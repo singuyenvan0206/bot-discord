@@ -7,9 +7,6 @@ const db = require('./database');
 const { EMOJI, BUTTON_ID, createGiveawayEmbed } = require('./utils/embeds');
 const { startTimer } = require('./utils/timer');
 
-// Set FFMPEG_PATH for @discordjs/voice
-process.env.FFMPEG_PATH = require('ffmpeg-static');
-
 // ─── Config ──────────────────────────────────────────────────────
 
 const PREFIX = '!';
@@ -40,6 +37,10 @@ const client = new Client({
     ],
 });
 
+// ─── Game State ──────────────────────────────────────────────────
+
+const activeChainGames = new Map();
+
 // ─── Load Slash Commands ─────────────────────────────────────────
 
 client.commands = new Collection();
@@ -57,11 +58,13 @@ for (const file of commandFiles) {
 // ─── Slash Command & Button Handler ─────────────────────────────
 
 client.on(Events.InteractionCreate, async interaction => {
-    // Handle button interactions (giveaway entry)
+    // Handle button interactions
     if (interaction.isButton()) {
         if (interaction.customId === BUTTON_ID) {
             return handleButtonEntry(interaction);
         }
+
+
         return;
     }
 
@@ -110,21 +113,7 @@ client.on(Events.MessageCreate, async message => {
             case 'ttt': case 'tictactoe': return prefixTicTacToe(message);
             case 'slots': case 'slot': case 's': return prefixSlots(message);
             case 'reaction': case 'react': case 'r': return prefixReaction(message);
-            case 'wordchain': case 'wc': return prefixWordChain(message);
-
-            // ── Music Commands ─────────────────────────────────────
-            case 'play': case 'p': return prefixPlay(message, args);
-            case 'skip': case 'sk': return prefixSkip(message);
-            case 'stop': case 'st': return prefixStop(message);
-            case 'pause': return prefixMusicPause(message);
-            case 'resume': return prefixMusicResume(message);
-            case 'queue': case 'q': return prefixQueue(message);
-            case 'nowplaying': case 'np': return prefixNowPlaying(message);
-            case 'volume': case 'vol': return prefixVolume(message, args);
-            case 'shuffle': return prefixShuffle(message);
-            case 'loop': return prefixLoop(message);
-            case 'remove': case 'rm': return prefixRemove(message, args);
-            case 'clear': return prefixClear(message);
+            case 'wordchain': case 'wc': return prefixWordChain(message, args);
 
             // ── Giveaway Commands ────────────────────────────────
             case 'gstart': case 'gs': return prefixGiveawayStart(message, args);
@@ -151,61 +140,82 @@ client.on(Events.MessageCreate, async message => {
 
 // ─── !help ───────────────────────────────────────────────────────
 
-async function prefixHelp(message) {
-    const embed = new EmbedBuilder()
-        .setTitle('📖  Bot Commands')
-        .setColor(0x5865F2)
-        .setDescription('All commands also work as slash commands (`/giveaway`, `/fun`).')
-        .addFields(
-            {
-                name: '🎉 Giveaway',
-                value: [
-                    '`!gstart <duration> <prize>` — Start a giveaway',
-                    '`!gend <message_id>` — End a giveaway early',
-                    '`!greroll <message_id>` — Re-roll winners',
-                    '`!glist` — List active giveaways',
-                    '`!gdelete <message_id>` — Delete a giveaway',
-                    '`!gpause <message_id>` — Pause a giveaway',
-                    '`!gresume <message_id>` — Resume a giveaway',
-                    '`!ginfo <message_id>` — Show giveaway info',
-                ].join('\n'),
-            },
-            {
-                name: '🎮 Fun',
-                value: [
-                    '`!coinflip [heads/tails]` — Flip a coin',
-                    '`!dice [sides] [count]` — Roll dice',
-                    '`!8ball <question>` — Magic 8-Ball',
-                    '`!rps <choice>` — Rock Paper Scissors',
-                    '`!trivia` — Trivia quiz',
-                    '`!guess` — Guess the number (1-100)',
-                    '`!wyr` — Would You Rather',
-                    '`!scramble` — Unscramble a word',
-                    '`!blackjack` — Play Blackjack',
-                    '`!ttt` — Tic-Tac-Toe',
-                    '`!slots` — Slot machine',
-                    '`!reaction` — Reaction speed test',
-                    '`!wordchain` / `!wc` — Word chain game',
-                ].join('\n'),
-            },
-            {
-                name: '🎵 Music (SoundCloud Only)',
-                value: [
-                    '`!play <url>` — Play from SoundCloud (Direct Link)',
-                    '`!skip` (sk) — Skip current song',
-                    '`!stop` (st) — Stop & leave channel',
-                    '`!queue` (q) — Show queue',
-                    '`!nowplaying` (np) — Current song info',
-                    '`!volume <1-100>` (vol) — Set volume',
-                    '`!remove <#>` (rm) — Remove song from queue',
-                    '`!loop`, `!shuffle`, `!pause`, `!resume`, `!clear`'
-                ].join('\n'),
-            },
-        )
-        .setFooter({ text: `Prefix: ${PREFIX}` })
-        .setTimestamp();
+// ─── !help ───────────────────────────────────────────────────────
 
-    return message.reply({ embeds: [embed] });
+async function prefixHelp(message) {
+    const helpCommand = require('./commands/help');
+    // Adapt message to interaction-like object for code reuse
+    const fakeInteraction = {
+        client: message.client,
+        user: message.author,
+        guild: message.guild,
+        channel: message.channel,
+        reply: async (options) => {
+            // If options is just a string, convert to object
+            if (typeof options === 'string') options = { content: options };
+            return message.reply(options);
+        },
+        editReply: async (options) => {
+            // We can't edit the user's message, but we can edit our reply if we tracked it.
+            // For simplicity in this adaptation, we'll just send a new message or ignore if it's complex state updates.
+            // However, the help command uses createMessageComponentCollector on the response.
+            // So we need to ensure the initial reply returns the message object.
+        }
+    };
+
+    // The help command uses interaction.reply which returns a response object (interaction response).
+    // Message.reply returns a Message object.
+
+    // Let's rewrite a simple adapter for the help command specifically or just duplicate the logic slightly for prefix.
+    // Actually, it's better to just reuse the logic but we need to handle the collector correctly.
+
+    const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ComponentType } = require('discord.js');
+    const categories = {
+        giveaway: {
+            label: 'Giveaway', description: 'Giveaway commands', emoji: '🎉', commands: [
+                '`!gstart <duration> <prize>` — Start', '`!gend <id>` — End', '`!greroll <id>` — Reroll',
+                '`!glist` — List', '`!gdelete <id>` — Delete', '`!gpause <id>` — Pause',
+                '`!gresume <id>` — Resume', '`!ginfo <id>` — Info'
+            ]
+        },
+        fun: {
+            label: 'Fun', description: 'Mini-games', emoji: '🎮', commands: [
+                '`!coinflip`, `!dice`, `!8ball`, `!rps`, `!trivia`', '`!guess`, `!wyr`, `!scramble`, `!blackjack`',
+                '`!ttt`, `!slots`, `!reaction`, `!wordchain`'
+            ]
+        },
+    };
+
+    const homeEmbed = new EmbedBuilder()
+        .setTitle('🤖  Bot Help Menu')
+        .setDescription('Select a category from the dropdown menu to see commands.')
+        .setColor(0x5865F2)
+        .addFields({ name: '🔗 Links', value: '[Support](https://discord.gg/example) • [Invite](https://discord.com)' })
+        .setFooter({ text: `Prefix: ${PREFIX}` });
+
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId(`help_select_${message.id}`)
+        .setPlaceholder('Select a category...')
+        .addOptions(Object.entries(categories).map(([k, v]) => ({ label: v.label, description: v.description, value: k, emoji: v.emoji })));
+
+    const row = new ActionRowBuilder().addComponents(selectMenu);
+    const reply = await message.reply({ embeds: [homeEmbed], components: [row] });
+
+    const collector = reply.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 60000 });
+
+    collector.on('collect', async i => {
+        if (i.user.id !== message.author.id) return i.reply({ content: '❌ Not your menu!', ephemeral: true });
+        const category = categories[i.values[0]];
+        const embed = new EmbedBuilder()
+            .setTitle(`${category.emoji}  ${category.label}`)
+            .setDescription(category.commands.join('\n'))
+            .setColor(0x5865F2)
+            .setFooter({ text: 'Select "Home" to go back' }); // Logic to go back could be added but simple is fine
+
+        await i.update({ embeds: [embed] });
+    });
+
+    collector.on('end', () => reply.edit({ components: [] }).catch(() => { }));
 }
 
 // ─── !coinflip ───────────────────────────────────────────────────
@@ -405,6 +415,7 @@ async function prefixTrivia(message) {
                 '', `The correct answer was **${labels[q.answer]}. ${q.options[q.answer]}**`,
             ].join('\n'))
             .setColor(0x95A5A6)
+            .setFooter({ text: `Prefix: ${PREFIX}` })
             .setTimestamp();
 
         await reply.edit({ embeds: [timeoutEmbed], components: [disabledRow] }).catch(() => { });
@@ -910,7 +921,25 @@ async function prefixReaction(message) {
 
 // ─── !wordchain ──────────────────────────────────────────────────
 
-async function prefixWordChain(message) {
+async function prefixWordChain(message, args) {
+    const channelId = message.channel.id;
+    const existingGame = activeChainGames.get(channelId);
+
+    // Check for stop command
+    if (args && args[0]?.toLowerCase() === 'stop') {
+        if (existingGame) {
+            existingGame.stop();
+            activeChainGames.delete(channelId);
+            return message.reply('🛑 Word Chain game stopped.');
+        } else {
+            return message.reply('❌ No Word Chain game is currently active in this channel.');
+        }
+    }
+
+    if (existingGame) {
+        return message.reply('⚠️ A Word Chain game is already active in this channel! Use `!wc stop` to end it.');
+    }
+
     const chain = [];
     let lastLetter = null;
     let lastUserId = null;
@@ -921,7 +950,7 @@ async function prefixWordChain(message) {
     await message.reply({
         embeds: [new EmbedBuilder()
             .setTitle('🔗  Word Chain!')
-            .setDescription('**Rules:** Type a word starting with the **last letter** of the previous word.\nNo repeats • Min 2 letters • No same user twice in a row\n\n🟢 **Type any word to start!**')
+            .setDescription('**Rules:** Type a word starting with the **last letter** of the previous word.\nNo repeats • Min 2 letters • No same user twice in a row\n\n🟢 **Type any word to start!**\nUse `!wc stop` to end the game manually.')
             .setColor(0x3498DB)]
     });
 
@@ -954,7 +983,12 @@ async function prefixWordChain(message) {
         }
     });
 
-    collector.on('end', () => {
+
+
+    collector.on('end', (collected, reason) => {
+        activeChainGames.delete(channelId);
+        if (reason === 'user') return; // Handled by stop command
+
         const lastWords = chain.slice(-10).map(c => `**${c.word}**`).join(' → ');
         const rating = wordCount >= 20 ? '🏆 **Amazing!**' : wordCount >= 10 ? '🔥 **Great!**' : wordCount >= 5 ? '👍 **Not bad!**' : '💪 **Try again!**';
         message.channel.send({
@@ -964,132 +998,10 @@ async function prefixWordChain(message) {
                 .setColor(0xF39C12)]
         });
     });
+
+    activeChainGames.set(channelId, collector);
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// Music Prefix Commands
-// ═══════════════════════════════════════════════════════════════════
-
-const { getQueue, getOrCreateQueue } = require('./utils/musicPlayer');
-
-function musicErr(msg) { return new EmbedBuilder().setDescription(`❌ ${msg}`).setColor(0xE74C3C); }
-function musicOk(title, desc, color = 0x1DB954) { return new EmbedBuilder().setTitle(title).setDescription(desc).setColor(color); }
-
-async function prefixPlay(message, args) {
-    const vc = message.member?.voice?.channel;
-    if (!vc) return message.reply({ embeds: [musicErr('You must be in a voice channel!')] });
-    if (!args.length) return message.reply({ embeds: [musicErr('Usage: `!play <song name or URL>`')] });
-    const queue = getOrCreateQueue(message.guildId);
-    if (!queue.connection) await queue.connect(vc, message.channel);
-    const loading = await message.reply({ embeds: [new EmbedBuilder().setDescription('🔍 Searching...').setColor(0x5865F2)] });
-    try {
-        const song = await queue.addSong(args.join(' '), message.author.username);
-        if (!song) return loading.edit({ embeds: [musicErr('No results found!')] });
-        const embed = new EmbedBuilder().setColor(0x1DB954).setTimestamp();
-        if (queue.songs.length === 0 && queue.currentSong === song) {
-            embed.setTitle('🎵  Now Playing').setDescription(`**[${song.title}](${song.url})**\n\n⏱️ \`${song.duration}\` • 🎤 ${song.requester}`);
-        } else {
-            embed.setTitle('📥  Added to Queue').setDescription(`**[${song.title}](${song.url})**\n\n⏱️ \`${song.duration}\` • 📋 #${queue.songs.length}`);
-        }
-        if (song.thumbnail) embed.setThumbnail(song.thumbnail);
-        return loading.edit({ embeds: [embed] });
-    } catch (err) { return loading.edit({ embeds: [musicErr(`Error: ${err.message}`)] }); }
-}
-
-async function prefixSkip(message) {
-    const q = getQueue(message.guildId);
-    if (!q || !q.playing) return message.reply({ embeds: [musicErr('Nothing is playing!')] });
-    const name = q.currentSong?.title || 'Unknown';
-    q.skip();
-    return message.reply({ embeds: [musicOk('⏭️  Skipped', `Skipped **${name}**`)] });
-}
-
-async function prefixStop(message) {
-    const q = getQueue(message.guildId);
-    if (!q || !q.playing) return message.reply({ embeds: [musicErr('Nothing is playing!')] });
-    q.stop();
-    return message.reply({ embeds: [musicOk('⏹️  Stopped', 'Music stopped and queue cleared.', 0xE74C3C)] });
-}
-
-async function prefixMusicPause(message) {
-    const q = getQueue(message.guildId);
-    if (!q || !q.playing) return message.reply({ embeds: [musicErr('Nothing is playing!')] });
-    if (!q.pause()) return message.reply({ embeds: [musicErr('Already paused!')] });
-    return message.reply({ embeds: [musicOk('⏸️  Paused', 'Use `!resume` to continue.')] });
-}
-
-async function prefixMusicResume(message) {
-    const q = getQueue(message.guildId);
-    if (!q || !q.playing) return message.reply({ embeds: [musicErr('Nothing is playing!')] });
-    if (!q.resume()) return message.reply({ embeds: [musicErr('Not paused!')] });
-    return message.reply({ embeds: [musicOk('▶️  Resumed', 'Music resumed!')] });
-}
-
-async function prefixQueue(message) {
-    const q = getQueue(message.guildId);
-    if (!q || (!q.currentSong && q.songs.length === 0)) return message.reply({ embeds: [musicErr('Queue is empty!')] });
-    const lines = [];
-    if (q.currentSong) lines.push(`🎵 **Now:** [${q.currentSong.title}](${q.currentSong.url}) \`${q.currentSong.duration}\``);
-    if (q.songs.length > 0) {
-        lines.push('');
-        q.songs.slice(0, 10).forEach((s, i) => lines.push(`**${i + 1}.** [${s.title}](${s.url}) \`${s.duration}\``));
-        if (q.songs.length > 10) lines.push(`\n*...and ${q.songs.length - 10} more*`);
-    }
-    const loopIcon = q.loop === 'off' ? '❌' : q.loop === 'song' ? '🔂' : '🔁';
-    return message.reply({ embeds: [new EmbedBuilder().setTitle('📋  Music Queue').setDescription(lines.join('\n')).setColor(0x5865F2).setFooter({ text: `${q.songs.length} queued • Loop: ${loopIcon} ${q.loop} • Vol: ${q.volume}%` })] });
-}
-
-async function prefixNowPlaying(message) {
-    const q = getQueue(message.guildId);
-    if (!q || !q.currentSong) return message.reply({ embeds: [musicErr('Nothing is playing!')] });
-    const s = q.currentSong;
-    const embed = new EmbedBuilder().setTitle('🎵  Now Playing').setDescription(`**[${s.title}](${s.url})**\n\n⏱️ \`${s.duration}\` • 🎤 ${s.requester}\n🔊 ${q.volume}% • 🔁 ${q.loop}`).setColor(0x1DB954);
-    if (s.thumbnail) embed.setThumbnail(s.thumbnail);
-    return message.reply({ embeds: [embed] });
-}
-
-async function prefixVolume(message, args) {
-    const q = getQueue(message.guildId);
-    if (!q || !q.playing) return message.reply({ embeds: [musicErr('Nothing is playing!')] });
-    const vol = parseInt(args[0]);
-    if (isNaN(vol) || vol < 1 || vol > 100) return message.reply({ embeds: [musicErr('Usage: `!volume <1-100>`')] });
-    q.setVolume(vol);
-    const icon = vol > 70 ? '🔊' : vol > 30 ? '🔉' : '🔈';
-    return message.reply({ embeds: [musicOk(`${icon}  Volume`, `Set to **${vol}%**`)] });
-}
-
-async function prefixShuffle(message) {
-    const q = getQueue(message.guildId);
-    if (!q || q.songs.length < 2) return message.reply({ embeds: [musicErr('Need at least 2 songs in queue!')] });
-    q.shuffle();
-    return message.reply({ embeds: [musicOk('🔀  Shuffled', `Shuffled **${q.songs.length}** songs!`)] });
-}
-
-async function prefixLoop(message) {
-    const q = getQueue(message.guildId);
-    if (!q || !q.playing) return message.reply({ embeds: [musicErr('Nothing is playing!')] });
-    const mode = q.toggleLoop();
-    const icons = { off: '❌ Off', song: '🔂 Song', queue: '🔁 Queue' };
-    return message.reply({ embeds: [musicOk('🔁  Loop Mode', `Set to **${icons[mode]}**`)] });
-}
-
-async function prefixRemove(message, args) {
-    const q = getQueue(message.guildId);
-    if (!q || q.songs.length === 0) return message.reply({ embeds: [musicErr('Queue is empty!')] });
-    const pos = parseInt(args[0]);
-    if (isNaN(pos)) return message.reply({ embeds: [musicErr('Usage: `!remove <position>`')] });
-    const removed = q.remove(pos - 1);
-    if (!removed) return message.reply({ embeds: [musicErr('Invalid position!')] });
-    return message.reply({ embeds: [musicOk('🗑️  Removed', `Removed **${removed.title}**`)] });
-}
-
-async function prefixClear(message) {
-    const q = getQueue(message.guildId);
-    if (!q || q.songs.length === 0) return message.reply({ embeds: [musicErr('Queue is already empty!')] });
-    const count = q.songs.length;
-    q.clear();
-    return message.reply({ embeds: [musicOk('🧹  Cleared', `Removed **${count}** songs.`)] });
-}
 
 // ─── Duration Parser ─────────────────────────────────────────────
 
