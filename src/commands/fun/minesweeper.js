@@ -5,7 +5,7 @@ module.exports = {
     name: 'minesweeper',
     aliases: ['mine', 'ms'],
     description: 'Play Minesweeper! (24 Cells)',
-    cooldown: 10,
+    cooldown: 30,
     async execute(message, args) {
         let bet = parseInt(args[0]);
         if (!args[0]) bet = 50; // Default

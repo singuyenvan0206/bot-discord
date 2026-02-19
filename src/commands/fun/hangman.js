@@ -108,7 +108,7 @@ module.exports = {
     name: 'hangman',
     aliases: ['hang', 'hm'],
     description: 'Play Hangman!',
-    cooldown: 10,
+    cooldown: 30,
     async execute(message, args) {
         const wordObj = SCRAMBLE_WORDS[Math.floor(Math.random() * SCRAMBLE_WORDS.length)];
         const word = wordObj.word.toUpperCase();

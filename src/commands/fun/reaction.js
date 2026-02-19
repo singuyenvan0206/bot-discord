@@ -5,7 +5,7 @@ module.exports = {
     name: 'reaction',
     aliases: ['react'],
     description: 'Test your reaction speed',
-    cooldown: 10,
+    cooldown: 30,
     async execute(message, args) {
         const embed = new EmbedBuilder()
             .setTitle('⚡  Reaction Test')

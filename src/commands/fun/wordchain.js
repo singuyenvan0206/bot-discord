@@ -5,7 +5,7 @@ module.exports = {
     name: 'wordchain',
     aliases: ['wc'],
     description: 'Play Word Chain',
-    cooldown: 60,
+    cooldown: 30,
     async execute(message, args) {
         if (message.client.activeChainGames?.has(message.channel.id)) {
             return message.reply('❌ A word chain game is already running in this channel! Type `!stop` to end it.');

@@ -4,7 +4,7 @@ const db = require('../../database');
 module.exports = {
     name: 'math',
     description: 'Solve a math problem',
-    cooldown: 10,
+    cooldown: 30,
     async execute(message, args) {
         const ops = ['+', '-', '*'];
         const op = ops[Math.floor(Math.random() * ops.length)];

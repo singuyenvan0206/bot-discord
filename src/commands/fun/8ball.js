@@ -13,7 +13,7 @@ module.exports = {
     name: '8ball',
     aliases: ['8b'],
     description: 'Ask the magic 8-ball',
-    cooldown: 3,
+    cooldown: 30,
     async execute(message, args) {
         const question = args.join(' ');
         if (!question) return message.reply('❌ You need to ask a question!');

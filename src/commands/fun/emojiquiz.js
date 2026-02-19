@@ -384,7 +384,7 @@ module.exports = {
     name: 'emojiquiz',
     aliases: ['quiz', 'eq'],
     description: 'Guess the phrase from emojis!',
-    cooldown: 10,
+    cooldown: 30,
     async execute(message, args) {
         const q = EMOJI_QUIZ[Math.floor(Math.random() * EMOJI_QUIZ.length)];
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case

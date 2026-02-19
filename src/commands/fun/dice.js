@@ -5,7 +5,7 @@ module.exports = {
     name: 'dice',
     aliases: ['roll', 'd'],
     description: 'Roll 2 dice and bet on the outcome!',
-    cooldown: 5,
+    cooldown: 30,
     async execute(message, args) {
         const user = db.getUser(message.author.id);
 

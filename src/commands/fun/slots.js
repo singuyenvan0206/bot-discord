@@ -5,7 +5,7 @@ module.exports = {
     name: 'slots',
     aliases: ['slot'],
     description: 'Spin the slot machine!',
-    cooldown: 5,
+    cooldown: 30,
     async execute(message, args) {
         let bet = parseInt(args[0]);
         if (!args[0]) bet = 50; // Default
