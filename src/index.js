@@ -89,10 +89,29 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
+const xpCooldowns = new Set();
 // ─── Prefix Command Handler (!commands) ──────────────────────────
 
 client.on(Events.MessageCreate, async message => {
     if (message.author.bot) return;
+
+    // ─── Leveling System ───
+    if (!xpCooldowns.has(message.author.id)) {
+        const xpGain = Math.floor(Math.random() * 11) + 15; // 15-25 XP
+        const user = db.addXp(message.author.id, xpGain);
+
+        const nextLevelXp = (user.level + 1) * 100;
+        if (user.xp >= nextLevelXp) {
+            user.level++;
+            user.xp -= nextLevelXp;
+            db.updateUser(user.id, { level: user.level, xp: user.xp });
+            message.channel.send(`🎉 **Level Up!** ${message.author} is now **Level ${user.level}**! 🆙`);
+        }
+
+        xpCooldowns.add(message.author.id);
+        setTimeout(() => xpCooldowns.delete(message.author.id), 60_000); // 1 minute cooldown
+    }
+
     if (!message.content.startsWith(PREFIX)) return;
 
     const args = message.content.slice(PREFIX.length).trim().split(/\s+/);

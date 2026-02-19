@@ -16,12 +16,49 @@ const categories = {
             '`!ginfo <message_id>` — Show giveaway info',
         ]
     },
+    economy: {
+        label: 'Economy',
+        description: 'Money, jobs, and trading',
+        emoji: '💰',
+        commands: [
+            '`/balance` — Check balance and level',
+            '`/daily` — Claim daily reward',
+            '`/work` — Work for money',
+            '`/transfer <user> <amount>` — Send money',
+            '`/leaderboard` — Richest users',
+            '`/shop` — View item shop',
+            '`/buy <item>` — Buy items',
+            '`/inventory` — View your items',
+        ]
+    },
+    utility: {
+        label: 'Utility',
+        description: 'Useful tools',
+        emoji: '🔧',
+        commands: [
+            '`/ping` — Check latency',
+            '`/avatar <user>` — View avatar',
+            '`/serverinfo` — Server stats',
+            '`/userinfo <user>` — User stats',
+        ]
+    },
+    moderation: {
+        label: 'Moderation',
+        description: 'Admin tools',
+        emoji: '🛡️',
+        commands: [
+            '`/kick <user>` — Kick a member',
+            '`/ban <user>` — Ban a member',
+            '`/timeout <user> <time>` — Timeout a member',
+            '`/clear <amount>` — Delete messages',
+        ]
+    },
     fun: {
         label: 'Fun',
         description: 'Mini-games and fun commands',
         emoji: '🎮',
         commands: [
-            '`!coinflip` — Flip a coin',
+            '`!coinflip [bet]` — Flip a coin',
             '`!dice` — Roll dice',
             '`!8ball` — Ask the magic 8-ball',
             '`!rps` — Rock Paper Scissors',
@@ -29,11 +66,16 @@ const categories = {
             '`!guess` — Guess the number',
             '`!wyr` — Would You Rather',
             '`!scramble` — Unscramble words',
-            '`!blackjack` — Play Blackjack',
+            '`!blackjack [bet]` — Play Blackjack',
             '`!ttt` — Tic-Tac-Toe',
-            '`!slots` — Spin the slots',
+            '`!slots [bet]` — Spin the slots',
             '`!reaction` — Test reaction time',
             '`!wordchain` — Word chain game',
+            '`/minesweeper` — Play Minesweeper',
+            '`/hangman` — Play Hangman',
+            '`/math` — Solve math problems',
+            '`/emojiquiz` — Guess the emoji phrase',
+            '`/cardbattle [bet]` — Multiplayer High Card',
         ]
     },
 };

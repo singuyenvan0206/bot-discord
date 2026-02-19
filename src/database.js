@@ -61,6 +61,22 @@ function initSchema() {
         )
     `);
 
+    db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+            id TEXT PRIMARY KEY,
+            balance INTEGER NOT NULL DEFAULT 0,
+            xp INTEGER NOT NULL DEFAULT 0,
+            level INTEGER NOT NULL DEFAULT 0,
+            last_daily INTEGER DEFAULT 0,
+            last_work INTEGER DEFAULT 0,
+            level INTEGER NOT NULL DEFAULT 0,
+            last_daily INTEGER DEFAULT 0,
+            last_work INTEGER DEFAULT 0,
+            last_rob INTEGER DEFAULT 0,
+            inventory TEXT DEFAULT '{}'
+        )
+    `);
+
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_guild ON giveaways(guild_id)');
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_active ON giveaways(ended, ends_at)');
@@ -69,7 +85,9 @@ function initSchema() {
     // Migrate existing tables — add new columns if missing
     safeAddColumn('giveaways', 'paused', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
+    safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
     safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
+    safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
 
     saveDb();
 }
@@ -225,6 +243,71 @@ function getBonusEntries(giveawayId, userId) {
     return row ? row.bonus_entries : 0;
 }
 
+
+// ─── User / Economy ──────────────────────────────────────────────
+
+function getUser(userId) {
+    let user = queryOne('SELECT * FROM users WHERE id = ?', [userId]);
+    if (!user) {
+        execute('INSERT INTO users (id) VALUES (?)', [userId]);
+        execute('INSERT INTO users (id) VALUES (?)', [userId]);
+        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}' };
+    }
+    return user;
+}
+
+function updateUser(userId, updates) {
+    const fields = [];
+    const values = [];
+    Object.entries(updates).forEach(([key, value]) => {
+        fields.push(`${key} = ?`);
+        values.push(value);
+    });
+    if (fields.length === 0) return;
+    values.push(userId);
+    execute(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
+}
+
+function addBalance(userId, amount) {
+    getUser(userId); // Ensure user exists
+    execute('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, userId]);
+}
+
+function removeBalance(userId, amount) {
+    getUser(userId); // Ensure user exists
+    execute('UPDATE users SET balance = MAX(0, balance - ?) WHERE id = ?', [amount, userId]);
+}
+
+function addXp(userId, amount) {
+    getUser(userId);
+    execute('UPDATE users SET xp = xp + ? WHERE id = ?', [amount, userId]);
+    return getUser(userId);
+}
+
+function getTopUsers(limit = 10, type = 'balance') {
+    return queryAll(`SELECT * FROM users ORDER BY ${type} DESC LIMIT ?`, [limit]);
+}
+
+function addItem(userId, itemId, count = 1) {
+    const user = getUser(userId);
+    const inv = JSON.parse(user.inventory || '{}');
+    inv[itemId] = (inv[itemId] || 0) + count;
+    execute('UPDATE users SET inventory = ? WHERE id = ?', [JSON.stringify(inv), userId]);
+}
+
+function removeItem(userId, itemId, count = 1) {
+    const user = getUser(userId);
+    const inv = JSON.parse(user.inventory || '{}');
+    if (!inv[itemId]) return false;
+
+    inv[itemId] -= count;
+    if (inv[itemId] <= 0) delete inv[itemId];
+
+    execute('UPDATE users SET inventory = ? WHERE id = ?', [JSON.stringify(inv), userId]);
+    return true;
+}
+
+
 module.exports = {
     getDb,
     createGiveaway,
@@ -246,4 +329,13 @@ module.exports = {
     getTotalEntries,
     addBonusEntry,
     getBonusEntries,
+    getBonusEntries,
+    getUser,
+    updateUser,
+    addBalance,
+    removeBalance,
+    addXp,
+    getTopUsers,
+    addItem,
+    removeItem,
 };

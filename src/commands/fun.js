@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const db = require('../database');
 
 // ═══════════════════════════════════════════════════════════════════
 // Data Pools
@@ -25,6 +26,88 @@ const TRIVIA_QUESTIONS = [
     { question: 'What is the currency of Japan?', options: ['Yuan', 'Won', 'Yen', 'Ringgit'], answer: 2 },
     { question: 'Which planet has the most moons?', options: ['Jupiter', 'Saturn', 'Uranus', 'Neptune'], answer: 1 },
     { question: 'What is the largest organ in the human body?', options: ['Heart', 'Liver', 'Skin', 'Brain'], answer: 2 },
+    // New Questions
+    { question: 'Who is the main character in "One Piece"?', options: ['Zoro', 'Luffy', 'Sanji', 'Nami'], answer: 1 },
+    { question: 'What is the capital of Japan?', options: ['Seoul', 'Beijing', 'Tokyo', 'Bangkok'], answer: 2 },
+    { question: 'How many players are in a standard soccer team?', options: ['10', '11', '12', '9'], answer: 1 },
+    { question: 'What is the hardest rock?', options: ['Diamond', 'Granite', 'Quartz', 'Marble'], answer: 0 },
+    { question: 'Who wrote "Harry Potter"?', options: ['J.R.R. Tolkien', 'George R.R. Martin', 'J.K. Rowling', 'Stephen King'], answer: 2 },
+    { question: 'What is the chemical symbol for Water?', options: ['H2O', 'CO2', 'O2', 'NaCl'], answer: 0 },
+    { question: 'Which Pokemon is the mascot of the franchise?', options: ['Charmander', 'Pikachu', 'Squirtle', 'Bulbasaur'], answer: 1 },
+    { question: 'What year did the Titanic sink?', options: ['1910', '1912', '1915', '1920'], answer: 1 },
+    { question: 'Which planet is closest to the Sun?', options: ['Venus', 'Mercury', 'Mars', 'Earth'], answer: 1 },
+    { question: 'What is the largest mammal in the world?', options: ['Elephant', 'Blue Whale', 'Giraffe', 'Hippo'], answer: 1 },
+    { question: 'How many colors are in a rainbow?', options: ['5', '6', '7', '8'], answer: 2 },
+    { question: 'Who invented the telephone?', options: ['Edison', 'Tesla', 'Bell', 'Einstein'], answer: 2 },
+    { question: 'What is the main ingredient in Guacamole?', options: ['Tomato', 'Avocado', 'Onion', 'Pepper'], answer: 1 },
+    { question: 'Which country invented Pizza?', options: ['France', 'USA', 'Italy', 'Spain'], answer: 2 },
+    { question: 'What is the fastest land animal?', options: ['Lion', 'Cheetah', 'Horse', 'Leopard'], answer: 1 },
+    { question: 'How many stripes are on the US flag?', options: ['10', '11', '12', '13'], answer: 3 },
+    { question: 'Which superhero is Peter Parker?', options: ['Batman', 'Superman', 'Spider-Man', 'Iron Man'], answer: 2 },
+    { question: 'What is the boiling point of water?', options: ['90°C', '100°C', '110°C', '120°C'], answer: 1 },
+    { question: 'Who painted the "Starry Night"?', options: ['Picasso', 'Van Gogh', 'Da Vinci', 'Monet'], answer: 1 },
+    { question: 'Which ocean is the Bermuda Triangle in?', options: ['Pacific', 'Atlantic', 'Indian', 'Arctic'], answer: 1 },
+    { question: 'What is the currency of the UK?', options: ['Euro', 'Dollar', 'Pound', 'Franc'], answer: 2 },
+    { question: 'How many sides does a hexagon have?', options: ['5', '6', '7', '8'], answer: 1 },
+    { question: 'What is the largest desert in the world?', options: ['Sahara', 'Gobi', 'Arabian', 'Antarctic'], answer: 3 },
+    { question: 'Who is known as the "Dark Knight"?', options: ['Superman', 'Batman', 'Flash', 'Wonder Woman'], answer: 1 },
+    { question: 'Which gas do plants absorb?', options: ['Oxygen', 'Nitrogen', 'Carbon Dioxide', 'Helium'], answer: 2 },
+    { question: 'What is the capital of Australia?', options: ['Sydney', 'Melbourne', 'Canberra', 'Perth'], answer: 2 },
+    { question: 'Who discovered gravity?', options: ['Einstein', 'Newton', 'Galileo', 'Hawking'], answer: 1 },
+    { question: 'How many teeth does an adult human have?', options: ['28', '30', '32', '34'], answer: 2 },
+    { question: 'What is the smallest bird in the world?', options: ['Sparrow', 'Hummingbird', 'Parrot', 'Robin'], answer: 1 },
+    { question: 'Which country has the Pyramids?', options: ['Mexico', 'Egypt', 'India', 'Peru'], answer: 1 },
+    // ─── MASSIVE EXPANSION: TRIVIA ───
+    { question: 'What does CPU stand for?', options: ['Central Process Unit', 'Central Processing Unit', 'Computer Personal Unit', 'Central Processor Unit'], answer: 1 },
+    { question: 'Which company owns Xbox?', options: ['Sony', 'Nintendo', 'Microsoft', 'Sega'], answer: 2 },
+    { question: 'What is the highest grossing movie of all time?', options: ['Titanic', 'Avengers: Endgame', 'Avatar', 'Star Wars'], answer: 2 },
+    { question: 'Which fruit floats on water?', options: ['Grape', 'Apple', 'Mango', 'Banana'], answer: 1 },
+    { question: 'How many hearts does an octopus have?', options: ['1', '2', '3', '4'], answer: 2 },
+    { question: 'Who is the god of thunder in Norse mythology?', options: ['Loki', 'Odin', 'Thor', 'Hela'], answer: 2 },
+    { question: 'What is the chemical symbol for Silver?', options: ['Si', 'Ag', 'Au', 'Sl'], answer: 1 },
+    { question: 'Which planet rotates clockwise?', options: ['Mars', 'Venus', 'Jupiter', 'Neptune'], answer: 1 },
+    { question: 'Who founded Microsoft?', options: ['Steve Jobs', 'Bill Gates', 'Elon Musk', 'Mark Zuckerberg'], answer: 1 },
+    { question: 'What does HTML stand for?', options: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Hyper Transfer Make Language', 'Home Tool Markup Language'], answer: 0 },
+    { question: 'Which chess piece can only move diagonally?', options: ['Rook', 'Knight', 'Bishop', 'King'], answer: 2 },
+    { question: 'What is the national animal of Scotland?', options: ['Sheep', 'Lion', 'Unicorn', 'Dragon'], answer: 2 },
+    { question: 'How many rings are in the Olympic symbol?', options: ['4', '5', '6', '7'], answer: 1 },
+    { question: 'Who is the author of "The Lord of the Rings"?', options: ['C.S. Lewis', 'J.R.R. Tolkien', 'George R.R. Martin', 'J.K. Rowling'], answer: 1 },
+    { question: 'What is the largest bone in the human body?', options: ['Skull', 'Spine', 'Femur', 'Rib'], answer: 2 },
+    { question: 'Which country drinks the most coffee per capita?', options: ['USA', 'Italy', 'Finland', 'Brazil'], answer: 2 },
+    { question: 'What is the capital of Canada?', options: ['Toronto', 'Vancouver', 'Montreal', 'Ottawa'], answer: 3 },
+    { question: 'Which element is needed for combustion?', options: ['Helium', 'Oxygen', 'Carbon', 'Nitrogen'], answer: 1 },
+    { question: 'Who was the first man on the moon?', options: ['Buzz Aldrin', 'Neil Armstrong', 'Yuri Gagarin', 'John Glenn'], answer: 1 },
+    { question: 'What is the fastest aquatic animal?', options: ['Shark', 'Sailfish', 'Dolphin', 'Tuna'], answer: 1 },
+    { question: 'Depending on the version, how many eyes does a Minecraft Enderman have?', options: ['2', '3', '4', '6'], answer: 0 },
+    { question: 'Which Avenger is a doctor?', options: ['Iron Man', 'Captain America', 'Doctor Strange', 'Hulk'], answer: 2 },
+    { question: 'What is the currency of Russia?', options: ['Euro', 'Dollar', 'Ruble', 'Yen'], answer: 2 },
+    { question: 'What is the longest river in the world?', options: ['Amazon', 'Nile', 'Yangtze', 'Mississippi'], answer: 1 },
+    { question: 'Which country has the most islands?', options: ['Philippines', 'Indonesia', 'Sweden', 'Canada'], answer: 2 },
+    { question: 'What does "www" stand for?', options: ['World Wide Web', 'World Web Wide', 'Wide World Web', 'Web World Wide'], answer: 0 },
+    { question: 'How many keys are on a standard piano?', options: ['66', '77', '88', '99'], answer: 2 },
+    { question: 'Who painted "The Last Supper"?', options: ['Michelangelo', 'Da Vinci', 'Raphael', 'Donatello'], answer: 1 },
+    { question: 'Which blood type is the universal donor?', options: ['A', 'B', 'AB', 'O'], answer: 3 },
+    { question: 'What is the square root of 64?', options: ['6', '7', '8', '9'], answer: 2 },
+    { question: 'Which planet is known as the Morning Star?', options: ['Mars', 'Venus', 'Mercury', 'Jupiter'], answer: 1 },
+    { question: 'Who wrote "Romeo and Juliet"?', options: ['Charles Dickens', 'William Shakespeare', 'Jane Austen', 'Mark Twain'], answer: 1 },
+    { question: 'What is the main language of Brazil?', options: ['Spanish', 'Portuguese', 'English', 'French'], answer: 1 },
+    { question: 'How many sides does a heptagon have?', options: ['6', '7', '8', '9'], answer: 1 },
+    { question: 'What is the hardest mineral?', options: ['Gold', 'Iron', 'Diamond', 'Quartz'], answer: 2 },
+    { question: 'Which city is known as the Big Apple?', options: ['Los Angeles', 'Chicago', 'New York', 'Miami'], answer: 2 },
+    { question: 'What is the most popular sport in the world?', options: ['Basketball', 'Cricket', 'Soccer', 'Tennis'], answer: 2 },
+    { question: 'How many stars are on the Chinese flag?', options: ['4', '5', '6', '7'], answer: 1 },
+    { question: 'Who discovered Penicillin?', options: ['Fleming', 'Pasteur', 'Curie', 'Darwin'], answer: 0 },
+    { question: 'What is the largest cat species?', options: ['Lion', 'Tiger', 'Leopard', 'Jaguar'], answer: 1 },
+    { question: 'Which instrument has 47 strings?', options: ['Guitar', 'Piano', 'Harp', 'Violin'], answer: 2 },
+    { question: 'What is the capital of Italy?', options: ['Venice', 'Milan', 'Rome', 'Florence'], answer: 2 },
+    { question: 'Which gaming console is best selling of all time?', options: ['PS2', 'DS', 'Switch', 'PS4'], answer: 0 },
+    { question: 'Who is the mascot of SEGA?', options: ['Mario', 'Sonic', 'Pacman', 'Crash'], answer: 1 },
+    { question: 'What is the freezing point of water in Fahrenheit?', options: ['0', '10', '32', '100'], answer: 2 },
+    { question: 'Which organ produces insulin?', options: ['Liver', 'Kidney', 'Pancreas', 'Stomach'], answer: 2 },
+    { question: 'What is the smallest continent?', options: ['Europe', 'Antarctica', 'Australia', 'South America'], answer: 2 },
+    { question: 'Who sang "Thriller"?', options: ['Prince', 'Michael Jackson', 'Madonna', 'Queen'], answer: 1 },
+    { question: 'What is the main ingredient in Hummus?', options: ['Chickpeas', 'Lentils', 'Beans', 'Peas'], answer: 0 },
+    { question: 'Which year did the first iPhone launch?', options: ['2005', '2006', '2007', '2008'], answer: 2 },
 ];
 
 const EIGHT_BALL_RESPONSES = [
@@ -36,6 +119,12 @@ const EIGHT_BALL_RESPONSES = [
     { text: 'Cannot predict now.', type: 'neutral' }, { text: 'Concentrate and ask again.', type: 'neutral' },
     { text: "Don't count on it.", type: 'negative' }, { text: 'My reply is no.', type: 'negative' },
     { text: 'Outlook not so good.', type: 'negative' }, { text: 'Very doubtful.', type: 'negative' },
+    // New Responses
+    { text: 'My sources say no.', type: 'negative' }, { text: 'As I see it, yes.', type: 'positive' },
+    { text: 'Ask your mom.', type: 'neutral' }, { text: 'I assume so.', type: 'positive' },
+    { text: 'Better not tell you now.', type: 'neutral' }, { text: 'In your dreams.', type: 'negative' },
+    { text: 'Yes, but be careful.', type: 'positive' }, { text: 'No way!', type: 'negative' },
+    { text: 'Maybe... if you give me a cookie.', type: 'neutral' }, { text: '404 Answer Not Found.', type: 'neutral' },
 ];
 
 const WOULD_YOU_RATHER = [
@@ -54,6 +143,58 @@ const WOULD_YOU_RATHER = [
     ['Have x-ray vision', 'Have night vision'],
     ['Be 10 years older', 'Be 5 years younger'],
     ['Win the lottery', 'Live twice as long'],
+    // New Scenarios
+    ['Always be cold', 'Always be hot'],
+    ['Speak all languages', 'Speak to animals'],
+    ['Be the funniest person', 'Be the most attractive person'],
+    ['Give up phone for a year', 'Give up internet for a month'],
+    ['Have a pause button for life', 'Have a rewind button for life'],
+    ['Lose all your money', 'Lose all your memories'],
+    ['Eat only pizza', 'Eat only tacos'],
+    ['Live in a cave', 'Live in a treehouse'],
+    ['Be famous but alone', 'Be poor but loved'],
+    ['Explore space', 'Explore the ocean'],
+    ['Never get angry', 'Never get sad'],
+    ['Have a personal chef', 'Have a personal driver'],
+    ['Change your past', 'See your future'],
+    ['Be a ninja', 'Be a pirate'],
+    ['Have infinite battery life', 'Have free wifi everywhere'],
+    ['Always say everything on your mind', 'Never be able to speak again'],
+    ['Live without TV', 'Live without social media'],
+    ['Be a dragon', 'Own a dragon'],
+    ['Stop time', 'Fly'],
+    ['Be the villain', 'Be the sidekick'],
+    // ─── MASSIVE EXPANSION: WOULD YOU RATHER ───
+    ['Have a rewind button', 'Have a pause button'],
+    ['Be able to talk with animals', 'Speak all foreign languages'],
+    ['Win $50,000', 'Let your best friend win $500,000'],
+    ['Be famous in this lifetime', 'Be famous in history books'],
+    ['Find true love', 'Find a suitcase with 5 million dollars'],
+    ['Never be able to go out during the day', 'Never be able to go out at night'],
+    ['Have a personal maid', 'Have a personal chef'],
+    ['Be able to change the past', 'Be able to see the future'],
+    ['Sacrifice yourself to save 100 strangers', 'Watch 100 strangers die'],
+    ['Live in a video game', 'Live in a movie'],
+    ['Lose your sight', 'Lose your hearing'],
+    ['Always say what you are thinking', 'Never be able to speak again'],
+    ['Be covered in fur', 'Be covered in scales'],
+    ['Have a flying carpet', 'Have a transparent car'],
+    ['Never retain your memories', 'Never be able to make new memories'],
+    ['Only be able to whisper', 'Only be able to shout'],
+    ['Have fingers as long as legs', 'Have legs as long as fingers'],
+    ['Eat a spider', 'Eat a cockroach'],
+    ['Live in the wilderness', 'Live in a jail'],
+    ['Be the smartest person', 'Be the funniest person'],
+    ['Control fire', 'Control water'],
+    ['Teleport anywhere', 'Read minds'],
+    ['Have 3 eyes', 'Have 3 arms'],
+    ['Be forced to sing every time you speak', 'Be forced to dance every time you move'],
+    ['Fight 100 duck-sized horses', 'Fight 1 horse-sized duck'],
+    ['Always smell like fish', 'Always smell like sewage'],
+    ['Have a head the size of a tennis ball', 'Have a head the size of a watermelon'],
+    ['Never use the internet again', 'Never watch TV again'],
+    ['Be an unknown superhero', 'Be a famous villain'],
+    ['Live without your phone', 'Live without your computer'],
 ];
 
 const SCRAMBLE_WORDS = [
@@ -77,6 +218,111 @@ const SCRAMBLE_WORDS = [
     { word: 'CHAMPION', hint: 'The winner' },
     { word: 'PAINTING', hint: 'Art on canvas' },
     { word: 'LANGUAGE', hint: 'Used to communicate' },
+    // New Words
+    { word: 'PYTHON', hint: 'A snake or a coding language' },
+    { word: 'BANANA', hint: 'Yellow curved fruit' },
+    { word: 'GALAXY', hint: 'Contains solar systems' },
+    { word: 'PUZZLE', hint: 'You solve it' },
+    { word: 'JUNGLE', hint: 'Wild forest' },
+    { word: 'GUITAR', hint: 'Musical instrument with strings' },
+    { word: 'DOCTOR', hint: 'Treats sick people' },
+    { word: 'SCHOOL', hint: 'Place for learning' },
+    { word: 'SUMMER', hint: 'Hot season' },
+    { word: 'WINTER', hint: 'Cold season' },
+    { word: 'PLANET', hint: 'Orbits a star' },
+    { word: 'ROCKET', hint: 'Goes to space' },
+    { word: 'COFFEE', hint: 'Morning drink' },
+    { word: 'CAMERA', hint: 'Takes photos' },
+    { word: 'ZOMBIE', hint: 'Undead creature' },
+    { word: 'PIRATE', hint: 'Sails the seas for gold' },
+    { word: 'ROBOT', hint: 'Mechanical being' },
+    { word: 'CASTLE', hint: 'Where kings live' },
+    { word: 'DIAMOND', hint: 'Precious gem' },
+    { word: 'DRAGON', hint: 'Fire breathing beast' },
+    { word: 'TOMATO', hint: 'Red fruit/vegetable' },
+    { word: 'ORANGE', hint: 'A color and a fruit' },
+    { word: 'PURPLE', hint: 'Color of royalty' },
+    { word: 'SQUARE', hint: 'Shape with 4 equal sides' },
+    { word: 'CIRCLE', hint: 'Round shape' },
+    { word: 'FRIEND', hint: 'Someone you like' },
+    { word: 'BOTTLE', hint: 'Holds liquid' },
+    { word: 'WINDOW', hint: 'You look through it' },
+    { word: 'GARDEN', hint: 'Where plants grow' },
+    { word: 'BRIDGE', hint: 'Connects two places' },
+    // ─── MASSIVE EXPANSION: SCRAMBLE ───
+    { word: 'KEYBOARD', hint: 'Input device' },
+    { word: 'MONITOR', hint: 'Output display' },
+    { word: 'SPEAKER', hint: 'Produces sound' },
+    { word: 'HEADPHONE', hint: 'Personal audio' },
+    { word: 'LAPTOP', hint: 'Portable computer' },
+    { word: 'CHARGER', hint: 'Gives power' },
+    { word: 'BATTERY', hint: 'Stores energy' },
+    { word: 'NETWORK', hint: 'Connected computers' },
+    { word: 'SERVER', hint: 'Hosts data' },
+    { word: 'DATABASE', hint: 'Stores information' },
+    { word: 'WEBSITE', hint: 'Pages on the internet' },
+    { word: 'BROWSER', hint: 'Views websites' },
+    { word: 'PROGRAM', hint: 'Set of instructions' },
+    { word: 'ALGORITHM', hint: 'Step by step procedure' },
+    { word: 'VARIABLE', hint: 'Stores a value' },
+    { word: 'FUNCTION', hint: 'Reusable code block' },
+    { word: 'ARRAY', hint: 'List of items' },
+    { word: 'OBJECT', hint: 'Key value pairs' },
+    { word: 'STRING', hint: 'Text data type' },
+    { word: 'BOOLEAN', hint: 'True or False' },
+    { word: 'INTEGER', hint: 'Whole number' },
+    { word: 'FLOAT', hint: 'Decimal number' },
+    { word: 'SYNTAX', hint: 'Grammar of code' },
+    { word: 'ERROR', hint: 'Something went wrong' },
+    { word: 'DEBUG', hint: 'Fixing errors' },
+    { word: 'COMPILE', hint: 'Build code' },
+    { word: 'RUNTIME', hint: 'When code executes' },
+    { word: 'MEMORY', hint: 'RAM' },
+    { word: 'STORAGE', hint: 'Hard drive' },
+    { word: 'LINUX', hint: 'Open source OS' },
+    { word: 'WINDOWS', hint: 'Microsoft OS' },
+    { word: 'APPLE', hint: 'Tech giant or fruit' },
+    { word: 'ANDROID', hint: 'Mobile OS' },
+    { word: 'ROUTER', hint: 'Directs traffic' },
+    { word: 'SWITCH', hint: 'Network device or console' },
+    { word: 'MODEM', hint: 'Connects to ISP' },
+    { word: 'WIFI', hint: 'Violent connection... wait no' },
+    { word: 'BLUETOOTH', hint: 'Wireless short range' },
+    { word: 'ETHERNET', hint: 'Wired connection' },
+    { word: 'FIREWALL', hint: 'Network security' },
+    { word: 'VIRUS', hint: 'Malware' },
+    { word: 'HACKER', hint: 'Breaks into systems' },
+    { word: 'PASSWORD', hint: 'Secret key' },
+    { word: 'ENCRYPTION', hint: 'Scrambles data perfectly' },
+    { word: 'BITCOIN', hint: 'Crypto currency' },
+    { word: 'BLOCKCHAIN', hint: 'Chain of blocks' },
+    { word: 'ROBOTICS', hint: 'Building robots' },
+    { word: 'AUTOMATION', hint: 'Self operating' },
+    { word: 'ARTIFICIAL', hint: 'Not natural' },
+    { word: 'INTELLIGENCE', hint: 'Smarts' },
+];
+
+const EMOJI_QUIZ = [
+    { emojis: '🦁👑', answer: 'The Lion King' },
+    { emojis: '⚡🧙‍♂️👓', answer: 'Harry Potter' },
+    { emojis: '🦇👨', answer: 'Batman' },
+    { emojis: '🕸️🕷️👨', answer: 'Spider-Man' },
+    { emojis: '🚢🧊💔', answer: 'Titanic' },
+    { emojis: '🦖🦕🏞️', answer: 'Jurassic Park' },
+    { emojis: '👽🚲🌕', answer: 'E.T.' },
+    { emojis: '👻🚫👨‍🚒', answer: 'Ghostbusters' },
+    { emojis: '🔍🐠', answer: 'Finding Nemo' },
+    { emojis: '🐼🥋', answer: 'Kung Fu Panda' },
+    { emojis: '🍎👸🏰', answer: 'Snow White' },
+    { emojis: '🧞‍♂️✨🐒', answer: 'Aladdin' },
+    { emojis: '🚀🌌⚔️', answer: 'Star Wars' },
+    { emojis: '💍🌋👣', answer: 'Lord of the Rings' },
+    { emojis: '🏴‍☠️🦜🚢', answer: 'Pirates of the Caribbean' },
+    { emojis: '🤠🧸🚀', answer: 'Toy Story' },
+    { emojis: '🍫🏭🎫', answer: 'Charlie and the Chocolate Factory' },
+    { emojis: '🤡🎈😱', answer: 'It' },
+    { emojis: '🐀👨‍🍳🍲', answer: 'Ratatouille' },
+    { emojis: '🧠💭😄', answer: 'Inside Out' }
 ];
 
 const CARD_SUITS = ['♠️', '♥️', '♦️', '♣️'];
@@ -92,8 +338,8 @@ module.exports = {
         .setDescription('Fun mini-games and activities!')
 
         .addSubcommand(sub => sub.setName('coinflip').setDescription('Flip a coin!')
-            .addStringOption(opt => opt.setName('call').setDescription('Call heads or tails')
-                .addChoices({ name: 'Heads', value: 'heads' }, { name: 'Tails', value: 'tails' })))
+            .addStringOption(opt => opt.setName('call').setDescription('Call heads or tails').addChoices({ name: 'Heads', value: 'heads' }, { name: 'Tails', value: 'tails' }))
+            .addIntegerOption(opt => opt.setName('bet').setDescription('Amount to bet (optional)').setMinValue(1)))
 
         .addSubcommand(sub => sub.setName('dice').setDescription('Roll dice!')
             .addIntegerOption(opt => opt.setName('sides').setDescription('Number of sides (default: 6)').setMinValue(2).setMaxValue(100))
@@ -114,16 +360,29 @@ module.exports = {
 
         .addSubcommand(sub => sub.setName('scramble').setDescription('Unscramble the word!'))
 
-        .addSubcommand(sub => sub.setName('blackjack').setDescription('Play Blackjack against the dealer!'))
+        .addSubcommand(sub => sub.setName('blackjack').setDescription('Play Blackjack against the dealer!')
+            .addIntegerOption(opt => opt.setName('bet').setDescription('Amount to bet (optional)').setMinValue(1)))
 
         .addSubcommand(sub => sub.setName('tictactoe').setDescription('Play Tic-Tac-Toe!')
             .addUserOption(opt => opt.setName('opponent').setDescription('Who to play against (leave empty to play vs bot)')))
 
-        .addSubcommand(sub => sub.setName('slots').setDescription('Spin the slot machine!'))
+        .addSubcommand(sub => sub.setName('slots').setDescription('Spin the slot machine!')
+            .addIntegerOption(opt => opt.setName('bet').setDescription('Amount to bet (optional)').setMinValue(1)))
 
         .addSubcommand(sub => sub.setName('reaction').setDescription('Test your reaction speed!'))
 
-        .addSubcommand(sub => sub.setName('wordchain').setDescription('Word chain — connect the last letter!')),
+        .addSubcommand(sub => sub.setName('wordchain').setDescription('Word chain — connect the last letter!'))
+
+        .addSubcommand(sub => sub.setName('minesweeper').setDescription('Play Minesweeper!'))
+        .addSubcommand(sub => sub.setName('emojiquiz').setDescription('Guess the phrase from emojis!'))
+
+        .addSubcommand(sub => sub.setName('cardbattle')
+            .setDescription('High Card multiplayer battle!')
+            .addIntegerOption(opt => opt.setName('bet').setDescription('Amount to bet').setMinValue(10)))
+
+        .addSubcommand(sub => sub.setName('hangman').setDescription('Play Hangman!'))
+
+        .addSubcommand(sub => sub.setName('math').setDescription('Solve a math problem for coins!')),
 
     async execute(interaction) {
         const sub = interaction.options.getSubcommand();
@@ -141,6 +400,11 @@ module.exports = {
             case 'slots': return handleSlots(interaction);
             case 'reaction': return handleReaction(interaction);
             case 'wordchain': return handleWordChain(interaction);
+            case 'minesweeper': return handleMinesweeper(interaction);
+            case 'emojiquiz': return handleEmojiQuiz(interaction);
+            case 'cardbattle': return handleCardBattle(interaction);
+            case 'hangman': return handleHangman(interaction);
+            case 'math': return handleMath(interaction);
         }
     },
 };
@@ -153,6 +417,13 @@ module.exports = {
 
 async function handleCoinflip(interaction) {
     const call = interaction.options.getString('call');
+    const bet = interaction.options.getInteger('bet');
+    const user = db.getUser(interaction.user.id);
+
+    if (bet && user.balance < bet) {
+        return interaction.reply({ content: `❌ You don't have enough money! Balance: **${user.balance}**`, ephemeral: true });
+    }
+
     const result = Math.random() < 0.5 ? 'heads' : 'tails';
     const emoji = result === 'heads' ? '🪙' : '💿';
 
@@ -160,7 +431,17 @@ async function handleCoinflip(interaction) {
 
     if (call) {
         const won = call === result;
-        embed.setDescription(`The coin landed on **${result.toUpperCase()}**!\n\nYou called **${call}** — ${won ? '🎉 **You win!**' : '😔 **You lose!**'}`);
+        if (bet) {
+            if (won) {
+                db.addBalance(user.id, bet);
+                embed.setDescription(`The coin landed on **${result.toUpperCase()}**!\n\nYou called **${call}** — 🎉 **You win ${bet * 2} coins!** 💰`);
+            } else {
+                db.removeBalance(user.id, bet);
+                embed.setDescription(`The coin landed on **${result.toUpperCase()}**!\n\nYou called **${call}** — 😔 **You lost ${bet} coins.** 💸`);
+            }
+        } else {
+            embed.setDescription(`The coin landed on **${result.toUpperCase()}**!\n\nYou called **${call}** — ${won ? '🎉 **You win!**' : '😔 **You lose!**'}`);
+        }
     } else {
         embed.setDescription(`The coin landed on **${result.toUpperCase()}**! ${emoji}`);
     }
@@ -435,7 +716,9 @@ async function handleBlackjack(interaction) {
 
     // Check for natural blackjack
     if (handValue(playerHand) === 21) {
-        const embed = buildEmbed(true).setTitle('🃏  Blackjack — 🎉 BLACKJACK!').setDescription(buildEmbed(true).data.description + '\n\n🏆 **Natural Blackjack! You win!**');
+        const winAmount = Math.ceil(bet * 1.5);
+        if (bet) db.addBalance(interaction.user.id, winAmount); // Natural pays 3:2 usually, or just 2.5x total
+        const embed = buildEmbed(true).setTitle('🃏  Blackjack — 🎉 BLACKJACK!').setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack! You win${bet ? ` ${winAmount + bet} coins` : ''}!**`);
         return interaction.reply({ embeds: [embed] });
     }
 
@@ -476,18 +759,35 @@ async function handleBlackjack(interaction) {
     });
 }
 
-async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed) {
+async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) {
     // Dealer draws until 17
     while (handValue(dealerHand) < 17) dealerHand.push(drawCard());
 
     const playerVal = handValue(playerHand);
     const dealerVal = handValue(dealerHand);
 
-    let result, color;
-    if (dealerVal > 21) { result = '🎉 **Dealer busts! You win!**'; color = 0x2ECC71; }
-    else if (playerVal > dealerVal) { result = '🎉 **You win!**'; color = 0x2ECC71; }
-    else if (playerVal < dealerVal) { result = '😔 **Dealer wins!**'; color = 0xE74C3C; }
-    else { result = "🤝 **It's a push (tie)!**"; color = 0xF39C12; }
+    let result, color, payout = 0;
+    if (dealerVal > 21) {
+        result = `🎉 **Dealer busts! You win${bet ? ` ${bet} coins` : ''}!**`;
+        color = 0x2ECC71;
+        payout = bet ? bet * 2 : 0;
+    }
+    else if (playerVal > dealerVal) {
+        result = `🎉 **You win${bet ? ` ${bet} coins` : ''}!**`;
+        color = 0x2ECC71;
+        payout = bet ? bet * 2 : 0;
+    }
+    else if (playerVal < dealerVal) {
+        result = `😔 **Dealer wins${bet ? ` ${bet} coins` : ''}!**`;
+        color = 0xE74C3C;
+    }
+    else {
+        result = `🤝 **It's a push (tie)!**${bet ? ' Bet refunded.' : ''}`;
+        color = 0xF39C12;
+        payout = bet ? bet : 0;
+    }
+
+    if (payout > 0) db.addBalance(i.user.id, payout);
 
     const finalEmbed = buildEmbed(true);
     finalEmbed.setDescription(finalEmbed.data.description + `\n\n${result}`).setColor(color);
@@ -618,6 +918,13 @@ async function handleTicTacToe(interaction) {
 // ─── Slots ───────────────────────────────────────────────────────
 
 async function handleSlots(interaction) {
+    const bet = interaction.options.getInteger('bet');
+    const user = db.getUser(interaction.user.id);
+    if (bet) {
+        if (user.balance < bet) return interaction.reply({ content: `❌ Not enough money! Balance: **${user.balance}**`, ephemeral: true });
+        db.removeBalance(user.id, bet);
+    }
+
     const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
     const weights = [25, 20, 18, 15, 12, 7, 3]; // rarer = less weight
     const totalWeight = weights.reduce((a, b) => a + b, 0);
@@ -639,18 +946,30 @@ async function handleSlots(interaction) {
     const allMatch = r2[0] === r2[1] && r2[1] === r2[2];
     const twoMatch = r2[0] === r2[1] || r2[1] === r2[2] || r2[0] === r2[2];
 
-    const multiplierMap = { '7️⃣': '🏆 JACKPOT! x100', '💎': '💎 x50', '⭐': '⭐ x25', '🍉': 'x10', '🍊': 'x5', '🍋': 'x3', '🍒': 'x2' };
+    const multiplierMap = { '7️⃣': 100, '💎': 50, '⭐': 25, '🍉': 10, '🍊': 5, '🍋': 3, '🍒': 2 };
 
     let result, color;
+    let payout = 0;
     if (allMatch) {
-        result = `🎰 **THREE ${r2[0]}!** ${multiplierMap[r2[0]] || 'Big Win!'}`;
+        const mult = multiplierMap[r2[0]];
+        result = `🎰 **JACKPOT! THREE ${r2[0]}!**`;
+        payout = bet ? bet * mult : 0;
         color = r2[0] === '7️⃣' ? 0xFFD700 : 0x2ECC71;
     } else if (twoMatch) {
+        const mult = 1.5;
         result = '🎰 **Two matching!** Small win!';
+        payout = bet ? Math.floor(bet * mult) : 0;
         color = 0xF39C12;
     } else {
         result = '🎰 No match. Try again!';
         color = 0x95A5A6;
+    }
+
+    if (payout > 0) {
+        db.addBalance(user.id, payout);
+        result += `\n💰 **Won ${payout} coins!**`;
+    } else if (bet) {
+        result += `\n💸 **Lost ${bet} coins.**`;
     }
 
     const slotDisplay = [
@@ -790,5 +1109,266 @@ async function handleWordChain(interaction) {
                 .setDescription(`⏰ No one answered in time!\n\n📊 **${wordCount}** words • **${players.size}** player(s)\n\n${wordCount > 0 ? `🔗 ${lastWords}\n\n` : ''}${rating}`)
                 .setColor(0xF39C12).setTimestamp()]
         });
+    });
+}
+
+// ─── Emoji Quiz ──────────────────────────────────────────────────
+
+async function handleEmojiQuiz(interaction) {
+    const q = EMOJI_QUIZ[Math.floor(Math.random() * EMOJI_QUIZ.length)];
+    const embed = new EmbedBuilder()
+        .setTitle('🧩  Emoji Quiz')
+        .setDescription(`Guess the movie/phrase:\n\n# ${q.emojis}`)
+        .setColor(0xE67E22)
+        .setFooter({ text: 'Type the answer exactly!' });
+
+    await interaction.reply({ embeds: [embed] });
+
+    try {
+        const collected = await interaction.channel.awaitMessages({
+            filter: m => m.content.toLowerCase() === q.answer.toLowerCase() && !m.author.bot,
+            max: 1,
+            time: 15_000,
+            errors: ['time']
+        });
+
+        const msg = collected.first();
+        const reward = 100;
+        const xp = 30;
+
+        db.addBalance(msg.author.id, reward);
+        db.addXp(msg.author.id, xp);
+
+        await msg.reply({
+            embeds: [new EmbedBuilder()
+                .setTitle('🎉  Correct!')
+                .setDescription(`The answer was **${q.answer}**.\nWinner: ${msg.author}\nReward: 💰 **${reward}** | ✨ **${xp}** XP`)
+                .setColor(0x2ECC71)]
+        });
+    } catch {
+        await interaction.followUp({ content: `⏰ Time's up! The answer was **${q.answer}**.`, ephemeral: true });
+    }
+}
+
+// ─── Multiplayer Card Battle ─────────────────────────────────────
+
+async function handleCardBattle(interaction) {
+    const bet = interaction.options.getInteger('bet') || 0;
+    const author = db.getUser(interaction.user.id);
+
+    if (bet > 0) {
+        if (author.balance < bet) return interaction.reply({ content: `❌ You need **${bet}** coins to start this lobby.`, ephemeral: true });
+        db.removeBalance(author.id, bet);
+    }
+
+    const hostId = interaction.user.id;
+    const players = new Set([hostId]);
+    const deck = [];
+    const suits = ['♠️', '♥️', '♦️', '♣️'];
+    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+    // Build deck
+    for (const s of suits) {
+        for (const r of ranks) {
+            deck.push({ suit: s, rank: r, value: ranks.indexOf(r) + 2 });
+        }
+    }
+
+    const lobbyEmbed = new EmbedBuilder()
+        .setTitle('🃏  High Card Battle')
+        .setDescription(`**Host:** ${interaction.user}\n**Bet:** 💰 ${bet}\n\nPlayers: 1\n\n*Click Join to enter!*`)
+        .setColor(0x9B59B6);
+
+    const joinRow = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId(`join_card_${hostId}`).setLabel('Join').setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId(`start_card_${hostId}`).setLabel('Start Game').setStyle(ButtonStyle.Primary)
+    );
+
+    const reply = await interaction.reply({ embeds: [lobbyEmbed], components: [joinRow], fetchReply: true });
+
+    const collector = reply.createMessageComponentCollector({ time: 60_000 });
+
+    collector.on('collect', async i => {
+        if (i.customId === `join_card_${hostId}`) {
+            if (players.has(i.user.id)) return i.reply({ content: '❌ You already joined!', ephemeral: true });
+
+            if (bet > 0) {
+                const p = db.getUser(i.user.id);
+                if (p.balance < bet) return i.reply({ content: `❌ You need **${bet}** coins to join!`, ephemeral: true });
+                db.removeBalance(i.user.id, bet);
+            }
+
+            players.add(i.user.id);
+            lobbyEmbed.setDescription(`**Host:** ${interaction.user}\n**Bet:** 💰 ${bet}\n\nPlayers: ${players.size}\n${Array.from(players).map(id => `<@${id}>`).join(', ')}\n\n*Click Join to enter!*`);
+            await i.update({ embeds: [lobbyEmbed] });
+        }
+
+        if (i.customId === `start_card_${hostId}`) {
+            if (i.user.id !== hostId) return i.reply({ content: '❌ Only the host can start.', ephemeral: true });
+            if (players.size < 2) return i.reply({ content: '❌ Need at least 2 players!', ephemeral: true });
+            collector.stop('started');
+        }
+    });
+
+    collector.on('end', async (_, reason) => {
+        if (reason !== 'started') {
+            // Refund host if timed out
+            if (bet > 0) db.addBalance(hostId, bet);
+            return interaction.editReply({ content: '⏰ Lobby timed out.', components: [] });
+        }
+
+        // Game Start
+        let results = [];
+        let highestVal = -1;
+        let winners = [];
+
+        // Shuffle
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+
+        for (const pid of players) {
+            const card = deck.pop();
+            results.push({ id: pid, card });
+            if (card.value > highestVal) {
+                highestVal = card.value;
+                winners = [pid];
+            } else if (card.value === highestVal) {
+                winners.push(pid);
+            }
+        }
+
+        const pot = bet * players.size;
+        const prize = Math.floor(pot / winners.length);
+
+        winners.forEach(w => db.addBalance(w, prize));
+
+        const resultText = results.map(r => `<@${r.id}>: **${r.card.rank}${r.card.suit}**`).join('\n');
+        const winnerText = winners.map(w => `<@${w}>`).join(', ');
+
+        const gameEmbed = new EmbedBuilder()
+            .setTitle('🃏  Card Battle Results')
+            .setDescription(`${resultText}\n\n🏆 **Winner(s):** ${winnerText}\n💰 **Prize:** ${prize} coins`)
+            .setColor(0xF1C40F);
+
+        await interaction.editReply({ embeds: [gameEmbed], components: [] });
+    });
+}
+
+// ─── Minesweeper ─────────────────────────────────────────────────
+
+async function handleMinesweeper(interaction) {
+    const size = interaction.options.getInteger('size') || 8;
+    const mines = interaction.options.getInteger('mines') || 10;
+
+    if (mines >= size * size) {
+        return interaction.reply({ content: '❌ Too many mines for this grid size!', ephemeral: true });
+    }
+
+    // Initialize grid
+    const grid = Array(size).fill().map(() => Array(size).fill(0));
+    const mineLocs = new Set();
+
+    // Place mines
+    while (mineLocs.size < mines) {
+        const r = Math.floor(Math.random() * size);
+        const c = Math.floor(Math.random() * size);
+        const key = `${r},${c}`;
+        if (!mineLocs.has(key)) {
+            mineLocs.add(key);
+            grid[r][c] = '💣';
+        }
+    }
+
+    // Calculate numbers
+    for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+            if (grid[r][c] === '💣') continue;
+            let count = 0;
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (dr === 0 && dc === 0) continue;
+                    const nr = r + dr, nc = c + dc;
+                    if (nr >= 0 && nr < size && nc >= 0 && nc < size && grid[nr][nc] === '💣') count++;
+                }
+            }
+            grid[r][c] = count === 0 ? '🟦' : ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣'][count - 1];
+        }
+    }
+
+    // Format grid
+    const board = grid.map(row => row.map(cell => `||${cell}||`).join('')).join('\n');
+
+    const embed = new EmbedBuilder()
+        .setTitle(`💣  Minesweeper (${size}x${size})`)
+        .setDescription(`Find the **${mines}** mines!\n\n${board}`)
+        .setColor(0xE74C3C);
+
+    return interaction.reply({ embeds: [embed] });
+}
+
+// ─── Hangman ─────────────────────────────────────────────────────
+
+async function handleHangman(interaction) {
+    const wordObj = SCRAMBLE_WORDS[Math.floor(Math.random() * SCRAMBLE_WORDS.length)];
+    const word = wordObj.word.toUpperCase();
+    const hint = wordObj.hint;
+    const guessed = new Set();
+    let lives = 6;
+    let gameOver = false;
+
+    function getDisplay() {
+        return word.split('').map(l => guessed.has(l) ? l : '\\_').join(' ');
+    }
+
+    const embed = new EmbedBuilder()
+        .setTitle('😵  Hangman')
+        .setDescription(`**Hint:** ${hint}\n\n**Word:** ${getDisplay()}\n**Lives:** ${'❤️'.repeat(lives)}\n\n**Guessed:** ${Array.from(guessed).join(', ') || 'None'}`)
+        .setColor(0x3498DB)
+        .setFooter({ text: 'Type a letter to guess!' });
+
+    await interaction.reply({ embeds: [embed] });
+    const message = await interaction.fetchReply();
+
+    const collector = interaction.channel.createMessageCollector({
+        filter: m => m.author.id === interaction.user.id && /^[a-zA-Z]$/.test(m.content) && !m.author.bot,
+        time: 120_000
+    });
+
+    collector.on('collect', async m => {
+        if (gameOver) return;
+        m.delete().catch(() => { }); // Try to clean up user messages
+
+        const letter = m.content.toUpperCase();
+        if (guessed.has(letter)) return; // Already guessed
+
+        guessed.add(letter);
+
+        if (!word.includes(letter)) {
+            lives--;
+        }
+
+        const currentDisplay = getDisplay();
+        const won = !currentDisplay.includes('\\_');
+        const lost = lives <= 0;
+
+        if (won || lost) {
+            gameOver = true;
+            embed.setDescription(`**Word:** ${word}\n\n${won ? '🎉 **YOU WON!**' : '💀 **YOU DIED!**'}`)
+                .setColor(won ? 0x2ECC71 : 0xE74C3C);
+            collector.stop();
+        } else {
+            embed.setDescription(`**Hint:** ${hint}\n\n**Word:** ${currentDisplay}\n**Lives:** ${'❤️'.repeat(lives)}\n\n**Guessed:** ${Array.from(guessed).join(', ')}`);
+        }
+
+        await message.edit({ embeds: [embed] });
+    });
+
+    collector.on('end', (_, reason) => {
+        if (reason === 'time' && !gameOver) {
+            embed.setDescription(`⏰ **Time's up!** The word was **${word}**.`).setColor(0x95A5A6);
+            message.edit({ embeds: [embed] });
+        }
     });
 }
