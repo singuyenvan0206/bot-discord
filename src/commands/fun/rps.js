@@ -1,11 +1,13 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'rps',
     aliases: ['rock'],
     description: 'Rock Paper Scissors',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const choices = ['rock', 'paper', 'scissors'];
         const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };
@@ -61,6 +63,7 @@ module.exports = {
             collector.on('collect', async i => {
                 const choice = i.customId.split('_')[1];
                 await playRPS(i, choice, null, reply, bet);
+                startCooldown(message.client, 'rps', message.author.id);
             });
 
             collector.on('end', (_, reason) => {
@@ -75,6 +78,7 @@ module.exports = {
 
         // Command mode
         await playRPS(null, userChoice, message, null, bet);
+        startCooldown(message.client, 'rps', message.author.id);
 
         async function playRPS(interaction, uChoice, msgObj, replyObj, betAmount) {
             const botChoice = choices[Math.floor(Math.random() * choices.length)];

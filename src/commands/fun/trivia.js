@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 const TRIVIA_QUESTIONS = [
     // --- General Knowledge ---
@@ -214,6 +215,7 @@ module.exports = {
     aliases: ['triv'],
     description: 'Test your knowledge',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const q = TRIVIA_QUESTIONS[Math.floor(Math.random() * TRIVIA_QUESTIONS.length)];
         const answers = [q.a, ...q.w].sort(() => Math.random() - 0.5);
@@ -272,6 +274,7 @@ module.exports = {
             if (reason === 'time') {
                 reply.edit({ embeds: [new EmbedBuilder().setTitle('⏰  Time\'s Up!').setDescription(`The answer was **${q.a}**.`).setColor(0x95A5A6)], components: [] }).catch(() => { });
             }
+            startCooldown(message.client, 'trivia', message.author.id);
         });
     }
 };

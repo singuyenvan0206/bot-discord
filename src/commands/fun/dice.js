@@ -1,11 +1,13 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'dice',
     aliases: ['roll', 'd'],
     description: 'Roll 2 dice and bet on the outcome!',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const user = db.getUser(message.author.id);
 
@@ -105,6 +107,7 @@ module.exports = {
                 .setColor(won ? 0x2ECC71 : 0xE74C3C);
 
             await i.update({ embeds: [resultEmbed], components: [] });
+            startCooldown(message.client, 'dice', message.author.id);
         });
 
         collector.on('end', (collected) => {

@@ -1,4 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { startCooldown } = require('../../utils/cooldown');
 
 const QUESTIONS = [
     ["Be able to fly", "Be able to turn invisible"],
@@ -17,6 +18,7 @@ module.exports = {
     name: 'wyr',
     description: 'Would You Rather?',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const q = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
         const uid = Date.now().toString(36);
@@ -59,6 +61,7 @@ module.exports = {
                 .setColor(0x3498DB);
 
             reply.edit({ embeds: [resultEmbed], components: [] }).catch(() => { });
+            startCooldown(message.client, 'wyr', message.author.id);
         });
     }
 };

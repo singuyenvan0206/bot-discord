@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 const EMOJI_QUIZ = [
     // ═══ Movies ═══
@@ -385,6 +386,7 @@ module.exports = {
     aliases: ['quiz', 'eq'],
     description: 'Guess the phrase from emojis!',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const q = EMOJI_QUIZ[Math.floor(Math.random() * EMOJI_QUIZ.length)];
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case
@@ -419,6 +421,7 @@ module.exports = {
                     .setDescription(`The answer was **${displayAnswer}**.\nWinner: ${msg.author}\nReward: 💰 **${reward}** coins`)
                     .setColor(0x2ECC71)]
             });
+            startCooldown(message.client, 'emojiquiz', message.author.id);
         } catch {
             await message.channel.send({
                 embeds: [new EmbedBuilder()
@@ -426,6 +429,7 @@ module.exports = {
                     .setDescription(`Nobody got it! The answer was **${displayAnswer}**.`)
                     .setColor(0xE74C3C)]
             });
+            startCooldown(message.client, 'emojiquiz', message.author.id);
         }
     }
 };

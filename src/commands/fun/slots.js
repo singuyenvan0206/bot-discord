@@ -1,11 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'slots',
     aliases: ['slot'],
     description: 'Spin the slot machine!',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         let bet = parseInt(args[0]);
         if (!args[0]) bet = 50; // Default
@@ -86,6 +88,7 @@ module.exports = {
             .setDescription(`${slotDisplay}\n\n${result}`)
             .setColor(color).setTimestamp();
 
+        startCooldown(message.client, 'slots', message.author.id);
         return message.reply({ embeds: [embed] });
     }
 };

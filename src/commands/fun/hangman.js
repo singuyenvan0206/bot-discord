@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 const SCRAMBLE_WORDS = [
     { word: 'DISCORD', hint: 'A chat platform' },
@@ -109,6 +110,7 @@ module.exports = {
     aliases: ['hang', 'hm'],
     description: 'Play Hangman!',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const wordObj = SCRAMBLE_WORDS[Math.floor(Math.random() * SCRAMBLE_WORDS.length)];
         const word = wordObj.word.toUpperCase();
@@ -191,6 +193,7 @@ module.exports = {
                 embed.setDescription(`⏰ **Time's up!** The word was **${word}**.`).setColor(0x95A5A6);
                 msg.edit({ embeds: [embed] });
             }
+            startCooldown(message.client, 'hangman', message.author.id);
         });
     }
 };

@@ -1,10 +1,12 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'math',
     description: 'Solve a math problem',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const ops = ['+', '-', '*'];
         const op = ops[Math.floor(Math.random() * ops.length)];
@@ -37,8 +39,10 @@ module.exports = {
             db.addBalance(winner.author.id, reward);
 
             winner.reply(`🎉 **Correct!** The answer was **${answer}**.\nYou won 💰 **${reward}** coins!`);
+            startCooldown(message.client, 'math', message.author.id);
         } catch {
             message.channel.send(`⏰ **Time's up!** The answer was **${answer}**.`);
+            startCooldown(message.client, 'math', message.author.id);
         }
     }
 };

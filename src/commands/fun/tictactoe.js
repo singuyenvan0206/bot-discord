@@ -1,4 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { startCooldown } = require('../../utils/cooldown');
 const db = require('../../database');
 
 module.exports = {
@@ -6,6 +7,7 @@ module.exports = {
     aliases: ['ttt'],
     description: 'Play Tic-Tac-Toe!',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const opponent = message.mentions.users.first();
         const isBot = !opponent || opponent.id === message.author.id || opponent.bot;
@@ -131,6 +133,8 @@ module.exports = {
             if (reason === 'time') {
                 reply.edit({ embeds: [new EmbedBuilder().setTitle('❌⭕  Tic-Tac-Toe — ⏰ Timed Out').setColor(0x95A5A6)], components: [] }).catch(() => { });
             }
+            startCooldown(message.client, 'tictactoe', message.author.id);
+            if (opponent && !isBot) startCooldown(message.client, 'tictactoe', opponent.id);
         });
     }
 };

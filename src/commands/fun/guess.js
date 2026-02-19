@@ -1,11 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'guess',
     aliases: ['gn'],
     description: 'Guess the number (1-100)',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const number = Math.floor(Math.random() * 100) + 1;
         let attempts = 0;
@@ -43,6 +45,7 @@ module.exports = {
             if (reason === 'time') {
                 message.channel.send(`⏰ **Time's up!** The number was **${number}**.`);
             }
+            startCooldown(message.client, 'guess', message.author.id);
         });
     }
 };

@@ -1,11 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'reaction',
     aliases: ['react'],
     description: 'Test your reaction speed',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const embed = new EmbedBuilder()
             .setTitle('⚡  Reaction Test')
@@ -40,8 +42,10 @@ module.exports = {
                 db.addBalance(winner.author.id, reward);
 
                 winner.reply(`🎉 **${diff}ms!** ${speedRank}!\n💰 **+${reward} coins!**`);
+                startCooldown(message.client, 'reaction', message.author.id);
             } catch {
                 message.channel.send('⏰ **Too slow!** No one reacted in time.');
+                startCooldown(message.client, 'reaction', message.author.id);
             }
         }, delay);
     }

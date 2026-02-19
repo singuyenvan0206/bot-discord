@@ -1,11 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'wordchain',
     aliases: ['wc'],
     description: 'Play Word Chain',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         if (message.client.activeChainGames?.has(message.channel.id)) {
             return message.reply('❌ A word chain game is already running in this channel! Type `!stop` to end it.');
@@ -90,6 +92,7 @@ module.exports = {
                 .setDescription(`**Total words:** ${usedWords.size}\n\n${scoreboard}`)
                 .setColor(0xE74C3C);
             message.channel.send({ embeds: [endEmbed] });
+            startCooldown(message.client, 'wordchain', message.author.id);
         });
     }
 };

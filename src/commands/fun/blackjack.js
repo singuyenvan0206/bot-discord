@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 const CARD_SUITS = ['♠️', '♥️', '♦️', '♣️'];
 const CARD_VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -71,6 +72,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
     const finalEmbed = buildEmbed(true);
     finalEmbed.setDescription(finalEmbed.data.description + `\n\n${result}`).setColor(color);
     await i.update({ embeds: [finalEmbed], components: [] });
+    startCooldown(i.client, 'blackjack', i.user.id);
 }
 
 module.exports = {
@@ -78,6 +80,7 @@ module.exports = {
     aliases: ['bj'],
     description: 'Play Blackjack against the dealer!',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         let bet = parseInt(args[0]);
         if (!args[0]) bet = 50; // Default
@@ -121,6 +124,7 @@ module.exports = {
                 db.addBalance(message.author.id, winAmount);
             }
             const embed = buildEmbed(true).setTitle('🃏  Blackjack — 🎉 BLACKJACK!').setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack! You win${bet ? ` ${winAmount + bet} coins` : ''}!**`);
+            startCooldown(message.client, 'blackjack', message.author.id);
             return message.reply({ embeds: [embed] });
         }
 

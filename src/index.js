@@ -231,8 +231,10 @@ client.on(Events.InteractionCreate, async interaction => {
             }
         }
 
-        timestamps.set(interaction.user.id, now);
-        setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+        if (!command.manualCooldown) {
+            timestamps.set(interaction.user.id, now);
+            setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+        }
 
         try {
             await command.execute(messageAdapter, args);
@@ -284,8 +286,10 @@ client.on(Events.MessageCreate, async message => {
         }
     }
 
-    timestamps.set(message.author.id, now);
-    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    if (!command.manualCooldown) {
+        timestamps.set(message.author.id, now);
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    }
 
     try {
         await command.execute(message, args);

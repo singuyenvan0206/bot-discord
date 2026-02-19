@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { startCooldown } = require('../../utils/cooldown');
 
 const WORDS_BY_CATEGORY = {
     'Technology & Coding': [
@@ -39,6 +40,7 @@ module.exports = {
     aliases: ['scram'],
     description: 'Unscramble the word',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         // Pick random category
         const categories = Object.keys(WORDS_BY_CATEGORY);
@@ -70,8 +72,10 @@ module.exports = {
             db.addBalance(winner.author.id, reward);
 
             message.channel.send(`🎉 **Correct!** ${winner.author} unscrambled the word **${word}** and won 💰 **${reward}** coins!`);
+            startCooldown(message.client, 'scramble', message.author.id);
         } catch {
             message.channel.send(`⏰ **Time's up!** The word was **${word}**.`);
+            startCooldown(message.client, 'scramble', message.author.id);
         }
     }
 };

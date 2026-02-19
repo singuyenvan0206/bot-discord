@@ -1,12 +1,14 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const db = require('../../database');
 const { Deck, evaluateHand } = require('../../utils/pokerLogic');
+const { startCooldown } = require('../../utils/cooldown');
 
 module.exports = {
     name: 'poker',
     aliases: ['pk'],
     description: 'Texas Hold\'em Poker (Modals)',
     cooldown: 30,
+    manualCooldown: true,
     async execute(message, args) {
         const minBuyIn = parseInt(args[0]) || 50; // Default
         const hostId = message.author.id;
@@ -489,6 +491,9 @@ module.exports = {
                 .setColor(0xF1C40F);
 
             await reply.edit({ embeds: [embed], components: [] });
+            players.forEach(p => {
+                if (!p.isBot) startCooldown(message.client, 'poker', p.id);
+            });
         }
     }
 };
