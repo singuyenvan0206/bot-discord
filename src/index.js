@@ -174,14 +174,24 @@ client.on(Events.InteractionCreate, async interaction => {
             },
             reply: async (content) => {
                 try {
+                    // Normalize to object and add fetchReply so we get a Message back
+                    if (typeof content === 'string') {
+                        content = { content, fetchReply: true };
+                    } else {
+                        content = { ...content, fetchReply: true };
+                    }
+
+                    let msg;
                     if (!hasReplied) {
                         hasReplied = true;
-                        return await interaction.reply(content);
+                        msg = await interaction.reply(content);
                     } else {
-                        return await interaction.followUp(content);
+                        msg = await interaction.followUp(content);
                     }
+                    return msg;
                 } catch (err) {
                     // Fallback to channel.send if interaction expired
+                    if (typeof content === 'object') delete content.fetchReply;
                     return await interaction.channel.send(content).catch(() => { });
                 }
             },
