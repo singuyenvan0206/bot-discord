@@ -73,7 +73,7 @@ module.exports = {
 
         // Standard Mode: !dice [sides] [count]
         const sides = parseInt(args[0]) || 6;
-        const count = parseInt(args[1]) || 1;
+        const count = parseInt(args[1]) || 2;
 
         if (sides < 2 || sides > 100) return message.reply('❌ Sides must be between 2 and 100.');
         if (count < 1 || count > 10) return message.reply('❌ You can only roll 1-10 dice.');
