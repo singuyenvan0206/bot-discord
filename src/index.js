@@ -140,16 +140,19 @@ client.on(Events.InteractionCreate, async interaction => {
 
             const optionNames = optionMap[commandName] || [];
             for (const name of optionNames) {
-                const userOpt = interaction.options.getUser(name);
-                const intOpt = interaction.options.getInteger(name);
-                const strOpt = interaction.options.getString(name);
+                const raw = interaction.options.get(name);
+                if (!raw) continue;
 
-                if (userOpt) {
-                    args.push(`<@${userOpt.id}>`);
-                } else if (intOpt !== null && intOpt !== undefined) {
-                    args.push(String(intOpt));
-                } else if (strOpt) {
-                    args.push(strOpt);
+                // Use the correct getter based on actual option type
+                if (raw.type === 6) { // USER
+                    const userOpt = interaction.options.getUser(name);
+                    if (userOpt) args.push(`<@${userOpt.id}>`);
+                } else if (raw.type === 4) { // INTEGER
+                    const intOpt = interaction.options.getInteger(name);
+                    if (intOpt !== null) args.push(String(intOpt));
+                } else if (raw.type === 3) { // STRING
+                    const strOpt = interaction.options.getString(name);
+                    if (strOpt) args.push(strOpt);
                 }
             }
         }
