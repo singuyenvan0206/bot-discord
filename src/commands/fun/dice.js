@@ -1,100 +1,119 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const db = require('../../database');
 
 module.exports = {
     name: 'dice',
     aliases: ['roll', 'd'],
-    description: 'Roll dice or bet on the outcome!',
+    description: 'Roll 2 dice and bet on the outcome!',
     async execute(message, args) {
         const user = db.getUser(message.author.id);
-        const input = args[0]?.toLowerCase();
 
-        // Gambling Mode: !dice <high/low/odd/even/7/num> <bet>
-        // High: 8-12, Low: 2-6 (7 is loss)
-        if (['high', 'low', 'odd', 'even', '7'].includes(input) || (parseInt(input) >= 2 && parseInt(input) <= 12)) {
-            let bet = parseInt(args[1]);
-            if (!args[1]) bet = 50; // Default
+        // Parse bet amount: $dice <bet> or $dice (default 50)
+        let bet = parseInt(args[0]);
+        if (!args[0]) bet = 50;
+        if (isNaN(bet) || bet <= 0) return message.reply('❌ Invalid bet amount! Usage: `$dice <bet>`');
+        if (user.balance < bet) return message.reply(`❌ Insufficient funds! Balance: **${user.balance}** 💰`);
 
-            if (!bet || isNaN(bet) || bet <= 0) return message.reply('❌ Invalid bet amount!');
-            if (user.balance < bet) return message.reply(`❌ Insufficient funds! Balance: **${user.balance}**`);
+        const uid = Date.now().toString(36);
 
-            db.removeBalance(user.id, bet);
+        // Show betting options as buttons
+        const embed = new EmbedBuilder()
+            .setTitle('🎲  Dice Gamble (2d6)')
+            .setDescription(
+                `**Bet:** ${bet} coins\n\n` +
+                `Choose your prediction:\n` +
+                `🔼 **High** — Total is 8-12 (2× payout)\n` +
+                `🔽 **Low** — Total is 2-6 (2× payout)\n` +
+                `🔢 **Odd** — Total is odd (2× payout)\n` +
+                `#️⃣ **Even** — Total is even (2× payout)\n` +
+                `🍀 **Lucky 7** — Total is exactly 7 (4× payout)`
+            )
+            .setColor(0x3498DB)
+            .setFooter({ text: `Balance: ${user.balance} coins` });
 
-            // Roll 2 Dice
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`dice_high_${uid}`).setLabel('High').setEmoji('🔼').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`dice_low_${uid}`).setLabel('Low').setEmoji('🔽').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`dice_odd_${uid}`).setLabel('Odd').setEmoji('🔢').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`dice_even_${uid}`).setLabel('Even').setEmoji('#️⃣').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`dice_7_${uid}`).setLabel('Lucky 7').setEmoji('🍀').setStyle(ButtonStyle.Success),
+        );
+
+        const reply = await message.reply({ embeds: [embed], components: [row] });
+
+        const collector = reply.createMessageComponentCollector({
+            filter: i => i.customId.endsWith(uid) && i.user.id === message.author.id,
+            time: 30000,
+            max: 1,
+        });
+
+        collector.on('collect', async (i) => {
+            const choice = i.customId.split('_')[1]; // high, low, odd, even, 7
+
+            // Re-check balance at time of click
+            const freshUser = db.getUser(message.author.id);
+            if (freshUser.balance < bet) {
+                return i.update({
+                    embeds: [new EmbedBuilder().setTitle('🎲  Dice Gamble').setDescription('❌ You no longer have enough coins!').setColor(0xE74C3C)],
+                    components: [],
+                });
+            }
+
+            db.removeBalance(message.author.id, bet);
+
+            // Roll 2d6
             const d1 = Math.floor(Math.random() * 6) + 1;
             const d2 = Math.floor(Math.random() * 6) + 1;
             const roll = d1 + d2;
 
+            // Determine win
             let won = false;
-            let multiplier = 2; // Default 2x
+            let multiplier = 2;
+            const choiceLabel = { high: 'High (8-12)', low: 'Low (2-6)', odd: 'Odd', even: 'Even', '7': 'Lucky 7' };
 
-            if (input === 'high' && roll > 7) won = true;        // 8-12
-            else if (input === 'low' && roll < 7) won = true;    // 2-6
-            else if (input === 'even' && roll % 2 === 0) won = true;
-            else if (input === 'odd' && roll % 2 !== 0) won = true;
-            else if (input === '7' && roll === 7) {
-                won = true;
-                multiplier = 4; // 7 is harder (16.6%) -> 4x payout
-            }
-            else if (parseInt(input) === roll) {
-                won = true;
-                // Specific number payouts could vary, but let's keep it simple or weighted?
-                // 2 and 12 are hardest (1/36). 7 is easiest (6/36).
-                // Let's settle on a flat 5x for any specific number for simplicity.
-                multiplier = 5;
-            }
+            if (choice === 'high' && roll > 7) won = true;
+            else if (choice === 'low' && roll < 7) won = true;
+            else if (choice === 'even' && roll % 2 === 0) won = true;
+            else if (choice === 'odd' && roll % 2 !== 0) won = true;
+            else if (choice === '7' && roll === 7) { won = true; multiplier = 4; }
 
             let prize = won ? bet * multiplier : 0;
+            let bonusText = '';
 
             if (won) {
                 const { getUserMultiplier } = require('../../utils/multiplier');
-                const bonusMult = getUserMultiplier(user.id, 'gamble');
+                const bonusMult = getUserMultiplier(message.author.id, 'gamble');
                 const bonus = Math.floor(prize * bonusMult);
                 prize += bonus;
-                db.addBalance(user.id, prize);
+                db.addBalance(message.author.id, prize);
+                if (bonus > 0) bonusText = `\n✨ **Bonus:** +${Math.round(bonusMult * 100)}% from items!`;
             }
 
-            const resultMsg = won ? `🎉 **You Won!** (+${prize})` : `💸 **You Lost!** (-${bet})`;
-            if (won) {
-                const multiplier = require('../../utils/multiplier').getUserMultiplier(user.id, 'gamble');
-                if (multiplier > 0 && resultMsg.includes('Won')) {
-                    // Hacky way to append if I don't want to rewrite the whole string construction
-                }
-            }
-            const color = won ? 0x2ECC71 : 0xE74C3C;
-
-            const embed = new EmbedBuilder()
+            const diceEmojis = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            const resultEmbed = new EmbedBuilder()
                 .setTitle('🎲  Dice Gamble (2d6)')
-                .setDescription(`You bet **${bet}** on **${input}**...\nRolls: 🎲 **${d1}** + **${d2}** = **${roll}**\n\n${resultMsg}`)
-                .setColor(color);
+                .setDescription(
+                    `**Prediction:** ${choiceLabel[choice]}\n` +
+                    `**Bet:** ${bet} coins\n\n` +
+                    `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
+                    (won
+                        ? `🎉 **You Won ${prize} coins!** (${multiplier}× payout)${bonusText}`
+                        : `💸 **You Lost ${bet} coins!**`) +
+                    `\n\n💰 Balance: **${db.getUser(message.author.id).balance}**`
+                )
+                .setColor(won ? 0x2ECC71 : 0xE74C3C);
 
-            return message.reply({ embeds: [embed] });
-        }
+            await i.update({ embeds: [resultEmbed], components: [] });
+        });
 
-        // Standard Mode: !dice [sides] [count]
-        const sides = parseInt(args[0]) || 6;
-        const count = parseInt(args[1]) || 2;
-
-        if (sides < 2 || sides > 100) return message.reply('❌ Sides must be between 2 and 100.');
-        if (count < 1 || count > 10) return message.reply('❌ You can only roll 1-10 dice.');
-
-        const rolls = [];
-        let total = 0;
-        for (let i = 0; i < count; i++) {
-            const roll = Math.floor(Math.random() * sides) + 1;
-            rolls.push(roll);
-            total += roll;
-        }
-
-        const embed = new EmbedBuilder()
-            .setTitle('🎲  Dice Roll')
-            .setDescription(`Rolling **${count}** x **d${sides}**`)
-            .addFields(
-                { name: 'Rolls', value: rolls.join(', '), inline: true },
-                { name: 'Total', value: `**${total}**`, inline: true }
-            )
-            .setColor(0x3498DB);
-
-        return message.reply({ embeds: [embed] });
+        collector.on('end', (collected) => {
+            if (collected.size === 0) {
+                const timeoutEmbed = new EmbedBuilder()
+                    .setTitle('🎲  Dice Gamble')
+                    .setDescription('⏰ You took too long! Bet cancelled.')
+                    .setColor(0x95A5A6);
+                reply.edit({ embeds: [timeoutEmbed], components: [] }).catch(() => { });
+            }
+        });
     }
 };
