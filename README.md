@@ -1,8 +1,35 @@
-# 🎉 Discord Bot
+# 🎉 Simsimi — Discord Bot
 
-A feature-rich, all-in-one Discord bot packed with **30+ commands** — including an interactive giveaway system, casino-style mini-games with coin betting, a full economy with shops & inventory, and handy utility commands. Built with [discord.js](https://discord.js.org/) v14 and powered by a persistent SQLite database.
+> A feature-rich, all-in-one Discord bot packed with **30+ commands** — including an interactive giveaway system, casino-style mini-games with coin betting, a full economy with shops & inventory, and handy utility commands.
 
-**Prefix:** `$`
+[![Discord.js](https://img.shields.io/badge/discord.js-v14-5865F2?logo=discord&logoColor=white)](https://discord.js.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+---
+
+## 🤖 About
+
+**Simsimi** is a multipurpose Discord bot designed to bring fun, engagement, and utility to your server. Whether you're hosting giveaways for your community, competing in casino games with friends, building your virtual wealth, or just checking server stats — Simsimi has you covered.
+
+**Prefix:** `$` — All commands start with a dollar sign (e.g., `$help`, `$daily`, `$blackjack`)
+
+### Key Highlights
+
+- 🎁 **Giveaway Management** — Create timed giveaways with button/reaction entry, role restrictions, pause/resume, and auto winner selection
+- 🎮 **18 Interactive Mini-Games** — From Blackjack & Poker to Minesweeper, Trivia, Emoji Quiz, Hangman, and more — all with rich embeds & button UIs
+- 💰 **Virtual Economy** — Earn coins through daily rewards and work, bet in games, buy items from the shop, and climb the leaderboard
+- 🛒 **Shop & Multipliers** — Purchase items that permanently boost your income, daily rewards, and gambling winnings
+- 🔧 **Server Utilities** — Ping, avatar viewer, server info, user info
+- 💾 **Persistent Storage** — All data (balances, inventories, giveaways) saved in a local SQLite database
+- ⚡ **Lightweight** — No external database server needed; runs on a single Node.js process
+
+### Invite the Bot
+
+```
+https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands
+```
+> Replace `YOUR_CLIENT_ID` with your bot's Application ID from the [Discord Developer Portal](https://discord.com/developers/applications).
 
 ---
 

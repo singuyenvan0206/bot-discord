@@ -99,6 +99,115 @@ client.on(Events.InteractionCreate, async interaction => {
         }
         return;
     }
+
+    // Handle slash commands
+    if (interaction.isChatInputCommand()) {
+        const commandName = interaction.commandName;
+        const command = client.commands.get(commandName);
+        if (!command) return;
+
+        // Build args array from slash command options
+        let args = [];
+
+        // Special handling for giveaway subcommands
+        if (commandName === 'giveaway') {
+            const sub = interaction.options.getSubcommand();
+            args.push(sub);
+            if (sub === 'start') {
+                args.push(interaction.options.getString('duration'));
+                args.push(String(interaction.options.getInteger('winners')));
+                args.push(interaction.options.getString('prize'));
+            } else if (['end', 'reroll', 'pause', 'resume', 'delete'].includes(sub)) {
+                args.push(interaction.options.getString('message_id'));
+            }
+        } else {
+            // Generic option extraction — maintains order for existing execute() functions
+            const optionMap = {
+                // coinflip: choice, bet
+                'coinflip': ['choice', 'bet'],
+                // 8ball: question
+                '8ball': ['question'],
+                // transfer: user, amount
+                'transfer': ['user', 'amount'],
+                // buy: item
+                'buy': ['item'],
+                // bet-only commands
+                'blackjack': ['bet'], 'poker': ['bet'], 'dice': ['bet'],
+                'slots': ['bet'], 'minesweeper': ['bet'],
+                // user-optional commands
+                'balance': ['user'], 'avatar': ['user'], 'userinfo': ['user'],
+            };
+
+            const optionNames = optionMap[commandName] || [];
+            for (const name of optionNames) {
+                const userOpt = interaction.options.getUser(name);
+                const intOpt = interaction.options.getInteger(name);
+                const strOpt = interaction.options.getString(name);
+
+                if (userOpt) {
+                    args.push(`<@${userOpt.id}>`);
+                } else if (intOpt !== null && intOpt !== undefined) {
+                    args.push(String(intOpt));
+                } else if (strOpt) {
+                    args.push(strOpt);
+                }
+            }
+        }
+
+        // Create a message-like adapter so existing execute() functions work
+        let hasReplied = false;
+        const messageAdapter = {
+            author: interaction.user,
+            member: interaction.member,
+            channel: interaction.channel,
+            guild: interaction.guild,
+            client: interaction.client,
+            createdTimestamp: interaction.createdTimestamp,
+            content: `$${commandName} ${args.join(' ')}`.trim(),
+            mentions: {
+                users: {
+                    first: () => {
+                        const userOpt = interaction.options.getUser('user');
+                        return userOpt || null;
+                    }
+                }
+            },
+            reply: async (content) => {
+                try {
+                    if (!hasReplied) {
+                        hasReplied = true;
+                        return await interaction.reply(content);
+                    } else {
+                        return await interaction.followUp(content);
+                    }
+                } catch (err) {
+                    // Fallback to channel.send if interaction expired
+                    return await interaction.channel.send(content).catch(() => { });
+                }
+            },
+            edit: async (content) => {
+                try {
+                    return await interaction.editReply(content);
+                } catch {
+                    return null;
+                }
+            },
+            react: async () => { },
+            delete: async () => { },
+        };
+
+        try {
+            await command.execute(messageAdapter, args);
+        } catch (error) {
+            console.error(`[Slash] Error executing /${commandName}:`, error);
+            const errMsg = '❌ An error occurred while executing this command.';
+            if (!hasReplied) {
+                interaction.reply({ content: errMsg, ephemeral: true }).catch(() => { });
+            } else {
+                interaction.followUp({ content: errMsg, ephemeral: true }).catch(() => { });
+            }
+        }
+    }
 });
 
 const xpCooldowns = new Set();
