@@ -5,6 +5,7 @@ module.exports = {
     name: 'guess',
     aliases: ['gn'],
     description: 'Guess the number (1-100)',
+    cooldown: 10,
     async execute(message, args) {
         const number = Math.floor(Math.random() * 100) + 1;
         let attempts = 0;

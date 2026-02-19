@@ -5,6 +5,7 @@ module.exports = {
     name: 'wordchain',
     aliases: ['wc'],
     description: 'Play Word Chain',
+    cooldown: 60,
     async execute(message, args) {
         if (message.client.activeChainGames?.has(message.channel.id)) {
             return message.reply('❌ A word chain game is already running in this channel! Type `!stop` to end it.');
@@ -14,6 +15,7 @@ module.exports = {
         message.client.activeChainGames.add(message.channel.id);
 
         let usedWords = new Set();
+        let playerScores = new Map();
         let lastChar = String.fromCharCode(97 + Math.floor(Math.random() * 26));
         let turn = null;
         let players = [message.author.id];
@@ -68,14 +70,26 @@ module.exports = {
             lastChar = word.slice(-1);
             turn = m.author.id;
 
+            // Reward 5 coins per valid word
+            const reward = 5;
+            db.addBalance(m.author.id, reward);
+            playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + reward);
+
             await m.react('✅');
         });
 
         collector.on('end', (collected, reason) => {
             message.client.activeChainGames.delete(message.channel.id);
-            if (reason !== 'stopped') {
-                message.channel.send('🛑 **Word Chain Game Over!**');
-            }
+            const scoreboard = [...playerScores.entries()]
+                .sort((a, b) => b[1] - a[1])
+                .map(([id, coins], i) => `**${i + 1}.** <@${id}> — 💰 ${coins} coins`)
+                .join('\n') || 'No words were played.';
+
+            const endEmbed = new EmbedBuilder()
+                .setTitle('🛑  Word Chain — Game Over!')
+                .setDescription(`**Total words:** ${usedWords.size}\n\n${scoreboard}`)
+                .setColor(0xE74C3C);
+            message.channel.send({ embeds: [endEmbed] });
         });
     }
 };

@@ -5,6 +5,7 @@ module.exports = {
     name: 'coinflip',
     aliases: ['flip', 'cf'],
     description: 'Flip a coin',
+    cooldown: 3,
     async execute(message, args) {
         const call = args[0]?.toLowerCase();
 

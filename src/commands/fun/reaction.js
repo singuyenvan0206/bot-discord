@@ -1,9 +1,11 @@
 const { EmbedBuilder } = require('discord.js');
+const db = require('../../database');
 
 module.exports = {
     name: 'reaction',
     aliases: ['react'],
     description: 'Test your reaction speed',
+    cooldown: 10,
     async execute(message, args) {
         const embed = new EmbedBuilder()
             .setTitle('⚡  Reaction Test')
@@ -30,7 +32,14 @@ module.exports = {
                 const winner = collected.first();
                 const diff = winner.createdTimestamp - now;
 
-                winner.reply(`🎉 **${diff}ms!** That was fast! 🏎️`);
+                // Reward based on reaction speed
+                let reward = 15;
+                let speedRank = '🐢 Nice';
+                if (diff < 300) { reward = 50; speedRank = '⚡ Insane'; }
+                else if (diff < 500) { reward = 30; speedRank = '🏎️ Fast'; }
+                db.addBalance(winner.author.id, reward);
+
+                winner.reply(`🎉 **${diff}ms!** ${speedRank}!\n💰 **+${reward} coins!**`);
             } catch {
                 message.channel.send('⏰ **Too slow!** No one reacted in time.');
             }

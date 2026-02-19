@@ -46,6 +46,7 @@ const activeChainGames = new Map();
 // ─── Load Slash Commands ─────────────────────────────────────────
 
 client.commands = new Collection();
+client.cooldowns = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 // commandsPath is already declared above if I messed up, better to just replace the whole block carefully.
 // Actually, looking at the previous diff, I replaced lines 48-56.
@@ -209,6 +210,30 @@ client.on(Events.InteractionCreate, async interaction => {
             delete: async () => { },
         };
 
+        // Cooldown handling
+        if (!client.cooldowns.has(command.name)) {
+            client.cooldowns.set(command.name, new Collection());
+        }
+
+        const now = Date.now();
+        const timestamps = client.cooldowns.get(command.name);
+        const cooldownAmount = (command.cooldown || 3) * 1000;
+
+        if (timestamps.has(interaction.user.id)) {
+            const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+                return interaction.reply({
+                    content: `❌ Vui lòng đợi **${timeLeft.toFixed(1)}s** nữa để sử dụng lại lệnh này!`,
+                    ephemeral: true
+                });
+            }
+        }
+
+        timestamps.set(interaction.user.id, now);
+        setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+
         try {
             await command.execute(messageAdapter, args);
         } catch (error) {
@@ -240,6 +265,27 @@ client.on(Events.MessageCreate, async message => {
     const command = client.commands.get(commandName);
 
     if (!command) return;
+
+    // Cooldown handling
+    if (!client.cooldowns.has(command.name)) {
+        client.cooldowns.set(command.name, new Collection());
+    }
+
+    const now = Date.now();
+    const timestamps = client.cooldowns.get(command.name);
+    const cooldownAmount = (command.cooldown || 3) * 1000;
+
+    if (timestamps.has(message.author.id)) {
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+        if (now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000;
+            return message.reply(`❌ Vui lòng đợi **${timeLeft.toFixed(1)}s** nữa để sử dụng lại lệnh này!`).then(m => setTimeout(() => m.delete().catch(() => { }), 5000));
+        }
+    }
+
+    timestamps.set(message.author.id, now);
+    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
     try {
         await command.execute(message, args);

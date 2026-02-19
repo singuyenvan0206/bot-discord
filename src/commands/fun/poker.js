@@ -6,6 +6,7 @@ module.exports = {
     name: 'poker',
     aliases: ['pk'],
     description: 'Texas Hold\'em Poker (Modals)',
+    cooldown: 60,
     async execute(message, args) {
         const minBuyIn = parseInt(args[0]) || 50; // Default
         const hostId = message.author.id;

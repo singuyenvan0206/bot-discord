@@ -77,6 +77,7 @@ module.exports = {
     name: 'blackjack',
     aliases: ['bj'],
     description: 'Play Blackjack against the dealer!',
+    cooldown: 10,
     async execute(message, args) {
         let bet = parseInt(args[0]);
         if (!args[0]) bet = 50; // Default

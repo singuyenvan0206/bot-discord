@@ -38,6 +38,7 @@ module.exports = {
     name: 'scramble',
     aliases: ['scram'],
     description: 'Unscramble the word',
+    cooldown: 10,
     async execute(message, args) {
         // Pick random category
         const categories = Object.keys(WORDS_BY_CATEGORY);

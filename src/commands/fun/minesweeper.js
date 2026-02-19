@@ -5,6 +5,7 @@ module.exports = {
     name: 'minesweeper',
     aliases: ['mine', 'ms'],
     description: 'Play Minesweeper! (24 Cells)',
+    cooldown: 10,
     async execute(message, args) {
         let bet = parseInt(args[0]);
         if (!args[0]) bet = 50; // Default
@@ -226,12 +227,12 @@ module.exports = {
             }
         }
         );
-    
 
-    collector.on('end', (_, reason) => {
-        if (reason === 'time') {
-            reply.edit({ content: '⏰ Time\'s up!', components: [] }).catch(() => { });
-        }
-    });
-}
+
+        collector.on('end', (_, reason) => {
+            if (reason === 'time') {
+                reply.edit({ content: '⏰ Time\'s up!', components: [] }).catch(() => { });
+            }
+        });
+    }
 };

@@ -1,9 +1,11 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const db = require('../../database');
 
 module.exports = {
     name: 'tictactoe',
     aliases: ['ttt'],
     description: 'Play Tic-Tac-Toe!',
+    cooldown: 30,
     async execute(message, args) {
         const opponent = message.mentions.users.first();
         const isBot = !opponent || opponent.id === message.author.id || opponent.bot;
@@ -88,8 +90,20 @@ module.exports = {
 
             if (winner) {
                 let resultText;
-                if (winner === 'draw') resultText = "🤝 **It's a draw!**";
-                else resultText = `🏆 **${winner === 'X' ? playerX.username : playerO.username} wins!** (${winner === 'X' ? '❌' : '⭕'})`;
+                if (winner === 'draw') {
+                    resultText = "🤝 **It's a draw!**";
+                } else {
+                    const winnerId = winner === 'X' ? playerX.id : playerO.id;
+                    const winnerName = winner === 'X' ? playerX.username : playerO.username;
+                    const reward = 100;
+
+                    if (winnerId !== message.client.user.id) {
+                        db.addBalance(winnerId, reward);
+                        resultText = `🏆 **${winnerName} wins!** (${winner === 'X' ? '❌' : '⭕'})\n💰 **+${reward} coins!**`;
+                    } else {
+                        resultText = `🏆 **${winnerName} wins!** (${winner === 'X' ? '❌' : '⭕'})`;
+                    }
+                }
 
                 const finalEmbed = new EmbedBuilder()
                     .setTitle('❌⭕  Tic-Tac-Toe — Game Over')

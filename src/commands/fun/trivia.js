@@ -213,6 +213,7 @@ module.exports = {
     name: 'trivia',
     aliases: ['triv'],
     description: 'Test your knowledge',
+    cooldown: 10,
     async execute(message, args) {
         const q = TRIVIA_QUESTIONS[Math.floor(Math.random() * TRIVIA_QUESTIONS.length)];
         const answers = [q.a, ...q.w].sort(() => Math.random() - 0.5);

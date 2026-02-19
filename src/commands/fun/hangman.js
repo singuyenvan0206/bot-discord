@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
+const db = require('../../database');
 
 const SCRAMBLE_WORDS = [
     { word: 'DISCORD', hint: 'A chat platform' },
@@ -107,6 +108,7 @@ module.exports = {
     name: 'hangman',
     aliases: ['hang', 'hm'],
     description: 'Play Hangman!',
+    cooldown: 10,
     async execute(message, args) {
         const wordObj = SCRAMBLE_WORDS[Math.floor(Math.random() * SCRAMBLE_WORDS.length)];
         const word = wordObj.word.toUpperCase();
@@ -142,7 +144,9 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    embed.setDescription(`**Word:** ${word}\n\n🎉 **YOU WON!** (You guessed the full word!)`)
+                    const reward = 50;
+                    db.addBalance(message.author.id, reward);
+                    embed.setDescription(`**Word:** ${word}\n\n🎉 **YOU WON!** (You guessed the full word!)\n💰 **+${reward} coins!**`)
                         .setColor(0x2ECC71);
                     collector.stop();
                     await msg.edit({ embeds: [embed] });
@@ -166,7 +170,13 @@ module.exports = {
 
             if (won || lost) {
                 gameOver = true;
-                embed.setDescription(`**Word:** ${word}\n\n${won ? '🎉 **YOU WON!**' : '💀 **YOU DIED!**'}`)
+                let resultText = won ? '🎉 **YOU WON!**' : '💀 **YOU DIED!**';
+                if (won) {
+                    const reward = 50;
+                    db.addBalance(message.author.id, reward);
+                    resultText += `\n💰 **+${reward} coins!**`;
+                }
+                embed.setDescription(`**Word:** ${word}\n\n${resultText}`)
                     .setColor(won ? 0x2ECC71 : 0xE74C3C);
                 collector.stop();
             } else {

@@ -5,6 +5,7 @@ module.exports = {
     name: 'rps',
     aliases: ['rock'],
     description: 'Rock Paper Scissors',
+    cooldown: 5,
     async execute(message, args) {
         const choices = ['rock', 'paper', 'scissors'];
         const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };

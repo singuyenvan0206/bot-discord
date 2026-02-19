@@ -16,6 +16,7 @@ const QUESTIONS = [
 module.exports = {
     name: 'wyr',
     description: 'Would You Rather?',
+    cooldown: 5,
     async execute(message, args) {
         const q = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
         const uid = Date.now().toString(36);
