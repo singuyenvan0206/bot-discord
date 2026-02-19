@@ -69,11 +69,20 @@ function initSchema() {
             level INTEGER NOT NULL DEFAULT 0,
             last_daily INTEGER DEFAULT 0,
             last_work INTEGER DEFAULT 0,
-            level INTEGER NOT NULL DEFAULT 0,
-            last_daily INTEGER DEFAULT 0,
-            last_work INTEGER DEFAULT 0,
             last_rob INTEGER DEFAULT 0,
             inventory TEXT DEFAULT '{}'
+        )
+    `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS guild_users (
+            guild_id TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            xp INTEGER DEFAULT 0,
+            level INTEGER DEFAULT 0,
+            warnings INTEGER DEFAULT 0,
+            json_data TEXT DEFAULT '{}',
+            PRIMARY KEY (guild_id, user_id)
         )
     `);
 
@@ -81,13 +90,26 @@ function initSchema() {
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_active ON giveaways(ended, ends_at)');
     db.run('CREATE INDEX IF NOT EXISTS idx_participants_giveaway ON participants(giveaway_id)');
+    db.run('CREATE INDEX IF NOT EXISTS idx_guild_users_guild ON guild_users(guild_id)');
 
     // Migrate existing tables — add new columns if missing
     safeAddColumn('giveaways', 'paused', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
-    safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
     safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
+
+    // Ensure new table exists for existing DBs
+    db.run(`
+        CREATE TABLE IF NOT EXISTS guild_users (
+            guild_id TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            xp INTEGER DEFAULT 0,
+            level INTEGER DEFAULT 0,
+            warnings INTEGER DEFAULT 0,
+            json_data TEXT DEFAULT '{}',
+            PRIMARY KEY (guild_id, user_id)
+        )
+    `);
 
     saveDb();
 }
@@ -132,7 +154,7 @@ function createGiveaway({ guildId, channelId, messageId, hostId, prize, descript
     execute(
         `INSERT INTO giveaways (guild_id, channel_id, message_id, host_id, prize, description, winner_count, required_role_id, ends_at, scheduled_start)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [guildId, channelId, messageId, hostId, prize, description, winnerCount, requiredRoleId, endsAt, scheduledStart || null]
+        [guildId, channelId, messageId, hostId, prize, description || null, winnerCount, requiredRoleId || null, endsAt, scheduledStart || null]
     );
     const row = queryOne('SELECT last_insert_rowid() as id');
     return row ? row.id : null;
@@ -244,14 +266,13 @@ function getBonusEntries(giveawayId, userId) {
 }
 
 
-// ─── User / Economy ──────────────────────────────────────────────
+// ─── Global Scope: User / Economy ──────────────────────────────────────────────
 
 function getUser(userId) {
     let user = queryOne('SELECT * FROM users WHERE id = ?', [userId]);
     if (!user) {
         execute('INSERT INTO users (id) VALUES (?)', [userId]);
-        execute('INSERT INTO users (id) VALUES (?)', [userId]);
-        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}' };
+        user = { id: userId, balance: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}' };
     }
     return user;
 }
@@ -278,13 +299,7 @@ function removeBalance(userId, amount) {
     execute('UPDATE users SET balance = MAX(0, balance - ?) WHERE id = ?', [amount, userId]);
 }
 
-function addXp(userId, amount) {
-    getUser(userId);
-    execute('UPDATE users SET xp = xp + ? WHERE id = ?', [amount, userId]);
-    return getUser(userId);
-}
-
-function getTopUsers(limit = 10, type = 'balance') {
+function getTopUsers(limit = 100, type = 'balance') {
     return queryAll(`SELECT * FROM users ORDER BY ${type} DESC LIMIT ?`, [limit]);
 }
 
@@ -306,6 +321,37 @@ function removeItem(userId, itemId, count = 1) {
     execute('UPDATE users SET inventory = ? WHERE id = ?', [JSON.stringify(inv), userId]);
     return true;
 }
+
+// ─── Server Scope: Guild Data ──────────────────────────────────────────────
+
+function getGuildUser(guildId, userId) {
+    let user = queryOne('SELECT * FROM guild_users WHERE guild_id = ? AND user_id = ?', [guildId, userId]);
+    if (!user) {
+        execute('INSERT INTO guild_users (guild_id, user_id) VALUES (?, ?)', [guildId, userId]);
+        user = { guild_id: guildId, user_id: userId, xp: 0, level: 0, warnings: 0, json_data: '{}' };
+    }
+    return user;
+}
+
+function updateGuildUser(guildId, userId, updates) {
+    const fields = [];
+    const values = [];
+    Object.entries(updates).forEach(([key, value]) => {
+        fields.push(`${key} = ?`);
+        values.push(value);
+    });
+    if (fields.length === 0) return;
+    values.push(guildId);
+    values.push(userId);
+    execute(`UPDATE guild_users SET ${fields.join(', ')} WHERE guild_id = ? AND user_id = ?`, values);
+}
+
+// ─── Owner Permissions ──────────────────────────────────────────────
+
+function isOwner(userId) {
+    return process.env.OWNER_ID === userId;
+}
+
 
 
 module.exports = {
@@ -329,13 +375,14 @@ module.exports = {
     getTotalEntries,
     addBonusEntry,
     getBonusEntries,
-    getBonusEntries,
     getUser,
     updateUser,
     addBalance,
     removeBalance,
-    addXp,
     getTopUsers,
     addItem,
     removeItem,
+    getGuildUser,
+    updateGuildUser,
+    isOwner,
 };
