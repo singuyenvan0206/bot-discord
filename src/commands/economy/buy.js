@@ -7,7 +7,8 @@ module.exports = {
     description: 'Buy an item from the shop',
     async execute(message, args) {
         const query = args[0]?.toLowerCase();
-        let quantity = parseInt(args[1]) || 1;
+        const { parseAmount } = require('../../utils/economy');
+        let quantity = parseAmount(args[1], 1); // 1 is default for "all" here if balance isn't relevant, but let's pass a sensible number or just use it for k/m
 
         if (!query) return message.reply('❌ Please specify an item to buy (e.g., `!buy 1` or `!buy cookies`).');
         if (quantity <= 0) return message.reply('❌ Quantity must be a positive number.');

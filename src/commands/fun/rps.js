@@ -14,13 +14,14 @@ module.exports = {
 
         let userChoice = args[0]?.toLowerCase();
         let bet = 0;
+        const { parseAmount } = require('../../utils/economy');
 
-        // Check if first arg is a bet amount (number)
-        if (args[0] && !isNaN(parseInt(args[0])) && !choices.includes(userChoice)) {
-            bet = parseInt(args[0]);
+        // Check if first arg is a bet amount
+        if (args[0] && !choices.includes(userChoice)) {
+            bet = parseAmount(args[0], user.balance);
             userChoice = null; // No choice made yet
-        } else if (args[1] && !isNaN(parseInt(args[1]))) {
-            bet = parseInt(args[1]);
+        } else if (args[1]) {
+            bet = parseAmount(args[1], user.balance);
         }
 
         // Default Bet if none provided

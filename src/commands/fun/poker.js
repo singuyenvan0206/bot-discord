@@ -10,7 +10,9 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
-        const minBuyIn = parseInt(args[0]) || 50; // Default
+        const user = db.getUser(message.author.id);
+        const { parseAmount } = require('../../utils/economy');
+        const minBuyIn = args[0] ? parseAmount(args[0], user.balance) : 50;
         const hostId = message.author.id;
 
         // Game State
@@ -74,7 +76,9 @@ module.exports = {
                 // Wait for submit
                 try {
                     const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `buyin_modal_${i.user.id}` });
-                    const amount = parseInt(submit.fields.getTextInputValue('amount'));
+                    const user = db.getUser(i.user.id);
+                    const amountStr = submit.fields.getTextInputValue('amount');
+                    const amount = parseAmount(amountStr, user.balance);
 
                     if (isNaN(amount) || amount < minBuyIn) {
                         joiningPlayers.delete(i.user.id);
@@ -88,7 +92,7 @@ module.exports = {
                         return submit.reply({ content: '❌ The maximum buy-in is **250,000** coins!', flags: 64 });
                     }
 
-                    const user = db.getUser(i.user.id);
+
                     if (user.balance < amount) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
@@ -327,7 +331,7 @@ module.exports = {
 
                 try {
                     const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `raise_modal_${i.user.id}` });
-                    const val = parseInt(submit.fields.getTextInputValue('amount'));
+                    const val = parseAmount(submit.fields.getTextInputValue('amount'), p.chips + p.currentBet);
 
                     if (isNaN(val) || val < minTotal) {
                         return submit.reply({ content: `❌ Invalid Raise! Must be at least ${minTotal}.`, flags: 64 });

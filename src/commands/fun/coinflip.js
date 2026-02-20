@@ -14,10 +14,8 @@ module.exports = {
         }
 
         const user = db.getUser(message.author.id);
-
-        // Default bet logic
-        let bet = parseInt(args[1]);
-        if (!args[1]) bet = 50; // Default if no arg provided
+        const { parseAmount } = require('../../utils/economy');
+        let bet = args[1] ? parseAmount(args[1], user.balance) : 50;
 
         if (isNaN(bet) || bet <= 0) return message.reply('❌ Invalid bet amount.');
         if (user.balance < bet) return message.reply(`❌ You don't have enough money! Balance: **${user.balance}**`);

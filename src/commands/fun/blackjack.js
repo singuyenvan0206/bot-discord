@@ -75,6 +75,8 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
     startCooldown(i.client, 'blackjack', i.user.id);
 }
 
+const { parseAmount } = require('../../utils/economy');
+
 module.exports = {
     name: 'blackjack',
     aliases: ['bj'],
@@ -82,10 +84,8 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
-        let bet = parseInt(args[0]);
-        if (!args[0]) bet = 50; // Default
-
         const user = db.getUser(message.author.id);
+        let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
 
         if (args[0] && (isNaN(bet) || bet <= 0)) {
             return message.reply('❌ Invalid bet amount.');

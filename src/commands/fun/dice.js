@@ -10,10 +10,11 @@ module.exports = {
     manualCooldown: true,
     async execute(message, args) {
         const user = db.getUser(message.author.id);
+        const { parseAmount } = require('../../utils/economy');
 
         // Parse bet amount: $dice <bet> or $dice (default 50)
-        let bet = parseInt(args[0]);
-        if (!args[0]) bet = 50;
+        let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
+
         if (isNaN(bet) || bet <= 0) return message.reply('❌ Invalid bet amount! Usage: `$dice <bet>`');
         if (user.balance < bet) return message.reply(`❌ Insufficient funds! Balance: **${user.balance}** 💰`);
         if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');

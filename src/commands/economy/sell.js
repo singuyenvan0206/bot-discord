@@ -7,12 +7,14 @@ module.exports = {
     description: 'Sell an item back to the shop for 70% of its price',
     async execute(message, args) {
         const query = args[0]?.toLowerCase();
-        let quantity = parseInt(args[1]) || 1;
+        const { parseAmount } = require('../../utils/economy');
 
         if (!query) return message.reply('❌ Please specify an item to sell (e.g., `!sell 1` or `!sell cookies`).');
-        if (quantity < 1) return message.reply('❌ Quantity must be at least 1.');
 
-        // Try to find item by ID or Name
+        const user = db.getUser(message.author.id);
+        const inv = JSON.parse(user.inventory || '{}');
+
+        // Find item first to get owned count for "all" quantity
         const item = SHOP_ITEMS.find(i =>
             String(i.id) === query ||
             i.name.toLowerCase().includes(query)
@@ -20,14 +22,12 @@ module.exports = {
 
         if (!item) return message.reply('❌ Item not found. Check `!inventory` for your items.');
 
-        // Default to 1 if not specified
+        const ownedCount = inv[String(item.id)] || 0;
+        let quantity = args[1] ? parseAmount(args[1], ownedCount) : 1;
+
+        // Default to 1 if not specified or if parseAmount returned an invalid number
         if (isNaN(quantity) || quantity < 1) quantity = 1;
 
-        const user = db.getUser(message.author.id);
-        const inv = JSON.parse(user.inventory || '{}');
-
-        // Check ownership
-        const ownedCount = inv[String(item.id)] || 0;
         if (ownedCount < quantity) {
             return message.reply(`❌ You only have **${ownedCount}x ${item.name}**!`);
         }
