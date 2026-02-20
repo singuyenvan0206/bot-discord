@@ -209,19 +209,26 @@ module.exports = {
                         collector.stop('win');
                         let prize = 0;
                         if (bet > 0) {
-                            prize = Math.ceil(bet * 1.5); // 1.5x multiplier for easy/medium mode
+                            const baseWin = Math.ceil(bet * 1.5);
                             const { getUserMultiplier } = require('../../utils/multiplier');
-                            const bonusMult = getUserMultiplier(user.id, 'gamble');
-                            const bonus = Math.floor(prize * bonusMult);
-                            prize += bonus;
+                            const multiplier = getUserMultiplier(user.id, 'gamble');
+                            const bonus = Math.floor(bet * multiplier);
+                            prize = baseWin + bonus;
 
                             db.addBalance(user.id, prize);
+
+                            const winEmbed = new EmbedBuilder()
+                                .setTitle('🎉  Victory!')
+                                .setDescription(`You cleared the minefield!\n\n**Base Win:** 💰 +${baseWin}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Prize:** 💰 **${prize}** coins`)
+                                .setColor(0x2ECC71);
+                            await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
+                        } else {
+                            const winEmbed = new EmbedBuilder()
+                                .setTitle('🎉  Victory!')
+                                .setDescription(`You cleared the minefield!`)
+                                .setColor(0x2ECC71);
+                            await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         }
-                        const winEmbed = new EmbedBuilder()
-                            .setTitle('🎉  Victory!')
-                            .setDescription(`You cleared the minefield!\nPrize: **${prize}** coins`)
-                            .setColor(0x2ECC71);
-                        await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                     } else {
                         await i.update({ components: renderComponents() });
                     }

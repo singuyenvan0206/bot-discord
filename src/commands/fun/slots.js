@@ -62,13 +62,13 @@ module.exports = {
 
         if (payout > 0) {
             const { getUserMultiplier } = require('../../utils/multiplier');
-            const bonusMult = getUserMultiplier(user.id, 'gamble');
-            const bonus = Math.floor(payout * bonusMult);
+            const multiplier = getUserMultiplier(user.id, 'gamble');
+            const bonus = Math.floor(bet * multiplier);
             payout += bonus;
 
             db.addBalance(user.id, payout);
             result += `\n💰 **Won ${payout} coins!**`;
-            if (bonus > 0) result += ` *(+${Math.round(bonusMult * 100)}% bonus!)*`;
+            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% bonus: ${bonus} coins)*`;
         } else if (bet) {
             result += `\n💸 **Lost ${bet} coins.**`;
         }

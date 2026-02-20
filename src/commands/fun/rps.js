@@ -108,13 +108,13 @@ module.exports = {
                 if (outcome === 'win') {
                     let prize = betAmount * 2;
                     const { getUserMultiplier } = require('../../utils/multiplier');
-                    const bonusMult = getUserMultiplier(user.id, 'gamble');
-                    const bonus = Math.floor(prize * bonusMult);
+                    const multiplier = getUserMultiplier(user.id, 'gamble');
+                    const bonus = Math.floor(betAmount * multiplier);
                     prize += bonus;
 
                     db.addBalance(user.id, prize);
                     result += `\n💰 **Won ${prize} coins!**`;
-                    if (bonus > 0) result += ` *(Includes +${Math.round(bonusMult * 100)}% bonus!)*`;
+                    if (bonus > 0) result += ` *(Includes +${bonus} bonus: ${Math.round(multiplier * 100)}%)*`;
                 } else if (outcome === 'tie') {
                     db.addBalance(user.id, betAmount); // Refund
                     result += `\n🤝 **Bet refunded.**`;

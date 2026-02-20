@@ -38,10 +38,10 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
 
         if (payout > 0) {
             const { getUserMultiplier } = require('../../utils/multiplier');
-            const bonusMult = getUserMultiplier(i.user.id, 'gamble');
-            const bonus = Math.floor(payout * bonusMult);
+            const multiplier = getUserMultiplier(i.user.id, 'gamble');
+            const bonus = Math.floor(bet * multiplier);
             payout += bonus;
-            if (bonus > 0) result += ` *(+${Math.round(bonusMult * 100)}% bonus)*`;
+            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% bonus: ${bonus} coins)*`;
         }
     }
     else if (playerVal > dealerVal) {
@@ -51,10 +51,10 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
 
         if (payout > 0) {
             const { getUserMultiplier } = require('../../utils/multiplier');
-            const bonusMult = getUserMultiplier(i.user.id, 'gamble');
-            const bonus = Math.floor(payout * bonusMult);
+            const multiplier = getUserMultiplier(i.user.id, 'gamble');
+            const bonus = Math.floor(bet * multiplier);
             payout += bonus;
-            if (bonus > 0) result += ` *(+${Math.round(bonusMult * 100)}% bonus)*`;
+            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% bonus: ${bonus} coins)*`;
         }
     }
     else if (playerVal < dealerVal) {
@@ -115,17 +115,25 @@ module.exports = {
         }
 
         if (handValue(playerHand) === 21) {
-            const winAmount = Math.ceil(bet * 1.5);
             if (bet) {
+                const baseProfit = Math.ceil(bet * 1.5);
                 const { getUserMultiplier } = require('../../utils/multiplier');
-                const bonusMult = getUserMultiplier(message.author.id, 'gamble');
-                const bonus = Math.floor(winAmount * bonusMult);
-                winAmount += bonus;
-                db.addBalance(message.author.id, winAmount);
+                const multiplier = getUserMultiplier(message.author.id, 'gamble');
+                const bonus = Math.floor(bet * multiplier);
+                const totalPayout = bet + baseProfit + bonus; // Refund bet + 1.5x profit + bonus
+
+                db.addBalance(message.author.id, totalPayout);
+
+                const embed = buildEmbed(true)
+                    .setTitle('🃏  Blackjack — 🎉 BLACKJACK!')
+                    .setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**\n**Base Win:** 💰 +${baseProfit}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Returned:** 💰 **${totalPayout}** coins`);
+
+                startCooldown(message.client, 'blackjack', message.author.id);
+                return message.reply({ embeds: [embed] });
+            } else {
+                const embed = buildEmbed(true).setTitle('🃏  Blackjack — 🎉 BLACKJACK!').setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**`);
+                return message.reply({ embeds: [embed] });
             }
-            const embed = buildEmbed(true).setTitle('🃏  Blackjack — 🎉 BLACKJACK!').setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack! You win${bet ? ` ${winAmount + bet} coins` : ''}!**`);
-            startCooldown(message.client, 'blackjack', message.author.id);
-            return message.reply({ embeds: [embed] });
         }
 
         const row = new ActionRowBuilder().addComponents(

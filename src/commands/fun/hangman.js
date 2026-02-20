@@ -76,10 +76,18 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const reward = 50;
-                    db.addBalance(message.author.id, reward);
-                    embed.setDescription(`**Word:** ${word}\n\n🎉 **YOU WON!** (You guessed the full word!)\n💰 **+${reward} coins!**`)
-                        .setColor(0x2ECC71);
+                    const baseReward = 50;
+                    const { getUserMultiplier } = require('../../utils/multiplier');
+                    const multiplier = getUserMultiplier(message.author.id, 'income');
+                    const bonus = Math.floor(baseReward * multiplier);
+                    const totalReward = baseReward + bonus;
+
+                    db.addBalance(message.author.id, totalReward);
+
+                    let resultStr = `**Word:** ${word}\n\n🎉 **YOU WON!** (You guessed the full word!)\n💰 **+${baseReward} coins!**`;
+                    if (bonus > 0) resultStr += `\n✨ **Item Bonus:** +${bonus} (${Math.round(multiplier * 100)}%)`;
+
+                    embed.setDescription(resultStr).setColor(0x2ECC71);
                     collector.stop();
                     await msg.edit({ embeds: [embed] });
                     return;
@@ -104,9 +112,15 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? '🎉 **YOU WON!**' : '💀 **YOU DIED!**';
                 if (won) {
-                    const reward = 50;
-                    db.addBalance(message.author.id, reward);
-                    resultText += `\n💰 **+${reward} coins!**`;
+                    const baseReward = 50;
+                    const { getUserMultiplier } = require('../../utils/multiplier');
+                    const multiplier = getUserMultiplier(message.author.id, 'income');
+                    const bonus = Math.floor(baseReward * multiplier);
+                    const totalReward = baseReward + bonus;
+
+                    db.addBalance(message.author.id, totalReward);
+                    resultText += `\n💰 **+${baseReward}** coins!`;
+                    if (bonus > 0) resultText += ` *(+${bonus} item bonus)*`;
                 }
                 embed.setDescription(`**Word:** ${word}\n\n${resultText}`)
                     .setColor(won ? 0x2ECC71 : 0xE74C3C);

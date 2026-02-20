@@ -13,6 +13,13 @@ function getUserMultiplier(userId, type) {
             totalMulti += item.multiplier * count;
         }
     }
+
+    // --- Diministhing Returns (Dampening) ---
+    // If multiplier > 100% (1.0), the excess is halved to prevent economy inflation.
+    if (totalMulti > 1.0) {
+        totalMulti = 1.0 + (totalMulti - 1.0) * 0.5;
+    }
+
     return totalMulti;
 }
 

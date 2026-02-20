@@ -121,7 +121,13 @@ module.exports = {
 
         // 6. Respond
         if (caughtItem.value > 0) {
-            db.addBalance(message.author.id, caughtItem.value);
+            const { getUserMultiplier } = require('../../utils/multiplier');
+            const multiplier = getUserMultiplier(message.author.id, 'income');
+            const bonus = Math.floor(caughtItem.value * multiplier);
+            const totalValue = caughtItem.value + bonus;
+
+            db.addBalance(message.author.id, totalValue);
+
             const embed = new EmbedBuilder()
                 .setTitle('🎣 Fishing Trip')
                 .setColor(0x3498DB)
@@ -130,8 +136,13 @@ module.exports = {
                     { name: 'Caught', value: `${caughtItem.emoji} **${caughtItem.name}**`, inline: true },
                     { name: 'Earnings', value: `💰 **+${caughtItem.value}**`, inline: true },
                     { name: 'Luck', value: `✨ ${totalLuck.toFixed(1)}x`, inline: true }
-                )
-                .setFooter({ text: 'Bait consumed: -1 ' + bait.name });
+                );
+
+            if (bonus > 0) {
+                embed.addFields({ name: 'Item Bonus', value: `✨ +${bonus} (${Math.round(multiplier * 100)}%)`, inline: true });
+            }
+
+            embed.setFooter({ text: 'Bait consumed: -1 ' + bait.name });
 
             message.reply({ embeds: [embed] });
         } else {

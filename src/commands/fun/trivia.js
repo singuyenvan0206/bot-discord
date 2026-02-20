@@ -103,7 +103,18 @@ module.exports = {
             const selectedIndex = parseInt(i.customId.split('_')[1]);
 
             if (selectedIndex === correctIndex) {
-                await i.update({ content: `✅ **Correct!** The answer was **${q.a}**.`, components: [], embeds: [] });
+                const baseReward = 100;
+                const { getUserMultiplier } = require('../../utils/multiplier');
+                const multiplier = getUserMultiplier(i.user.id, 'income');
+                const bonus = Math.floor(baseReward * multiplier);
+                const totalReward = baseReward + bonus;
+
+                db.addBalance(i.user.id, totalReward);
+
+                let resultMsg = `✅ **Correct!** The answer was **${q.a}**.\nReward: 💰 **${baseReward}** coins`;
+                if (bonus > 0) resultMsg += ` ✨ *(+${bonus} item bonus)*`;
+
+                await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {
                 await i.update({ content: `❌ **Wrong!** The correct answer was **${q.a}**.`, components: [], embeds: [] });
             }

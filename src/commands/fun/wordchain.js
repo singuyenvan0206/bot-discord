@@ -73,10 +73,15 @@ module.exports = {
             lastChar = word.slice(-1);
             turn = m.author.id;
 
-            // Reward 5 coins per valid word
-            const reward = 5;
-            db.addBalance(m.author.id, reward);
-            playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + reward);
+            // Reward 5 coins per valid word + income bonus
+            const baseReward = 5;
+            const { getUserMultiplier } = require('../../utils/multiplier');
+            const multiplier = getUserMultiplier(m.author.id, 'income');
+            const bonus = Math.floor(baseReward * multiplier);
+            const totalReward = baseReward + bonus;
+
+            db.addBalance(m.author.id, totalReward);
+            playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
 
             await m.react('✅');
         });

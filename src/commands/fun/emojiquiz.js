@@ -439,14 +439,21 @@ module.exports = {
             });
 
             const msg = collected.first();
-            const reward = 150;
+            const baseReward = 150;
+            const { getUserMultiplier } = require('../../utils/multiplier');
+            const multiplier = getUserMultiplier(msg.author.id, 'income');
+            const bonus = Math.floor(baseReward * multiplier);
+            const totalReward = baseReward + bonus;
 
-            db.addBalance(msg.author.id, reward);
+            db.addBalance(msg.author.id, totalReward);
+
+            let resultDesc = `The answer was **${displayAnswer}**.\nWinner: ${msg.author}\nReward: 💰 **${baseReward}** coins`;
+            if (bonus > 0) resultDesc += `\n✨ **Item Bonus:** +${bonus} (${Math.round(multiplier * 100)}%)`;
 
             await msg.reply({
                 embeds: [new EmbedBuilder()
                     .setTitle('🎉  Correct!')
-                    .setDescription(`The answer was **${displayAnswer}**.\nWinner: ${msg.author}\nReward: 💰 **${reward}** coins`)
+                    .setDescription(resultDesc)
                     .setColor(0x2ECC71)]
             });
             startCooldown(message.client, 'emojiquiz', message.author.id);

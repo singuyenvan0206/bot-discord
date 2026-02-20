@@ -69,10 +69,18 @@ module.exports = {
             });
 
             const winner = collected.first();
-            const reward = 50;
-            db.addBalance(winner.author.id, reward);
+            const baseReward = 50;
+            const { getUserMultiplier } = require('../../utils/multiplier');
+            const multiplier = getUserMultiplier(winner.author.id, 'income');
+            const bonus = Math.floor(baseReward * multiplier);
+            const totalReward = baseReward + bonus;
 
-            message.channel.send(`🎉 **Correct!** ${winner.author} unscrambled the word **${word}** and won 💰 **${reward}** coins!`);
+            db.addBalance(winner.author.id, totalReward);
+
+            let msgText = `🎉 **Correct!** ${winner.author} unscrambled the word **${word}** and won 💰 **${baseReward}** coins!`;
+            if (bonus > 0) msgText += ` ✨ *(+${bonus} item bonus)*`;
+
+            message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);
         } catch {
             message.channel.send(`⏰ **Time's up!** The word was **${word}**.`);

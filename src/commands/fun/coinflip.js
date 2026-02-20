@@ -31,31 +31,33 @@ module.exports = {
         if (won) {
             const { getUserMultiplier } = require('../../utils/multiplier');
             const multiplier = getUserMultiplier(user.id, 'gamble');
-            const bonus = Math.floor(prize * multiplier);
-            db.addBalance(user.id, prize + bonus);
+            const bonus = Math.floor(bet * multiplier);
+            const totalEarnings = prize + bonus;
+            db.addBalance(user.id, totalEarnings);
 
-            if (bonus > 0) {
-                // We need to inject this into the embed, but let's just add it to the balance and show it in the field
-                prize += bonus; // Visual update for next lines
-            }
+            const embed = new EmbedBuilder()
+                .setTitle('🪙  Coinflip')
+                .setDescription(`You picked **${call}**...\nThe coin shows **${result}**!`)
+                .addFields(
+                    { name: 'Result', value: '🎉 **You Won!**', inline: true },
+                    { name: 'Base Win', value: `💰 +${bet}`, inline: true },
+                    { name: 'Item Bonus', value: `✨ +${bonus} (${Math.round(multiplier * 100)}%)`, inline: true },
+                    { name: 'Total Return', value: `💰 **${totalEarnings}** coins`, inline: false }
+                )
+                .setColor(0x2ECC71);
+
+            return message.reply({ embeds: [embed] });
+        } else {
+            const embed = new EmbedBuilder()
+                .setTitle('🪙  Coinflip')
+                .setDescription(`You picked **${call}**...\nThe coin shows **${result}**!`)
+                .addFields(
+                    { name: 'Result', value: '❌ **You Lost!**', inline: true },
+                    { name: 'Earnings', value: `💸 -${bet}`, inline: true }
+                )
+                .setColor(0xE74C3C);
+
+            return message.reply({ embeds: [embed] });
         }
-
-        const embed = new EmbedBuilder()
-            .setTitle('🪙  Coinflip')
-            .setDescription(`You picked **${call}**...\nThe coin shows **${result}**!`)
-            .addFields(
-                { name: 'Result', value: won ? '🎉 **You Won!**' : '❌ **You Lost!**', inline: true },
-                { name: 'Earnings', value: won ? `💰 +${prize + (Math.floor(prize * require('../../utils/multiplier').getUserMultiplier(user.id, 'gamble')))}` : `💸 -${bet}`, inline: true }
-            )
-            .setColor(won ? 0x2ECC71 : 0xE74C3C);
-
-        if (won) {
-            const multiplier = require('../../utils/multiplier').getUserMultiplier(user.id, 'gamble');
-            if (multiplier > 0) {
-                embed.setDescription(embed.data.description + `\n✨ **Bonus:** +${Math.round(multiplier * 100)}% from items!`);
-            }
-        }
-
-        return message.reply({ embeds: [embed] });
     }
 };

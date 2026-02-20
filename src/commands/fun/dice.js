@@ -85,11 +85,11 @@ module.exports = {
 
             if (won) {
                 const { getUserMultiplier } = require('../../utils/multiplier');
-                const bonusMult = getUserMultiplier(message.author.id, 'gamble');
-                const bonus = Math.floor(prize * bonusMult);
+                const multiplier = getUserMultiplier(message.author.id, 'gamble');
+                const bonus = Math.floor(bet * multiplier);
                 prize += bonus;
                 db.addBalance(message.author.id, prize);
-                if (bonus > 0) bonusText = `\n✨ **Bonus:** +${Math.round(bonusMult * 100)}% from items!`;
+                if (bonus > 0) bonusText = `\n✨ **Bonus:** +${bonus} coins (+${Math.round(multiplier * 100)}%)!`;
             }
 
             const diceEmojis = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
