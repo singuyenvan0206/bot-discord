@@ -82,6 +82,12 @@ module.exports = {
                         return submit.reply({ content: `❌ Invalid Amount! Must be at least ${minBuyIn}.`, flags: 64 });
                     }
 
+                    if (amount > 250000) {
+                        joiningPlayers.delete(i.user.id);
+                        updateLobby();
+                        return submit.reply({ content: '❌ The maximum buy-in is **250,000** coins!', flags: 64 });
+                    }
+
                     const user = db.getUser(i.user.id);
                     if (user.balance < amount) {
                         joiningPlayers.delete(i.user.id);
@@ -325,6 +331,9 @@ module.exports = {
 
                     if (isNaN(val) || val < minTotal) {
                         return submit.reply({ content: `❌ Invalid Raise! Must be at least ${minTotal}.`, flags: 64 });
+                    }
+                    if (val > 250000) {
+                        return submit.reply({ content: '❌ The maximum bet is **250,000** coins!', flags: 64 });
                     }
                     if (val > p.chips + p.currentBet) {
                         return submit.reply({ content: `❌ Not enough chips! You have ${p.chips + p.currentBet} total.`, flags: 64 });

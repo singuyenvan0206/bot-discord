@@ -16,6 +16,7 @@ module.exports = {
         if (!args[0]) bet = 50;
         if (isNaN(bet) || bet <= 0) return message.reply('❌ Invalid bet amount! Usage: `$dice <bet>`');
         if (user.balance < bet) return message.reply(`❌ Insufficient funds! Balance: **${user.balance}** 💰`);
+        if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');
 
         const uid = Date.now().toString(36);
 

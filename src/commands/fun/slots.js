@@ -17,6 +17,7 @@ module.exports = {
 
         if (bet) {
             if (user.balance < bet) return message.reply(`❌ Not enough money! Balance: **${user.balance}**`);
+            if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');
             db.removeBalance(user.id, bet);
         }
 

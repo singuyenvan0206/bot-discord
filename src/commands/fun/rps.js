@@ -32,6 +32,7 @@ module.exports = {
         const user = db.getUser(message.author.id);
         if (bet > 0) {
             if (user.balance < bet) return message.reply(`❌ You don't have enough money! Balance: **${user.balance}**`);
+            if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');
             db.removeBalance(user.id, bet);
         } else if (bet < 0) {
             return message.reply('❌ Invalid bet amount.');
