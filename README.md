@@ -1,6 +1,8 @@
 # 🎉 Simsimi — Discord Bot
 
-> A feature-rich, all-in-one Discord bot packed with **30+ commands** — including an interactive giveaway system, casino-style mini-games with coin betting, a full economy with shops & inventory, and handy utility commands.
+> A feature-rich, all-in-one Discord bot packed with **30+ commands** — including an interactive giveaway system, casino-style mini-games with coin betting, a full economy with shops & inventory, and handy utility commands. 
+> 
+> 🌍 **Now featuring full Bilingual Support (English & Vietnamese) natively!**
 
 [![Discord.js](https://img.shields.io/badge/discord.js-v14-5865F2?logo=discord&logoColor=white)](https://discord.js.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
@@ -16,17 +18,18 @@
 
 ### Key Highlights
 
-- 🎁 **Giveaway Management** — Create timed giveaways with button/reaction entry, role restrictions, pause/resume, and auto winner selection
-- 🎮 **18 Interactive Mini-Games** — From Blackjack & Poker to Minesweeper, Trivia, Emoji Quiz, Hangman, and more — all with rich embeds & button UIs
-- 💰 **Virtual Economy** — Earn coins through daily rewards and work, bet in games, buy items from the shop, and climb the leaderboard
-- 🛒 **Shop & Multipliers** — Purchase items that permanently boost your income, daily rewards, and gambling winnings
-- 🔧 **Server Utilities** — Ping, avatar viewer, server info, user info
-- 💾 **Persistent Storage** — All data (balances, inventories, giveaways) saved in a local SQLite database
-- ⚡ **Lightweight** — No external database server needed; runs on a single Node.js process
+- 🌍 **Bilingual Support (i18n)** — Play seamlessly in English or Vietnamese. The bot supports global server defaults and custom user overwrites (`$language`)!
+- 🎁 **Giveaway Management** — Create timed giveaways with button/reaction entry, role restrictions, pause/resume, and auto winner selection.
+- 🎮 **18+ Interactive Mini-Games** — From Blackjack & Poker to Minesweeper, Trivia, Emoji Quiz, Hangman, and more — all with rich embeds & interactive button UIs.
+- 💰 **Virtual Economy** — Earn coins through daily rewards and working, bet in games, buy items from the shop, and climb the leaderboard.
+- 🛒 **Dynamic Shop & Inventory** — Purchase items spanning Tools, Baits, Income Boosts, Daily Boosts, and Luck Boosts. Increase your earnings permanently!
+- 🔧 **Server Utilities** — Ping, avatar viewer, deeply detailed server & user info, and rich user profiles (featuring precise *Net Worth* tracking).
+- 💾 **Persistent Storage** — All data (balances, inventories, giveaways) securely saved in a local, fast SQLite database.
+- ⚡ **Lightweight** — No external database server needed; runs efficiently on a single Node.js process.
 
 ### Invite the Bot
 
-```
+```text
 https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands
 ```
 > Replace `YOUR_CLIENT_ID` with your bot's Application ID from the [Discord Developer Portal](https://discord.com/developers/applications).
@@ -40,7 +43,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scop
 - [Fun & Games](#-fun--games)
 - [Economy System](#-economy-system)
 - [Utility Commands](#-utility-commands)
-- [Shop & Items](#-shop--items)
+- [Setting up the Language (i18n)](#-setting-up-the-language)
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
 - [Tech Stack](#-tech-stack)
@@ -49,18 +52,18 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scop
 
 ## ✨ Features Overview
 
-- 🎁 **Giveaway System** — Create, manage, pause, resume, reroll, and delete giveaways with button & reaction entry
-- 🎮 **18 Mini-Games** — Blackjack, Poker, Minesweeper, Trivia, Emoji Quiz, Hangman, Word Scramble, and more
-- 💰 **Full Economy** — Earn coins through daily rewards, work, and games. Spend them in the shop for boost items
-- 🛒 **Item Shop & Inventory** — Buy items that give permanent multiplier bonuses to your earnings
-- 🔧 **Utility Tools** — Check latency, view server/user info, and display avatars
-- 💾 **Persistent Data** — All user balances, inventories, and giveaways saved in SQLite
+- 🌍 **English & Vietnamese Localization** — `$lang server vi` or `$lang user en`.
+- 🎁 **Giveaway System** — Create, manage, pause, resume, reroll, and delete giveaways.
+- 🎮 **Mini-Games** — Blackjack, Poker, Minesweeper, Trivia, Emoji Quiz, Hangman, Word Scramble, Wordchain, Memory, and more!
+- 💰 **Full Economy System** — `$daily`, `$work`, `$fish`, profiles, and global leaderboards.
+- 🛒 **Item Shop & Interactivity** — Extensive lore, item descriptions (`$iteminfo`), buy, sell, and multiplier enhancements.
+- 🔧 **Utility Tools** — Check latencies, user/server infographics, and avatar rippers.
 
 ---
 
 ## 🎁 Giveaway System
 
-Full-featured giveaway management with button-click and reaction entry. Requires `Manage Messages` permission.
+Full-featured giveaway management with clickable buttons. Requires `Manage Messages` permission.
 
 | Subcommand | Usage | Description |
 |------------|-------|-------------|
@@ -73,106 +76,92 @@ Full-featured giveaway management with button-click and reaction entry. Requires
 | `delete` | `$giveaway delete <message_id>` | Permanently delete a giveaway |
 
 > **Aliases:** `$g`
->
-> **Entry methods:** Users can enter by clicking the 🎉 button or reacting with 🎉
->
-> **Features:** Role-restricted entry, live participant count embed, automatic winner selection on timer expiry
 
 ---
 
 ## 🎮 Fun & Games
 
-All games feature interactive button-based UIs and rich embeds. Many support **coin betting** — win to grow your balance!
+All games feature interactive button-based UIs and rich embeds. Many support **coin betting** — win to grow your wealth!
 
 ### 🃏 Card & Casino Games
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
-| `$blackjack [bet]` | `$bj` | Play Blackjack against the dealer. Hit or Stand with buttons. Default bet: 50 coins. Pays 2× on win, 2.5× on natural Blackjack. Supports item multiplier bonuses |
-| `$poker [bet]` | `$pk` | Texas Hold'em style multiplayer poker with lobby system. Join with buttons, supports bot opponents. Full betting rounds (call, raise, fold, all-in) via modals |
-| `$slots` | — | Spin the slot machine. Match symbols to win coin payouts |
-| `$coinflip` | `$cf`, `$flip` | Flip a coin — simple heads or tails |
-| `$dice` | `$roll` | Roll dice with various betting modes |
+| `$blackjack [bet]` | `$bj` | Play Blackjack against the dealer. Hit or Stand. Default bet: 50. Pays 2× on win, 2.5× on natural! |
+| `$poker [bet]` | `$pk` | Texas Hold'em style multiplayer poker with lobby system. Join with buttons. Full betting rounds via modals! |
+| `$slots` | — | Spin the slot machine. Match 3 symbols to win huge Jackpots! |
+| `$coinflip` | `$cf`, `$flip` | Flip a coin — simple heads or tails betting |
+| `$dice` | `$roll` | Roll the golden dice for a quick gamble |
 
-### 🧩 Puzzle & Word Games
-
-| Command | Aliases | Description |
-|---------|---------|-------------|
-| `$minesweeper [bet]` | `$mine`, `$ms` | Interactive 24-cell Minesweeper grid with buttons. Reveal cells, avoid mines. More cells revealed = higher payout |
-| `$hangman` | `$hang`, `$hm` | Classic Hangman with 100+ words and hints. 6 lives, guess letters or the full word. 2 minute time limit |
-| `$scramble` | `$scram` | Unscramble a random word from 8 categories (Technology, Animals, Food, Geography, Objects, Emotions, Verbs, Adjectives). Win 50 coins. 30 second timer |
-| `$wordchain` | `$wc` | Multiplayer word chain — each word must start with the last letter of the previous word. Anti-spam: can't go twice in a row. Type `!stop` to end |
-| `$guess` | `$gn` | Guess a random number within a range |
-| `$math` | — | Solve a randomly generated math problem for coins |
-
-### 🧠 Trivia & Quiz Games
+### 🧩 Logic & Word Games
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
-| `$trivia` | — | Answer multiple-choice questions from 150+ trivia questions across 6 categories: General Knowledge, Science & Nature, History & Culture, Pop Culture, Geography, and Math & Logic. Win coins for correct answers |
-| `$emojiquiz` | `$quiz` | Guess what the emojis represent! 200+ puzzles across 12 categories: Movies, TV Shows, Songs, Food, Animals, Countries, Sports, Video Games, Brands, Celebrities, Concepts, and more. Supports multiple accepted answers |
+| `$minesweeper [bet]` | `$mine`, `$ms` | Interactive grid Minesweeper. Flags, bombs, and shields! |
+| `$hangman` | `$hang`, `$hm` | Classic Hangman. 6 lives, guess letters or the full word with a hint dictionary system. |
+| `$scramble` | `$scram` | Unscramble a random word from 8 categories. Win 50 coins. |
+| `$wordchain` | `$wc` | Multiplayer word chain. Play continuously in a channel until told to stop (Nối chữ)! |
+| `$guess` | `$gn` | Guess a random number between 1 and 100 within 10 attempts! |
+| `$emojiquiz` | `$quiz` | Guess the Movie/Phrase/Place from a string of Emojis! Huge puzzle database. |
+| `$memory` | `$mem`, `$match`| Flip cards and find the matching pairs before time expires! |
+| `$trivia` | — | Answer multiple-choice questions from 150+ diverse trivia challenges. |
 
-### 🎲 Quick Games
+### 🎲 Fast-Paced Duels & Challenges
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
-| `$rps` | `$rock` | Rock Paper Scissors with interactive buttons and animated results |
-| `$tictactoe` | `$ttt` | Challenge another player to Tic-Tac-Toe with a button-based grid |
-| `$8ball` | — | Ask the Magic 8-Ball a question and get a mystical answer |
-| `$reaction` | `$react` | Test your reaction speed — click the button as fast as you can |
-| `$wyr` | — | Would You Rather — vote on two options with buttons. Results shown with percentages after 60 seconds |
+| `$rps` | `$rock` | Rock Paper Scissors. Solo against bot or PvP duel! |
+| `$tictactoe` | `$ttt` | Challenge a friend to 3x3 Tic-Tac-Toe. Winner takes the pot. |
+| `$connect4` | `$c4` | 7x6 Connect 4. Strategic 1v1 PvP matches. |
+| `$reaction` | `$react` | Reaction speed test. Click the button the instant it flashes "GO"! |
 
 ---
 
 ## 💰 Economy System
 
-Earn, spend, and compete with a full virtual economy. All data persists across sessions.
+Earn, spend, and compete. All data flawlessly persists across restarts.
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
 | `$balance` | `$bal`, `$bl` | Check your current coin balance |
-| `$daily` | `$d`, `$dy` | Claim **500 coins** every 24 hours. Boosted by item multipliers |
-| `$work` | `$w`, `$wk` | Work a random job (Programmer, Chef, Doctor, etc.) and earn **100–300 coins**. 1 hour cooldown. Boosted by item multipliers |
-| `$transfer` | `$pay`, `$tf` | Send coins to another user (e.g. `$pay @user 100`) |
-| `$shop` | `$sh`, `$store` | Browse the item shop — see prices, descriptions, and bonus multipliers |
-| `$buy` | `$b` | Buy an item from the shop (e.g. `$buy laptop`) |
-| `$inventory` | `$inv` | View your purchased items |
-| `$leaderboard` | `$lb`, `$top` | See the richest users ranked by balance |
-
-### � Multiplier System
-
-Items you buy provide **permanent percentage bonuses** to your earnings:
-
-- **Income multipliers** — Boost coin earnings from `$work`
-- **Daily multipliers** — Boost coin earnings from `$daily`
-- **Gamble multipliers** — Boost winnings from Blackjack, Poker, and other betting games
+| `$profile` | `$p`, `$prof` | Comprehensive overview: Wallet, Level, Ranking, Total Net Worth, and Collection. |
+| `$daily` | `$d`, `$dy` | Claim daily rewards. Boosted by items like Smartphones & Mansions! |
+| `$work` | `$w`, `$wk` | Work a job (Programmer, Chef, Doctor...) for hourly income! |
+| `$fish` | `$fishing` | The fishing minigame! Requires Rod & Bait to catch common and legendary sea creatures. |
+| `$shop` | `$sh`, `$store` | Browse the item shop by category (Tools, Baits, Income, Daily, Gamble). |
+| `$buy` | `$b` | Buy an item (e.g. `$buy 13` or `$buy laptop`) |
+| `$sell` | `$s` | Sell items back to the shop for a 70% refund. |
+| `$inventory` | `$inv` | View your sorted inventory, total items, and absolute property value (`Net Worth`). |
+| `$iteminfo` | `$item`, `$info`| Read detailed lore, multiplier stats, and pricing for any specific item! |
+| `$transfer` | `$pay`, `$tf` | Send coins seamlessly to another user. |
+| `$leaderboard` | `$lb`, `$top` | Global server ranking based strictly on accurate **Net Worth** (Wallet + Inventory). |
 
 ---
 
-## 🛒 Shop & Items
+## 🌐 Setting up the Language
 
-| Item | Price | Bonus |
-|------|-------|-------|
-| 🍪 Cookies | 50 | +1% Daily Reward |
-| 🎣 Fishing Rod | 500 | +2% Work Income |
-| 📱 Phone | 1,000 | +5% Daily Reward |
-| 🛡️ Shield | 1,000 | +3% Daily Reward |
-| ⚔️ Sword | 1,500 | +5% Work Income |
-| 💻 Laptop | 5,000 | +10% Work Income |
-| 🍀 Lucky Clover | 7,777 | +7% Gambling Winnings |
-| 👔 Business Suit | 10,000 | +20% Work Income |
-| 🎫 Golden Ticket | 50,000 | +50% Daily Reward |
+The bot is fully localized! 
+- The ultimate fallback language is `English`.
+- If a server Administrator sets a language, everyone in the server sees that language.
+- If a User sets a language explicitly, their personal preference will override the server.
+
+| Command | Description |
+|---------|-------------|
+| `$lang server vi` | Changes the default language for the ENTIRE server to Vietnamese. (Requires Admin) |
+| `$lang user en` | Sets your PERSONAL interface language to English. |
+| `$lang reset` | Clears your personal setting to sync with the server default again. |
 
 ---
 
-## � Utility Commands
+##  Utility Commands
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
-| `$ping` | `$p` | Check bot latency and API response time |
-| `$avatar [user]` | `$av` | Display a user's avatar in full resolution. Defaults to yourself if no user specified |
-| `$serverinfo` | — | View detailed server statistics (member count, channels, roles, creation date, etc.) |
-| `$userinfo [user]` | `$user`, `$ui` | View detailed user info (account age, roles, join date, status, permissions, etc.) |
+| `$ping` | `$p` | Check bot latency, API response time, and detailed hardware usage (RAM, Uptime, Node.js ver) |
+| `$avatar [user]` | `$av` | Display a user's avatar. Also supports rendering their Server Profile Avatar and Banner! |
+| `$serverinfo` | — | View deep server stats (Boost tiers, Offline ratios, Text/Voice channel split) |
+| `$userinfo [user]` | `$user`, `$ui` | View account age, Discord badges, highest roles, and Discord permissions. |
+| `$help [command]`| — | Displays a highly interactive dropdown menu of all categories. Pass a command name to generate a highly detailed **Strategy & Rules Guide** explicitly for that component! |
 
 ---
 
@@ -209,7 +198,7 @@ Items you buy provide **permanent percentage bonuses** to your earnings:
    npm start
    ```
 
-   For development with auto-restart on file changes:
+   For rapid development:
    ```bash
    npm run dev
    ```
@@ -218,44 +207,30 @@ Items you buy provide **permanent percentage bonuses** to your earnings:
 
 ## 📁 Project Structure
 
-```
+```text
 bot-discord/
 ├── src/
-│   ├── index.js              # Bot entry point, event handlers, command loader
-│   ├── database.js            # SQLite database (users, giveaways, participants, guilds)
+│   ├── index.js              # Bot entry point, event handlers
+│   ├── database.js            # SQLite database manager
+│   ├── config.js              # Global configuration, prices, cooldowns
+│   ├── locales/               # i18n Translation dictionaries
+│   │   ├── en.json            #   English dictionary + comprehensive game guides & lore
+│   │   └── vi.json            #   Vietnamese dictionary
 │   ├── commands/
-│   │   ├── giveaway.js        # Giveaway management (start, end, reroll, pause, etc.)
-│   │   ├── help.js            # Interactive help menu with category dropdown
-│   │   ├── fun/               # 18 mini-game commands
-│   │   │   ├── blackjack.js   #   Blackjack with betting
-│   │   │   ├── poker.js       #   Multiplayer Texas Hold'em
-│   │   │   ├── minesweeper.js #   Interactive grid minesweeper
-│   │   │   ├── trivia.js      #   150+ trivia questions
-│   │   │   ├── emojiquiz.js   #   200+ emoji puzzles
-│   │   │   ├── hangman.js     #   Classic hangman (100+ words)
-│   │   │   ├── scramble.js    #   Word scramble (8 categories)
-│   │   │   ├── wordchain.js   #   Multiplayer word chain
-│   │   │   └── ...            #   + 10 more games
-│   │   ├── economy/           # 8 economy commands
-│   │   │   ├── daily.js       #   Daily reward (500 coins, 24h cooldown)
-│   │   │   ├── work.js        #   Work jobs (100-300 coins, 1h cooldown)
-│   │   │   ├── shop.js        #   Browse item shop
-│   │   │   ├── buy.js         #   Purchase items
-│   │   │   └── ...            #   + 4 more economy commands
-│   │   └── utility/           # 4 utility commands
-│   │       ├── ping.js        #   Bot latency check
-│   │       ├── avatar.js      #   User avatar display
-│   │       ├── serverinfo.js  #   Server statistics
-│   │       └── userinfo.js    #   User information
+│   │   ├── giveaway.js        # Giveaway subsystem
+│   │   ├── help.js            # Unified dynamic help generator
+│   │   ├── fun/               # 18+ game implementations
+│   │   ├── economy/           # Economy features (Shop, Fish, Work, Profile, Inventory)
+│   │   └── utility/           # Core platform status and inspection tools (Language, Ping, Info)
 │   └── utils/
-│       ├── embeds.js          # Embed builders, emojis & button constants
-│       ├── timer.js           # Giveaway expiry timer (auto-ends & picks winners)
-│       ├── pokerLogic.js      # Poker hand evaluation & deck management
-│       ├── shopItems.js       # Shop item definitions & multiplier configs
-│       └── multiplier.js      # Calculates user's total bonus multiplier from items
-├── giveaways.db               # SQLite database file (auto-created)
+│       ├── i18n.js            # Internationalization dynamic fallback engine
+│       ├── economy.js         # Parsing and Net-Worth recalculation algorithms
+│       ├── pokerLogic.js      # Texas Hold'em Engine
+│       └── shopItems.js       # Hardcoded shop catalog parameters
+├── .data/
+│   └── database.sqlite        # SQLite database file (auto-generated)
 ├── package.json
-└── .env                       # Environment variables (not committed)
+└── .env                       # Secrets
 ```
 
 ---
@@ -266,12 +241,12 @@ bot-discord/
 |------------|---------|
 | [Node.js](https://nodejs.org/) ≥ 18 | JavaScript runtime |
 | [discord.js](https://discord.js.org/) v14 | Discord API framework |
-| [sql.js](https://github.com/sql-js/sql.js) | SQLite database (in-process, no native dependencies) |
-| [ms](https://github.com/vercel/ms) | Human-readable duration parsing |
+| [sql.js](https://github.com/sql-js/sql.js) | SQLite database (in-process, fast IO) |
+| [ms](https://github.com/vercel/ms) | Human-readable duration processing |
 | [dotenv](https://github.com/motdotla/dotenv) | Environment variable management |
 
 ---
 
 ## 📝 License
 
-This project is open source and available for personal use.
+This project is open-source and available for personal use.
