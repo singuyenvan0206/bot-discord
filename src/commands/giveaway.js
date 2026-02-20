@@ -32,6 +32,8 @@ module.exports = {
 
             const endTime = Math.floor((Date.now() + duration) / 1000);
 
+            message.delete().catch(() => { });
+
             // Create giveaway object for embed (matches DB column names used by embeds.js)
             const giveaway = {
                 prize: prize,
