@@ -6,7 +6,7 @@ const config = require('../../config');
 module.exports = {
     name: 'tictactoe',
     aliases: ['ttt'],
-    description: 'Play Tic-Tac-Toe!',
+    description: 'Chơi trò chơi Cờ Ca-rô (Tic-Tac-Toe)!',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -59,8 +59,8 @@ module.exports = {
         const turnPlayer = () => currentTurn === 'X' ? playerX : playerO;
 
         const embed = new EmbedBuilder()
-            .setTitle('❌⭕  Tic-Tac-Toe')
-            .setDescription(`**❌ ${playerX.username}** vs **⭕ ${playerO.username}**\n\nIt's ${turnPlayer().username}'s turn! (${currentTurn === 'X' ? '❌' : '⭕'})`)
+            .setTitle('❌⭕  Cờ Ca-rô (Tic-Tac-Toe)')
+            .setDescription(`**❌ ${playerX.username}** vs **⭕ ${playerO.username}**\n\nĐến lượt của **${turnPlayer().username}**! (${currentTurn === 'X' ? '❌' : '⭕'})`)
             .setColor(config.COLORS.INFO).setTimestamp();
 
         const reply = await message.reply({ embeds: [embed], components: buildBoard() });
@@ -72,11 +72,11 @@ module.exports = {
 
         collector.on('collect', async (i) => {
             if ((currentTurn === 'X' && i.user.id !== playerX.id) || (currentTurn === 'O' && i.user.id !== playerO.id)) {
-                return i.reply({ content: `${config.EMOJIS.ERROR} It's not your turn!`, ephemeral: true });
+                return i.reply({ content: `${config.EMOJIS.ERROR} Không phải lượt của bạn!`, ephemeral: true });
             }
 
             const idx = parseInt(i.customId.split('_')[1]);
-            if (board[idx] !== null) return i.reply({ content: `${config.EMOJIS.ERROR} That spot is taken!`, ephemeral: true });
+            if (board[idx] !== null) return i.reply({ content: `${config.EMOJIS.ERROR} Vị trí này đã được chọn!`, ephemeral: true });
 
             board[idx] = currentTurn;
             let winner = checkWinner();
@@ -94,7 +94,7 @@ module.exports = {
             if (winner) {
                 let resultText;
                 if (winner === 'draw') {
-                    resultText = "🤝 **It's a draw!**";
+                    resultText = "🤝 **Hòa rồi!**";
                 } else {
                     const winnerId = winner === 'X' ? playerX.id : playerO.id;
                     const winnerName = winner === 'X' ? playerX.username : playerO.username;
@@ -102,14 +102,14 @@ module.exports = {
 
                     if (winnerId !== message.client.user.id) {
                         db.addBalance(winnerId, reward);
-                        resultText = `🏆 **${winnerName} wins!** (${winner === 'X' ? '❌' : '⭕'})\n${config.EMOJIS.COIN} **+${reward} coins!**`;
+                        resultText = `🏆 **${winnerName} đã thắng!** (${winner === 'X' ? '❌' : '⭕'})\n${config.EMOJIS.COIN} **+${reward} coins!**`;
                     } else {
-                        resultText = `🏆 **${winnerName} wins!** (${winner === 'X' ? '❌' : '⭕'})`;
+                        resultText = `🏆 **${winnerName} đã thắng!** (${winner === 'X' ? '❌' : '⭕'})`;
                     }
                 }
 
                 const finalEmbed = new EmbedBuilder()
-                    .setTitle('❌⭕  Tic-Tac-Toe — Game Over')
+                    .setTitle('❌⭕  Cờ Ca-rô — Kết thúc ván đấu')
                     .setDescription(`**❌ ${playerX.username}** vs **⭕ ${playerO.username}**\n\n${resultText}`)
                     .setColor(winner === 'draw' ? config.COLORS.WARNING : config.COLORS.SUCCESS).setTimestamp();
 
@@ -122,8 +122,8 @@ module.exports = {
                 collector.stop();
             } else {
                 const turnEmbed = new EmbedBuilder()
-                    .setTitle('❌⭕  Tic-Tac-Toe')
-                    .setDescription(`**❌ ${playerX.username}** vs **⭕ ${playerO.username}**\n\nIt's ${turnPlayer().username}'s turn! (${currentTurn === 'X' ? '❌' : '⭕'})`)
+                    .setTitle('❌⭕  Cờ Ca-rô (Tic-Tac-Toe)')
+                    .setDescription(`**❌ ${playerX.username}** vs **⭕ ${playerO.username}**\n\nĐến lượt của **${turnPlayer().username}**! (${currentTurn === 'X' ? '❌' : '⭕'})`)
                     .setColor(config.COLORS.INFO).setTimestamp();
 
                 await i.update({ embeds: [turnEmbed], components: buildBoard() });
@@ -132,7 +132,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                reply.edit({ embeds: [new EmbedBuilder().setTitle(`❌⭕  Tic-Tac-Toe — ${config.EMOJIS.TIMER} Timed Out`).setColor(config.COLORS.NEUTRAL)], components: [] }).catch(() => { });
+                reply.edit({ embeds: [new EmbedBuilder().setTitle(`❌⭕  Cờ Ca-rô — ${config.EMOJIS.TIMER} Hết thời gian`).setColor(config.COLORS.NEUTRAL)], components: [] }).catch(() => { });
             }
             startCooldown(message.client, 'tictactoe', message.author.id);
             if (opponent && !isBot) startCooldown(message.client, 'tictactoe', opponent.id);

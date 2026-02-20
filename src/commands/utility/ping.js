@@ -4,9 +4,9 @@ const config = require('../../config');
 module.exports = {
     name: 'ping',
     aliases: ['p', 'pong'],
-    description: 'Check the bot\'s latency and status',
+    description: 'Kiểm tra độ trễ và trạng thái hoạt động của bot',
     async execute(message, args) {
-        const sent = await message.reply('🏓 Pinging...');
+        const sent = await message.reply('🏓 Đang kiểm tra tín hiệu...');
         const roundtrip = sent.createdTimestamp - message.createdTimestamp;
         const heartbeat = message.client.ws.ping;
         const uptime = process.uptime();
@@ -16,7 +16,7 @@ module.exports = {
         const hours = Math.floor((uptime % 86400) / 3600);
         const minutes = Math.floor((uptime % 3600) / 60);
         const seconds = Math.floor(uptime % 60);
-        const uptimeStr = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        const uptimeStr = `${days}n ${hours}g ${minutes}p ${seconds}s`;
 
         // Memory usage
         const memUsage = process.memoryUsage();
@@ -37,19 +37,19 @@ module.exports = {
             .setTitle('🏓  Pong!')
             .setDescription(`${latencyBar(roundtrip)}`)
             .addFields(
-                { name: '📡 Roundtrip', value: `\`${roundtrip}ms\``, inline: true },
-                { name: '💓 Heartbeat', value: `\`${heartbeat}ms\``, inline: true },
-                { name: '⏱️ Uptime', value: `\`${uptimeStr}\``, inline: true },
-                { name: '🖥️ Memory', value: `\`${memMB} MB\``, inline: true },
-                { name: '🌐 Servers', value: `\`${message.client.guilds.cache.size}\``, inline: true },
-                { name: '👥 Users', value: `\`${message.client.users.cache.size}\``, inline: true },
+                { name: '📡 Độ trễ (Roundtrip)', value: `\`${roundtrip}ms\``, inline: true },
+                { name: '💓 Nhịp tim (Heartbeat)', value: `\`${heartbeat}ms\``, inline: true },
+                { name: '⏱️ Thời gian hoạt động', value: `\`${uptimeStr}\``, inline: true },
+                { name: '🖥️ Bộ nhớ dùng', value: `\`${memMB} MB\``, inline: true },
+                { name: '🌐 Máy chủ', value: `\`${message.client.guilds.cache.size}\``, inline: true },
+                { name: '👥 Người dùng', value: `\`${message.client.users.cache.size}\``, inline: true },
                 { name: '📦 Node.js', value: `\`${process.version}\``, inline: true },
                 { name: '📚 Discord.js', value: `\`v${require('discord.js').version}\``, inline: true },
-                { name: '💻 Platform', value: `\`${process.platform}\``, inline: true },
+                { name: '💻 Nền tảng', value: `\`${process.platform}\``, inline: true },
             )
             .setColor(color)
             .setTimestamp()
-            .setFooter({ text: `Requested by ${message.author.tag}` });
+            .setFooter({ text: `Yêu cầu bởi ${message.author.tag}` });
 
         return sent.edit({ content: null, embeds: [embed] });
     }

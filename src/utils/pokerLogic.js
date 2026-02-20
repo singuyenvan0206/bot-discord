@@ -66,52 +66,52 @@ function evaluateHand(holeCards, communityCards) {
         const flushSuit = getFlushSuit(allCards);
         if (flushSuit) {
             const flushCards = allCards.filter(c => c.suit === flushSuit);
-            if (getStraight(flushCards)) return { score: 900, name: 'Straight Flush', cards: flushCards.slice(0, 5) };
+            if (getStraight(flushCards)) return { score: 900, name: 'Thùng Phá Sảnh', cards: flushCards.slice(0, 5) };
         }
     }
 
     // 4 of a Kind
     if (maxCount === 4) {
         const quadValue = Object.keys(rankCounts).find(key => rankCounts[key] === 4);
-        return { score: 800 + parseInt(quadValue), name: 'Four of a Kind' }; // Score tie-break with rank
+        return { score: 800 + parseInt(quadValue), name: 'Tứ Quý' }; // Score tie-break with rank
     }
 
     // Full House (3 + 2)
     if (maxCount === 3 && countValues.filter(c => c >= 2).length >= 2) {
         const tripValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 3).map(Number));
-        return { score: 700 + tripValue, name: 'Full House' };
+        return { score: 700 + tripValue, name: 'Cù Lũ' };
     }
 
     // Flush
     if (isFlush) {
-        return { score: 600 + isFlush[0].value, name: 'Flush' };
+        return { score: 600 + isFlush[0].value, name: 'Thùng' };
     }
 
     // Straight
     if (isStraight) {
-        return { score: 500 + isStraight[0].value, name: 'Straight' };
+        return { score: 500 + isStraight[0].value, name: 'Sảnh' };
     }
 
     // 3 of a Kind
     if (maxCount === 3) {
         const tripValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 3).map(Number));
-        return { score: 400 + tripValue, name: 'Three of a Kind' };
+        return { score: 400 + tripValue, name: 'Sám Cô' };
     }
 
     // Two Pair
     if (countValues.filter(c => c === 2).length >= 2) {
         const pairs = Object.keys(rankCounts).filter(k => rankCounts[k] === 2).map(Number).sort((a, b) => b - a);
-        return { score: 300 + pairs[0], name: 'Two Pair' };
+        return { score: 300 + pairs[0], name: 'Thú' };
     }
 
     // Pair
     if (maxCount === 2) {
         const pairValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 2).map(Number));
-        return { score: 200 + pairValue, name: 'Pair' };
+        return { score: 200 + pairValue, name: 'Đôi' };
     }
 
     // High Card
-    return { score: 100 + allCards[0].value, name: 'High Card' };
+    return { score: 100 + allCards[0].value, name: 'Mậu Thầu' };
 }
 
 function getFlushSuit(cards) {

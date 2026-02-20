@@ -82,7 +82,7 @@ async function finishGiveaway(client, giveaway) {
                     await user.send({
                         embeds: [
                             createWinnerAnnouncementEmbed(giveaway, [winnerId])
-                                .setFooter({ text: `From server: ${guild.name}` })
+                                .setFooter({ text: `Từ máy chủ: ${guild.name}` })
                         ],
                     });
                 } catch {
@@ -91,7 +91,7 @@ async function finishGiveaway(client, giveaway) {
             }
         } else {
             await channel.send({
-                content: `😔 No valid entries for the giveaway **${giveaway.prize}** — no winners could be picked.`,
+                content: `😔 Không có người tham gia hợp lệ cho giveaway **${giveaway.prize}** — không thể chọn người thắng.`,
             }).catch(() => { });
         }
     } catch (error) {

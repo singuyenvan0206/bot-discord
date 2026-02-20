@@ -6,6 +6,7 @@ const path = require('path');
 const db = require('./database');
 const { EMOJI, BUTTON_ID, createGiveawayEmbed } = require('./utils/embeds');
 const { startTimer } = require('./utils/timer');
+const { t, getLanguage } = require('./utils/i18n');
 
 // ─── Config ──────────────────────────────────────────────────────
 
@@ -225,8 +226,9 @@ client.on(Events.InteractionCreate, async interaction => {
 
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
+                const lang = getLanguage(interaction.user.id, interaction.guild?.id);
                 return interaction.reply({
-                    content: `❌ Vui lòng đợi **${timeLeft.toFixed(1)}s** nữa để sử dụng lại lệnh này!`,
+                    content: t('common.cooldown', lang, { time: timeLeft.toFixed(1) }),
                     ephemeral: true
                 });
             }
@@ -237,16 +239,22 @@ client.on(Events.InteractionCreate, async interaction => {
             setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
         }
 
+        const lang = getLanguage(messageAdapter.user.id, messageAdapter.guild?.id);
+
         try {
             await command.execute(messageAdapter, args);
         } catch (error) {
             console.error(`[Slash] Error executing /${commandName}:`, error);
-            const errMsg = '❌ An error occurred while executing this command.';
+            const errMsg = t('common.error', lang);
             if (!hasReplied) {
                 interaction.reply({ content: errMsg, ephemeral: true }).catch(() => { });
             } else {
                 interaction.followUp({ content: errMsg, ephemeral: true }).catch(() => { });
             }
+        }
+    } else if (interaction.isButton()) {
+        if (interaction.customId === BUTTON_ID) {
+            return handleButtonEntry(interaction);
         }
     }
 });
@@ -256,18 +264,18 @@ const xpCooldowns = new Set();
 client.on(Events.MessageCreate, async message => {
     if (message.author.bot) return;
 
-    // ─── Leveling System (Removed) ───
-    // if (!xpCooldowns.has(message.author.id)) { ... }
-
     // ─── Command Handling ───
-    if (!message.content.startsWith(PREFIX)) return;
+    if (!message.content.startsWith(config.PREFIX)) return;
 
-    const args = message.content.slice(PREFIX.length).trim().split(/ +/);
+    const args = message.content.slice(config.PREFIX.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
-    const command = client.commands.get(commandName);
+    const command = client.commands.get(commandName) ||
+        client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
     if (!command) return;
+
+    const lang = getLanguage(message.author.id, message.guild?.id);
 
     // Cooldown handling
     if (!client.cooldowns.has(command.name)) {
@@ -283,7 +291,7 @@ client.on(Events.MessageCreate, async message => {
 
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
-            return message.reply(`❌ Vui lòng đợi **${timeLeft.toFixed(1)}s** nữa để sử dụng lại lệnh này!`).then(m => setTimeout(() => m.delete().catch(() => { }), 5000));
+            return message.reply(t('common.cooldown', lang, { time: timeLeft.toFixed(1) }));
         }
     }
 
@@ -296,7 +304,7 @@ client.on(Events.MessageCreate, async message => {
         await command.execute(message, args);
     } catch (error) {
         console.error(`[Command] Error executing !${commandName}:`, error);
-        message.reply('❌ An error occurred while executing this command.').catch(() => { });
+        message.reply(t('common.error', lang)).catch(() => { });
     }
 });
 
@@ -328,13 +336,13 @@ function parseDuration(str) {
 async function handleButtonEntry(interaction) {
     const giveaway = db.getGiveaway(interaction.message.id);
 
-    if (!giveaway) return interaction.reply({ content: '❌ This giveaway no longer exists.', ephemeral: true });
-    if (giveaway.ended) return interaction.reply({ content: '❌ This giveaway has already ended.', ephemeral: true });
-    if (giveaway.paused) return interaction.reply({ content: '⏸️ This giveaway is currently paused.', ephemeral: true });
+    if (!giveaway) return interaction.reply({ content: '❌ Giveaway này không còn tồn tại.', ephemeral: true });
+    if (giveaway.ended) return interaction.reply({ content: '❌ Giveaway này đã kết thúc.', ephemeral: true });
+    if (giveaway.paused) return interaction.reply({ content: '⏸️ Giveaway này đang tạm dừng.', ephemeral: true });
 
     if (giveaway.required_role_id) {
         if (!interaction.member.roles.cache.has(giveaway.required_role_id)) {
-            return interaction.reply({ content: `❌ You need the <@&${giveaway.required_role_id}> role to enter.`, ephemeral: true });
+            return interaction.reply({ content: `❌ Bạn cần vai trò <@&${giveaway.required_role_id}> để tham gia.`, ephemeral: true });
         }
     }
 
@@ -345,7 +353,7 @@ async function handleButtonEntry(interaction) {
         const embed = createGiveawayEmbed(giveaway, newCount);
         const { createEntryButton } = require('./utils/embeds');
         await interaction.update({ embeds: [embed], components: [createEntryButton()] });
-        return interaction.followUp({ content: '❌ You have left the giveaway.', ephemeral: true });
+        return interaction.followUp({ content: '❌ Bạn đã rời khỏi giveaway.', ephemeral: true });
     }
 
     db.addParticipant(giveaway.id, interaction.user.id);
@@ -354,7 +362,7 @@ async function handleButtonEntry(interaction) {
     const embed = createGiveawayEmbed(giveaway, newCount);
     const { createEntryButton } = require('./utils/embeds');
     await interaction.update({ embeds: [embed], components: [createEntryButton()] });
-    return interaction.followUp({ content: '✅ You have entered the giveaway! Good luck! 🍀', ephemeral: true });
+    return interaction.followUp({ content: '✅ Bạn đã tham gia giveaway! Chúc bạn may mắn! 🍀', ephemeral: true });
 }
 
 // ─── Reaction Handlers (Giveaway Entry) ──────────────────────────

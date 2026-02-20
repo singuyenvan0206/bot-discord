@@ -6,7 +6,7 @@ const config = require('../../config');
 module.exports = {
     name: 'scramble',
     aliases: ['scram'],
-    description: 'Unscramble the word',
+    description: 'Sắp xếp lại từ đã bị xáo trộn',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -19,7 +19,7 @@ module.exports = {
 
             if (data && data.length > 0) {
                 word = data[0];
-                category = "Random";
+                category = "Ngẫu nhiên";
 
                 // Try fetching definition for hint
                 try {
@@ -29,7 +29,7 @@ module.exports = {
                     if (defData && defData.length > 0 && defData[0].meanings && defData[0].meanings.length > 0) {
                         const meaning = defData[0].meanings[0];
                         if (meaning.definitions && meaning.definitions.length > 0) {
-                            category = "Definition";
+                            category = "Định nghĩa";
                             hint = meaning.definitions[0].definition;
                         }
                     }
@@ -42,22 +42,22 @@ module.exports = {
         }
 
         if (!word) {
-            return message.reply(`${config.EMOJIS.ERROR} Unable to fetch a word at this time. Please try again later.`);
+            return message.reply(`${config.EMOJIS.ERROR} Hiện không thể lấy được từ mới. Vui lòng thử lại sau.`);
         }
 
         const scrambled = word.split('').sort(() => Math.random() - 0.5).join('');
 
-        if (category === "Definition" && hint) {
-            hint = `Definition: **${hint}**`;
+        if (category === "Định nghĩa" && hint) {
+            hint = `Định nghĩa: **${hint}**`;
         } else {
-            hint = `Category: **${category}**` + (Math.random() > 0.5 ? ` | Starts with: **${word[0].toUpperCase()}**` : ` | Length: **${word.length}**`);
+            hint = `Thể loại: **${category}**` + (Math.random() > 0.5 ? ` | Bắt đầu bằng: **${word[0].toUpperCase()}**` : ` | Độ dài: **${word.length}**`);
         }
 
         const embed = new EmbedBuilder()
-            .setTitle('🔠  Word Scramble')
-            .setDescription(`Unscramble this word: **${scrambled}**\n\n💡 **Hint:** ${hint}`)
+            .setTitle('🔠  Sắp Xếp Từ (Scramble)')
+            .setDescription(`Hãy sắp xếp lại từ này: **${scrambled}**\n\n💡 **Gợi ý:** ${hint}`)
             .setColor(0xE67E22)
-            .setFooter({ text: 'You have 30 seconds!' });
+            .setFooter({ text: 'Bạn có 30 giây!' });
 
         await message.reply({ embeds: [embed] });
 
@@ -78,13 +78,13 @@ module.exports = {
 
             db.addBalance(winner.author.id, totalReward);
 
-            let msgText = `${config.EMOJIS.SUCCESS} **Correct!** ${winner.author} unscrambled the word **${word}** and won ${config.EMOJIS.COIN} **${baseReward}** coins!`;
-            if (bonus > 0) msgText += ` ✨ *(+${bonus} item bonus)*`;
+            let msgText = `${config.EMOJIS.SUCCESS} **Chính xác!** ${winner.author} đã tìm ra từ **${word}** và nhận được ${config.EMOJIS.COIN} **${baseReward}** coins!`;
+            if (bonus > 0) msgText += ` ✨ *(Thưởng item +${bonus})*`;
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);
         } catch {
-            message.channel.send(`${config.EMOJIS.TIMER} **Time's up!** The word was **${word}**.`);
+            message.channel.send(`${config.EMOJIS.TIMER} **Hết thời gian!** Từ đó là **${word}**.`);
             startCooldown(message.client, 'scramble', message.author.id);
         }
     }

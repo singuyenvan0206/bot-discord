@@ -5,8 +5,11 @@ const config = require('../../config');
 module.exports = {
     name: 'work',
     aliases: ['w', 'wk'],
-    description: 'Work to earn money',
+    description: 'Làm việc để kiếm tiền',
     async execute(message, args) {
+        const { t, getLanguage } = require('../../utils/i18n');
+        const lang = getLanguage(message.author.id, message.guild.id);
+
         const user = db.getUser(message.author.id);
         const now = Math.floor(Date.now() / 1000);
         const cooldown = config.ECONOMY.WORK_COOLDOWN;
@@ -14,10 +17,10 @@ module.exports = {
         if (now - user.last_work < cooldown) {
             const remaining = (user.last_work + cooldown) - now;
             const minutes = Math.floor(remaining / 60);
-            return message.reply(`${config.EMOJIS.WAITING} You need to rest! Work again in **${minutes}m**.`);
+            return message.reply(t('work.cooldown', lang, { minutes }));
         }
 
-        const jobs = ['Programmer', 'Builder', 'Waiter', 'Chef', 'Mechanic', 'Doctor', 'Artist'];
+        const jobs = t('work.jobs', lang);
         const job = jobs[Math.floor(Math.random() * jobs.length)];
 
         // Base earnings from config
@@ -32,9 +35,9 @@ module.exports = {
         db.updateUser(message.author.id, { last_work: now });
         db.addBalance(message.author.id, total);
 
-        let msg = `${config.EMOJIS.WORK} You worked as a **${job}** and earned **${baseEarnings}** coins! ${config.EMOJIS.COIN}`;
+        let msg = t('work.success', lang, { job, amount: baseEarnings, emoji: config.EMOJIS.COIN });
         if (bonus > 0) {
-            msg += `\n✨ **Item Bonus:** +${bonus} coins (${Math.round(multiplier * 100)}%)!`;
+            msg += t('work.bonus', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
         }
 
         return message.reply(msg);

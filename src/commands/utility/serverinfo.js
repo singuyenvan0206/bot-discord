@@ -4,7 +4,7 @@ const config = require('../../config');
 module.exports = {
     name: 'serverinfo',
     aliases: ['server', 'si'],
-    description: 'View detailed server information',
+    description: 'Xem thông tin chi tiết về máy chủ',
     async execute(message, args) {
         const guild = message.guild;
         const owner = await guild.fetchOwner().catch(() => null);
@@ -30,7 +30,7 @@ module.exports = {
         // Boost info
         const boostLevel = guild.premiumTier;
         const boostCount = guild.premiumSubscriptionCount || 0;
-        const boostLabels = ['None', 'Level 1', 'Level 2', 'Level 3'];
+        const boostLabels = ['Không có', 'Cấp 1', 'Cấp 2', 'Cấp 3'];
 
         // Emoji & Sticker count
         const emojis = guild.emojis.cache.size;
@@ -47,27 +47,27 @@ module.exports = {
         const roleCount = guild.roles.cache.size - 1;
 
         // Verification level
-        const verificationLevels = ['None', 'Low', 'Medium', 'High', 'Very High'];
-        const verificationLevel = verificationLevels[guild.verificationLevel] || 'Unknown';
+        const verificationLevels = ['Không có', 'Thấp', 'Trung bình', 'Cao', 'Rất cao'];
+        const verificationLevel = verificationLevels[guild.verificationLevel] || 'Không rõ';
 
         const embed = new EmbedBuilder()
-            .setTitle(`📊  ${guild.name}`)
+            .setTitle(`📊  Thông tin máy chủ: ${guild.name}`)
             .setThumbnail(guild.iconURL({ dynamic: true, size: 512 }))
             .addFields(
-                { name: '👑 Owner', value: owner ? `${owner.user.tag}\n${owner.user}` : 'Unknown', inline: true },
-                { name: '📅 Created', value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:D>\n<t:${Math.floor(guild.createdTimestamp / 1000)}:R>`, inline: true },
-                { name: '🔒 Verification', value: `${verificationLevel}`, inline: true },
+                { name: '👑 Chủ sở hữu', value: owner ? `${owner.user.tag}\n${owner.user}` : 'Không rõ', inline: true },
+                { name: '📅 Ngày tạo', value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:D>\n<t:${Math.floor(guild.createdTimestamp / 1000)}:R>`, inline: true },
+                { name: '🔒 Xác minh', value: `${verificationLevel}`, inline: true },
 
-                { name: `👥 Members (${totalMembers})`, value: `👤 Humans: **${humans}**\n🤖 Bots: **${bots}**\n🟢 Online: **${online}** | 🌙 Idle: **${idle}** | ⛔ DND: **${dnd}**`, inline: false },
+                { name: `👥 Thành viên (${totalMembers})`, value: `👤 Người: **${humans}**\n🤖 Bot: **${bots}**\n🟢 Trực tuyến: **${online}** | 🌙 Chờ: **${idle}** | ⛔ DND: **${dnd}**`, inline: false },
 
-                { name: `💬 Channels (${guild.channels.cache.size})`, value: `📝 Text: **${textChannels}** | 🔊 Voice: **${voiceChannels}**\n📁 Categories: **${categories}**${forums ? ` | 📋 Forums: **${forums}**` : ''}${stages ? ` | 🎤 Stages: **${stages}**` : ''}`, inline: false },
+                { name: `💬 Kênh (${guild.channels.cache.size})`, value: `📝 Văn bản: **${textChannels}** | 🔊 Thoại: **${voiceChannels}**\n📁 Danh mục: **${categories}**${forums ? ` | 📋 Diễn đàn: **${forums}**` : ''}${stages ? ` | 🎤 Sân khấu: **${stages}**` : ''}`, inline: false },
 
-                { name: `🚀 Boosts`, value: `Level: **${boostLabels[boostLevel]}**\nBoosts: **${boostCount}**`, inline: true },
-                { name: `😄 Emojis (${emojis})`, value: `Static: **${emojis - animated}** | Animated: **${animated}**\n🏷️ Stickers: **${stickers}**`, inline: true },
-                { name: `🎭 Roles (${roleCount})`, value: roles.length > 0 ? (roles.length > 900 ? roles.slice(0, 900) + '...' : roles) : 'None', inline: false },
+                { name: `🚀 Tăng cường (Boost)`, value: `Cấp độ: **${boostLabels[boostLevel]}**\nSố lượt: **${boostCount}**`, inline: true },
+                { name: `😄 Biểu tượng (${emojis})`, value: `Tĩnh: **${emojis - animated}** | Động: **${animated}**\n🏷️ Sticker: **${stickers}**`, inline: true },
+                { name: `🎭 Vai trò (${roleCount})`, value: roles.length > 0 ? (roles.length > 900 ? roles.slice(0, 900) + '...' : roles) : 'Không có', inline: false },
             )
             .setColor(config.COLORS.SCHEDULED)
-            .setFooter({ text: `Server ID: ${guild.id}` })
+            .setFooter({ text: `ID Máy chủ: ${guild.id}` })
             .setTimestamp();
 
         // Add banner if exists

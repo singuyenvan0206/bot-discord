@@ -6,7 +6,7 @@ const config = require('../../config');
 module.exports = {
     name: 'hangman',
     aliases: ['hang', 'hm'],
-    description: 'Play Hangman!',
+    description: 'Chơi Trò Chơi Người Treo Cổ (Hangman)!',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -35,7 +35,7 @@ module.exports = {
                     console.error('Error fetching definition:', e);
                 }
 
-                if (!hint) hint = "Mystery Word";
+                if (!hint) hint = "Từ bí ẩn (Không có định nghĩa)";
             }
         } catch (error) {
             console.error('Error fetching random word:', error);
@@ -43,7 +43,7 @@ module.exports = {
 
         // If API fails to provide a word
         if (!word) {
-            return message.reply(`${config.EMOJIS.ERROR} Unable to fetch a word at this time. Please try again later.`);
+            return message.reply(`${config.EMOJIS.ERROR} Hiện không thể lấy được từ mới. Vui lòng thử lại sau.`);
         }
 
         const guessed = new Set();
@@ -55,10 +55,10 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setTitle('😵  Hangman')
-            .setDescription(`**Hint:** ${hint}\n\n**Word:** ${getDisplay()}\n**Lives:** ${'❤️'.repeat(lives)}\n\n**Guessed:** ${Array.from(guessed).join(', ') || 'None'}`)
+            .setTitle('😵  Người Treo Cổ (Hangman)')
+            .setDescription(`**Gợi ý:** ${hint}\n\n**Từ:** ${getDisplay()}\n**Mạng sống:** ${'❤️'.repeat(lives)}\n\n**Đã đoán:** ${Array.from(guessed).join(', ') || 'Chưa có'}`)
             .setColor(config.COLORS.INFO)
-            .setFooter({ text: 'Type a letter to guess!' });
+            .setFooter({ text: 'Hãy gõ một chữ cái để đoán!' });
 
         const msg = await message.reply({ embeds: [embed] });
 
@@ -85,8 +85,8 @@ module.exports = {
 
                     db.addBalance(message.author.id, totalReward);
 
-                    let resultStr = `**Word:** ${word}\n\n${config.EMOJIS.SUCCESS} **YOU WON!** (You guessed the full word!)\n${config.EMOJIS.COIN} **+${baseReward} coins!**`;
-                    if (bonus > 0) resultStr += `\n✨ **Item Bonus:** +${bonus} (${Math.round(multiplier * 100)}%)`;
+                    let resultStr = `**Từ:** ${word}\n\n${config.EMOJIS.SUCCESS} **BẠN ĐÃ THẮNG!** (Bạn đã đoán đúng cả từ!)\n${config.EMOJIS.COIN} **+${baseReward} coins!**`;
+                    if (bonus > 0) resultStr += `\n✨ **Thưởng Item:** +${bonus} (${Math.round(multiplier * 100)}%)`;
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
                     collector.stop();
@@ -110,7 +110,7 @@ module.exports = {
 
             if (won || lost) {
                 gameOver = true;
-                let resultText = won ? `${config.EMOJIS.SUCCESS} **YOU WON!**` : '💀 **YOU DIED!**';
+                let resultText = won ? `${config.EMOJIS.SUCCESS} **BẠN ĐÃ THẮNG!**` : '💀 **BẠN ĐÃ THUA!**';
                 if (won) {
                     const baseReward = config.ECONOMY.HANGMAN_REWARD;
                     const { getUserMultiplier } = require('../../utils/multiplier');
@@ -120,13 +120,13 @@ module.exports = {
 
                     db.addBalance(message.author.id, totalReward);
                     resultText += `\n${config.EMOJIS.COIN} **+${baseReward}** coins!`;
-                    if (bonus > 0) resultText += ` *(+${bonus} item bonus)*`;
+                    if (bonus > 0) resultText += ` *(Thưởng item +${bonus})*`;
                 }
-                embed.setDescription(`**Word:** ${word}\n\n${resultText}`)
+                embed.setDescription(`**Từ:** ${word}\n\n${resultText}`)
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);
                 collector.stop();
             } else {
-                embed.setDescription(`**Hint:** ${hint}\n\n**Word:** ${currentDisplay}\n**Lives:** ${'❤️'.repeat(lives)}\n\n**Guessed:** ${Array.from(guessed).join(', ') || 'None'}`);
+                embed.setDescription(`**Gợi ý:** ${hint}\n\n**Từ:** ${currentDisplay}\n**Mạng sống:** ${'❤️'.repeat(lives)}\n\n**Đã đoán:** ${Array.from(guessed).join(', ') || 'Chưa có'}`);
             }
 
             await msg.edit({ embeds: [embed] });
@@ -134,7 +134,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time' && !gameOver) {
-                embed.setDescription(`${config.EMOJIS.TIMER} **Time's up!** The word was **${word}**.`).setColor(config.COLORS.NEUTRAL);
+                embed.setDescription(`${config.EMOJIS.TIMER} **Hết thời gian!** Từ đó là **${word}**.`).setColor(config.COLORS.NEUTRAL);
                 msg.edit({ embeds: [embed] });
             }
             startCooldown(message.client, 'hangman', message.author.id);

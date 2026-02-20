@@ -33,7 +33,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
 
     let result, color, payout = 0;
     if (dealerVal > 21) {
-        result = `🎉 **Dealer busts! You win${bet ? ` ${bet} coins` : ''}!**`;
+        result = `🎉 **Nhà cái bị quắc! Bạn thắng${bet ? ` ${bet} coins` : ''}!**`;
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
 
@@ -42,11 +42,11 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
             const multiplier = getUserMultiplier(i.user.id, 'gamble');
             const bonus = Math.floor(bet * multiplier);
             payout += bonus;
-            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% bonus: ${bonus} coins)*`;
+            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% thưởng: ${bonus} coins)*`;
         }
     }
     else if (playerVal > dealerVal) {
-        result = `🎉 **You win${bet ? ` ${bet} coins` : ''}!**`;
+        result = `🎉 **Bạn thắng${bet ? ` ${bet} coins` : ''}!**`;
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
 
@@ -55,15 +55,15 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
             const multiplier = getUserMultiplier(i.user.id, 'gamble');
             const bonus = Math.floor(bet * multiplier);
             payout += bonus;
-            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% bonus: ${bonus} coins)*`;
+            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% thưởng: ${bonus} coins)*`;
         }
     }
     else if (playerVal < dealerVal) {
-        result = `😔 **Dealer wins${bet ? ` ${bet} coins` : ''}!**`;
+        result = `😔 **Nhà cái thắng${bet ? ` ${bet} coins` : ''}!**`;
         color = config.COLORS.GAMBLE_LOSS;
     }
     else {
-        result = `🤝 **It's a push (tie)!**${bet ? ' Bet refunded.' : ''}`;
+        result = `🤝 **Hòa (Push)!**${bet ? ' Tiền cược được hoàn trả.' : ''}`;
         color = config.COLORS.GAMBLE_PUSH;
         payout = bet ? bet : 0;
     }
@@ -81,7 +81,7 @@ const { parseAmount } = require('../../utils/economy');
 module.exports = {
     name: 'blackjack',
     aliases: ['bj'],
-    description: 'Play Blackjack against the dealer!',
+    description: 'Chơi Xì Dách (Blackjack) đối kháng với nhà cái!',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -89,13 +89,13 @@ module.exports = {
         let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
 
         if (args[0] && (isNaN(bet) || bet <= 0)) {
-            return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
+            return message.reply(`${config.EMOJIS.ERROR} Số tiền cược không hợp lệ.`);
         }
 
         if (bet && user.balance < bet) {
-            return message.reply(`${config.EMOJIS.ERROR} You don't have enough money! Balance: **${user.balance}**`);
+            return message.reply(`${config.EMOJIS.ERROR} Bạn không đủ tiền! Số dư: **${user.balance}**`);
         }
-        if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+        if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
         if (bet) db.removeBalance(user.id, bet);
 
         const playerHand = [drawCard(), drawCard()];
@@ -108,10 +108,10 @@ module.exports = {
             const dealerCards = showDealer ? handString(dealerHand) : `${dealerHand[0].display} \`??\``;
 
             return new EmbedBuilder()
-                .setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack`)
+                .setTitle(`${config.EMOJIS.BLACKJACK}  Xì Dách (Blackjack)`)
                 .setDescription([
-                    `**Dealer's Hand** (${dealerVal})`, dealerCards, '',
-                    `**Your Hand** (${playerVal})`, handString(playerHand),
+                    `**Bài của Nhà Cái** (${dealerVal})`, dealerCards, '',
+                    `**Bài của Bạn** (${playerVal})`, handString(playerHand),
                 ].join('\n'))
                 .setColor(playerVal > 21 ? config.COLORS.GAMBLE_LOSS : config.COLORS.GAMBLE_WIN).setTimestamp();
         }
@@ -127,20 +127,20 @@ module.exports = {
                 db.addBalance(message.author.id, totalPayout);
 
                 const embed = buildEmbed(true)
-                    .setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — 🎉 BLACKJACK!`)
-                    .setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**\n**Base Win:** ${config.EMOJIS.COIN} +${baseProfit}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Returned:** ${config.EMOJIS.COIN} **${totalPayout}** coins`);
+                    .setTitle(`${config.EMOJIS.BLACKJACK}  Xì Dách — 🎉 XÌ DÁCH!`)
+                    .setDescription(buildEmbed(true).data.description + `\n\n🏆 **Xì Dách Tự Nhiên!**\n**Thắng cơ bản:** ${config.EMOJIS.COIN} +${baseProfit}\n**Thưởng Item:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Tổng nhận:** ${config.EMOJIS.COIN} **${totalPayout}** coins`);
 
                 startCooldown(message.client, 'blackjack', message.author.id);
                 return message.reply({ embeds: [embed] });
             } else {
-                const embed = buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — 🎉 BLACKJACK!`).setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**`);
+                const embed = buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Xì Dách — 🎉 XÌ DÁCH!`).setDescription(buildEmbed(true).data.description + `\n\n🏆 **Xì Dách Tự Nhiên!**`);
                 return message.reply({ embeds: [embed] });
             }
         }
 
         const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId(`bj_hit_${uid}`).setLabel('Hit').setEmoji(config.EMOJIS.BLACKJACK).setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId(`bj_stand_${uid}`).setLabel('Stand').setEmoji(config.EMOJIS.STOP).setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId(`bj_hit_${uid}`).setLabel('Rút bài').setEmoji(config.EMOJIS.BLACKJACK).setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`bj_stand_${uid}`).setLabel('Dừng bài').setEmoji(config.EMOJIS.STOP).setStyle(ButtonStyle.Danger),
         );
 
         const reply = await message.reply({ embeds: [buildEmbed()], components: [row] });
@@ -155,8 +155,8 @@ module.exports = {
             if (i.customId.startsWith('bj_hit')) {
                 playerHand.push(drawCard());
                 if (handValue(playerHand) > 21) {
-                    const bustEmbed = buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — 💥 BUST!`).setColor(config.COLORS.GAMBLE_LOSS);
-                    bustEmbed.setDescription(bustEmbed.data.description + '\n\n💥 **Bust! You went over 21. Dealer wins!**');
+                    const bustEmbed = buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Xì Dách — 💥 QUẮC!`).setColor(config.COLORS.GAMBLE_LOSS);
+                    bustEmbed.setDescription(bustEmbed.data.description + '\n\n💥 **Bạn đã bị quắc (quá 21)! Nhà cái thắng.**');
                     await i.update({ embeds: [bustEmbed], components: [] });
                     collector.stop();
                 } else if (handValue(playerHand) === 21) {
@@ -173,7 +173,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                reply.edit({ embeds: [buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — ${config.EMOJIS.TIMER} Timed Out`)], components: [] }).catch(() => { });
+                reply.edit({ embeds: [buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Xì Dách — ${config.EMOJIS.TIMER} Hết Thời Gian`)], components: [] }).catch(() => { });
             }
         });
     }

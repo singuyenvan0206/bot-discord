@@ -1,0 +1,60 @@
+{
+    "common": {
+        "error": "❌ An error occurred.",
+        "insufficient_funds": "❌ You don't have enough money! Balance: **{{balance}}**",
+        "invalid_amount": "❌ Invalid amount.",
+        "cooldown": "❌ Please wait **{{time}}s** before using this command again!",
+        "success": "✅ Success!"
+    },
+    "slots": {
+        "title": "🎰  Slot Machine",
+        "rolling": "🎰  Rolling...",
+        "win_jackpot": "🎰 **JACKPOT! THREE {{symbol}} SYMBOLS!**",
+        "win_small": "🎰 **Two matching symbols.** (50% Refund)",
+        "lose": "🎰 No matches. Better luck next time!",
+        "won_coins": "\n{{emoji}} **Won {{amount}} coins!**",
+        "lost_coins": "\n💸 **Lost {{amount}} coins.**",
+        "bonus_item": " *(Includes +{{amount}} bonus from item: {{percent}}%)*"
+    },
+    "daily": {
+        "cooldown": "❌ You can claim your daily reward in **{{hours}}h {{minutes}}m**.",
+        "success": "✅ You received your daily reward of **{{amount}}** coins! {{emoji}}",
+        "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "work": {
+        "cooldown": "❌ You need to rest! Come back to work in **{{minutes}} minutes**.",
+        "success": "💼 You worked as a **{{job}}** and earned **{{amount}}** coins! {{emoji}}",
+        "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
+        "jobs": [
+            "Programmer",
+            "Builder",
+            "Waiter",
+            "Chef",
+            "Mechanic",
+            "Doctor",
+            "Artist",
+            "Streamer",
+            "Shipper",
+            "Accountant"
+        ]
+    },
+    "balance": {
+        "title": "💰 Wallet: {{user}}",
+        "description": "💸 Cash: **{{balance}}** coins"
+    },
+    "transfer": {
+        "mention": "❌ Please mention (@mention) the user you want to transfer money to.",
+        "invalid": "❌ Please enter a valid amount.",
+        "self": "❌ You cannot transfer money to yourself!",
+        "bot": "❌ You cannot transfer money to bots.",
+        "insufficient": "❌ You don't have enough money! You only have **{{balance}}** coins.",
+        "success": "✅ Successfully transferred **{{amount}}** coins to {{user}}! 💸"
+    },
+    "coinflip": {
+        "lose": "💸 **You lost {{amount}} coins.**"
+    },
+    "language": {
+        "set_success": "✅ Language has been set to **English**.",
+        "invalid": "❌ Invalid language. Supported: `en`, `vi`"
+    }
+}

@@ -6,10 +6,10 @@ const { isManager } = require('../utils/permissions');
 module.exports = {
     name: 'giveaway',
     aliases: ['g'],
-    description: 'Manage giveaways',
+    description: 'Quản lý sự kiện tặng quà (Giveaway)',
     async execute(message, args) {
         if (!isManager(message.member)) {
-            return message.reply('❌ You do not have permission to manage giveaways.');
+            return message.reply('❌ Bạn không có quyền quản lý giveaway.');
         }
 
         const subcommand = args[0]?.toLowerCase();
@@ -21,15 +21,15 @@ module.exports = {
             const prize = args.slice(3).join(' ');
 
             if (!durationInput || !winnersInput || !prize) {
-                return message.reply('❌ Usage: `$giveaway start <time> <winners> <prize>`\nExample: `$giveaway start 10m 1 Nitro`');
+                return message.reply(`❌ Cách dùng: \`${config.PREFIX}giveaway start <thời_gian> <số_người_thắng> <phần_thưởng>\`\nVí dụ: \`${config.PREFIX}giveaway start 10m 1 Nitro\``);
             }
 
             const ms = require('ms');
             const duration = ms(durationInput);
-            if (!duration) return message.reply('❌ Invalid duration format (e.g., 10m, 1h, 1d).');
+            if (!duration) return message.reply('❌ Định dạng thời gian không hợp lệ (vđ: 10m, 1h, 1d).');
 
             const winnerCount = parseInt(winnersInput);
-            if (isNaN(winnerCount) || winnerCount < 1) return message.reply('❌ Invalid winner count.');
+            if (isNaN(winnerCount) || winnerCount < 1) return message.reply('❌ Số lượng người thắng không hợp lệ.');
 
             const endTime = Math.floor((Date.now() + duration) / 1000);
 
@@ -65,55 +65,55 @@ module.exports = {
 
         } else if (subcommand === 'end') {
             const messageId = args[1];
-            if (!messageId) return message.reply('❌ Usage: `$giveaway end <message_id>`');
+            if (!messageId) return message.reply(`❌ Cách dùng: \`${config.PREFIX}giveaway end <message_id>\``);
 
             const giveaway = db.getGiveaway(messageId);
-            if (!giveaway || giveaway.ended) return message.reply('❌ Giveaway not found or already ended.');
+            if (!giveaway || giveaway.ended) return message.reply('❌ Không tìm thấy giveaway hoặc sự kiện đã kết thúc.');
 
             // Set end time to past so the timer picks it up and finishes it properly
             db.updateGiveaway(giveaway.message_id, { endsAt: Math.floor(Date.now() / 1000) - 1 });
-            message.reply('✅ Giveaway set to end immediately. Winners will be picked shortly.');
+            message.reply('✅ Giveaway đã được đặt để kết thúc ngay lập tức. Người thắng sẽ được chọn sớm.');
 
         } else if (subcommand === 'reroll') {
             const messageId = args[1];
-            if (!messageId) return message.reply('❌ Usage: `$giveaway reroll <message_id>`');
+            if (!messageId) return message.reply(`❌ Cách dùng: \`${config.PREFIX}giveaway reroll <message_id>\``);
 
             const giveaway = db.getGiveaway(messageId);
-            if (!giveaway) return message.reply('❌ Giveaway not found.');
-            if (!giveaway.ended) return message.reply('❌ Giveaway has not ended yet.');
+            if (!giveaway) return message.reply('❌ Không tìm thấy giveaway.');
+            if (!giveaway.ended) return message.reply('❌ Sự kiện này vẫn chưa kết thúc.');
 
             const participants = db.getParticipantUserIds(giveaway.id);
-            if (participants.length === 0) return message.reply('❌ No participants.');
+            if (participants.length === 0) return message.reply('❌ Không có người tham gia.');
 
             const winnerId = participants[Math.floor(Math.random() * participants.length)];
             const channel = message.guild.channels.cache.get(giveaway.channel_id);
             if (channel) {
-                channel.send(`🎉 **New Winner:** <@${winnerId}>! (Reroll)`);
+                channel.send(`🎉 **Người thắng mới:** <@${winnerId}>! (Quay lại)`);
             }
-            message.reply('✅ Rerolled!');
+            message.reply('✅ Đã quay lại người thắng mới!');
 
         } else if (subcommand === 'list') {
             const giveaways = db.getActiveGiveaways().filter(g => g.guild_id === message.guild.id);
-            if (giveaways.length === 0) return message.reply('❌ No active giveaways.');
+            if (giveaways.length === 0) return message.reply('❌ Không có giveaway nào đang diễn ra.');
 
-            const list = giveaways.map(g => `ID: \`${g.message_id}\` | Prize: **${g.prize}** | Ends: <t:${g.ends_at}:R>`).join('\n');
-            message.reply(`🎉 **Active Giveaways**\n${list}`);
+            const list = giveaways.map(g => `ID: \`${g.message_id}\` | Phần thưởng: **${g.prize}** | Kết thúc: <t:${g.ends_at}:R>`).join('\n');
+            message.reply(`🎉 **Các sự kiện Giveaway đang diễn ra**\n${list}`);
 
         } else if (subcommand === 'delete') {
             const messageId = args[1];
-            if (!messageId) return message.reply('❌ Usage: `$giveaway delete <message_id>`');
+            if (!messageId) return message.reply(`❌ Cách dùng: \`${config.PREFIX}giveaway delete <message_id>\``);
 
             const giveaway = db.getGiveaway(messageId);
-            if (!giveaway) return message.reply('❌ Giveaway not found.');
+            if (!giveaway) return message.reply('❌ Không tìm thấy giveaway.');
 
             db.deleteGiveaway(giveaway.message_id);
             const channel = message.guild.channels.cache.get(giveaway.channel_id);
             if (channel) {
                 channel.messages.fetch(giveaway.message_id).then(m => m.delete()).catch(() => { });
             }
-            message.reply('✅ Giveaway deleted.');
+            message.reply('✅ Đã xóa giveaway.');
         } else {
-            message.reply('❌ Unknown subcommand. Usage: `$giveaway <start|end|reroll|list|delete>`');
+            message.reply(`❌ Lệnh không hợp lệ. Cách dùng: \`${config.PREFIX}giveaway <start|end|reroll|list|delete>\``);
         }
     }
 };

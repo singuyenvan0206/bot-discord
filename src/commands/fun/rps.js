@@ -6,21 +6,28 @@ const config = require('../../config');
 module.exports = {
     name: 'rps',
     aliases: ['rock'],
-    description: 'Rock Paper Scissors',
+    description: 'Trò chơi Kéo Búa Bao',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
         const choices = ['rock', 'paper', 'scissors'];
         const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };
+        const vnNames = { rock: 'Búa', paper: 'Bao', scissors: 'Kéo' };
 
         const { parseAmount } = require('../../utils/economy');
         const user = db.getUser(message.author.id);
 
         let userChoice = args[0]?.toLowerCase();
+
+        // Support Vietnamese inputs
+        if (userChoice === 'bua' || userChoice === 'búa') userChoice = 'rock';
+        if (userChoice === 'bao') userChoice = 'paper';
+        if (userChoice === 'keo' || userChoice === 'kéo') userChoice = 'scissors';
+
         let bet = 0;
 
         // Check if first arg is a bet amount
-        if (args[0] && !choices.includes(userChoice)) {
+        if (args[0] && !choices.includes(userChoice) && !['bua', 'búa', 'bao', 'keo', 'kéo'].includes(args[0]?.toLowerCase())) {
             bet = parseAmount(args[0], user.balance);
             userChoice = null; // No choice made yet
         } else if (args[1]) {
@@ -34,25 +41,25 @@ module.exports = {
 
         // Validate Bet
         if (bet > 0) {
-            if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} You don't have enough money! Balance: **${user.balance}**`);
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} Bạn không đủ tiền! Số dư: **${user.balance}**`);
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
             db.removeBalance(user.id, bet);
         } else if (bet < 0) {
-            return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
+            return message.reply(`${config.EMOJIS.ERROR} Số tiền cược không hợp lệ.`);
         }
 
         if (!userChoice || !choices.includes(userChoice)) {
             // Interactive mode
             const uid = Date.now().toString(36);
             const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId(`rps_rock_${uid}`).setLabel('Rock').setEmoji('🪨').setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId(`rps_paper_${uid}`).setLabel('Paper').setEmoji('📄').setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId(`rps_scissors_${uid}`).setLabel('Scissors').setEmoji('✂️').setStyle(ButtonStyle.Primary)
+                new ButtonBuilder().setCustomId(`rps_rock_${uid}`).setLabel('Búa').setEmoji('🪨').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId(`rps_paper_${uid}`).setLabel('Bao').setEmoji('📄').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId(`rps_scissors_${uid}`).setLabel('Kéo').setEmoji('✂️').setStyle(ButtonStyle.Primary)
             );
 
             const embed = new EmbedBuilder()
-                .setTitle('Rock Paper Scissors')
-                .setDescription(bet > 0 ? `**Betting: ${bet} coins**\nChoose your weapon!` : 'Choose your weapon!')
+                .setTitle('Kéo Búa Bao')
+                .setDescription(bet > 0 ? `**Đang cược: ${bet} coins**\nHãy chọn vũ khí của bạn!` : 'Hãy chọn vũ khí của bạn!')
                 .setColor(config.COLORS.WARNING);
 
             const reply = await message.reply({ embeds: [embed], components: [row] });
@@ -70,11 +77,17 @@ module.exports = {
                 startCooldown(message.client, 'rps', message.author.id);
             });
 
+            collector.on('collect', async i => {
+                const choice = i.customId.split('_')[1];
+                await playRPS(i, choice, null, reply, bet);
+                startCooldown(message.client, 'rps', message.author.id);
+            });
+
             collector.on('end', (_, reason) => {
                 if (reason === 'time') {
                     // Refund if timed out
                     if (bet > 0) db.addBalance(user.id, bet);
-                    reply.edit({ content: `${config.EMOJIS.TIMER} Timed out! Bet refunded.`, components: [] }).catch(() => { });
+                    reply.edit({ content: `${config.EMOJIS.TIMER} Đã quá thời gian! Tiền cược đã được hoàn trả.`, components: [] }).catch(() => { });
                 }
             });
             return;
@@ -91,7 +104,7 @@ module.exports = {
             let outcome = 'lose'; // win, lose, tie
 
             if (uChoice === botChoice) {
-                result = "It's a tie! 🤝";
+                result = "Hòa rồi! 🤝";
                 outcome = 'tie';
             }
             else if (
@@ -99,11 +112,11 @@ module.exports = {
                 (uChoice === 'paper' && botChoice === 'rock') ||
                 (uChoice === 'scissors' && botChoice === 'paper')
             ) {
-                result = "You win! 🎉";
+                result = "Bạn đã thắng! 🎉";
                 outcome = 'win';
             }
             else {
-                result = "I win! 😈";
+                result = "Tôi thắng rồi! 😈";
                 outcome = 'lose';
             }
 
@@ -117,19 +130,19 @@ module.exports = {
                     prize += bonus;
 
                     db.addBalance(user.id, prize);
-                    result += `\n${config.EMOJIS.COIN} **Won ${prize} coins!**`;
-                    if (bonus > 0) result += ` *(Includes +${bonus} bonus: ${Math.round(multiplier * 100)}%)*`;
+                    result += `\n${config.EMOJIS.COIN} **Nhận được ${prize} coins!**`;
+                    if (bonus > 0) result += ` *(Bao gồm +${bonus} thưởng item: ${Math.round(multiplier * 100)}%)*`;
                 } else if (outcome === 'tie') {
                     db.addBalance(user.id, betAmount); // Refund
-                    result += `\n🤝 **Bet refunded.**`;
+                    result += `\n🤝 **Tiền cược đã được hoàn trả.**`;
                 } else {
-                    result += `\n💸 **Lost ${betAmount} coins.**`;
+                    result += `\n💸 **Bạn mất ${betAmount} coins.**`;
                 }
             }
 
             const embed = new EmbedBuilder()
-                .setTitle('Rock Paper Scissors')
-                .setDescription(`You chose: ${emojis[uChoice]}\nI chose: ${emojis[botChoice]}\n\n**${result}**`)
+                .setTitle('Kết Quả Kéo Búa Bao')
+                .setDescription(`Bạn chọn: ${emojis[uChoice]} **${vnNames[uChoice]}**\nTôi chọn: ${emojis[botChoice]} **${vnNames[botChoice]}**\n\n**${result}**`)
                 .setColor(outcome === 'win' ? config.COLORS.GAMBLE_WIN : outcome === 'tie' ? config.COLORS.GAMBLE_PUSH : config.COLORS.GAMBLE_LOSS);
 
             if (interaction) {

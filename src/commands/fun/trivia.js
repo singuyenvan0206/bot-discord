@@ -25,7 +25,7 @@ function decodeHtml(html) {
 module.exports = {
     name: 'trivia',
     aliases: ['triv'],
-    description: 'Test your knowledge with trivia!',
+    description: 'Kiểm tra kiến thức của bạn với trò chơi Đố Vui (Trivia)!',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -59,20 +59,20 @@ module.exports = {
         }
 
         if (!q) {
-            return message.reply('❌ Unable to fetch a trivia question at this time. Please try again later.');
+            return message.reply('❌ Hiện không thể tải được câu hỏi đố vui. Vui lòng thử lại sau.');
         }
 
         const answers = [q.a, ...q.w].sort(() => Math.random() - 0.5);
         const correctIndex = answers.indexOf(q.a);
 
         const embed = new EmbedBuilder()
-            .setTitle('❓  Trivia Time!')
-            .setDescription(q.q)
+            .setTitle('❓  Đố Vui Hại Não (Trivia)!')
+            .setDescription(`${q.q}\n\n*(Lưu ý: Hiện tại câu hỏi chỉ hỗ trợ tiếng Anh)*`)
             .setColor('#FFD700')
             .addFields(
-                { name: 'Options', value: answers.map((a, i) => `${['🇦', '🇧', '🇨', '🇩'][i]} ${a}`).join('\n') }
+                { name: 'Lựa chọn', value: answers.map((a, i) => `${['🇦', '🇧', '🇨', '🇩'][i]} ${a}`).join('\n') }
             )
-            .setFooter({ text: 'You have 15 seconds to answer!' });
+            .setFooter({ text: 'Bạn có 15 giây để trả lời!' });
 
         const row = new ActionRowBuilder()
             .addComponents(
@@ -95,7 +95,7 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== message.author.id) {
-                return i.reply({ content: '❌ This isn\'t your trivia game!', ephemeral: true });
+                return i.reply({ content: '❌ Đây không phải lượt đố vui của bạn!', ephemeral: true });
             }
 
             if (answered.has(i.user.id)) return;
@@ -112,12 +112,12 @@ module.exports = {
 
                 db.addBalance(i.user.id, totalReward);
 
-                let resultMsg = `${config.EMOJIS.SUCCESS} **Correct!** The answer was **${q.a}**.\nReward: ${config.EMOJIS.COIN} **${baseReward}** coins`;
-                if (bonus > 0) resultMsg += ` ✨ *(+${bonus} item bonus)*`;
+                let resultMsg = `${config.EMOJIS.SUCCESS} **Chính xác!** Đáp án là **${q.a}**.\nPhần thưởng: ${config.EMOJIS.COIN} **${baseReward}** coins`;
+                if (bonus > 0) resultMsg += ` ✨ *(Thưởng item +${bonus})*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {
-                await i.update({ content: `${config.EMOJIS.ERROR} **Wrong!** The correct answer was **${q.a}**.`, components: [], embeds: [] });
+                await i.update({ content: `${config.EMOJIS.ERROR} **Sai rồi!** Đáp án chính xác là **${q.a}**.`, components: [], embeds: [] });
             }
             collector.stop();
         });
@@ -125,11 +125,11 @@ module.exports = {
         collector.on('end', async (collected, reason) => {
             if (reason === 'time' && collected.size === 0) {
                 try {
-                    await sentMsg.edit({ content: `${config.EMOJIS.TIMER} Time's up! The correct answer was **${q.a}**.`, components: [], embeds: [] });
+                    await sentMsg.edit({ content: `${config.EMOJIS.TIMER} **Hết thời gian!** Đáp án chính xác là **${q.a}**.`, components: [], embeds: [] });
                 } catch (e) { }
             }
             startCooldown(message.client, 'trivia', message.author.id);
         });
-    },
+    }
 
 };

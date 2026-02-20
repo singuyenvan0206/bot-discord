@@ -2,28 +2,30 @@ const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const config = require('../../config');
+const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'slots',
     aliases: ['slot'],
-    description: 'Spin the slot machine!',
+    description: 'Quay máy đánh bạc (Slot machine)!',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild.id);
         const user = db.getUser(message.author.id);
         const { parseAmount } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
 
-        if (args[0] && (isNaN(bet) || bet <= 0)) return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
+        if (args[0] && (isNaN(bet) || bet <= 0)) return message.reply(t('common.invalid_amount', lang));
 
         if (bet) {
-            if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} Not enough money! Balance: **${user.balance}**`);
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
             db.removeBalance(user.id, bet);
         }
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        const weights = [25, 20, 18, 15, 12, 7, 3]; // rarer = less weight
+        const weights = [40, 30, 15, 8, 4, 2, 1]; // Heavier weight on common symbols
         const totalWeight = weights.reduce((a, b) => a + b, 0);
 
         function weightedRandom() {
@@ -49,17 +51,18 @@ module.exports = {
         let payout = 0;
         if (allMatch) {
             const mult = multiplierMap[r2[0]];
-            result = `🎰 **JACKPOT! THREE ${r2[0]}!**`;
+            result = t('slots.win_jackpot', lang, { symbol: r2[0] });
             payout = bet ? bet * mult : 0;
-            color = r2[0] === '7️⃣' ? 0xFFD700 : config.COLORS.GAMBLE_WIN;
+            color = r2[0] === '7️⃣' ? 0xFF9900 : config.COLORS.GAMBLE_WIN;
         } else if (twoMatch) {
-            const mult = 1.5;
-            result = '🎰 **Two matching!** Small win!';
+            // Difficulty Increase: Two match payout nerfed from 1.5x to 0.5x
+            const mult = 0.5;
+            result = t('slots.win_small', lang);
             payout = bet ? Math.floor(bet * mult) : 0;
-            color = config.COLORS.GAMBLE_PUSH;
+            color = config.COLORS.GAMBLE_LOSS; // It's technically a loss of half
         } else {
-            result = '🎰 No match. Try again!';
-            color = config.COLORS.NEUTRAL;
+            result = t('slots.lose', lang);
+            color = config.COLORS.GAMBLE_LOSS;
         }
 
         if (payout > 0) {
@@ -69,10 +72,10 @@ module.exports = {
             payout += bonus;
 
             db.addBalance(user.id, payout);
-            result += `\n${config.EMOJIS.COIN} **Won ${payout} coins!**`;
-            if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% bonus: ${bonus} coins)*`;
+            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: payout });
+            if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
         } else if (bet) {
-            result += `\n💸 **Lost ${bet} coins.**`;
+            result += t('slots.lost_coins', lang, { amount: bet });
         }
 
         const slotDisplay = [
@@ -86,7 +89,7 @@ module.exports = {
         ].join('\n');
 
         const embed = new EmbedBuilder()
-            .setTitle('🎰  Slot Machine')
+            .setTitle(t('slots.title', lang))
             .setDescription(`${slotDisplay}\n\n${result}`)
             .setColor(color).setTimestamp();
 

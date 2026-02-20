@@ -6,7 +6,7 @@ const config = require('../../config');
 module.exports = {
     name: 'minesweeper',
     aliases: ['mine', 'ms'],
-    description: 'Play Minesweeper! (24 Cells)',
+    description: 'Chơi Dò Mìn (Minesweeper)! (24 ô)',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -14,14 +14,14 @@ module.exports = {
         const { parseAmount } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance) : 0;
 
-        if (args[0] && bet <= 0) return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
+        if (args[0] && bet <= 0) return message.reply(`${config.EMOJIS.ERROR} Số tiền cược không hợp lệ.`);
         if (!args[0]) bet = 50;
 
         if (bet > 0) {
             if (user.balance < bet) {
-                return message.reply(`${config.EMOJIS.ERROR} Not enough money! Balance: **${user.balance}**`);
+                return message.reply(`${config.EMOJIS.ERROR} Bạn không đủ tiền! Số dư: **${user.balance}**`);
             }
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
             db.removeBalance(user.id, bet);
         }
 
@@ -145,7 +145,7 @@ module.exports = {
                 if (r === 4) {
                     const flagBtn = new ButtonBuilder()
                         .setCustomId('ms_toggle')
-                        .setLabel(gameState.isFlagging ? 'Flagging: ON' : 'Flagging: OFF')
+                        .setLabel(gameState.isFlagging ? 'Cắm cờ: BẬT' : 'Cắm cờ: TẮT')
                         .setStyle(gameState.isFlagging ? ButtonStyle.Danger : ButtonStyle.Primary) // Red if On, Blue if Off
                         .setEmoji(gameState.isFlagging ? '🚩' : '🖱️')
                         .setDisabled(gameOver);
@@ -157,8 +157,8 @@ module.exports = {
         };
 
         const embed = new EmbedBuilder()
-            .setTitle('💣  Minesweeper')
-            .setDescription(`Mines: **${mineCount}**\nBet: **${bet || 0}**\n\nClick to reveal. Toggle Flag mode to mark mines.`)
+            .setTitle('💣  Dò Mìn (Minesweeper)')
+            .setDescription(`Số mìn: **${mineCount}**\nTiền cược: **${bet || 0}**\n\nNhấn để mở ô. Bật chế độ Cắm cờ để đánh dấu mìn.`)
             .setColor(0xE67E22);
 
         const reply = await message.reply({ embeds: [embed], components: renderComponents() });
@@ -197,15 +197,27 @@ module.exports = {
                 else gameState.flagged.add(idx);
                 await i.update({ components: renderComponents() });
             } else {
-                if (gameState.flagged.has(idx)) return i.reply({ content: '❌ Unflag this cell first!', ephemeral: true });
+                if (gameState.flagged.has(idx)) return i.reply({ content: '❌ Hãy bỏ cắm cờ ô này trước!', ephemeral: true });
 
                 const result = reveal(idx);
 
                 if (result === 'BOOM') {
                     collector.stop('boom');
+
+                    let loseAmount = bet;
+                    let shieldUsed = false;
+
+                    // Check for Shield (Item ID 6)
+                    const inv = JSON.parse(user.inventory || '{}');
+                    if (inv['6'] && inv['6'] > 0) {
+                        loseAmount = Math.floor(bet * 0.5);
+                        shieldUsed = true;
+                        db.addBalance(user.id, loseAmount); // Refund 50% (since 100% was already removed)
+                    }
+
                     const loseEmbed = new EmbedBuilder()
-                        .setTitle('💥  BOOM! Game Over')
-                        .setDescription(`You hit a mine!\nBet Lost: **${bet || 0}**`)
+                        .setTitle('💥  BÙM! Trò chơi kết thúc')
+                        .setDescription(`Bạn đã đạp trúng mìn!\n${shieldUsed ? `🛡️ **Khiên Bảo Vệ:** Thiệt hại giảm còn **${loseAmount}**` : `Mất tiền cược: **${loseAmount}**`}`)
                         .setColor(0xE74C3C);
                     await i.update({ embeds: [loseEmbed], components: renderComponents(true, false) });
                 } else {
@@ -224,14 +236,14 @@ module.exports = {
                             db.addBalance(user.id, prize);
 
                             const winEmbed = new EmbedBuilder()
-                                .setTitle(`${config.EMOJIS.SUCCESS}  Victory!`)
-                                .setDescription(`You cleared the minefield!\n\n**Base Win:** ${config.EMOJIS.COIN} +${baseWin}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Prize:** ${config.EMOJIS.COIN} **${prize}** coins`)
+                                .setTitle(`${config.EMOJIS.SUCCESS}  Chiến Thắng!`)
+                                .setDescription(`Bạn đã dọn sạch bãi mìn!\n\n**Thắng cơ bản:** ${config.EMOJIS.COIN} +${baseWin}\n**Thưởng Item:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Tổng cộng:** ${config.EMOJIS.COIN} **${prize}** coins`)
                                 .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         } else {
                             const winEmbed = new EmbedBuilder()
-                                .setTitle(`${config.EMOJIS.SUCCESS}  Victory!`)
-                                .setDescription(`You cleared the minefield!`)
+                                .setTitle(`${config.EMOJIS.SUCCESS}  Chiến Thắng!`)
+                                .setDescription(`Bạn đã dọn sạch bãi mìn!`)
                                 .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         }
@@ -246,7 +258,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                reply.edit({ content: '⏰ Time\'s up!', components: [] }).catch(() => { });
+                reply.edit({ content: '⏰ Hết thời gian!', components: [] }).catch(() => { });
             }
             startCooldown(message.client, 'minesweeper', message.author.id);
         });

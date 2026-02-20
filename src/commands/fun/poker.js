@@ -7,7 +7,7 @@ const config = require('../../config');
 module.exports = {
     name: 'poker',
     aliases: ['pk'],
-    description: 'Texas Hold\'em Poker (Modals)',
+    description: 'Chơi Poker Texas Hold\'em!',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -28,20 +28,20 @@ module.exports = {
         let currentBet = 0;
         let dealerIndex = 0;
         let turnIndex = 0;
-        let phase = 'Lobby';
+        let phase = 'Sảnh chờ';
 
         const lobbyEmbed = new EmbedBuilder()
-            .setTitle('♠️♥️ Texas Hold\'em (Advanced) ♦️♣️')
-            .setDescription(`**Host:** ${message.author}\n**Min Buy-in:** ${config.EMOJIS.COIN} ${minBuyIn}\n\n**Players (0):**\nWaiting for players...\n\n*Click Join to sit at the table!*`)
+            .setTitle('♠️♥️ Texas Hold\'em ♦️♣️')
+            .setDescription(`**Chủ phòng:** ${message.author}\n**Mức mua vào tối thiểu:** ${config.EMOJIS.COIN} ${minBuyIn}\n\n**Người chơi (0):**\nĐang đợi người chơi...\n\n*Nhấn Tham gia để ngồi vào bàn!*`)
             .setColor(config.COLORS.SUCCESS)
-            .setFooter({ text: 'Minimum 2 players to start' });
+            .setFooter({ text: 'Cần ít nhất 2 người để bắt đầu' });
 
         function getLobbyButtons() {
             return new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId(`join_poker_${hostId}`).setLabel('Join Table').setStyle(ButtonStyle.Success),
-                new ButtonBuilder().setCustomId(`add_bot_poker_${hostId}`).setLabel('Add Bot').setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId(`leave_poker_${hostId}`).setLabel('Leave').setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId(`start_poker_${hostId}`).setLabel('Start Game').setStyle(ButtonStyle.Primary)
+                new ButtonBuilder().setCustomId(`join_poker_${hostId}`).setLabel('Tham gia').setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId(`add_bot_poker_${hostId}`).setLabel('Thêm Bot').setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId(`leave_poker_${hostId}`).setLabel('Rời bàn').setStyle(ButtonStyle.Danger),
+                new ButtonBuilder().setCustomId(`start_poker_${hostId}`).setLabel('Bắt đầu').setStyle(ButtonStyle.Primary)
             );
         }
 
@@ -52,18 +52,18 @@ module.exports = {
 
         lobbyCollector.on('collect', async i => {
             if (i.customId === `join_poker_${hostId}`) {
-                if (gameStarted) return i.reply({ content: '❌ Game already started!', flags: 64 });
-                if (playerMap.has(i.user.id)) return i.reply({ content: '❌ You already joined!', flags: 64 });
-                if (joiningPlayers.has(i.user.id)) return i.reply({ content: '❌ You are already joining...', flags: 64 });
+                if (gameStarted) return i.reply({ content: '❌ Trò chơi đã bắt đầu!', flags: 64 });
+                if (playerMap.has(i.user.id)) return i.reply({ content: '❌ Bạn đã tham gia rồi!', flags: 64 });
+                if (joiningPlayers.has(i.user.id)) return i.reply({ content: '❌ Bạn đang trong quá trình tham gia...', flags: 64 });
 
                 // Show Modal
                 const modal = new ModalBuilder()
                     .setCustomId(`buyin_modal_${i.user.id}`)
-                    .setTitle('Poker Buy-in');
+                    .setTitle('Poker - Mua vào');
 
                 const input = new TextInputBuilder()
                     .setCustomId('amount')
-                    .setLabel(`Amount (Min: ${minBuyIn})`)
+                    .setLabel(`Số tiền (Tối thiểu: ${minBuyIn})`)
                     .setStyle(TextInputStyle.Short)
                     .setPlaceholder(`${minBuyIn}`)
                     .setRequired(true);
@@ -84,20 +84,20 @@ module.exports = {
                     if (isNaN(amount) || amount < minBuyIn) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
-                        return submit.reply({ content: `${config.EMOJIS.ERROR} Invalid Amount! Must be at least ${minBuyIn}.`, flags: 64 });
+                        return submit.reply({ content: `${config.EMOJIS.ERROR} Số tiền không hợp lệ! Phải ít nhất là ${minBuyIn}.`, flags: 64 });
                     }
 
                     if (amount > config.ECONOMY.MAX_BET) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
-                        return submit.reply({ content: `${config.EMOJIS.ERROR} The maximum buy-in is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`, flags: 64 });
+                        return submit.reply({ content: `${config.EMOJIS.ERROR} Mức mua vào tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`, flags: 64 });
                     }
 
 
                     if (user.balance < amount) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
-                        return submit.reply({ content: `❌ Insufficient funds! You have ${user.balance}.`, flags: 64 });
+                        return submit.reply({ content: `❌ Không đủ tiền! Bạn có ${user.balance}.`, flags: 64 });
                     }
 
                     db.removeBalance(i.user.id, amount);
@@ -113,16 +113,16 @@ module.exports = {
                 }
 
             } else if (i.customId === `add_bot_poker_${hostId}`) {
-                if (i.user.id !== hostId) return i.reply({ content: '❌ Only host can add bots.', flags: 64 });
-                if (gameStarted) return i.reply({ content: '❌ Game already started.', flags: 64 });
+                if (i.user.id !== hostId) return i.reply({ content: '❌ Chỉ có chủ phòng mới có thể thêm bot.', flags: 64 });
+                if (gameStarted) return i.reply({ content: '❌ Trò chơi đã bắt đầu.', flags: 64 });
 
                 await i.deferUpdate().catch(() => { });
                 addPlayer(null, true, minBuyIn); // Bots buy in for min
                 updateLobby();
 
             } else if (i.customId === `leave_poker_${hostId}`) {
-                if (gameStarted) return i.reply({ content: '❌ Cannot leave active game.', flags: 64 });
-                if (!playerMap.has(i.user.id)) return i.reply({ content: '❌ You are not in the game.', flags: 64 });
+                if (gameStarted) return i.reply({ content: '❌ Không thể rời khi trò chơi đang diễn ra.', flags: 64 });
+                if (!playerMap.has(i.user.id)) return i.reply({ content: '❌ Bạn không có trong bàn.', flags: 64 });
 
                 await i.deferUpdate().catch(() => { });
                 const p = playerMap.get(i.user.id);
@@ -132,9 +132,9 @@ module.exports = {
                 updateLobby();
 
             } else if (i.customId === `start_poker_${hostId}`) {
-                if (i.user.id !== hostId) return i.reply({ content: '❌ Only host can start.', flags: 64 });
-                if (joiningPlayers.size > 0) return i.reply({ content: '❌ Someone is joining! Please wait.', flags: 64 });
-                if (players.length < 2) return i.reply({ content: '❌ Need 2+ players!', flags: 64 });
+                if (i.user.id !== hostId) return i.reply({ content: '❌ Chỉ có chủ phòng mới có thể bắt đầu.', flags: 64 });
+                if (joiningPlayers.size > 0) return i.reply({ content: '❌ Đang có người tham gia! Vui lòng đợi.', flags: 64 });
+                if (players.length < 2) return i.reply({ content: '❌ Cần ít nhất 2 người chơi!', flags: 64 });
 
                 await i.deferUpdate().catch(() => { });
                 gameStarted = true;
@@ -146,7 +146,7 @@ module.exports = {
         lobbyCollector.on('end', (_, reason) => {
             if (reason !== 'started') {
                 players.forEach(p => { if (!p.isBot) db.addBalance(p.id, p.chips); });
-                reply.edit({ content: '⏰ Lobby timed out. Refunds issued.', components: [] }).catch(() => { });
+                reply.edit({ content: '⏰ Hết thời gian chờ sảnh. Đã hoàn lại tiền.', components: [] }).catch(() => { });
             }
         });
 
@@ -182,12 +182,12 @@ module.exports = {
             });
 
             if (joiningPlayers.size > 0) {
-                joiningPlayers.forEach(id => playerList.push(`<@${id}> (Joining...)`));
+                joiningPlayers.forEach(id => playerList.push(`<@${id}> (Đang tham gia...)`));
             }
 
-            const listStr = playerList.length > 0 ? playerList.join('\n') : 'Waiting for players...';
+            const listStr = playerList.length > 0 ? playerList.join('\n') : 'Đang đợi người chơi...';
 
-            lobbyEmbed.setDescription(`**Host:** ${message.author}\n**Min Buy-in:** ${config.EMOJIS.COIN} ${minBuyIn}\n\n**Players (${players.length + joiningPlayers.size}):**\n${listStr}\n\n*Click Join to sit at the table!*`);
+            lobbyEmbed.setDescription(`**Chủ phòng:** ${message.author}\n**Mức mua vào tối thiểu:** ${config.EMOJIS.COIN} ${minBuyIn}\n\n**Người chơi (${players.length + joiningPlayers.size}):**\n${listStr}\n\n*Nhấn Tham gia để ngồi vào bàn!*`);
             reply.edit({ embeds: [lobbyEmbed], components: [getLobbyButtons()] }).catch(() => { });
         }
 
@@ -211,7 +211,7 @@ module.exports = {
 
                 if (!p.isBot) {
                     try {
-                        await p.user.send(`🃏 **Your Poker Hand:** ${p.hand[0]} ${p.hand[1]}\nGame in <#${message.channel.id}>`);
+                        await p.user.send(`🃏 **Bài Poker của bạn:** ${p.hand[0]} ${p.hand[1]}\nTrò chơi tại <#${message.channel.id}>`);
                     } catch (e) {
                         // ignore
                     }
@@ -219,10 +219,10 @@ module.exports = {
             }
 
             // Phase 1: Pre-Flop
-            phase = 'Pre-Flop';
+            phase = 'Chia bài riêng';
             // Blinds/Ante
             const ante = Math.max(1, Math.floor(minBuyIn * 0.05));
-            let anteMsg = `Ante: ${ante}\n`;
+            let anteMsg = `Tiền xâu: ${ante}\n`;
 
             players.forEach(p => {
                 const contribution = Math.min(p.chips, ante);
@@ -304,10 +304,10 @@ module.exports = {
         gameCollector.on('collect', async i => {
             if (!gameStarted) return;
             const p = playerMap.get(i.user.id);
-            if (!p) return i.reply({ content: '❌ Not in game.', flags: 64 });
+            if (!p) return i.reply({ content: '❌ Không có trong trò chơi.', flags: 64 });
 
             if (players[turnIndex].id !== p.id) {
-                return i.reply({ content: `❌ It's **${players[turnIndex].name}**'s turn!`, flags: 64 });
+                return i.reply({ content: `❌ Tới lượt của **${players[turnIndex].name}**!`, flags: 64 });
             }
 
             const action = i.customId;
@@ -315,13 +315,13 @@ module.exports = {
             if (action === 'raise') {
                 const modal = new ModalBuilder()
                     .setCustomId(`raise_modal_${i.user.id}`)
-                    .setTitle('Raise Bet');
+                    .setTitle('Tăng mức cược (Tố)');
 
                 const minTotal = currentBet + Math.max(10, Math.floor(minBuyIn * 0.1));
 
                 const input = new TextInputBuilder()
                     .setCustomId('amount')
-                    .setLabel(`Raise Total To (Min: ${minTotal})`)
+                    .setLabel(`Tổng mức cược (Tối thiểu: ${minTotal})`)
                     .setStyle(TextInputStyle.Short)
                     .setPlaceholder(`${minTotal}`)
                     .setRequired(true);
@@ -331,17 +331,17 @@ module.exports = {
                 await i.showModal(modal);
 
                 try {
-                    const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `buyin_modal_${i.user.id}` });
+                    const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `raise_modal_${i.user.id}` });
                     const val = parseAmount(submit.fields.getTextInputValue('amount'), p.chips + p.currentBet);
 
                     if (isNaN(val) || val < minTotal) {
-                        return submit.reply({ content: `❌ Invalid Raise! Must be at least ${minTotal}.`, flags: 64 });
+                        return submit.reply({ content: `❌ Mức tố không hợp lệ! Phải ít nhất là ${minTotal}.`, flags: 64 });
                     }
                     if (val > 250000) {
-                        return submit.reply({ content: '❌ The maximum bet is **250,000** coins!', flags: 64 });
+                        return submit.reply({ content: '❌ Mức cược tối đa là **250,000** coins!', flags: 64 });
                     }
                     if (val > p.chips + p.currentBet) {
-                        return submit.reply({ content: `❌ Not enough chips! You have ${p.chips + p.currentBet} total.`, flags: 64 });
+                        return submit.reply({ content: `❌ Không đủ chip! Bạn chỉ có tổng cộng ${p.chips + p.currentBet}.`, flags: 64 });
                     }
 
                     await submit.deferUpdate();
@@ -366,7 +366,7 @@ module.exports = {
 
             if (action === 'fold') {
                 player.folded = true;
-                msg = `❌ **${player.name}** Folded.`;
+                msg = `❌ **${player.name}** đã bỏ bài.`;
             }
             else if (action === 'call' || action === 'check') {
                 const amount = Math.min(player.chips, toCall);
@@ -376,7 +376,7 @@ module.exports = {
                 player.hasActed = true;
 
                 if (player.chips === 0) player.allIn = true;
-                msg = amount === 0 ? `✅ **${player.name}** Checked.` : `💸 **${player.name}** Called ${amount}.`;
+                msg = amount === 0 ? `✅ **${player.name}** đã nhường (Check).` : `💸 **${player.name}** đã theo ${amount}.`;
             }
             else if (action === 'raise') {
                 let targetTotal = 0;
@@ -401,7 +401,7 @@ module.exports = {
                 }
 
                 if (player.chips === 0) player.allIn = true;
-                msg = `📈 **${player.name}** Raised to ${player.currentBet}!`;
+                msg = `📈 **${player.name}** đã tố lên ${player.currentBet}!`;
             } else if (action === 'allin') {
                 const amount = player.chips;
                 player.chips = 0;
@@ -413,9 +413,9 @@ module.exports = {
                 if (player.currentBet > currentBet) {
                     currentBet = player.currentBet;
                     players.forEach(op => { if (op.id !== player.id && !op.folded && !op.allIn) op.hasActed = false; });
-                    msg = `🚨 **${player.name}** went ALL-IN with ${player.currentBet}!`;
+                    msg = `🚨 **${player.name}** đã TẤT TAY với ${player.currentBet}!`;
                 } else {
-                    msg = `🚨 **${player.name}** called ALL-IN (${player.currentBet})!`;
+                    msg = `🚨 **${player.name}** đã theo TẤT TAY (${player.currentBet})!`;
                 }
             }
 
@@ -424,36 +424,36 @@ module.exports = {
         }
 
         function getActionRow(currentPlayer) {
-            if (phase === 'Showdown') return [];
+            if (phase === 'Ngửa bài (Showdown)') return [];
             const toCall = currentBet - (currentPlayer ? currentPlayer.currentBet : 0);
 
             const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('fold').setLabel('Fold').setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? 'Check' : `Call ${toCall}`).setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('raise').setLabel('Raise').setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId('allin').setLabel('All-in').setStyle(ButtonStyle.Danger)
+                new ButtonBuilder().setCustomId('fold').setLabel('Bỏ bài').setStyle(ButtonStyle.Danger),
+                new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? 'Nhường' : `Theo ${toCall}`).setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId('raise').setLabel('Tố').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId('allin').setLabel('Tất tay').setStyle(ButtonStyle.Danger)
             );
             return [row];
         }
 
         async function updateTable() {
             const activeP = players[turnIndex];
-            const cardsStr = communityCards.length > 0 ? communityCards.map(c => c.toString()).join(' ') : '[ Waiting... ]';
+            const cardsStr = communityCards.length > 0 ? communityCards.map(c => c.toString()).join(' ') : '[ Đang đợi... ]';
 
             const statusTxt = players.map(p => {
                 let s = p.isBot ? p.name : `<@${p.id}>`;
                 s += ` (💰${p.chips})`;
-                if (p.folded) s += ' [FOLD]';
-                else if (p.allIn) s += ' [ALL-IN]';
-                else if (p.id === activeP.id) s += ' 👈 **TURN**';
+                if (p.folded) s += ' [BỎ BÀI]';
+                else if (p.allIn) s += ' [TẤT TAY]';
+                else if (p.id === activeP.id) s += ' 👈 **LƯỢT**';
 
-                if (p.currentBet > 0) s += ` [Bet: ${p.currentBet}]`;
+                if (p.currentBet > 0) s += ` [Đã cược: ${p.currentBet}]`;
                 return s;
             }).join('\n');
 
             const embed = new EmbedBuilder()
                 .setTitle(`♥️ Texas Hold'em - ${phase}`)
-                .setDescription(`**Community:** ${cardsStr}\n\n**Pot:** ${config.EMOJIS.COIN} ${pot}\n**Current Bet:** ${currentBet}\n\n${statusTxt}`)
+                .setDescription(`**Bài chung:** ${cardsStr}\n\n**Tổng hũ:** ${config.EMOJIS.COIN} ${pot}\n**Mức cược hiện tại:** ${currentBet}\n\n${statusTxt}`)
                 .setColor(config.COLORS.INFO);
 
             const components = (!activeP.isBot) ? getActionRow(activeP) : [];
@@ -464,16 +464,16 @@ module.exports = {
             players.forEach(p => { p.currentBet = 0; p.hasActed = false; });
             currentBet = 0;
 
-            if (phase === 'Pre-Flop') {
-                phase = 'Flop';
+            if (phase === 'Chia bài riêng') {
+                phase = '3 lá chung (Flop)';
                 communityCards.push(...deck.deal(3));
-            } else if (phase === 'Flop') {
-                phase = 'Turn';
+            } else if (phase === '3 lá chung (Flop)') {
+                phase = 'Lá thứ 4 (Turn)';
                 communityCards.push(...deck.deal(1));
-            } else if (phase === 'Turn') {
-                phase = 'River';
+            } else if (phase === 'Lá thứ 4 (Turn)') {
+                phase = 'Lá cuối (River)';
                 communityCards.push(...deck.deal(1));
-            } else if (phase === 'River') {
+            } else if (phase === 'Lá cuối (River)') {
                 endRound();
                 return;
             }
@@ -482,7 +482,7 @@ module.exports = {
 
         async function endRound() {
             gameCollector.stop();
-            phase = 'Showdown';
+            phase = 'Ngửa bài (Showdown)';
 
             const active = players.filter(p => !p.folded);
             let winners = [];
@@ -490,7 +490,7 @@ module.exports = {
 
             if (active.length === 1) {
                 winners = [active[0]];
-                resultText = `${active[0].name} wins (others folded)!`;
+                resultText = `${active[0].name} thắng (những người khác đã bỏ bài)!`;
             } else {
                 let bestScore = -1;
                 const results = [];
@@ -519,8 +519,8 @@ module.exports = {
 
             const winnerNames = winners.map(w => w.name).join(', ');
             const embed = new EmbedBuilder()
-                .setTitle('🏆 Game Over')
-                .setDescription(`**Winner(s):** ${winnerNames}\n**Pot:** ${pot}\n\n${resultText}`)
+                .setTitle('🏆 Kết Thúc Ván Đấu')
+                .setDescription(`**Người thắng:** ${winnerNames}\n**Tổng hũ:** ${pot}\n\n${resultText}`)
                 .setColor(config.COLORS.WARNING);
 
             await reply.edit({ embeds: [embed], components: [] });

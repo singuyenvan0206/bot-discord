@@ -186,6 +186,11 @@ const commands = [
             .setDescription('Delete a giveaway')
             .addStringOption(opt => opt.setName('message_id').setDescription('Giveaway message ID').setRequired(true))
         ),
+    new SlashCommandBuilder()
+        .setName('language')
+        .setDescription('Set the language for you or the server')
+        .addStringOption(opt => opt.setName('choice').setDescription('Language choice (en/vi)').setRequired(true).addChoices({ name: 'English', value: 'en' }, { name: 'Tiếng Việt', value: 'vi' }))
+        .addStringOption(opt => opt.setName('scope').setDescription('Apply to (user/server)').addChoices({ name: 'Personal (User)', value: 'user' }, { name: 'Default (Server Admin)', value: 'server' })),
 ].map(cmd => cmd.toJSON());
 
 // ─── Register Commands ───────────────────────────────────────────

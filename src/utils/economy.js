@@ -1,8 +1,7 @@
+const SHOP_ITEMS = require('./shopItems');
+
 /**
  * Parses a string amount into a number, supporting abbreviations (k, m, b) and shorthand like "all".
- * @param {string|number} input The input string or number to parse.
- * @param {number} balance The user's current balance (required for "all").
- * @returns {number} The parsed integer amount.
  */
 function parseAmount(input, balance = 0) {
     if (typeof input === 'number') return Math.floor(input);
@@ -30,4 +29,25 @@ function parseAmount(input, balance = 0) {
     return Math.floor(value);
 }
 
-module.exports = { parseAmount };
+/**
+ * Calculates a user's total net worth (Wallet + Inventory Value).
+ * @param {object} userData User data from the database.
+ * @returns {number} The total net worth.
+ */
+function calculateNetWorth(userData) {
+    if (!userData) return 0;
+
+    let total = userData.balance || 0;
+    const inventory = JSON.parse(userData.inventory || '{}');
+
+    for (const [id, count] of Object.entries(inventory)) {
+        const item = SHOP_ITEMS.find(i => String(i.id) === id);
+        if (item) {
+            total += (item.price * count);
+        }
+    }
+
+    return total;
+}
+
+module.exports = { parseAmount, calculateNetWorth };

@@ -6,7 +6,7 @@ const config = require('../../config');
 module.exports = {
     name: 'guess',
     aliases: ['gn'],
-    description: 'Guess the number (1-100)',
+    description: 'Đoán số (1-100)',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -14,8 +14,8 @@ module.exports = {
         let attempts = 0;
 
         const embed = new EmbedBuilder()
-            .setTitle('🔢  Guess the Number')
-            .setDescription(`I'm thinking of a number between **1 and 100**.\nYou have **1 minute** to guess it!`)
+            .setTitle('🔢  Đoán Số')
+            .setDescription(`Tôi đang nghĩ về một con số từ **1 đến 100**.\nBạn có **1 phút** để đoán nó!`)
             .setColor(config.COLORS.INFO);
 
         await message.reply({ embeds: [embed] });
@@ -33,7 +33,7 @@ module.exports = {
                 const reward = Math.max(10, config.ECONOMY.GUESS_REWARD_BASE - (attempts * 5));
                 db.addBalance(m.author.id, reward);
 
-                m.reply(`${config.EMOJIS.SUCCESS} **Correct!** The number was **${number}**.\nYou guessed it in **${attempts}** attempts and won ${config.EMOJIS.COIN} **${reward}** coins!`);
+                m.reply(`${config.EMOJIS.SUCCESS} **Chính xác!** Con số đó là **${number}**.\nBạn đã đoán đúng trong **${attempts}** lần thử và nhận được ${config.EMOJIS.COIN} **${reward}** coins!`);
                 collector.stop();
             } else if (guess < number) {
                 m.react('⬆️'); // Higher
@@ -42,9 +42,13 @@ module.exports = {
             }
         });
 
+        collector.on('collect', m => { // Fixed redundant collector on collect
+            // Already handled above
+        });
+
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                message.channel.send(`${config.EMOJIS.TIMER} **Time's up!** The number was **${number}**.`);
+                message.channel.send(`${config.EMOJIS.TIMER} **Hết thời gian!** Con số đó là **${number}**.`);
             }
             startCooldown(message.client, 'guess', message.author.id);
         });

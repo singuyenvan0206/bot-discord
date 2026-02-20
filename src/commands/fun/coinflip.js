@@ -5,59 +5,65 @@ const config = require('../../config');
 module.exports = {
     name: 'coinflip',
     aliases: ['flip', 'cf'],
-    description: 'Flip a coin',
+    description: 'Tung đồng xu',
     cooldown: 30,
     async execute(message, args) {
-        const call = args[0]?.toLowerCase();
-
-        if (!['heads', 'tails'].includes(call)) {
-            return message.reply(`${config.EMOJIS.ERROR} Please specify **heads** or **tails**! Usage: \`${config.PREFIX}coinflip <heads/tails> [bet]\``);
-        }
+        const { t, getLanguage } = require('../../utils/i18n');
+        const { startCooldown } = require('../../utils/cooldown');
+        const lang = getLanguage(message.author.id, message.guild.id);
 
         const user = db.getUser(message.author.id);
         const { parseAmount } = require('../../utils/economy');
-        let bet = args[1] ? parseAmount(args[1], user.balance) : 50;
 
-        if (isNaN(bet) || bet <= 0) return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
-        if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} You don't have enough money! Balance: **${user.balance}**`);
-        if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+        let call = args[0] ? args[0].toLowerCase() : null;
+        let bet = args[1] ? parseAmount(args[1], user.balance) : 0;
 
-        db.removeBalance(user.id, bet);
+        // Support vn side names
+        if (call === 'ngửa' || call === 'ngua') call = 'heads';
+        if (call === 'sấp' || call === 'sap') call = 'tails';
+
+        if (call !== 'heads' && call !== 'tails') {
+            return message.reply(t('coinflip.invalid_side', lang, { prefix: config.PREFIX }));
+        }
+
+        if (bet > 0) {
+            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            db.removeBalance(user.id, bet);
+        }
 
         const result = Math.random() < 0.5 ? 'heads' : 'tails';
         const won = call === result;
-        const prize = bet * 2;
+
+        const displayCall = t(`coinflip.${call}`, lang);
+        const displayResult = t(`coinflip.${result}`, lang);
+
+        let payout = 0;
+        let flavorText = '';
 
         if (won) {
+            payout = bet * 2;
             const { getUserMultiplier } = require('../../utils/multiplier');
             const multiplier = getUserMultiplier(user.id, 'gamble');
             const bonus = Math.floor(bet * multiplier);
-            const totalEarnings = prize + bonus;
-            db.addBalance(user.id, totalEarnings);
+            payout += bonus;
 
-            const embed = new EmbedBuilder()
-                .setTitle('🪙  Coinflip')
-                .setDescription(`You picked **${call}**...\nThe coin shows **${result}**!`)
-                .addFields(
-                    { name: 'Result', value: `🎉 **You Won!**`, inline: true },
-                    { name: 'Base Win', value: `${config.EMOJIS.COIN} +${bet}`, inline: true },
-                    { name: 'Item Bonus', value: `✨ +${bonus} (${Math.round(multiplier * 100)}%)`, inline: true },
-                    { name: 'Total Return', value: `${config.EMOJIS.COIN} **${totalEarnings}** coins`, inline: false }
-                )
-                .setColor(config.COLORS.GAMBLE_WIN);
-
-            return message.reply({ embeds: [embed] });
+            if (payout > 0) db.addBalance(user.id, payout);
+            flavorText = t('coinflip.win', lang, { amount: payout });
+            if (bonus > 0) flavorText += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
         } else {
-            const embed = new EmbedBuilder()
-                .setTitle('🪙  Coinflip')
-                .setDescription(`You picked **${call}**...\nThe coin shows **${result}**!`)
-                .addFields(
-                    { name: 'Result', value: `${config.EMOJIS.ERROR} **You Lost!**`, inline: true },
-                    { name: 'Earnings', value: `💸 -${bet}`, inline: true }
-                )
-                .setColor(config.COLORS.GAMBLE_LOSS);
-
-            return message.reply({ embeds: [embed] });
+            flavorText = t('coinflip.lose', lang, { amount: bet });
         }
+
+        const embed = new EmbedBuilder()
+            .setTitle(t('coinflip.title', lang))
+            .setDescription(
+                t('coinflip.description', lang, { call: displayCall, result: displayResult }) +
+                `\n\n${flavorText}`
+            )
+            .setColor(won ? config.COLORS.GAMBLE_WIN : config.COLORS.GAMBLE_LOSS);
+
+        startCooldown(message.client, 'coinflip', message.author.id);
+        return message.reply({ embeds: [embed] });
     }
 };

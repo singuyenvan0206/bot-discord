@@ -86,19 +86,6 @@ function initSchema() {
         )
     `);
 
-    db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_guild ON giveaways(guild_id)');
-    db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
-    db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_active ON giveaways(ended, ends_at)');
-    db.run('CREATE INDEX IF NOT EXISTS idx_participants_giveaway ON participants(giveaway_id)');
-    db.run('CREATE INDEX IF NOT EXISTS idx_guild_users_guild ON guild_users(guild_id)');
-
-    // Migrate existing tables — add new columns if missing
-    safeAddColumn('giveaways', 'paused', 'INTEGER NOT NULL DEFAULT 0');
-    safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
-    safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
-    safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
-
-    // Ensure new table exists for existing DBs
     db.run(`
         CREATE TABLE IF NOT EXISTS guild_users (
             guild_id TEXT NOT NULL,
@@ -110,6 +97,28 @@ function initSchema() {
             PRIMARY KEY (guild_id, user_id)
         )
     `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS guilds (
+            id TEXT PRIMARY KEY,
+            language TEXT DEFAULT 'vi',
+            prefix TEXT,
+            json_data TEXT DEFAULT '{}'
+        )
+    `);
+
+    db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_guild ON giveaways(guild_id)');
+    db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
+    db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_active ON giveaways(ended, ends_at)');
+    db.run('CREATE INDEX IF NOT EXISTS idx_participants_giveaway ON participants(giveaway_id)');
+    db.run('CREATE INDEX IF NOT EXISTS idx_guild_users_guild ON guild_users(guild_id)');
+
+    // Migrate existing tables — add new columns if missing
+    safeAddColumn('giveaways', 'paused', 'INTEGER NOT NULL DEFAULT 0');
+    safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
+    safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
+    safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
+    safeAddColumn('users', 'language', "TEXT DEFAULT 'vi'");
 
     migrateInventoryIds();
 
@@ -401,6 +410,29 @@ function isOwner(userId) {
     return process.env.OWNER_ID === userId;
 }
 
+// ─── Guilds ─────────────────────────────────────────────────────────
+
+function getGuild(guildId) {
+    let guild = queryOne('SELECT * FROM guilds WHERE id = ?', [guildId]);
+    if (!guild) {
+        execute('INSERT INTO guilds (id) VALUES (?)', [guildId]);
+        guild = { id: guildId, language: 'vi', prefix: null, json_data: '{}' };
+    }
+    return guild;
+}
+
+function updateGuild(guildId, updates) {
+    const fields = [];
+    const values = [];
+    Object.entries(updates).forEach(([key, value]) => {
+        fields.push(`${key} = ?`);
+        values.push(value);
+    });
+    if (fields.length === 0) return;
+    values.push(guildId);
+    execute(`UPDATE guilds SET ${fields.join(', ')} WHERE id = ?`, values);
+}
+
 
 
 module.exports = {
@@ -434,4 +466,6 @@ module.exports = {
     getGuildUser,
     updateGuildUser,
     isOwner,
+    getGuild,
+    updateGuild,
 };

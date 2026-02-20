@@ -29,23 +29,24 @@ module.exports = {
             const itemsList = currentItems.length > 0 ? currentItems.map(i => {
                 let desc = `*${i.description}*`;
                 if (i.multiplier) {
-                    desc += `\n✨ **Bonus:** +${Math.round(i.multiplier * 100)}% effect`;
+                    desc += `\n✨ **Thưởng:** +${Math.round(i.multiplier * 100)}% hiệu ứng`;
                 }
                 return `**${i.name}** — ${config.EMOJIS.COIN} ${i.price.toLocaleString()}\n${desc}\nID: \`${i.id}\``;
-            }).join('\n\n') : '*No items in this category yet.*';
+            }).join('\n\n') : '*Hiện chưa có vật phẩm nào trong danh mục này.*';
 
             const categoryNames = {
-                income: '💼 Income',
-                daily: '📅 Daily',
-                gamble: '🎲 Gamble',
-                tools: '🎣 Tools'
+                income: '💼 Tăng Thu Nhập',
+                daily: '📅 Thưởng Hàng Ngày',
+                gamble: '🎲 Tăng May Mắn',
+                tools: '🎣 Dụng Cụ Câu Cá'
             };
 
             return new EmbedBuilder()
-                .setTitle(`🛒  Shop: ${categoryNames[category]}`)
+                .setTitle(`🛒  Cửa Hàng — ${categoryNames[category]}`)
                 .setDescription(itemsList)
-                .setColor(config.COLORS.SCHEDULED)
-                .setFooter({ text: `Page ${page + 1}/${totalPages} • Use ${config.PREFIX}buy <id> [amount]` });
+                .setColor(config.COLORS.INFO)
+                .setThumbnail(message.client.user.displayAvatarURL())
+                .setFooter({ text: `Trang ${page + 1}/${totalPages} • Dùng ${config.PREFIX}buy <id> [số_lượng]` });
         };
 
         const generateComponents = (category, page) => {
@@ -54,10 +55,10 @@ module.exports = {
 
             const categoryRow = new ActionRowBuilder()
                 .addComponents(
-                    new ButtonBuilder().setCustomId('cat_income').setLabel('💼 Income').setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_income').setLabel('💼 Thu Nhập').setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
                     new ButtonBuilder().setCustomId('cat_daily').setLabel('📅 Daily').setStyle(category === 'daily' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_gamble').setLabel('🎲 Gamble').setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_tools').setLabel('🎣 Tools').setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary)
+                    new ButtonBuilder().setCustomId('cat_gamble').setLabel('🎲 Cờ Bạc').setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_tools').setLabel('🎣 Công Cụ').setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary)
                 );
 
             const navRow = new ActionRowBuilder()

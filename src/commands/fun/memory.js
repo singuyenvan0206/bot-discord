@@ -8,7 +8,7 @@ const MEM_EMOJIS = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍓', '🍑', '�
 module.exports = {
     name: 'memory',
     aliases: ['mem', 'match'],
-    description: 'Play Memory Match! (Find all pairs)',
+    description: 'Trò chơi Trí Nhớ (Memory Match)! Tìm các cặp hình giống nhau.',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
@@ -53,10 +53,10 @@ module.exports = {
         };
 
         const embed = new EmbedBuilder()
-            .setTitle('🧠 Memory Match')
-            .setDescription('Find all matching pairs! Click buttons to reveal cards.')
+            .setTitle('🧠 Trò Chơi Trí Nhớ')
+            .setDescription('Hãy tìm tất cả các cặp hình giống nhau! Nhấn vào các nút để lật thẻ.')
             .setColor(config.COLORS.SCHEDULED)
-            .setFooter({ text: 'Time Limit: 2 Minutes' });
+            .setFooter({ text: 'Giới hạn thời gian: 2 Phút' });
 
         const reply = await message.reply({ embeds: [embed], components: getButtonGrid() });
 
@@ -67,7 +67,7 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (isProcessing) return i.reply({ content: `${config.EMOJIS.WAITING} Please wait...`, ephemeral: true });
+            if (isProcessing) return i.reply({ content: `${config.EMOJIS.WAITING} Vui lòng đợi một chút...`, ephemeral: true });
 
             const idx = parseInt(i.customId.split('_')[1]);
             const cell = grid[idx];
@@ -109,8 +109,8 @@ module.exports = {
 
                         db.addBalance(message.author.id, reward);
 
-                        embed.setTitle(`${config.EMOJIS.SUCCESS} Victory!`)
-                            .setDescription(`**You found all pairs!**\n\n⏱️ Time: **${timeTaken}s**\n🔄 Attempts: **${attempts}**\n${config.EMOJIS.COIN} Reward: **${reward} coins**`)
+                        embed.setTitle(`${config.EMOJIS.SUCCESS} Chiến Thắng!`)
+                            .setDescription(`**Bạn đã tìm thấy tất cả các cặp hình!**\n\n⏱️ Thời gian: **${timeTaken}s**\n🔄 Số lần thử: **${attempts}**\n${config.EMOJIS.COIN} Phần thưởng: **${reward} coins**`)
                             .setColor(config.COLORS.SUCCESS);
 
                         await i.update({ embeds: [embed], components: getButtonGrid(true) });
@@ -124,7 +124,9 @@ module.exports = {
                     await i.update({ components: getButtonGrid() });
 
                     setTimeout(async () => {
-                        firstCell.revealed = false;
+                        if (firstPick !== null) { // Defensive check
+                            grid[firstPick].revealed = false;
+                        }
                         cell.revealed = false;
                         firstPick = null;
                         isProcessing = false;
@@ -136,7 +138,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                embed.setTitle(`${config.EMOJIS.TIMER} Time's Up!`).setColor(config.COLORS.ERROR);
+                embed.setTitle(`${config.EMOJIS.TIMER} Hết Thời Gian!`).setColor(config.COLORS.ERROR);
                 reply.edit({ embeds: [embed], components: getButtonGrid(true) }).catch(() => { });
                 startCooldown(message.client, 'memory', message.author.id);
             }

@@ -6,12 +6,12 @@ const config = require('../../config');
 module.exports = {
     name: 'wordchain',
     aliases: ['wc'],
-    description: 'Play Word Chain',
+    description: 'Chơi Nối Chữ (Word Chain)',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
         if (message.client.activeChainGames?.has(message.channel.id)) {
-            return message.reply(`❌ A word chain game is already running in this channel! Type \`${config.PREFIX}stop\` to end it.`);
+            return message.reply(`❌ Một trò chơi Nối Chữ đang diễn ra trong kênh này! Gõ \`${config.PREFIX}stop\` để dừng lại.`);
         }
 
         if (!message.client.activeChainGames) message.client.activeChainGames = new Set();
@@ -24,10 +24,10 @@ module.exports = {
         let players = [message.author.id];
 
         const embed = new EmbedBuilder()
-            .setTitle('🔗  Word Chain')
-            .setDescription(`Game started! The first word must start with **${lastChar.toUpperCase()}**.\n\nType a word to join!`)
+            .setTitle('🔗  Nối Chữ (Word Chain)')
+            .setDescription(`Trò chơi bắt đầu! Từ đầu tiên phải bắt đầu bằng chữ **${lastChar.toUpperCase()}**.\n\n*(Lưu ý: Hiện tại chỉ hỗ trợ từ tiếng Anh)*\n\nGõ một từ để tham gia!`)
             .setColor(config.COLORS.INFO)
-            .setFooter({ text: `Type ${config.PREFIX}stop to end game` });
+            .setFooter({ text: `Gõ ${config.PREFIX}stop để kết thúc trò chơi` });
 
         await message.channel.send({ embeds: [embed] });
 
@@ -54,7 +54,7 @@ module.exports = {
                 const { isManager } = require('../../utils/permissions');
                 if (isManager(m.member)) {
                     collector.stop('stopped');
-                    return message.channel.send(`🛑 **Game stopped by Manager ${m.author}!**`);
+                    return message.channel.send(`🛑 **Trò chơi đã bị dừng bởi Quản lý ${m.author}!**`);
                 }
             }
 
@@ -70,10 +70,10 @@ module.exports = {
 
             // Invalid word checks
             let invalidReason = null;
-            if (usedWords.has(word)) invalidReason = 'Word already used!';
-            else if (word.charAt(0) !== lastChar) invalidReason = `Must start with **${lastChar.toUpperCase()}**!`;
-            else if (word.length < 3) invalidReason = 'Must be 3+ letters!';
-            else if (!/^[a-z]+$/.test(word)) invalidReason = 'Must be a single English word!';
+            if (usedWords.has(word)) invalidReason = 'Từ này đã được sử dụng rồi!';
+            else if (word.charAt(0) !== lastChar) invalidReason = `Phải bắt đầu bằng chữ **${lastChar.toUpperCase()}**!`;
+            else if (word.length < 3) invalidReason = 'Phải có ít nhất 3 chữ cái!';
+            else if (!/^[a-z]+$/.test(word)) invalidReason = 'Phải là một từ tiếng Anh duy nhất!';
 
             if (invalidReason) {
                 await m.react(config.EMOJIS.ERROR);
@@ -110,11 +110,11 @@ module.exports = {
             const scoreboard = [...playerScores.entries()]
                 .sort((a, b) => b[1] - a[1])
                 .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} ${coins} coins`)
-                .join('\n') || 'No words were played.';
+                .join('\n') || 'Không có ai tham gia chơi.';
 
             const endEmbed = new EmbedBuilder()
-                .setTitle('🛑  Word Chain — Game Over!')
-                .setDescription(`**Total words:** ${usedWords.size}\n\n${scoreboard}`)
+                .setTitle('🛑  Nối Chữ — Kết Thúc!')
+                .setDescription(`**Tổng số từ:** ${usedWords.size}\n\n${scoreboard}`)
                 .setColor(config.COLORS.ERROR);
             message.channel.send({ embeds: [endEmbed] });
             startCooldown(message.client, 'wordchain', message.author.id);

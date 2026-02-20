@@ -1,0 +1,57 @@
+{
+    "common": {
+        "error": "❌ Đã có lỗi xảy ra.",
+        "insufficient_funds": "❌ Bạn không đủ tiền! Số dư: **{{balance}}**",
+        "invalid_amount": "❌ Số tiền không hợp lệ.",
+        "cooldown": "❌ Vui lòng đợi **{{time}}s** nữa để sử dụng lại lệnh này!",
+        "success": "✅ Thành công!"
+    },
+    "slots": {
+        "title": "🎰  Máy Quay Slots",
+        "rolling": "🎰  Đang quay...",
+        "win_jackpot": "🎰 **SIÊU CẤP NỔ HŨ! BA BIỂU TƯỢNG {{symbol}}!**",
+        "win_small": "🎰 **Hai biểu tượng trùng nhau.** (Hoàn trả lại 50%)",
+        "lose": "🎰 Không có cặp nào. Chúc bạn may mắn lần sau!",
+        "won_coins": "\n{{emoji}} **Thắng {{amount}} coins!**",
+        "lost_coins": "\n💸 **Mất {{amount}} coins.**",
+        "bonus_item": " *(Thêm +{{amount}} thưởng item: {{percent}}%)*"
+    },
+    "daily": {
+        "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{hours}} giờ {{minutes}} phút** nữa.",
+        "success": "✅ Bạn đã nhận phần thưởng hàng ngày là **{{amount}}** coins! {{emoji}}",
+        "bonus": "\n✨ **Thưởng thêm vật phẩm:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "work": {
+        "cooldown": "❌ Bạn cần nghỉ ngơi! Hãy quay lại làm việc sau **{{minutes}} phút**.",
+        "success": "💼 Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** coins! {{emoji}}",
+        "bonus": "\n✨ **Thưởng thêm vật phẩm:** +{{amount}} coins ({{percent}}%)!",
+        "jobs": [
+            "Lập trình viên",
+            "Thợ xây",
+            "Phục vụ bàn",
+            "Đầu bếp",
+            "Thợ sửa xe",
+            "Bác sĩ",
+            "Họa sĩ",
+            "Streamer",
+            "Shipper",
+            "Kế toán"
+        ]
+    },
+    "balance": {
+        "title": "💰 Tài khoản: {{user}}",
+        "description": "💸 Tiền mặt: **{{balance}}** coins"
+    },
+    "transfer": {
+        "mention": "❌ Vui lòng nhắc tên (@mention) người bạn muốn chuyển tiền.",
+        "invalid": "❌ Vui lòng nhập số tiền hợp lệ.",
+        "self": "❌ Bạn không thể tự chuyển khoản cho chính mình!",
+        "bot": "❌ Bạn không thể chuyển tiền cho bot.",
+        "insufficient": "❌ Bạn không đủ tiền! Bạn chỉ còn **{{balance}}** coins.",
+        "success": "✅ Đã chuyển thành công **{{amount}}** coins cho {{user}}! 💸"
+    },
+    "language": {
+        "set_success": "✅ Ngôn ngữ đã được thiết lập thành **Tiếng Việt**.",
+        "invalid": "❌ Ngôn ngữ không hợp lệ. Hỗ trợ: `en`, `vi`"
+    }
+}
