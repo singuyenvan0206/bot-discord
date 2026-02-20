@@ -12,15 +12,16 @@ const categories = {
             '`$blackjack` (`$bj`) — Play Blackjack',
             '`$slots` — Spin the slots',
             '`$tictactoe` (`$ttt`) — Play Tic-Tac-Toe',
-            '`$trivia` — Test your knowledge',
+            '`$connect4` (`$c4`) — Play Connect 4',
+            '`$memory` (`$mem`, `$match`) — Play Memory Match',
+            '`$trivia` — Test your knowledge (Unlimited)',
             '`$emojiquiz` (`$quiz`) — Guess the movie/phrase',
             '`$poker` (`$pk`) — Multiplayer High Card Poker',
             '`$minesweeper` (`$mine`, `$ms`) — Classic Minesweeper',
-            '`$hangman` (`$hang`, `$hm`) — Classic Hangman',
+            '`$hangman` (`$hang`, `$hm`) — Hangman (Unlimited words)',
             '`$wordchain` (`$wc`) — Multiplayer Word Chain',
-            '`$scramble` (`$scram`) — Unscramble words',
+            '`$scramble` (`$scram`) — Unscramble words (Unlimited)',
             '`$guess` (`$gn`) — Guess the number',
-            '`$math` — Solve math problems',
             '`$reaction` (`$react`) — Test reaction speed',
         ]
     },
@@ -70,9 +71,34 @@ module.exports = {
     name: 'help',
     description: 'Shows a list of all available commands',
     async execute(message, args) {
+        // 1. Check if user wants specific command help
+        if (args.length > 0) {
+            const name = args[0].toLowerCase();
+            const command = message.client.commands.get(name) ||
+                message.client.commands.find(c => c.aliases && c.aliases.includes(name));
+
+            if (!command) {
+                return message.reply(`❌ Could not find command **${name}**!`);
+            }
+
+            const embed = new EmbedBuilder()
+                .setTitle(`Command: $${command.name}`)
+                .setDescription(command.description || 'No description provided')
+                .setColor(0x3498DB)
+                .addFields(
+                    { name: '📝 Aliases', value: command.aliases ? command.aliases.map(a => `$${a}`).join(', ') : 'None', inline: true },
+                    { name: '⏱️ Cooldown', value: `${command.cooldown || 3} seconds`, inline: true },
+                    { name: '💡 Usage', value: `$${command.name} ${command.usage || ''}`, inline: false }
+                )
+                .setFooter({ text: 'Type $help to see all commands' });
+
+            return message.reply({ embeds: [embed] });
+        }
+
+        // 2. Default Behavior: Show Category Menu
         const homeEmbed = new EmbedBuilder()
             .setTitle('🤖  Bot Help Menu')
-            .setDescription('Select a category from the dropdown menu below to see available commands.')
+            .setDescription('Select a category from the dropdown menu below to see available commands.\n\n💡 **Tip:** Type `$help <command>` for more details on a specific command!')
             .setColor(0x5865F2)
             .addFields({ name: '🔗 Links', value: '[Support Server](https://discord.gg/) • [Invite Bot](https://discord.com/oauth2/authorize?client_id=' + message.client.user.id + '&permissions=8&scope=bot%20applications.commands)' })
             .setThumbnail(message.client.user.displayAvatarURL())

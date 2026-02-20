@@ -137,6 +137,7 @@ client.on(Events.InteractionCreate, async interaction => {
                 'slots': ['bet'], 'minesweeper': ['bet'],
                 // user-optional commands
                 'balance': ['user'], 'avatar': ['user'], 'userinfo': ['user'],
+                'help': ['command'],
             };
 
             const optionNames = optionMap[commandName] || [];

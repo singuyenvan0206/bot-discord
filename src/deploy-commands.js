@@ -139,7 +139,8 @@ const commands = [
 
     new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Show all available commands'),
+        .setDescription('Show all available commands')
+        .addStringOption(opt => opt.setName('command').setDescription('Get details for a specific command')),
 
     // ═══ Giveaway ═══
     new SlashCommandBuilder()
