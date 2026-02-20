@@ -2,39 +2,6 @@ const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 
-const WORDS_BY_CATEGORY = {
-    'Technology & Coding': [
-        'javascript', 'discord', 'developer', 'function', 'variable', 'array', 'object', 'async', 'await', 'promise', 'callback', 'server', 'client', 'database', 'frontend', 'backend', 'fullstack', 'framework', 'library', 'compiler', 'algorithm', 'binary', 'boolean', 'cache', 'cloud', 'debug', 'encryption', 'hardware', 'interface', 'kernel', 'loop', 'memory', 'network', 'pixel', 'python', 'query', 'runtime', 'software', 'syntax', 'terminal', 'unicode', 'virtual', 'widget', 'xml', 'yaml', 'zip', 'agile', 'bug', 'class', 'data',
-        'integer', 'string', 'float', 'double', 'char', 'void', 'null', 'undefined', 'scope', 'hoisting', 'closure', 'prototype', 'inheritance', 'recursion', 'iteration', 'conditional', 'statement', 'expression', 'operator', 'operand', 'argument', 'parameter', 'return', 'break', 'continue', 'switch', 'case', 'default', 'try', 'catch', 'finally', 'throw', 'error', 'exception', 'stack', 'heap', 'queue', 'list', 'map', 'set', 'tree', 'graph', 'node', 'edge', 'vertex', 'hash', 'table', 'index', 'key', 'value'
-    ],
-    'Animals': [
-        'aardvark', 'albatross', 'alligator', 'alpaca', 'ant', 'anteater', 'antelope', 'ape', 'armadillo', 'baboon', 'badger', 'barracuda', 'bat', 'bear', 'beaver', 'bee', 'bison', 'boar', 'buffalo', 'butterfly', 'camel', 'capybara', 'caribou', 'cassowary', 'cat', 'caterpillar', 'cattle', 'chamois', 'cheetah', 'chicken', 'chimpanzee', 'chinchilla', 'chough', 'clam', 'cobra', 'cockroach', 'cod', 'cormorant', 'coyote', 'crab', 'crane', 'crocodile', 'crow', 'curlew', 'deer', 'dinosaur', 'dog', 'dogfish', 'dolphin', 'donkey', 'dotterel', 'dove', 'dragonfly', 'duck', 'dugong', 'dunlin', 'eagle', 'echidna', 'eel', 'eland', 'elephant', 'elk', 'emu', 'falcon', 'ferret', 'finch', 'fish', 'flamingo', 'fly', 'fox', 'frog', 'gaur', 'gazelle', 'gerbil', 'giraffe', 'gnat', 'gnu', 'goat', 'goldfinch', 'goldfish', 'goose', 'gorilla', 'goshawk', 'grasshopper', 'grouse', 'guanaco', 'gull', 'hamster', 'hare', 'hawk', 'hedgehog', 'heron', 'herring', 'hippopotamus', 'hornet', 'horse', 'human', 'hummingbird', 'hyena', 'ibex', 'ibis', 'jackal', 'jaguar', 'jay', 'jellyfish', 'kangaroo', 'kingfisher', 'koala', 'kookaburra', 'kouprey', 'kudu', 'lapwing', 'lark', 'lemur', 'leopard', 'lion', 'llama', 'lobster', 'locust', 'loris', 'louse', 'lyrebird', 'magpie', 'mallard', 'manatee', 'mandrill', 'mantis', 'marten', 'meerkat', 'mink', 'mole', 'mongoose', 'monkey', 'moose', 'mosquito', 'mouse', 'mule', 'narwhal', 'newt', 'nightingale', 'octopus', 'okapi', 'opossum', 'oryx', 'ostrich', 'otter', 'owl', 'oyster', 'panther', 'parrot', 'partridge', 'peafowl', 'pelican', 'penguin', 'pheasant', 'pig', 'pigeon', 'pony', 'porcupine', 'porpoise', 'quail', 'quelea', 'quetzal', 'rabbit', 'raccoon', 'rail', 'ram', 'rat', 'raven', 'red deer', 'red panda', 'reindeer', 'rhinoceros', 'rook', 'salamander', 'salmon', 'sand dollar', 'sandpiper', 'sardine', 'scorpion', 'seahorse', 'seal', 'shark', 'sheep', 'shrew', 'skunk', 'snail', 'snake', 'sparrow', 'spider', 'spoonbill', 'squid', 'squirrel', 'starling', 'stingray', 'stinkbug', 'stork', 'swallow', 'swan', 'tapir', 'tarsier', 'termite', 'tiger', 'toad', 'trout', 'turkey', 'turtle', 'viper', 'vulture', 'wallaby', 'walrus', 'wasp', 'weasel', 'whale', 'wildcat', 'wolf', 'wolverine', 'wombat', 'woodcock', 'woodpecker', 'worm', 'wren', 'yak', 'zebra'
-    ],
-    'Food & Drink': [
-        'apple', 'apricot', 'avocado', 'banana', 'blackberry', 'blueberry', 'boysenberry', 'cantaloupe', 'cherry', 'coconut', 'cranberry', 'cucumber', 'currant', 'date', 'durian', 'elderberry', 'fig', 'grape', 'grapefruit', 'guava', 'honeydew', 'jackfruit', 'kiwi', 'kumquat', 'lemon', 'lime', 'lychee', 'mango', 'melon', 'mulberry', 'nectarine', 'olive', 'orange', 'papaya', 'passionfruit', 'peach', 'pear', 'persimmon', 'pineapple', 'plum', 'pomegranate', 'pomelo', 'quince', 'raspberry', 'starfruit', 'strawberry', 'tangerine', 'watermelon', 'asparagus', 'bean', 'beet', 'broccoli', 'cabbage', 'carrot', 'cauliflower', 'celery', 'corn', 'eggplant', 'garlic', 'kale', 'lettuce', 'mushroom', 'onion', 'pea', 'pepper', 'potato', 'pumpkin', 'radish', 'spinach', 'squash', 'tomato', 'turnip', 'yam', 'zucchini', 'bagel', 'biscuit', 'bread', 'cake', 'candy', 'cheese', 'chocolate', 'cookie', 'croissant', 'dessert', 'donut', 'egg', 'honey', 'ice cream', 'jelly', 'milk', 'muffin', 'noodle', 'pasta', 'pastry', 'pie', 'pizza', 'pudding', 'rice', 'sandwich', 'soup', 'sugar', 'sushi', 'toast', 'waffle', 'yogurt', 'coffee', 'juice', 'soda', 'tea', 'water', 'wine', 'beer'
-    ],
-    'Geography & Space': [
-        'africa', 'antarctica', 'asia', 'australia', 'europe', 'north america', 'south america', 'mountain', 'river', 'ocean', 'lake', 'sea', 'desert', 'forest', 'island', 'valley', 'volcano', 'canyon', 'glacier', 'jungle', 'city', 'country', 'continent', 'map', 'globe', 'compass', 'latitude', 'longitude', 'equator', 'pole', 'earth', 'mars', 'venus', 'jupiter', 'saturn', 'uranus', 'neptune', 'mercury', 'pluto', 'sun', 'moon', 'star', 'galaxy', 'universe', 'asteroid', 'comet', 'meteor', 'planet', 'satellite', 'telescope', 'space', 'astronaut', 'orbit', 'gravity', 'eclipse', 'nebula', 'blackhole', 'supernova', 'constellation', 'zodiac'
-    ],
-    'Objects & Tools': [
-        'chair', 'table', 'desk', 'lamp', 'bed', 'sofa', 'couch', 'window', 'door', 'floor', 'ceiling', 'wall', 'roof', 'house', 'building', 'bridge', 'road', 'street', 'car', 'bus', 'truck', 'train', 'plane', 'boat', 'ship', 'bicycle', 'motorcycle', 'scooter', 'skateboard', 'key', 'lock', 'phone', 'computer', 'laptop', 'tablet', 'camera', 'watch', 'clock', 'pencil', 'pen', 'paper', 'book', 'notebook', 'backpack', 'bag', 'wallet', 'purse', 'glass', 'cup', 'plate', 'bowl', 'fork', 'spoon', 'knife', 'shoes', 'shirt', 'pants', 'dress', 'hat', 'gloves', 'socks', 'coat', 'jacket', 'scarf', 'tie', 'belt', 'glasses', 'umbrella', 'mirror', 'comb', 'brush', 'soap', 'shampoo', 'towel', 'toothbrush', 'toothpaste', 'razor', 'scissors', 'hammer', 'screwdriver', 'wrench', 'drill', 'saw', 'nail', 'screw', 'bolt', 'nut', 'rope', 'tape', 'glue', 'paint', 'canvas'
-    ],
-    'Emotions & Abstract': [
-        'happy', 'sad', 'angry', 'excited', 'bored', 'tired', 'scared', 'nervous', 'proud', 'confused', 'surprised', 'love', 'hate', 'joy', 'fear', 'hope', 'dream', 'idea', 'thought', 'memory', 'future', 'past', 'present', 'time', 'life', 'death', 'soul', 'spirit', 'mind', 'heart', 'friend', 'family', 'enemy', 'stranger', 'neighbor', 'leader', 'follower', 'hero', 'villain', 'king', 'queen', 'prince', 'princess', 'knight', 'wizard', 'witch', 'magic', 'power', 'peace', 'war', 'battle', 'fight', 'victory', 'defeat', 'success', 'failure', 'truth', 'lie', 'secret', 'mystery', 'puzzle', 'game', 'sport', 'music', 'art', 'dance', 'song', 'movie', 'book', 'story', 'poem', 'joke', 'riddle', 'word', 'language', 'voice', 'sound', 'noise', 'silence', 'light', 'dark', 'color', 'shape', 'size', 'speed', 'distance', 'weight', 'height', 'depth', 'volume', 'area', 'temperature', 'weather', 'climate', 'season', 'spring', 'summer', 'autumn', 'winter', 'storm', 'rain', 'snow', 'wind', 'cloud', 'sun', 'fog', 'ice', 'fire'
-    ],
-    'Verbs & Actions': [
-        'run', 'walk', 'jump', 'fly', 'swim', 'climb', 'crawl', 'drive', 'ride', 'sail', 'read', 'write', 'draw', 'paint', 'sing', 'dance', 'play', 'work', 'study', 'learn', 'teach', 'cook', 'eat', 'drink', 'sleep', 'dream', 'wake', 'clean', 'wash', 'build', 'create', 'destroy', 'fix', 'break', 'cut', 'mix', 'open', 'close', 'lock', 'unlock', 'push', 'pull', 'lift', 'carry', 'throw', 'catch', 'hit', 'kick', 'punch', 'kiss', 'hug', 'laugh', 'cry', 'smile', 'frown', 'shout', 'whisper', 'talk', 'speak', 'listen', 'hear', 'see', 'watch', 'look', 'smell', 'taste', 'touch', 'feel', 'think', 'believe', 'know', 'remember', 'forget', 'love', 'hate', 'like', 'dislike', 'want', 'need', 'have', 'own', 'buy', 'sell', 'pay', 'give', 'take', 'steal', 'borrow', 'lend', 'find', 'lose', 'search', 'hide', 'show', 'appear', 'disappear', 'start', 'stop', 'begin', 'end', 'finish', 'win', 'lose', 'help', 'hurt', 'kill', 'save', 'live', 'die', 'grow', 'shrink', 'change', 'move', 'stay', 'go', 'come', 'wait', 'meet', 'join', 'leave'
-    ],
-    'Adjectives': [
-        'good', 'bad', 'great', 'terrible', 'happy', 'sad', 'big', 'small', 'huge', 'tiny', 'tall', 'short', 'long', 'wide', 'narrow', 'thick', 'thin', 'heavy', 'light', 'fast', 'slow', 'quick', 'rapid', 'hard', 'soft', 'strong', 'weak', 'hot', 'cold', 'warm', 'cool', 'wet', 'dry', 'clean', 'dirty', 'new', 'old', 'young', 'rich', 'poor', 'beautiful', 'ugly', 'pretty', 'cute', 'smart', 'stupid', 'clever', 'dumb', 'funny', 'serious', 'crazy', 'sane', 'polite', 'rude', 'kind', 'cruel', 'brave', 'cowardly', 'honest', 'dishonest', 'true', 'false', 'real', 'fake', 'easy', 'difficult', 'simple', 'complex', 'bright', 'dark', 'sharp', 'dull', 'smooth', 'rough', 'loud', 'quiet', 'sweet', 'sour', 'bitter', 'salty', 'spicy', 'fresh', 'rotten', 'healthy', 'sick', 'tired', 'awake', 'busy', 'free', 'full', 'empty', 'open', 'closed', 'safe', 'dangerous', 'right', 'wrong', 'left', 'right', 'early', 'late', 'first', 'last', 'next', 'previous', 'best', 'worst', 'better', 'worse', 'more', 'less', 'most', 'least', 'all', 'none', 'some', 'many', 'few'
-    ],
-    'General / Mixed': [
-        'adventure', 'mystery', 'fantasy', 'horror', 'romance', 'comedy', 'drama', 'action', 'thriller', 'sci-fi', 'western', 'history', 'biography', 'autobiography', 'novel', 'fiction', 'non-fiction', 'poetry', 'prose', 'essay', 'article', 'journal', 'diary', 'letter', 'memo', 'report', 'speech', 'lecture', 'sermon', 'interview', 'conversation', 'discussion', 'debate', 'argument', 'dialogue', 'monologue', 'soliloquy', 'script', 'screenplay', 'play', 'movie', 'film', 'cinema', 'theater', 'stage', 'performance', 'concert', 'show', 'exhibition', 'gallery', 'museum', 'library', 'school', 'university', 'college', 'academy', 'institute', 'class', 'course', 'lesson', 'subject', 'topic', 'theme', 'idea', 'concept', 'theory', 'hypothesis', 'evidence', 'proof', 'fact', 'opinion', 'belief', 'myth', 'legend', 'folklore', 'fable', 'fairy tale', 'bedtime story', 'nursery rhyme', 'song', 'music', 'melody', 'rhythm', 'beat', 'tempo', 'harmony', 'chord', 'note', 'scale', 'instrument', 'guitar', 'piano', 'drums', 'violin', 'flute', 'trumpet', 'saxophone', 'clarinet', 'harp', 'cello', 'bass', 'orchestra', 'band', 'choir', 'singer', 'musician', 'artist', 'painter', 'sculptor', 'writer', 'author', 'poet', 'actor', 'director', 'producer', 'editor', 'cameraman', 'photographer', 'designer', 'architect', 'engineer', 'scientist', 'doctor', 'nurse', 'teacher', 'student', 'lawyer', 'judge', 'police', 'firefighter', 'soldier', 'pilot', 'captain', 'chef', 'cook', 'baker', 'butcher', 'farmer', 'gardener', 'driver', 'mechanic', 'plumber', 'electrician', 'carpenter', 'painter', 'tailor', 'barber', 'hairdresser', 'waiter', 'waitress', 'manager', 'boss', 'employee', 'office', 'factory', 'shop', 'store', 'market', 'mall', 'bank', 'hospital', 'clinic', 'pharmacy', 'hotel', 'restaurant', 'cafe', 'pub', 'bar', 'club', 'park', 'garden', 'zoo', 'aquarium', 'stadium', 'arena', 'gym', 'pool', 'beach', 'mountain', 'lake', 'river', 'forest', 'desert', 'cave', 'island', 'city', 'town', 'village', 'country', 'world', 'planet', 'universe',
-        'absolute', 'abstract', 'academic', 'accident', 'accuracy', 'activity', 'actually', 'addition', 'adequate', 'adjacent', 'adjust', 'advance', 'advisory', 'advocate', 'aesthetic', 'affidavit', 'affiliate', 'aggression', 'agreement', 'airplane', 'airport', 'algorithm', 'alliance', 'allocate', 'alphabet', 'aluminum', 'ambition', 'ambulance', 'amendment', 'analysis', 'analyst', 'ancestor', 'ancient', 'angel', 'animal', 'announce', 'annually', 'anomaly', 'answer', 'antenna', 'antique', 'anxiety', 'anybody', 'anyway', 'apart', 'apology', 'appeal', 'appear', 'appendix', 'appetite', 'applause', 'apple', 'appoint', 'approve', 'apricot', 'aquarium', 'arcade', 'archery', 'archive', 'arctic', 'arduous', 'argument', 'arithmetic', 'armchair', 'arrival', 'arrow', 'artery', 'artistic', 'artwork', 'aspect', 'asphalt', 'aspire', 'assert', 'assess', 'assign', 'assist', 'assume', 'asthma', 'atomic', 'attach', 'attack', 'attain', 'attempt', 'attend', 'attitude', 'attorney', 'attract', 'auction', 'audience', 'audit', 'augment', 'August', 'aunt', 'author', 'autism', 'autumn', 'avenue', 'average', 'avoid', 'award', 'aware', 'awkward', 'axiom',
-        'bachelor', 'backbone', 'backup', 'backward', 'bacteria', 'badminton', 'balance', 'balcony', 'baldness', 'ballad', 'ballerina', 'balloon', 'ballot', 'bamboo', 'banana', 'bandage', 'bandit', 'banish', 'banjo', 'banker', 'bankrupt', 'banner', 'banquet', 'baptize', 'barbecue', 'barbell', 'barber', 'barefoot', 'bargain', 'barium', 'bark', 'barley', 'barman', 'baron', 'barrel', 'barrier', 'baseball', 'basement', 'basic', 'basil', 'basin', 'basket', 'bassoon', 'batch', 'bathe', 'battery', 'battle', 'bayonet', 'beacon', 'beagle', 'beak', 'beaker', 'beard', 'beast', 'beat', 'beauty', 'beaver', 'because', 'become', 'bedbug', 'bedroom', 'beetle', 'before', 'beggar', 'begin', 'behalf', 'behave', 'behind', 'beige', 'belief', 'nausea', 'nebula', 'necklace', 'nectar', 'needle', 'neglect', 'neighbor', 'neither', 'neon', 'nephew', 'nerve', 'nervous', 'network', 'neutral', 'neutron', 'newly', 'news', 'next', 'nibble', 'nickel', 'niece', 'night', 'nimble', 'nineteen', 'ninety', 'nitrogen', 'nobody', 'nocturnal', 'noise', 'nomad', 'nominal', 'nominate', 'nonstop', 'noodle', 'normal', 'north', 'nose', 'nostril', 'notable', 'notary', 'notice', 'notify', 'notion', 'novel', 'novice', 'nuclear', 'number', 'nurse', 'nurture', 'nutmeg', 'nutrient', 'nylon', 'nymph'
-    ]
-};
-
 module.exports = {
     name: 'scramble',
     aliases: ['scram'],
@@ -42,14 +9,48 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
-        // Pick random category
-        const categories = Object.keys(WORDS_BY_CATEGORY);
-        const category = categories[Math.floor(Math.random() * categories.length)];
-        const wordList = WORDS_BY_CATEGORY[category];
-        const word = wordList[Math.floor(Math.random() * wordList.length)];
+        let word, category, hint;
+
+        try {
+            // Try fetching from Random Word API
+            const response = await fetch('https://random-word-api.herokuapp.com/word?number=1');
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                word = data[0];
+                category = "Random";
+
+                // Try fetching definition for hint
+                try {
+                    const defResponse = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+                    const defData = await defResponse.json();
+
+                    if (defData && defData.length > 0 && defData[0].meanings && defData[0].meanings.length > 0) {
+                        const meaning = defData[0].meanings[0];
+                        if (meaning.definitions && meaning.definitions.length > 0) {
+                            category = "Definition";
+                            hint = meaning.definitions[0].definition;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error fetching definition:', e);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching random word:', error);
+        }
+
+        if (!word) {
+            return message.reply('❌ Unable to fetch a word at this time. Please try again later.');
+        }
+
         const scrambled = word.split('').sort(() => Math.random() - 0.5).join('');
 
-        const hint = `Category: **${category}**` + (Math.random() > 0.5 ? ` | Starts with: **${word[0].toUpperCase()}**` : ` | Length: **${word.length}**`);
+        if (category === "Definition" && hint) {
+            hint = `Definition: **${hint}**`;
+        } else {
+            hint = `Category: **${category}**` + (Math.random() > 0.5 ? ` | Starts with: **${word[0].toUpperCase()}**` : ` | Length: **${word.length}**`);
+        }
 
         const embed = new EmbedBuilder()
             .setTitle('🔠  Word Scramble')

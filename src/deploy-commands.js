@@ -78,21 +78,8 @@ const commands = [
         .setDescription('Guess the number!'),
 
     new SlashCommandBuilder()
-        .setName('math')
-        .setDescription('Solve a random math problem!'),
-
-    new SlashCommandBuilder()
         .setName('reaction')
         .setDescription('Test your reaction speed!'),
-
-    new SlashCommandBuilder()
-        .setName('8ball')
-        .setDescription('Ask the Magic 8-Ball a question')
-        .addStringOption(opt => opt.setName('question').setDescription('Your question').setRequired(true)),
-
-    new SlashCommandBuilder()
-        .setName('wyr')
-        .setDescription('Would You Rather?'),
 
     // ═══ Economy ═══
     new SlashCommandBuilder()
