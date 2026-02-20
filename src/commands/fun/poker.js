@@ -337,6 +337,9 @@ module.exports = {
                     // console.error(e); 
                 }
 
+            } else if (action === 'allin') {
+                await i.deferUpdate().catch(() => { });
+                handleAction(p, 'allin');
             } else {
                 await i.deferUpdate().catch(() => { });
                 handleAction(p, action);
@@ -385,6 +388,21 @@ module.exports = {
 
                 if (player.chips === 0) player.allIn = true;
                 msg = `📈 **${player.name}** Raised to ${player.currentBet}!`;
+            } else if (action === 'allin') {
+                const amount = player.chips;
+                player.chips = 0;
+                player.currentBet += amount;
+                pot += amount;
+                player.allIn = true;
+                player.hasActed = true;
+
+                if (player.currentBet > currentBet) {
+                    currentBet = player.currentBet;
+                    players.forEach(op => { if (op.id !== player.id && !op.folded && !op.allIn) op.hasActed = false; });
+                    msg = `🚨 **${player.name}** went ALL-IN with ${player.currentBet}!`;
+                } else {
+                    msg = `🚨 **${player.name}** called ALL-IN (${player.currentBet})!`;
+                }
             }
 
             turnIndex = (turnIndex + 1) % players.length;
@@ -398,7 +416,8 @@ module.exports = {
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('fold').setLabel('Fold').setStyle(ButtonStyle.Danger),
                 new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? 'Check' : `Call ${toCall}`).setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('raise').setLabel('Raise').setStyle(ButtonStyle.Primary)
+                new ButtonBuilder().setCustomId('raise').setLabel('Raise').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId('allin').setLabel('All-in').setStyle(ButtonStyle.Danger)
             );
             return [row];
         }

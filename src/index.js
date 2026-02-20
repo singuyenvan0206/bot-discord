@@ -340,7 +340,12 @@ async function handleButtonEntry(interaction) {
 
     const participants = db.getParticipantUserIds(giveaway.id);
     if (participants.includes(interaction.user.id)) {
-        return interaction.reply({ content: '✅ You have already entered! Good luck! 🍀', ephemeral: true });
+        db.removeParticipant(giveaway.id, interaction.user.id);
+        const newCount = db.getParticipantCount(giveaway.id);
+        const embed = createGiveawayEmbed(giveaway, newCount);
+        const { createEntryButton } = require('./utils/embeds');
+        await interaction.update({ embeds: [embed], components: [createEntryButton()] });
+        return interaction.followUp({ content: '❌ You have left the giveaway.', ephemeral: true });
     }
 
     db.addParticipant(giveaway.id, interaction.user.id);
@@ -349,6 +354,7 @@ async function handleButtonEntry(interaction) {
     const embed = createGiveawayEmbed(giveaway, newCount);
     const { createEntryButton } = require('./utils/embeds');
     await interaction.update({ embeds: [embed], components: [createEntryButton()] });
+    return interaction.followUp({ content: '✅ You have entered the giveaway! Good luck! 🍀', ephemeral: true });
 }
 
 // ─── Reaction Handlers (Giveaway Entry) ──────────────────────────
