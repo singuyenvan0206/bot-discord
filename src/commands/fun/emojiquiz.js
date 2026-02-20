@@ -379,6 +379,30 @@ const EMOJI_QUIZ = [
     { emojis: '🍿🎬🧂', answers: ['popcorn'], category: '🍽️ Food' },
     { emojis: '🫖🍵🇬🇧', answers: ['tea', 'english tea', 'afternoon tea'], category: '🍽️ Food' },
     { emojis: '🥐🍫☕', answers: ['breakfast', 'brunch'], category: '🍽️ Food' },
+
+    // ═══ New Additions ═══
+    { emojis: '🧛‍♂️🦇🏰', answers: ['dracula', 'vampire'], category: '🎬 Movie' },
+    { emojis: '👻👨‍🔬🔫', answers: ['ghostbusters'], category: '🎬 Movie' },
+    { emojis: '🦖🌴🚙', answers: ['jurassic park'], category: '🎬 Movie' },
+    { emojis: '🍫🏭👦', answers: ['charlie and the chocolate factory', 'willy wonka'], category: '🎬 Movie' },
+    { emojis: '🚢🧊💑', answers: ['titanic'], category: '🎬 Movie' },
+    { emojis: '🧙‍♂️💍🌋', answers: ['lord of the rings'], category: '🎬 Movie' },
+    { emojis: '🦁👑🐗', answers: ['the lion king', 'lion king'], category: '🎬 Movie' },
+    { emojis: '🤡🎈🛀', answers: ['it'], category: '🎬 Movie' },
+    { emojis: '🤖🕶️💊', answers: ['the matrix', 'matrix'], category: '🎬 Movie' },
+    { emojis: '🧟‍♂️🧟‍♀️🔫', answers: ['walking dead', 'zombieland'], category: '📺 TV Show' },
+    { emojis: '🧪💎🚐', answers: ['breaking bad'], category: '📺 TV Show' },
+    { emojis: '🦑🎮💰', answers: ['squid game'], category: '📺 TV Show' },
+    { emojis: '🧇👧🧠', answers: ['stranger things'], category: '📺 TV Show' },
+    { emojis: '🏰🐉🐺', answers: ['game of thrones'], category: '📺 TV Show' },
+    { emojis: '🎸🎩🌹', answers: ['slash', 'guns n roses'], category: '⭐ Celebrity' },
+    { emojis: '🕴️🔫🍸', answers: ['james bond', '007'], category: '🎬 Movie' },
+    { emojis: '🕷️🕸️🤟', answers: ['spiderman'], category: '🦸 Superhero' },
+    { emojis: '🦇🃏🤡', answers: ['batman'], category: '🦸 Superhero' },
+    { emojis: '⚡🌩️🔨', answers: ['thor'], category: '🦸 Superhero' },
+    { emojis: '🟢💪😡', answers: ['hulk'], category: '🦸 Superhero' },
+    { emojis: '🇺🇸🛡️⭐', answers: ['captain america'], category: '🦸 Superhero' },
+    { emojis: '🤖🔴🌗', answers: ['iron man'], category: '🦸 Superhero' }
 ];
 
 module.exports = {
@@ -391,11 +415,17 @@ module.exports = {
         const q = EMOJI_QUIZ[Math.floor(Math.random() * EMOJI_QUIZ.length)];
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case
 
+        // Generate Hint: Match words and replace non-first letters with underscores
+        const hint = displayAnswer.replace(/[a-zA-Z0-9]/g, (char, index) => {
+            if (index === 0 || displayAnswer[index - 1] === ' ') return char;
+            return '\\_';
+        });
+
         const embed = new EmbedBuilder()
             .setTitle('🧩  Emoji Quiz')
-            .setDescription(`**${q.category}** — Guess what it is!\n\n# ${q.emojis}`)
+            .setDescription(`**${q.category}** — Guess what it is!\n\n# ${q.emojis}\n\n💡 **Hint:** \`${hint}\``)
             .setColor(0xE67E22)
-            .setFooter({ text: '30s to answer • Type your guess!' });
+            .setFooter({ text: '45s to answer • Type your guess!' });
 
         await message.reply({ embeds: [embed] });
 
@@ -406,7 +436,7 @@ module.exports = {
                     m.content.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '') === a.replace(/[^a-z0-9\s]/g, '')
                 ),
                 max: 1,
-                time: 30_000,
+                time: 45_000,
                 errors: ['time']
             });
 
