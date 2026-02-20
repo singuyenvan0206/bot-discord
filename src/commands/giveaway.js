@@ -1,13 +1,14 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const db = require('../database');
 const { createGiveawayEmbed, createEntryButton } = require('../utils/embeds');
+const { isManager } = require('../utils/permissions');
 
 module.exports = {
     name: 'giveaway',
     aliases: ['g'],
     description: 'Manage giveaways',
     async execute(message, args) {
-        if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages) && !db.isOwner(message.author.id)) {
+        if (!isManager(message.member)) {
             return message.reply('❌ You do not have permission to manage giveaways.');
         }
 

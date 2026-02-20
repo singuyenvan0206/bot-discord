@@ -10,7 +10,7 @@ module.exports = {
         const userData = db.getUser(message.author.id);
         const inv = JSON.parse(userData.inventory || '{}');
         const lines = Object.entries(inv).map(([id, count]) => {
-            const item = SHOP_ITEMS.find(i => i.id === id);
+            const item = SHOP_ITEMS.find(i => String(i.id) === id);
             const name = item ? item.name : id;
             return `**${name}**: ${count}`;
         });

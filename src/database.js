@@ -111,7 +111,56 @@ function initSchema() {
         )
     `);
 
+    migrateInventoryIds();
+
     saveDb();
+}
+
+/**
+ * Migrates inventory string IDs to numerical IDs.
+ */
+function migrateInventoryIds() {
+    const mapping = {
+        'cookies': 1, 'worm_bait': 2, 'cricket_bait': 3, 'squid_bait': 4,
+        'phone': 5, 'shield': 6, 'sword': 7, 'lamp': 8, 'dice_set': 9,
+        'sneakers': 10, 'fishing_rod': 11, 'mining_pick': 12, 'keyboard': 13,
+        'mouse': 14, 'rug': 15, 'cards': 16, 'monitor': 17, 'laptop': 18,
+        'ring': 19, 'painting': 20, 'poker_chips': 21, 'desk': 22,
+        'lucky_clover': 23, 'chair': 24, 'business_suit': 25, 'fiberglass_rod': 26,
+        'watch': 27, 'statue': 28, 'slot_token': 29, 'vip_card': 30,
+        'horseshoe': 31, 'golden_ticket': 32, 'carbon_rod': 33, 'car': 34,
+        'mansion': 35, 'yacht': 36, 'space_station': 37, 'time_machine': 38
+    };
+
+    const users = queryAll('SELECT id, inventory FROM users');
+    let migratedCount = 0;
+
+    for (const user of users) {
+        if (!user.inventory || user.inventory === '{}') continue;
+
+        try {
+            const inv = JSON.parse(user.inventory);
+            const newInv = {};
+            let changed = false;
+
+            for (const [oldId, count] of Object.entries(inv)) {
+                if (mapping[oldId]) {
+                    newInv[mapping[oldId]] = count;
+                    changed = true;
+                } else {
+                    newInv[oldId] = count; // Keep as is if not in mapping
+                }
+            }
+
+            if (changed) {
+                execute('UPDATE users SET inventory = ? WHERE id = ?', [JSON.stringify(newInv), user.id]);
+                migratedCount++;
+            }
+        } catch (e) {
+            console.error(`Failed to migrate inventory for user ${user.id}:`, e);
+        }
+    }
+    if (migratedCount > 0) console.log(`✅ Migrated ${migratedCount} user inventories to numerical IDs.`);
 }
 
 /**

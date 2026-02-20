@@ -6,18 +6,16 @@ module.exports = {
     aliases: ['b'],
     description: 'Buy an item from the shop',
     async execute(message, args) {
-        const itemId = args[0]?.toLowerCase();
+        const inputId = args[0];
         let quantity = parseInt(args[1]);
 
-        if (!itemId) return message.reply('❌ Please specify an item ID to buy (e.g., `!buy laptop`).');
+        if (!inputId) return message.reply('❌ Please specify an item ID to buy (e.g., `!buy 1`).');
 
-        // Default to 1 if not specified or invalid
-        if (isNaN(quantity) || quantity < 1) quantity = 1;
-
-        const item = SHOP_ITEMS.find(i => i.id === itemId);
+        // Try to find by number ID first, then by name if needed (optional, keeping it simple as requested)
+        const item = SHOP_ITEMS.find(i => String(i.id) === inputId);
         const user = db.getUser(message.author.id);
 
-        if (!item) return message.reply('❌ Item not found. Check `!shop` for IDs.');
+        if (!item) return message.reply('❌ Item not found. Check `!shop` for the correct Number IDs.');
 
         const totalPrice = item.price * quantity;
 

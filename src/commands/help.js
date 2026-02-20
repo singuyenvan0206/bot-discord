@@ -35,6 +35,7 @@ const categories = {
             '`$work` (`$w`, `$wk`) — Work to earn money',
             '`$shop` (`$sh`, `$store`) — Browse items',
             '`$buy` (`$b`) <id> — Buy an item',
+            '`$sell` (`$s`) <id> [amount] — Sell an item (70% refund)',
             '`$inventory` (`$inv`) — View your inventory',
             '`$transfer` (`$pay`, `$tf`) <user> <amount> — Send money',
             '`$leaderboard` (`$lb`, `$top`) — View richest users',

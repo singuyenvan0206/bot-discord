@@ -39,9 +39,10 @@ module.exports = {
 
             // Check for stop command
             if (word === '!stop') {
-                if (players.includes(m.author.id) || m.member.permissions.has('ManageMessages')) {
+                const { isManager } = require('../../utils/permissions');
+                if (isManager(m.member)) {
                     collector.stop('stopped');
-                    return message.channel.send(`🛑 **Game stopped by ${m.author}!**`);
+                    return message.channel.send(`🛑 **Game stopped by Manager ${m.author}!**`);
                 }
             }
 

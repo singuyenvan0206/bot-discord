@@ -7,7 +7,7 @@ function getUserMultiplier(userId, type) {
     let totalMulti = 0;
 
     for (const [itemId, count] of Object.entries(inv)) {
-        const item = SHOP_ITEMS.find(i => i.id === itemId);
+        const item = SHOP_ITEMS.find(i => String(i.id) === itemId);
         if (item && item.multiplier && item.type === type) {
             // Stackable: multiplier * count
             totalMulti += item.multiplier * count;
