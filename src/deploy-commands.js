@@ -92,6 +92,10 @@ const commands = [
         .setDescription('Claim your daily reward'),
 
     new SlashCommandBuilder()
+        .setName('fish')
+        .setDescription('Go fishing to earn coins (Requires Fishing Rod)'),
+
+    new SlashCommandBuilder()
         .setName('work')
         .setDescription('Work to earn money'),
 

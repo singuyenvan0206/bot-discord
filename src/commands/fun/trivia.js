@@ -25,7 +25,7 @@ module.exports = {
     name: 'trivia',
     aliases: ['triv'],
     description: 'Test your knowledge with trivia!',
-    cooldown: 10,
+    cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
         let q;
@@ -43,7 +43,18 @@ module.exports = {
                 };
             }
         } catch (error) {
-            console.error('Error fetching trivia question:', error);
+            console.error('Error fetching trivia question from API, trying fallback:', error);
+        }
+
+        if (!q) {
+            try {
+                const localQuestions = require('../../data/trivia_questions.json');
+                if (localQuestions && localQuestions.length > 0) {
+                    q = localQuestions[Math.floor(Math.random() * localQuestions.length)];
+                }
+            } catch (err) {
+                console.error('Error loading local trivia questions:', err);
+            }
         }
 
         if (!q) {

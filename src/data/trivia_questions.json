@@ -1,0 +1,47 @@
+[
+    {
+        "q": "What is the capital of France?",
+        "a": "Paris",
+        "w": [
+            "London",
+            "Berlin",
+            "Madrid"
+        ]
+    },
+    {
+        "q": "Which planet is known as the Red Planet?",
+        "a": "Mars",
+        "w": [
+            "Venus",
+            "Jupiter",
+            "Saturn"
+        ]
+    },
+    {
+        "q": "What is the largest mammal in the world?",
+        "a": "Blue Whale",
+        "w": [
+            "African Elephant",
+            "Giraffe",
+            "Hippopotamus"
+        ]
+    },
+    {
+        "q": "Who wrote 'Romeo and Juliet'?",
+        "a": "William Shakespeare",
+        "w": [
+            "Charles Dickens",
+            "Jane Austen",
+            "Mark Twain"
+        ]
+    },
+    {
+        "q": "What is the chemical symbol for Gold?",
+        "a": "Au",
+        "w": [
+            "Ag",
+            "Fe",
+            "Pb"
+        ]
+    }
+]

@@ -57,11 +57,51 @@ module.exports = [
     },
     {
         id: 'fishing_rod',
-        name: '🎣 Fishing Rod',
+        name: '🎣 Bamboo Rod (Tier 1)',
+        price: 2500,
+        description: 'Basic rod. Good for small fish. (Luck: 1.0x)',
+        multiplier: 1.0,
+        type: 'tool'
+    },
+    {
+        id: 'fiberglass_rod',
+        name: '🎣 Fiberglass Rod (Tier 2)',
+        price: 10000,
+        description: 'Stronger and flexible. Catch better fish! (Luck: 1.5x)',
+        multiplier: 1.5,
+        type: 'tool'
+    },
+    {
+        id: 'carbon_rod',
+        name: '🎣 Carbon Fiber Rod (Tier 3)',
+        price: 50000,
+        description: 'Top of the line. Catch legends! (Luck: 2.5x)',
+        multiplier: 2.5,
+        type: 'tool'
+    },
+    {
+        id: 'worm_bait',
+        name: '🪱 Worm Bait',
+        price: 50,
+        description: 'Single-use bait. Required to fish. (Luck: +10%)',
+        multiplier: 0.1,
+        type: 'bait'
+    },
+    {
+        id: 'cricket_bait',
+        name: '🦗 Cricket Bait',
+        price: 150,
+        description: 'Tasty treat for fish. (Luck: +30%)',
+        multiplier: 0.3,
+        type: 'bait'
+    },
+    {
+        id: 'squid_bait',
+        name: '🦑 Squid Bait',
         price: 500,
-        description: 'Catch extra coins (+2% Work Income)',
-        multiplier: 0.02,
-        type: 'income'
+        description: 'Irresistible to big fish. (Luck: +80%)',
+        multiplier: 0.8,
+        type: 'bait'
     },
     {
         id: 'cookies',

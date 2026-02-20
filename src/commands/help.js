@@ -38,6 +38,7 @@ const categories = {
             '`$inventory` (`$inv`) — View your inventory',
             '`$transfer` (`$pay`, `$tf`) <user> <amount> — Send money',
             '`$leaderboard` (`$lb`, `$top`) — View richest users',
+            '`$fish` (`$fishing`, `$cast`) — Catch fish for coins!',
         ]
     },
     utility: {
@@ -138,6 +139,10 @@ const COMMAND_GUIDES = {
         guide: '**Description:**\nTest of reflexes.\n\n**How to Play:**\n- A message will say "Get Ready...".\n- Wait for the emoji (e.g., green square) to appear.\n- Click it as fast as you can!\n- Your time will be recorded.'
     },
     // ═══ Economy ═══
+    'fish': {
+        usage: '',
+        guide: '**Description:**\nCast your line to catch fish using a Rod and Bait!\n\n**Requirements:**\n1. **Rod:** Bamboo (Tier 1), Fiberglass (Tier 2), or Carbon Fiber (Tier 3).\n2. **Bait:** Worm (Basic), Cricket (Better), or Squid (Pro).\n\n**How to Play:**\n- Buy a Rod and Bait from the `$shop`.\n- Run `$fish`.\n- The bot automatically uses your **Best Rod** and **Best Bait**.\n- Bait is consumed (-1) per cast.\n\n**Mechanics:**\n- Better Rod + Better Bait = Higher Luck (✨).\n- Higher Luck unlocks rarer fish (e.g., Sharks, Krakens).\n\n**Cooldown:**\n60 seconds.'
+    },
     'work': {
         usage: '',
         guide: '**Description:**\nPerform a random job to earn a paycheck.\n\n**Cooldown:**\nCheck `$help work` to see the cooldown timer.\n\n**Rewards:**\n- Random amount of coins based on the job.'
