@@ -6,16 +6,21 @@ module.exports = {
     aliases: ['b'],
     description: 'Buy an item from the shop',
     async execute(message, args) {
-        const inputId = args[0];
-        let quantity = parseInt(args[1]);
+        const query = args[0]?.toLowerCase();
+        let quantity = parseInt(args[1]) || 1;
 
-        if (!inputId) return message.reply('❌ Please specify an item ID to buy (e.g., `!buy 1`).');
+        if (!query) return message.reply('❌ Please specify an item to buy (e.g., `!buy 1` or `!buy cookies`).');
+        if (quantity <= 0) return message.reply('❌ Quantity must be a positive number.');
 
-        // Try to find by number ID first, then by name if needed (optional, keeping it simple as requested)
-        const item = SHOP_ITEMS.find(i => String(i.id) === inputId);
+        // Try to find by numerical ID, then by partial name
+        const item = SHOP_ITEMS.find(i =>
+            String(i.id) === query ||
+            i.name.toLowerCase().includes(query)
+        );
+
         const user = db.getUser(message.author.id);
 
-        if (!item) return message.reply('❌ Item not found. Check `!shop` for the correct Number IDs.');
+        if (!item) return message.reply('❌ Item not found. Check `!shop` for available items.');
 
         const totalPrice = item.price * quantity;
 

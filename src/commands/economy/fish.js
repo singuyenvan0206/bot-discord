@@ -4,16 +4,16 @@ const { startCooldown } = require('../../utils/cooldown');
 
 // Rod Definitions (Must match shopItems.js logic)
 const RODS = [
-    { id: 'carbon_rod', name: 'Carbon Fiber Rod', luck: 2.5 },
-    { id: 'fiberglass_rod', name: 'Fiberglass Rod', luck: 1.5 },
-    { id: 'fishing_rod', name: 'Bamboo Rod', luck: 1.0 } // Tier 1
+    { id: '33', name: 'Carbon Fiber Rod', luck: 2.5 },
+    { id: '26', name: 'Fiberglass Rod', luck: 1.5 },
+    { id: '11', name: 'Bamboo Rod', luck: 1.0 } // Tier 1
 ];
 
 // Bait Definitions
 const BAITS = [
-    { id: 'squid_bait', name: 'Squid Bait', luck: 0.8 },
-    { id: 'cricket_bait', name: 'Cricket Bait', luck: 0.3 },
-    { id: 'worm_bait', name: 'Worm Bait', luck: 0.1 }
+    { id: '4', name: 'Squid Bait', luck: 0.8 },
+    { id: '3', name: 'Cricket Bait', luck: 0.3 },
+    { id: '2', name: 'Worm Bait', luck: 0.1 }
 ];
 
 // Fish Table

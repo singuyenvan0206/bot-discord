@@ -6,14 +6,19 @@ module.exports = {
     aliases: ['s'],
     description: 'Sell an item back to the shop for 70% of its price',
     async execute(message, args) {
-        const inputId = args[0];
-        let quantity = parseInt(args[1]);
+        const query = args[0]?.toLowerCase();
+        let quantity = parseInt(args[1]) || 1;
 
-        if (!inputId) return message.reply('❌ Please specify an item ID to sell (e.g., `!sell 1`).');
+        if (!query) return message.reply('❌ Please specify an item to sell (e.g., `!sell 1` or `!sell cookies`).');
+        if (quantity < 1) return message.reply('❌ Quantity must be at least 1.');
 
-        // Try to find item by ID
-        const item = SHOP_ITEMS.find(i => String(i.id) === inputId);
-        if (!item) return message.reply('❌ Item not found. Check `!inventory` for IDs.');
+        // Try to find item by ID or Name
+        const item = SHOP_ITEMS.find(i =>
+            String(i.id) === query ||
+            i.name.toLowerCase().includes(query)
+        );
+
+        if (!item) return message.reply('❌ Item not found. Check `!inventory` for your items.');
 
         // Default to 1 if not specified
         if (isNaN(quantity) || quantity < 1) quantity = 1;
