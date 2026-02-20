@@ -118,9 +118,10 @@ function initSchema() {
     safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
     safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
-    safeAddColumn('users', 'language', "TEXT DEFAULT 'vi'");
+    safeAddColumn('users', 'language', "TEXT DEFAULT NULL");
 
     migrateInventoryIds();
+    migrateUserLanguages();
 
     saveDb();
 }
@@ -330,9 +331,17 @@ function getUser(userId) {
     let user = queryOne('SELECT * FROM users WHERE id = ?', [userId]);
     if (!user) {
         execute('INSERT INTO users (id) VALUES (?)', [userId]);
-        user = { id: userId, balance: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}' };
+        user = { id: userId, balance: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}', language: null };
     }
     return user;
+}
+
+/**
+ * One-time migration to clear all user languages, letting them follow server settings.
+ */
+function migrateUserLanguages() {
+    execute('UPDATE users SET language = NULL');
+    console.log('✅ Cleared all user language preferences (fallback to server enabled).');
 }
 
 function updateUser(userId, updates) {

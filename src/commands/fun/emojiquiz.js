@@ -1,7 +1,9 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
+const { getUserMultiplier } = require('../../utils/multiplier');
 
 const EMOJI_QUIZ = [
     // ═══ Movies ═══
@@ -471,6 +473,7 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = await getLanguage(message.author.id);
         const q = EMOJI_QUIZ[Math.floor(Math.random() * EMOJI_QUIZ.length)];
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case
 
@@ -481,10 +484,10 @@ module.exports = {
         });
 
         const embed = new EmbedBuilder()
-            .setTitle('🧩  Emoji Quiz')
-            .setDescription(`**${q.category}** — Guess what it is!\n\n# ${q.emojis}\n\n💡 **Hint:** \`${hint}\``)
+            .setTitle(t('emojiquiz.title', lang))
+            .setDescription(`**${q.category}** — ${t('emojiquiz.question', lang, { emojis: `\n\n# ${q.emojis}` })}\n\n💡 **Hint:** \`${hint}\``)
             .setColor(0xE67E22)
-            .setFooter({ text: '45s to answer • Type your guess!' });
+            .setFooter({ text: t('emojiquiz.footer', lang) });
 
         await message.reply({ embeds: [embed] });
 
@@ -495,25 +498,26 @@ module.exports = {
                     m.content.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '') === a.replace(/[^a-z0-9\s]/g, '')
                 ),
                 max: 1,
-                time: 45_000,
+                time: 30_000,
                 errors: ['time']
             });
 
-            const msg = collected.first();
+            const winnerMsg = collected.first();
             const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD;
-            const { getUserMultiplier } = require('../../utils/multiplier');
-            const multiplier = getUserMultiplier(msg.author.id, 'income');
+            const multiplier = getUserMultiplier(winnerMsg.author.id, 'income');
             const bonus = Math.floor(baseReward * multiplier);
             const totalReward = baseReward + bonus;
 
-            db.addBalance(msg.author.id, totalReward);
+            db.addBalance(winnerMsg.author.id, totalReward);
 
-            let resultDesc = `The answer was **${displayAnswer}**.\nWinner: ${msg.author}\nReward: ${config.EMOJIS.COIN} **${baseReward}** coins`;
+            let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
+                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: baseReward });
+
             if (bonus > 0) resultDesc += `\n✨ **Item Bonus:** +${bonus} (${Math.round(multiplier * 100)}%)`;
 
-            await msg.reply({
+            await winnerMsg.reply({
                 embeds: [new EmbedBuilder()
-                    .setTitle(`${config.EMOJIS.SUCCESS}  Correct!`)
+                    .setTitle(t('common.success', lang))
                     .setDescription(resultDesc)
                     .setColor(config.COLORS.SUCCESS)]
             });
@@ -521,8 +525,8 @@ module.exports = {
         } catch {
             await message.channel.send({
                 embeds: [new EmbedBuilder()
-                    .setTitle(`${config.EMOJIS.TIMER}  Time's Up!`)
-                    .setDescription(`Nobody got it! The answer was **${displayAnswer}**.`)
+                    .setTitle(t('emojiquiz.incorrect', lang).replace('✅', '⌛')) // Reusing or just using text
+                    .setDescription(t('emojiquiz.timeout', lang, { answer: displayAnswer }))
                     .setColor(config.COLORS.ERROR)]
             });
             startCooldown(message.client, 'emojiquiz', message.author.id);

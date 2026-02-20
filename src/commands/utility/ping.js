@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -6,7 +7,8 @@ module.exports = {
     aliases: ['p', 'pong'],
     description: 'Kiểm tra độ trễ và trạng thái hoạt động của bot',
     async execute(message, args) {
-        const sent = await message.reply('🏓 Đang kiểm tra tín hiệu...');
+        const lang = getLanguage(message.author.id, message.guild?.id);
+        const sent = await message.reply(t('ping.checking', lang));
         const roundtrip = sent.createdTimestamp - message.createdTimestamp;
         const heartbeat = message.client.ws.ping;
         const uptime = process.uptime();
@@ -16,7 +18,7 @@ module.exports = {
         const hours = Math.floor((uptime % 86400) / 3600);
         const minutes = Math.floor((uptime % 3600) / 60);
         const seconds = Math.floor(uptime % 60);
-        const uptimeStr = `${days}n ${hours}g ${minutes}p ${seconds}s`;
+        const uptimeStr = t('ping.uptime_format', lang, { d: days, h: hours, m: minutes, s: seconds });
 
         // Memory usage
         const memUsage = process.memoryUsage();
@@ -34,22 +36,22 @@ module.exports = {
         };
 
         const embed = new EmbedBuilder()
-            .setTitle('🏓  Pong!')
+            .setTitle(t('ping.title', lang))
             .setDescription(`${latencyBar(roundtrip)}`)
             .addFields(
-                { name: '📡 Độ trễ (Roundtrip)', value: `\`${roundtrip}ms\``, inline: true },
-                { name: '💓 Nhịp tim (Heartbeat)', value: `\`${heartbeat}ms\``, inline: true },
-                { name: '⏱️ Thời gian hoạt động', value: `\`${uptimeStr}\``, inline: true },
-                { name: '🖥️ Bộ nhớ dùng', value: `\`${memMB} MB\``, inline: true },
-                { name: '🌐 Máy chủ', value: `\`${message.client.guilds.cache.size}\``, inline: true },
-                { name: '👥 Người dùng', value: `\`${message.client.users.cache.size}\``, inline: true },
-                { name: '📦 Node.js', value: `\`${process.version}\``, inline: true },
-                { name: '📚 Discord.js', value: `\`v${require('discord.js').version}\``, inline: true },
-                { name: '💻 Nền tảng', value: `\`${process.platform}\``, inline: true },
+                { name: t('ping.roundtrip', lang), value: `\`${roundtrip}ms\``, inline: true },
+                { name: t('ping.heartbeat', lang), value: `\`${heartbeat}ms\``, inline: true },
+                { name: t('ping.uptime', lang), value: `\`${uptimeStr}\``, inline: true },
+                { name: t('ping.memory', lang), value: `\`${memMB} MB\``, inline: true },
+                { name: t('ping.servers', lang), value: `\`${message.client.guilds.cache.size}\``, inline: true },
+                { name: t('ping.users', lang), value: `\`${message.client.users.cache.size}\``, inline: true },
+                { name: t('ping.node', lang), value: `\`${process.version}\``, inline: true },
+                { name: t('ping.djs', lang), value: `\`v${require('discord.js').version}\``, inline: true },
+                { name: t('ping.platform', lang), value: `\`${process.platform}\``, inline: true },
             )
             .setColor(color)
             .setTimestamp()
-            .setFooter({ text: `Yêu cầu bởi ${message.author.tag}` });
+            .setFooter({ text: t('common.requested_by', lang, { user: message.author.tag }) });
 
         return sent.edit({ content: null, embeds: [embed] });
     }

@@ -1,54 +1,62 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
     name: 'guess',
     aliases: ['gn'],
-    description: 'Đoán số (1-100)',
+    description: 'Guess the number (1-100)',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = await getLanguage(message.author.id);
         const number = Math.floor(Math.random() * 100) + 1;
+        const maxAttempts = 10;
         let attempts = 0;
 
         const embed = new EmbedBuilder()
-            .setTitle('🔢  Đoán Số')
-            .setDescription(`Tôi đang nghĩ về một con số từ **1 đến 100**.\nBạn có **1 phút** để đoán nó!`)
+            .setTitle(t('guess.title', lang))
+            .setDescription(t('guess.start', lang))
             .setColor(config.COLORS.INFO);
 
         await message.reply({ embeds: [embed] });
 
         const collector = message.channel.createMessageCollector({
             filter: m => !m.author.bot && !isNaN(parseInt(m.content)),
-            time: 60_000
+            time: 60_000,
+            max: maxAttempts
         });
 
-        collector.on('collect', m => {
+        collector.on('collect', async m => {
             const guess = parseInt(m.content);
             attempts++;
+            const attemptsLeft = maxAttempts - attempts;
 
             if (guess === number) {
-                const reward = Math.max(10, config.ECONOMY.GUESS_REWARD_BASE - (attempts * 5));
+                const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
+                const reward = Math.max(10, baseReward - (attempts * 5));
                 db.addBalance(m.author.id, reward);
 
-                m.reply(`${config.EMOJIS.SUCCESS} **Chính xác!** Con số đó là **${number}**.\nBạn đã đoán đúng trong **${attempts}** lần thử và nhận được ${config.EMOJIS.COIN} **${reward}** coins!`);
-                collector.stop();
-            } else if (guess < number) {
-                m.react('⬆️'); // Higher
-            } else {
-                m.react('⬇️'); // Lower
+                await m.reply(t('guess.win', lang, {
+                    number,
+                    emoji: config.EMOJIS.COIN,
+                    amount: reward
+                }));
+                collector.stop('win');
+            } else if (attempts < maxAttempts) {
+                const hintKey = guess < number ? 'guess.higher' : 'guess.lower';
+                await m.reply(t(hintKey, lang, { attempts: attemptsLeft }));
             }
         });
 
-        collector.on('collect', m => { // Fixed redundant collector on collect
-            // Already handled above
-        });
-
         collector.on('end', (_, reason) => {
-            if (reason === 'time') {
-                message.channel.send(`${config.EMOJIS.TIMER} **Hết thời gian!** Con số đó là **${number}**.`);
+            if (reason !== 'win' && reason !== 'user' && reason !== 'limit') {
+                message.channel.send(t('guess.lose', lang, { number }));
+            } else if (reason === 'limit' && attempts >= maxAttempts) {
+                // This covers the case where max attempts were reached without winning
+                message.channel.send(t('guess.lose', lang, { number }));
             }
             startCooldown(message.client, 'guess', message.author.id);
         });

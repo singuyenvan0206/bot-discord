@@ -4,7 +4,52 @@
         "insufficient_funds": "❌ Bạn không đủ tiền! Số dư: **{{balance}}**",
         "invalid_amount": "❌ Số tiền không hợp lệ.",
         "cooldown": "❌ Vui lòng đợi **{{time}}s** nữa để sử dụng lại lệnh này!",
-        "success": "✅ Thành công!"
+        "success": "✅ Thành công!",
+        "max_bet_error": "❌ Mức cược tối đa là **{{limit}}** coins!",
+        "mention_opponent": "❌ Vui lòng nhắc tên (mention) đối thủ để chơi cùng!",
+        "no_challenge_bot": "❌ Bạn không thể thách đấu với bot!",
+        "no_challenge_self": "❌ Bạn không thể thách đấu với chính mình!",
+        "opponent_insufficient_funds": "❌ {{opponent}} không đủ tiền! Số dư của họ: **{{balance}}**",
+        "requested_by": "Yêu cầu bởi {{user}}"
+    },
+    "connect4": {
+        "title": "🔴 Bốn Hàng (Connect 4) 🟡",
+        "challenge_title": "🔴 Thách Đấu Bốn Hàng (Connect 4) 🟡",
+        "challenge_msg": "{{opponent}}, **{{user}}** đã thách đấu bạn một ván Bốn Hàng!{{bet}}\n\nBạn có chấp nhận không?",
+        "bet_amount": "\nTiền cược: {{emoji}} **{{amount}}**",
+        "accept": "Chấp nhận",
+        "deny": "Từ chối",
+        "denied": "❌ Thách đấu đã bị từ chối.",
+        "not_participant": "❌ Bạn không tham gia ván đấu này!",
+        "column_full": "❌ Cột này đã đầy!",
+        "win": "🏆 **{{winner}} đã thắng!** ({{symbol}})",
+        "reward": "\n{{emoji}} **+{{amount}} coins!**",
+        "draw": "🤝 **Hòa rồi!**",
+        "refund": "\nTiền cược đã được hoàn trả.",
+        "turn_footer": "Lượt của: {{user}} ({{symbol}})",
+        "end_footer": "Kết thúc ván đấu",
+        "timeout": "⌛ Ván đấu đã hết thời gian!",
+        "challenge_timeout": "⌛ Thời gian thách đấu đã hết."
+    },
+    "memory": {
+        "title": "🧠 Trò Chơi Trí Nhớ",
+        "description": "Hãy tìm tất cả các cặp hình giống nhau! Nhấn vào các nút để lật thẻ.",
+        "footer": "Giới hạn thời gian: 2 Phút",
+        "wait": "⌛ Vui lòng đợi một chút...",
+        "win_title": "✅ Chiến Thắng!",
+        "win_msg": "**Bạn đã tìm thấy tất cả các cặp hình!**\n\n⏱️ Thời gian: **{{time}}s**\n🔄 Số lần thử: **{{attempts}}**\n{{emoji}} Phần thưởng: **{{reward}} coins**",
+        "timeout": "⌛ Hết Thời Gian!"
+    },
+    "trivia": {
+        "title": "❓  Đố Vui Hại Não (Trivia)!",
+        "english_note": "\n\n*(Lưu ý: Hiện tại câu hỏi chỉ hỗ trợ tiếng Anh)*",
+        "choices": "Lựa chọn",
+        "footer": "Bạn có 15 giây để trả lời!",
+        "not_your_turn": "❌ Đây không phải lượt đố vui của bạn!",
+        "correct": "✅ **Chính xác!** Đáp án là **{{answer}}**.\nPhần thưởng: {{emoji}} **{{reward}}** coins",
+        "incorrect": "❌ **Sai rồi!** Đáp án chính xác là **{{answer}}**.",
+        "timeout": "⌛ **Hết thời gian!** Đáp án chính xác là **{{answer}}**.",
+        "load_error": "❌ Hiện không thể tải được câu hỏi đố vui. Vui lòng thử lại sau."
     },
     "slots": {
         "title": "🎰  Máy Quay Slots",
@@ -15,6 +60,94 @@
         "won_coins": "\n{{emoji}} **Thắng {{amount}} coins!**",
         "lost_coins": "\n💸 **Mất {{amount}} coins.**",
         "bonus_item": " *(Thêm +{{amount}} thưởng item: {{percent}}%)*"
+    },
+    "coinflip": {
+        "title": "🪙  Tung Đồng Xu",
+        "description": "Bạn đã chọn **{{call}}** và kết quả là **{{result}}**!",
+        "heads": "Ngửa",
+        "tails": "Sấp",
+        "invalid_side": "❌ Vui lòng chọn `heads` hoặc `tails`!\nCách dùng: `{{prefix}}coinflip <heads|tails> [tiền_cược]`",
+        "win": "🎉 **Bạn đã thắng {{amount}} coins!**",
+        "lose": "💸 **Bạn đã mất {{amount}} coins.**"
+    },
+    "dice": {
+        "title": "🎲  Đổ Xúc Xắc (2d6)",
+        "menu_title": "🎲  Đổ Xúc Xắc",
+        "bet_info": "**Mức cược:** {{amount}} coins\n\nChọn dự đoán của bạn:\n",
+        "high": "🔼 **Tài (Cao)** — Tổng từ 8-12 (x2 thưởng)",
+        "low": "🔽 **Xỉu (Thấp)** — Tổng từ 2-6 (x2 thưởng)",
+        "odd": "🔢 **Lẻ** — Tổng là số lẻ (x2 thưởng)",
+        "even": "#️⃣ **Chẵn** — Tổng là số chẵn (x2 thưởng)",
+        "lucky_7": "{{emoji}} **Số 7 May Mắn** — Tổng chính xác bằng 7 (x4 thưởng)",
+        "label_high": "Tài",
+        "label_low": "Xỉu",
+        "label_odd": "Lẻ",
+        "label_even": "Chẵn",
+        "label_7": "Số 7",
+        "balance_footer": "Số dư: {{balance}} coins",
+        "insufficient_bet": "❌ Bạn không còn đủ tiền cược!",
+        "result_title": "🎲  Kết Quả Đổ Xúc Xắc",
+        "prediction": "Dự đoán",
+        "payout": "🎉 **Bạn đã thắng {{amount}} coins!** (x{{multiplier}} tiền cược)",
+        "lose_msg": "💸 **Bạn đã thua {{amount}} coins!**",
+        "timeout": "❌ Bạn đã quá thời gian chọn! Lượt chơi bị hủy.",
+        "prediction_labels": {
+            "high": "Tài (Cao) (8-12)",
+            "low": "Xỉu (Thấp) (2-6)",
+            "odd": "Số Lẻ",
+            "even": "Số Chẵn",
+            "7": "Số 7 May Mắn"
+        }
+    },
+    "rps": {
+        "title": "✂️  Kéo Búa Bao",
+        "choose": "Hãy chọn vũ khí của bạn!",
+        "betting": "**Đang cược: {{amount}} coins**",
+        "rock": "Búa",
+        "paper": "Bao",
+        "scissors": "Kéo",
+        "win": "Bạn đã thắng! 🎉",
+        "lose": "Tôi thắng rồi! 😈",
+        "tie": "Hòa rồi! 🤝",
+        "won_coins": "\n{{emoji}} **Nhận được {{amount}} coins!**",
+        "lost_coins": "\n💸 **Bạn mất {{amount}} coins.**",
+        "refund": "\n🤝 **Tiền cược đã được hoàn trả.**",
+        "result_title": "Kết Quả Kéo Búa Bao",
+        "user_chose": "Bạn chọn",
+        "bot_chose": "Tôi chọn",
+        "timeout_refund": "❌ Đã quá thời gian! Tiền cược đã được hoàn trả."
+    },
+    "blackjack": {
+        "title": "🃏  Xì Dách (Blackjack)",
+        "dealer_hand": "Bài của Nhà Cái",
+        "player_hand": "Bài của Bạn",
+        "label_hit": "Rút bài",
+        "label_stand": "Dừng bài",
+        "win": "🎉 **Nhà cái bị quắc! Bạn thắng{{amount}}!**",
+        "win_amount": " {{amount}} coins",
+        "win_simple": "🎉 **Bạn thắng{{amount}}!**",
+        "lose": "😔 **Nhà cái thắng{{amount}}!**",
+        "tie": "🤝 **Hòa (Push)!**{{refund}}",
+        "refund": " Tiền cược được hoàn trả.",
+        "natural_title": "🃏 Xì Dách — 🎉 XÌ DÁCH!",
+        "natural_win": "🏆 **Xì Dách Tự Nhiên!**",
+        "base_win": "Thắng cơ bản",
+        "total_payout": "Tổng nhận",
+        "bust_title": "🃏 Xì Dách — 💥 QUẮC!",
+        "bust_msg": "💥 **Bạn đã bị quắc (quá 21)! Nhà cái thắng.**",
+        "timeout_title": "🃏 Xì Dách — {{emoji}} Hết Thời Gian"
+    },
+    "tictactoe": {
+        "title": "❌⭕  Cờ Ca-rô (Tic-Tac-Toe)",
+        "vs": "**❌ {{playerX}}** vs **⭕ {{playerO}}**",
+        "turn": "Đến lượt của **{{player}}**! ({{symbol}})",
+        "not_your_turn": "❌ Không phải lượt của bạn!",
+        "already_taken": "❌ Vị trí này đã được chọn!",
+        "draw": "🤝 **Hòa rồi!**",
+        "winner_msg": "🏆 **{{winner}} đã thắng!** ({{symbol}})",
+        "reward_msg": "\n{{emoji}} **+{{amount}} coins!**",
+        "ending_title": "❌⭕  Cờ Ca-rô — Kết thúc ván đấu",
+        "timeout_title": "❌⭕  Cờ Ca-rô — {{emoji}} Hết thời gian"
     },
     "daily": {
         "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{hours}} giờ {{minutes}} phút** nữa.",
@@ -42,6 +175,237 @@
         "title": "💰 Tài khoản: {{user}}",
         "description": "💸 Tiền mặt: **{{balance}}** coins"
     },
+    "fish": {
+        "title": "🎣 Chuyến Câu Cá",
+        "rod_needed": "❌ Bạn cần một cái **Cần câu** để đi câu! Hãy mua một cái trong cửa hàng (`{{prefix}}buy 11`).",
+        "bait_needed": "❌ Bạn cần **Mồi câu** để đi câu! Hãy mua mồi trong cửa hàng (vđ: `{{prefix}}buy 2`).",
+        "description": "Sử dụng **{{rod}}** và **{{bait}}**...",
+        "caught": "Đã bắt được",
+        "income": "Thu nhập",
+        "luck": "May mắn",
+        "item_bonus": "Thưởng Item",
+        "bonus_percent": "✨ +{{amount}} ({{percent}}%)",
+        "footer_success": "Mồi đã dùng: -1 {{bait}}",
+        "footer_fail": "Chúc bạn may mắn lần sau! (-1 Mồi câu)",
+        "items": {
+            "old_boot": "Chiếc Ủng Cũ",
+            "rusty_can": "Vỏ Lon Gỉ",
+            "seaweed": "Rong Biển",
+            "sardine": "Cá Mòi",
+            "brook_trout": "Cá Hồi Suối",
+            "bass": "Cá Vược",
+            "sockeye_salmon": "Cá Hồi Đỏ",
+            "tuna": "Cá Ngừ",
+            "pufferfish": "Cá Nóc",
+            "clownfish": "Cá Hề",
+            "swordfish": "Cá Kiếm",
+            "shark": "Cá Mập",
+            "whale": "Cá Voi",
+            "treasure_chest": "Rương Kho Báu",
+            "kraken": "Quái Vật Kraken"
+        }
+    },
+    "items": {
+        "1": {
+            "name": "🍪 Bánh Quy",
+            "desc": "Bổ sung đường! (+1% Thưởng Hàng Ngày)"
+        },
+        "2": {
+            "name": "🪱 Mồi Giun",
+            "desc": "Mồi dùng một lần. Cần thiết để câu cá. (Luck: +10%)"
+        },
+        "3": {
+            "name": "🦗 Mồi Dế",
+            "desc": "Món khoái khẩu của cá. (Luck: +30%)"
+        },
+        "4": {
+            "name": "🦑 Mồi Mực",
+            "desc": "Không loài cá lớn nào cưỡng lại được. (Luck: +80%)"
+        },
+        "5": {
+            "name": "📱 Điện Thoại",
+            "desc": "Luôn kết nối (+5% Thưởng Hàng Ngày)"
+        },
+        "6": {
+            "name": "🛡️ Khiên Bảo Vệ",
+            "desc": "Bảo vệ 50% tiền cược trong Dò Mìn! (+3% Daily)"
+        },
+        "7": {
+            "name": "⚔️ Kiếm Hiệp Sĩ",
+            "desc": "Trở thành lính đánh mercenary (+5% Thu Nhập Làm Việc)"
+        },
+        "8": {
+            "name": "🛋️ Đèn Dung Nham",
+            "desc": "Cảm giác thư thái (+2% Daily)"
+        },
+        "9": {
+            "name": "🎲 Xúc Xắc Vàng",
+            "desc": "Đổ số cao (+2% Gamble)"
+        },
+        "10": {
+            "name": "👟 Giày Thể Thao",
+            "desc": "Chạy nhanh hơn (+2% Work)"
+        },
+        "11": {
+            "name": "🎣 Cần Tre (Bậc 1)",
+            "desc": "Cần câu cơ bản. (Luck: 1.0x)"
+        },
+        "12": {
+            "name": "⛏️ Cuốc Khai Thác",
+            "desc": "Đào tìm kho báu! (+5% Thu Nhập)"
+        },
+        "13": {
+            "name": "⌨️ Bàn Phím RGB",
+            "desc": "Gõ phím lạch cạch (+3% Work)"
+        },
+        "14": {
+            "name": "🖱️ Chuột Gaming",
+            "desc": "Click chuột chính xác (+3% Work)"
+        },
+        "15": {
+            "name": "🧸 Thảm Lông",
+            "desc": "Mềm mại đôi chân (+4% Daily)"
+        },
+        "16": {
+            "name": "🃏 Bộ Bài Ám Hiệu",
+            "desc": "Biết khi nào nên theo (+4% Gamble)"
+        },
+        "17": {
+            "name": "🖥️ Màn Hình 4K",
+            "desc": "Rõ nét từng chi tiết (+5% Work)"
+        },
+        "18": {
+            "name": "💻 Laptop",
+            "desc": "Làm việc chăm chỉ hơn! (+10% Thu Nhập)"
+        },
+        "19": {
+            "name": "💍 Nhẫn Vàng",
+            "desc": "Sáng bóng và quý giá (+5% Gamble Win)"
+        },
+        "20": {
+            "name": "🎨 Tranh Trừu Tượng",
+            "desc": "Trang trí đẳng cấp (+6% Daily)"
+        },
+        "21": {
+            "name": "🪙 Chip Đất Sét",
+            "desc": "Cảm giác chuyên nghiệp (+6% Gamble)"
+        },
+        "22": {
+            "name": "🪑 Bàn Đứng",
+            "desc": "Tư thế tốt hơn (+7% Work)"
+        },
+        "23": {
+            "name": "🍀 Cỏ 4 Lá",
+            "desc": "Cảm thấy may mắn? (+7% Tiền Thắng Cược)"
+        },
+        "24": {
+            "name": "💺 Ghế Công Thái Học",
+            "desc": "Làm việc thoải mái (+9% Work)"
+        },
+        "25": {
+            "name": "👔 Bộ Vest Công Sở",
+            "desc": "Trông chuyên nghiệp hơn (+20% Thu Nhập)"
+        },
+        "26": {
+            "name": "🎣 Cần Sợi Thủy Tinh (Bậc 2)",
+            "desc": "Bắt được cá xịn hơn! (Luck: 1.5x)"
+        },
+        "27": {
+            "name": "⌚ Đồng Hồ Rolex",
+            "desc": "Thời gian là tiền bạc (+10% Gamble Win)"
+        },
+        "28": {
+            "name": "🗿 Tượng Đá",
+            "desc": "Vững như bàn thạch (+12% Daily)"
+        },
+        "31": {
+            "name": "🐴 Móng Ngựa Vàng",
+            "desc": "May mắn thuần khiết (+25% Gamble)"
+        },
+        "32": {
+            "name": "🎫 Vé Vàng VIP",
+            "desc": "Đặc quyền VIP (+50% Thưởng Hàng Ngày)"
+        },
+        "33": {
+            "name": "🎣 Cần Sợi Carbon (Bậc 3)",
+            "desc": "Hàng đỉnh của đỉnh. (Luck: 2.5x)"
+        },
+        "34": {
+            "name": "🏎️ Siêu Xe",
+            "desc": "Vút bay trên đường! (+25% Income)"
+        },
+        "35": {
+            "name": "🏰 Biệt Thự",
+            "desc": "Sống đời thượng lưu (+100% Thưởng Hàng Ngày)"
+        },
+        "36": {
+            "name": "🛥️ Siêu Du Thuyền",
+            "desc": "Văn phòng trên biển (+50% Thu Nhập)"
+        },
+        "37": {
+            "name": "🚀 Trạm Không Gian",
+            "desc": "Phần thưởng từ quỹ đạo (+200% Thưởng Hàng Ngày)"
+        },
+        "38": {
+            "name": "⏳ Cỗ Máy Thời Gian",
+            "desc": "Viết lại lịch sử (+50% Tiền Thắng Cược)"
+        }
+    },
+    "shop": {
+        "title": "🛒 Cửa Hàng — {{category}}",
+        "empty": "*Hiện chưa có vật phẩm nào trong danh mục này.*",
+        "bonus_label": "\n✨ **Thưởng:** +{{percent}}% hiệu ứng",
+        "footer": "Trang {{page}}/{{total}} • Dùng {{prefix}}buy <id> [số_lượng]",
+        "categories": {
+            "income": "💼 Tăng Thu Nhập",
+            "daily": "📅 Thưởng Hàng Ngày",
+            "gamble": "🎲 Tăng May Mắn",
+            "tools": "🎣 Dụng Cụ Câu Cá"
+        },
+        "labels": {
+            "income": "💼 Thu Nhập",
+            "daily": "📅 Daily",
+            "gamble": "🎲 Cờ Bạc",
+            "tools": "🎣 Công Cụ"
+        }
+    },
+    "inventory": {
+        "title": "🎒 Túi đồ: {{user}}",
+        "empty": "*Túi đồ của bạn đang trống. Hãy ghé thăm `{{prefix}}shop` để mua sắm nhé!*",
+        "categories": {
+            "tool": "🎣 Công Cụ",
+            "bait": "🪱 Mồi Câu",
+            "income": "💼 Tăng Thu Nhập",
+            "daily": "📅 Thưởng Hàng Ngày",
+            "gamble": "🎲 May Mắn",
+            "other": "📦 Khác"
+        },
+        "info": "📊 Tổng quan",
+        "total_items": "Tổng vật phẩm: **{{count}}**",
+        "inventory_value": "Giá trị kho đồ: **{{emoji}} {{amount}}**",
+        "sell_tip": "💡 Mẹo: Dùng {{prefix}}sell <vật_phẩm> để quy đổi vật phẩm thành coins!"
+    },
+    "buy": {
+        "prompt": "❌ Vui lòng chỉ định vật phẩm muốn mua (vđ: `{{prefix}}buy 1` hoặc `{{prefix}}buy cookies`).",
+        "invalid_qty": "❌ Số lượng phải là một số dương.",
+        "not_found": "❌ Không tìm thấy vật phẩm. Hãy dùng `{{prefix}}shop` để xem các vật phẩm có sẵn.",
+        "insufficient_funds": "❌ Bạn cần **{{price}}** coins để mua **{{quantity}}x {{item}}**!",
+        "success": "✅ Bạn đã mua **{{quantity}}x {{item}}** với giá **{{price}}** coins! 🛍️",
+        "effect_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% hiệu quả!"
+    },
+    "sell": {
+        "prompt": "❌ Vui lòng chỉ định vật phẩm muốn bán (vđ: `{{prefix}}sell 1` hoặc `{{prefix}}sell cookies`).",
+        "not_found": "❌ Không tìm thấy vật phẩm. Hãy dùng `{{prefix}}inventory` để xem túi đồ của bạn.",
+        "insufficient_owned": "❌ Bạn chỉ có **{{count}}x {{item}}**!",
+        "fail": "❌ Không thể xóa vật phẩm khỏi túi đồ của bạn.",
+        "success": "✅ Bạn đã bán **{{quantity}}x {{item}}** và nhận được **{{price}}** coins! {{emoji}} (Hoàn tiền {{percent}}%)"
+    },
+    "leaderboard": {
+        "title": "🏆 Bảng Xếp Hạng Đại Gia: {{server}}",
+        "empty": "*Chưa có dữ liệu cho máy chủ này.*",
+        "footer": "Tổng Tài Sản (Ví + Túi đồ)",
+        "you": " ⬅️ **Bạn**"
+    },
     "transfer": {
         "mention": "❌ Vui lòng nhắc tên (@mention) người bạn muốn chuyển tiền.",
         "invalid": "❌ Vui lòng nhập số tiền hợp lệ.",
@@ -50,8 +414,364 @@
         "insufficient": "❌ Bạn không đủ tiền! Bạn chỉ còn **{{balance}}** coins.",
         "success": "✅ Đã chuyển thành công **{{amount}}** coins cho {{user}}! 💸"
     },
+    "avatar": {
+        "title": "🖼️  Ảnh đại diện",
+        "download": "🔗 Link tải xuống",
+        "server_avatar": "🏠 Ảnh đại diện máy chủ",
+        "server_avatar_link": "[Nhấn vào đây]({{url}})",
+        "banner": "🎨 Banner",
+        "banner_link": "[Nhấn vào đây]({{url}})",
+        "view_banner": "Xem Banner"
+    },
+    "ping": {
+        "checking": "🏓 Đang kiểm tra tín hiệu...",
+        "title": "🏓  Pong!",
+        "roundtrip": "📡 Độ trễ (Roundtrip)",
+        "heartbeat": "💓 Nhịp tim (Heartbeat)",
+        "uptime": "⏱️ Thời gian hoạt động",
+        "memory": "🖥️ Bộ nhớ dùng",
+        "servers": "🌐 Máy chủ",
+        "users": "👥 Người dùng",
+        "node": "📦 Node.js",
+        "djs": "📚 Discord.js",
+        "platform": "💻 Nền tảng",
+        "uptime_format": "{{d}}n {{h}}g {{m}}p {{s}}s"
+    },
+    "profile": {
+        "title": "Hồ sơ của {{user}}",
+        "economy": "💰 Kinh tế",
+        "balance": "**Số dư:** {{emoji}} {{amount}}",
+        "net_worth": "**Tổng tài sản:** {{emoji}} {{amount}}",
+        "ranking": "🏆 Xếp hạng",
+        "wealth_rank": "**Hạng giàu có:** {{rank}}",
+        "unranked": "Chưa xếp hạng (>100)",
+        "collection": "🎒 Bộ sưu tập",
+        "total_items": "**Tổng vật phẩm:** {{count}}",
+        "item_types": "**Số loại vật phẩm:** {{count}}",
+        "joined": "📅 Tham gia từ",
+        "id": "🆔 Định danh (ID)",
+        "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm"
+    },
+    "serverinfo": {
+        "title": "📊  Thông tin máy chủ: {{name}}",
+        "owner": "👑 Chủ sở hữu",
+        "created": "📅 Ngày tạo",
+        "verification": "🔒 Xác minh",
+        "members": "👥 Thành viên ({{total}})",
+        "member_stats": "👤 Người: **{{humans}}**\n🤖 Bot: **{{bots}}**\n🟢 Trực tuyến: **{{online}}** | 🌙 Chờ: **{{idle}}** | ⛔ DND: **{{dnd}}**",
+        "channels": "💬 Kênh ({{total}})",
+        "channel_stats": "📝 Văn bản: **{{text}}** | 🔊 Thoại: **{{voice}}**\n📁 Danh mục: **{{categories}}**{{extra}}",
+        "extra_channels": " | 📋 Diễn đàn: **{{forums}}** | 🎤 Sân khấu: **{{stages}}**",
+        "boost": "🚀 Tăng cường (Boost)",
+        "boost_stats": "Cấp độ: **{{level}}**\nSố lượt: **{{count}}**",
+        "emojis": "😄 Biểu tượng ({{total}})",
+        "emoji_stats": "Tĩnh: **{{static}}** | Động: **{{animated}}**\n🏷️ Sticker: **{{stickers}}**",
+        "roles": "🎭 Vai trò ({{count}})",
+        "none": "Không có",
+        "unknown": "Không rõ",
+        "footer": "ID Máy chủ: {{id}}",
+        "boost_levels": [
+            "Không có",
+            "Cấp 1",
+            "Cấp 2",
+            "Cấp 3"
+        ],
+        "verification_levels": [
+            "Không có",
+            "Thấp",
+            "Trung bình",
+            "Cao",
+            "Rất cao"
+        ]
+    },
+    "userinfo": {
+        "title_user": "👤  Thông tin người dùng",
+        "title_bot": "🤖  Thông tin Bot",
+        "username": "📛 Tên người dùng",
+        "nickname": "🏷️ Biệt danh",
+        "status": "📊 Trạng thái",
+        "account_created": "📅 Ngày tạo tài khoản",
+        "server_join": "📥 Tham gia máy chủ",
+        "activity": "🎮 Hoạt động",
+        "badges": "🏅 Huy hiệu (Badges)",
+        "roles": "🎭 Vai trò [{{count}}]",
+        "permissions": "🔑 Quyền hạn chính",
+        "balance": "💰 Số dư",
+        "balance_val": "**{{amount}}** coins",
+        "items": "🎒 Vật phẩm",
+        "items_val": "**{{count}}** vật phẩm",
+        "id": "🆔 ID người dùng",
+        "none": "Không có",
+        "unknown": "Không rõ",
+        "std_member": "Thành viên tiêu chuẩn",
+        "status_map": {
+            "online": "🟢 Trực tuyến",
+            "idle": "🌙 Chờ",
+            "dnd": "⛔ Không làm phiền",
+            "offline": "⚫ Ngoại tuyến"
+        },
+        "activity_types": {
+            "0": "Đang chơi",
+            "1": "Đang phát trực tiếp",
+            "2": "Đang nghe",
+            "3": "Đang xem",
+            "4": "Trạng thái tùy chỉnh",
+            "5": "Đang thi đấu"
+        },
+        "perm_map": {
+            "Administrator": "👑 Quản trị viên",
+            "ManageGuild": "⚙️ Quản lý máy chủ",
+            "ManageChannels": "📝 Quản lý kênh",
+            "ManageRoles": "🎭 Quản lý vai trò",
+            "ManageMessages": "💬 Quản lý tin nhắn",
+            "BanMembers": "🔨 Ban thành viên",
+            "KickMembers": "👢 Kick thành viên",
+            "MentionEveryone": "📢 Nhắc tên mọi người"
+        }
+    },
+    "minesweeper": {
+        "title": "💣  Dò Mìn (Minesweeper)",
+        "description": "Số mìn: **{{mineCount}}**\nTiền cược: **{{bet}}**\n\nNhấn để mở ô. Bật chế độ Cắm cờ để đánh dấu mìn.",
+        "flag_on": "Cắm cờ: BẬT",
+        "flag_off": "Cắm cờ: TẮT",
+        "unflag_first": "❌ Hãy bỏ cắm cờ ô này trước!",
+        "lose_title": "💥  BÙM! Trò chơi kết thúc",
+        "lose_desc": "Bạn đã đạp trúng mìn!",
+        "shield_used": "🛡️ **Khiên Bảo Vệ:** Thiệt hại giảm còn **{{amount}}**",
+        "bet_lost": "Mất tiền cược: **{{amount}}**",
+        "win_title": "Chiến Thắng!",
+        "win_desc": "Bạn đã dọn sạch bãi mìn!"
+    },
+    "wordchain": {
+        "title": "🔗  Nối Chữ (Word Chain)",
+        "already_running": "❌ Một trò chơi Nối Chữ đang diễn ra trong kênh này! Gõ `{{prefix}}stop` để dừng lại.",
+        "start_desc": "Trò chơi bắt đầu! Từ đầu tiên phải bắt đầu bằng chữ **{{char}}**.\n\n*(Lưu ý: Hiện tại chỉ hỗ trợ từ tiếng Anh)*\n\nGõ một từ để tham gia!",
+        "stop_footer": "Gõ {{prefix}}stop để kết thúc trò chơi",
+        "stopped_by": "Trò chơi đã bị dừng bởi Quản lý {{user}}!",
+        "already_used": "Từ này đã được sử dụng rồi!",
+        "wrong_start": "Phải bắt đầu bằng chữ **{{char}}**!",
+        "too_short": "Phải có ít nhất 3 chữ cái!",
+        "invalid_chars": "Phải là một từ tiếng Anh duy nhất!",
+        "no_participants": "Không có ai tham gia chơi.",
+        "end_title": "🛑  Nối Chữ — Kết Thúc!",
+        "total_words": "Tổng số từ"
+    },
+    "hangman": {
+        "title": "😵  Người Treo Cổ (Hangman)",
+        "fetch_error": "Hiện không thể lấy được từ mới. Vui lòng thử lại sau.",
+        "no_definition": "Từ bí ẩn (Không có định nghĩa)",
+        "hint": "Gợi ý",
+        "word": "Từ",
+        "lives": "Mạng sống",
+        "guessed": "Đã đoán",
+        "footer": "Hãy gõ một chữ cái để đoán!",
+        "win_msg": "BẠN ĐÃ THẮNG!",
+        "lose_msg": "BẠN ĐÃ THUA!",
+        "word_guess_win": "Bạn đã đoán đúng cả từ!"
+    },
+    "scramble": {
+        "title": "🔠  Sắp Xếp Từ (Scramble)",
+        "arrange_this": "Hãy sắp xếp lại từ này",
+        "footer": "Bạn có 30 giây!",
+        "correct": "Chính xác!",
+        "found_word": "đã tìm ra từ",
+        "category": "Thể loại",
+        "cat_random": "Ngẫu nhiên",
+        "cat_def": "Định nghĩa",
+        "starts_with": "Bắt đầu bằng",
+        "length": "Độ dài"
+    },
+    "poker": {
+        "title": "♠️♥️ Texas Hold'em ♦️♣️",
+        "host": "Chủ phòng: {{user}}",
+        "min_buyin": "Mức mua vào tối thiểu: {{amount}}",
+        "players": "Người chơi ({{count}}):",
+        "waiting_players": "Đang đợi người chơi...",
+        "join_instruction": "*Nhấn Tham gia để ngồi vào bàn!*",
+        "min_players_footer": "Cần ít nhất 2 người để bắt đầu",
+        "already_started": "❌ Trò chơi đã bắt đầu!",
+        "already_joined": "❌ Bạn đã tham gia rồi!",
+        "joining_process": "❌ Bạn đang trong quá trình tham gia...",
+        "buyin_modal_title": "Poker - Mua vào",
+        "buyin_amount_label": "Số tiền (Tối thiểu: {{amount}})",
+        "insufficient_buyin": "❌ Số tiền không hợp lệ! Phải ít nhất là {{amount}}.",
+        "insufficient_funds_buyin": "❌ Không đủ tiền! Bạn có {{balance}}.",
+        "only_host_bot": "❌ Chỉ có chủ phòng mới có thể thêm bot.",
+        "cannot_leave_running": "❌ Không thể rời khi trò chơi đang diễn ra.",
+        "not_in_table": "❌ Bạn không có trong bàn.",
+        "only_host_start": "❌ Chỉ có chủ phòng mới có thể bắt đầu.",
+        "someone_joining": "❌ Đang có người tham gia! Vui lòng đợi.",
+        "lobby_timeout": "⏰ Hết thời gian chờ sảnh. Đã hoàn lại tiền.",
+        "joining_status": " (Đang tham gia...)",
+        "your_hand": "🃏 **Bài Poker của bạn:** {{card1}} {{card2}}\nTrò chơi tại {{channel}}",
+        "ante": "Tiền xâu: {{amount}}",
+        "pot": "Tổng hũ: {{amount}}",
+        "current_bet": "Mức cược hiện tại: {{amount}}",
+        "turn_of": "Đến lượt của **{{user}}**!",
+        "check_msg": "✅ **{{user}}** đã nhường (Check).",
+        "call_msg": "💸 **{{user}}** đã theo {{amount}}.",
+        "raise_msg": "📈 **{{user}}** đã tố lên {{amount}}!",
+        "all_in_msg": "🚨 **{{name}}** đã TẤT TAY với {{amount}}!",
+        "call_all_in_msg": "🚨 **{{name}}** đã theo TẤT TAY ({{amount}})! ",
+        "hand_names": {
+            "straight_flush": "Thùng Phá Sảnh",
+            "four_of_a_kind": "Tứ Quý",
+            "full_house": "Cù Lũ",
+            "flush": "Thùng",
+            "straight": "Sảnh",
+            "three_of_a_kind": "Sám Cô",
+            "two_pair": "Thú (Hai Đôi)",
+            "pair": "Đôi",
+            "high_card": "Mậu Thầu"
+        },
+        "fold_msg": "❌ **{{user}}** đã bỏ bài.",
+        "winners": "Người thắng: {{names}}",
+        "win_by_fold": "{{user}} thắng (những người khác đã bỏ bài)!",
+        "end_title": "🏆 Kết Thúc Ván Đấu",
+        "community_cards": "Bài chung",
+        "label_fold": "Bỏ bài",
+        "label_check": "Nhường",
+        "label_call": "Theo {{amount}}",
+        "label_raise": "Tố",
+        "label_allin": "Tất tay",
+        "phases": {
+            "lobby": "Sảnh chờ",
+            "deal": "Chia bài riêng",
+            "flop": "3 lá chung (Flop)",
+            "turn": "Lá thứ 4 (Turn)",
+            "river": "Lá cuối (River)",
+            "showdown": "Ngửa bài (Showdown)"
+        }
+    },
+    "emojiquiz": {
+        "title": "🧩  Emoji Quiz",
+        "question": "Đây là gì? {{emojis}}",
+        "footer": "Bạn có 30 giây để trả lời!",
+        "correct": "✅ **Chính xác!** Đáp án là **{{answer}}**.",
+        "reward": "\n{{emoji}} Phần thưởng: **{{amount}}** coins",
+        "incorrect": "❌ **Sai rồi!**",
+        "timeout": "⌛ **Hết thời gian!** Đáp án đúng là **{{answer}}**."
+    },
+    "guess": {
+        "title": "🔢  Đoán Số",
+        "start": "Tôi đang nghĩ một con số từ **1** đến **100**. Bạn có **10 lượt** đoán!",
+        "higher": "🔼 **Lớn hơn!** (Còn {{attempts}} lượt)",
+        "lower": "🔽 **Nhỏ hơn!** (Còn {{attempts}} lượt)",
+        "win": "🎉 **Chính xác!** Con số đó là **{{number}}**.\n{{emoji}} Thưởng: **{{amount}}** coins",
+        "lose": "😔 **Kết thúc!** Bạn đã hết lượt. Con số đó là **{{number}}**."
+    },
+    "reaction": {
+        "title": "⚡  Phản Xạ",
+        "wait": "Chuẩn bị...",
+        "go": "⚡ **CHOP!**",
+        "too_early": "❌ Sớm quá! Bạn đã bấm trước khi có tín hiệu.",
+        "result": "✅ Kết quả: **{{time}}ms**",
+        "win": "\n{{emoji}} Thưởng: **{{amount}}** coins",
+        "timeout": "⌛ Quá chậm! Bạn không phản xạ kịp."
+    },
     "language": {
-        "set_success": "✅ Ngôn ngữ đã được thiết lập thành **Tiếng Việt**.",
-        "invalid": "❌ Ngôn ngữ không hợp lệ. Hỗ trợ: `en`, `vi`"
+        "title": "Cài đặt Ngôn ngữ",
+        "resolved": "Ngôn ngữ Hiện tại",
+        "personal": "Lựa chọn Cá nhân",
+        "server_setting": "Cài đặt Máy chủ",
+        "not_set": "Chưa thiết lập (theo máy chủ)",
+        "usage": "Cách dùng",
+        "usage_user": "Thiết lập ngôn ngữ cá nhân",
+        "usage_server": "Thiết lập ngôn ngữ máy chủ",
+        "usage_reset": "Xóa lựa chọn cá nhân (theo máy chủ)",
+        "invalid": "❌ Ngôn ngữ không hợp lệ! Vui lòng dùng `en` hoặc `vi`.",
+        "set_success": "Ngôn ngữ đã được thiết lập thành **{{lang}}**.",
+        "reset_success": "Lựa chọn ngôn ngữ cá nhân của bạn đã được xóa."
+    },
+    "help": {
+        "title": "📖 {{emoji}} Lệnh: {{prefix}}{{name}}",
+        "description": "Mô tả",
+        "aliases": "Tên viết tắt",
+        "cooldown": "Thời gian chờ",
+        "usage_title": "Cách dùng",
+        "guide_title": "Hướng dẫn chi tiết",
+        "none": "Không có",
+        "no_description": "Không có mô tả",
+        "no_guide": "Không có hướng dẫn chi tiết.",
+        "footer_all": "Nhập {{prefix}}help để xem tất cả danh mục",
+        "menu_title": "{{emoji}} Menu Hướng dẫn Bot",
+        "menu_desc": "Chọn một danh mục từ menu thả xuống bên dưới để xem các lệnh có sẵn.\n\n💡 **Mẹo:** Nhập `{{prefix}}help <tên_lệnh>` để xem hướng dẫn chi tiết của lệnh đó!",
+        "menu_placeholder": "Chọn một danh mục...",
+        "home": "Trang chủ",
+        "home_desc": "Quay lại menu chính",
+        "session_expired": "Phiên làm việc đã hết hạn",
+        "footer_home": "Tất cả các lệnh đều sử dụng tiền tố \"{{prefix}}\"",
+        "footer_category": "Chọn \"Trang chủ\" để quay lại hoặc chọn danh mục khác",
+        "categories": {
+            "fun": {
+                "label": "Trò chơi & Giải trí",
+                "description": "Các trò chơi nhỏ và hoạt động vui nhộn"
+            },
+            "economy": {
+                "label": "Kinh tế",
+                "description": "Tiền bạc, công việc và giao dịch"
+            },
+            "utility": {
+                "label": "Tiện ích",
+                "description": "Công cụ hữu ích"
+            },
+            "giveaway": {
+                "label": "Sự kiện Quà tặng",
+                "description": "Tổ chức và quản lý Giveaway"
+            }
+        },
+        "guides": {
+            "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
+            "hangman": "🌟 **Mô tả:** Trò chơi đoán chữ kinh điển! Bạn phải tìm ra từ ẩn trước khi hình nhân bị treo hoàn toàn.\n\n🕹️ **Cách chơi:**\n- Bot sẽ chọn ngẫu nhiên một từ bí ẩn.\n- Bạn bắt đầu với **6 mạng** (❤️).\n- Nhắn một chữ cái bất kỳ để đoán (vđ: \"a\").\n- Nếu chữ cái đúng, nó sẽ hiển thị ở tất cả các vị trí trong từ.\n- Nếu sai, bạn sẽ mất 1 mạng.\n- Bạn có thể nhắn cả từ nếu đã chắc chắn.\n\n💡 **Mẹo:** Sử dụng nút Gợi ý (Hint) để xem định nghĩa, nhưng hãy dùng tiết kiệm nhé!\n\n💰 **Phần thưởng:** Thắng cuộc nhận **50 coins** cộng thêm thưởng dựa trên số mạng còn lại.",
+            "scramble": "🌟 **Mô tả:** Kiểm tra vốn từ vựng của bạn! Sắp xếp lại các chữ cái bị xáo trộn để tìm ra từ chính xác.\n\n🕹️ **Cách chơi:**\n- Một từ bị đảo lộn sẽ hiện ra (vđ: \"elppa\" -> \"apple\").\n- Bạn có **30 giây** để nhắn đáp án đúng vào kênh chat.\n- Người đầu tiên trả lời đúng sẽ giành chiến thắng.\n\n💡 **Mẹo:** Tìm kiếm các hậu tố hoặc tiền tố phổ biến (như -ing, -pre) để giải mã nhanh hơn.\n\n💰 **Phần thưởng:** Người giải đúng đầu tiên nhận **50 coins**.",
+            "connect4": "🌟 **Mô tả:** Trận chiến chiến thuật 1v1! Hãy là người đầu tiên xếp được 4 quân cờ cùng màu thành hàng dọc, ngang hoặc chéo.\n\n🕹️ **Cách chơi:**\n1. Thách đấu: `$connect4 @user [tiền cược]` (cược không bắt buộc).\n2. Đối thủ phải nhấn 'Chấp nhận' để bắt đầu.\n3. Hai người lần lượt nhấn vào số cột (1-7) để thả quân cờ (🔴 hoặc 🟡).\n\n⚖️ **Quy tắc:**\n- Trọng lực: Quân cờ sẽ rơi xuống vị trí thấp nhất còn trống trong cột.\n- Hòa nếu bảng (42 ô) đầy mà không ai thắng.\n\n💰 **Phần thưởng:** Người thắng nhận 100% tổng tiền cược (trừ một khoản phí nhỏ).",
+            "memory": "🌟 **Mô tả:** Rèn luyện trí não! Tìm tất cả các cặp emoji giống nhau được ẩn sau các nút bấm.\n\n🕹️ **Cách chơi:**\n1. Một bảng 4x4 với các nút úp xuống sẽ hiện ra.\n2. Nhấn một nút để lật và xem emoji.\n3. Nhấn nút khác để tìm cặp tương ứng.\n4. Nếu khớp, chúng sẽ mở mãi. Nếu không, chúng sẽ úp lại sau 1 giây.\n\n🎯 **Mục tiêu:** Tìm đủ **8 cặp** với số lần thử ít nhất có thể.\n\n💰 **Phần thưởng:**\n- Thưởng cơ bản: **100 coins**.\n- Thưởng tốc độ: Thêm coins nếu hoàn thành dưới 30 hoặc 60 giây.",
+            "minesweeper": "🌟 **Mô tả:** Phiên bản dò mìn mạo hiểm! Di chuyển qua bãi mìn để nhân số tiền thưởng của bạn lên gấp nhiều lần.\n\n🕹️ **Cách chơi:**\n- Bảng 5x5 chứa **5 quả mìn ẩn giấu**.\n- Nhấn các nút ⬜ để khám phá.\n- **Kim cương (💎):** Tăng hệ số nhân tiền thưởng. Bạn an toàn để tiếp tục!\n- **Mìn (💣):** Game over. Bạn mất toàn bộ số tiền cược hiện tại.\n- **Rút tiền (Cashout):** Nhấn nút Rút tiền bất cứ lúc nào để dừng lại và nhận thưởng hiện có.\n\n🛡️ **Phòng thủ:** Nếu có **Shield (Khiên)** trong kho đồ, nó sẽ tự vỡ để bảo toàn 50% tiền cược khi bạn dẫm phải mìn.\n\n💰 **Giới hạn:** Càng nhiều kim cương, rủi ro càng cao... nhưng phần thưởng cũng cực khủng!",
+            "wordchain": "🌟 **Mô tả:** Thử thách ngôn ngữ nhiều người chơi. Chuỗi chữ của bạn có thể kéo dài bao lâu?\n\n🕹️ **Cách chơi:**\n1. Bot đưa ra từ bắt đầu ngẫu nhiên.\n2. Bạn phải nhắn một từ **bắt đầu bằng chữ cái cuối cùng** của từ trước đó.\n3. Ví dụ: `Apple` -> `Elephant` -> `Tiger`.\n\n⚖️ **Quy tắc nghiêm ngặt:**\n- Từ phải là tiếng Anh hợp lệ (kiểm tra qua từ điển).\n- Không được tự nối chữ của chính mình (phải có người khác xen kẽ).\n- Không được sử dụng lại từ đã dùng trong cùng một lượt chơi.\n\n💰 **Phần thưởng:** Mỗi từ hợp lệ đóng góp vào chuỗi sẽ mang về cho bạn coins!",
+            "blackjack": "🌟 **Mô tả:** Trò chơi casino kinh điển! Đánh bại nhà cái bằng cách đạt điểm gần 21 nhất mà không vượt quá.\n\n🕹️ **Cách chơi:**\n- **Rút (Hit):** Lấy thêm bài để tăng điểm.\n- **Dừng (Stand):** Giữ điểm hiện tại và đợi nhà cái so bài.\n\n⚖️ **Giá trị bài:**\n- 2-10: Theo số trên bài.\n- J, Q, K: 10 điểm.\n- Ace (A): 1 hoặc 11 điểm linh hoạt.\n\n💰 **Trả thưởng:**\n- Thắng thường: Nhận **x2** tiền cược.\n- Blackjack tự nhiên (A + bài 10đ): Nhận **x2.5** tiền cược.\n- Hòa (Push): Hoàn trả lại tiền cược.",
+            "slots": "🌟 **Mô tả:** Quay hũ thử vận may với máy quay hũ 3 hàng chất lượng cao!\n\n🕹️ **Cách chơi:**\n- Nhập tiền cược và sử dụng lệnh.\n- Khớp 3 biểu tượng ở hàng ngang giữa để thắng.\n\n💰 **Bảng thưởng:**\n- 7️⃣7️⃣7️⃣ (Ba số 7): **x100 JACKPOT!**\n- 💎💎💎 (Kim cương): **x50**\n- ⭐⭐⭐ (Sao): **x25**\n- 🍒🍒🍒 (Anh đào): **x10**\n- Hai biểu tượng giống nhau: **Hoàn 50% cược**.\n\n✨ **Bonus:** Một số vật phẩm trong kho đồ có thể tăng tỷ lệ ăn hũ của bạn vĩnh viễn!",
+            "poker": "🌟 **Mô tả:** Texas Hold'em Poker! Đấu trí và đặt cược với đối thủ trong trò chơi bài đỉnh cao.\n\n🕹️ **Cách chơi:**\n1. Sảnh: Tạo game và đợi ít nhất 2 người tham gia.\n2. Chia bài: Mỗi người nhận 2 lá bài tẩy (riêng).\n3. Đặt cược: Trải qua 4 vòng (Pre-flop, Flop, Turn, River).\n4. Hành động: **Bỏ bài** (Thoát), **Theo/Nhường** (Khớp cược), **Tố** (Tăng cược), **Tất tay** (Cược hết).\n\n⚖️ **Thắng cuộc:** Bộ 5 lá bài mạnh nhất (kết hợp từ bài tẩy và bài chung) sẽ thắng toàn bộ hũ tiền (Pot).\n\n💡 **Thứ tự bài:** Thùng phá sảnh > Tứ quý > Cù lũ > Thùng > Sảnh > Sám cô > Thú (2 đôi) > Đôi > Mậu thầu.",
+            "emojiquiz": "🌟 **Mô tả:** Câu đố hình ảnh thú vị! Đoán cụm từ, bộ phim hoặc vật dụng được mô tả bằng emoji.\n\n🕹️ **Cách chơi:**\n- Phân tích chuỗi emoji (vđ: 🍎🥧 -> Apple Pie).\n- Bạn có **30 giây** để nhắn đáp án chính xác.\n- Các câu đố được chia theo hạng mục (Phim, Đồ vật, Địa điểm).\n\n💰 **Phần thưởng:** Trả lời đúng và nhanh sẽ nhận coins dựa trên độ khó của câu đố.",
+            "guess": "🌟 **Mô tả:** Trò chơi đoán số đơn giản nhưng gây nghiện. Bạn có thể tìm thấy con số tôi đang nghĩ?\n\n🕹️ **Cách chơi:**\n- Bot chọn một số ngẫu nhiên từ **1 đến 100**.\n- Bạn có **10 lượt thử** để đoán.\n- Sau mỗi lần đoán, bot sẽ gợi ý số đó **Lớn hơn** (🔼) hoặc **Nhỏ hơn** (🔽).\n\n💰 **Phần thưởng:** Tiền thưởng bắt đầu ở mức cao và giảm dần sau mỗi lần đoán sai. Đoán càng nhanh thưởng càng lớn!",
+            "reaction": "🌟 **Mô tả:** Tốc độ thuần túy! Phản xạ của bạn nhanh đến mức nào khi chịu áp lực?\n\n🕹️ **Cách chơi:**\n- Bot sẽ nhắn \"Chuẩn bị...\". Ngẫu nhiên, màn hình sẽ hiện **⚡ CHOP!**.\n- Nhấn nút thật nhanh ngay khi thấy tín hiệu.\n\n⚖️ **Quy tắc:**\n- **Bấm sớm:** Bấm trước khi có tín hiệu sẽ bị xử thua hoặc phạt tiền.\n- **Hết giờ:** Bạn có 5 giây để phản xạ trước khi lượt chơi kết thúc.\n\n💰 **Phần thưởng:** Thưởng theo cấp độ! Thời gian phản xạ (ms) càng ngắn, tiền thưởng càng nhiều.",
+            "rps": "🌟 **Mô tả:** Kéo Búa Bao! Trò chơi dự đoán kinh điển có chế độ Đấu với Bot hoặc PvP.\n\n🕹️ **Cách chơi:**\n- Chọn vũ khí của bạn: 🪨 Búa, 📄 Bao, hoặc ✂️ Kéo.\n- **Solo:** Chơi với bot để ăn tiền cược.\n- **PvP:** Thách đấu người dùng khác một trận đấu sinh tử.\n\n⚖️ **Khắc chế:** Búa thắng Kéo, Kéo thắng Bao, Bao thắng Búa.",
+            "tictactoe": "🌟 **Mô tả:** Trò chơi cờ ca-rô 3x3 chiến thuật. Xếp 3 dấu liên tiếp để thắng.\n\n🕹️ **Cách chơi:**\n1. Thách đấu người khác: `$ttt @user [tiền cược]`.\n2. Thay phiên nhau đặt dấu (❌ hoặc ⭕).\n\n💰 **Kết quả:** Người thắng ăn toàn bộ tiền cược. Hoàn tiền nếu hòa.",
+            "fish": "🌟 **Mô tả:** Thư giãn và thả câu! Đánh bắt từ những chú cá măng bé nhỏ đến những quái vật biển huyền thoại.\n\n🎣 **Trang bị:**\n- **Cần câu:** Mua cần Tre, Sợi thủy tinh hoặc Carbon trong `$shop`.\n- **Mồi:** Mua giun, dế hoặc mực để thu hút các loại cá khác nhau.\n\n🕹️ **Cách chơi:**\n- Chỉ cần dùng lệnh `$fish`. Bot tự chọn trang bị xịn nhất bạn có.\n- Mỗi lần câu tốn 1 mồi và có thời gian chờ ngắn.\n\n✨ **Yếu tố may mắn:** Trang bị càng xịn, chỉ số 'May mắn' càng cao, giúp bạn dễ bắt được cá hiếm (Cá mập, Kraken) với giá cực cao!",
+            "work": "🌟 **Mô tả:** Xây dựng sự nghiệp và tạo thu nhập ổn định. Thăng cấp để tăng lương theo giờ!\n\n🕹️ **Cơ chế:**\n- Làm việc mỗi giờ để nhận **XP** và **Coins**.\n- Khi đủ XP, bạn sẽ **Lên cấp (Level Up)**.\n- Cấp càng cao mở khóa công việc xịn hơn và lương tăng mạnh.\n\n💰 **Chuỗi ngày làm việc:** Làm việc đều đặn mỗi ngày để tăng streak, nhận thưởng bonus hàng ngày.",
+            "profile": "🌟 **Mô tả:** Hộ chiếu số của bạn! Xem chi tiết tiến trình và sự giàu có của bất kỳ ai.\n\n📊 **Thông số chi tiết:**\n- **Số dư ví:** Tiền mặt bạn đang có.\n- **Tổng tài sản (Net Worth):** Tổng giá trị tiền mặt + toàn bộ vật phẩm trong kho đồ.\n- **Thứ hạng:** Vị trí của bạn trên bảng xếp hạng giàu có toàn cầu.\n- **Kinh nghiệm:** Cấp độ hiện tại và tiến trình lên cấp tiếp theo.",
+            "leaderboard": "🌟 **Mô tả:** Bảng vàng danh dự! Xem ai đang thống trị nền kinh tế của máy chủ.\n\n🏆 **Cấu trúc:**\n- Xếp hạng dựa trên **Tổng tài sản (Net Worth)**.\n- Huy chương đặc biệt (🥇 🥈 🥉) cho Top 3 người giàu nhất.\n- Cập nhật thời gian thực khi người dùng tăng hoặc giảm tài sản."
+        }
+    },
+    "giveaway": {
+        "active_title": "{{emoji}}  SỰ KIỆN GIVEAWAY  {{emoji}}",
+        "ends": "Kết thúc",
+        "winners": "Số người thắng",
+        "host": "Người tổ chức",
+        "required_role": "Vai trò yêu cầu",
+        "entries": "**{{count}}** lượt tham gia",
+        "footer_id": "ID: {{id}} • Kết thúc lúc",
+        "paused_title": "⏸️  GIVEAWAY ĐÃ TẠM DỪNG  ⏸️",
+        "paused_desc": "🟡 **Giveaway này hiện đang tạm dừng.** Không thể tham gia lúc này.",
+        "ended_title": "{{emoji}}  GIVEAWAY ĐÃ KẾT THÚC  {{emoji}}",
+        "ended_desc": "🏆 Người chiến thắng: {{winners}}",
+        "no_participants": "Không có người tham gia hợp lệ — không thể xác định người thắng.",
+        "total_entries": "Tổng cộng: **{{count}}** lượt tham gia",
+        "congrats_title": "🏆  Xin chúc mừng!  🏆",
+        "won_prize": "Bạn đã thắng phần quà **{{prize}}**!",
+        "stats_title": "📊  Thông tin Giveaway",
+        "status": "Trạng thái",
+        "status_active": "🟢 Đang diễn ra",
+        "status_paused": "🟡 Tạm dừng",
+        "status_ended": "🔴 Đã kết thúc",
+        "time_left": "Thời gian còn lại",
+        "scheduled_title": "⏳  GIVEAWAY — SẮP BẮT ĐẦU  ⏳",
+        "starts": "Bắt đầu",
+        "scheduled_desc": "⏳ **Giveaway này chưa bắt đầu.** Hãy theo dõi nhé!",
+        "join_button": "Tham gia ngay",
+        "left_giveaway": "❌ Bạn đã rời khỏi giveaway.",
+        "joined_giveaway": "✅ Bạn đã tham gia giveaway! Chúc bạn may mắn! 🍀",
+        "not_exists": "❌ Giveaway này không còn tồn tại.",
+        "already_ended": "❌ Giveaway này đã kết thúc.",
+        "role_required_msg": "❌ Bạn cần vai trò <@&{{roleId}}> để tham gia."
     }
 }

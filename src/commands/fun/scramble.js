@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -10,6 +11,7 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         let word, category, hint;
 
         try {
@@ -19,7 +21,7 @@ module.exports = {
 
             if (data && data.length > 0) {
                 word = data[0];
-                category = "Ngẫu nhiên";
+                category = t('scramble.cat_random', lang);
 
                 // Try fetching definition for hint
                 try {
@@ -29,7 +31,7 @@ module.exports = {
                     if (defData && defData.length > 0 && defData[0].meanings && defData[0].meanings.length > 0) {
                         const meaning = defData[0].meanings[0];
                         if (meaning.definitions && meaning.definitions.length > 0) {
-                            category = "Định nghĩa";
+                            category = t('scramble.cat_def', lang);
                             hint = meaning.definitions[0].definition;
                         }
                     }
@@ -42,22 +44,22 @@ module.exports = {
         }
 
         if (!word) {
-            return message.reply(`${config.EMOJIS.ERROR} Hiện không thể lấy được từ mới. Vui lòng thử lại sau.`);
+            return message.reply(`${config.EMOJIS.ERROR} ${t('hangman.fetch_error', lang)}`);
         }
 
         const scrambled = word.split('').sort(() => Math.random() - 0.5).join('');
 
-        if (category === "Định nghĩa" && hint) {
-            hint = `Định nghĩa: **${hint}**`;
+        if (category === t('scramble.cat_def', lang) && hint) {
+            hint = `${t('scramble.cat_def', lang)}: **${hint}**`;
         } else {
-            hint = `Thể loại: **${category}**` + (Math.random() > 0.5 ? ` | Bắt đầu bằng: **${word[0].toUpperCase()}**` : ` | Độ dài: **${word.length}**`);
+            hint = `${t('scramble.category', lang)}: **${category}**` + (Math.random() > 0.5 ? ` | ${t('scramble.starts_with', lang)}: **${word[0].toUpperCase()}**` : ` | ${t('scramble.length', lang)}: **${word.length}**`);
         }
 
         const embed = new EmbedBuilder()
-            .setTitle('🔠  Sắp Xếp Từ (Scramble)')
-            .setDescription(`Hãy sắp xếp lại từ này: **${scrambled}**\n\n💡 **Gợi ý:** ${hint}`)
+            .setTitle(t('scramble.title', lang))
+            .setDescription(`${t('scramble.arrange_this', lang)}: **${scrambled}**\n\n💡 **${t('hangman.hint', lang)}:** ${hint}`)
             .setColor(0xE67E22)
-            .setFooter({ text: 'Bạn có 30 giây!' });
+            .setFooter({ text: t('scramble.footer', lang) });
 
         await message.reply({ embeds: [embed] });
 
@@ -78,13 +80,13 @@ module.exports = {
 
             db.addBalance(winner.author.id, totalReward);
 
-            let msgText = `${config.EMOJIS.SUCCESS} **Chính xác!** ${winner.author} đã tìm ra từ **${word}** và nhận được ${config.EMOJIS.COIN} **${baseReward}** coins!`;
-            if (bonus > 0) msgText += ` ✨ *(Thưởng item +${bonus})*`;
+            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${t('rps.won_coins', lang === 'vi' ? 'và nhận được' : 'and received')} ${config.EMOJIS.COIN} **${baseReward}** coins!`;
+            if (bonus > 0) msgText += ` ✨ *(${t('fish.item_bonus', lang)} +${bonus})*`;
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);
         } catch {
-            message.channel.send(`${config.EMOJIS.TIMER} **Hết thời gian!** Từ đó là **${word}**.`);
+            message.channel.send(`${config.EMOJIS.TIMER} **${t('wordchain.timeout', lang)}** ${t('hangman.word', lang)} ${t('tictactoe.winner_msg', lang === 'vi' ? 'là' : 'is')} **${word}**.`);
             startCooldown(message.client, 'scramble', message.author.id);
         }
     }

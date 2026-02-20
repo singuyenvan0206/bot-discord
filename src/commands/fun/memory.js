@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 const MEM_EMOJIS = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍓', '🍑', '🍍'];
@@ -12,12 +13,12 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         // Setup Grid
         let deck = [...MEM_EMOJIS, ...MEM_EMOJIS];
         deck = deck.sort(() => Math.random() - 0.5); // Shuffle
 
         // Game State
-        const gridSize = 16;
         const grid = deck.map((emoji, i) => ({
             id: i,
             emoji: emoji,
@@ -53,10 +54,10 @@ module.exports = {
         };
 
         const embed = new EmbedBuilder()
-            .setTitle('🧠 Trò Chơi Trí Nhớ')
-            .setDescription('Hãy tìm tất cả các cặp hình giống nhau! Nhấn vào các nút để lật thẻ.')
+            .setTitle(t('memory.title', lang))
+            .setDescription(t('memory.description', lang))
             .setColor(config.COLORS.SCHEDULED)
-            .setFooter({ text: 'Giới hạn thời gian: 2 Phút' });
+            .setFooter({ text: t('memory.footer', lang) });
 
         const reply = await message.reply({ embeds: [embed], components: getButtonGrid() });
 
@@ -67,7 +68,7 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (isProcessing) return i.reply({ content: `${config.EMOJIS.WAITING} Vui lòng đợi một chút...`, ephemeral: true });
+            if (isProcessing) return i.reply({ content: t('memory.wait', lang), ephemeral: true });
 
             const idx = parseInt(i.customId.split('_')[1]);
             const cell = grid[idx];
@@ -109,8 +110,8 @@ module.exports = {
 
                         db.addBalance(message.author.id, reward);
 
-                        embed.setTitle(`${config.EMOJIS.SUCCESS} Chiến Thắng!`)
-                            .setDescription(`**Bạn đã tìm thấy tất cả các cặp hình!**\n\n⏱️ Thời gian: **${timeTaken}s**\n🔄 Số lần thử: **${attempts}**\n${config.EMOJIS.COIN} Phần thưởng: **${reward} coins**`)
+                        embed.setTitle(t('memory.win_title', lang))
+                            .setDescription(t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: reward }))
                             .setColor(config.COLORS.SUCCESS);
 
                         await i.update({ embeds: [embed], components: getButtonGrid(true) });
@@ -138,7 +139,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                embed.setTitle(`${config.EMOJIS.TIMER} Hết Thời Gian!`).setColor(config.COLORS.ERROR);
+                embed.setTitle(t('memory.timeout', lang)).setColor(config.COLORS.ERROR);
                 reply.edit({ embeds: [embed], components: getButtonGrid(true) }).catch(() => { });
                 startCooldown(message.client, 'memory', message.author.id);
             }

@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-
 const { COLORS, EMOJIS, BUTTON_ID } = require('../config');
+const { t } = require('./i18n');
 const EMOJI = EMOJIS.GIVEAWAY;
 
 /**
@@ -13,27 +13,34 @@ function formatTimestamp(unixSeconds, style = 'R') {
 /**
  * Format the remaining time as a human-readable string.
  */
-function formatDuration(ms) {
-    if (ms <= 0) return 'Đã kết thúc';
+function formatDuration(ms, lang = 'vi') {
+    if (ms <= 0) return t('giveaway.already_ended', lang);
 
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (days > 0) return `${days} ngày ${hours % 24} giờ ${minutes % 60} phút`;
-    if (hours > 0) return `${hours} giờ ${minutes % 60} phút ${seconds % 60} giây`;
-    if (minutes > 0) return `${minutes} phút ${seconds % 60} giây`;
-    return `${seconds} giây`;
+    if (lang === 'vi') {
+        if (days > 0) return `${days} ngày ${hours % 24} giờ ${minutes % 60} phút`;
+        if (hours > 0) return `${hours} giờ ${minutes % 60} phút ${seconds % 60} giây`;
+        if (minutes > 0) return `${minutes} phút ${seconds % 60} giây`;
+        return `${seconds} giây`;
+    } else {
+        if (days > 0) return `${days}d ${hours % 24}h ${minutes % 60}m`;
+        if (hours > 0) return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+        if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+        return `${seconds}s`;
+    }
 }
 
 /**
  * Build the Enter Giveaway button row.
  */
-function createEntryButton(disabled = false) {
+function createEntryButton(disabled = false, lang = 'vi') {
     const button = new ButtonBuilder()
         .setCustomId(BUTTON_ID)
-        .setLabel('Tham gia ngay')
+        .setLabel(t('giveaway.join_button', lang))
         .setEmoji(EMOJIS.GIVEAWAY)
         .setStyle(ButtonStyle.Primary)
         .setDisabled(disabled);
@@ -44,27 +51,29 @@ function createEntryButton(disabled = false) {
 /**
  * Build the main giveaway embed (active state).
  */
-function createGiveawayEmbed(giveaway, participantCount = 0) {
+function createGiveawayEmbed(giveaway, participantCount = 0, lang = 'vi') {
     const timeLeft = giveaway.ends_at * 1000 - Date.now();
     const color = timeLeft < 60000 ? COLORS.ENDING_SOON : COLORS.ACTIVE;
 
     const embed = new EmbedBuilder()
-        .setTitle(`${EMOJIS.GIVEAWAY}  SỰ KIỆN GIVEAWAY  ${EMOJIS.GIVEAWAY}`)
+        .setTitle(t('giveaway.active_title', lang, { emoji: EMOJIS.GIVEAWAY }))
         .setDescription([
             `### 🎁 ${giveaway.prize}`,
             '',
             giveaway.description ? `${giveaway.description}\n` : '',
-            `⏰ Kết thúc: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
-            `🏆 Số người thắng: **${giveaway.winner_count}**`,
-            `👤 Người tổ chức: <@${giveaway.host_id}>`,
-            giveaway.required_role_id ? `🔒 Vai trò yêu cầu: <@&${giveaway.required_role_id}>` : '',
+            `⏰ ${t('giveaway.ends', lang)}: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
+            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count}**`,
+            `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
+            giveaway.required_role_id ? `🔒 ${t('giveaway.required_role', lang)}: <@&${giveaway.required_role_id}>` : '',
             '',
-            `📥 **${participantCount}** lượt tham gia`,
+            `📥 ${t('giveaway.entries', lang, { count: participantCount })}`,
             '',
-            `Thả cảm xúc ${EMOJI} hoặc nhấn nút bên dưới để tham gia!`,
+            lang === 'vi'
+                ? `Thả cảm xúc ${EMOJI} hoặc nhấn nút bên dưới để tham gia!`
+                : `React with ${EMOJI} or click the button below to join!`,
         ].filter(Boolean).join('\n'))
         .setColor(color)
-        .setFooter({ text: `ID: ${giveaway.message_id || 'đang tạo'} • Kết thúc lúc` })
+        .setFooter({ text: `${t('giveaway.footer_id', lang, { id: giveaway.message_id || '...' })}` })
         .setTimestamp(giveaway.ends_at * 1000);
 
     return embed;
@@ -73,24 +82,24 @@ function createGiveawayEmbed(giveaway, participantCount = 0) {
 /**
  * Build the paused giveaway embed.
  */
-function createPausedEmbed(giveaway, participantCount = 0) {
+function createPausedEmbed(giveaway, participantCount = 0, lang = 'vi') {
     const embed = new EmbedBuilder()
-        .setTitle('⏸️  GIVEAWAY ĐÃ TẠM DỪNG  ⏸️')
+        .setTitle(t('giveaway.paused_title', lang))
         .setDescription([
             `### 🎁 ${giveaway.prize}`,
             '',
             giveaway.description ? `${giveaway.description}\n` : '',
-            `⏰ Kết thúc: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
-            `🏆 Số người thắng: **${giveaway.winner_count}**`,
-            `👤 Người tổ chức: <@${giveaway.host_id}>`,
-            giveaway.required_role_id ? `🔒 Vai trò yêu cầu: <@&${giveaway.required_role_id}>` : '',
+            `⏰ ${t('giveaway.ends', lang)}: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
+            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count}**`,
+            `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
+            giveaway.required_role_id ? `🔒 ${t('giveaway.required_role', lang)}: <@&${giveaway.required_role_id}>` : '',
             '',
-            `📥 **${participantCount}** lượt tham gia`,
+            `📥 ${t('giveaway.entries', lang, { count: participantCount })}`,
             '',
-            '🟡 **Giveaway này hiện đang tạm dừng.** Không thể tham gia lúc này.',
+            t('giveaway.paused_desc', lang),
         ].filter(Boolean).join('\n'))
         .setColor(COLORS.PAUSED)
-        .setFooter({ text: `ID: ${giveaway.message_id} • Đã tạm dừng` })
+        .setFooter({ text: `ID: ${giveaway.message_id} • ${t('giveaway.status_paused', lang)}` })
         .setTimestamp();
 
     return embed;
@@ -99,24 +108,24 @@ function createPausedEmbed(giveaway, participantCount = 0) {
 /**
  * Build the ended giveaway embed.
  */
-function createEndedEmbed(giveaway, winners, participantCount = 0) {
+function createEndedEmbed(giveaway, winners, participantCount = 0, lang = 'vi') {
     const winnerText = winners.length > 0
         ? winners.map(id => `<@${id}>`).join(', ')
-        : 'Không có người tham gia hợp lệ — không thể xác định người thắng.';
+        : t('giveaway.no_participants', lang);
 
     const embed = new EmbedBuilder()
-        .setTitle(`${EMOJIS.GIVEAWAY}  GIVEAWAY ĐÃ KẾT THÚC  ${EMOJIS.GIVEAWAY}`)
+        .setTitle(t('giveaway.ended_title', lang, { emoji: EMOJIS.GIVEAWAY }))
         .setDescription([
             `### 🎁 ${giveaway.prize}`,
             '',
             giveaway.description ? `${giveaway.description}\n` : '',
-            `🏆 Người chiến thắng: ${winnerText}`,
-            `👤 Người tổ chức: <@${giveaway.host_id}>`,
+            `🏆 ${t('giveaway.ended_desc', lang, { winners: winnerText })}`,
+            `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
             '',
-            `📥 Tổng cộng: **${participantCount}** lượt tham gia`,
+            `📥 ${t('giveaway.total_entries', lang, { count: participantCount })}`,
         ].filter(Boolean).join('\n'))
         .setColor(COLORS.ENDED)
-        .setFooter({ text: `ID: ${giveaway.message_id} • Kết thúc lúc` })
+        .setFooter({ text: `${t('giveaway.footer_id', lang, { id: giveaway.message_id })}` })
         .setTimestamp(Date.now());
 
     return embed;
@@ -125,17 +134,17 @@ function createEndedEmbed(giveaway, winners, participantCount = 0) {
 /**
  * Build a winner announcement embed.
  */
-function createWinnerAnnouncementEmbed(giveaway, winners) {
+function createWinnerAnnouncementEmbed(giveaway, winners, lang = 'vi') {
     const winnerMentions = winners.map(id => `<@${id}>`).join(', ');
 
     return new EmbedBuilder()
-        .setTitle('🏆  Xin chúc mừng!  🏆')
+        .setTitle(t('giveaway.congrats_title', lang))
         .setDescription([
             `${winnerMentions}`,
             '',
-            `Bạn đã thắng phần quà **${giveaway.prize}**!`,
+            t('giveaway.won_prize', lang, { prize: giveaway.prize }),
             '',
-            `🎁 Tổ chức bởi <@${giveaway.host_id}>`,
+            `🎁 ${t('giveaway.host', lang)} <@${giveaway.host_id}>`,
         ].join('\n'))
         .setColor(COLORS.ENDED)
         .setTimestamp(Date.now());
@@ -144,31 +153,31 @@ function createWinnerAnnouncementEmbed(giveaway, winners) {
 /**
  * Build a detailed info/stats embed for a giveaway.
  */
-function createInfoStatsEmbed(giveaway, participantCount, totalEntries) {
+function createInfoStatsEmbed(giveaway, participantCount, totalEntries, lang = 'vi') {
     const isActive = !giveaway.ended && !giveaway.paused;
     const isPaused = giveaway.paused && !giveaway.ended;
     const isEnded = giveaway.ended;
 
-    let status = '🟢 Đang diễn ra';
+    let status = t('giveaway.status_active', lang);
     let color = COLORS.ACTIVE;
-    if (isPaused) { status = '🟡 Tạm dừng'; color = COLORS.PAUSED; }
-    if (isEnded) { status = '🔴 Đã kết thúc'; color = COLORS.ENDED; }
+    if (isPaused) { status = t('giveaway.status_paused', lang); color = COLORS.PAUSED; }
+    if (isEnded) { status = t('giveaway.status_ended', lang); color = COLORS.ENDED; }
 
     const timeLeft = giveaway.ends_at * 1000 - Date.now();
 
     const embed = new EmbedBuilder()
-        .setTitle(`📊  Thông tin Giveaway`)
+        .setTitle(t('giveaway.stats_title', lang))
         .setDescription([
             `### 🎁 ${giveaway.prize}`,
             giveaway.description ? `> ${giveaway.description}` : '',
         ].filter(Boolean).join('\n'))
         .addFields(
-            { name: '📋 Trạng thái', value: status, inline: true },
-            { name: '🏆 Người thắng', value: `${giveaway.winner_count}`, inline: true },
-            { name: '👤 Người tổ chức', value: `<@${giveaway.host_id}>`, inline: true },
-            { name: '📥 Lượt tham gia', value: `${participantCount} người (${totalEntries} lượt tính cả bonus)`, inline: true },
-            { name: '⏰ Kết thúc', value: isEnded ? 'Đã kết thúc' : `${formatTimestamp(giveaway.ends_at)} (${formatDuration(timeLeft)})`, inline: true },
-            { name: '🔒 Vai trò yêu cầu', value: giveaway.required_role_id ? `<@&${giveaway.required_role_id}>` : 'Không có', inline: true },
+            { name: t('giveaway.status', lang), value: status, inline: true },
+            { name: t('giveaway.winners', lang), value: `${giveaway.winner_count}`, inline: true },
+            { name: t('giveaway.host', lang), value: `<@${giveaway.host_id}>`, inline: true },
+            { name: t('giveaway.entries', lang, { count: participantCount }), value: `${totalEntries} (with bonus)`, inline: true },
+            { name: t('giveaway.time_left', lang), value: isEnded ? t('giveaway.status_ended', lang) : `${formatTimestamp(giveaway.ends_at)} (${formatDuration(timeLeft, lang)})`, inline: true },
+            { name: t('giveaway.required_role', lang), value: giveaway.required_role_id ? `<@&${giveaway.required_role_id}>` : t('help.none', lang), inline: true },
         )
         .setColor(color)
         .setFooter({ text: `ID: ${giveaway.message_id}` })
@@ -180,23 +189,23 @@ function createInfoStatsEmbed(giveaway, participantCount, totalEntries) {
 /**
  * Build a scheduled giveaway embed (not yet started).
  */
-function createScheduledEmbed(giveaway) {
+function createScheduledEmbed(giveaway, lang = 'vi') {
     const embed = new EmbedBuilder()
-        .setTitle('⏳  GIVEAWAY — SẮP BẮT ĐẦU  ⏳')
+        .setTitle(t('giveaway.scheduled_title', lang))
         .setDescription([
             `### 🎁 ${giveaway.prize}`,
             '',
             giveaway.description ? `${giveaway.description}\n` : '',
-            `📅 Bắt đầu: ${formatTimestamp(giveaway.scheduled_start)} (${formatTimestamp(giveaway.scheduled_start, 'f')})`,
-            `⏰ Kết thúc: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
-            `🏆 Số người thắng: **${giveaway.winner_count}**`,
-            `👤 Người tổ chức: <@${giveaway.host_id}>`,
-            giveaway.required_role_id ? `🔒 Vai trò yêu cầu: <@&${giveaway.required_role_id}>` : '',
+            `📅 ${t('giveaway.starts', lang)}: ${formatTimestamp(giveaway.scheduled_start)} (${formatTimestamp(giveaway.scheduled_start, 'f')})`,
+            `⏰ ${t('giveaway.ends', lang)}: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
+            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count}**`,
+            `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
+            giveaway.required_role_id ? `🔒 ${t('giveaway.required_role', lang)}: <@&${giveaway.required_role_id}>` : '',
             '',
-            '⏳ **Giveaway này chưa bắt đầu.** Hãy theo dõi nhé!',
+            t('giveaway.scheduled_desc', lang),
         ].filter(Boolean).join('\n'))
         .setColor(COLORS.SCHEDULED)
-        .setFooter({ text: `ID: ${giveaway.message_id || 'đang tạo'} • Bắt đầu lúc` })
+        .setFooter({ text: `ID: ${giveaway.message_id || '...'} • ${t('giveaway.starts', lang)}` })
         .setTimestamp(giveaway.scheduled_start * 1000);
 
     return embed;

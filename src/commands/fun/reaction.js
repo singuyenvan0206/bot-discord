@@ -1,53 +1,79 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
     name: 'reaction',
     aliases: ['react'],
-    description: 'Kiểm tra tốc độ phản ứng của bạn',
+    description: 'Test your reaction speed',
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = await getLanguage(message.author.id);
+
         const embed = new EmbedBuilder()
-            .setTitle('⚡  Kiểm Tra Phản Ứng')
-            .setDescription('Hãy đợi đấy...')
+            .setTitle(t('reaction.title', lang))
+            .setDescription(t('reaction.wait', lang))
             .setColor(config.COLORS.ERROR);
 
         const msg = await message.reply({ embeds: [embed] });
 
         const delay = Math.floor(Math.random() * 3000) + 2000; // 2-5 seconds
+        let signalFired = false;
+        let signalTime = 0;
 
-        setTimeout(async () => {
-            const now = Date.now();
-            embed.setDescription('**HÃY GÕ "NGAY"!**').setColor(config.COLORS.SUCCESS);
-            await msg.edit({ embeds: [embed] });
+        const collector = message.channel.createMessageCollector({
+            filter: m => !m.author.bot && (
+                m.content.toLowerCase().trim() === 'now' ||
+                m.content.toLowerCase().trim() === 'ngay'
+            ),
+            time: delay + 5000
+        });
 
+        const timer = setTimeout(async () => {
+            signalFired = true;
+            signalTime = Date.now();
+            embed.setDescription(t('reaction.go', lang)).setColor(config.COLORS.SUCCESS);
             try {
-                const collected = await message.channel.awaitMessages({
-                    filter: m => (m.content.toLowerCase() === 'now' || m.content.toLowerCase() === 'ngay') && !m.author.bot,
-                    max: 1,
-                    time: 5000,
-                    errors: ['time']
-                });
-
-                const winner = collected.first();
-                const diff = winner.createdTimestamp - now;
-
-                // Reward based on reaction speed
-                let reward = config.ECONOMY.REACTION_REWARD_BASE;
-                let speedRank = '🐢 Khá tốt';
-                if (diff < 300) { reward = reward * 3 + 5; speedRank = '⚡ Thần tốc'; }
-                else if (diff < 500) { reward = reward * 2; speedRank = '🏎️ Nhanh'; }
-                db.addBalance(winner.author.id, reward);
-
-                winner.reply(`${config.EMOJIS.SUCCESS} **${diff}ms!** Đạt hạng: ${speedRank}!\n${config.EMOJIS.COIN} **+${reward} coins!**`);
-                startCooldown(message.client, 'reaction', message.author.id);
-            } catch (reason) {
-                message.channel.send(`${config.EMOJIS.TIMER} **Quá chậm rồi!** Không có ai phản ứng kịp thời.`);
-                startCooldown(message.client, 'reaction', message.author.id);
+                await msg.edit({ embeds: [embed] });
+            } catch (err) {
+                collector.stop('error');
             }
         }, delay);
+
+        collector.on('collect', async m => {
+            if (!signalFired) {
+                clearTimeout(timer);
+                collector.stop('too_early');
+                await m.reply(t('reaction.too_early', lang));
+            } else {
+                const diff = m.createdTimestamp - signalTime;
+                collector.stop('win');
+
+                let reward = config.ECONOMY.REACTION_REWARD_BASE || 15;
+                if (diff < 300) { reward = reward * 3 + 5; }
+                else if (diff < 500) { reward = reward * 2; }
+                db.addBalance(m.author.id, reward);
+
+                let resultDesc = t('reaction.result', lang, { time: diff });
+                resultDesc += t('reaction.win', lang, { emoji: config.EMOJIS.COIN, amount: reward });
+
+                await m.reply({
+                    embeds: [new EmbedBuilder()
+                        .setTitle(t('common.success', lang))
+                        .setDescription(resultDesc)
+                        .setColor(config.COLORS.SUCCESS)]
+                });
+            }
+        });
+
+        collector.on('end', (_, reason) => {
+            if (reason === 'time') {
+                message.channel.send(t('reaction.timeout', lang));
+            }
+            startCooldown(message.client, 'reaction', message.author.id);
+        });
     }
 };

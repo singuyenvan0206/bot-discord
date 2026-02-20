@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -10,10 +11,11 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const opponent = message.mentions.users.first();
-        if (!opponent) return message.reply(`${config.EMOJIS.ERROR} Vui lòng nhắc tên (mention) đối thủ để chơi cùng!`);
-        if (opponent.bot) return message.reply(`${config.EMOJIS.ERROR} Bạn không thể thách đấu với bot!`);
-        if (opponent.id === message.author.id) return message.reply(`${config.EMOJIS.ERROR} Bạn không thể thách đấu với chính mình!`);
+        if (!opponent) return message.reply(t('common.mention_opponent', lang));
+        if (opponent.bot) return message.reply(t('common.no_challenge_bot', lang));
+        if (opponent.id === message.author.id) return message.reply(t('common.no_challenge_self', lang));
 
         let bet = parseInt(args[1]); // args[0] is user mention
         if (!args[1]) bet = 0;
@@ -22,22 +24,24 @@ module.exports = {
         const opponentUser = db.getUser(opponent.id);
 
         if (bet > 0) {
-            if (authorUser.balance < bet) return message.reply(`${config.EMOJIS.ERROR} Bạn không đủ tiền! Số dư: **${authorUser.balance}**`);
-            if (opponentUser.balance < bet) return message.reply(`${config.EMOJIS.ERROR} ${opponent} không đủ tiền! Số dư của họ: **${opponentUser.balance}**`);
+            if (authorUser.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: authorUser.balance }));
+            if (opponentUser.balance < bet) return message.reply(t('common.opponent_insufficient_funds', lang, { opponent: opponent.username, balance: opponentUser.balance }));
         }
+
+        const betStr = bet > 0 ? t('connect4.bet_amount', lang, { emoji: config.EMOJIS.COIN, amount: bet }) : '';
 
         // Ask opponent to accept
         const confirmEmbed = new EmbedBuilder()
-            .setTitle('🔴 Thách Đấu Bốn Hàng (Connect 4) 🟡')
-            .setDescription(`${opponent}, **${message.author.username}** đã thách đấu bạn một ván Bốn Hàng!${bet > 0 ? `\nTiền cược: ${config.EMOJIS.COIN} **${bet}**` : ''}\n\nBạn có chấp nhận không?`)
+            .setTitle(t('connect4.challenge_title', lang))
+            .setDescription(t('connect4.challenge_msg', lang, { opponent: opponent.toString(), user: message.author.username, bet: betStr }))
             .setColor(config.COLORS.WARNING);
 
         const confirmRow = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId('c4_accept').setLabel('Chấp nhận').setEmoji(config.EMOJIS.SUCCESS).setStyle(ButtonStyle.Success),
-            new ButtonBuilder().setCustomId('c4_deny').setLabel('Từ chối').setEmoji(config.EMOJIS.ERROR).setStyle(ButtonStyle.Danger)
+            new ButtonBuilder().setCustomId('c4_accept').setLabel(t('connect4.accept', lang)).setEmoji(config.EMOJIS.SUCCESS).setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId('c4_deny').setLabel(t('connect4.deny', lang)).setEmoji(config.EMOJIS.ERROR).setStyle(ButtonStyle.Danger)
         );
 
-        const confirmMsg = await message.reply({ content: `${opponent}`, embeds: [confirmEmbed], components: [confirmRow] });
+        const confirmMsg = await message.reply({ content: opponent.toString(), embeds: [confirmEmbed], components: [confirmRow] });
 
         try {
             const confirmation = await confirmMsg.awaitMessageComponent({
@@ -46,7 +50,7 @@ module.exports = {
             });
 
             if (confirmation.customId === 'c4_deny') {
-                confirmation.update({ content: `${config.EMOJIS.ERROR} Thách đấu đã bị từ chối.`, embeds: [], components: [] });
+                confirmation.update({ content: t('connect4.denied', lang), embeds: [], components: [] });
                 return;
             }
 
@@ -132,10 +136,10 @@ module.exports = {
             };
 
             const gameEmbed = new EmbedBuilder()
-                .setTitle('Bốn Hàng (Connect 4)')
+                .setTitle(t('connect4.title', lang))
                 .setDescription(renderBoard())
                 .setColor(config.COLORS.INFO)
-                .setFooter({ text: `Lượt của: ${turn === P1 ? message.author.username : opponent.username} (${turn})` });
+                .setFooter({ text: t('connect4.turn_footer', lang, { user: turn === P1 ? message.author.username : opponent.username, symbol: turn }) });
 
             await confirmMsg.edit({ content: null, embeds: [gameEmbed], components: getButtons() });
 
@@ -149,16 +153,16 @@ module.exports = {
                 const isP1 = i.user.id === p1Id;
                 const isP2 = i.user.id === p2Id;
 
-                if (!isP1 && !isP2) return i.reply({ content: `${config.EMOJIS.ERROR} Bạn không tham gia ván đấu này!`, ephemeral: true });
+                if (!isP1 && !isP2) return i.reply({ content: t('connect4.not_participant', lang), ephemeral: true });
 
                 if ((turn === P1 && !isP1) || (turn === P2 && !isP2)) {
-                    return i.reply({ content: `${config.EMOJIS.ERROR} Không phải lượt của bạn!`, ephemeral: true });
+                    return i.reply({ content: t('tictactoe.not_your_turn', lang), ephemeral: true });
                 }
 
                 const col = parseInt(i.customId.split('_')[1]);
 
                 const success = dropToken(col, turn);
-                if (!success) return i.reply({ content: `${config.EMOJIS.ERROR} Cột này đã đầy!`, ephemeral: true });
+                if (!success) return i.reply({ content: t('connect4.column_full', lang), ephemeral: true });
 
                 const winner = checkWin();
 
@@ -168,11 +172,11 @@ module.exports = {
 
                     let resultText = '';
                     if (winner === 'draw') {
-                        resultText = "🤝 **Hòa rồi!**";
+                        resultText = t('connect4.draw', lang);
                         if (bet > 0) {
                             db.addBalance(p1Id, bet);
                             db.addBalance(p2Id, bet);
-                            resultText += '\nTiền cược đã được hoàn trả.';
+                            resultText += t('connect4.refund', lang);
                         }
                     } else {
                         const winId = winner === P1 ? p1Id : p2Id;
@@ -181,27 +185,28 @@ module.exports = {
 
                         if (bet > 0) {
                             db.addBalance(winId, prize);
-                            resultText = `🏆 **${winName} đã thắng!** (${winner})\n${config.EMOJIS.COIN} **+${prize} coins!**`;
+                            resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
+                                t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: prize });
                         } else {
-                            resultText = `🏆 **${winName} đã thắng!** (${winner})`;
+                            resultText = t('connect4.win', lang, { winner: winName, symbol: winner });
                         }
                     }
 
-                    gameEmbed.setDescription(renderBoard() + `\n\n${resultText}`).setFooter({ text: 'Kết thúc ván đấu' });
+                    gameEmbed.setDescription(renderBoard() + `\n\n${resultText}`).setFooter({ text: t('connect4.end_footer', lang) });
                     await i.update({ embeds: [gameEmbed], components: getButtons(true) });
 
                     startCooldown(message.client, 'connect4', p1Id);
                     startCooldown(message.client, 'connect4', p2Id);
                 } else {
                     turn = turn === P1 ? P2 : P1;
-                    gameEmbed.setDescription(renderBoard()).setFooter({ text: `Lượt của: ${turn === P1 ? message.author.username : opponent.username} (${turn})` });
+                    gameEmbed.setDescription(renderBoard()).setFooter({ text: t('connect4.turn_footer', lang, { user: turn === P1 ? message.author.username : opponent.username, symbol: turn }) });
                     await i.update({ embeds: [gameEmbed], components: getButtons() });
                 }
             });
 
             collector.on('end', (_, reason) => {
                 if (reason === 'time' && !gameOver) {
-                    confirmMsg.edit({ content: `${config.EMOJIS.TIMER} Ván đấu đã hết thời gian!`, components: [] });
+                    confirmMsg.edit({ content: t('connect4.timeout', lang), components: [] });
                     if (bet > 0) {
                         db.addBalance(p1Id, bet);
                         db.addBalance(p2Id, bet);
@@ -212,7 +217,7 @@ module.exports = {
             });
 
         } catch (e) {
-            confirmMsg.edit({ content: `${config.EMOJIS.TIMER} Thời gian thách đấu đã hết.`, embeds: [], components: [] });
+            confirmMsg.edit({ content: t('connect4.challenge_timeout', lang), embeds: [], components: [] });
         }
     }
 };

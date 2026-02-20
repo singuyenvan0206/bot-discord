@@ -1,7 +1,10 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { parseAmount } = require('../../utils/economy');
+const { getUserMultiplier } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'dice',
@@ -10,39 +13,38 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
-        const { parseAmount } = require('../../utils/economy');
 
         // Parse bet amount: $dice <bet> or $dice (default 50)
         let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
 
-        if (isNaN(bet) || bet <= 0) return message.reply(`${config.EMOJIS.ERROR} Số tiền cược không hợp lệ! Cách dùng: \`${config.PREFIX}dice <tiền_cược>\``);
-        if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} Không đủ tiền! Số dư: **${user.balance}** ${config.EMOJIS.COIN}`);
-        if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+        if (isNaN(bet) || bet <= 0) return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
+        if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+        if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
 
         const uid = Date.now().toString(36);
 
         // Show betting options as buttons
         const embed = new EmbedBuilder()
-            .setTitle(`${config.EMOJIS.GAMBLE}  Đổ Xúc Xắc (2d6)`)
+            .setTitle(t('dice.title', lang))
             .setDescription(
-                `**Mức cược:** ${bet} coins\n\n` +
-                `Chọn dự đoán của bạn:\n` +
-                `🔼 **Tài (Cao)** — Tổng từ 8-12 (x2 thưởng)\n` +
-                `🔽 **Xỉu (Thấp)** — Tổng từ 2-6 (x2 thưởng)\n` +
-                `🔢 **Lẻ** — Tổng là số lẻ (x2 thưởng)\n` +
-                `#️⃣ **Chẵn** — Tổng là số chẵn (x2 thưởng)\n` +
-                `${config.EMOJIS.LUCKY} **Số 7 May Mắn** — Tổng chính xác bằng 7 (x4 thưởng)`
+                t('dice.bet_info', lang, { amount: bet }) +
+                t('dice.high', lang) + '\n' +
+                t('dice.low', lang) + '\n' +
+                t('dice.odd', lang) + '\n' +
+                t('dice.even', lang) + '\n' +
+                t('dice.lucky_7', lang, { emoji: config.EMOJIS.LUCKY })
             )
             .setColor(config.COLORS.INFO)
-            .setFooter({ text: `Số dư: ${user.balance} coins` });
+            .setFooter({ text: t('dice.balance_footer', lang, { balance: user.balance }) });
 
         const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId(`dice_high_${uid}`).setLabel('Tài').setEmoji('🔼').setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId(`dice_low_${uid}`).setLabel('Xỉu').setEmoji('🔽').setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId(`dice_odd_${uid}`).setLabel('Lẻ').setEmoji('🔢').setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder().setCustomId(`dice_even_${uid}`).setLabel('Chẵn').setEmoji('#️⃣').setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder().setCustomId(`dice_7_${uid}`).setLabel('Số 7').setEmoji(config.EMOJIS.LUCKY).setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId(`dice_high_${uid}`).setLabel(t('dice.label_high', lang)).setEmoji('🔼').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`dice_low_${uid}`).setLabel(t('dice.label_low', lang)).setEmoji('🔽').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`dice_odd_${uid}`).setLabel(t('dice.label_odd', lang)).setEmoji('🔢').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`dice_even_${uid}`).setLabel(t('dice.label_even', lang)).setEmoji('#️⃣').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`dice_7_${uid}`).setLabel(t('dice.label_7', lang)).setEmoji(config.EMOJIS.LUCKY).setStyle(ButtonStyle.Success),
         );
 
         const reply = await message.reply({ embeds: [embed], components: [row] });
@@ -60,7 +62,7 @@ module.exports = {
             const freshUser = db.getUser(message.author.id);
             if (freshUser.balance < bet) {
                 return i.update({
-                    embeds: [new EmbedBuilder().setTitle(`${config.EMOJIS.GAMBLE}  Đổ Xúc Xắc`).setDescription(`${config.EMOJIS.ERROR} Bạn không còn đủ tiền cược!`).setColor(config.COLORS.GAMBLE_LOSS)],
+                    embeds: [new EmbedBuilder().setTitle(t('dice.menu_title', lang)).setDescription(t('dice.insufficient_bet', lang)).setColor(config.COLORS.GAMBLE_LOSS)],
                     components: [],
                 });
             }
@@ -75,7 +77,6 @@ module.exports = {
             // Determine win
             let won = false;
             let winMultiplier = 2;
-            const choiceLabel = { high: 'Tài (Cao) (8-12)', low: 'Xỉu (Thấp) (2-6)', odd: 'Số Lẻ', even: 'Số Chẵn', '7': 'Số 7 May Mắn' };
 
             if (choice === 'high' && roll > 7) won = true;
             else if (choice === 'low' && roll < 7) won = true;
@@ -87,25 +88,28 @@ module.exports = {
             let bonusText = '';
 
             if (won) {
-                const { getUserMultiplier } = require('../../utils/multiplier');
                 const multiplier = getUserMultiplier(message.author.id, 'gamble');
                 const bonus = Math.floor(bet * multiplier);
                 prize += bonus;
                 db.addBalance(message.author.id, prize);
-                if (bonus > 0) bonusText = `\n✨ **Thưởng thêm:** +${bonus} coins (+${Math.round(multiplier * 100)}%)!`;
+                if (bonus > 0) {
+                    bonusText = t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+                }
             }
 
             const diceEmojis = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            const labels = t('dice.prediction_labels', lang);
+
             const resultEmbed = new EmbedBuilder()
-                .setTitle(`${config.EMOJIS.GAMBLE}  Kết Quả Đổ Xúc Xắc`)
+                .setTitle(t('dice.result_title', lang))
                 .setDescription(
-                    `**Dự đoán:** ${choiceLabel[choice]}\n` +
-                    `**Tiền cược:** ${bet} coins\n\n` +
+                    `**${t('dice.prediction', lang)}:** ${labels[choice]}\n` +
+                    `**${t('help.usage_title', lang)}:** ${bet} coins\n\n` +
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
                     (won
-                        ? `🎉 **Bạn đã thắng ${prize} coins!** (x${winMultiplier} tiền cược)${bonusText}`
-                        : `💸 **Bạn đã thua ${bet} coins!**`) +
-                    `\n\n${config.EMOJIS.COIN} Số dư: **${db.getUser(message.author.id).balance}**`
+                        ? t('dice.payout', lang, { amount: prize, multiplier: winMultiplier }) + bonusText
+                        : t('dice.lose_msg', lang, { amount: bet })) +
+                    `\n\n${config.EMOJIS.COIN} ${t('balance.description', lang, { balance: db.getUser(message.author.id).balance })}`
                 )
                 .setColor(won ? config.COLORS.GAMBLE_WIN : config.COLORS.GAMBLE_LOSS);
 
@@ -116,8 +120,8 @@ module.exports = {
         collector.on('end', (collected) => {
             if (collected.size === 0) {
                 const timeoutEmbed = new EmbedBuilder()
-                    .setTitle(`${config.EMOJIS.GAMBLE}  Đổ Xúc Xắc`)
-                    .setDescription(`${config.EMOJIS.TIMER} Bạn đã quá thời gian chọn! Lượt chơi bị hủy.`)
+                    .setTitle(t('dice.menu_title', lang))
+                    .setDescription(t('dice.timeout', lang))
                     .setColor(config.COLORS.NEUTRAL);
                 reply.edit({ embeds: [timeoutEmbed], components: [] }).catch(() => { });
             }

@@ -1,3 +1,5 @@
+const { t } = require('./i18n');
+
 const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 const SUITS = ['♠️', '♥️', '♦️', '♣️'];
 
@@ -36,13 +38,8 @@ class Deck {
     }
 }
 
-function evaluateHand(holeCards, communityCards) {
+function evaluateHand(holeCards, communityCards, lang = 'vi') {
     const allCards = [...holeCards, ...communityCards];
-    // We need to find the best 5-card combination from 7 cards
-    // There are 21 combinations of 5 cards from 7.
-    // For simplicity and performance in a bot, we can use a heuristic or just evaluate the 7 cards directly 
-    // effectively finding the best 5-card rank logic.
-
     // Sort by value descending
     allCards.sort((a, b) => b.value - a.value);
 
@@ -59,60 +56,84 @@ function evaluateHand(holeCards, communityCards) {
 
     // Check for Straight Flush
     if (isFlush && isStraight) {
-        // Need to check if the specific flush cards form a straight
-        // This is complex. For a simple bot, usually checking if we have a straight AND a flush is "good enough" 
-        // but strictly incorrect if they are different subsets.
-        // Let's do a slightly better check: Get flush cards, check for straight.
         const flushSuit = getFlushSuit(allCards);
         if (flushSuit) {
             const flushCards = allCards.filter(c => c.suit === flushSuit);
-            if (getStraight(flushCards)) return { score: 900, name: 'Thùng Phá Sảnh', cards: flushCards.slice(0, 5) };
+            if (getStraight(flushCards)) return { score: 900, name: t('poker.hand_names.straight_flush', lang), cards: flushCards.slice(0, 5) };
         }
     }
 
     // 4 of a Kind
     if (maxCount === 4) {
         const quadValue = Object.keys(rankCounts).find(key => rankCounts[key] === 4);
-        return { score: 800 + parseInt(quadValue), name: 'Tứ Quý' }; // Score tie-break with rank
+        return { score: 800 + parseInt(quadValue), name: t('poker.hand_names.four_of_a_kind', lang) };
     }
 
     // Full House (3 + 2)
     if (maxCount === 3 && countValues.filter(c => c >= 2).length >= 2) {
         const tripValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 3).map(Number));
-        return { score: 700 + tripValue, name: 'Cù Lũ' };
+        return { score: 700 + tripValue, name: t('poker.hand_names.full_house', lang) };
     }
 
     // Flush
     if (isFlush) {
-        return { score: 600 + isFlush[0].value, name: 'Thùng' };
+        return { score: 600 + isFlush[0].value, name: t('poker.hand_names.flush', lang) };
     }
 
     // Straight
     if (isStraight) {
-        return { score: 500 + isStraight[0].value, name: 'Sảnh' };
+        return { score: 500 + isStraight[0].value, name: t('poker.hand_names.straight', lang) };
     }
 
     // 3 of a Kind
     if (maxCount === 3) {
         const tripValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 3).map(Number));
-        return { score: 400 + tripValue, name: 'Sám Cô' };
+        return { score: 400 + tripValue, name: t('poker.hand_names.three_of_a_kind', lang) };
     }
 
     // Two Pair
     if (countValues.filter(c => c === 2).length >= 2) {
         const pairs = Object.keys(rankCounts).filter(k => rankCounts[k] === 2).map(Number).sort((a, b) => b - a);
-        return { score: 300 + pairs[0], name: 'Thú' };
+        return { score: 300 + pairs[0], name: t('poker.hand_names.two_pair', lang) };
     }
 
     // Pair
     if (maxCount === 2) {
         const pairValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 2).map(Number));
-        return { score: 200 + pairValue, name: 'Đôi' };
+        return { score: 200 + pairValue, name: t('poker.hand_names.pair', lang) };
     }
 
     // High Card
-    return { score: 100 + allCards[0].value, name: 'Mậu Thầu' };
+    return { score: 100 + allCards[0].value, name: t('poker.hand_names.high_card', lang) };
 }
+
+function getFlushSuit(cards) {
+    const counts = {};
+    for (const c of cards) counts[c.suit] = (counts[c.suit] || 0) + 1;
+    return Object.keys(counts).find(s => counts[s] >= 5);
+}
+
+function getFlush(cards) {
+    const suit = getFlushSuit(cards);
+    if (!suit) return null;
+    return cards.filter(c => c.suit === suit).slice(0, 5);
+}
+
+function getStraight(cards) {
+    const uniqueValues = [...new Set(cards.map(c => c.value))].sort((a, b) => b - a);
+    for (let i = 0; i <= uniqueValues.length - 5; i++) {
+        const subset = uniqueValues.slice(i, i + 5);
+        if (subset[0] - subset[4] === 4) {
+            return cards.filter(c => c.value === subset[0]);
+        }
+    }
+    if (uniqueValues.includes(14) && uniqueValues.includes(2) && uniqueValues.includes(3) && uniqueValues.includes(4) && uniqueValues.includes(5)) {
+        return cards.filter(c => c.value === 5); // 5-high straight
+    }
+    return null;
+}
+
+module.exports = { Deck, evaluateHand };
 
 function getFlushSuit(cards) {
     const counts = {};

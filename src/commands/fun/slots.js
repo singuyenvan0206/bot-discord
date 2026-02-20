@@ -20,7 +20,7 @@ module.exports = {
 
         if (bet) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
             db.removeBalance(user.id, bet);
         }
 

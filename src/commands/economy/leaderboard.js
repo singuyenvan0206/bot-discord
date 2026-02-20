@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { calculateNetWorth } = require('../../utils/economy');
 
@@ -8,6 +9,8 @@ module.exports = {
     aliases: ['lb', 'top'],
     description: 'Hiển thị 10 người giàu nhất trên máy chủ này',
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
+
         // Fetch top 100 users by balance as a proxy for net worth
         const topUsers = db.getTopUsers(100, 'balance');
         const guildMembers = [];
@@ -39,16 +42,16 @@ module.exports = {
         const medals = ['🥇', '🥈', '🥉'];
         const lines = guildMembers.map((u, i) => {
             const rankLabel = medals[i] || `**${i + 1}.**`;
-            const isAuthor = u.userId === message.author.id ? ' ⬅️ **Bạn**' : '';
+            const isAuthor = u.userId === message.author.id ? t('leaderboard.you', lang) : '';
             return `${rankLabel} ${u.username} — ${config.EMOJIS.COIN} **${u.netWorth.toLocaleString()}**${isAuthor}`;
         });
 
         const embed = new EmbedBuilder()
-            .setTitle(`🏆  Bảng Xếp Hạng Đại Gia: ${message.guild.name}`)
-            .setDescription(lines.join('\n') || '*Chưa có dữ liệu cho máy chủ này.*')
+            .setTitle(t('leaderboard.title', lang, { server: message.guild.name }))
+            .setDescription(lines.join('\n') || t('leaderboard.empty', lang))
             .setColor(config.COLORS.SUCCESS)
             .setThumbnail(message.guild.iconURL({ dynamic: true }))
-            .setFooter({ text: 'Tổng Tài Sản (Ví + Túi đồ)' })
+            .setFooter({ text: t('leaderboard.footer', lang) })
             .setTimestamp();
 
         return message.reply({ embeds: [embed] });

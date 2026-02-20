@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 
@@ -29,6 +30,7 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         let q;
         try {
             // Try fetching from OpenTDB API
@@ -59,20 +61,20 @@ module.exports = {
         }
 
         if (!q) {
-            return message.reply('❌ Hiện không thể tải được câu hỏi đố vui. Vui lòng thử lại sau.');
+            return message.reply(t('trivia.load_error', lang));
         }
 
         const answers = [q.a, ...q.w].sort(() => Math.random() - 0.5);
         const correctIndex = answers.indexOf(q.a);
 
         const embed = new EmbedBuilder()
-            .setTitle('❓  Đố Vui Hại Não (Trivia)!')
-            .setDescription(`${q.q}\n\n*(Lưu ý: Hiện tại câu hỏi chỉ hỗ trợ tiếng Anh)*`)
+            .setTitle(t('trivia.title', lang))
+            .setDescription(`${q.q}${t('trivia.english_note', lang)}`)
             .setColor('#FFD700')
             .addFields(
-                { name: 'Lựa chọn', value: answers.map((a, i) => `${['🇦', '🇧', '🇨', '🇩'][i]} ${a}`).join('\n') }
+                { name: t('trivia.choices', lang), value: answers.map((a, i) => `${['🇦', '🇧', '🇨', '🇩'][i]} ${a}`).join('\n') }
             )
-            .setFooter({ text: 'Bạn có 15 giây để trả lời!' });
+            .setFooter({ text: t('trivia.footer', lang) });
 
         const row = new ActionRowBuilder()
             .addComponents(
@@ -95,7 +97,7 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== message.author.id) {
-                return i.reply({ content: '❌ Đây không phải lượt đố vui của bạn!', ephemeral: true });
+                return i.reply({ content: t('trivia.not_your_turn', lang), ephemeral: true });
             }
 
             if (answered.has(i.user.id)) return;
@@ -112,12 +114,12 @@ module.exports = {
 
                 db.addBalance(i.user.id, totalReward);
 
-                let resultMsg = `${config.EMOJIS.SUCCESS} **Chính xác!** Đáp án là **${q.a}**.\nPhần thưởng: ${config.EMOJIS.COIN} **${baseReward}** coins`;
+                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: baseReward });
                 if (bonus > 0) resultMsg += ` ✨ *(Thưởng item +${bonus})*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {
-                await i.update({ content: `${config.EMOJIS.ERROR} **Sai rồi!** Đáp án chính xác là **${q.a}**.`, components: [], embeds: [] });
+                await i.update({ content: t('trivia.incorrect', lang, { answer: q.a }), components: [], embeds: [] });
             }
             collector.stop();
         });
@@ -125,11 +127,10 @@ module.exports = {
         collector.on('end', async (collected, reason) => {
             if (reason === 'time' && collected.size === 0) {
                 try {
-                    await sentMsg.edit({ content: `${config.EMOJIS.TIMER} **Hết thời gian!** Đáp án chính xác là **${q.a}**.`, components: [], embeds: [] });
+                    await sentMsg.edit({ content: t('trivia.timeout', lang, { answer: q.a }), components: [], embeds: [] });
                 } catch (e) { }
             }
             startCooldown(message.client, 'trivia', message.author.id);
         });
     }
-
 };

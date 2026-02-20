@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -7,6 +8,7 @@ module.exports = {
     aliases: ['user', 'ui', 'whois'],
     description: 'Xem thông tin chi tiết về người dùng',
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;
@@ -31,22 +33,17 @@ module.exports = {
             'VerifiedBot': '🤖',
             'Nitro': '💎',
         };
-        const badges = flags.map(f => badgeMap[f] || `\`${f}\``).join(' ') || 'Không có';
+        const badges = flags.map(f => badgeMap[f] || `\`${f}\``).join(' ') || t('userinfo.none', lang);
 
         // Status
-        const statusMap = {
-            'online': '🟢 Trực tuyến',
-            'idle': '🌙 Chờ',
-            'dnd': '⛔ Không làm phiền',
-            'offline': '⚫ Ngoại tuyến',
-        };
-        const status = member?.presence?.status ? statusMap[member.presence.status] : '⚫ Ngoại tuyến';
+        const statusMap = t('userinfo.status_map', lang);
+        const status = member?.presence?.status ? statusMap[member.presence.status] : statusMap['offline'];
 
         // Activity
         const activity = member?.presence?.activities?.[0];
-        let activityStr = 'Không có';
+        let activityStr = t('userinfo.none', lang);
         if (activity) {
-            const typeMap = { 0: 'Đang chơi', 1: 'Đang phát trực tiếp', 2: 'Đang nghe', 3: 'Đang xem', 4: 'Trạng thái tùy chỉnh', 5: 'Đang thi đấu' };
+            const typeMap = t('userinfo.activity_types', lang);
             const prefix = typeMap[activity.type] || '';
             activityStr = activity.type === 4
                 ? `${activity.emoji?.toString() || ''} ${activity.state || ''}`.trim()
@@ -61,7 +58,7 @@ module.exports = {
                 .sort((a, b) => b.position - a.position)
                 .first(20)
                 .map(r => `${r}`);
-            rolesStr = roles.length > 0 ? roles.join(' ') : 'Không có';
+            rolesStr = roles.length > 0 ? roles.join(' ') : t('userinfo.none', lang);
             if (rolesStr.length > 900) rolesStr = rolesStr.slice(0, 900) + '...';
         }
 
@@ -69,16 +66,13 @@ module.exports = {
         const keyPerms = [];
         if (member) {
             const perms = member.permissions;
-            if (perms.has('Administrator')) keyPerms.push('👑 Quản trị viên');
-            if (perms.has('ManageGuild')) keyPerms.push('⚙️ Quản lý máy chủ');
-            if (perms.has('ManageChannels')) keyPerms.push('📝 Quản lý kênh');
-            if (perms.has('ManageRoles')) keyPerms.push('🎭 Quản lý vai trò');
-            if (perms.has('ManageMessages')) keyPerms.push('💬 Quản lý tin nhắn');
-            if (perms.has('BanMembers')) keyPerms.push('🔨 Ban thành viên');
-            if (perms.has('KickMembers')) keyPerms.push('👢 Kick thành viên');
-            if (perms.has('MentionEveryone')) keyPerms.push('📢 Nhắc tên mọi người');
+            const permMap = t('userinfo.perm_map', lang);
+
+            for (const [key, label] of Object.entries(permMap)) {
+                if (perms.has(key)) keyPerms.push(label);
+            }
         }
-        const permStr = keyPerms.length > 0 ? keyPerms.join(', ') : 'Thành viên tiêu chuẩn';
+        const permStr = keyPerms.length > 0 ? keyPerms.join(', ') : t('userinfo.std_member', lang);
 
         // Economy data
         const dbUser = db.getUser(user.id);
@@ -86,34 +80,34 @@ module.exports = {
         const itemCount = Object.values(inventory).reduce((a, b) => a + b, 0);
 
         // Nickname
-        const nickname = member?.nickname || 'Không có';
+        const nickname = member?.nickname || t('userinfo.none', lang);
 
         // Highest role color
         const color = member?.displayColor || config.COLORS.NEUTRAL;
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
-            .setTitle(`${user.bot ? '🤖' : '👤'}  Thông tin người dùng`)
+            .setTitle(user.bot ? t('userinfo.title_bot', lang) : t('userinfo.title_user', lang))
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 512 }))
             .addFields(
-                { name: '📛 Tên người dùng', value: `${user.tag}`, inline: true },
-                { name: '🏷️ Biệt danh', value: nickname, inline: true },
-                { name: '📊 Trạng thái', value: status, inline: true },
+                { name: t('userinfo.username', lang), value: `${user.tag}`, inline: true },
+                { name: t('userinfo.nickname', lang), value: nickname, inline: true },
+                { name: t('userinfo.status', lang), value: status, inline: true },
 
-                { name: '📅 Ngày tạo tài khoản', value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>\n<t:${Math.floor(user.createdTimestamp / 1000)}:R>`, inline: true },
-                { name: '📥 Tham gia máy chủ', value: member ? `<t:${Math.floor(member.joinedTimestamp / 1000)}:D>\n<t:${Math.floor(member.joinedTimestamp / 1000)}:R>` : 'N/A', inline: true },
-                { name: '🎮 Hoạt động', value: activityStr, inline: true },
+                { name: t('userinfo.account_created', lang), value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>\n<t:${Math.floor(user.createdTimestamp / 1000)}:R>`, inline: true },
+                { name: t('userinfo.server_join', lang), value: member ? `<t:${Math.floor(member.joinedTimestamp / 1000)}:D>\n<t:${Math.floor(member.joinedTimestamp / 1000)}:R>` : 'N/A', inline: true },
+                { name: t('userinfo.activity', lang), value: activityStr, inline: true },
 
-                { name: '🏅 Huy hiệu (Badges)', value: badges, inline: false },
-                { name: `🎭 Vai trò [${member ? member.roles.cache.size - 1 : 0}]`, value: rolesStr, inline: false },
-                { name: '🔑 Quyền hạn chính', value: permStr, inline: false },
+                { name: t('userinfo.badges', lang), value: badges, inline: false },
+                { name: t('userinfo.roles', lang, { count: member ? member.roles.cache.size - 1 : 0 }), value: rolesStr, inline: false },
+                { name: t('userinfo.permissions', lang), value: permStr, inline: false },
 
-                { name: '💰 Số dư', value: `**${dbUser.balance.toLocaleString()}** coins`, inline: true },
-                { name: '🎒 Vật phẩm', value: `**${itemCount}** vật phẩm`, inline: true },
-                { name: '🆔 ID người dùng', value: `\`${user.id}\``, inline: true },
+                { name: t('userinfo.balance', lang), value: t('userinfo.balance_val', lang, { amount: dbUser.balance.toLocaleString() }), inline: true },
+                { name: t('userinfo.items', lang), value: t('userinfo.items_val', lang, { count: itemCount }), inline: true },
+                { name: t('userinfo.id', lang), value: `\`${user.id}\``, inline: true },
             )
             .setColor(color)
-            .setFooter({ text: `Yêu cầu bởi ${message.author.tag}` })
+            .setFooter({ text: t('common.requested_by', lang, { user: message.author.tag }) })
             .setTimestamp();
 
         // Add banner if user has one

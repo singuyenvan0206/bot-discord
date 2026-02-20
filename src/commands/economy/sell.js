@@ -1,5 +1,6 @@
 const db = require('../../database');
 const SHOP_ITEMS = require('../../utils/shopItems');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -7,10 +8,11 @@ module.exports = {
     aliases: ['s'],
     description: `Bán vật phẩm lại cho cửa hàng với giá bằng ${Math.round(config.ECONOMY.SELL_RECOVERY * 100)}% giá gốc`,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const query = args[0]?.toLowerCase();
         const { parseAmount } = require('../../utils/economy');
 
-        if (!query) return message.reply(`${config.EMOJIS.ERROR} Vui lòng chỉ định vật phẩm muốn bán (vđ: \`${config.PREFIX}sell 1\` hoặc \`${config.PREFIX}sell cookies\`).`);
+        if (!query) return message.reply(t('sell.prompt', lang, { prefix: config.PREFIX }));
 
         const user = db.getUser(message.author.id);
         const inv = JSON.parse(user.inventory || '{}');
@@ -21,8 +23,9 @@ module.exports = {
             i.name.toLowerCase().includes(query)
         );
 
-        if (!item) return message.reply(`${config.EMOJIS.ERROR} Không tìm thấy vật phẩm. Hãy dùng \`${config.PREFIX}inventory\` để xem túi đồ của bạn.`);
+        if (!item) return message.reply(t('sell.not_found', lang, { prefix: config.PREFIX }));
 
+        const itemName = t(`items.${item.id}.name`, lang);
         const ownedCount = inv[String(item.id)] || 0;
         let quantity = args[1] ? parseAmount(args[1], ownedCount) : 1;
 
@@ -30,7 +33,7 @@ module.exports = {
         if (isNaN(quantity) || quantity < 1) quantity = 1;
 
         if (ownedCount < quantity) {
-            return message.reply(`${config.EMOJIS.ERROR} Bạn chỉ có **${ownedCount}x ${item.name}**!`);
+            return message.reply(t('sell.insufficient_owned', lang, { count: ownedCount, item: itemName }));
         }
 
         // Calculate sell price from config
@@ -38,10 +41,16 @@ module.exports = {
 
         // Perform transaction
         const success = db.removeItem(message.author.id, String(item.id), quantity);
-        if (!success) return message.reply(`${config.EMOJIS.ERROR} Không thể xóa vật phẩm khỏi túi đồ của bạn.`);
+        if (!success) return message.reply(t('sell.fail', lang));
 
         db.addBalance(message.author.id, sellPrice);
 
-        return message.reply(`${config.EMOJIS.SUCCESS} Bạn đã bán **${quantity}x ${item.name}** và nhận được **${sellPrice.toLocaleString()}** coins! ${config.EMOJIS.COIN} (Hoàn tiền ${Math.round(config.ECONOMY.SELL_RECOVERY * 100)}%)`);
+        return message.reply(t('sell.success', lang, {
+            quantity,
+            item: itemName,
+            price: sellPrice.toLocaleString(),
+            emoji: config.EMOJIS.COIN,
+            percent: Math.round(config.ECONOMY.SELL_RECOVERY * 100)
+        }));
     }
 };

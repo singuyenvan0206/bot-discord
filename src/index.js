@@ -328,15 +328,17 @@ function parseDuration(str) {
 // ─── Button Entry Handler ────────────────────────────────────────
 
 async function handleButtonEntry(interaction) {
+    const guildId = interaction.guildId;
+    const lang = getLanguage(interaction.user.id, guildId);
     const giveaway = db.getGiveaway(interaction.message.id);
 
-    if (!giveaway) return interaction.reply({ content: '❌ Giveaway này không còn tồn tại.', ephemeral: true });
-    if (giveaway.ended) return interaction.reply({ content: '❌ Giveaway này đã kết thúc.', ephemeral: true });
-    if (giveaway.paused) return interaction.reply({ content: '⏸️ Giveaway này đang tạm dừng.', ephemeral: true });
+    if (!giveaway) return interaction.reply({ content: t('giveaway.not_exists', lang), ephemeral: true });
+    if (giveaway.ended) return interaction.reply({ content: t('giveaway.already_ended', lang), ephemeral: true });
+    if (giveaway.paused) return interaction.reply({ content: t('giveaway.paused_title', lang), ephemeral: true });
 
     if (giveaway.required_role_id) {
         if (!interaction.member.roles.cache.has(giveaway.required_role_id)) {
-            return interaction.reply({ content: `❌ Bạn cần vai trò <@&${giveaway.required_role_id}> để tham gia.`, ephemeral: true });
+            return interaction.reply({ content: t('giveaway.role_required_msg', lang, { roleId: giveaway.required_role_id }), ephemeral: true });
         }
     }
 
@@ -344,19 +346,19 @@ async function handleButtonEntry(interaction) {
     if (participants.includes(interaction.user.id)) {
         db.removeParticipant(giveaway.id, interaction.user.id);
         const newCount = db.getParticipantCount(giveaway.id);
-        const embed = createGiveawayEmbed(giveaway, newCount);
+        const embed = createGiveawayEmbed(giveaway, newCount, lang);
         const { createEntryButton } = require('./utils/embeds');
-        await interaction.update({ embeds: [embed], components: [createEntryButton()] });
-        return interaction.followUp({ content: '❌ Bạn đã rời khỏi giveaway.', ephemeral: true });
+        await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
+        return interaction.followUp({ content: t('giveaway.left_giveaway', lang), ephemeral: true });
     }
 
     db.addParticipant(giveaway.id, interaction.user.id);
 
     const newCount = db.getParticipantCount(giveaway.id);
-    const embed = createGiveawayEmbed(giveaway, newCount);
+    const embed = createGiveawayEmbed(giveaway, newCount, lang);
     const { createEntryButton } = require('./utils/embeds');
-    await interaction.update({ embeds: [embed], components: [createEntryButton()] });
-    return interaction.followUp({ content: '✅ Bạn đã tham gia giveaway! Chúc bạn may mắn! 🍀', ephemeral: true });
+    await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
+    return interaction.followUp({ content: t('giveaway.joined_giveaway', lang), ephemeral: true });
 }
 
 // ─── Reaction Handlers (Giveaway Entry) ──────────────────────────
@@ -408,10 +410,11 @@ client.on(Events.MessageReactionRemove, async (reaction, user) => {
 
 async function updateGiveawayEmbed(message, giveaway) {
     try {
+        const lang = getLanguage(null, giveaway.guild_id);
         const count = db.getParticipantCount(giveaway.id);
-        const embed = createGiveawayEmbed(giveaway, count);
+        const embed = createGiveawayEmbed(giveaway, count, lang);
         const { createEntryButton } = require('./utils/embeds');
-        await message.edit({ embeds: [embed], components: [createEntryButton()] });
+        await message.edit({ embeds: [embed], components: [createEntryButton(false, lang)] });
     } catch (err) {
         console.error('[Giveaway] Failed to update embed:', err);
     }

@@ -1,7 +1,10 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { parseAmount } = require('../../utils/economy');
+const { getUserMultiplier } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'rps',
@@ -10,12 +13,11 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
+        const user = db.getUser(message.author.id);
+
         const choices = ['rock', 'paper', 'scissors'];
         const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };
-        const vnNames = { rock: 'Búa', paper: 'Bao', scissors: 'Kéo' };
-
-        const { parseAmount } = require('../../utils/economy');
-        const user = db.getUser(message.author.id);
 
         let userChoice = args[0]?.toLowerCase();
 
@@ -41,25 +43,25 @@ module.exports = {
 
         // Validate Bet
         if (bet > 0) {
-            if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} Bạn không đủ tiền! Số dư: **${user.balance}**`);
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
             db.removeBalance(user.id, bet);
         } else if (bet < 0) {
-            return message.reply(`${config.EMOJIS.ERROR} Số tiền cược không hợp lệ.`);
+            return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
         }
 
         if (!userChoice || !choices.includes(userChoice)) {
             // Interactive mode
             const uid = Date.now().toString(36);
             const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId(`rps_rock_${uid}`).setLabel('Búa').setEmoji('🪨').setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId(`rps_paper_${uid}`).setLabel('Bao').setEmoji('📄').setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId(`rps_scissors_${uid}`).setLabel('Kéo').setEmoji('✂️').setStyle(ButtonStyle.Primary)
+                new ButtonBuilder().setCustomId(`rps_rock_${uid}`).setLabel(t('rps.rock', lang)).setEmoji('🪨').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId(`rps_paper_${uid}`).setLabel(t('rps.paper', lang)).setEmoji('📄').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId(`rps_scissors_${uid}`).setLabel(t('rps.scissors', lang)).setEmoji('✂️').setStyle(ButtonStyle.Primary)
             );
 
             const embed = new EmbedBuilder()
-                .setTitle('Kéo Búa Bao')
-                .setDescription(bet > 0 ? `**Đang cược: ${bet} coins**\nHãy chọn vũ khí của bạn!` : 'Hãy chọn vũ khí của bạn!')
+                .setTitle(t('rps.title', lang))
+                .setDescription((bet > 0 ? t('rps.betting', lang, { amount: bet }) + '\n' : '') + t('rps.choose', lang))
                 .setColor(config.COLORS.WARNING);
 
             const reply = await message.reply({ embeds: [embed], components: [row] });
@@ -77,17 +79,11 @@ module.exports = {
                 startCooldown(message.client, 'rps', message.author.id);
             });
 
-            collector.on('collect', async i => {
-                const choice = i.customId.split('_')[1];
-                await playRPS(i, choice, null, reply, bet);
-                startCooldown(message.client, 'rps', message.author.id);
-            });
-
             collector.on('end', (_, reason) => {
                 if (reason === 'time') {
                     // Refund if timed out
                     if (bet > 0) db.addBalance(user.id, bet);
-                    reply.edit({ content: `${config.EMOJIS.TIMER} Đã quá thời gian! Tiền cược đã được hoàn trả.`, components: [] }).catch(() => { });
+                    reply.edit({ content: t('rps.timeout_refund', lang), embeds: [], components: [] }).catch(() => { });
                 }
             });
             return;
@@ -100,11 +96,11 @@ module.exports = {
         async function playRPS(interaction, uChoice, msgObj, replyObj, betAmount) {
             const botChoice = choices[Math.floor(Math.random() * choices.length)];
 
-            let result;
+            let result = '';
             let outcome = 'lose'; // win, lose, tie
 
             if (uChoice === botChoice) {
-                result = "Hòa rồi! 🤝";
+                result = t('rps.tie', lang);
                 outcome = 'tie';
             }
             else if (
@@ -112,11 +108,11 @@ module.exports = {
                 (uChoice === 'paper' && botChoice === 'rock') ||
                 (uChoice === 'scissors' && botChoice === 'paper')
             ) {
-                result = "Bạn đã thắng! 🎉";
+                result = t('rps.win', lang);
                 outcome = 'win';
             }
             else {
-                result = "Tôi thắng rồi! 😈";
+                result = t('rps.lose', lang);
                 outcome = 'lose';
             }
 
@@ -124,25 +120,24 @@ module.exports = {
             if (betAmount > 0) {
                 if (outcome === 'win') {
                     let prize = betAmount * 2;
-                    const { getUserMultiplier } = require('../../utils/multiplier');
                     const multiplier = getUserMultiplier(user.id, 'gamble');
                     const bonus = Math.floor(betAmount * multiplier);
                     prize += bonus;
 
                     db.addBalance(user.id, prize);
-                    result += `\n${config.EMOJIS.COIN} **Nhận được ${prize} coins!**`;
-                    if (bonus > 0) result += ` *(Bao gồm +${bonus} thưởng item: ${Math.round(multiplier * 100)}%)*`;
+                    result += t('rps.won_coins', lang, { amount: prize, emoji: config.EMOJIS.COIN });
+                    if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
                 } else if (outcome === 'tie') {
                     db.addBalance(user.id, betAmount); // Refund
-                    result += `\n🤝 **Tiền cược đã được hoàn trả.**`;
+                    result += t('rps.refund', lang);
                 } else {
-                    result += `\n💸 **Bạn mất ${betAmount} coins.**`;
+                    result += t('rps.lost_coins', lang, { amount: betAmount });
                 }
             }
 
             const embed = new EmbedBuilder()
-                .setTitle('Kết Quả Kéo Búa Bao')
-                .setDescription(`Bạn chọn: ${emojis[uChoice]} **${vnNames[uChoice]}**\nTôi chọn: ${emojis[botChoice]} **${vnNames[botChoice]}**\n\n**${result}**`)
+                .setTitle(t('rps.result_title', lang))
+                .setDescription(`${t('rps.user_chose', lang)}: ${emojis[uChoice]} **${t(`rps.${uChoice}`, lang)}**\n${t('rps.bot_chose', lang)}: ${emojis[botChoice]} **${t(`rps.${botChoice}`, lang)}**\n\n**${result}**`)
                 .setColor(outcome === 'win' ? config.COLORS.GAMBLE_WIN : outcome === 'tie' ? config.COLORS.GAMBLE_PUSH : config.COLORS.GAMBLE_LOSS);
 
             if (interaction) {

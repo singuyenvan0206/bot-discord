@@ -52,16 +52,16 @@ function t(key, lang = 'vi', replace = {}) {
 function getLanguage(userId, guildId = null) {
     // 1. Check User setting
     const user = db.getUser(userId);
-    if (user && user.language) return user.language;
+    if (user && user.language && user.language !== 'null') return user.language;
 
     // 2. Check Guild setting
     if (guildId) {
         const guild = db.getGuild(guildId);
-        if (guild && guild.language) return guild.language;
+        if (guild && guild.language && guild.language !== 'null') return guild.language;
     }
 
     // 3. Default
-    return 'vi';
+    return 'en';
 }
 
 module.exports = { t, getLanguage };

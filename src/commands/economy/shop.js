@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const SHOP_ITEMS = require('../../utils/shopItems');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -7,6 +8,7 @@ module.exports = {
     aliases: ['store', 'sh'],
     description: 'View items for sale',
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const ITEMS_PER_PAGE = 5;
         let currentCategory = 'income';
         let currentPage = 0;
@@ -27,26 +29,23 @@ module.exports = {
             const currentItems = items.slice(start, end);
 
             const itemsList = currentItems.length > 0 ? currentItems.map(i => {
-                let desc = `*${i.description}*`;
+                const name = t(`items.${i.id}.name`, lang);
+                const description = t(`items.${i.id}.desc`, lang);
+                let desc = `*${description}*`;
                 if (i.multiplier) {
-                    desc += `\n✨ **Thưởng:** +${Math.round(i.multiplier * 100)}% hiệu ứng`;
+                    desc += t('shop.bonus_label', lang, { percent: Math.round(i.multiplier * 100) });
                 }
-                return `**${i.name}** — ${config.EMOJIS.COIN} ${i.price.toLocaleString()}\n${desc}\nID: \`${i.id}\``;
-            }).join('\n\n') : '*Hiện chưa có vật phẩm nào trong danh mục này.*';
+                return `**${name}** — ${config.EMOJIS.COIN} ${i.price.toLocaleString()}\n${desc}\nID: \`${i.id}\``;
+            }).join('\n\n') : t('shop.empty', lang);
 
-            const categoryNames = {
-                income: '💼 Tăng Thu Nhập',
-                daily: '📅 Thưởng Hàng Ngày',
-                gamble: '🎲 Tăng May Mắn',
-                tools: '🎣 Dụng Cụ Câu Cá'
-            };
+            const categoryName = t(`shop.categories.${category}`, lang);
 
             return new EmbedBuilder()
-                .setTitle(`🛒  Cửa Hàng — ${categoryNames[category]}`)
+                .setTitle(t('shop.title', lang, { category: categoryName }))
                 .setDescription(itemsList)
                 .setColor(config.COLORS.INFO)
                 .setThumbnail(message.client.user.displayAvatarURL())
-                .setFooter({ text: `Trang ${page + 1}/${totalPages} • Dùng ${config.PREFIX}buy <id> [số_lượng]` });
+                .setFooter({ text: t('shop.footer', lang, { page: page + 1, total: totalPages, prefix: config.PREFIX }) });
         };
 
         const generateComponents = (category, page) => {
@@ -55,10 +54,10 @@ module.exports = {
 
             const categoryRow = new ActionRowBuilder()
                 .addComponents(
-                    new ButtonBuilder().setCustomId('cat_income').setLabel('💼 Thu Nhập').setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_daily').setLabel('📅 Daily').setStyle(category === 'daily' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_gamble').setLabel('🎲 Cờ Bạc').setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_tools').setLabel('🎣 Công Cụ').setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary)
+                    new ButtonBuilder().setCustomId('cat_income').setLabel(t('shop.labels.income', lang)).setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_daily').setLabel(t('shop.labels.daily', lang)).setStyle(category === 'daily' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_gamble').setLabel(t('shop.labels.gamble', lang)).setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_tools').setLabel(t('shop.labels.tools', lang)).setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary)
                 );
 
             const navRow = new ActionRowBuilder()

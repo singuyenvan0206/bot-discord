@@ -1,6 +1,10 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const config = require('../../config');
+const { t, getLanguage } = require('../../utils/i18n');
+const { startCooldown } = require('../../utils/cooldown');
+const { parseAmount } = require('../../utils/economy');
+const { getUserMultiplier } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'coinflip',
@@ -8,12 +12,8 @@ module.exports = {
     description: 'Tung đồng xu',
     cooldown: 30,
     async execute(message, args) {
-        const { t, getLanguage } = require('../../utils/i18n');
-        const { startCooldown } = require('../../utils/cooldown');
-        const lang = getLanguage(message.author.id, message.guild.id);
-
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
-        const { parseAmount } = require('../../utils/economy');
 
         let call = args[0] ? args[0].toLowerCase() : null;
         let bet = args[1] ? parseAmount(args[1], user.balance) : 0;
@@ -28,7 +28,7 @@ module.exports = {
 
         if (bet > 0) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
             db.removeBalance(user.id, bet);
         }
 
@@ -43,7 +43,6 @@ module.exports = {
 
         if (won) {
             payout = bet * 2;
-            const { getUserMultiplier } = require('../../utils/multiplier');
             const multiplier = getUserMultiplier(user.id, 'gamble');
             const bonus = Math.floor(bet * multiplier);
             payout += bonus;

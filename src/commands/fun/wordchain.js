@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -10,8 +11,9 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         if (message.client.activeChainGames?.has(message.channel.id)) {
-            return message.reply(`❌ Một trò chơi Nối Chữ đang diễn ra trong kênh này! Gõ \`${config.PREFIX}stop\` để dừng lại.`);
+            return message.reply(t('wordchain.already_running', lang, { prefix: config.PREFIX }));
         }
 
         if (!message.client.activeChainGames) message.client.activeChainGames = new Set();
@@ -24,10 +26,10 @@ module.exports = {
         let players = [message.author.id];
 
         const embed = new EmbedBuilder()
-            .setTitle('🔗  Nối Chữ (Word Chain)')
-            .setDescription(`Trò chơi bắt đầu! Từ đầu tiên phải bắt đầu bằng chữ **${lastChar.toUpperCase()}**.\n\n*(Lưu ý: Hiện tại chỉ hỗ trợ từ tiếng Anh)*\n\nGõ một từ để tham gia!`)
+            .setTitle(t('wordchain.title', lang))
+            .setDescription(t('wordchain.start_desc', lang, { char: lastChar.toUpperCase() }))
             .setColor(config.COLORS.INFO)
-            .setFooter({ text: `Gõ ${config.PREFIX}stop để kết thúc trò chơi` });
+            .setFooter({ text: t('wordchain.stop_footer', lang, { prefix: config.PREFIX }) });
 
         await message.channel.send({ embeds: [embed] });
 
@@ -54,7 +56,7 @@ module.exports = {
                 const { isManager } = require('../../utils/permissions');
                 if (isManager(m.member)) {
                     collector.stop('stopped');
-                    return message.channel.send(`🛑 **Trò chơi đã bị dừng bởi Quản lý ${m.author}!**`);
+                    return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author })}**`);
                 }
             }
 
@@ -70,10 +72,10 @@ module.exports = {
 
             // Invalid word checks
             let invalidReason = null;
-            if (usedWords.has(word)) invalidReason = 'Từ này đã được sử dụng rồi!';
-            else if (word.charAt(0) !== lastChar) invalidReason = `Phải bắt đầu bằng chữ **${lastChar.toUpperCase()}**!`;
-            else if (word.length < 3) invalidReason = 'Phải có ít nhất 3 chữ cái!';
-            else if (!/^[a-z]+$/.test(word)) invalidReason = 'Phải là một từ tiếng Anh duy nhất!';
+            if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
+            else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
+            else if (word.length < 3) invalidReason = t('wordchain.too_short', lang);
+            else if (!/^[a-z]+$/.test(word)) invalidReason = t('wordchain.invalid_chars', lang);
 
             if (invalidReason) {
                 await m.react(config.EMOJIS.ERROR);
@@ -110,11 +112,11 @@ module.exports = {
             const scoreboard = [...playerScores.entries()]
                 .sort((a, b) => b[1] - a[1])
                 .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} ${coins} coins`)
-                .join('\n') || 'Không có ai tham gia chơi.';
+                .join('\n') || t('wordchain.no_participants', lang);
 
             const endEmbed = new EmbedBuilder()
-                .setTitle('🛑  Nối Chữ — Kết Thúc!')
-                .setDescription(`**Tổng số từ:** ${usedWords.size}\n\n${scoreboard}`)
+                .setTitle(t('wordchain.end_title', lang))
+                .setDescription(`**${t('wordchain.total_words', lang)}:** ${usedWords.size}\n\n${scoreboard}`)
                 .setColor(config.COLORS.ERROR);
             message.channel.send({ embeds: [endEmbed] });
             startCooldown(message.client, 'wordchain', message.author.id);

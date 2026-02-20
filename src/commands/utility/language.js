@@ -10,29 +10,35 @@ module.exports = {
     cooldown: 5,
     async execute(message, args) {
         const guildId = message.guild?.id;
-        const lang = getLanguage(message.author.id, guildId);
+        const userSettings = db.getUser(message.author.id);
+        const guildSettings = guildId ? db.getGuild(guildId) : null;
+        const resolvedLang = getLanguage(message.author.id, guildId);
 
         if (!args[0]) {
             const embed = new EmbedBuilder()
-                .setTitle('🌐 Language Settings')
+                .setTitle('🌐 ' + t('language.title', resolvedLang))
                 .setDescription(
-                    `**Current Language:** \`${lang === 'vi' ? 'Tiếng Việt (vi)' : 'English (en)'}\`\n\n` +
-                    `**Usage:**\n` +
-                    `• \`${config.PREFIX}language en\` - Set your personal language to English.\n` +
-                    `• \`${config.PREFIX}language vi\` - Thiết lập ngôn ngữ cá nhân thành Tiếng Việt.\n\n` +
-                    `**Server Admin:**\n` +
-                    `• \`${config.PREFIX}language server <en/vi>\` - Set default server language.`
+                    `**${t('language.resolved', resolvedLang)}:** \`${resolvedLang === 'vi' ? 'Tiếng Việt (vi)' : 'English (en)'}\`\n\n` +
+                    `**${t('language.personal', resolvedLang)}:** \`${userSettings.language ? (userSettings.language === 'vi' ? 'Tiếng Việt (vi)' : 'English (en)') : t('language.not_set', resolvedLang)}\`\n` +
+                    `**${t('language.server_setting', resolvedLang)}:** \`${guildSettings?.language === 'vi' ? 'Tiếng Việt (vi)' : 'English (en)'}\`\n\n` +
+                    `**${t('language.usage', resolvedLang)}:**\n` +
+                    `• \`${config.PREFIX}lang <en/vi>\` - ${t('language.usage_user', resolvedLang)}\n` +
+                    `• \`${config.PREFIX}lang server <en/vi>\` - ${t('language.usage_server', resolvedLang)}\n` +
+                    `• \`${config.PREFIX}lang reset\` - ${t('language.usage_reset', resolvedLang)}`
                 )
                 .setColor(config.COLORS.INFO);
             return message.reply({ embeds: [embed] });
         }
 
         let choice = args[0].toLowerCase();
-        let scope = 'user';
 
-        // Support both structures: 
-        // 1. !language server en (choice='server', args[1]='en')
-        // 2. !language en server (choice='en', args[1]='server')
+        if (choice === 'reset' || choice === 'default') {
+            db.updateUser(message.author.id, { language: null });
+            const newLang = getLanguage(message.author.id, guildId);
+            return message.reply(`✅ ${t('language.reset_success', newLang)}`);
+        }
+
+        let scope = 'user';
         if (choice === 'server') {
             scope = 'server';
             choice = args[1]?.toLowerCase();
@@ -41,26 +47,22 @@ module.exports = {
         }
 
         if (!choice || (choice !== 'en' && choice !== 'vi')) {
-            return message.reply(t('language.invalid', lang));
+            return message.reply({ content: t('language.invalid', resolvedLang) });
         }
 
-        // Server setting
         if (scope === 'server') {
             if (!guildId) return message.reply('❌ This command can only be used in a server.');
+            const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild) || db.isOwner(message.author.id);
 
-            const isOwner = db.isOwner(message.author.id);
-            const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild);
-
-            if (!isOwner && !isAdmin) {
-                return message.reply(t('common.error', lang));
-            }
+            if (!isAdmin) return message.reply(t('common.error', resolvedLang));
 
             db.updateGuild(guildId, { language: choice });
-            return message.reply(t('language.set_success', choice));
+            const langName = choice === 'vi' ? 'Tiếng Việt' : 'English';
+            return message.reply(`✅ ${t('language.set_success', choice, { lang: langName })}`);
         }
 
-        // User setting
         db.updateUser(message.author.id, { language: choice });
-        return message.reply(t('language.set_success', choice));
+        const langName = choice === 'vi' ? 'Tiếng Việt' : 'English';
+        return message.reply(`✅ ${t('language.set_success', choice, { lang: langName })}`);
     }
 };

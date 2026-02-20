@@ -10,18 +10,19 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
         const { parseAmount } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance) : 0;
 
-        if (args[0] && bet <= 0) return message.reply(`${config.EMOJIS.ERROR} Số tiền cược không hợp lệ.`);
+        if (args[0] && bet <= 0) return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
         if (!args[0]) bet = 50;
 
         if (bet > 0) {
             if (user.balance < bet) {
-                return message.reply(`${config.EMOJIS.ERROR} Bạn không đủ tiền! Số dư: **${user.balance}**`);
+                return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
             }
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} Mức cược tối đa là **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
             db.removeBalance(user.id, bet);
         }
 
@@ -145,7 +146,7 @@ module.exports = {
                 if (r === 4) {
                     const flagBtn = new ButtonBuilder()
                         .setCustomId('ms_toggle')
-                        .setLabel(gameState.isFlagging ? 'Cắm cờ: BẬT' : 'Cắm cờ: TẮT')
+                        .setLabel(gameState.isFlagging ? t('minesweeper.flag_on', lang) : t('minesweeper.flag_off', lang))
                         .setStyle(gameState.isFlagging ? ButtonStyle.Danger : ButtonStyle.Primary) // Red if On, Blue if Off
                         .setEmoji(gameState.isFlagging ? '🚩' : '🖱️')
                         .setDisabled(gameOver);
@@ -157,8 +158,8 @@ module.exports = {
         };
 
         const embed = new EmbedBuilder()
-            .setTitle('💣  Dò Mìn (Minesweeper)')
-            .setDescription(`Số mìn: **${mineCount}**\nTiền cược: **${bet || 0}**\n\nNhấn để mở ô. Bật chế độ Cắm cờ để đánh dấu mìn.`)
+            .setTitle(t('minesweeper.title', lang))
+            .setDescription(t('minesweeper.description', lang, { mineCount, bet: bet || 0 }))
             .setColor(0xE67E22);
 
         const reply = await message.reply({ embeds: [embed], components: renderComponents() });
@@ -197,7 +198,7 @@ module.exports = {
                 else gameState.flagged.add(idx);
                 await i.update({ components: renderComponents() });
             } else {
-                if (gameState.flagged.has(idx)) return i.reply({ content: '❌ Hãy bỏ cắm cờ ô này trước!', ephemeral: true });
+                if (gameState.flagged.has(idx)) return i.reply({ content: t('minesweeper.unflag_first', lang), ephemeral: true });
 
                 const result = reveal(idx);
 
@@ -216,8 +217,11 @@ module.exports = {
                     }
 
                     const loseEmbed = new EmbedBuilder()
-                        .setTitle('💥  BÙM! Trò chơi kết thúc')
-                        .setDescription(`Bạn đã đạp trúng mìn!\n${shieldUsed ? `🛡️ **Khiên Bảo Vệ:** Thiệt hại giảm còn **${loseAmount}**` : `Mất tiền cược: **${loseAmount}**`}`)
+                        .setTitle(t('minesweeper.lose_title', lang))
+                        .setDescription(t('minesweeper.lose_desc', lang) + '\n' +
+                            (shieldUsed
+                                ? t('minesweeper.shield_used', lang, { amount: loseAmount })
+                                : t('minesweeper.bet_lost', lang, { amount: loseAmount })))
                         .setColor(0xE74C3C);
                     await i.update({ embeds: [loseEmbed], components: renderComponents(true, false) });
                 } else {
@@ -236,14 +240,14 @@ module.exports = {
                             db.addBalance(user.id, prize);
 
                             const winEmbed = new EmbedBuilder()
-                                .setTitle(`${config.EMOJIS.SUCCESS}  Chiến Thắng!`)
-                                .setDescription(`Bạn đã dọn sạch bãi mìn!\n\n**Thắng cơ bản:** ${config.EMOJIS.COIN} +${baseWin}\n**Thưởng Item:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Tổng cộng:** ${config.EMOJIS.COIN} **${prize}** coins`)
+                                .setTitle(`${config.EMOJIS.SUCCESS}  ${t('minesweeper.win_title', lang)}`)
+                                .setDescription(t('minesweeper.win_desc', lang) + `\n\n**${t('fish.income', lang)}:** ${config.EMOJIS.COIN} +${baseWin}\n**${t('fish.item_bonus', lang)}:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**${t('balance.description', lang, { balance: prize })}**`)
                                 .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         } else {
                             const winEmbed = new EmbedBuilder()
-                                .setTitle(`${config.EMOJIS.SUCCESS}  Chiến Thắng!`)
-                                .setDescription(`Bạn đã dọn sạch bãi mìn!`)
+                                .setTitle(`${config.EMOJIS.SUCCESS}  ${t('minesweeper.win_title', lang)}`)
+                                .setDescription(t('minesweeper.win_desc', lang))
                                 .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         }
@@ -258,7 +262,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                reply.edit({ content: '⏰ Hết thời gian!', components: [] }).catch(() => { });
+                reply.edit({ content: `⏰ ${t('tictactoe.timeout_title', lang)}`, components: [] }).catch(() => { });
             }
             startCooldown(message.client, 'minesweeper', message.author.id);
         });

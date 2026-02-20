@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -10,6 +11,7 @@ module.exports = {
     cooldown: 30,
     manualCooldown: true,
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         let word, hint;
 
         try {
@@ -35,7 +37,7 @@ module.exports = {
                     console.error('Error fetching definition:', e);
                 }
 
-                if (!hint) hint = "Từ bí ẩn (Không có định nghĩa)";
+                if (!hint) hint = t('hangman.no_definition', lang);
             }
         } catch (error) {
             console.error('Error fetching random word:', error);
@@ -43,7 +45,7 @@ module.exports = {
 
         // If API fails to provide a word
         if (!word) {
-            return message.reply(`${config.EMOJIS.ERROR} Hiện không thể lấy được từ mới. Vui lòng thử lại sau.`);
+            return message.reply(`${config.EMOJIS.ERROR} ${t('hangman.fetch_error', lang)}`);
         }
 
         const guessed = new Set();
@@ -55,10 +57,10 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setTitle('😵  Người Treo Cổ (Hangman)')
-            .setDescription(`**Gợi ý:** ${hint}\n\n**Từ:** ${getDisplay()}\n**Mạng sống:** ${'❤️'.repeat(lives)}\n\n**Đã đoán:** ${Array.from(guessed).join(', ') || 'Chưa có'}`)
+            .setTitle(t('hangman.title', lang))
+            .setDescription(`${t('hangman.hint', lang)}: ${hint}\n\n${t('hangman.word', lang)}: ${getDisplay()}\n${t('hangman.lives', lang)}: ${'❤️'.repeat(lives)}\n\n${t('hangman.guessed', lang)}: ${Array.from(guessed).join(', ') || t('userinfo.none', lang)}`)
             .setColor(config.COLORS.INFO)
-            .setFooter({ text: 'Hãy gõ một chữ cái để đoán!' });
+            .setFooter({ text: t('hangman.footer', lang) });
 
         const msg = await message.reply({ embeds: [embed] });
 
@@ -85,8 +87,8 @@ module.exports = {
 
                     db.addBalance(message.author.id, totalReward);
 
-                    let resultStr = `**Từ:** ${word}\n\n${config.EMOJIS.SUCCESS} **BẠN ĐÃ THẮNG!** (Bạn đã đoán đúng cả từ!)\n${config.EMOJIS.COIN} **+${baseReward} coins!**`;
-                    if (bonus > 0) resultStr += `\n✨ **Thưởng Item:** +${bonus} (${Math.round(multiplier * 100)}%)`;
+                    let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${baseReward} coins!**`;
+                    if (bonus > 0) resultStr += `\n✨ **${t('fish.item_bonus', lang)}:** +${bonus} (${Math.round(multiplier * 100)}%)`;
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
                     collector.stop();
@@ -110,7 +112,7 @@ module.exports = {
 
             if (won || lost) {
                 gameOver = true;
-                let resultText = won ? `${config.EMOJIS.SUCCESS} **BẠN ĐÃ THẮNG!**` : '💀 **BẠN ĐÃ THUA!**';
+                let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
                     const baseReward = config.ECONOMY.HANGMAN_REWARD;
                     const { getUserMultiplier } = require('../../utils/multiplier');
@@ -120,13 +122,13 @@ module.exports = {
 
                     db.addBalance(message.author.id, totalReward);
                     resultText += `\n${config.EMOJIS.COIN} **+${baseReward}** coins!`;
-                    if (bonus > 0) resultText += ` *(Thưởng item +${bonus})*`;
+                    if (bonus > 0) resultText += ` *(${t('fish.item_bonus', lang)} +${bonus})*`;
                 }
-                embed.setDescription(`**Từ:** ${word}\n\n${resultText}`)
+                embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);
                 collector.stop();
             } else {
-                embed.setDescription(`**Gợi ý:** ${hint}\n\n**Từ:** ${currentDisplay}\n**Mạng sống:** ${'❤️'.repeat(lives)}\n\n**Đã đoán:** ${Array.from(guessed).join(', ') || 'Chưa có'}`);
+                embed.setDescription(`${t('hangman.hint', lang)}: ${hint}\n\n${t('hangman.word', lang)}: ${currentDisplay}\n${t('hangman.lives', lang)}: ${'❤️'.repeat(lives)}\n\n${t('hangman.guessed', lang)}: ${Array.from(guessed).join(', ') || t('userinfo.none', lang)}`);
             }
 
             await msg.edit({ embeds: [embed] });
@@ -134,7 +136,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time' && !gameOver) {
-                embed.setDescription(`${config.EMOJIS.TIMER} **Hết thời gian!** Từ đó là **${word}**.`).setColor(config.COLORS.NEUTRAL);
+                embed.setDescription(`${config.EMOJIS.TIMER} **${t('wordchain.timeout', lang)}** ${t('hangman.word', lang)} ${t('tictactoe.winner_msg', lang === 'vi' ? 'là' : 'is')} **${word}**.`).setColor(config.COLORS.NEUTRAL);
                 msg.edit({ embeds: [embed] });
             }
             startCooldown(message.client, 'hangman', message.author.id);

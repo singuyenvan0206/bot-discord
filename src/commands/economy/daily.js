@@ -1,5 +1,6 @@
 const db = require('../../database');
 const { getUserMultiplier } = require('../../utils/multiplier');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -7,8 +8,7 @@ module.exports = {
     aliases: ['d', 'dy'],
     description: 'Nhận phần thưởng hàng ngày của bạn',
     async execute(message, args) {
-        const { t, getLanguage } = require('../../utils/i18n');
-        const lang = getLanguage(message.author.id, message.guild.id);
+        const lang = getLanguage(message.author.id, message.guild?.id);
 
         const user = db.getUser(message.author.id);
         const now = Math.floor(Date.now() / 1000);
@@ -29,9 +29,9 @@ module.exports = {
         db.updateUser(message.author.id, { last_daily: now });
         db.addBalance(message.author.id, total);
 
-        let msg = t('daily.success', lang, { amount: baseReward, emoji: config.EMOJIS.COIN });
+        let msg = t('daily.success', lang, { amount: baseReward.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (bonus > 0) {
-            msg += t('daily.bonus', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+            msg += t('daily.bonus', lang, { amount: bonus.toLocaleString(), percent: Math.round(multiplier * 100) });
         }
 
         return message.reply(msg);

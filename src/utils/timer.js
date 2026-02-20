@@ -1,5 +1,6 @@
 const db = require('../database');
 const { createGiveawayEmbed, createEndedEmbed, createWinnerAnnouncementEmbed, createEntryButton, EMOJI } = require('./embeds');
+const { getLanguage } = require('./i18n');
 
 const CHECK_INTERVAL = 15_000; // 15 seconds
 const EMBED_UPDATE_INTERVAL = 60_000; // 1 minute
@@ -60,16 +61,18 @@ async function finishGiveaway(client, giveaway) {
         const winners = pickWinners(participants, giveaway.winner_count);
         const participantCount = participantIds.length;
 
+        const lang = getLanguage(null, giveaway.guild_id);
+
         // Mark as ended in DB
         db.endGiveaway(giveaway.message_id);
 
         // Update the giveaway embed (remove buttons)
-        const endedEmbed = createEndedEmbed(giveaway, winners, participantCount);
+        const endedEmbed = createEndedEmbed(giveaway, winners, participantCount, lang);
         await message.edit({ embeds: [endedEmbed], components: [] }).catch(() => { });
 
         // Announce winners in the channel
         if (winners.length > 0) {
-            const announcementEmbed = createWinnerAnnouncementEmbed(giveaway, winners);
+            const announcementEmbed = createWinnerAnnouncementEmbed(giveaway, winners, lang);
             await channel.send({
                 content: `🎉 ${winners.map(id => `<@${id}>`).join(', ')}`,
                 embeds: [announcementEmbed],
@@ -81,8 +84,8 @@ async function finishGiveaway(client, giveaway) {
                     const user = await client.users.fetch(winnerId);
                     await user.send({
                         embeds: [
-                            createWinnerAnnouncementEmbed(giveaway, [winnerId])
-                                .setFooter({ text: `Từ máy chủ: ${guild.name}` })
+                            createWinnerAnnouncementEmbed(giveaway, [winnerId], lang)
+                                .setFooter({ text: `${lang === 'vi' ? 'Từ máy chủ' : 'From server'}: ${guild.name}` })
                         ],
                     });
                 } catch {
@@ -120,9 +123,10 @@ async function activateScheduledGiveaways(client) {
             const message = await channel.messages.fetch(giveaway.message_id).catch(() => null);
             if (!message) continue;
 
+            const lang = getLanguage(null, giveaway.guild_id);
             // Check if this is still showing a "Coming Soon" embed — update it to active
-            const embed = createGiveawayEmbed(giveaway, 0);
-            const buttonRow = createEntryButton();
+            const embed = createGiveawayEmbed(giveaway, 0, lang);
+            const buttonRow = createEntryButton(false, lang);
             await message.edit({ embeds: [embed], components: [buttonRow] });
             await message.react(EMOJI).catch(() => { });
 
@@ -159,9 +163,10 @@ async function updateActiveEmbeds(client) {
             const message = await channel.messages.fetch(giveaway.message_id).catch(() => null);
             if (!message) continue;
 
+            const lang = getLanguage(null, giveaway.guild_id);
             const participantCount = db.getParticipantCount(giveaway.id);
-            const embed = createGiveawayEmbed(giveaway, participantCount);
-            const buttonRow = createEntryButton();
+            const embed = createGiveawayEmbed(giveaway, participantCount, lang);
+            const buttonRow = createEntryButton(false, lang);
             await message.edit({ embeds: [embed], components: [buttonRow] }).catch(() => { });
         } catch {
             // Silently skip if we can't update

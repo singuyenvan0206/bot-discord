@@ -1,4 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -6,6 +7,7 @@ module.exports = {
     aliases: ['av', 'pfp'],
     description: 'Xem ảnh đại diện của người dùng với độ phân giải cao',
     async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;
@@ -22,13 +24,13 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
-            .setTitle('🖼️  Ảnh đại diện (Avatar)')
+            .setTitle(t('avatar.title', lang))
             .setImage(globalAvatar)
             .addFields(
-                { name: '🔗 Link tải xuống', value: links, inline: false },
+                { name: t('avatar.download', lang), value: links, inline: false },
             )
             .setColor(member?.displayColor || config.COLORS.INFO)
-            .setFooter({ text: `Yêu cầu bởi ${message.author.tag}` })
+            .setFooter({ text: t('common.requested_by', lang, { user: message.author.tag }) })
             .setTimestamp();
 
         const components = [];
@@ -36,7 +38,7 @@ module.exports = {
         // Add button for server avatar if different
         if (hasServerAvatar) {
             embed.addFields(
-                { name: '🏠 Ảnh đại diện máy chủ', value: `[Nhấn vào đây](${serverAvatar})`, inline: true }
+                { name: t('avatar.server_avatar', lang), value: t('avatar.server_avatar_link', lang, { url: serverAvatar }), inline: true }
             );
         }
 
@@ -45,12 +47,12 @@ module.exports = {
         if (fetchedUser?.bannerURL()) {
             const bannerUrl = fetchedUser.bannerURL({ dynamic: true, size: 4096 });
             embed.addFields(
-                { name: '🎨 Banner', value: `[Nhấn vào đây](${bannerUrl})`, inline: true }
+                { name: t('avatar.banner', lang), value: t('avatar.banner_link', lang, { url: bannerUrl }), inline: true }
             );
 
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
-                    .setLabel('Xem Banner')
+                    .setLabel(t('avatar.view_banner', lang))
                     .setStyle(ButtonStyle.Link)
                     .setURL(bannerUrl)
                     .setEmoji('🎨')

@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -7,8 +8,7 @@ module.exports = {
     aliases: ['bal', 'bl'],
     description: 'Kiểm tra số dư của bạn hoặc của người khác',
     async execute(message, args) {
-        const { t, getLanguage } = require('../../utils/i18n');
-        const lang = getLanguage(message.author.id, message.guild.id);
+        const lang = getLanguage(message.author.id, message.guild?.id);
 
         const target = message.mentions.users.first() || message.author;
         const targetData = db.getUser(target.id);

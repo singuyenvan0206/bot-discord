@@ -4,7 +4,84 @@
         "insufficient_funds": "❌ You don't have enough money! Balance: **{{balance}}**",
         "invalid_amount": "❌ Invalid amount.",
         "cooldown": "❌ Please wait **{{time}}s** before using this command again!",
-        "success": "✅ Success!"
+        "success": "✅ Success!",
+        "max_bet_error": "❌ The maximum bet is **{{limit}}** coins!",
+        "mention_opponent": "❌ Please mention an opponent to play with!",
+        "no_challenge_bot": "❌ You cannot challenge a bot!",
+        "no_challenge_self": "❌ You cannot challenge yourself!",
+        "opponent_insufficient_funds": "❌ {{opponent}} does not have enough coins! Their balance: **{{balance}}**",
+        "requested_by": "Requested by {{user}}"
+    },
+    "connect4": {
+        "title": "🔴 Connect 4 🟡",
+        "challenge_title": "🔴 Connect 4 Challenge 🟡",
+        "challenge_msg": "{{opponent}}, **{{user}}** has challenged you to a game of Connect 4!{{bet}}\n\nDo you accept?",
+        "bet_amount": "\nBet: {{emoji}} **{{amount}}**",
+        "accept": "Accept",
+        "deny": "Deny",
+        "denied": "❌ Challenge has been denied.",
+        "not_participant": "❌ You are not participating in this game!",
+        "column_full": "❌ This column is full!",
+        "win": "🏆 **{{winner}} has won!** ({{symbol}})",
+        "reward": "\n{{emoji}} **+{{amount}} coins!**",
+        "draw": "🤝 **It's a draw!**",
+        "refund": "\nBet has been refunded.",
+        "turn_footer": "Turn: {{user}} ({{symbol}})",
+        "end_footer": "Game Over",
+        "timeout": "⌛ Game has timed out!",
+        "challenge_timeout": "⌛ Challenge time has expired."
+    },
+    "memory": {
+        "title": "🧠 Memory Match",
+        "description": "Find all matching pairs! Click buttons to flip cards.",
+        "footer": "Time limit: 2 Minutes",
+        "wait": "⌛ Please wait a moment...",
+        "win_title": "✅ Victory!",
+        "win_msg": "**You found all the pairs!**\n\n⏱️ Time: **{{time}}s**\n🔄 Attempts: **{{attempts}}**\n{{emoji}} Reward: **{{reward}} coins**",
+        "timeout": "⌛ Time's up!"
+    },
+    "trivia": {
+        "title": "❓  Trivia!",
+        "english_note": "\n\n*(Note: Questions are currently only in English)*",
+        "choices": "Choices",
+        "footer": "You have 15 seconds to answer!",
+        "not_your_turn": "❌ This is not your trivia turn!",
+        "correct": "✅ **Correct!** The answer is **{{answer}}**.\nReward: {{emoji}} **{{reward}}** coins",
+        "incorrect": "❌ **Wrong!** The correct answer is **{{answer}}**.",
+        "timeout": "⌛ **Time's up!** The correct answer is **{{answer}}**.",
+        "load_error": "❌ Could not load trivia question. Please try again later."
+    },
+    "blackjack": {
+        "title": "🃏  Blackjack",
+        "dealer_hand": "Dealer's Hand",
+        "player_hand": "Your Hand",
+        "label_hit": "Hit",
+        "label_stand": "Stand",
+        "win": "🎉 **Dealer BUSTED! You won{{amount}}!**",
+        "win_amount": " {{amount}} coins",
+        "win_simple": "🎉 **You won{{amount}}!**",
+        "lose": "😔 **Dealer wins{{amount}}!**",
+        "tie": "🤝 **Push!**{{refund}}",
+        "refund": " Bet has been refunded.",
+        "natural_title": "🃏 Blackjack — 🎉 BLACKJACK!",
+        "natural_win": "🏆 **Natural Blackjack!**",
+        "base_win": "Base Win",
+        "total_payout": "Total Payout",
+        "bust_title": "🃏 Blackjack — 💥 BUST!",
+        "bust_msg": "💥 **You busted (over 21)! Dealer wins.**",
+        "timeout_title": "🃏 Blackjack — {{emoji}} Timeout"
+    },
+    "tictactoe": {
+        "title": "❌⭕  Tic-Tac-Toe",
+        "vs": "**❌ {{playerX}}** vs **⭕ {{playerO}}**",
+        "turn": "It's **{{player}}**'s turn! ({{symbol}})",
+        "not_your_turn": "❌ It's not your turn!",
+        "already_taken": "❌ This spot is already taken!",
+        "draw": "🤝 **It's a draw!**",
+        "winner_msg": "🏆 **{{winner}} has won!** ({{symbol}})",
+        "reward_msg": "\n{{emoji}} **+{{amount}} coins!**",
+        "ending_title": "❌⭕  Tic-Tac-Toe — Game Over",
+        "timeout_title": "❌⭕  Tic-Tac-Toe — {{emoji}} Timeout"
     },
     "slots": {
         "title": "🎰  Slot Machine",
@@ -42,6 +119,237 @@
         "title": "💰 Wallet: {{user}}",
         "description": "💸 Cash: **{{balance}}** coins"
     },
+    "fish": {
+        "title": "🎣 Fishing Trip",
+        "rod_needed": "❌ You need a **Fishing Rod** to fish! Buy one in the shop (`{{prefix}}buy 11`).",
+        "bait_needed": "❌ You need **Bait** to fish! Buy bait in the shop (e.g., `{{prefix}}buy 2`).",
+        "description": "Using **{{rod}}** and **{{bait}}**...",
+        "caught": "Caught",
+        "income": "Income",
+        "luck": "Luck",
+        "item_bonus": "Item Bonus",
+        "bonus_percent": "✨ +{{amount}} ({{percent}}%)",
+        "footer_success": "Bait used: -1 {{bait}}",
+        "footer_fail": "Better luck next time! (-1 Bait)",
+        "items": {
+            "old_boot": "Old Boot",
+            "rusty_can": "Rusty Can",
+            "seaweed": "Seaweed",
+            "sardine": "Sardine",
+            "brook_trout": "Brook Trout",
+            "bass": "Bass",
+            "sockeye_salmon": "Sockeye Salmon",
+            "tuna": "Tuna",
+            "pufferfish": "Pufferfish",
+            "clownfish": "Clownfish",
+            "swordfish": "Swordfish",
+            "shark": "Shark",
+            "whale": "Whale",
+            "treasure_chest": "Treasure Chest",
+            "kraken": "Kraken Monster"
+        }
+    },
+    "items": {
+        "1": {
+            "name": "🍪 Cookie",
+            "desc": "Sugar rush! (+1% Daily Bonus)"
+        },
+        "2": {
+            "name": "🪱 Worm Bait",
+            "desc": "One-time use bait. Required for fishing. (Luck: +10%)"
+        },
+        "3": {
+            "name": "🦗 Cricket Bait",
+            "desc": "Favorited by many fish. (Luck: +30%)"
+        },
+        "4": {
+            "name": "🦑 Squid Bait",
+            "desc": "Irresistible to big fish. (Luck: +80%)"
+        },
+        "5": {
+            "name": "📱 Smartphone",
+            "desc": "Stay connected (+5% Daily Bonus)"
+        },
+        "6": {
+            "name": "🛡️ Shield",
+            "desc": "Protects 50% bet in Minesweeper! (+3% Daily)"
+        },
+        "7": {
+            "name": "⚔️ Knight Sword",
+            "desc": "Become a mercenary (+5% Work Income)"
+        },
+        "8": {
+            "name": "🛋️ Lava Lamp",
+            "desc": "Chill vibes (+2% Daily)"
+        },
+        "9": {
+            "name": "🎲 Golden Dice",
+            "desc": "Roll high (+2% Gamble)"
+        },
+        "10": {
+            "name": "👟 Sneakers",
+            "desc": "Run faster (+2% Work)"
+        },
+        "11": {
+            "name": "🎣 Bamboo Rod (Tier 1)",
+            "desc": "Basic fishing rod. (Luck: 1.0x)"
+        },
+        "12": {
+            "name": "⛏️ Pickaxe",
+            "desc": "Dig for treasure! (+5% Income)"
+        },
+        "13": {
+            "name": "⌨️ RGB Keyboard",
+            "desc": "Clicky keys (+3% Work)"
+        },
+        "14": {
+            "name": "🖱️ Gaming Mouse",
+            "desc": "Precise clicks (+3% Work)"
+        },
+        "15": {
+            "name": "🧸 Shag Rug",
+            "desc": "Soft on the feet (+4% Daily)"
+        },
+        "16": {
+            "name": "🃏 Marked Deck",
+            "desc": "Know when to fold (+4% Gamble)"
+        },
+        "17": {
+            "name": "🖥️ 4K Monitor",
+            "desc": "Clear vision (+5% Work)"
+        },
+        "18": {
+            "name": "💻 Laptop",
+            "desc": "Work harder! (+10% Income)"
+        },
+        "19": {
+            "name": "💍 Gold Ring",
+            "desc": "Shiny and precious (+5% Gamble Win)"
+        },
+        "20": {
+            "name": "🎨 Abstract Painting",
+            "desc": "Classy decoration (+6% Daily)"
+        },
+        "21": {
+            "name": "🪙 Clay Chips",
+            "desc": "Pro feel (+6% Gamble)"
+        },
+        "22": {
+            "name": "🪑 Standing Desk",
+            "desc": "Better posture (+7% Work)"
+        },
+        "23": {
+            "name": "🍀 4-Leaf Clover",
+            "desc": "Feeling lucky? (+7% Gamble Win)"
+        },
+        "24": {
+            "name": "💺 Ergonomic Chair",
+            "desc": "Sit comfortably (+9% Work)"
+        },
+        "25": {
+            "name": "👔 Business Suit",
+            "desc": "Look professional (+20% Income)"
+        },
+        "26": {
+            "name": "🎣 Fiberglass Rod (Tier 2)",
+            "desc": "Catch better fish! (Luck: 1.5x)"
+        },
+        "27": {
+            "name": "⌚ Rolex",
+            "desc": "Time is money (+10% Gamble Win)"
+        },
+        "28": {
+            "name": "🗿 Moai Statue",
+            "desc": "Steady as a rock (+12% Daily)"
+        },
+        "31": {
+            "name": "🐴 Golden Horseshoe",
+            "desc": "Pure luck (+25% Gamble)"
+        },
+        "32": {
+            "name": "🎫 VIP Golden Ticket",
+            "desc": "VIP perks (+50% Daily Bonus)"
+        },
+        "33": {
+            "name": "🎣 Carbon Rod (Tier 3)",
+            "desc": "Top of the line. (Luck: 2.5x)"
+        },
+        "34": {
+            "name": "🏎️ Supercar",
+            "desc": "Zoom zoom! (+25% Income)"
+        },
+        "35": {
+            "name": "🏰 Mansion",
+            "desc": "High life (+100% Daily Bonus)"
+        },
+        "36": {
+            "name": "🛥️ Superyacht",
+            "desc": "Ocean office (+50% Income)"
+        },
+        "37": {
+            "name": "🚀 Space Station",
+            "desc": "Orbital rewards (+200% Daily Bonus)"
+        },
+        "38": {
+            "name": "⏳ Time Machine",
+            "desc": "Rewrite history (+50% Gamble Win)"
+        }
+    },
+    "shop": {
+        "title": "🛒 Shop — {{category}}",
+        "empty": "*No items available in this category.*",
+        "bonus_label": "\n✨ **Bonus:** +{{percent}}% effect",
+        "footer": "Page {{page}}/{{total}} • Use {{prefix}}buy <id> [quantity]",
+        "categories": {
+            "income": "💼 Increase Income",
+            "daily": "📅 Daily Rewards",
+            "gamble": "🎲 Increase Luck",
+            "tools": "🎣 Fishing Tools"
+        },
+        "labels": {
+            "income": "💼 Income",
+            "daily": "📅 Daily",
+            "gamble": "🎲 Gamble",
+            "tools": "🎣 Tools"
+        }
+    },
+    "inventory": {
+        "title": "🎒 Inventory: {{user}}",
+        "empty": "*Your inventory is empty. Visit `{{prefix}}shop` to buy some items!*",
+        "categories": {
+            "tool": "🎣 Tools",
+            "bait": "🪱 Baits",
+            "income": "💼 Income Boosts",
+            "daily": "📅 Daily Boosts",
+            "gamble": "🎲 Luck Boosts",
+            "other": "📦 Others"
+        },
+        "info": "📊 Summary",
+        "total_items": "Total Items: **{{count}}**",
+        "inventory_value": "Inventory Value: **{{emoji}} {{amount}}**",
+        "sell_tip": "💡 Tip: Use {{prefix}}sell <item> to turn items back into coins!"
+    },
+    "buy": {
+        "prompt": "❌ Please specify the item you want to buy (e.g., `{{prefix}}buy 1` or `{{prefix}}buy cookies`).",
+        "invalid_qty": "❌ Quantity must be a positive number.",
+        "not_found": "❌ Item not found. Use `{{prefix}}shop` to see available items.",
+        "insufficient_funds": "❌ You need **{{price}}** coins to buy **{{quantity}}x {{item}}**!",
+        "success": "✅ You bought **{{quantity}}x {{item}}** for **{{price}}** coins! 🛍️",
+        "effect_activated": "\n✨ **Effect activated:** +{{percent}}% efficiency!"
+    },
+    "sell": {
+        "prompt": "❌ Please specify the item you want to sell (e.g., `{{prefix}}sell 1` or `{{prefix}}sell cookies`).",
+        "not_found": "❌ Item not found. Use `{{prefix}}inventory` to see your items.",
+        "insufficient_owned": "❌ You only have **{{count}}x {{item}}**!",
+        "fail": "❌ Could not remove item from your inventory.",
+        "success": "✅ You sold **{{quantity}}x {{item}}** and received **{{price}}** coins! {{emoji}} (Refund {{percent}}%)"
+    },
+    "leaderboard": {
+        "title": "🏆 Richest Users: {{server}}",
+        "empty": "*No data available for this server yet.*",
+        "footer": "Net Worth (Wallet + Inventory)",
+        "you": " ⬅️ **You**"
+    },
     "transfer": {
         "mention": "❌ Please mention (@mention) the user you want to transfer money to.",
         "invalid": "❌ Please enter a valid amount.",
@@ -50,11 +358,420 @@
         "insufficient": "❌ You don't have enough money! You only have **{{balance}}** coins.",
         "success": "✅ Successfully transferred **{{amount}}** coins to {{user}}! 💸"
     },
+    "avatar": {
+        "title": "🖼️  Avatar",
+        "download": "🔗 Download Link",
+        "server_avatar": "🏠 Server Avatar",
+        "server_avatar_link": "[Click here]({{url}})",
+        "banner": "🎨 Banner",
+        "banner_link": "[Click here]({{url}})",
+        "view_banner": "View Banner"
+    },
+    "ping": {
+        "checking": "🏓 Checking connectivity...",
+        "title": "🏓  Pong!",
+        "roundtrip": "📡 Roundtrip Latency",
+        "heartbeat": "💓 Heartbeat",
+        "uptime": "⏱️ Uptime",
+        "memory": "🖥️ Memory Used",
+        "servers": "🌐 Servers",
+        "users": "👥 Users",
+        "node": "📦 Node.js",
+        "djs": "📚 Discord.js",
+        "platform": "💻 Platform",
+        "uptime_format": "{{d}}d {{h}}h {{m}}m {{s}}s"
+    },
+    "profile": {
+        "title": "Profile of {{user}}",
+        "economy": "💰 Economy",
+        "balance": "**Balance:** {{emoji}} {{amount}}",
+        "net_worth": "**Net Worth:** {{emoji}} {{amount}}",
+        "ranking": "🏆 Ranking",
+        "wealth_rank": "**Wealth Rank:** {{rank}}",
+        "unranked": "Unranked (>100)",
+        "collection": "🎒 Collection",
+        "total_items": "**Total Items:** {{count}}",
+        "item_types": "**Item Types:** {{count}}",
+        "joined": "📅 Joined Since",
+        "id": "🆔 Identity (ID)",
+        "footer": "Type {{prefix}}inventory to see item details"
+    },
+    "serverinfo": {
+        "title": "📊  Server Info: {{name}}",
+        "owner": "👑 Owner",
+        "created": "📅 Created Date",
+        "verification": "🔒 Verification",
+        "members": "👥 Members ({{total}})",
+        "member_stats": "👤 Humans: **{{humans}}**\n🤖 Bots: **{{bots}}**\n🟢 Online: **{{online}}** | 🌙 Idle: **{{idle}}** | ⛔ DND: **{{dnd}}**",
+        "channels": "💬 Channels ({{total}})",
+        "channel_stats": "📝 Text: **{{text}}** | 🔊 Voice: **{{voice}}**\n📁 Categories: **{{categories}}**{{extra}}",
+        "extra_channels": " | 📋 Forums: **{{forums}}** | 🎤 Stages: **{{stages}}**",
+        "boost": "🚀 Boost",
+        "boost_stats": "Level: **{{level}}**\nSubscribers: **{{count}}**",
+        "emojis": "😄 Emojis ({{total}})",
+        "emoji_stats": "Static: **{{static}}** | Animated: **{{animated}}**\n🏷️ Stickers: **{{stickers}}**",
+        "roles": "🎭 Roles ({{count}})",
+        "none": "None",
+        "unknown": "Unknown",
+        "footer": "Server ID: {{id}}",
+        "boost_levels": [
+            "None",
+            "Level 1",
+            "Level 2",
+            "Level 3"
+        ],
+        "verification_levels": [
+            "None",
+            "Low",
+            "Medium",
+            "High",
+            "Very High"
+        ]
+    },
+    "userinfo": {
+        "title_user": "👤  User Info",
+        "title_bot": "🤖  Bot Info",
+        "username": "📛 Username",
+        "nickname": "🏷️ Nickname",
+        "status": "📊 Status",
+        "account_created": "📅 Account Created",
+        "server_join": "📥 Server Join",
+        "activity": "🎮 Activity",
+        "badges": "🏅 Badges",
+        "roles": "🎭 Roles [{{count}}]",
+        "permissions": "🔑 Key Permissions",
+        "balance": "💰 Balance",
+        "balance_val": "**{{amount}}** coins",
+        "items": "🎒 Items",
+        "items_val": "**{{count}}** items",
+        "id": "🆔 User ID",
+        "none": "None",
+        "unknown": "Unknown",
+        "std_member": "Standard Member",
+        "status_map": {
+            "online": "🟢 Online",
+            "idle": "🌙 Idle",
+            "dnd": "⛔ Do Not Disturb",
+            "offline": "⚫ Offline"
+        },
+        "activity_types": {
+            "0": "Playing",
+            "1": "Streaming",
+            "2": "Listening",
+            "3": "Watching",
+            "4": "Custom Status",
+            "5": "Competing"
+        },
+        "perm_map": {
+            "Administrator": "👑 Administrator",
+            "ManageGuild": "⚙️ Manage Server",
+            "ManageChannels": "📝 Manage Channels",
+            "ManageRoles": "🎭 Manage Roles",
+            "ManageMessages": "💬 Manage Messages",
+            "BanMembers": "🔨 Ban Members",
+            "KickMembers": "👢 Kick Members",
+            "MentionEveryone": "📢 Mention Everyone"
+        }
+    },
+    "minesweeper": {
+        "title": "💣  Minesweeper",
+        "description": "Mines: **{{mineCount}}**\nBet: **{{bet}}**\n\nClick to open cells. Toggle Flag mode to mark mines.",
+        "flag_on": "Flag: ON",
+        "flag_off": "Flag: OFF",
+        "unflag_first": "❌ Please unflag this cell first!",
+        "lose_title": "💥  BOOM! Game Over",
+        "lose_desc": "You hit a mine!",
+        "shield_used": "🛡️ **Shield Protection:** Damage reduced to **{{amount}}**",
+        "bet_lost": "Bet lost: **{{amount}}**",
+        "win_title": "Victory!",
+        "win_desc": "You cleared the minefield!"
+    },
+    "wordchain": {
+        "title": "🔗  Word Chain",
+        "already_running": "❌ A Word Chain game is already running in this channel! Type `{{prefix}}stop` to end it.",
+        "start_desc": "Game started! The first word must start with **{{char}}**.\n\n*(Note: Currently only English words are supported)*\n\nType a word to join!",
+        "stop_footer": "Type {{prefix}}stop to end the game",
+        "stopped_by": "Game stopped by Manager {{user}}!",
+        "already_used": "This word has already been used!",
+        "wrong_start": "Must start with letter **{{char}}**!",
+        "too_short": "Must be at least 3 letters!",
+        "invalid_chars": "Must be a single English word!",
+        "no_participants": "No one participated.",
+        "end_title": "🛑  Word Chain — Ended!",
+        "total_words": "Total words"
+    },
+    "hangman": {
+        "title": "😵  Hangman",
+        "fetch_error": "Currently unable to fetch a new word. Please try again later.",
+        "no_definition": "Mystery Word (No definition)",
+        "hint": "Hint",
+        "word": "Word",
+        "lives": "Lives",
+        "guessed": "Guessed",
+        "footer": "Type a letter to guess!",
+        "win_msg": "YOU WON!",
+        "lose_msg": "YOU LOST!",
+        "word_guess_win": "You guessed the whole word correctly!"
+    },
+    "scramble": {
+        "title": "🔠  Scramble",
+        "arrange_this": "Rearrange this word",
+        "footer": "You have 30 seconds!",
+        "correct": "Correct!",
+        "found_word": "found the word",
+        "category": "Category",
+        "cat_random": "Random",
+        "cat_def": "Definition",
+        "starts_with": "Starts with",
+        "length": "Length"
+    },
+    "poker": {
+        "title": "♠️♥️ Texas Hold'em ♦️♣️",
+        "host": "Host: {{user}}",
+        "min_buyin": "Min Buy-in: {{amount}}",
+        "players": "Players ({{count}}):",
+        "waiting_players": "Waiting for players...",
+        "join_instruction": "*Click Join to take a seat!*",
+        "min_players_footer": "At least 2 players needed to start",
+        "already_started": "❌ The game has already started!",
+        "already_joined": "❌ You've already joined!",
+        "joining_process": "❌ You are already in the process of joining...",
+        "buyin_modal_title": "Poker - Buy-in",
+        "buyin_amount_label": "Amount (Min: {{amount}})",
+        "insufficient_buyin": "❌ Invalid amount! Must be at least {{amount}}.",
+        "insufficient_funds_buyin": "❌ Not enough money! You have {{balance}}.",
+        "only_host_bot": "❌ Only the host can add bots.",
+        "cannot_leave_running": "❌ Cannot leave while a game is in progress.",
+        "not_in_table": "❌ You are not at the table.",
+        "only_host_start": "❌ Only the host can start the game.",
+        "someone_joining": "❌ Someone is currently joining! Please wait.",
+        "lobby_timeout": "⏰ Lobby timeout. Money has been refunded.",
+        "joining_status": " (Joining...)",
+        "your_hand": "🃏 **Your Poker Hand:** {{card1}} {{card2}}\nGame in {{channel}}",
+        "ante": "Ante: {{amount}}",
+        "pot": "Total Pot: {{amount}}",
+        "current_bet": "Current Bet: {{amount}}",
+        "turn_of": "It's **{{user}}**'s turn!",
+        "check_msg": "✅ **{{user}}** checked.",
+        "call_msg": "💸 **{{user}}** called {{amount}}.",
+        "raise_msg": "📈 **{{user}}** raised to {{amount}}!",
+        "allin_msg": "🚨 **{{user}}** went ALL-IN with {{amount}}!",
+        "allin_call_msg": "🚨 **{{user}}** called ALL-IN ({{amount}})!",
+        "hand_names": {
+            "straight_flush": "Straight Flush",
+            "four_of_a_kind": "Four of a Kind",
+            "full_house": "Full House",
+            "flush": "Flush",
+            "straight": "Straight",
+            "three_of_a_kind": "Three of a Kind",
+            "two_pair": "Two Pair",
+            "pair": "Pair",
+            "high_card": "High Card"
+        },
+        "fold_msg": "❌ **{{user}}** folded.",
+        "winners": "Winners: {{names}}",
+        "win_by_fold": "{{user}} wins (others folded)!",
+        "end_title": "🏆 Game Ended",
+        "community_cards": "Community Cards",
+        "label_fold": "Fold",
+        "label_check": "Check",
+        "label_call": "Call {{amount}}",
+        "label_raise": "Raise",
+        "label_allin": "All-in",
+        "phases": {
+            "lobby": "Lobby",
+            "deal": "Pre-Flop",
+            "flop": "Flop (3 Cards)",
+            "turn": "Turn (4th Card)",
+            "river": "River (Last Card)",
+            "showdown": "Showdown"
+        }
+    },
+    "emojiquiz": {
+        "title": "🧩  Emoji Quiz",
+        "question": "What is this? {{emojis}}",
+        "footer": "You have 30 seconds to answer!",
+        "correct": "✅ **Correct!** The answer is **{{answer}}**.",
+        "reward": "\n{{emoji}} Reward: **{{amount}}** coins",
+        "incorrect": "❌ **Incorrect!**",
+        "timeout": "⌛ **Time's up!** The answer was **{{answer}}**."
+    },
+    "guess": {
+        "title": "🔢  Guess the Number",
+        "start": "I'm thinking of a number between **1** and **100**. You have **10 attempts**!",
+        "higher": "🔼 **Higher!** ({{attempts}} attempts left)",
+        "lower": "🔽 **Lower!** ({{attempts}} attempts left)",
+        "win": "🎉 **Correct!** The number was **{{number}}**.\n{{emoji}} Reward: **{{amount}}** coins",
+        "lose": "😔 **Game Over!** You ran out of attempts. The number was **{{number}}**."
+    },
+    "reaction": {
+        "title": "⚡  Reaction Time",
+        "wait": "Wait for it...",
+        "go": "⚡ **GO!**",
+        "too_early": "❌ Too early! You clicked before the signal.",
+        "result": "✅ Result: **{{time}}ms**",
+        "win": "\n{{emoji}} Reward: **{{amount}}** coins",
+        "timeout": "⌛ Too slow! You didn't react in time."
+    },
     "coinflip": {
+        "title": "🪙  Coin Flip",
+        "description": "You chose **{{call}}** and the result was **{{result}}**!",
+        "heads": "Heads",
+        "tails": "Tails",
+        "invalid_side": "❌ Please choose `heads` or `tails`!\nUsage: `{{prefix}}coinflip <heads|tails> [bet]`",
+        "win": "🎉 **You won {{amount}} coins!**",
         "lose": "💸 **You lost {{amount}} coins.**"
     },
+    "dice": {
+        "title": "🎲  Dice Roll (2d6)",
+        "menu_title": "🎲  Dice Roll",
+        "bet_info": "**Bet:** {{amount}} coins\n\nChoose your prediction:\n",
+        "high": "🔼 **High** — Total 8-12 (x2 Payout)",
+        "low": "🔽 **Low** — Total 2-6 (x2 Payout)",
+        "odd": "🔢 **Odd** — Total is odd (x2 Payout)",
+        "even": "#️⃣ **Even** — Total is even (x2 Payout)",
+        "lucky_7": "{{emoji}} **Lucky 7** — Total is exactly 7 (x4 Payout)",
+        "label_high": "High",
+        "label_low": "Low",
+        "label_odd": "Odd",
+        "label_even": "Even",
+        "label_7": "Lucky 7",
+        "balance_footer": "Balance: {{balance}} coins",
+        "insufficient_bet": "❌ You don't have enough coins for this bet!",
+        "result_title": "🎲  Dice Roll Result",
+        "prediction": "Prediction",
+        "payout": "🎉 **You won {{amount}} coins!** (x{{multiplier}} payout)",
+        "lose_msg": "💸 **You lost {{amount}} coins!**",
+        "timeout": "❌ You took too long to choose. Game cancelled.",
+        "prediction_labels": {
+            "high": "High (8-12)",
+            "low": "Low (2-6)",
+            "odd": "Odd Number",
+            "even": "Even Number",
+            "7": "Lucky 7"
+        }
+    },
+    "rps": {
+        "title": "✂️  Rock Paper Scissors",
+        "choose": "Choose your weapon!",
+        "betting": "**Betting: {{amount}} coins**",
+        "rock": "Rock",
+        "paper": "Paper",
+        "scissors": "Scissors",
+        "win": "You won! 🎉",
+        "lose": "I won! 😈",
+        "tie": "It's a tie! 🤝",
+        "won_coins": "\n{{emoji}} **Received {{amount}} coins!**",
+        "lost_coins": "\n💸 **You lost {{amount}} coins.**",
+        "refund": "\n🤝 **Bet has been refunded.**",
+        "result_title": "Rock Paper Scissors Result",
+        "user_chose": "You chose",
+        "bot_chose": "I chose",
+        "timeout_refund": "❌ Time's up! Bet has been refunded."
+    },
     "language": {
-        "set_success": "✅ Language has been set to **English**.",
-        "invalid": "❌ Invalid language. Supported: `en`, `vi`"
+        "title": "Language Settings",
+        "resolved": "Current Language",
+        "personal": "Personal Preference",
+        "server_setting": "Server Setting",
+        "not_set": "Not Set (following server)",
+        "usage": "Usage",
+        "usage_user": "Set your personal language",
+        "usage_server": "Set default server language",
+        "usage_reset": "Reset to follow server setting",
+        "invalid": "❌ Invalid language! Please use `en` or `vi`.",
+        "set_success": "Language has been updated to **{{lang}}**.",
+        "reset_success": "Your personal language preference has been cleared."
+    },
+    "help": {
+        "title": "📖 {{emoji}} Command: {{prefix}}{{name}}",
+        "description": "Description",
+        "aliases": "Aliases",
+        "cooldown": "Cooldown",
+        "usage_title": "Usage",
+        "guide_title": "Detailed Guide",
+        "none": "None",
+        "no_description": "No description",
+        "no_guide": "No detailed guide available.",
+        "footer_all": "Type {{prefix}}help to see all categories",
+        "menu_title": "{{emoji}} Bot Guide Menu",
+        "menu_desc": "Choose a category from the dropdown below to see available commands.\n\n💡 **Tip:** Type `{{prefix}}help <command_name>` to see a detailed guide for that command!",
+        "menu_placeholder": "Choose a category...",
+        "home": "Home",
+        "home_desc": "Return to main menu",
+        "session_expired": "Session expired",
+        "footer_home": "All commands use the prefix \"{{prefix}}\"",
+        "footer_category": "Choose \"Home\" to go back or select another category",
+        "categories": {
+            "fun": {
+                "label": "Games & Entertainment",
+                "description": "Mini-games and fun activities"
+            },
+            "economy": {
+                "label": "Economy",
+                "description": "Money, work, and trades"
+            },
+            "utility": {
+                "label": "Utility",
+                "description": "Useful tools"
+            },
+            "giveaway": {
+                "label": "Giveaway Events",
+                "description": "Organize and manage Giveaways"
+            }
+        },
+        "guides": {
+            "trivia": "🌟 **Description:** Challenge your knowledge with a huge question bank covering Science, History, Entertainment, and more!\n\n🕹️ **How to Play:**\n1. Use the command to receive a multiple-choice question.\n2. You have **15 seconds** to analyze and answer.\n3. Click the button (A, B, C, D) corresponding to the correct answer.\n\n💰 **Rewards:** Correct answers earn coins instantly. If no one answers, the coins remain in the bank!",
+            "hangman": "🌟 **Description:** A classic word-guessing game where you must find the hidden word before the man is fully drawn!\n\n🕹️ **How to Play:**\n- The bot selects a random mystery word.\n- You start with **6 lives** (❤️).\n- Message a single letter to guess (e.g., \"a\").\n- If the letter is in the word, it reveals all its positions.\n- If not, you lose 1 life.\n- You can also type the full word if you're confident.\n\n💡 **Tip:** Use the hint button for a dictionary definition, but use it sparingly!\n\n💰 **Rewards:** Winning gives you **50 coins** plus a bonus for remaining lives.",
+            "scramble": "🌟 **Description:** Put your vocabulary to the test! Unscramble the jumbled letters to find the hidden word.\n\n🕹️ **How to Play:**\n- A scrambled word appears (e.g., \"elppa\" -> \"apple\").\n- You have **30 seconds** to type the correct unscrambled word in the chat.\n- The first player to respond correctly wins.\n\n💡 **Tip:** Look for common suffixes or prefixes (like -ing, -pre) to crack it faster.\n\n💰 **Rewards:** The first person to solve it correctly receives **50 coins**.",
+            "connect4": "🌟 **Description:** A strategic 1v1 battle! Be the first to line up four pieces of your color vertically, horizontally, or diagonally.\n\n🕹️ **How to Play:**\n1. Challenge: `$connect4 @user [bet]` (betting is optional).\n2. Opponent must click 'Accept' to start.\n3. Players take turns clicking columns (1-7) to drop their piece (🔴 or 🟡).\n\n⚖️ **Rules:**\n- Gravity applies: pieces fall to the lowest available spot in a column.\n- The game ends in a draw if the entire board (42 slots) is filled without a winner.\n\n💰 **Rewards:** The winner takes 100% of the pot (minus a small house fee).",
+            "memory": "🌟 **Description:** Train your brain! Find all matching pairs of emojis hidden behind buttons.\n\n🕹️ **How to Play:**\n1. A 4x4 grid of face-down icons appears.\n2. Click a button to flip it and reveal the emoji.\n3. Click another button to find its match.\n4. If they match, they stay revealed. If not, they flip back after a second.\n\n🎯 **Goal:** Match all **8 pairs** with the fewest attempts possible.\n\n💰 **Rewards:**\n- Base Completion: **100 coins**.\n- Speed Bonus: Bonus coins if you finish in under 30 or 60 seconds.",
+            "minesweeper": "🌟 **Description:** A high-stakes gambling version of the classic! Navigate the minefield to multiply your winnings.\n\n🕹️ **How to Play:**\n- The 5x5 grid contains **5 hidden mines**.\n- Click ⬜ buttons to reveal what's underneath.\n- **Gem (💎):** Increases your win multiplier. Safe to continue!\n- **Mine (💣):** Game over. You lose your entire current bet.\n- **Cashout:** Click the Cashout button at any time to walk away with your accumulated winnings.\n\n🛡️ **Defense:** If you have a **Shield** in your inventory, it will automatically break to save 50% of your bet when you hit a mine.\n\n💰 **Limit:** The more gems you find, the higher the risk... and the higher the reward!",
+            "wordchain": "🌟 **Description:** A competitive multi-player linguistic challenge. How long can the chain go?\n\n🕹️ **How to Play:**\n1. Bot starts with a random word.\n2. You must type a word that **starts with the last letter** of the previous word.\n3. Example: `Apple` -> `Elephant` -> `Tiger`.\n\n⚖️ **Strict Rules:**\n- Words must be valid English (verified via dictionary).\n- You cannot follow your own word (no solo play).\n- Words cannot be reused during the same session.\n\n💰 **Rewards:** Every valid word added to the chain earns you coins!",
+            "blackjack": "🌟 **Description:** The ultimate casino classic! Beat the dealer by getting closer to 21 without going over.\n\n🕹️ **How to Play:**\n- **Hit:** Take another card to increase your score.\n- **Stand:** Keep your current score and let the dealer play.\n\n⚖️ **Card Values:**\n- 2-10: Face value.\n- J, Q, K: 10 points.\n- Ace: 1 or 11 points (dynamic).\n\n💰 **Payouts:**\n- Standard Win: **2x** your bet.\n- Natural Blackjack (Ace + 10-value): **2.5x** your bet.\n- Push (Tie): Bet is fully refunded.",
+            "slots": "🌟 **Description:** Pull the lever and test your luck on the high-fidelity 3-reel slot machine.\n\n🕹️ **How to Play:**\n- Enter your bet and type the command.\n- Match three symbols in the middle horizontal row to win.\n\n💰 **Paytable:**\n- 7️⃣7️⃣7️⃣ (Triple Sevens): **x100 JACKPOT!**\n- 💎💎💎 (Diamonds): **x50**\n- ⭐⭐⭐ (Stars): **x25**\n- 🍒🍒🍒 (Cherries): **x10**\n- Two matching symbols (any): **50% Refund**.\n\n✨ **Bonus:** Certain inventory items can increase your slot payouts permanently!",
+            "poker": "🌟 **Description:** Texas Hold'em Poker! Outsmart and outbet your opponents in this classic card game.\n\n🕹️ **How to Play:**\n1. Lobby: Create a game and wait for at least 2 players to join.\n2. Deal: Each player gets 2 private cards (Hole cards).\n3. Betting: 4 rounds are played (Pre-flop, Flop, Turn, River).\n4. Actions: **Fold** (Quit), **Check/Call** (Match bet), **Raise** (Increase bet), **All-in** (Bet everything).\n\n⚖️ **Winning:** The best 5-card hand made using hole cards and 5 community cards wins the entire pot.\n\n💡 **Hand Rankings:** Royal Flush > Straight Flush > 4-of-a-Kind > Full House > Flush > Straight > 3-of-a-Kind > 2 Pair > Pair > High Card.",
+            "emojiquiz": "🌟 **Description:** A fun visual puzzle! Guess the common phrase, movie, or object described by a set of emojis.\n\n🕹️ **How to Play:**\n- Analyze the emoji string (e.g., 🍎🥧 -> Apple Pie).\n- You have **30 seconds** to type the exact answer.\n- Hints are categorized (Movies, Objects, Places).\n\n💰 **Rewards:** Fast and correct answers provide a coin reward based on difficulty.",
+            "guess": "🌟 **Description:** A simple but addictive numbers game. Can you find the number I'm thinking of?\n\n🕹️ **How to Play:**\n- Bot picks a random number between **1 and 100**.\n- You have **10 attempts** to guess it.\n- After each guess, the bot tells you if the number is **higher** (🔼) or **lower** (🔽).\n\n💰 **Rewards:** The reward starts high and decreases with every failed attempt. Guess fast for maximum profit!",
+            "reaction": "🌟 **Description:** Pure speed! How fast are your reflexes when the pressure is on?\n\n🕹️ **How to Play:**\n- Bot will say \"Wait for it...\". Randomly, the screen will flash **⚡ GO!**.\n- Click the button as fast as you can.\n\n⚖️ **Rules:**\n- **Early Clicks:** Clicking before the signal results in an automatic loss / penalty.\n- **Timeout:** You have 5 seconds to react before the round expires.\n\n💰 **Rewards:** Rewards are scaled! The faster your millisecond time, the more coins you earn.",
+            "rps": "🌟 **Description:** Rock, Paper, Scissors! A classic game of prediction available in Solo or PvP mode.\n\n🕹️ **How to Play:**\n- Choose your weapon: 🪨 Rock, 📄 Paper, or ✂️ Scissors.\n- **Solo:** Play against the bot for a bet.\n- **PvP:** Challenge another user to a high-stakes duel.\n\n⚖️ **Counters:** Rock beats Scissors, Scissors beats Paper, Paper beats Rock.",
+            "tictactoe": "🌟 **Description:** The timeless 3x3 strategy game. Get three in a row to win.\n\n🕹️ **How to Play:**\n1. Challenge another user: `$ttt @user [bet]`.\n2. Take turns placing your mark (❌ or ⭕).\n\n💰 **Outcome:** Winner takes the pot. Refund on draw.",
+            "fish": "🌟 **Description:** Relax and cast your line! Catch a variety of fish from common sardines to legendary sea monsters.\n\n🎣 **Gear Needed:**\n- **Rod:** Get a Bamboo, Fiberglass, or Carbon Fiber rod from the `$shop`.\n- **Bait:** Buy worms, crickets, or squid to attract different fish species.\n\n🕹️ **How to Play:**\n- Just type `$fish`. The bot automatically selects your highest-tier equipment.\n- Every catch uses 1 bait and has a small cooldown.\n\n✨ **Luck Factor:** Better equipment grants higher 'Luck', which drastically improves the chances of catching rare, high-value fish.",
+            "work": "🌟 **Description:** Build your career and earn a steady income. Level up to increase your hourly wage!\n\n🕹️ **Mechanics:**\n- Work every hour to gain **XP** and **Coins**.\n- As you gain XP, you will **Level Up**.\n- Higher levels unlock better jobs and significant pay raises.\n\n💰 **Daily Streak:** Working consistently increases your streak, providing daily bonus coins.",
+            "profile": "🌟 **Description:** Your digital passport! View a deep dive into any user's progress and wealth.\n\n📊 **Detailed Stats:**\n- **Personal Balance:** Your spendable cash.\n- **Net Worth:** Total value of your cash + all items in your inventory.\n- **Rankings:** Your position on the global wealth leaderboard.\n- **Experience:** Current level and progress toward the next one.",
+            "leaderboard": "🌟 **Description:** The hall of fame! See who rules the server's economy.\n\n🏆 **Structure:**\n- Top rankings are based on **Net Worth** (Total Assets).\n- Special medals (🥇 🥈 🥉) are awarded to the Top 3 earners.\n- Updates in real-time as users gain or lose wealth."
+        }
+    },
+    "giveaway": {
+        "active_title": "{{emoji}}  GIVEAWAY EVENT  {{emoji}}",
+        "ends": "Ends",
+        "winners": "Number of winners",
+        "host": "Host",
+        "required_role": "Required role",
+        "entries": "**{{count}}** entries",
+        "footer_id": "ID: {{id}} • Ends at",
+        "paused_title": "⏸️  GIVEAWAY PAUSED  ⏸️",
+        "paused_desc": "🟡 **This giveaway is currently paused.** Entry is not possible at this time.",
+        "ended_title": "{{emoji}}  GIVEAWAY ENDED  {{emoji}}",
+        "ended_desc": "🏆 Winners: {{winners}}",
+        "no_participants": "No valid participants — winners could not be determined.",
+        "total_entries": "Total: **{{count}}** entries",
+        "congrats_title": "🏆  Congratulations!  🏆",
+        "won_prize": "You won the prize **{{prize}}**!",
+        "stats_title": "📊  Giveaway Info",
+        "status": "Status",
+        "status_active": "🟢 Active",
+        "status_paused": "🟡 Paused",
+        "status_ended": "🔴 Ended",
+        "time_left": "Time left",
+        "scheduled_title": "⏳  GIVEAWAY — STARTING SOON  ⏳",
+        "starts": "Starts",
+        "scheduled_desc": "⏳ **This giveaway hasn't started yet.** Stay tuned!",
+        "join_button": "Join now",
+        "left_giveaway": "❌ You have left the giveaway.",
+        "joined_giveaway": "✅ You have joined the giveaway! Good luck! 🍀",
+        "not_exists": "❌ This giveaway no longer exists.",
+        "already_ended": "❌ This giveaway has ended.",
+        "role_required_msg": "❌ You need the <@&{{roleId}}> role to enter."
     }
 }
