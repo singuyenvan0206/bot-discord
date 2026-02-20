@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 module.exports = {
     name: 'slots',
@@ -13,11 +14,11 @@ module.exports = {
         const { parseAmount } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
 
-        if (args[0] && (isNaN(bet) || bet <= 0)) return message.reply('❌ Invalid bet amount.');
+        if (args[0] && (isNaN(bet) || bet <= 0)) return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
 
         if (bet) {
-            if (user.balance < bet) return message.reply(`❌ Not enough money! Balance: **${user.balance}**`);
-            if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');
+            if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} Not enough money! Balance: **${user.balance}**`);
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
             db.removeBalance(user.id, bet);
         }
 
@@ -50,15 +51,15 @@ module.exports = {
             const mult = multiplierMap[r2[0]];
             result = `🎰 **JACKPOT! THREE ${r2[0]}!**`;
             payout = bet ? bet * mult : 0;
-            color = r2[0] === '7️⃣' ? 0xFFD700 : 0x2ECC71;
+            color = r2[0] === '7️⃣' ? 0xFFD700 : config.COLORS.GAMBLE_WIN;
         } else if (twoMatch) {
             const mult = 1.5;
             result = '🎰 **Two matching!** Small win!';
             payout = bet ? Math.floor(bet * mult) : 0;
-            color = 0xF39C12;
+            color = config.COLORS.GAMBLE_PUSH;
         } else {
             result = '🎰 No match. Try again!';
-            color = 0x95A5A6;
+            color = config.COLORS.NEUTRAL;
         }
 
         if (payout > 0) {
@@ -68,7 +69,7 @@ module.exports = {
             payout += bonus;
 
             db.addBalance(user.id, payout);
-            result += `\n💰 **Won ${payout} coins!**`;
+            result += `\n${config.EMOJIS.COIN} **Won ${payout} coins!**`;
             if (bonus > 0) result += ` *(+${Math.round(multiplier * 100)}% bonus: ${bonus} coins)*`;
         } else if (bet) {
             result += `\n💸 **Lost ${bet} coins.**`;

@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 module.exports = {
     name: 'minesweeper',
@@ -13,14 +14,14 @@ module.exports = {
         const { parseAmount } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance) : 0;
 
-        if (args[0] && bet <= 0) return message.reply('❌ Invalid bet amount.');
-        if (!args[0]) bet = 50; // Default bet if no argument is provided
+        if (args[0] && bet <= 0) return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
+        if (!args[0]) bet = 50;
 
         if (bet > 0) {
             if (user.balance < bet) {
-                return message.reply(`❌ Not enough money! Balance: **${user.balance}**`);
+                return message.reply(`${config.EMOJIS.ERROR} Not enough money! Balance: **${user.balance}**`);
             }
-            if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
             db.removeBalance(user.id, bet);
         }
 
@@ -223,15 +224,15 @@ module.exports = {
                             db.addBalance(user.id, prize);
 
                             const winEmbed = new EmbedBuilder()
-                                .setTitle('🎉  Victory!')
-                                .setDescription(`You cleared the minefield!\n\n**Base Win:** 💰 +${baseWin}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Prize:** 💰 **${prize}** coins`)
-                                .setColor(0x2ECC71);
+                                .setTitle(`${config.EMOJIS.SUCCESS}  Victory!`)
+                                .setDescription(`You cleared the minefield!\n\n**Base Win:** ${config.EMOJIS.COIN} +${baseWin}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Prize:** ${config.EMOJIS.COIN} **${prize}** coins`)
+                                .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         } else {
                             const winEmbed = new EmbedBuilder()
-                                .setTitle('🎉  Victory!')
+                                .setTitle(`${config.EMOJIS.SUCCESS}  Victory!`)
                                 .setDescription(`You cleared the minefield!`)
-                                .setColor(0x2ECC71);
+                                .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         }
                     } else {

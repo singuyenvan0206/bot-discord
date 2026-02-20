@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const SHOP_ITEMS = require('../../utils/shopItems');
+const config = require('../../config');
 
 module.exports = {
     name: 'inventory',
@@ -18,7 +19,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle(`🎒  Inventory: ${message.author.username}`)
             .setDescription(lines.length > 0 ? lines.join('\n') : '*Your inventory is empty.*')
-            .setColor(0x3498DB);
+            .setColor(config.COLORS.INFO);
         return message.reply({ embeds: [embed] });
     }
 };

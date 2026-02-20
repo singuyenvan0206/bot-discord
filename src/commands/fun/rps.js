@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 module.exports = {
     name: 'rps',
@@ -12,9 +13,11 @@ module.exports = {
         const choices = ['rock', 'paper', 'scissors'];
         const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };
 
+        const { parseAmount } = require('../../utils/economy');
+        const user = db.getUser(message.author.id);
+
         let userChoice = args[0]?.toLowerCase();
         let bet = 0;
-        const { parseAmount } = require('../../utils/economy');
 
         // Check if first arg is a bet amount
         if (args[0] && !choices.includes(userChoice)) {
@@ -30,13 +33,12 @@ module.exports = {
         }
 
         // Validate Bet
-        const user = db.getUser(message.author.id);
         if (bet > 0) {
-            if (user.balance < bet) return message.reply(`❌ You don't have enough money! Balance: **${user.balance}**`);
-            if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');
+            if (user.balance < bet) return message.reply(`${config.EMOJIS.ERROR} You don't have enough money! Balance: **${user.balance}**`);
+            if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
             db.removeBalance(user.id, bet);
         } else if (bet < 0) {
-            return message.reply('❌ Invalid bet amount.');
+            return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
         }
 
         if (!userChoice || !choices.includes(userChoice)) {
@@ -51,7 +53,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle('Rock Paper Scissors')
                 .setDescription(bet > 0 ? `**Betting: ${bet} coins**\nChoose your weapon!` : 'Choose your weapon!')
-                .setColor(0xF1C40F);
+                .setColor(config.COLORS.WARNING);
 
             const reply = await message.reply({ embeds: [embed], components: [row] });
 
@@ -70,9 +72,9 @@ module.exports = {
 
             collector.on('end', (_, reason) => {
                 if (reason === 'time') {
-                    // Refund if timed out?
+                    // Refund if timed out
                     if (bet > 0) db.addBalance(user.id, bet);
-                    reply.edit({ content: '⏰ Timed out! Bet refunded.', components: [] }).catch(() => { });
+                    reply.edit({ content: `${config.EMOJIS.TIMER} Timed out! Bet refunded.`, components: [] }).catch(() => { });
                 }
             });
             return;
@@ -115,7 +117,7 @@ module.exports = {
                     prize += bonus;
 
                     db.addBalance(user.id, prize);
-                    result += `\n💰 **Won ${prize} coins!**`;
+                    result += `\n${config.EMOJIS.COIN} **Won ${prize} coins!**`;
                     if (bonus > 0) result += ` *(Includes +${bonus} bonus: ${Math.round(multiplier * 100)}%)*`;
                 } else if (outcome === 'tie') {
                     db.addBalance(user.id, betAmount); // Refund
@@ -128,7 +130,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle('Rock Paper Scissors')
                 .setDescription(`You chose: ${emojis[uChoice]}\nI chose: ${emojis[botChoice]}\n\n**${result}**`)
-                .setColor(outcome === 'win' ? 0x2ECC71 : outcome === 'tie' ? 0xF39C12 : 0xE74C3C);
+                .setColor(outcome === 'win' ? config.COLORS.GAMBLE_WIN : outcome === 'tie' ? config.COLORS.GAMBLE_PUSH : config.COLORS.GAMBLE_LOSS);
 
             if (interaction) {
                 await interaction.update({ embeds: [embed], components: [] });

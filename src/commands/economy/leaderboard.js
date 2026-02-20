@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const config = require('../../config');
 
 module.exports = {
     name: 'leaderboard',
@@ -32,13 +33,13 @@ module.exports = {
         }
 
         const lines = guildMembers.map((u, i) => {
-            return `**${i + 1}.** ${u.username} — 💰 **${u.balance.toLocaleString()}**`;
+            return `**${i + 1}.** ${u.username} — ${config.EMOJIS.COIN} **${u.balance.toLocaleString()}**`;
         });
 
         const embed = new EmbedBuilder()
             .setTitle(`🏆  Richest Users in ${message.guild.name}`)
             .setDescription(lines.join('\n') || 'No data found in this server.')
-            .setColor(0xF1C40F)
+            .setColor(config.COLORS.WARNING)
             .setFooter({ text: 'Global Wealth, Local Rank' });
 
         return message.reply({ embeds: [embed] });

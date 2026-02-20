@@ -1,17 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const COLORS = {
-    ACTIVE: 0x5865F2,        // Discord Blurple
-    ENDING_SOON: 0xFEE75C,   // Yellow
-    ENDED: 0x57F287,         // Green
-    ERROR: 0xED4245,         // Red
-    INFO: 0x5865F2,          // Blurple
-    PAUSED: 0xF0B232,        // Orange-Yellow
-    SCHEDULED: 0x9B59B6,     // Purple
-};
-
-const EMOJI = '🎉';
-const BUTTON_ID = 'giveaway_enter';
+const { COLORS, EMOJIS, BUTTON_ID } = require('../config');
+const EMOJI = EMOJIS.GIVEAWAY;
 
 /**
  * Format a Unix timestamp into a Discord relative timestamp.
@@ -44,7 +34,7 @@ function createEntryButton(disabled = false) {
     const button = new ButtonBuilder()
         .setCustomId(BUTTON_ID)
         .setLabel('Enter Giveaway')
-        .setEmoji('🎉')
+        .setEmoji(EMOJIS.GIVEAWAY)
         .setStyle(ButtonStyle.Primary)
         .setDisabled(disabled);
 
@@ -59,7 +49,7 @@ function createGiveawayEmbed(giveaway, participantCount = 0) {
     const color = timeLeft < 60000 ? COLORS.ENDING_SOON : COLORS.ACTIVE;
 
     const embed = new EmbedBuilder()
-        .setTitle('🎉  GIVEAWAY  🎉')
+        .setTitle(`${EMOJIS.GIVEAWAY}  GIVEAWAY  ${EMOJIS.GIVEAWAY}`)
         .setDescription([
             `### 🎁 ${giveaway.prize}`,
             '',
@@ -115,7 +105,7 @@ function createEndedEmbed(giveaway, winners, participantCount = 0) {
         : 'No valid entries — no winners could be determined.';
 
     const embed = new EmbedBuilder()
-        .setTitle('🎉  GIVEAWAY ENDED  🎉')
+        .setTitle(`${EMOJIS.GIVEAWAY}  GIVEAWAY ENDED  ${EMOJIS.GIVEAWAY}`)
         .setDescription([
             `### 🎁 ${giveaway.prize}`,
             '',
@@ -217,7 +207,7 @@ function createScheduledEmbed(giveaway) {
  */
 function createErrorEmbed(message) {
     return new EmbedBuilder()
-        .setDescription(`❌ ${message}`)
+        .setDescription(`${EMOJIS.ERROR} ${message}`)
         .setColor(COLORS.ERROR);
 }
 
@@ -226,7 +216,7 @@ function createErrorEmbed(message) {
  */
 function createInfoEmbed(message) {
     return new EmbedBuilder()
-        .setDescription(`✅ ${message}`)
+        .setDescription(`${EMOJIS.SUCCESS} ${message}`)
         .setColor(COLORS.INFO);
 }
 

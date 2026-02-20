@@ -9,7 +9,7 @@ const { startTimer } = require('./utils/timer');
 
 // ─── Config ──────────────────────────────────────────────────────
 
-const PREFIX = '$';
+const { PREFIX } = require('./config');
 
 // ─── Validate Environment ────────────────────────────────────────
 

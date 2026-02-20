@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 
 // Helper function to decode HTML entities
@@ -103,7 +104,7 @@ module.exports = {
             const selectedIndex = parseInt(i.customId.split('_')[1]);
 
             if (selectedIndex === correctIndex) {
-                const baseReward = 100;
+                const baseReward = config.ECONOMY.TRIVIA_REWARD;
                 const { getUserMultiplier } = require('../../utils/multiplier');
                 const multiplier = getUserMultiplier(i.user.id, 'income');
                 const bonus = Math.floor(baseReward * multiplier);
@@ -111,12 +112,12 @@ module.exports = {
 
                 db.addBalance(i.user.id, totalReward);
 
-                let resultMsg = `✅ **Correct!** The answer was **${q.a}**.\nReward: 💰 **${baseReward}** coins`;
+                let resultMsg = `${config.EMOJIS.SUCCESS} **Correct!** The answer was **${q.a}**.\nReward: ${config.EMOJIS.COIN} **${baseReward}** coins`;
                 if (bonus > 0) resultMsg += ` ✨ *(+${bonus} item bonus)*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {
-                await i.update({ content: `❌ **Wrong!** The correct answer was **${q.a}**.`, components: [], embeds: [] });
+                await i.update({ content: `${config.EMOJIS.ERROR} **Wrong!** The correct answer was **${q.a}**.`, components: [], embeds: [] });
             }
             collector.stop();
         });
@@ -124,7 +125,7 @@ module.exports = {
         collector.on('end', async (collected, reason) => {
             if (reason === 'time' && collected.size === 0) {
                 try {
-                    await sentMsg.edit({ content: `⏰ Time's up! The correct answer was **${q.a}**.`, components: [], embeds: [] });
+                    await sentMsg.edit({ content: `${config.EMOJIS.TIMER} Time's up! The correct answer was **${q.a}**.`, components: [], embeds: [] });
                 } catch (e) { }
             }
             startCooldown(message.client, 'trivia', message.author.id);

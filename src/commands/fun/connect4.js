@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 module.exports = {
     name: 'connect4',
@@ -10,9 +11,9 @@ module.exports = {
     manualCooldown: true,
     async execute(message, args) {
         const opponent = message.mentions.users.first();
-        if (!opponent) return message.reply('❌ Please mention an opponent to play with!');
-        if (opponent.bot) return message.reply('❌ You cannot play against bots (yet)!');
-        if (opponent.id === message.author.id) return message.reply('❌ You cannot play against yourself!');
+        if (!opponent) return message.reply(`${config.EMOJIS.ERROR} Please mention an opponent to play with!`);
+        if (opponent.bot) return message.reply(`${config.EMOJIS.ERROR} You cannot play against bots (yet)!`);
+        if (opponent.id === message.author.id) return message.reply(`${config.EMOJIS.ERROR} You cannot play against yourself!`);
 
         let bet = parseInt(args[1]); // args[0] is user mention
         if (!args[1]) bet = 0;
@@ -21,19 +22,19 @@ module.exports = {
         const opponentUser = db.getUser(opponent.id);
 
         if (bet > 0) {
-            if (authorUser.balance < bet) return message.reply(`❌ You don't have enough coins! Balance: **${authorUser.balance}**`);
-            if (opponentUser.balance < bet) return message.reply(`❌ ${opponent} doesn't have enough coins! Balance: **${opponentUser.balance}**`);
+            if (authorUser.balance < bet) return message.reply(`${config.EMOJIS.ERROR} You don't have enough coins! Balance: **${authorUser.balance}**`);
+            if (opponentUser.balance < bet) return message.reply(`${config.EMOJIS.ERROR} ${opponent} doesn't have enough coins! Balance: **${opponentUser.balance}**`);
         }
 
         // Ask opponent to accept
         const confirmEmbed = new EmbedBuilder()
             .setTitle('🔴 Connect 4 Challenge 🟡')
-            .setDescription(`${opponent}, **${message.author.username}** challenges you to a game of Connect 4!${bet > 0 ? `\nBet: 💰 **${bet}**` : ''}\n\nDo you accept?`)
-            .setColor(0xE67E22);
+            .setDescription(`${opponent}, **${message.author.username}** challenges you to a game of Connect 4!${bet > 0 ? `\nBet: ${config.EMOJIS.COIN} **${bet}**` : ''}\n\nDo you accept?`)
+            .setColor(config.COLORS.WARNING);
 
         const confirmRow = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId('c4_accept').setLabel('Accept').setStyle(ButtonStyle.Success),
-            new ButtonBuilder().setCustomId('c4_deny').setLabel('Deny').setStyle(ButtonStyle.Danger)
+            new ButtonBuilder().setCustomId('c4_accept').setLabel('Accept').setEmoji(config.EMOJIS.SUCCESS).setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId('c4_deny').setLabel('Deny').setEmoji(config.EMOJIS.ERROR).setStyle(ButtonStyle.Danger)
         );
 
         const confirmMsg = await message.reply({ content: `${opponent}`, embeds: [confirmEmbed], components: [confirmRow] });
@@ -45,7 +46,7 @@ module.exports = {
             });
 
             if (confirmation.customId === 'c4_deny') {
-                confirmation.update({ content: '❌ Challenge declined.', embeds: [], components: [] });
+                confirmation.update({ content: `${config.EMOJIS.ERROR} Challenge declined.`, embeds: [], components: [] });
                 return;
             }
 
@@ -109,9 +110,8 @@ module.exports = {
             };
 
             const renderBoard = () => {
-                // Only show buttons for columns, board is in description
                 const str = grid.map(row => row.join('')).join('\n');
-                return str + '\n1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣'; // Column numbers under board
+                return str + '\n1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣';
             };
 
             const getButtons = (disabled = false) => {
@@ -123,7 +123,7 @@ module.exports = {
                         .setCustomId(`c4_${i}`)
                         .setLabel(`${i + 1}`)
                         .setStyle(ButtonStyle.Secondary)
-                        .setDisabled(disabled || grid[0][i] !== EMPTY); // Disable if col full
+                        .setDisabled(disabled || grid[0][i] !== EMPTY);
 
                     if (i < 4) row1.addComponents(btn);
                     else row2.addComponents(btn);
@@ -134,7 +134,7 @@ module.exports = {
             const gameEmbed = new EmbedBuilder()
                 .setTitle('Connect 4')
                 .setDescription(renderBoard())
-                .setColor(0x3498DB)
+                .setColor(config.COLORS.INFO)
                 .setFooter({ text: `${turn === P1 ? message.author.username : opponent.username}'s turn (${turn})` });
 
             await confirmMsg.edit({ content: null, embeds: [gameEmbed], components: getButtons() });
@@ -146,20 +146,19 @@ module.exports = {
             collector.on('collect', async i => {
                 if (gameOver) return;
 
-                // Turn check
                 const isP1 = i.user.id === p1Id;
                 const isP2 = i.user.id === p2Id;
 
-                if (!isP1 && !isP2) return i.reply({ content: '❌ You are not in this game!', ephemeral: true });
+                if (!isP1 && !isP2) return i.reply({ content: `${config.EMOJIS.ERROR} You are not in this game!`, ephemeral: true });
 
                 if ((turn === P1 && !isP1) || (turn === P2 && !isP2)) {
-                    return i.reply({ content: '❌ Not your turn!', ephemeral: true });
+                    return i.reply({ content: `${config.EMOJIS.ERROR} Not your turn!`, ephemeral: true });
                 }
 
                 const col = parseInt(i.customId.split('_')[1]);
 
                 const success = dropToken(col, turn);
-                if (!success) return i.reply({ content: '❌ Column is full!', ephemeral: true });
+                if (!success) return i.reply({ content: `${config.EMOJIS.ERROR} Column is full!`, ephemeral: true });
 
                 const winner = checkWin();
 
@@ -182,7 +181,7 @@ module.exports = {
 
                         if (bet > 0) {
                             db.addBalance(winId, prize);
-                            resultText = `🏆 **${winName} wins!** (${winner})\n💰 **+${prize} coins!**`;
+                            resultText = `🏆 **${winName} wins!** (${winner})\n${config.EMOJIS.COIN} **+${prize} coins!**`;
                         } else {
                             resultText = `🏆 **${winName} wins!** (${winner})`;
                         }
@@ -202,7 +201,7 @@ module.exports = {
 
             collector.on('end', (_, reason) => {
                 if (reason === 'time' && !gameOver) {
-                    confirmMsg.edit({ content: '⏰ Game timed out!', components: [] });
+                    confirmMsg.edit({ content: `${config.EMOJIS.TIMER} Game timed out!`, components: [] });
                     if (bet > 0) {
                         db.addBalance(p1Id, bet);
                         db.addBalance(p2Id, bet);
@@ -213,7 +212,7 @@ module.exports = {
             });
 
         } catch (e) {
-            confirmMsg.edit({ content: '⏰ Challenge timed out.', embeds: [], components: [] });
+            confirmMsg.edit({ content: `${config.EMOJIS.TIMER} Challenge timed out.`, embeds: [], components: [] });
         }
     }
 };

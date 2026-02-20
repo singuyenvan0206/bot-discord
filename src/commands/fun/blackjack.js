@@ -1,13 +1,14 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
-const CARD_SUITS = ['♠️', '♥️', '♦️', '♣️'];
-const CARD_VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const CARD_SUITS = config.CARDS.SUITS;
+const CARD_VALUES = config.CARDS.VALUES;
 
 function drawCard() {
-    const suit = CARD_SUITS[Math.floor(Math.random() * 4)];
-    const value = CARD_VALUES[Math.floor(Math.random() * 13)];
+    const suit = CARD_SUITS[Math.floor(Math.random() * CARD_SUITS.length)];
+    const value = CARD_VALUES[Math.floor(Math.random() * CARD_VALUES.length)];
     return { suit, value, display: `${value}${suit}` };
 }
 
@@ -33,7 +34,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
     let result, color, payout = 0;
     if (dealerVal > 21) {
         result = `🎉 **Dealer busts! You win${bet ? ` ${bet} coins` : ''}!**`;
-        color = 0x2ECC71;
+        color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
 
         if (payout > 0) {
@@ -46,7 +47,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
     }
     else if (playerVal > dealerVal) {
         result = `🎉 **You win${bet ? ` ${bet} coins` : ''}!**`;
-        color = 0x2ECC71;
+        color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
 
         if (payout > 0) {
@@ -59,11 +60,11 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet) 
     }
     else if (playerVal < dealerVal) {
         result = `😔 **Dealer wins${bet ? ` ${bet} coins` : ''}!**`;
-        color = 0xE74C3C;
+        color = config.COLORS.GAMBLE_LOSS;
     }
     else {
         result = `🤝 **It's a push (tie)!**${bet ? ' Bet refunded.' : ''}`;
-        color = 0xF39C12;
+        color = config.COLORS.GAMBLE_PUSH;
         payout = bet ? bet : 0;
     }
 
@@ -88,13 +89,13 @@ module.exports = {
         let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
 
         if (args[0] && (isNaN(bet) || bet <= 0)) {
-            return message.reply('❌ Invalid bet amount.');
+            return message.reply(`${config.EMOJIS.ERROR} Invalid bet amount.`);
         }
 
         if (bet && user.balance < bet) {
-            return message.reply(`❌ You don't have enough money! Balance: **${user.balance}**`);
+            return message.reply(`${config.EMOJIS.ERROR} You don't have enough money! Balance: **${user.balance}**`);
         }
-        if (bet > 250000) return message.reply('❌ The maximum bet is **250,000** coins!');
+        if (bet > config.ECONOMY.MAX_BET) return message.reply(`${config.EMOJIS.ERROR} The maximum bet is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`);
         if (bet) db.removeBalance(user.id, bet);
 
         const playerHand = [drawCard(), drawCard()];
@@ -107,12 +108,12 @@ module.exports = {
             const dealerCards = showDealer ? handString(dealerHand) : `${dealerHand[0].display} \`??\``;
 
             return new EmbedBuilder()
-                .setTitle('🃏  Blackjack')
+                .setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack`)
                 .setDescription([
                     `**Dealer's Hand** (${dealerVal})`, dealerCards, '',
                     `**Your Hand** (${playerVal})`, handString(playerHand),
                 ].join('\n'))
-                .setColor(playerVal > 21 ? 0xE74C3C : 0x2ECC71).setTimestamp();
+                .setColor(playerVal > 21 ? config.COLORS.GAMBLE_LOSS : config.COLORS.GAMBLE_WIN).setTimestamp();
         }
 
         if (handValue(playerHand) === 21) {
@@ -126,20 +127,20 @@ module.exports = {
                 db.addBalance(message.author.id, totalPayout);
 
                 const embed = buildEmbed(true)
-                    .setTitle('🃏  Blackjack — 🎉 BLACKJACK!')
-                    .setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**\n**Base Win:** 💰 +${baseProfit}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Returned:** 💰 **${totalPayout}** coins`);
+                    .setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — 🎉 BLACKJACK!`)
+                    .setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**\n**Base Win:** ${config.EMOJIS.COIN} +${baseProfit}\n**Item Bonus:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**Total Returned:** ${config.EMOJIS.COIN} **${totalPayout}** coins`);
 
                 startCooldown(message.client, 'blackjack', message.author.id);
                 return message.reply({ embeds: [embed] });
             } else {
-                const embed = buildEmbed(true).setTitle('🃏  Blackjack — 🎉 BLACKJACK!').setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**`);
+                const embed = buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — 🎉 BLACKJACK!`).setDescription(buildEmbed(true).data.description + `\n\n🏆 **Natural Blackjack!**`);
                 return message.reply({ embeds: [embed] });
             }
         }
 
         const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId(`bj_hit_${uid}`).setLabel('Hit').setEmoji('🃏').setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId(`bj_stand_${uid}`).setLabel('Stand').setEmoji('🛑').setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId(`bj_hit_${uid}`).setLabel('Hit').setEmoji(config.EMOJIS.BLACKJACK).setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`bj_stand_${uid}`).setLabel('Stand').setEmoji(config.EMOJIS.STOP).setStyle(ButtonStyle.Danger),
         );
 
         const reply = await message.reply({ embeds: [buildEmbed()], components: [row] });
@@ -154,7 +155,7 @@ module.exports = {
             if (i.customId.startsWith('bj_hit')) {
                 playerHand.push(drawCard());
                 if (handValue(playerHand) > 21) {
-                    const bustEmbed = buildEmbed(true).setTitle('🃏  Blackjack — 💥 BUST!').setColor(0xE74C3C);
+                    const bustEmbed = buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — 💥 BUST!`).setColor(config.COLORS.GAMBLE_LOSS);
                     bustEmbed.setDescription(bustEmbed.data.description + '\n\n💥 **Bust! You went over 21. Dealer wins!**');
                     await i.update({ embeds: [bustEmbed], components: [] });
                     collector.stop();
@@ -172,7 +173,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                reply.edit({ embeds: [buildEmbed(true).setTitle('🃏  Blackjack — ⏰ Timed Out')], components: [] }).catch(() => { });
+                reply.edit({ embeds: [buildEmbed(true).setTitle(`${config.EMOJIS.BLACKJACK}  Blackjack — ${config.EMOJIS.TIMER} Timed Out`)], components: [] }).catch(() => { });
             }
         });
     }

@@ -1,4 +1,5 @@
 const { EmbedBuilder, ChannelType } = require('discord.js');
+const config = require('../../config');
 
 module.exports = {
     name: 'serverinfo',
@@ -65,7 +66,7 @@ module.exports = {
                 { name: `😄 Emojis (${emojis})`, value: `Static: **${emojis - animated}** | Animated: **${animated}**\n🏷️ Stickers: **${stickers}**`, inline: true },
                 { name: `🎭 Roles (${roleCount})`, value: roles.length > 0 ? (roles.length > 900 ? roles.slice(0, 900) + '...' : roles) : 'None', inline: false },
             )
-            .setColor(0x9B59B6)
+            .setColor(config.COLORS.SCHEDULED)
             .setFooter({ text: `Server ID: ${guild.id}` })
             .setTimestamp();
 

@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
+const config = require('../../config');
 
 module.exports = {
     name: 'ping',
@@ -22,9 +23,9 @@ module.exports = {
         const memMB = (memUsage.heapUsed / 1024 / 1024).toFixed(2);
 
         // Latency color
-        let color = 0x2ECC71; // Green
-        if (roundtrip > 200) color = 0xE74C3C; // Red
-        else if (roundtrip > 100) color = 0xF39C12; // Yellow
+        let color = config.COLORS.SUCCESS; // Green
+        if (roundtrip > 200) color = config.COLORS.ERROR; // Red
+        else if (roundtrip > 100) color = config.COLORS.WARNING; // Yellow
 
         // Latency bar
         const latencyBar = (ms) => {

@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 module.exports = {
     name: 'guess',
@@ -14,8 +15,8 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setTitle('🔢  Guess the Number')
-            .setDescription('I\'m thinking of a number between **1 and 100**.\nYou have **1 minute** to guess it!')
-            .setColor(0x3498DB);
+            .setDescription(`I'm thinking of a number between **1 and 100**.\nYou have **1 minute** to guess it!`)
+            .setColor(config.COLORS.INFO);
 
         await message.reply({ embeds: [embed] });
 
@@ -29,10 +30,10 @@ module.exports = {
             attempts++;
 
             if (guess === number) {
-                const reward = Math.max(10, 100 - (attempts * 5));
+                const reward = Math.max(10, config.ECONOMY.GUESS_REWARD_BASE - (attempts * 5));
                 db.addBalance(m.author.id, reward);
 
-                m.reply(`🎉 **Correct!** The number was **${number}**.\nYou guessed it in **${attempts}** attempts and won 💰 **${reward}** coins!`);
+                m.reply(`${config.EMOJIS.SUCCESS} **Correct!** The number was **${number}**.\nYou guessed it in **${attempts}** attempts and won ${config.EMOJIS.COIN} **${reward}** coins!`);
                 collector.stop();
             } else if (guess < number) {
                 m.react('⬆️'); // Higher
@@ -43,7 +44,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                message.channel.send(`⏰ **Time's up!** The number was **${number}**.`);
+                message.channel.send(`${config.EMOJIS.TIMER} **Time's up!** The number was **${number}**.`);
             }
             startCooldown(message.client, 'guess', message.author.id);
         });

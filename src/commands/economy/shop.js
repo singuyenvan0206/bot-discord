@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const SHOP_ITEMS = require('../../utils/shopItems');
+const config = require('../../config');
 
 module.exports = {
     name: 'shop',
@@ -30,7 +31,7 @@ module.exports = {
                 if (i.multiplier) {
                     desc += `\n✨ **Bonus:** +${Math.round(i.multiplier * 100)}% effect`;
                 }
-                return `**${i.name}** — 💰 ${i.price.toLocaleString()}\n${desc}\nID: \`${i.id}\``;
+                return `**${i.name}** — ${config.EMOJIS.COIN} ${i.price.toLocaleString()}\n${desc}\nID: \`${i.id}\``;
             }).join('\n\n') : '*No items in this category yet.*';
 
             const categoryNames = {
@@ -43,8 +44,8 @@ module.exports = {
             return new EmbedBuilder()
                 .setTitle(`🛒  Shop: ${categoryNames[category]}`)
                 .setDescription(itemsList)
-                .setColor(0x9B59B6)
-                .setFooter({ text: `Page ${page + 1}/${totalPages} • Use !buy <id> [amount]` });
+                .setColor(config.COLORS.SCHEDULED)
+                .setFooter({ text: `Page ${page + 1}/${totalPages} • Use ${config.PREFIX}buy <id> [amount]` });
         };
 
         const generateComponents = (category, page) => {

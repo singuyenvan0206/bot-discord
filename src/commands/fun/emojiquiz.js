@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 const EMOJI_QUIZ = [
     // ═══ Movies ═══
@@ -439,7 +440,7 @@ module.exports = {
             });
 
             const msg = collected.first();
-            const baseReward = 150;
+            const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD;
             const { getUserMultiplier } = require('../../utils/multiplier');
             const multiplier = getUserMultiplier(msg.author.id, 'income');
             const bonus = Math.floor(baseReward * multiplier);
@@ -447,22 +448,22 @@ module.exports = {
 
             db.addBalance(msg.author.id, totalReward);
 
-            let resultDesc = `The answer was **${displayAnswer}**.\nWinner: ${msg.author}\nReward: 💰 **${baseReward}** coins`;
+            let resultDesc = `The answer was **${displayAnswer}**.\nWinner: ${msg.author}\nReward: ${config.EMOJIS.COIN} **${baseReward}** coins`;
             if (bonus > 0) resultDesc += `\n✨ **Item Bonus:** +${bonus} (${Math.round(multiplier * 100)}%)`;
 
             await msg.reply({
                 embeds: [new EmbedBuilder()
-                    .setTitle('🎉  Correct!')
+                    .setTitle(`${config.EMOJIS.SUCCESS}  Correct!`)
                     .setDescription(resultDesc)
-                    .setColor(0x2ECC71)]
+                    .setColor(config.COLORS.SUCCESS)]
             });
             startCooldown(message.client, 'emojiquiz', message.author.id);
         } catch {
             await message.channel.send({
                 embeds: [new EmbedBuilder()
-                    .setTitle('⏰  Time\'s Up!')
+                    .setTitle(`${config.EMOJIS.TIMER}  Time's Up!`)
                     .setDescription(`Nobody got it! The answer was **${displayAnswer}**.`)
-                    .setColor(0xE74C3C)]
+                    .setColor(config.COLORS.ERROR)]
             });
             startCooldown(message.client, 'emojiquiz', message.author.id);
         }

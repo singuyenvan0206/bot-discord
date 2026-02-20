@@ -1,4 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const config = require('../../config');
 
 module.exports = {
     name: 'avatar',
@@ -21,12 +22,12 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
-            .setTitle(`🖼️  Avatar`)
+            .setTitle('🖼️  Avatar')
             .setImage(globalAvatar)
             .addFields(
                 { name: '🔗 Download Links', value: links, inline: false },
             )
-            .setColor(member?.displayColor || 0x3498DB)
+            .setColor(member?.displayColor || config.COLORS.INFO)
             .setFooter({ text: `Requested by ${message.author.tag}` })
             .setTimestamp();
 

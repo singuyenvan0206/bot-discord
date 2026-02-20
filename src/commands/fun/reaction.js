@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 module.exports = {
     name: 'reaction',
@@ -12,7 +13,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle('⚡  Reaction Test')
             .setDescription('Wait for it...')
-            .setColor(0xE74C3C);
+            .setColor(config.COLORS.ERROR);
 
         const msg = await message.reply({ embeds: [embed] });
 
@@ -20,7 +21,7 @@ module.exports = {
 
         setTimeout(async () => {
             const now = Date.now();
-            embed.setDescription('**TYPE "NOW"!**').setColor(0x2ECC71);
+            embed.setDescription('**TYPE "NOW"!**').setColor(config.COLORS.SUCCESS);
             await msg.edit({ embeds: [embed] });
 
             try {
@@ -35,16 +36,16 @@ module.exports = {
                 const diff = winner.createdTimestamp - now;
 
                 // Reward based on reaction speed
-                let reward = 15;
+                let reward = config.ECONOMY.REACTION_REWARD_BASE;
                 let speedRank = '🐢 Nice';
-                if (diff < 300) { reward = 50; speedRank = '⚡ Insane'; }
-                else if (diff < 500) { reward = 30; speedRank = '🏎️ Fast'; }
+                if (diff < 300) { reward = reward * 3 + 5; speedRank = '⚡ Insane'; }
+                else if (diff < 500) { reward = reward * 2; speedRank = '🏎️ Fast'; }
                 db.addBalance(winner.author.id, reward);
 
-                winner.reply(`🎉 **${diff}ms!** ${speedRank}!\n💰 **+${reward} coins!**`);
+                winner.reply(`${config.EMOJIS.SUCCESS} **${diff}ms!** ${speedRank}!\n${config.EMOJIS.COIN} **+${reward} coins!**`);
                 startCooldown(message.client, 'reaction', message.author.id);
-            } catch {
-                message.channel.send('⏰ **Too slow!** No one reacted in time.');
+            } catch (reason) {
+                message.channel.send(`${config.EMOJIS.TIMER} **Too slow!** No one reacted in time.`);
                 startCooldown(message.client, 'reaction', message.author.id);
             }
         }, delay);

@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const config = require('../../config');
 
 module.exports = {
     name: 'userinfo',
@@ -88,7 +89,7 @@ module.exports = {
         const nickname = member?.nickname || 'None';
 
         // Highest role color
-        const color = member?.displayColor || 0x95A5A6;
+        const color = member?.displayColor || config.COLORS.NEUTRAL;
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })

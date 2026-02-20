@@ -1,8 +1,9 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
-const EMOJIS = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍓', '🍑', '🍍'];
+const MEM_EMOJIS = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍓', '🍑', '🍍'];
 
 module.exports = {
     name: 'memory',
@@ -12,7 +13,7 @@ module.exports = {
     manualCooldown: true,
     async execute(message, args) {
         // Setup Grid
-        let deck = [...EMOJIS, ...EMOJIS];
+        let deck = [...MEM_EMOJIS, ...MEM_EMOJIS];
         deck = deck.sort(() => Math.random() - 0.5); // Shuffle
 
         // Game State
@@ -54,7 +55,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle('🧠 Memory Match')
             .setDescription('Find all matching pairs! Click buttons to reveal cards.')
-            .setColor(0x9B59B6)
+            .setColor(config.COLORS.SCHEDULED)
             .setFooter({ text: 'Time Limit: 2 Minutes' });
 
         const reply = await message.reply({ embeds: [embed], components: getButtonGrid() });
@@ -66,7 +67,7 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (isProcessing) return i.reply({ content: '⏳ Please wait...', ephemeral: true });
+            if (isProcessing) return i.reply({ content: `${config.EMOJIS.WAITING} Please wait...`, ephemeral: true });
 
             const idx = parseInt(i.customId.split('_')[1]);
             const cell = grid[idx];
@@ -99,9 +100,7 @@ module.exports = {
                         const timeTaken = ((Date.now() - startTime) / 1000).toFixed(1);
 
                         // Calculate Reward
-                        // Base 50, -1 per attempt over 12?
-                        // Bonus for fast time
-                        let reward = 100;
+                        let reward = config.ECONOMY.MEMORY_REWARD_BASE;
                         if (attempts > 12) reward = Math.max(10, reward - ((attempts - 12) * 5));
 
                         // Time bonus
@@ -110,9 +109,9 @@ module.exports = {
 
                         db.addBalance(message.author.id, reward);
 
-                        embed.setTitle('🎉 Victory!')
-                            .setDescription(`**You found all pairs!**\n\n⏱️ Time: **${timeTaken}s**\n🔄 Attempts: **${attempts}**\n💰 Reward: **${reward} coins**`)
-                            .setColor(0x2ECC71);
+                        embed.setTitle(`${config.EMOJIS.SUCCESS} Victory!`)
+                            .setDescription(`**You found all pairs!**\n\n⏱️ Time: **${timeTaken}s**\n🔄 Attempts: **${attempts}**\n${config.EMOJIS.COIN} Reward: **${reward} coins**`)
+                            .setColor(config.COLORS.SUCCESS);
 
                         await i.update({ embeds: [embed], components: getButtonGrid(true) });
                         startCooldown(message.client, 'memory', message.author.id);
@@ -137,7 +136,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                embed.setTitle('⏰ Time\'s Up!').setColor(0xE74C3C);
+                embed.setTitle(`${config.EMOJIS.TIMER} Time's Up!`).setColor(config.COLORS.ERROR);
                 reply.edit({ embeds: [embed], components: getButtonGrid(true) }).catch(() => { });
                 startCooldown(message.client, 'memory', message.author.id);
             }

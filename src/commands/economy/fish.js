@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 // Rod Definitions (Must match shopItems.js logic)
 const RODS = [
@@ -54,10 +55,10 @@ module.exports = {
         }
 
         if (!rod) {
-            return message.reply('❌ You need a **Fishing Rod** to fish! Buy one from the shop (`$buy fishing_rod`).');
+            return message.reply(`${config.EMOJIS.ERROR} You need a **Fishing Rod** to fish! Buy one from the shop (\`${config.PREFIX}buy fishing_rod\`).`);
         }
 
-        // 2. Check for Bait (Use Best or user choice?) -> We use Best Available for now to maximize luck
+        // 2. Check for Bait (Use Best)
         let bait = null;
         for (const b of BAITS) {
             if (inventory[b.id] && inventory[b.id] > 0) {
@@ -67,39 +68,23 @@ module.exports = {
         }
 
         if (!bait) {
-            return message.reply('❌ You need **Bait** to fish! Buy some from the shop (e.g., `$buy worm_bait`).');
+            return message.reply(`${config.EMOJIS.ERROR} You need **Bait** to fish! Buy some from the shop (e.g., \`${config.PREFIX}buy worm_bait\`).`);
         }
 
         // 3. Consume Bait
         db.removeItem(message.author.id, bait.id, 1);
 
         // 4. Calculate Total Luck
-        // Base luck 1.0. Rod multiplies it. Bait adds to multiplier? 
-        // Logic: Total Luck = Rod Luck + Bait Bonus
-        // Example: Carbon (2.5) + Squid (0.8) = 3.3x
         const totalLuck = rod.luck + bait.luck;
 
         // 5. Determine Catch
-        // Filter catches that meet the minLuck requirement
-        // Then use luck to influence weights (higher luck = significantly higher weight for rare items)
-
         let pool = CATCHES.filter(c => c.minLuck <= totalLuck);
-
-        // Adjust weights based on luck: Rare items get a boost
-        // We will create a dynamic pool where "value" maps to "rarity". 
-        // Higher value = Lower base weight. 
-        // High luck should multiply the weight of high-value items more? 
-        // Or simpler: Just shuffle the probability mass towards the end.
 
         let weightedPool = pool.map(c => {
             let modWeight = c.weight;
-            // Boost rare items if luck is high
             if (totalLuck > 2.0 && c.value > 500) modWeight *= 2;
             if (totalLuck > 3.0 && c.value > 1000) modWeight *= 3;
-
-            // Reduce trash weight if luck is high
             if (totalLuck > 2.0 && c.value === 0) modWeight *= 0.5;
-
             return { ...c, weight: modWeight };
         });
 
@@ -129,12 +114,12 @@ module.exports = {
             db.addBalance(message.author.id, totalValue);
 
             const embed = new EmbedBuilder()
-                .setTitle('🎣 Fishing Trip')
-                .setColor(0x3498DB)
+                .setTitle(`${config.EMOJIS.FISH} Fishing Trip`)
+                .setColor(config.COLORS.INFO)
                 .setDescription(`Used **${rod.name}** and **${bait.name}**...`)
                 .addFields(
                     { name: 'Caught', value: `${caughtItem.emoji} **${caughtItem.name}**`, inline: true },
-                    { name: 'Earnings', value: `💰 **+${caughtItem.value}**`, inline: true },
+                    { name: 'Earnings', value: `${config.EMOJIS.COIN} **+${caughtItem.value}**`, inline: true },
                     { name: 'Luck', value: `✨ ${totalLuck.toFixed(1)}x`, inline: true }
                 );
 
@@ -147,12 +132,12 @@ module.exports = {
             message.reply({ embeds: [embed] });
         } else {
             const embed = new EmbedBuilder()
-                .setTitle('🎣 Fishing Trip')
-                .setColor(0x95A5A6)
+                .setTitle(`${config.EMOJIS.FISH} Fishing Trip`)
+                .setColor(config.COLORS.NEUTRAL)
                 .setDescription(`Used **${rod.name}** and **${bait.name}**...`)
                 .addFields(
                     { name: 'Caught', value: `${caughtItem.emoji} **${caughtItem.name}**`, inline: true },
-                    { name: 'Earnings', value: `💰 **0**`, inline: true }
+                    { name: 'Earnings', value: `${config.EMOJIS.COIN} **0**`, inline: true }
                 )
                 .setFooter({ text: 'Better luck next time! (-1 Bait)' });
 

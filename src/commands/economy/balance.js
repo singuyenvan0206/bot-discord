@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const config = require('../../config');
 
 module.exports = {
     name: 'balance',
@@ -9,9 +10,9 @@ module.exports = {
         const target = message.mentions.users.first() || message.author;
         const targetData = db.getUser(target.id);
         const embed = new EmbedBuilder()
-            .setTitle(`💰  Balance: ${target.username}`)
+            .setTitle(`${config.EMOJIS.COIN}  Balance: ${target.username}`)
             .setDescription(`💸 Cash: **${targetData.balance.toLocaleString()}** coins`)
-            .setColor(0xF1C40F);
+            .setColor(config.COLORS.WARNING);
         return message.reply({ embeds: [embed] });
     }
 };

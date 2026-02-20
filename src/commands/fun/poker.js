@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const db = require('../../database');
 const { Deck, evaluateHand } = require('../../utils/pokerLogic');
 const { startCooldown } = require('../../utils/cooldown');
+const config = require('../../config');
 
 module.exports = {
     name: 'poker',
@@ -31,8 +32,8 @@ module.exports = {
 
         const lobbyEmbed = new EmbedBuilder()
             .setTitle('♠️♥️ Texas Hold\'em (Advanced) ♦️♣️')
-            .setDescription(`**Host:** ${message.author}\n**Min Buy-in:** 💰 ${minBuyIn}\n\n**Players (0):**\nWaiting for players...\n\n*Click Join to sit at the table!*`)
-            .setColor(0x2ECC71)
+            .setDescription(`**Host:** ${message.author}\n**Min Buy-in:** ${config.EMOJIS.COIN} ${minBuyIn}\n\n**Players (0):**\nWaiting for players...\n\n*Click Join to sit at the table!*`)
+            .setColor(config.COLORS.SUCCESS)
             .setFooter({ text: 'Minimum 2 players to start' });
 
         function getLobbyButtons() {
@@ -83,13 +84,13 @@ module.exports = {
                     if (isNaN(amount) || amount < minBuyIn) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
-                        return submit.reply({ content: `❌ Invalid Amount! Must be at least ${minBuyIn}.`, flags: 64 });
+                        return submit.reply({ content: `${config.EMOJIS.ERROR} Invalid Amount! Must be at least ${minBuyIn}.`, flags: 64 });
                     }
 
-                    if (amount > 250000) {
+                    if (amount > config.ECONOMY.MAX_BET) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
-                        return submit.reply({ content: '❌ The maximum buy-in is **250,000** coins!', flags: 64 });
+                        return submit.reply({ content: `${config.EMOJIS.ERROR} The maximum buy-in is **${config.ECONOMY.MAX_BET.toLocaleString()}** coins!`, flags: 64 });
                     }
 
 
@@ -186,7 +187,7 @@ module.exports = {
 
             const listStr = playerList.length > 0 ? playerList.join('\n') : 'Waiting for players...';
 
-            lobbyEmbed.setDescription(`**Host:** ${message.author}\n**Min Buy-in:** 💰 ${minBuyIn}\n\n**Players (${players.length + joiningPlayers.size}):**\n${listStr}\n\n*Click Join to sit at the table!*`);
+            lobbyEmbed.setDescription(`**Host:** ${message.author}\n**Min Buy-in:** ${config.EMOJIS.COIN} ${minBuyIn}\n\n**Players (${players.length + joiningPlayers.size}):**\n${listStr}\n\n*Click Join to sit at the table!*`);
             reply.edit({ embeds: [lobbyEmbed], components: [getLobbyButtons()] }).catch(() => { });
         }
 
@@ -330,7 +331,7 @@ module.exports = {
                 await i.showModal(modal);
 
                 try {
-                    const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `raise_modal_${i.user.id}` });
+                    const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `buyin_modal_${i.user.id}` });
                     const val = parseAmount(submit.fields.getTextInputValue('amount'), p.chips + p.currentBet);
 
                     if (isNaN(val) || val < minTotal) {
@@ -452,8 +453,8 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setTitle(`♥️ Texas Hold'em - ${phase}`)
-                .setDescription(`**Community:**\nsp# ${cardsStr}sp\n\n**Pot:** 💰 ${pot}\n**Current Bet:** ${currentBet}\n\n${statusTxt}`.replace(/sp/g, ' '))
-                .setColor(0x3498DB);
+                .setDescription(`**Community:** ${cardsStr}\n\n**Pot:** ${config.EMOJIS.COIN} ${pot}\n**Current Bet:** ${currentBet}\n\n${statusTxt}`)
+                .setColor(config.COLORS.INFO);
 
             const components = (!activeP.isBot) ? getActionRow(activeP) : [];
             await reply.edit({ embeds: [embed], components }).catch(() => { });
@@ -520,7 +521,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle('🏆 Game Over')
                 .setDescription(`**Winner(s):** ${winnerNames}\n**Pot:** ${pot}\n\n${resultText}`)
-                .setColor(0xF1C40F);
+                .setColor(config.COLORS.WARNING);
 
             await reply.edit({ embeds: [embed], components: [] });
             players.forEach(p => {
