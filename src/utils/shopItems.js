@@ -110,5 +110,53 @@ module.exports = [
         description: 'Sugar rush! (+1% Daily Reward)',
         multiplier: 0.01,
         type: 'daily'
+    },
+    {
+        id: 'mining_pick',
+        name: '⛏️ Mining Pick',
+        price: 2500,
+        description: 'Dig for treasures!',
+        multiplier: 1.0,
+        type: 'tool'
+    },
+    {
+        id: 'ring',
+        name: '💍 Gold Ring',
+        price: 5000,
+        description: 'Shiny and precious.',
+        multiplier: 0,
+        type: 'collectible'
+    },
+    {
+        id: 'watch',
+        name: '⌚ Rolex Watch',
+        price: 10000,
+        description: 'Time is money.',
+        multiplier: 0,
+        type: 'collectible'
+    },
+    {
+        id: 'vip_card',
+        name: '💳 VIP Card',
+        price: 20000,
+        description: 'Exclusive access.',
+        multiplier: 0,
+        type: 'collectible'
+    },
+    {
+        id: 'car',
+        name: '🏎️ Sports Car',
+        price: 50000,
+        description: 'Vroom vroom!',
+        multiplier: 0,
+        type: 'collectible'
+    },
+    {
+        id: 'mansion',
+        name: '🏰 Mansion',
+        price: 250000,
+        description: 'Living the high life.',
+        multiplier: 0,
+        type: 'collectible'
     }
 ];
