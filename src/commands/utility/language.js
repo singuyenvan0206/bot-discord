@@ -9,7 +9,8 @@ module.exports = {
     description: 'Thiết lập ngôn ngữ cho bạn hoặc máy chủ (Set language for you or the server).',
     cooldown: 5,
     async execute(message, args) {
-        let lang = getLanguage(message.author.id, message.guild.id);
+        const guildId = message.guild?.id;
+        const lang = getLanguage(message.author.id, guildId);
 
         if (!args[0]) {
             const embed = new EmbedBuilder()
@@ -31,7 +32,7 @@ module.exports = {
 
         // Support both structures: 
         // 1. !language server en (choice='server', args[1]='en')
-        // 2. /language choice:en scope:server (choice='en', args[1]='server')
+        // 2. !language en server (choice='en', args[1]='server')
         if (choice === 'server') {
             scope = 'server';
             choice = args[1]?.toLowerCase();
@@ -45,11 +46,16 @@ module.exports = {
 
         // Server setting
         if (scope === 'server') {
-            if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+            if (!guildId) return message.reply('❌ This command can only be used in a server.');
+
+            const isOwner = db.isOwner(message.author.id);
+            const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild);
+
+            if (!isOwner && !isAdmin) {
                 return message.reply(t('common.error', lang));
             }
 
-            db.updateGuild(message.guild.id, { language: choice });
+            db.updateGuild(guildId, { language: choice });
             return message.reply(t('language.set_success', choice));
         }
 
