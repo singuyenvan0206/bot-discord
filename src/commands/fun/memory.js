@@ -76,7 +76,7 @@ module.exports = {
             // Reveal
             cell.revealed = true;
 
-            if (!firstPick) {
+            if (firstPick === null) {
                 // First card picked
                 firstPick = idx;
                 await i.update({ components: getButtonGrid() });
