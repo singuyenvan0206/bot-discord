@@ -10,7 +10,7 @@ const { t, getLanguage } = require('./utils/i18n');
 
 // ─── Config ──────────────────────────────────────────────────────
 
-const { PREFIX } = require('./config');
+const config = require('./config');
 
 // ─── Validate Environment ────────────────────────────────────────
 
@@ -49,12 +49,6 @@ const activeChainGames = new Map();
 client.commands = new Collection();
 client.cooldowns = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
-// commandsPath is already declared above if I messed up, better to just replace the whole block carefully.
-// Actually, looking at the previous diff, I replaced lines 48-56.
-// The original code had `const commandsPath = ...` at line 47.
-// I inserted `const commandsPath = ...` at the start of my replacement block.
-// So I should just remove the redeclaration in the replacement.
-
 const commandFolders = fs.readdirSync(commandsPath);
 
 for (const folder of commandFolders) {
@@ -239,7 +233,7 @@ client.on(Events.InteractionCreate, async interaction => {
             setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
         }
 
-        const lang = getLanguage(messageAdapter.user.id, messageAdapter.guild?.id);
+        const lang = getLanguage(messageAdapter.author.id, messageAdapter.guild?.id);
 
         try {
             await command.execute(messageAdapter, args);
