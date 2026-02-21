@@ -80,7 +80,8 @@ module.exports = {
 
             db.addBalance(winner.author.id, totalReward);
 
-            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${t('rps.won_coins', lang === 'vi' ? 'và nhận được' : 'and received')} ${config.EMOJIS.COIN} **${baseReward}** coins!`;
+            const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
+            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${baseReward}** coins!`;
             if (bonus > 0) msgText += ` ✨ *(${t('fish.item_bonus', lang)} +${bonus})*`;
 
             message.channel.send(msgText);
