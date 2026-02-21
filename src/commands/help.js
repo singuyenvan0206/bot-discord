@@ -122,12 +122,13 @@ module.exports = {
                 return message.reply(`❌ Could not find command ** ${name}** !`);
             }
 
-            const guide = t(`help.guides.${command.name} `, lang).replace(/\$/g, prefix);
+            const guide = t(`help.guides.${command.name}`, lang).replace(/\$/g, prefix);
             const usage = command.usage || '';
+            const description = t(`help.descriptions.${command.name}`, lang) || command.description || t('help.no_description', lang);
 
             const embed = new EmbedBuilder()
                 .setTitle(t('help.title', lang, { emoji: '📖', prefix, name: command.name }))
-                .setDescription(command.description || t('help.no_description', lang))
+                .setDescription(description)
                 .setColor(config.COLORS.INFO)
                 .addFields(
                     { name: `📝 ${t('help.aliases', lang)} `, value: command.aliases ? command.aliases.map(a => `\`${prefix}${a}\``).join(', ') : t('help.none', lang), inline: true },
@@ -142,14 +143,14 @@ module.exports = {
 
         // 2. Default Behavior: Show Category Menu
         const generateHomeEmbed = () => new EmbedBuilder()
-            .setTitle(`${config.EMOJIS.SUCCESS}  ${t('help.menu_title', lang)}`)
-            .setDescription(`${t('help.menu_desc', lang, { prefix })}\n\n**🚀 ${lang === 'vi' ? 'Thống kê Bot' : 'Bot Stats'}:**\n` +
-                `> 📋 **${lang === 'vi' ? 'Lệnh' : 'Commands'}:** ${message.client.commands.size}\n` +
-                `> 🌐 **${lang === 'vi' ? 'Máy chủ' : 'Servers'}:** ${message.client.guilds.cache.size}\n` +
-                `> 👥 **${lang === 'vi' ? 'Người dùng' : 'Users'}:** ${message.client.users.cache.size}`)
+            .setTitle(t('help.menu_title', lang, { emoji: '📖' }))
+            .setDescription(`${t('help.menu_desc', lang, { prefix })}\n\n**🚀 ${t('help.stats_title', lang)}:**\n` +
+                `> 📋 **${t('help.stats_commands', lang)}:** ${message.client.commands.size}\n` +
+                `> 🌐 **${t('help.stats_servers', lang)}:** ${message.client.guilds.cache.size}\n` +
+                `> 👥 **${t('help.stats_users', lang)}:** ${message.client.users.cache.size}`)
             .setColor(config.COLORS.INFO)
             .addFields(
-                { name: '🔗 ' + (lang === 'vi' ? 'Liên kết nhanh' : 'Quick Links'), value: `[${lang === 'vi' ? 'Máy chủ hỗ trợ' : 'Support Server'}](https://discord.gg/) • [${lang === 'vi' ? 'Mời Bot' : 'Invite Bot'}](https://discord.com/oauth2/authorize?client_id=${message.client.user.id}&permissions=8&scope=bot%20applications.commands)`, inline: false }
+                { name: `🔗 ${t('help.quick_links', lang)}`, value: `[${t('help.support_server', lang)}](https://discord.gg/) • [${t('help.invite_bot', lang)}](https://discord.com/oauth2/authorize?client_id=${message.client.user.id}&permissions=8&scope=bot%20applications.commands)`, inline: false }
             )
             .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }))
             .setFooter({ text: t('help.footer_home', lang, { prefix }), iconURL: message.author.displayAvatarURL({ dynamic: true }) })
