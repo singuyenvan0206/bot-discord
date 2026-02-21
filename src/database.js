@@ -119,8 +119,19 @@ function initSchema() {
     safeAddColumn('giveaways', 'paused', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
     safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
+    // User columns
+    safeAddColumn('users', 'xp', 'INTEGER NOT NULL DEFAULT 0');
+    safeAddColumn('users', 'level', 'INTEGER NOT NULL DEFAULT 0');
+    safeAddColumn('users', 'last_work', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'last_rob', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'last_crime', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'last_slut', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'last_beg', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'last_search', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'last_daily', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'job', 'TEXT DEFAULT NULL');
     safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
-    safeAddColumn('users', 'language', "TEXT DEFAULT NULL");
+    safeAddColumn('users', 'language', 'TEXT DEFAULT NULL');
     safeAddColumn('users', 'active_buffs', "TEXT DEFAULT '[]'");
 
     migrateInventoryIds();
@@ -445,7 +456,11 @@ function updateGuild(guildId, updates) {
     execute(`UPDATE guilds SET ${fields.join(', ')} WHERE id = ?`, values);
 }
 
-
+function getRandomUserByJob(jobId) {
+    const users = queryAll('SELECT id FROM users WHERE job = ?', [jobId]);
+    if (!users || users.length === 0) return null;
+    return users[Math.floor(Math.random() * users.length)].id;
+}
 
 module.exports = {
     getDb,

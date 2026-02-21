@@ -575,7 +575,9 @@
         "ranking": "🏆 Xếp hạng",
         "wealth_rank": "**Hạng giàu có:** {{rank}}",
         "unranked": "Chưa xếp hạng (>100)",
+        "inventory_value": "💰 Giá trị kho đồ: {{amount}}",
         "collection": "🎒 Bộ sưu tập",
+        "active_buffs": "⚡ Buff Đang Hoạt Động",
         "total_items": "**Tổng vật phẩm:** {{count}}",
         "item_types": "**Số loại vật phẩm:** {{count}}",
         "joined": "📅 Tham gia từ",
@@ -898,6 +900,8 @@
             "serverlist": "🌟 **Mô tả:** Xem danh sách toàn bộ các máy chủ mà bot đang tham gia cùng với số lượng thành viên. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$serverlist`",
             "leaveserver": "🌟 **Mô tả:** Ra lệnh cho Bot rời khỏi một máy chủ cụ thể theo ID. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$leaveserver <ID_máy_chủ>`",
             "setstatus": "🌟 **Mô tả:** Đổi nội dung hiển thị trạng thái của Bot (ví dụ: Đang chơi..., Đang xem...). (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setstatus <loại> <nội_dung>`\n(Loại: chơi, xem, nghe, stream, thi_đấu)",
+            "job": "🌟 **Mô tả:** Hệ thống sự nghiệp chuyên sâu. Khi đạt Cấp độ 20, bạn có thể chọn một nghề nghiệp để nhận các đặc quyền riêng biệt.\n\n⚙️ **Lệnh con:**\n- `$job list`: Xem danh sách tất cả các nghề và đặc quyền.\n- `$job info`: Xem thông tin chi tiết về nghề hiện tại của bạn.\n\n💼 **Lưu ý:** Nghề nghiệp chỉ kích hoạt khi bạn đạt cấp độ 20. Nếu muốn đổi nghề, bạn cần mua 'Thẻ Chuyển Nghề' trong `$shop`.",
+            "use": "🌟 **Mô tả:** Sử dụng các vật phẩm tiêu hao trong túi đồ để kích hoạt hiệu ứng buff.\n\n🕹️ **Cách dùng:**\n`$use <ID_vật_phẩm>` (vđ: `$use 1` để ăn bánh quy).\n\n✨ **Hiệu ứng:**\n- Hầu hết các vật phẩm sẽ tăng % tiền thưởng cho bạn trong một khoảng thời gian nhất định.\n- Bạn có thể xem các buff đang hoạt động bằng lệnh `$inventory`.",
             "shutdown": "🌟 **Mô tả:** Tắt tiến trình hoạt động của Bot một cách an toàn. Cần khởi động lại thủ công bằng terminal. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$shutdown`"
         }
     },

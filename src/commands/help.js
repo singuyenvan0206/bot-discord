@@ -19,23 +19,23 @@ module.exports = {
                 description: t('help.categories.fun.description', lang),
                 emoji: '🎮',
                 commands: [
-                    '`$coinflip` (`$cf`, `$flip`) — ' + (lang === 'vi' ? 'Tung đồng xu' : 'Flip a coin'),
-                    '`$dice` (`$roll`) — ' + (lang === 'vi' ? 'Đổ xúc xắc' : 'Roll dice'),
-                    '`$rps` (`$rock`) — ' + (lang === 'vi' ? 'Kéo Búa Bao' : 'Rock Paper Scissors'),
-                    '`$blackjack` (`$bj`) — ' + (lang === 'vi' ? 'Chơi Blackjack' : 'Play Blackjack'),
-                    '`$slots` — ' + (lang === 'vi' ? 'Quay hũ Slots' : 'Spin Slots'),
-                    '`$tictactoe` (`$ttt`) — ' + (lang === 'vi' ? 'Chơi Cờ ca-rô (3x3)' : 'Tic Tac Toe (3x3)'),
-                    '`$connect4` (`$c4`) — ' + (lang === 'vi' ? 'Chơi Connect 4' : 'Play Connect 4'),
-                    '`$memory` (`$mem`, `$match`) — ' + (lang === 'vi' ? 'Trò chơi lật thẻ bài' : 'Memory card game'),
-                    '`$trivia` — ' + (lang === 'vi' ? 'Trắc nghiệm kiến thức' : 'Trivia quiz'),
-                    '`$emojiquiz` (`$eq`, `$quiz`) — ' + (lang === 'vi' ? 'Đoán phim/cụm từ qua Emoji' : 'Guess movie/phrase via Emoji'),
-                    '`$poker` (`$pk`) — ' + (lang === 'vi' ? 'Multiplayer High Card Poker' : 'Multiplayer High Card Poker'),
-                    '`$minesweeper` (`$mine`, `$ms`) — ' + (lang === 'vi' ? 'Dò mìn (Cổ điển)' : 'Minesweeper (Classic)'),
-                    '`$hangman` (`$hang`, `$hm`) — ' + (lang === 'vi' ? 'Trò chơi Người treo cổ' : 'Hangman game'),
-                    '`$wordchain` (`$wc`) — ' + (lang === 'vi' ? 'Trò chơi nối chữ' : 'Word chain game'),
-                    '`$scramble` (`$scram`) — ' + (lang === 'vi' ? 'Giải mã từ xáo trộn' : 'Unscramble words'),
-                    '`$guess` (`$gn`) — ' + (lang === 'vi' ? 'Đoán số' : 'Guess number'),
-                    '`$reaction` (`$react`) — ' + (lang === 'vi' ? 'Thử thách phản xạ' : 'Reaction challenge'),
+                    '`$coinflip` (`$cf`, `$flip`)',
+                    '`$dice` (`$roll`)',
+                    '`$rps` (`$rock`)',
+                    '`$blackjack` (`$bj`)',
+                    '`$slots`',
+                    '`$poker` (`$pk`)',
+                    '`$tictactoe` (`$ttt`)',
+                    '`$connect4` (`$c4`)',
+                    '`$memory` (`$mem`, `$match`)',
+                    '`$minesweeper` (`$mine`, `$ms`)',
+                    '`$trivia`',
+                    '`$emojiquiz` (`$eq`, `$quiz`)',
+                    '`$hangman` (`$hang`, `$hm`)',
+                    '`$wordchain` (`$wc`)',
+                    '`$scramble` (`$scram`)',
+                    '`$guess` (`$gn`)',
+                    '`$reaction` (`$react`)',
                 ]
             },
             economy: {
@@ -43,16 +43,18 @@ module.exports = {
                 description: t('help.categories.economy.description', lang),
                 emoji: '💰',
                 commands: [
-                    '`$balance` (`$bal`, `$bl`) — ' + (lang === 'vi' ? 'Kiểm tra ví và ngân hàng' : 'Check wallet and bank'),
-                    '`$daily` (`$d`, `$dy`) — ' + (lang === 'vi' ? 'Nhận thưởng hàng ngày' : 'Claim daily reward'),
-                    '`$work` (`$w`, `$wk`) — ' + (lang === 'vi' ? 'Làm việc kiếm tiền' : 'Work to earn money'),
-                    '`$shop` (`$sh`, `$store`) — ' + (lang === 'vi' ? 'Cửa hàng vật phẩm' : 'Item shop'),
-                    '`$buy` (`$b`) <id / all> — ' + (lang === 'vi' ? 'Mua vật phẩm' : 'Buy an item'),
-                    '`$sell` (`$s`) <id / all> [max] — ' + (lang === 'vi' ? 'Bán vật phẩm (Hoàn tiền 70%)' : 'Sell items (70% refund)'),
-                    '`$inventory` (`$inv`) — ' + (lang === 'vi' ? 'Xem túi đồ của bạn' : 'View your inventory'),
-                    '`$transfer` (`$pay`, `$tf`) <user> <amount / all> — ' + (lang === 'vi' ? 'Chuyển tiền' : 'Transfer money'),
-                    '`$leaderboard` (`$lb`, `$top`) — ' + (lang === 'vi' ? 'Bảng xếp hạng đại gia' : 'Rich leaderboard'),
-                    '`$fish` (`$fishing`, `$cast`) — ' + (lang === 'vi' ? 'Câu cá đổi lấy tiền!' : 'Go fishing for money!'),
+                    '`$balance` (`$bal`, `$bl`)',
+                    '`$daily` (`$d`, `$dy`)',
+                    '`$work` (`$w`, `$wk`)',
+                    '`$job` (`$j`)',
+                    '`$fish` (`$fishing`, `$cast`)',
+                    '`$shop` (`$sh`, `$store`)',
+                    '`$inventory` (`$inv`)',
+                    '`$buy` (`$b`)',
+                    '`$sell` (`$s`)',
+                    '`$use` <id>',
+                    '`$transfer` (`$pay`, `$tf`)',
+                    '`$leaderboard` (`$lb`, `$top`)',
                 ]
             },
             utility: {
@@ -60,12 +62,12 @@ module.exports = {
                 description: t('help.categories.utility.description', lang),
                 emoji: '🔧',
                 commands: [
-                    '`$ping` (`$p`) — ' + (lang === 'vi' ? 'Kiểm tra độ trễ bot' : 'Check bot latency'),
-                    '`$serverinfo` (`$si`) — ' + (lang === 'vi' ? 'Xem thông tin máy chủ' : 'View server information'),
-                    '`$userinfo` (`$user`, `$ui`) [user] — ' + (lang === 'vi' ? 'Xem chi tiết người dùng' : 'View user details'),
-                    '`$avatar` (`$av`) [user] — ' + (lang === 'vi' ? 'Xem ảnh đại diện' : 'View avatar'),
-                    '`$profile` (`$pf`) — ' + (lang === 'vi' ? 'Hồ sơ cá nhân toàn diện' : 'Comprehensive personal profile'),
-                    '`$language` (`$lang`) — ' + (lang === 'vi' ? 'Thiết lập ngôn ngữ' : 'Set language preferences'),
+                    '`$ping` (`$p`)',
+                    '`$profile` (`$pf`)',
+                    '`$userinfo` (`$ui`)',
+                    '`$serverinfo` (`$si`)',
+                    '`$avatar` (`$av`)',
+                    '`$language` (`$lang`)',
                 ]
             },
             giveaway: {
@@ -73,13 +75,13 @@ module.exports = {
                 description: t('help.categories.giveaway.description', lang),
                 emoji: '🎉',
                 commands: [
-                    '`$giveaway` (`$g`) start (`s`) <time> <winners> <prize>',
-                    '`$giveaway` (`$g`) end (`e`) <message_id>',
-                    '`$giveaway` (`$g`) reroll (`r`) <message_id>',
-                    '`$giveaway` (`$g`) list (`l`)',
-                    '`$giveaway` (`$g`) pause (`p`) <message_id>',
-                    '`$giveaway` (`$g`) resume (`res`) <message_id>',
-                    '`$giveaway` (`$g`) delete (`d`) <message_id>',
+                    '`$giveaway start`',
+                    '`$giveaway end`',
+                    '`$giveaway reroll`',
+                    '`$giveaway list`',
+                    '`$giveaway pause`',
+                    '`$giveaway resume`',
+                    '`$giveaway delete`',
                 ]
             }
         };
@@ -90,16 +92,16 @@ module.exports = {
                 description: t('help.categories.owner.description', lang),
                 emoji: '👑',
                 commands: [
-                    '`$addmoney` (`$am`) @user <amount> — ' + (lang === 'vi' ? 'Cộng tiền' : 'Add money'),
-                    '`$removemoney` (`$rm`) @user <amount> — ' + (lang === 'vi' ? 'Trừ tiền' : 'Remove money'),
-                    '`$additem` (`$ai`) @user <id> [qty] — ' + (lang === 'vi' ? 'Thêm vật phẩm' : 'Add item'),
-                    '`$removeitem` (`$ri`) @user <id> [qty] — ' + (lang === 'vi' ? 'Xóa vật phẩm' : 'Remove item'),
-                    '`$resetuser` (`$ru`) @user — ' + (lang === 'vi' ? 'Xóa hồ sơ người dùng' : 'Reset user profile'),
-                    '`$setowner` (`$so`) @user confirm — ' + (lang === 'vi' ? 'Chuyển quyền owner' : 'Transfer owner'),
-                    '`$serverlist` (`$sl`) — ' + (lang === 'vi' ? 'Danh sách máy chủ' : 'Server list'),
-                    '`$leaveserver` (`$ls`) <id> — ' + (lang === 'vi' ? 'Rời máy chủ' : 'Leave server'),
-                    '`$setstatus` (`$ss`) <type> <msg> — ' + (lang === 'vi' ? 'Đổi trạng thái' : 'Set status'),
-                    '`$shutdown` (`$sd`) — ' + (lang === 'vi' ? 'Tắt bot' : 'Shutdown bot'),
+                    '`$addmoney` (`$am`)',
+                    '`$removemoney` (`$rm`)',
+                    '`$additem` (`$ai`)',
+                    '`$removeitem` (`$ri`)',
+                    '`$setlevel`',
+                    '`$resetuser`',
+                    '`$serverlist`',
+                    '`$leaveserver`',
+                    '`$setstatus`',
+                    '`$shutdown`',
                 ]
             };
         }
@@ -134,12 +136,18 @@ module.exports = {
 
         // 2. Default Behavior: Show Category Menu
         const generateHomeEmbed = () => new EmbedBuilder()
-            .setTitle(t('help.menu_title', lang, { emoji: config.EMOJIS.SUCCESS }))
-            .setDescription(t('help.menu_desc', lang, { prefix }))
+            .setTitle(`${config.EMOJIS.SUCCESS}  ${t('help.menu_title', lang)}`)
+            .setDescription(`${t('help.menu_desc', lang, { prefix })}\n\n**🚀 ${lang === 'vi' ? 'Thống kê Bot' : 'Bot Stats'}:**\n` +
+                `> 📋 **${lang === 'vi' ? 'Lệnh' : 'Commands'}:** ${message.client.commands.size}\n` +
+                `> 🌐 **${lang === 'vi' ? 'Máy chủ' : 'Servers'}:** ${message.client.guilds.cache.size}\n` +
+                `> 👥 **${lang === 'vi' ? 'Người dùng' : 'Users'}:** ${message.client.users.cache.size}`)
             .setColor(config.COLORS.INFO)
-            .addFields({ name: '🔗 ' + (lang === 'vi' ? 'Liên kết' : 'Links'), value: `[${lang === 'vi' ? 'Máy chủ hỗ trợ' : 'Support Server'}](https://discord.gg/) • [${lang === 'vi' ? 'Mời Bot' : 'Invite Bot'}](https://discord.com/oauth2/authorize?client_id=${message.client.user.id}&permissions=8&scope=bot%20applications.commands)` })
-            .setThumbnail(message.client.user.displayAvatarURL())
-            .setFooter({ text: t('help.footer_home', lang, { prefix }) });
+            .addFields(
+                { name: '🔗 ' + (lang === 'vi' ? 'Liên kết nhanh' : 'Quick Links'), value: `[${lang === 'vi' ? 'Máy chủ hỗ trợ' : 'Support Server'}](https://discord.gg/) • [${lang === 'vi' ? 'Mời Bot' : 'Invite Bot'}](https://discord.com/oauth2/authorize?client_id=${message.client.user.id}&permissions=8&scope=bot%20applications.commands)`, inline: false }
+            )
+            .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }))
+            .setFooter({ text: t('help.footer_home', lang, { prefix }), iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+            .setTimestamp();
 
         const selectMenu = new StringSelectMenuBuilder()
             .setCustomId('help_select')
@@ -178,10 +186,13 @@ module.exports = {
 
             const category = categories[i.values[0]];
             const categoryEmbed = new EmbedBuilder()
+                .setAuthor({ name: `${category.label}`, iconURL: message.client.user.displayAvatarURL() })
                 .setTitle(`${category.emoji}  ${category.label}`)
-                .setDescription(category.commands.join('\n').replace(/\$/g, prefix))
+                .setDescription(`*${category.description}*\n\n${category.commands.join('\n').replace(/\$/g, prefix)}`)
                 .setColor(config.COLORS.INFO)
-                .setFooter({ text: t('help.footer_category', lang) });
+                .setThumbnail(message.client.user.displayAvatarURL())
+                .setFooter({ text: t('help.footer_category', lang) })
+                .setTimestamp();
 
             await i.update({ embeds: [categoryEmbed], components: [row] });
         });

@@ -451,6 +451,7 @@
             "other": "📦 Others"
         },
         "info": "📊 Summary",
+        "active_buffs": "⚡ Active Buffs",
         "total_items": "Total Items: **{{count}}**",
         "inventory_value": "Inventory Value: **{{emoji}} {{amount}}**",
         "sell_tip": "💡 Tip: Use {{prefix}}sell <item> to turn items back into coins!"
@@ -518,6 +519,7 @@
         "ranking": "🏆 Ranking",
         "wealth_rank": "**Wealth Rank:** {{rank}}",
         "unranked": "Unranked (>100)",
+        "collection": "🎒 Collection",
         "inventory_value": "💰 Inventory Value: {{amount}}",
         "active_buffs": "Active Buffs",
         "total_items": "📦 Total Items: {{count}}",
@@ -694,8 +696,8 @@
         "check_msg": "✅ **{{user}}** checked.",
         "call_msg": "💸 **{{user}}** called {{amount}}.",
         "raise_msg": "📈 **{{user}}** raised to {{amount}}!",
-        "allin_msg": "🚨 **{{user}}** went ALL-IN with {{amount}}!",
-        "allin_call_msg": "🚨 **{{user}}** called ALL-IN ({{amount}})!",
+        "all_in_msg": "🚨 **{{name}}** went ALL-IN with {{amount}}!",
+        "call_all_in_msg": "🚨 **{{name}}** called ALL-IN ({{amount}})!",
         "hand_names": {
             "straight_flush": "Straight Flush",
             "four_of_a_kind": "Four of a Kind",
@@ -898,7 +900,9 @@
             "serverlist": "🌟 **Description:** View an administrative list of all servers the bot is currently in, along with member counts. (Owner Only)\n\n🕹️ **Usage:**\n`$serverlist`",
             "leaveserver": "🌟 **Description:** Force the bot to leave a specific server by its ID. (Owner Only)\n\n🕹️ **Usage:**\n`$leaveserver <server_id>`",
             "setstatus": "🌟 **Description:** Change the bot's custom rich presence status text. (Owner Only)\n\n🕹️ **Usage:**\n`$setstatus <type> <text>`\n(Types: play, watch, listen, stream, compete)",
-            "shutdown": "🌟 **Description:** Safely terminate the bot process. Cannot be restarted via Discord; requires terminal access. (Owner Only)\n\n🕹️ **Usage:**\n`$shutdown`"
+            "shutdown": "🌟 **Description:** Safely terminate the bot process. Cannot be restarted via Discord; requires terminal access. (Owner Only)\n\n🕹️ **Usage:**\n`$shutdown`",
+            "job": "🌟 **Description:** Advanced career system. Upon reaching Level 20, you can choose a profession to unlock unique perks.\n\n⚙️ **Sub-commands:**\n- `$job list`: View all available jobs and their perks.\n- `$job info`: View detailed info about your current job.\n\n💼 **Note:** Professions unlock at level 20. To switch careers, purchase a 'Career Change Voucher' in `$shop`.",
+            "use": "🌟 **Description:** Consume usable items from your inventory to activate temporary buff effects.\n\n🕹️ **Usage:**\n`$use <item_id>` (e.g., `$use 1` to eat a cookie).\n\n✨ **Effects:**\n- Most items provide a % earnings bonus for a limited duration.\n- View your active buffs anytime using `$inventory`."
         }
     },
     "giveaway": {
