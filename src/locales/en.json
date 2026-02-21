@@ -335,6 +335,7 @@
         "not_found": "❌ Item not found. Use `{{prefix}}shop` to see available items.",
         "insufficient_funds": "❌ You need **{{price}}** coins to buy **{{quantity}}x {{item}}**!",
         "success": "✅ You bought **{{quantity}}x {{item}}** for **{{price}}** coins! 🛍️",
+        "success_multiple": "✅ You bought **{{items}}** for a total of **{{price}}** coins! 🛍️",
         "effect_activated": "\n✨ **Effect activated:** +{{percent}}% efficiency!"
     },
     "sell": {

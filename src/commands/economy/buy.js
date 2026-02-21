@@ -9,36 +9,71 @@ module.exports = {
     description: 'Mua một vật phẩm từ cửa hàng',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const query = args[0]?.toLowerCase();
+        const fullArg = args.join(' ');
+        if (!fullArg) return message.reply(t('buy.prompt', lang, { prefix: config.PREFIX }));
+
+        const requests = fullArg.split(',').map(s => s.trim()).filter(s => s.length > 0);
         const { parseAmount } = require('../../utils/economy');
-        let quantity = parseAmount(args[1], 1); // 1 is default for "all" here if balance isn't relevant
-
-        if (!query) return message.reply(t('buy.prompt', lang, { prefix: config.PREFIX }));
-        if (quantity <= 0) return message.reply(t('buy.invalid_qty', lang));
-
-        // Try to find by numerical ID, then by partial name (internal name)
-        const item = SHOP_ITEMS.find(i =>
-            String(i.id) === query ||
-            i.name.toLowerCase().includes(query)
-        );
-
         const user = db.getUser(message.author.id);
-        if (!item) return message.reply(t('buy.not_found', lang, { prefix: config.PREFIX }));
 
-        const itemName = t(`items.${item.id}.name`, lang);
-        const totalPrice = item.price * quantity;
+        let totalCost = 0;
+        const itemsToBuy = [];
+        const purchaseDetails = [];
 
-        if (user.balance < totalPrice) {
-            return message.reply(t('buy.insufficient_funds', lang, { price: totalPrice.toLocaleString(), quantity, item: itemName }));
+        for (const req of requests) {
+            const parts = req.split(/\s+/);
+            const query = parts[0]?.toLowerCase();
+
+            // If only one part (e.g. "1"), it means quantity wasn't provided, default to 1
+            const quantityArg = parts.length > 1 ? parts[parts.length - 1] : '1';
+            let quantity = parseAmount(quantityArg, 1);
+
+            if (isNaN(quantity) || quantity <= 0) {
+                quantity = 1;
+            }
+
+            // The real query is everything before the quantity, or just the query if no valid quantity provided
+            let itemQuery = query;
+            if (parts.length > 1 && !isNaN(parseAmount(parts[parts.length - 1], 1))) {
+                itemQuery = parts.slice(0, -1).join(' ').toLowerCase();
+            } else {
+                itemQuery = req.toLowerCase();
+            }
+
+            const item = SHOP_ITEMS.find(i =>
+                String(i.id) === itemQuery ||
+                i.name.toLowerCase().includes(itemQuery)
+            );
+
+            if (!item) return message.reply(`❌ ${t('buy.not_found', lang, { prefix: config.PREFIX })} (Tìm kiếm: \`${itemQuery}\`)`);
+
+            const itemName = t(`items.${item.id}.name`, lang);
+            const cost = item.price * quantity;
+            totalCost += cost;
+
+            itemsToBuy.push({ item, quantity, itemName });
+            purchaseDetails.push(`**${quantity}x** ${itemName}`);
         }
 
-        db.removeBalance(message.author.id, totalPrice);
-        db.addItem(message.author.id, item.id, quantity);
-
-        let msg = t('buy.success', lang, { quantity, item: itemName, price: totalPrice.toLocaleString() });
-        if (item.multiplier) {
-            msg += t('buy.effect_activated', lang, { percent: Math.round(item.multiplier * 100) });
+        if (user.balance < totalCost) {
+            return message.reply(t('buy.insufficient_funds', lang, { price: totalCost.toLocaleString(), quantity: 'tổng cộng', item: 'các vật phẩm này' }));
         }
-        return message.reply(msg);
+
+        db.removeBalance(message.author.id, totalCost);
+
+        let effectMsg = '';
+        for (const purchase of itemsToBuy) {
+            db.addItem(message.author.id, purchase.item.id, purchase.quantity);
+            if (purchase.item.multiplier && itemsToBuy.length === 1) {
+                effectMsg += t('buy.effect_activated', lang, { percent: Math.round(purchase.item.multiplier * 100) });
+            }
+        }
+
+        if (itemsToBuy.length === 1) {
+            const single = itemsToBuy[0];
+            return message.reply(t('buy.success', lang, { quantity: single.quantity, item: single.itemName, price: totalCost.toLocaleString() }) + effectMsg);
+        } else {
+            return message.reply(t('buy.success_multiple', lang, { items: purchaseDetails.join(', '), price: totalCost.toLocaleString() }));
+        }
     }
 };

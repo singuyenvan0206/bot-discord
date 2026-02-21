@@ -391,6 +391,7 @@
         "not_found": "❌ Không tìm thấy vật phẩm. Hãy dùng `{{prefix}}shop` để xem các vật phẩm có sẵn.",
         "insufficient_funds": "❌ Bạn cần **{{price}}** coins để mua **{{quantity}}x {{item}}**!",
         "success": "✅ Bạn đã mua **{{quantity}}x {{item}}** với giá **{{price}}** coins! 🛍️",
+        "success_multiple": "✅ Bạn đã mua **{{items}}** với tổng giá **{{price}}** coins! 🛍️",
         "effect_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% hiệu quả!"
     },
     "sell": {
