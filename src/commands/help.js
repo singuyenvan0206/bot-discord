@@ -132,7 +132,7 @@ module.exports = {
                 .setColor(config.COLORS.INFO)
                 .addFields(
                     { name: `📝 ${t('help.aliases', lang)} `, value: command.aliases ? command.aliases.map(a => `\`${prefix}${a}\``).join(', ') : t('help.none', lang), inline: true },
-                    { name: `⏱️ ${t('help.cooldown', lang)}`, value: `${command.cooldown || 3}s`, inline: true },
+                    { name: `⏱️ ${t('help.cooldown', lang)}`, value: `${formatDuration(command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN, lang)}`, inline: true },
                     { name: `💡 ${t('help.usage_title', lang)}`, value: `\`${prefix}${command.name} ${usage}\``.trim(), inline: true },
                     { name: `🔍 ${t('help.guide_title', lang)}`, value: guide.startsWith('help.guides') ? t('help.no_guide', lang) : guide, inline: false }
                 )

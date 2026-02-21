@@ -7,6 +7,7 @@ module.exports = {
     name: 'slut',
     aliases: ['sl'],
     description: 'Đi khách để kiếm tiền',
+    cooldown: config.ECONOMY.SLUT_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);

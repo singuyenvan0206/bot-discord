@@ -7,6 +7,7 @@ module.exports = {
     name: 'rob',
     aliases: ['steal'],
     description: 'Rob coins from another user',
+    cooldown: config.ECONOMY.ROB_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);

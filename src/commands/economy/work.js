@@ -8,6 +8,7 @@ module.exports = {
     name: 'work',
     aliases: ['w', 'wk'],
     description: 'Làm việc để kiếm tiền',
+    cooldown: config.ECONOMY.WORK_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 

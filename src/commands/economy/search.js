@@ -6,6 +6,7 @@ const config = require('../../config');
 module.exports = {
     name: 'search',
     description: 'Search random locations for some coins',
+    cooldown: config.ECONOMY.SEARCH_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);

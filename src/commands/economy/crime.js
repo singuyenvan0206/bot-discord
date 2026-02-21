@@ -7,6 +7,7 @@ module.exports = {
     name: 'crime',
     aliases: ['cr'],
     description: 'Thực hiện phi vụ bất hợp pháp để kiếm tiền',
+    cooldown: config.ECONOMY.CRIME_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);

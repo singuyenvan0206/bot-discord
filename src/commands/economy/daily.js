@@ -8,7 +8,7 @@ module.exports = {
     name: 'daily',
     aliases: ['dy', 'day'],
     description: 'Nhận phần thưởng điểm danh hàng ngày',
-    cooldown: 5,
+    cooldown: config.ECONOMY.DAILY_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 

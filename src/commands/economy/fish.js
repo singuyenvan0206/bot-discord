@@ -41,7 +41,7 @@ module.exports = {
     name: 'fish',
     aliases: ['f', 'fishing', 'cast'],
     description: 'Đi câu cá! Đòi hỏi phải có cần câu và mồi.',
-    cooldown: 15,
+    cooldown: config.ECONOMY.FISH_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
