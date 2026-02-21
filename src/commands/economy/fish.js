@@ -80,8 +80,11 @@ module.exports = {
         // 3. Consume Bait
         db.removeItem(message.author.id, bait.id, 1);
 
-        // 4. Calculate Total Luck
-        const totalLuck = rod.luck + bait.luck;
+        // 4. Calculate Total Luck (Farmer Job Bonus)
+        let totalLuck = rod.luck + bait.luck;
+        if (user.job === 'farmer') {
+            totalLuck *= 1.5; // Farmers get 50% more luck from gear
+        }
 
         // 5. Determine Catch
         let pool = CATCHES.filter(c => c.minLuck <= totalLuck);

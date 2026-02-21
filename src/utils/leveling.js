@@ -80,12 +80,17 @@ async function checkAndSendMilestone(message, reachedLevel20, lang) {
             ephemeral: true
         }).catch(() => { });
     } else {
-        // Nếu là tin nhắn thường, gửi bình thường vào kênh
-        return message.channel.send({
-            content: `<@${message.author.id}>`,
-            embeds: [embed],
-            components: [row]
-        }).catch(() => { });
+        // Gửi DM riêng tư cho người chơi — người khác không nhìn thấy
+        try {
+            const dmChannel = await message.author.createDM();
+            await dmChannel.send({ embeds: [embed], components: [row] });
+        } catch {
+            // Nếu DM bị tắt, thông báo ngắn gọn vào kênh rồi xóa sau 10 giây
+            const notice = await message.channel.send({
+                content: `<@${message.author.id}> 📬 ${lang === 'vi' ? 'Bạn đã đạt Cấp 20! Kiểm tra DM để chọn nghề nhé.' : 'You reached Level 20! Check your DMs to choose a career.'}`,
+            }).catch(() => null);
+            if (notice) setTimeout(() => notice.delete().catch(() => { }), 10000);
+        }
     }
 }
 

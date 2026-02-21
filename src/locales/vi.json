@@ -440,39 +440,39 @@
             "name": "🗿 Tượng Đá",
             "desc": "Vững như bàn thạch (+12% Daily)"
         },
-        "31": {
+        "29": {
             "name": "🐴 Móng Ngựa Vàng",
             "desc": "May mắn thuần khiết (+25% Gamble)"
         },
-        "32": {
+        "30": {
             "name": "🎫 Vé Vàng VIP",
             "desc": "Đặc quyền VIP (+50% Thưởng Hàng Ngày)"
         },
-        "33": {
+        "31": {
             "name": "🎣 Cần Sợi Carbon (Bậc 3)",
             "desc": "Hàng đỉnh của đỉnh. (Luck: 2.5x)"
         },
-        "34": {
+        "32": {
             "name": "🏎️ Siêu Xe",
             "desc": "Vút bay trên đường! (+25% Income)"
         },
-        "35": {
+        "33": {
             "name": "🏰 Biệt Thự",
             "desc": "Sống đời thượng lưu (+100% Thưởng Hàng Ngày)"
         },
-        "36": {
+        "34": {
             "name": "🛥️ Siêu Du Thuyền",
             "desc": "Văn phòng trên biển (+50% Thu Nhập)"
         },
-        "37": {
+        "35": {
             "name": "🚀 Trạm Không Gian",
             "desc": "Phần thưởng từ quỹ đạo (+200% Thưởng Hàng Ngày)"
         },
-        "38": {
+        "36": {
             "name": "⏳ Cỗ Máy Thời Gian",
             "desc": "Viết lại lịch sử (+50% Tiền Thắng Cược)"
         },
-        "39": {
+        "37": {
             "name": "🎟️ Thẻ Chuyển Nghề",
             "desc": "Sử dụng để đổi sang một công việc khác! (Tốn phí cao)"
         }
@@ -484,15 +484,17 @@
         "footer": "Trang {{page}}/{{total}} • Dùng {{prefix}}buy <id> [số_lượng]",
         "categories": {
             "income": "💼 Tăng Thu Nhập",
-            "daily": "📅 Thưởng Hàng Ngày",
-            "gamble": "🎲 Tăng May Mắn",
-            "tools": "🎣 Dụng Cụ Câu Cá"
+            "daily": "🎁 Thưởng Phần Trăm",
+            "gamble": "🎲 Tăng Thắng Cược",
+            "tools": "🛠️ Công Cụ",
+            "other": "💎 Khác"
         },
         "labels": {
             "income": "💼 Thu Nhập",
-            "daily": "📅 Daily",
+            "daily": "🎁 Hàng Ngày",
             "gamble": "🎲 Cờ Bạc",
-            "tools": "🎣 Công Cụ"
+            "tools": "🛠️ Công Cụ",
+            "other": "💎 Khác"
         }
     },
     "inventory": {
@@ -897,12 +899,42 @@
             "setlevel": "🌟 **Mô tả:** Đặt trực tiếp cấp độ hiện tại của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setlevel @user <cấp_độ>`",
             "resetuser": "🌟 **Mô tả:** Xóa hoàn toàn toàn bộ dữ liệu (tiền, kho đồ, cấp độ) của người chơi. Hành động này không thể hoàn tác. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$resetuser @user`",
             "setowner": "🌟 **Mô tả:** Chuyển giao quyền sở hữu Bot cho người dùng khác. Hành động này rất nguy hiểm và yêu cầu đổi `.env`. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setowner @user confirm`",
-            "serverlist": "🌟 **Mô tả:** Xem danh sách toàn bộ các máy chủ mà bot đang tham gia cùng với số lượng thành viên. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$serverlist`",
-            "leaveserver": "🌟 **Mô tả:** Ra lệnh cho Bot rời khỏi một máy chủ cụ thể theo ID. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$leaveserver <ID_máy_chủ>`",
-            "setstatus": "🌟 **Mô tả:** Đổi nội dung hiển thị trạng thái của Bot (ví dụ: Đang chơi..., Đang xem...). (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setstatus <loại> <nội_dung>`\n(Loại: chơi, xem, nghe, stream, thi_đấu)",
-            "job": "🌟 **Mô tả:** Hệ thống sự nghiệp chuyên sâu. Khi đạt Cấp độ 20, bạn có thể chọn một nghề nghiệp để nhận các đặc quyền riêng biệt.\n\n⚙️ **Lệnh con:**\n- `$job list`: Xem danh sách tất cả các nghề và đặc quyền.\n- `$job info`: Xem thông tin chi tiết về nghề hiện tại của bạn.\n\n💼 **Lưu ý:** Nghề nghiệp chỉ kích hoạt khi bạn đạt cấp độ 20. Nếu muốn đổi nghề, bạn cần mua 'Thẻ Chuyển Nghề' trong `$shop`.",
-            "use": "🌟 **Mô tả:** Sử dụng các vật phẩm tiêu hao trong túi đồ để kích hoạt hiệu ứng buff.\n\n🕹️ **Cách dùng:**\n`$use <ID_vật_phẩm>` (vđ: `$use 1` để ăn bánh quy).\n\n✨ **Hiệu ứng:**\n- Hầu hết các vật phẩm sẽ tăng % tiền thưởng cho bạn trong một khoảng thời gian nhất định.\n- Bạn có thể xem các buff đang hoạt động bằng lệnh `$inventory`.",
             "shutdown": "🌟 **Mô tả:** Tắt tiến trình hoạt động của Bot một cách an toàn. Cần khởi động lại thủ công bằng terminal. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$shutdown`"
+        }
+    },
+    "iteminfo": {
+        "prompt": "Vui lòng chỉ định một vật phẩm... Dùng `{{prefix}}iteminfo <id/tên>`",
+        "not_found": "Không tìm thấy vật phẩm.",
+        "title": "Thông Tin: {{name}}",
+        "details_label": "Chi Tiết",
+        "no_details": "Không có mô tả chi tiết.",
+        "price_label": "Giá Mua",
+        "sell_label": "Giá Bán",
+        "category_label": "Danh Mục",
+        "effect_label": "Tác Dụng",
+        "owned_label": "Sở Hữu"
+    },
+    "jobs": {
+        "police": {
+            "name": "Cảnh Sát"
+        },
+        "criminal": {
+            "name": "Tội Phạm"
+        },
+        "doctor": {
+            "name": "Bác Sĩ"
+        },
+        "programmer": {
+            "name": "Lập Trình Viên"
+        },
+        "farmer": {
+            "name": "Nông Dân"
+        },
+        "hacker": {
+            "name": "Hacker"
+        },
+        "streamer": {
+            "name": "Streamer"
         }
     },
     "giveaway": {

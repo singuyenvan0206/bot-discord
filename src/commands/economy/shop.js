@@ -35,15 +35,18 @@ module.exports = {
                 let desc = `*${description}*`;
                 let durationExtra = '';
                 if (i.duration) {
-                    const hours = Math.floor(i.duration / 3600);
-                    const timeStr = hours > 0 ? `${hours}h` : `${Math.floor(i.duration / 60)}m`;
-                    durationExtra = ` [⏳ ${timeStr}]`;
+                    let timeStr = '';
+                    if (i.duration >= 86400) {
+                        timeStr = `${Math.floor(i.duration / 86400)}${lang === 'vi' ? 'd' : 'd'}`;
+                    } else if (i.duration >= 3600) {
+                        timeStr = `${Math.floor(i.duration / 3600)}${lang === 'vi' ? 'h' : 'h'}`;
+                    } else {
+                        timeStr = `${Math.floor(i.duration / 60)}${lang === 'vi' ? 'm' : 'm'}`;
+                    }
+                    durationExtra = ` • ⏳ ${timeStr}`;
                 }
 
-                if (i.multiplier) {
-                    desc += t('shop.bonus_label', lang, { percent: Math.round(i.multiplier * 100) });
-                }
-                return `**${name}** — ${config.EMOJIS.COIN} ${i.price.toLocaleString()}${durationExtra}\n${desc}\nID: \`${i.id}\``;
+                return `**${name}** — ${config.EMOJIS.COIN} **${i.price.toLocaleString()}**${durationExtra}\n${desc}\nID: \`${i.id}\``;
             }).join('\n\n') : t('shop.empty', lang);
 
             const categoryName = t(`shop.categories.${category}`, lang);
@@ -65,7 +68,8 @@ module.exports = {
                     new ButtonBuilder().setCustomId('cat_income').setLabel(t('shop.labels.income', lang)).setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
                     new ButtonBuilder().setCustomId('cat_daily').setLabel(t('shop.labels.daily', lang)).setStyle(category === 'daily' ? ButtonStyle.Success : ButtonStyle.Secondary),
                     new ButtonBuilder().setCustomId('cat_gamble').setLabel(t('shop.labels.gamble', lang)).setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_tools').setLabel(t('shop.labels.tools', lang)).setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary)
+                    new ButtonBuilder().setCustomId('cat_tools').setLabel(t('shop.labels.tools', lang)).setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_other').setLabel(t('shop.labels.other', lang)).setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary)
                 );
 
             const navRow = new ActionRowBuilder()
@@ -93,7 +97,7 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.customId.startsWith('cat_')) {
-                currentCategory = i.customId.split('_')[1];
+                currentCategory = i.customId.replace('cat_', ''); // Simplified to handle any 'cat_' prefix
                 currentPage = 0; // Reset page on category switch
             } else if (i.customId === 'prev') {
                 currentPage = Math.max(0, currentPage - 1);

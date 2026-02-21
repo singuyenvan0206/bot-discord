@@ -384,39 +384,39 @@
             "name": "🗿 Moai Statue",
             "desc": "Steady as a rock (+12% Daily)"
         },
-        "31": {
+        "29": {
             "name": "🐴 Golden Horseshoe",
             "desc": "Pure luck (+25% Gamble)"
         },
-        "32": {
+        "30": {
             "name": "🎫 VIP Golden Ticket",
             "desc": "VIP perks (+50% Daily Bonus)"
         },
-        "33": {
+        "31": {
             "name": "🎣 Carbon Rod (Tier 3)",
             "desc": "Top of the line. (Luck: 2.5x)"
         },
-        "34": {
+        "32": {
             "name": "🏎️ Supercar",
             "desc": "Zoom zoom! (+25% Income)"
         },
-        "35": {
+        "33": {
             "name": "🏰 Mansion",
             "desc": "High life (+100% Daily Bonus)"
         },
-        "36": {
+        "34": {
             "name": "🛥️ Superyacht",
             "desc": "Ocean office (+50% Income)"
         },
-        "37": {
+        "35": {
             "name": "🚀 Space Station",
             "desc": "Orbital rewards (+200% Daily Bonus)"
         },
-        "38": {
+        "36": {
             "name": "⏳ Time Machine",
             "desc": "Rewrite history (+50% Gamble Win)"
         },
-        "39": {
+        "37": {
             "name": "🎟️ Career Change Voucher",
             "desc": "Use to switch to a different job path! (High cost)"
         }
@@ -428,9 +428,10 @@
         "footer": "Page {{page}}/{{total}} • Use {{prefix}}buy <id> [quantity]",
         "categories": {
             "income": "💼 Increase Income",
-            "daily": "📅 Daily Rewards",
-            "gamble": "🎲 Increase Luck",
-            "tools": "🎣 Fishing Tools"
+            "daily": "🎁 Daily Bonus",
+            "gamble": "🎲 Gamble Win",
+            "tools": "🛠️ Tools",
+            "other": "💎 Other"
         },
         "labels": {
             "income": "💼 Income",
@@ -903,6 +904,41 @@
             "shutdown": "🌟 **Description:** Safely terminate the bot process. Cannot be restarted via Discord; requires terminal access. (Owner Only)\n\n🕹️ **Usage:**\n`$shutdown`",
             "job": "🌟 **Description:** Advanced career system. Upon reaching Level 20, you can choose a profession to unlock unique perks.\n\n⚙️ **Sub-commands:**\n- `$job list`: View all available jobs and their perks.\n- `$job info`: View detailed info about your current job.\n\n💼 **Note:** Professions unlock at level 20. To switch careers, purchase a 'Career Change Voucher' in `$shop`.",
             "use": "🌟 **Description:** Consume usable items from your inventory to activate temporary buff effects.\n\n🕹️ **Usage:**\n`$use <item_id>` (e.g., `$use 1` to eat a cookie).\n\n✨ **Effects:**\n- Most items provide a % earnings bonus for a limited duration.\n- View your active buffs anytime using `$inventory`."
+        }
+    },
+    "iteminfo": {
+        "prompt": "Please specify an item to view... Use `{{prefix}}iteminfo <id/name>`",
+        "not_found": "Item not found.",
+        "title": "Item Info: {{name}}",
+        "details_label": "Details",
+        "no_details": "No detailed description available.",
+        "price_label": "Buy Price",
+        "sell_label": "Sell Price",
+        "category_label": "Category",
+        "effect_label": "Effect",
+        "owned_label": "Owned"
+    },
+    "jobs": {
+        "police": {
+            "name": "Police"
+        },
+        "criminal": {
+            "name": "Criminal"
+        },
+        "doctor": {
+            "name": "Doctor"
+        },
+        "programmer": {
+            "name": "Programmer"
+        },
+        "farmer": {
+            "name": "Farmer"
+        },
+        "hacker": {
+            "name": "Hacker"
+        },
+        "streamer": {
+            "name": "Streamer"
         }
     },
     "giveaway": {

@@ -22,7 +22,11 @@ function getUserMultiplier(userId, type) {
     for (const buff of activeBuffs) {
         const item = SHOP_ITEMS.find(i => i.id === buff.itemId);
         if (item && item.multiplier && item.type === type) {
-            totalMulti += item.multiplier;
+            if (item.idealJob && item.idealJob === user.job) {
+                totalMulti += item.multiplier * 2;
+            } else {
+                totalMulti += item.multiplier;
+            }
         }
     }
 

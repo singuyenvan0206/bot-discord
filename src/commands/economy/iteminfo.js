@@ -56,7 +56,24 @@ module.exports = {
             );
 
         if (item.multiplier) {
-            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang)}`, value: `+${Math.round(item.multiplier * 100)}%`, inline: true });
+            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang) || 'Hiệu ứng'}`, value: `+${Math.round(item.multiplier * 100)}%`, inline: true });
+        }
+
+        if (item.duration) {
+            let durationStr = '';
+            if (item.duration >= 86400) {
+                durationStr = `${Math.round(item.duration / 86400)} ${lang === 'vi' ? 'ngày' : 'days'}`;
+            } else if (item.duration >= 3600) {
+                durationStr = `${Math.round(item.duration / 3600)} ${lang === 'vi' ? 'giờ' : 'hours'}`;
+            } else {
+                durationStr = `${Math.round(item.duration / 60)} ${lang === 'vi' ? 'phút' : 'minutes'}`;
+            }
+            embed.addFields({ name: `⏳ ${lang === 'vi' ? 'Thời lượng' : 'Duration'}`, value: durationStr, inline: true });
+        }
+
+        if (item.idealJob) {
+            const jobName = t(`jobs.${item.idealJob}.name`, lang) || item.idealJob;
+            embed.addFields({ name: `💼 ${lang === 'vi' ? 'Nghề Phù Hợp' : 'Job Synergy'}`, value: jobName, inline: true });
         }
 
         embed.addFields({ name: `🎒 ${t('iteminfo.owned_label', lang)}`, value: `${count.toLocaleString()}`, inline: true });

@@ -32,11 +32,15 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.DirectMessageReactions,
+        GatewayIntentBits.DirectMessageTyping,
     ],
     partials: [
         Partials.Message,
         Partials.Reaction,
         Partials.User,
+        Partials.Channel,
     ],
 });
 
@@ -88,12 +92,10 @@ for (const folder of commandFolders) {
 // ─── Command & Button Handler ──────────────────────────────────
 
 client.on(Events.InteractionCreate, async interaction => {
+    console.log('[DEBUG] Received interaction:', interaction.customId, 'type:', interaction.type, 'in guild:', !!interaction.guildId);
     // Handle button interactions (Giveaways)
-    if (interaction.isButton()) {
-        if (interaction.customId === BUTTON_ID) {
-            return handleButtonEntry(interaction);
-        }
-        return;
+    if (interaction.isButton() && interaction.customId === BUTTON_ID) {
+        return handleButtonEntry(interaction);
     }
 
     // Handle slash commands
@@ -252,48 +254,59 @@ client.on(Events.InteractionCreate, async interaction => {
         }
 
         if (interaction.customId === 'choose_job_btn') {
-            const lang = getLanguage(interaction.user.id, interaction.guildId);
-            const user = db.getUser(interaction.user.id);
+            try {
+                const lang = getLanguage(interaction.user.id, interaction.guildId);
+                const user = db.getUser(interaction.user.id);
 
-            if (user.level < 20) {
-                return interaction.reply({ content: t('job.set_error_level', lang, { level: 20 }), ephemeral: true });
+                if (user.level < 20) {
+                    return interaction.reply({
+                        content: t('job.set_error_level', lang, { level: 20 }),
+                        ephemeral: !!interaction.guildId
+                    });
+                }
+
+                const jobs = config.ECONOMY.JOBS;
+                const select = new StringSelectMenuBuilder()
+                    .setCustomId('job_select')
+                    .setPlaceholder(t('job.select_placeholder', lang))
+                    .addOptions(
+                        Object.values(jobs).map(j => ({
+                            label: j.id.charAt(0).toUpperCase() + j.id.slice(1),
+                            description: t(`job.info_${j.id}`, lang).substring(0, 100),
+                            value: j.id,
+                            emoji: j.icon
+                        }))
+                    );
+
+                const row = new ActionRowBuilder().addComponents(select);
+
+                return await interaction.reply({
+                    content: t('job.milestone_desc', lang),
+                    components: [row],
+                    ephemeral: !!interaction.guildId
+                });
+            } catch (err) {
+                console.error('[Menu Error]', err);
+                return interaction.reply({ content: `Lỗi: ${err.message}`, ephemeral: true }).catch(() => { });
             }
-
-            const jobs = config.ECONOMY.JOBS;
-            const select = new StringSelectMenuBuilder()
-                .setCustomId('job_select')
-                .setPlaceholder(t('job.select_placeholder', lang))
-                .addOptions(
-                    Object.values(jobs).map(j => ({
-                        label: j.id.charAt(0).toUpperCase() + j.id.slice(1),
-                        description: t(`job.info_${j.id}`, lang).substring(0, 100),
-                        value: j.id,
-                        emoji: j.icon
-                    }))
-                );
-
-            const row = new ActionRowBuilder().addComponents(select);
-
-            return interaction.reply({
-                content: t('job.milestone_desc', lang),
-                components: [row],
-                ephemeral: true
-            });
         }
     } else if (interaction.isStringSelectMenu()) {
         if (interaction.customId === 'job_select') {
             const lang = getLanguage(interaction.user.id, interaction.guildId);
             const jobId = interaction.values[0];
             const job = config.ECONOMY.JOBS[jobId];
-
-            if (!job) return interaction.reply({ content: t('job.set_error_invalid', lang), ephemeral: true });
+            if (!job) {
+                return interaction.reply({
+                    content: t('job.set_error_invalid', lang),
+                    ephemeral: !!interaction.guildId
+                });
+            }
 
             db.updateUser(interaction.user.id, { job: jobId });
 
             return interaction.update({
                 content: t('job.set_success', lang, { job: jobId.charAt(0).toUpperCase() + jobId.slice(1) }),
-                components: [],
-                ephemeral: true
+                components: []
             });
         }
     }
