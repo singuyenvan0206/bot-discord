@@ -98,18 +98,23 @@ module.exports = {
             }
 
             const diceEmojis = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-            const labels = t('dice.prediction_labels', lang);
+            const labels = {
+                'high': t('dice.label_high', lang) + ' (8-12)',
+                'low': t('dice.label_low', lang) + ' (2-6)',
+                'odd': t('dice.label_odd', lang),
+                'even': t('dice.label_even', lang),
+                '7': t('dice.label_7', lang)
+            };
 
             const resultEmbed = new EmbedBuilder()
                 .setTitle(t('dice.result_title', lang))
                 .setDescription(
                     `**${t('dice.prediction', lang)}:** ${labels[choice]}\n` +
-                    `**${t('help.usage_title', lang)}:** ${bet} coins\n\n` +
+                    `**${t('rps.betting', lang, { amount: bet })}\n\n` +
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
                     (won
                         ? t('dice.payout', lang, { amount: prize, multiplier: winMultiplier }) + bonusText
-                        : t('dice.lose_msg', lang, { amount: bet })) +
-                    `\n\n${config.EMOJIS.COIN} ${t('balance.description', lang, { balance: db.getUser(message.author.id).balance })}`
+                        : t('dice.lose_msg', lang, { amount: bet }))
                 )
                 .setColor(won ? config.COLORS.GAMBLE_WIN : config.COLORS.GAMBLE_LOSS);
 
