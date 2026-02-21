@@ -10,12 +10,12 @@ module.exports = {
         const lang = getLanguage(message.author.id, message.guild?.id);
 
         const targetUser = message.mentions.users.first();
-        const amount = parseInt(args[1]);
+        const user = db.getUser(message.author.id);
+        const { parseAmount } = require('../../utils/economy');
+        const amount = parseAmount(args[1], user.balance);
 
         if (!targetUser) return message.reply(t('transfer.mention', lang));
         if (isNaN(amount) || amount <= 0) return message.reply(t('transfer.invalid', lang));
-
-        const user = db.getUser(message.author.id);
 
         if (targetUser.id === message.author.id) return message.reply(t('transfer.self', lang));
         if (targetUser.bot) return message.reply(t('transfer.bot', lang));

@@ -523,7 +523,8 @@
         "cat_random": "Random",
         "cat_def": "Definition",
         "starts_with": "Starts with",
-        "length": "Length"
+        "length": "Length",
+        "timeout": "⌛ **Time's up!** The word was **{{word}}**."
     },
     "poker": {
         "title": "♠️♥️ Texas Hold'em ♦️♣️",

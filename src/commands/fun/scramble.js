@@ -86,7 +86,7 @@ module.exports = {
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);
         } catch {
-            message.channel.send(`${config.EMOJIS.TIMER} **${t('wordchain.timeout', lang)}** ${t('hangman.word', lang)} ${t('tictactoe.winner_msg', lang === 'vi' ? 'là' : 'is')} **${word}**.`);
+            message.channel.send(t('scramble.timeout', lang, { word }));
             startCooldown(message.client, 'scramble', message.author.id);
         }
     }

@@ -579,7 +579,8 @@
         "cat_random": "Ngẫu nhiên",
         "cat_def": "Định nghĩa",
         "starts_with": "Bắt đầu bằng",
-        "length": "Độ dài"
+        "length": "Độ dài",
+        "timeout": "⌛ **Hết thời gian!** Từ đúng là **{{word}}**."
     },
     "poker": {
         "title": "♠️♥️ Texas Hold'em ♦️♣️",
