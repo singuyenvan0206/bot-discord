@@ -5,7 +5,7 @@ const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'setstatus',
-    aliases: ['setactivity'],
+    aliases: ['setactivity', 'ss'],
     description: '[OWNER] Chỉnh sửa trạng thái Custom Activity của bot',
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

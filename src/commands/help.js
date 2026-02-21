@@ -90,16 +90,16 @@ module.exports = {
                 description: t('help.categories.owner.description', lang),
                 emoji: '👑',
                 commands: [
-                    '`$addmoney` @user <amount> — ' + (lang === 'vi' ? 'Cộng tiền' : 'Add money'),
-                    '`$removemoney` @user <amount> — ' + (lang === 'vi' ? 'Trừ tiền' : 'Remove money'),
-                    '`$additem` @user <id> [qty] — ' + (lang === 'vi' ? 'Thêm vật phẩm' : 'Add item'),
-                    '`$removeitem` @user <id> [qty] — ' + (lang === 'vi' ? 'Xóa vật phẩm' : 'Remove item'),
-                    '`$resetuser` @user — ' + (lang === 'vi' ? 'Xóa hồ sơ người dùng' : 'Reset user profile'),
-                    '`$setowner` @user confirm — ' + (lang === 'vi' ? 'Chuyển quyền owner' : 'Transfer owner'),
-                    '`$serverlist` — ' + (lang === 'vi' ? 'Danh sách máy chủ' : 'Server list'),
-                    '`$leaveserver` <id> — ' + (lang === 'vi' ? 'Rời máy chủ' : 'Leave server'),
-                    '`$setstatus` <type> <msg> — ' + (lang === 'vi' ? 'Đổi trạng thái' : 'Set status'),
-                    '`$shutdown` — ' + (lang === 'vi' ? 'Tắt bot' : 'Shutdown bot'),
+                    '`$addmoney` (`$am`) @user <amount> — ' + (lang === 'vi' ? 'Cộng tiền' : 'Add money'),
+                    '`$removemoney` (`$rm`) @user <amount> — ' + (lang === 'vi' ? 'Trừ tiền' : 'Remove money'),
+                    '`$additem` (`$ai`) @user <id> [qty] — ' + (lang === 'vi' ? 'Thêm vật phẩm' : 'Add item'),
+                    '`$removeitem` (`$ri`) @user <id> [qty] — ' + (lang === 'vi' ? 'Xóa vật phẩm' : 'Remove item'),
+                    '`$resetuser` (`$ru`) @user — ' + (lang === 'vi' ? 'Xóa hồ sơ người dùng' : 'Reset user profile'),
+                    '`$setowner` (`$so`) @user confirm — ' + (lang === 'vi' ? 'Chuyển quyền owner' : 'Transfer owner'),
+                    '`$serverlist` (`$sl`) — ' + (lang === 'vi' ? 'Danh sách máy chủ' : 'Server list'),
+                    '`$leaveserver` (`$ls`) <id> — ' + (lang === 'vi' ? 'Rời máy chủ' : 'Leave server'),
+                    '`$setstatus` (`$ss`) <type> <msg> — ' + (lang === 'vi' ? 'Đổi trạng thái' : 'Set status'),
+                    '`$shutdown` (`$sd`) — ' + (lang === 'vi' ? 'Tắt bot' : 'Shutdown bot'),
                 ]
             };
         }

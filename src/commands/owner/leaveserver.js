@@ -5,7 +5,7 @@ const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'leaveserver',
-    aliases: ['leaveguild'],
+    aliases: ['leaveguild', 'ls'],
     description: '[OWNER] Rời khỏi một máy chủ cụ thể',
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

@@ -7,7 +7,7 @@ const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'setowner',
-    aliases: ['changeowner', 'transferowner'],
+    aliases: ['changeowner', 'transferowner', 'so'],
     description: '[OWNER] Chuyển nhượng quyền Owner cho người khác',
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
