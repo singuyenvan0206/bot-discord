@@ -10,7 +10,7 @@ module.exports = {
     name: 'rps',
     aliases: ['rock', 'paper', 'scissors'],
     description: 'Trò chơi Kéo Búa Bao',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -126,7 +126,7 @@ module.exports = {
                 if (outcome === 'win') {
                     let prize = betAmount * 2;
                     const multiplier = getUserMultiplier(user.id, 'gamble');
-                    const bonus = Math.floor(betAmount * multiplier);
+                    const bonus = Math.floor(prize * multiplier);
                     prize += bonus;
 
                     db.addBalance(user.id, prize);

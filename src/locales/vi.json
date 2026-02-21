@@ -720,6 +720,10 @@
             "giveaway": {
                 "label": "Sự kiện Quà tặng",
                 "description": "Tổ chức và quản lý Giveaway"
+            },
+            "owner": {
+                "label": "Đặc quyền Owner",
+                "description": "Quản lý và điều hành hệ thống Bot"
             }
         },
         "guides": {
@@ -741,7 +745,18 @@
             "fish": "🌟 **Mô tả:** Thư giãn và thả câu! Đánh bắt từ những chú cá măng bé nhỏ đến những quái vật biển huyền thoại.\n\n🎣 **Trang bị:**\n- **Cần câu:** Mua cần Tre, Sợi thủy tinh hoặc Carbon trong `$shop`.\n- **Mồi:** Mua giun, dế hoặc mực để thu hút các loại cá khác nhau.\n\n🕹️ **Cách chơi:**\n- Chỉ cần dùng lệnh `$fish`. Bot tự chọn trang bị xịn nhất bạn có.\n- Mỗi lần câu tốn 1 mồi và có thời gian chờ ngắn.\n\n✨ **Yếu tố may mắn:** Trang bị càng xịn, chỉ số 'May mắn' càng cao, giúp bạn dễ bắt được cá hiếm (Cá mập, Kraken) với giá cực cao!",
             "work": "🌟 **Mô tả:** Xây dựng sự nghiệp và tạo thu nhập ổn định. Thăng cấp để tăng lương theo giờ!\n\n🕹️ **Cơ chế:**\n- Làm việc mỗi giờ để nhận **XP** và **Coins**.\n- Khi đủ XP, bạn sẽ **Lên cấp (Level Up)**.\n- Cấp càng cao mở khóa công việc xịn hơn và lương tăng mạnh.\n\n💰 **Chuỗi ngày làm việc:** Làm việc đều đặn mỗi ngày để tăng streak, nhận thưởng bonus hàng ngày.",
             "profile": "🌟 **Mô tả:** Hộ chiếu số của bạn! Xem chi tiết tiến trình và sự giàu có của bất kỳ ai.\n\n📊 **Thông số chi tiết:**\n- **Số dư ví:** Tiền mặt bạn đang có.\n- **Tổng tài sản (Net Worth):** Tổng giá trị tiền mặt + toàn bộ vật phẩm trong kho đồ.\n- **Thứ hạng:** Vị trí của bạn trên bảng xếp hạng giàu có toàn cầu.\n- **Kinh nghiệm:** Cấp độ hiện tại và tiến trình lên cấp tiếp theo.",
-            "leaderboard": "🌟 **Mô tả:** Bảng vàng danh dự! Xem ai đang thống trị nền kinh tế của máy chủ.\n\n🏆 **Cấu trúc:**\n- Xếp hạng dựa trên **Tổng tài sản (Net Worth)**.\n- Huy chương đặc biệt (🥇 🥈 🥉) cho Top 3 người giàu nhất.\n- Cập nhật thời gian thực khi người dùng tăng hoặc giảm tài sản."
+            "leaderboard": "🌟 **Mô tả:** Bảng vàng danh dự! Xem ai đang thống trị nền kinh tế của máy chủ.\n\n🏆 **Cấu trúc:**\n- Xếp hạng dựa trên **Tổng tài sản (Net Worth)**.\n- Huy chương đặc biệt (🥇 🥈 🥉) cho Top 3 người giàu nhất.\n- Cập nhật thời gian thực khi người dùng tăng hoặc giảm tài sản.",
+            "addmoney": "🌟 **Mô tả:** Thêm số tiền tùy ý vào tài khoản của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$addmoney @user <số_tiền>`",
+            "removemoney": "🌟 **Mô tả:** Trừ số tiền tùy ý khỏi tài khoản của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$removemoney @user <số_tiền>`",
+            "additem": "🌟 **Mô tả:** Thêm vật phẩm vào kho đồ của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$additem @user <ID_vật_phẩm> [số_lượng]`",
+            "removeitem": "🌟 **Mô tả:** Thu hồi vật phẩm khỏi kho đồ của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$removeitem @user <ID_vật_phẩm> [số_lượng]`",
+            "setlevel": "🌟 **Mô tả:** Đặt trực tiếp cấp độ hiện tại của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setlevel @user <cấp_độ>`",
+            "resetuser": "🌟 **Mô tả:** Xóa hoàn toàn toàn bộ dữ liệu (tiền, kho đồ, cấp độ) của người chơi. Hành động này không thể hoàn tác. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$resetuser @user`",
+            "setowner": "🌟 **Mô tả:** Chuyển giao quyền sở hữu Bot cho người dùng khác. Hành động này rất nguy hiểm và yêu cầu đổi `.env`. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setowner @user confirm`",
+            "serverlist": "🌟 **Mô tả:** Xem danh sách toàn bộ các máy chủ mà bot đang tham gia cùng với số lượng thành viên. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$serverlist`",
+            "leaveserver": "🌟 **Mô tả:** Ra lệnh cho Bot rời khỏi một máy chủ cụ thể theo ID. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$leaveserver <ID_máy_chủ>`",
+            "setstatus": "🌟 **Mô tả:** Đổi nội dung hiển thị trạng thái của Bot (ví dụ: Đang chơi..., Đang xem...). (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setstatus <loại> <nội_dung>`\n(Loại: chơi, xem, nghe, stream, thi_đấu)",
+            "shutdown": "🌟 **Mô tả:** Tắt tiến trình hoạt động của Bot một cách an toàn. Cần khởi động lại thủ công bằng terminal. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$shutdown`"
         }
     },
     "giveaway": {

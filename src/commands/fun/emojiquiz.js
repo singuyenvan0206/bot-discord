@@ -470,7 +470,7 @@ module.exports = {
     name: 'emojiquiz',
     aliases: ['quiz', 'eq'],
     description: 'Guess the phrase from emojis!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);

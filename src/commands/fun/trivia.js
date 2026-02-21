@@ -27,7 +27,7 @@ module.exports = {
     name: 'trivia',
     aliases: ['triv', 'tv'],
     description: 'Kiểm tra kiến thức của bạn với trò chơi Đố Vui (Trivia)!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

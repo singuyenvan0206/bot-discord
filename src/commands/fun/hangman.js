@@ -8,7 +8,7 @@ module.exports = {
     name: 'hangman',
     aliases: ['hang', 'hm'],
     description: 'Chơi Trò Chơi Người Treo Cổ (Hangman)!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

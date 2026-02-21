@@ -69,7 +69,7 @@ module.exports = {
         if (payout > 0) {
             const { getUserMultiplier } = require('../../utils/multiplier');
             const multiplier = getUserMultiplier(user.id, 'gamble');
-            const bonus = Math.floor(bet * multiplier);
+            const bonus = Math.floor(payout * multiplier);
             payout += bonus;
 
             db.addBalance(user.id, payout);

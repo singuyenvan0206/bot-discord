@@ -8,7 +8,7 @@ module.exports = {
     name: 'tictactoe',
     aliases: ['ttt'],
     description: 'Chơi trò chơi Cờ Ca-rô (Tic-Tac-Toe)!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

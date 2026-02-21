@@ -2,6 +2,7 @@
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ComponentType } = require('discord.js');
 const config = require('../config');
 const { t, getLanguage } = require('../utils/i18n');
+const db = require('../database');
 
 module.exports = {
     name: 'help',
@@ -10,6 +11,7 @@ module.exports = {
     async execute(message, args) {
         const prefix = config.PREFIX;
         const lang = getLanguage(message.author.id, message.guild?.id);
+        const isOwner = db.isOwner(message.author.id);
 
         const categories = {
             fun: {
@@ -26,7 +28,7 @@ module.exports = {
                     '`$connect4` (`$c4`) — ' + (lang === 'vi' ? 'Chơi Connect 4' : 'Play Connect 4'),
                     '`$memory` (`$mem`, `$match`) — ' + (lang === 'vi' ? 'Trò chơi lật thẻ bài' : 'Memory card game'),
                     '`$trivia` — ' + (lang === 'vi' ? 'Trắc nghiệm kiến thức' : 'Trivia quiz'),
-                    '`$emojiquiz` (`$quiz`) — ' + (lang === 'vi' ? 'Đoán phim/cụm từ qua Emoji' : 'Guess movie/phrase via Emoji'),
+                    '`$emojiquiz` (`$eq`, `$quiz`) — ' + (lang === 'vi' ? 'Đoán phim/cụm từ qua Emoji' : 'Guess movie/phrase via Emoji'),
                     '`$poker` (`$pk`) — ' + (lang === 'vi' ? 'Multiplayer High Card Poker' : 'Multiplayer High Card Poker'),
                     '`$minesweeper` (`$mine`, `$ms`) — ' + (lang === 'vi' ? 'Dò mìn (Cổ điển)' : 'Minesweeper (Classic)'),
                     '`$hangman` (`$hang`, `$hm`) — ' + (lang === 'vi' ? 'Trò chơi Người treo cổ' : 'Hangman game'),
@@ -45,10 +47,10 @@ module.exports = {
                     '`$daily` (`$d`, `$dy`) — ' + (lang === 'vi' ? 'Nhận thưởng hàng ngày' : 'Claim daily reward'),
                     '`$work` (`$w`, `$wk`) — ' + (lang === 'vi' ? 'Làm việc kiếm tiền' : 'Work to earn money'),
                     '`$shop` (`$sh`, `$store`) — ' + (lang === 'vi' ? 'Cửa hàng vật phẩm' : 'Item shop'),
-                    '`$buy` (`$b`) <id> — ' + (lang === 'vi' ? 'Mua vật phẩm' : 'Buy an item'),
-                    '`$sell` (`$s`) <id> [amount] — ' + (lang === 'vi' ? 'Bán vật phẩm (Hoàn tiền 70%)' : 'Sell items (70% refund)'),
+                    '`$buy` (`$b`) <id / all> — ' + (lang === 'vi' ? 'Mua vật phẩm' : 'Buy an item'),
+                    '`$sell` (`$s`) <id / all> [max] — ' + (lang === 'vi' ? 'Bán vật phẩm (Hoàn tiền 70%)' : 'Sell items (70% refund)'),
                     '`$inventory` (`$inv`) — ' + (lang === 'vi' ? 'Xem túi đồ của bạn' : 'View your inventory'),
-                    '`$transfer` (`$pay`, `$tf`) <user> <amount> — ' + (lang === 'vi' ? 'Chuyển tiền' : 'Transfer money'),
+                    '`$transfer` (`$pay`, `$tf`) <user> <amount / all> — ' + (lang === 'vi' ? 'Chuyển tiền' : 'Transfer money'),
                     '`$leaderboard` (`$lb`, `$top`) — ' + (lang === 'vi' ? 'Bảng xếp hạng đại gia' : 'Rich leaderboard'),
                     '`$fish` (`$fishing`, `$cast`) — ' + (lang === 'vi' ? 'Câu cá đổi lấy tiền!' : 'Go fishing for money!'),
                 ]
@@ -59,10 +61,10 @@ module.exports = {
                 emoji: '🔧',
                 commands: [
                     '`$ping` (`$p`) — ' + (lang === 'vi' ? 'Kiểm tra độ trễ bot' : 'Check bot latency'),
-                    '`$serverinfo` — ' + (lang === 'vi' ? 'Xem thông tin máy chủ' : 'View server information'),
+                    '`$serverinfo` (`$si`) — ' + (lang === 'vi' ? 'Xem thông tin máy chủ' : 'View server information'),
                     '`$userinfo` (`$user`, `$ui`) [user] — ' + (lang === 'vi' ? 'Xem chi tiết người dùng' : 'View user details'),
                     '`$avatar` (`$av`) [user] — ' + (lang === 'vi' ? 'Xem ảnh đại diện' : 'View avatar'),
-                    '`$profile` — ' + (lang === 'vi' ? 'Hồ sơ cá nhân toàn diện' : 'Comprehensive personal profile'),
+                    '`$profile` (`$pf`) — ' + (lang === 'vi' ? 'Hồ sơ cá nhân toàn diện' : 'Comprehensive personal profile'),
                     '`$language` (`$lang`) — ' + (lang === 'vi' ? 'Thiết lập ngôn ngữ' : 'Set language preferences'),
                 ]
             },
@@ -71,16 +73,36 @@ module.exports = {
                 description: t('help.categories.giveaway.description', lang),
                 emoji: '🎉',
                 commands: [
-                    '`$giveaway` (`$g`) start <time> <winners> <prize>',
-                    '`$giveaway` (`$g`) end <message_id>',
-                    '`$giveaway` (`$g`) reroll <message_id>',
-                    '`$giveaway` (`$g`) list',
-                    '`$giveaway` (`$g`) pause <message_id>',
-                    '`$giveaway` (`$g`) resume <message_id>',
-                    '`$giveaway` (`$g`) delete <message_id>',
+                    '`$giveaway` (`$g`) start (`s`) <time> <winners> <prize>',
+                    '`$giveaway` (`$g`) end (`e`) <message_id>',
+                    '`$giveaway` (`$g`) reroll (`r`) <message_id>',
+                    '`$giveaway` (`$g`) list (`l`)',
+                    '`$giveaway` (`$g`) pause (`p`) <message_id>',
+                    '`$giveaway` (`$g`) resume (`res`) <message_id>',
+                    '`$giveaway` (`$g`) delete (`d`) <message_id>',
                 ]
             }
         };
+
+        if (isOwner) {
+            categories.owner = {
+                label: t('help.categories.owner.label', lang),
+                description: t('help.categories.owner.description', lang),
+                emoji: '👑',
+                commands: [
+                    '`$addmoney` @user <amount> — ' + (lang === 'vi' ? 'Cộng tiền' : 'Add money'),
+                    '`$removemoney` @user <amount> — ' + (lang === 'vi' ? 'Trừ tiền' : 'Remove money'),
+                    '`$additem` @user <id> [qty] — ' + (lang === 'vi' ? 'Thêm vật phẩm' : 'Add item'),
+                    '`$removeitem` @user <id> [qty] — ' + (lang === 'vi' ? 'Xóa vật phẩm' : 'Remove item'),
+                    '`$resetuser` @user — ' + (lang === 'vi' ? 'Xóa hồ sơ người dùng' : 'Reset user profile'),
+                    '`$setowner` @user confirm — ' + (lang === 'vi' ? 'Chuyển quyền owner' : 'Transfer owner'),
+                    '`$serverlist` — ' + (lang === 'vi' ? 'Danh sách máy chủ' : 'Server list'),
+                    '`$leaveserver` <id> — ' + (lang === 'vi' ? 'Rời máy chủ' : 'Leave server'),
+                    '`$setstatus` <type> <msg> — ' + (lang === 'vi' ? 'Đổi trạng thái' : 'Set status'),
+                    '`$shutdown` — ' + (lang === 'vi' ? 'Tắt bot' : 'Shutdown bot'),
+                ]
+            };
+        }
 
         // 1. Check if user wants specific command help
         if (args.length > 0) {

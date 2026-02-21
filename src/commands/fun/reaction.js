@@ -8,7 +8,7 @@ module.exports = {
     name: 'reaction',
     aliases: ['react', 'rt'],
     description: 'Test your reaction speed',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);

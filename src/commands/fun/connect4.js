@@ -1,3 +1,4 @@
+
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
@@ -8,7 +9,7 @@ module.exports = {
     name: 'connect4',
     aliases: ['c4'],
     description: 'Chơi trò chơi Bốn Hàng (Connect 4)!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

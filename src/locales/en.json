@@ -720,6 +720,10 @@
             "giveaway": {
                 "label": "Giveaway Events",
                 "description": "Organize and manage Giveaways"
+            },
+            "owner": {
+                "label": "Owner Only",
+                "description": "Bot management and administration"
             }
         },
         "guides": {
@@ -741,7 +745,18 @@
             "fish": "🌟 **Description:** Relax and cast your line! Catch a variety of fish from common sardines to legendary sea monsters.\n\n🎣 **Gear Needed:**\n- **Rod:** Get a Bamboo, Fiberglass, or Carbon Fiber rod from the `$shop`.\n- **Bait:** Buy worms, crickets, or squid to attract different fish species.\n\n🕹️ **How to Play:**\n- Just type `$fish`. The bot automatically selects your highest-tier equipment.\n- Every catch uses 1 bait and has a small cooldown.\n\n✨ **Luck Factor:** Better equipment grants higher 'Luck', which drastically improves the chances of catching rare, high-value fish.",
             "work": "🌟 **Description:** Build your career and earn a steady income. Level up to increase your hourly wage!\n\n🕹️ **Mechanics:**\n- Work every hour to gain **XP** and **Coins**.\n- As you gain XP, you will **Level Up**.\n- Higher levels unlock better jobs and significant pay raises.\n\n💰 **Daily Streak:** Working consistently increases your streak, providing daily bonus coins.",
             "profile": "🌟 **Description:** Your digital passport! View a deep dive into any user's progress and wealth.\n\n📊 **Detailed Stats:**\n- **Personal Balance:** Your spendable cash.\n- **Net Worth:** Total value of your cash + all items in your inventory.\n- **Rankings:** Your position on the global wealth leaderboard.\n- **Experience:** Current level and progress toward the next one.",
-            "leaderboard": "🌟 **Description:** The hall of fame! See who rules the server's economy.\n\n🏆 **Structure:**\n- Top rankings are based on **Net Worth** (Total Assets).\n- Special medals (🥇 🥈 🥉) are awarded to the Top 3 earners.\n- Updates in real-time as users gain or lose wealth."
+            "leaderboard": "🌟 **Description:** The hall of fame! See who rules the server's economy.\n\n🏆 **Structure:**\n- Top rankings are based on **Net Worth** (Total Assets).\n- Special medals (🥇 🥈 🥉) are awarded to the Top 3 earners.\n- Updates in real-time as users gain or lose wealth.",
+            "addmoney": "🌟 **Description:** Add any amount of coins to a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$addmoney @user <amount>`",
+            "removemoney": "🌟 **Description:** Remove any amount of coins from a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$removemoney @user <amount>`",
+            "additem": "🌟 **Description:** Grant items directly to a player's inventory. (Owner Only)\n\n🕹️ **Usage:**\n`$additem @user <item_id> [quantity]`",
+            "removeitem": "🌟 **Description:** Revoke items from a player's inventory. (Owner Only)\n\n🕹️ **Usage:**\n`$removeitem @user <item_id> [quantity]`",
+            "setlevel": "🌟 **Description:** Instantly change a player's current level. (Owner Only)\n\n🕹️ **Usage:**\n`$setlevel @user <level>`",
+            "resetuser": "🌟 **Description:** Completely wipe all data (money, inventory, stats) of a player. This action cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetuser @user`",
+            "setowner": "🌟 **Description:** Transfer Bot Ownership to another user. This is an extremely destructive action and requires changing `.env`. (Owner Only)\n\n🕹️ **Usage:**\n`$setowner @user confirm`",
+            "serverlist": "🌟 **Description:** View an administrative list of all servers the bot is currently in, along with member counts. (Owner Only)\n\n🕹️ **Usage:**\n`$serverlist`",
+            "leaveserver": "🌟 **Description:** Force the bot to leave a specific server by its ID. (Owner Only)\n\n🕹️ **Usage:**\n`$leaveserver <server_id>`",
+            "setstatus": "🌟 **Description:** Change the bot's custom rich presence status text. (Owner Only)\n\n🕹️ **Usage:**\n`$setstatus <type> <text>`\n(Types: play, watch, listen, stream, compete)",
+            "shutdown": "🌟 **Description:** Safely terminate the bot process. Cannot be restarted via Discord; requires terminal access. (Owner Only)\n\n🕹️ **Usage:**\n`$shutdown`"
         }
     },
     "giveaway": {

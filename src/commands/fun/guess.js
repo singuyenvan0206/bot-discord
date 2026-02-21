@@ -8,7 +8,7 @@ module.exports = {
     name: 'guess',
     aliases: ['gn'],
     description: 'Guess the number (1-100)',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);

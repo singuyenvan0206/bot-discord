@@ -10,7 +10,7 @@ module.exports = {
     name: 'coinflip',
     aliases: ['flip', 'cf'],
     description: 'Tung đồng xu',
-    cooldown: 30,
+    cooldown: 10,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
@@ -44,7 +44,7 @@ module.exports = {
         if (won) {
             payout = bet * 2;
             const multiplier = getUserMultiplier(user.id, 'gamble');
-            const bonus = Math.floor(bet * multiplier);
+            const bonus = Math.floor(payout * multiplier);
             payout += bonus;
 
             if (payout > 0) db.addBalance(user.id, payout);

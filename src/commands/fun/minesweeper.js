@@ -7,7 +7,7 @@ module.exports = {
     name: 'minesweeper',
     aliases: ['mine', 'ms'],
     description: 'Chơi Dò Mìn (Minesweeper)! (24 ô)',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -234,7 +234,7 @@ module.exports = {
                             const baseWin = Math.ceil(bet * 1.5);
                             const { getUserMultiplier } = require('../../utils/multiplier');
                             const multiplier = getUserMultiplier(user.id, 'gamble');
-                            const bonus = Math.floor(bet * multiplier);
+                            const bonus = Math.floor(baseWin * multiplier);
                             prize = baseWin + bonus;
 
                             db.addBalance(user.id, prize);

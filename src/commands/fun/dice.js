@@ -10,7 +10,7 @@ module.exports = {
     name: 'dice',
     aliases: ['roll', 'di', 'd'],
     description: 'Đổ 2 xúc xắc và đặt cược vào kết quả!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -89,7 +89,7 @@ module.exports = {
 
             if (won) {
                 const multiplier = getUserMultiplier(message.author.id, 'gamble');
-                const bonus = Math.floor(bet * multiplier);
+                const bonus = Math.floor(prize * multiplier);
                 prize += bonus;
                 db.addBalance(message.author.id, prize);
                 if (bonus > 0) {

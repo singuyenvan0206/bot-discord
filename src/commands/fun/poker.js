@@ -9,7 +9,7 @@ module.exports = {
     name: 'poker',
     aliases: ['pk'],
     description: 'Play Texas Hold\'em Poker!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);

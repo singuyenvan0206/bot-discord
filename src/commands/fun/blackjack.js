@@ -44,7 +44,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
 
         if (payout > 0) {
             const multiplier = getUserMultiplier(i.user.id, 'gamble');
-            const bonus = Math.floor(bet * multiplier);
+            const bonus = Math.floor(payout * multiplier);
             payout += bonus;
             if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
         }
@@ -56,7 +56,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
 
         if (payout > 0) {
             const multiplier = getUserMultiplier(i.user.id, 'gamble');
-            const bonus = Math.floor(bet * multiplier);
+            const bonus = Math.floor(payout * multiplier);
             payout += bonus;
             if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
         }
@@ -83,7 +83,7 @@ module.exports = {
     name: 'blackjack',
     aliases: ['bj'],
     description: 'Chơi Xì Dách (Blackjack) đối kháng với nhà cái!',
-    cooldown: 30,
+    cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -121,9 +121,10 @@ module.exports = {
         if (handValue(playerHand) === 21) {
             if (bet) {
                 const baseProfit = Math.ceil(bet * 1.5);
+                const prize = bet + baseProfit;
                 const multiplier = getUserMultiplier(message.author.id, 'gamble');
-                const bonus = Math.floor(bet * multiplier);
-                const totalPayout = bet + baseProfit + bonus; // Refund bet + 1.5x profit + bonus
+                const bonus = Math.floor(prize * multiplier);
+                const totalPayout = prize + bonus; // Refund bet + 1.5x profit + bonus
 
                 db.addBalance(message.author.id, totalPayout);
 
