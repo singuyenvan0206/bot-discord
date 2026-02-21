@@ -55,12 +55,39 @@ module.exports = {
             }
         }
 
-        // Add Summary Summary Field
+        // Add Summary Field
         embed.addFields({
             name: t('inventory.info', lang),
             value: `${t('inventory.total_items', lang, { count: totalItems.toLocaleString() })}\n${t('inventory.inventory_value', lang, { emoji: config.EMOJIS.COIN, amount: totalValue.toLocaleString() })}`,
             inline: false
         });
+
+        // Add Active Buffs Field
+        let activeBuffs = [];
+        try {
+            activeBuffs = JSON.parse(userData.active_buffs || '[]');
+        } catch (e) { activeBuffs = []; }
+
+        const now = Math.floor(Date.now() / 1000);
+        const validBuffs = activeBuffs.filter(b => b.expiresAt > now);
+
+        if (validBuffs.length > 0) {
+            const buffList = validBuffs.map(b => {
+                const item = SHOP_ITEMS.find(i => i.id === b.itemId);
+                const itemName = t(`items.${b.itemId}.name`, lang);
+                const remaining = b.expiresAt - now;
+                const hours = Math.floor(remaining / 3600);
+                const mins = Math.ceil((remaining % 3600) / 60);
+                const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+                return `✨ **${itemName}:** +${Math.round(item.multiplier * 100)}% (${timeStr})`;
+            }).join('\n');
+
+            embed.addFields({
+                name: `⏳ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`,
+                value: buffList,
+                inline: false
+            });
+        }
 
         // Add Category Fields
         for (const [key, cat] of Object.entries(categories)) {

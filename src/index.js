@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { Client, GatewayIntentBits, Partials, Collection, Events, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Collection, Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const db = require('./database');
@@ -249,6 +249,52 @@ client.on(Events.InteractionCreate, async interaction => {
     } else if (interaction.isButton()) {
         if (interaction.customId === BUTTON_ID) {
             return handleButtonEntry(interaction);
+        }
+
+        if (interaction.customId === 'choose_job_btn') {
+            const lang = getLanguage(interaction.user.id, interaction.guildId);
+            const user = db.getUser(interaction.user.id);
+
+            if (user.level < 20) {
+                return interaction.reply({ content: t('job.set_error_level', lang, { level: 20 }), ephemeral: true });
+            }
+
+            const jobs = config.ECONOMY.JOBS;
+            const select = new StringSelectMenuBuilder()
+                .setCustomId('job_select')
+                .setPlaceholder(t('job.select_placeholder', lang))
+                .addOptions(
+                    Object.values(jobs).map(j => ({
+                        label: j.id.charAt(0).toUpperCase() + j.id.slice(1),
+                        description: t(`job.info_${j.id}`, lang).substring(0, 100),
+                        value: j.id,
+                        emoji: j.icon
+                    }))
+                );
+
+            const row = new ActionRowBuilder().addComponents(select);
+
+            return interaction.reply({
+                content: t('job.milestone_desc', lang),
+                components: [row],
+                ephemeral: true
+            });
+        }
+    } else if (interaction.isStringSelectMenu()) {
+        if (interaction.customId === 'job_select') {
+            const lang = getLanguage(interaction.user.id, interaction.guildId);
+            const jobId = interaction.values[0];
+            const job = config.ECONOMY.JOBS[jobId];
+
+            if (!job) return interaction.reply({ content: t('job.set_error_invalid', lang), ephemeral: true });
+
+            db.updateUser(interaction.user.id, { job: jobId });
+
+            return interaction.update({
+                content: t('job.set_success', lang, { job: jobId.charAt(0).toUpperCase() + jobId.slice(1) }),
+                components: [],
+                ephemeral: true
+            });
         }
     }
 });

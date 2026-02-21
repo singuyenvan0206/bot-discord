@@ -160,17 +160,137 @@
         "success": "💼 Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** coins! {{emoji}}",
         "bonus": "\n✨ **Thưởng thêm vật phẩm:** +{{amount}} coins ({{percent}}%)!",
         "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!",
-        "jobs": [
-            "Lập trình viên",
-            "Thợ xây",
-            "Phục vụ bàn",
-            "Đầu bếp",
-            "Thợ sửa xe",
-            "Bác sĩ",
-            "Họa sĩ",
-            "Streamer",
-            "Shipper",
-            "Kế toán"
+        "job_bonus": "\n✨ **Thưởng nghề nghiệp ({{job}}):** +{{amount}} coins ({{percent}}%)!",
+        "job_categories": {
+            "tier0": [
+                "Shipper",
+                "Nhân viên vệ sinh",
+                "Phục vụ bàn",
+                "Bán hàng lề đường",
+                "Nhặt ve chai",
+                "Phụ hồ",
+                "Lao công",
+                "Bảo vệ bãi xe",
+                "Rửa bát",
+                "Phát tờ rơi"
+            ],
+            "tier5": [
+                "Thợ xây",
+                "Đầu bếp",
+                "Thợ sửa xe",
+                "Bảo vệ",
+                "Tài xế công nghệ",
+                "Thợ cắt tóc",
+                "Thợ xăm",
+                "Huấn luyện viên thể hình",
+                "Nhân viên ngân hàng",
+                "Quản lý kho"
+            ],
+            "tier10": [
+                "Lập trình viên",
+                "Bác sĩ",
+                "Họa sĩ",
+                "Streamer",
+                "KTS",
+                "Luật sư",
+                "Kỹ sư AI",
+                "Nhà văn",
+                "Phiên dịch viên",
+                "Nhạc sĩ",
+                "Hacker mũ trắng"
+            ],
+            "tier20": [
+                "CEO",
+                "Chính trị gia",
+                "Phi hành gia",
+                "Nhà sáng chế",
+                "Tỉ phú",
+                "Chủ tịch tập đoàn",
+                "Tổng thống",
+                "Siêu sao Hollywood",
+                "Nhà thám hiểm vũ trụ"
+            ]
+        }
+    },
+    "crime": {
+        "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{hours}} giờ {{minutes}} phút** nữa để thực hiện phi vụ tiếp theo.",
+        "success": "💰 Bạn đã **{{action}}** thành công và cuỗm được **{{amount}}** coins! {{emoji}}",
+        "failure": "🚔 Phi vụ thất bại! Bạn bị cảnh sát bắt và phải nộp phạt **{{amount}}** coins. (10% số dư)",
+        "actions": [
+            "trộm xe đạp của hàng xóm",
+            "cướp tiệm vàng",
+            "hack tài khoản ngân hàng",
+            "buôn bán đồ lậu",
+            "móc túi khách du lịch",
+            "thao túng thị trường chứng khoán"
+        ]
+    },
+    "beg": {
+        "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
+        "success": "💰 Bạn gặp một người tốt bụng và được họ cho **{{amount}}** coins! {{emoji}}",
+        "failure": "😢 Bạn đứng xin cả buổi nhưng chẳng ai thèm cho xu nào.",
+        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "search": {
+        "cooldown": "❌ Bạn đã tìm khắp nơi rồi! Hãy nghỉ ngơi **{{minutes}} phút** trước khi tìm tiếp.",
+        "success": "🔍 Bạn lục lọi trong **{{location}}** và tìm thấy **{{amount}}** coins! {{emoji}}",
+        "locations": [
+            "thùng rác",
+            "vỉa hè",
+            "bãi cỏ",
+            "gầm cầu",
+            "ghế đá công viên",
+            "túi áo cũ",
+            "dưới đệm sofa",
+            "ngách tủ",
+            "bãi đậu xe",
+            "cống rãnh"
+        ],
+        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "rob": {
+        "cooldown": "❌ Bạn đang bị truy nã! Hãy lẩn trốn trong **{{minutes}} phút** nữa.",
+        "success": "🥷 Bạn đã lẻn vào và trộm được **{{amount}}** coins từ {{user}}! {{emoji}}",
+        "failure": "🚔 Bạn bị {{user}} phát hiện và bắt quả tang! Bạn phải bồi thường **{{amount}}** coins cho họ.",
+        "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
+        "no_money_self": "❌ Bạn cần ít nhất **100 coins** trong ví để làm vốn nếu chẳng may bị bắt!",
+        "invalid_user": "❌ Bạn không thể tự trộm chính mình!",
+        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "job": {
+        "title": "Hệ Thống Nghề Nghiệp",
+        "name_field": "Nghề nghiệp",
+        "list_desc": "⚠️ Tất cả các nghề nghiệp yêu cầu **Cấp độ 20** để kích hoạt.",
+        "current": "💼 Nghề nghiệp hiện tại: **{{job}}**",
+        "none": "Chưa có",
+        "list_title": "Danh Sách Nghề Nghiệp",
+        "set_success": "✅ Chúc mừng! Bạn đã trở thành **{{job}}**.",
+        "set_error_level": "❌ Bạn cần đạt cấp độ **{{level}}** để nhận công việc này!",
+        "set_error_invalid": "❌ Nghề nghiệp không hợp lệ. Hãy dùng `$job list` để xem danh sách.",
+        "already_has": "❌ Bạn đã làm nghề này rồi!",
+        "info_police": "Cảnh sát: Nhận tiền phạt từ các tội phạm bị bắt.",
+        "info_criminal": "Tội phạm: Tăng tỉ lệ thành công và tiền thưởng khi trộm cắp.",
+        "info_doctor": "Bác sĩ: Giảm viện phí khi gặp rủi ro.",
+        "info_programmer": "Lập trình viên: Lương cao, thưởng lớn khi làm việc.",
+        "info_farmer": "Nông dân: Nghề nghiệp ổn định cho người mới.",
+        "info_hacker": "Hacker: Tăng bội phần thưởng khi lục lọi ($search) và phi vụ ($crime).",
+        "info_streamer": "Streamer: Nhận thêm tiền donate mỗi khi làm việc ($work).",
+        "milestone_title": "🎉 ĐẠT CẤP ĐỘ 20!",
+        "milestone_desc": "Chúc mừng bạn đã đạt cấp độ chuyên gia! Đã đến lúc chọn một con đường sự nghiệp chính thức để nhận thêm các đặc quyền độc nhất.",
+        "choose_button": "Chọn Nghề Nghiệp 💼",
+        "select_placeholder": "Chọn sự nghiệp của bạn...",
+        "police_notification": "👮 **Trực ban:** Bạn vừa bắt được một tên tội phạm và nhận được **{{amount}}** coins tiền phạt! 💰",
+        "doctor_notification": "👨‍⚕️ **Bệnh viện:** Một bệnh nhân vừa nhập viện! Bạn nhận được **{{amount}}** coins phí điều trị. 🏥"
+    },
+    "slut": {
+        "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{hours}} giờ {{minutes}} phút**.",
+        "success": "💋 Bạn đã đi khách thành công và nhận được **{{amount}}** coins từ khách hàng tốt bụng! {{emoji}}",
+        "failure": "👠 Xui quá! Bạn gặp phải khách 'bùng' tiền hoặc bị bảo kê đánh, tốn **{{amount}}** coins tiền thuốc men.",
+        "actions": [
+            "đứng đường ở Công viên Gia Định",
+            "tiếp khách trong quán karaoke",
+            "đi tour với đại gia",
+            "làm sugar baby"
         ]
     },
     "balance": {
@@ -351,6 +471,10 @@
         "38": {
             "name": "⏳ Cỗ Máy Thời Gian",
             "desc": "Viết lại lịch sử (+50% Tiền Thắng Cược)"
+        },
+        "39": {
+            "name": "🎟️ Thẻ Chuyển Nghề",
+            "desc": "Sử dụng để đổi sang một công việc khác! (Tốn phí cao)"
         }
     },
     "shop": {
@@ -383,6 +507,7 @@
             "other": "📦 Khác"
         },
         "info": "📊 Tổng quan",
+        "active_buffs": "Buff Đang Hoạt Động",
         "total_items": "Tổng vật phẩm: **{{count}}**",
         "inventory_value": "Giá trị kho đồ: **{{emoji}} {{amount}}**",
         "sell_tip": "💡 Mẹo: Dùng {{prefix}}sell <vật_phẩm> để quy đổi vật phẩm thành coins!"
@@ -456,6 +581,14 @@
         "joined": "📅 Tham gia từ",
         "id": "🆔 Định danh (ID)",
         "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm"
+    },
+    "use": {
+        "prompt": "❌ Vui lòng chỉ định vật phẩm muốn sử dụng (vđ: `{{prefix}}use 39`).",
+        "not_found": "❌ Không tìm thấy vật phẩm này trong túi đồ của bạn!",
+        "not_usable": "❌ Vật phẩm này không thể sử dụng trực tiếp.",
+        "success": "✅ Bạn đã sử dụng thành công **{{item}}**!",
+        "career_reset": "🔄 Nghề nghiệp của bạn đã được thiết lập lại. Hãy chọn một con đường mới!",
+        "no_job_to_reset": "❌ Bạn hiện không có nghề nghiệp nào để chuyển đổi!"
     },
     "serverinfo": {
         "title": "📊  Thông tin máy chủ: {{name}}",
@@ -747,7 +880,12 @@
             "rps": "🌟 **Mô tả:** Kéo Búa Bao! Trò chơi dự đoán kinh điển có chế độ Đấu với Bot hoặc PvP.\n\n🕹️ **Cách chơi:**\n- Chọn vũ khí của bạn: 🪨 Búa, 📄 Bao, hoặc ✂️ Kéo.\n- **Solo:** Chơi với bot để ăn tiền cược.\n- **PvP:** Thách đấu người dùng khác một trận đấu sinh tử.\n\n⚖️ **Khắc chế:** Búa thắng Kéo, Kéo thắng Bao, Bao thắng Búa.",
             "tictactoe": "🌟 **Mô tả:** Trò chơi cờ ca-rô 3x3 chiến thuật. Xếp 3 dấu liên tiếp để thắng.\n\n🕹️ **Cách chơi:**\n1. Thách đấu người khác: `$ttt @user [tiền cược]`.\n2. Thay phiên nhau đặt dấu (❌ hoặc ⭕).\n\n💰 **Kết quả:** Người thắng ăn toàn bộ tiền cược. Hoàn tiền nếu hòa.",
             "fish": "🌟 **Mô tả:** Thư giãn và thả câu! Đánh bắt từ những chú cá măng bé nhỏ đến những quái vật biển huyền thoại.\n\n🎣 **Trang bị:**\n- **Cần câu:** Mua cần Tre, Sợi thủy tinh hoặc Carbon trong `$shop`.\n- **Mồi:** Mua giun, dế hoặc mực để thu hút các loại cá khác nhau.\n\n🕹️ **Cách chơi:**\n- Chỉ cần dùng lệnh `$fish`. Bot tự chọn trang bị xịn nhất bạn có.\n- Mỗi lần câu tốn 1 mồi và có thời gian chờ ngắn.\n\n✨ **Yếu tố may mắn:** Trang bị càng xịn, chỉ số 'May mắn' càng cao, giúp bạn dễ bắt được cá hiếm (Cá mập, Kraken) với giá cực cao!",
-            "work": "🌟 **Mô tả:** Xây dựng sự nghiệp và tạo thu nhập!\n\n🕹️ **Cơ chế:**\n- Làm việc mỗi giờ để nhận **XP** và **Coins**.\n- Cấp độ càng cao, bạn càng nhận được nhiều tiền thưởng mỗi lần kết thúc công việc.\n\n💰 **Chuỗi ngày làm việc:** Làm việc đều đặn mỗi ngày để tăng streak, nhận thưởng bonus hàng ngày.",
+            "work": "🌟 **Mô tả:** Xây dựng sự nghiệp và tạo thu nhập!\n\n🕹️ **Cơ chế:**\n- Làm việc mỗi giờ để nhận **XP** và **Coins**.\n- Cấp độ càng cao, bạn càng nhận được nhiều tiền thưởng mỗi lần kết thúc công việc.\n- Các công việc cao cấp (Bác sĩ, CEO...) yêu cầu Cấp độ cao hơn để có thể thực thi.\n\n💰 **Chuỗi ngày làm việc:** Làm việc đều đặn mỗi ngày để tăng streak, nhận thưởng bonus hàng ngày.",
+            "crime": "🌟 **Mô tả:** Thực hiện các phi vụ bất hợp pháp để kiếm tiền nhanh.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công chỉ 40%.\n- Nếu thất bại, bạn sẽ bị phạt **10% tổng số tiền** đang có.\n\n💰 **Phần thưởng:** Tiền thưởng cực lớn và nhiều XP hơn lệnh `$work`.",
+            "beg": "🌟 **Mô tả:** Thử vận may bằng cách đi xin tiền người qua đường.\n\n💰 **Phần thưởng:** Tiền thưởng cực nhỏ, nhưng ít rủi ro.",
+            "search": "🌟 **Mô tả:** Lục lọi các địa điểm ngẫu nhiên để tìm tiền rơi.\n\n💰 **Phần thưởng:** Thu nhập ở mức trung bình, thường tìm thấy trong thùng rác hoặc dưới đệm sofa.",
+            "rob": "🌟 **Mô tả:** Đột nhập và trộm tiền của người dùng khác.\n\n⚠️ **Rủi ro:**\n- Nếu thất bại, bạn sẽ phải nộp phạt và bồi thường 20% số dư của mình cho nạn nhân.\n\n💰 **Phần thưởng:** Cướp được một phần tài sản của người khác.",
+            "slut": "🌟 **Mô tả:** Đi khách để kiếm thêm thu nhập.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công 60%.\n- Nếu thất bại, bạn sẽ mất một khoản tiền thuốc men cố định.\n\n💰 **Phần thưởng:** Tiền thưởng ở mức trung bình, cân bằng giữa rủi ro và lợi nhuận.",
             "profile": "🌟 **Mô tả:** Hộ chiếu số của bạn! Xem chi tiết tiến trình và sự giàu có của bất kỳ ai.\n\n📊 **Thông số chi tiết:**\n- **Số dư ví:** Tiền mặt bạn đang có.\n- **Tổng tài sản (Net Worth):** Tổng giá trị tiền mặt + toàn bộ vật phẩm trong kho đồ.\n- **Thứ hạng:** Vị trí của bạn trên bảng xếp hạng giàu có toàn cầu.\n- **Kinh nghiệm:** Cấp độ hiện tại và tiến trình điểm để lên cấp.",
             "leaderboard": "🌟 **Mô tả:** Bảng vàng danh dự! Xem ai đang thống trị nền kinh tế của máy chủ.\n\n🏆 **Cấu trúc:**\n- Xếp hạng dựa trên **Tổng tài sản (Net Worth)**.\n- Huy chương đặc biệt (🥇 🥈 🥉) cho Top 3 người giàu nhất.\n- Cập nhật thời gian thực khi người dùng tăng hoặc giảm tài sản.",
             "addmoney": "🌟 **Mô tả:** Thêm số tiền tùy ý vào tài khoản của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$addmoney @user <số_tiền>`",

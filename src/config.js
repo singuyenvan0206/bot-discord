@@ -55,7 +55,36 @@ module.exports = {
         SELL_RECOVERY: 0.7, // 70% return
         MIN_WORK_EARNINGS: 100,
         MAX_WORK_EARNINGS: 300,
+        CRIME_COOLDOWN: 14400, // 4 hours
+        CRIME_SUCCESS_RATE: 0.4,
+        CRIME_MIN_REWARD: 1000,
+        CRIME_MAX_REWARD: 3000,
+        CRIME_FINE_PERCENT: 0.1, // Pay 10% of balance as fine
+        SLUT_COOLDOWN: 7200, // 2 hours
+        SLUT_SUCCESS_RATE: 0.6,
+        SLUT_MIN_REWARD: 400,
+        SLUT_MAX_REWARD: 1000,
+        SLUT_FAIL_PENALTY: 200, // Fixed fine
+        BEG_COOLDOWN: 300, // 5 minutes
+        BEG_SUCCESS_RATE: 0.4,
+        BEG_MIN_REWARD: 10,
+        BEG_MAX_REWARD: 50,
+        SEARCH_COOLDOWN: 600, // 10 minutes
+        SEARCH_MIN_REWARD: 50,
+        SEARCH_MAX_REWARD: 200,
+        ROB_COOLDOWN: 3600, // 1 hour
+        ROB_SUCCESS_CHANCE: 0.3,
+        ROB_FAIL_PENALTY_PERCENT: 0.2, // Loser pays 20% to victim
         MAX_BET: 250000,
-        DEFAULT_COOLDOWN: 3
+        DEFAULT_COOLDOWN: 3,
+        JOBS: {
+            police: { id: 'police', bonus: 0.1, color: '#3498db', icon: '👮' },
+            criminal: { id: 'criminal', bonus: 0.15, color: '#e74c3c', icon: '🥷' },
+            doctor: { id: 'doctor', bonus: 0.05, color: '#2ecc71', icon: '👨‍⚕️' },
+            programmer: { id: 'programmer', bonus: 0.2, color: '#9b59b6', icon: '💻' },
+            farmer: { id: 'farmer', bonus: 0.05, color: '#f1c40f', icon: '👨‍🌾' },
+            hacker: { id: 'hacker', bonus: 0.25, color: '#27ae60', icon: '👨‍💻' },
+            streamer: { id: 'streamer', bonus: 0.12, color: '#6441a5', icon: '🎥' }
+        }
     }
 };

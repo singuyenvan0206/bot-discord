@@ -29,6 +29,11 @@ module.exports = {
                 last_daily: 0,
                 last_work: 0,
                 last_rob: 0,
+                last_crime: 0,
+                last_slut: 0,
+                last_beg: 0,
+                last_search: 0,
+                job: null,
                 inventory: '{}'
             });
 

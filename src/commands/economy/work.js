@@ -1,6 +1,6 @@
 const db = require('../../database');
 const { getUserMultiplier } = require('../../utils/multiplier');
-const { addXp, getLevelMultiplier } = require('../../utils/leveling');
+const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -17,41 +17,65 @@ module.exports = {
 
         if (now - user.last_work < cooldown) {
             const remaining = (user.last_work + cooldown) - now;
-            const minutes = Math.floor(remaining / 60);
+            const minutes = Math.ceil(remaining / 60);
             return message.reply(t('work.cooldown', lang, { minutes }));
         }
 
-        const jobs = t('work.jobs', lang);
-        const job = jobs[Math.floor(Math.random() * jobs.length)];
+        const categories = t('work.job_categories', lang);
+        let availableJobs = [...categories.tier0];
 
-        // Base earnings from config
-        const minEarnings = config.ECONOMY.MIN_WORK_EARNINGS;
-        const maxEarnings = config.ECONOMY.MAX_WORK_EARNINGS;
-        const baseEarnings = Math.floor(Math.random() * (maxEarnings - minEarnings + 1)) + minEarnings;
+        if (user.level >= 5) availableJobs.push(...categories.tier5);
+        if (user.level >= 10) availableJobs.push(...categories.tier10);
+        const level = user.level;
+        let jobName;
+        let jobMultiplier = 0;
 
-        const itemMultiplier = getUserMultiplier(message.author.id, 'income');
-        const levelMultiplier = getLevelMultiplier(user.level);
+        if (user.job) {
+            const jobConfig = config.ECONOMY.JOBS[user.job];
+            jobName = user.job.charAt(0).toUpperCase() + user.job.slice(1);
+            jobMultiplier = jobConfig ? jobConfig.bonus : 0;
+        } else {
+            const categories = t('work.job_categories', lang);
+            let jobs = categories.tier0;
+            if (level >= 20) jobs = categories.tier20;
+            else if (level >= 10) jobs = categories.tier10;
+            else if (level >= 5) jobs = categories.tier5;
 
-        const itemBonus = Math.floor(baseEarnings * itemMultiplier);
-        const levelBonus = Math.floor(baseEarnings * levelMultiplier);
+            jobName = jobs[Math.floor(Math.random() * jobs.length)];
+        }
 
-        const total = baseEarnings + itemBonus + levelBonus;
+        const baseReward = Math.floor(Math.random() * 401) + 100; // 100-500
+        const multiplier = getUserMultiplier(message.author.id, 'income');
+        const levelMultiplier = getLevelMultiplier(level);
 
-        // Add random XP between 15-30 for working
+        const itemBonus = Math.floor(baseReward * multiplier);
+        const levelBonus = Math.floor(baseReward * levelMultiplier);
+        const jobBonusAmount = Math.floor(baseReward * jobMultiplier);
+
+        const total = baseReward + itemBonus + levelBonus + jobBonusAmount;
+
+        // Add random XP
         const xpGained = Math.floor(Math.random() * 16) + 15;
-        addXp(message.author.id, xpGained);
+        const xpResult = addXp(message.author.id, xpGained);
 
         db.updateUser(message.author.id, { last_work: now });
         db.addBalance(message.author.id, total);
 
-        let msg = t('work.success', lang, { job, amount: baseEarnings.toLocaleString(), emoji: config.EMOJIS.COIN });
+        let msg = t('work.success', lang, { job: jobName, amount: baseReward.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (itemBonus > 0) {
-            msg += t('work.bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMultiplier * 100) });
+            msg += t('work.bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(multiplier * 100) });
         }
         if (levelBonus > 0) {
             msg += t('work.level_bonus', lang, { amount: levelBonus.toLocaleString(), percent: Math.round(levelMultiplier * 100) });
         }
 
-        return message.reply(msg);
+        if (jobBonusAmount > 0) {
+            msg += t('work.job_bonus', lang, { job: jobName, amount: jobBonusAmount.toLocaleString(), percent: Math.round(jobMultiplier * 100) });
+        }
+
+        await message.reply(msg);
+
+        // Trigger Level 20 milestone if reached
+        return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
     }
 };

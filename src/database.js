@@ -70,7 +70,13 @@ function initSchema() {
             last_daily INTEGER DEFAULT 0,
             last_work INTEGER DEFAULT 0,
             last_rob INTEGER DEFAULT 0,
-            inventory TEXT DEFAULT '{}'
+            last_crime INTEGER DEFAULT 0,
+            last_slut INTEGER DEFAULT 0,
+            last_beg INTEGER DEFAULT 0,
+            last_search INTEGER DEFAULT 0,
+            job TEXT DEFAULT NULL,
+            inventory TEXT DEFAULT '{}',
+            active_buffs TEXT DEFAULT '[]'
         )
     `);
 
@@ -115,6 +121,7 @@ function initSchema() {
     safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
     safeAddColumn('users', 'language', "TEXT DEFAULT NULL");
+    safeAddColumn('users', 'active_buffs', "TEXT DEFAULT '[]'");
 
     migrateInventoryIds();
     migrateUserLanguages();
@@ -327,7 +334,7 @@ function getUser(userId) {
     let user = queryOne('SELECT * FROM users WHERE id = ?', [userId]);
     if (!user) {
         execute('INSERT INTO users (id) VALUES (?)', [userId]);
-        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}', language: null };
+        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_slut: 0, last_beg: 0, last_search: 0, job: null, inventory: '{}', active_buffs: '[]', language: null };
     }
     return user;
 }
@@ -468,6 +475,7 @@ module.exports = {
     getTopUsers,
     addItem,
     removeItem,
+    getRandomUserByJob,
     getGuildUser,
     updateGuildUser,
     isOwner,

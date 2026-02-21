@@ -45,6 +45,7 @@ module.exports = {
             .setColor(config.COLORS.INFO)
             .addFields(
                 { name: t('profile.experience', lang), value: t('profile.level', lang, { level: dbUser.level }) + `\n\`${progressBar}\` ${Math.floor(progressPercent)}%\n(${Math.floor(dbUser.xp)}/${Math.floor(nextLevelXp)} XP)`, inline: false },
+                { name: t('job.name_field', lang), value: dbUser.job ? dbUser.job.charAt(0).toUpperCase() + dbUser.job.slice(1) : t('job.none', lang), inline: true },
                 { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
                 { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
                 { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length }), inline: true },

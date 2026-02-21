@@ -3,19 +3,30 @@ const SHOP_ITEMS = require('./shopItems');
 
 function getUserMultiplier(userId, type) {
     const user = db.getUser(userId);
-    const inv = JSON.parse(user.inventory || '{}');
-    let totalMulti = 0;
+    let buffs = [];
+    try {
+        buffs = JSON.parse(user.active_buffs || '[]');
+    } catch (e) {
+        buffs = [];
+    }
 
-    for (const [itemId, count] of Object.entries(inv)) {
-        const item = SHOP_ITEMS.find(i => String(i.id) === itemId);
+    const now = Math.floor(Date.now() / 1000);
+    const activeBuffs = buffs.filter(b => b.expiresAt > now);
+
+    // Background cleanup if expired buffs were removed
+    if (activeBuffs.length !== buffs.length) {
+        db.updateUser(userId, { active_buffs: JSON.stringify(activeBuffs) });
+    }
+
+    let totalMulti = 0;
+    for (const buff of activeBuffs) {
+        const item = SHOP_ITEMS.find(i => i.id === buff.itemId);
         if (item && item.multiplier && item.type === type) {
-            // Stackable: multiplier * count
-            totalMulti += item.multiplier * count;
+            totalMulti += item.multiplier;
         }
     }
 
-    // --- Diministhing Returns (Dampening) ---
-    // If multiplier > 100% (1.0), the excess is halved to prevent economy inflation.
+    // --- Diminishing Returns (Dampening) ---
     if (totalMulti > 1.0) {
         totalMulti = 1.0 + (totalMulti - 1.0) * 0.5;
     }

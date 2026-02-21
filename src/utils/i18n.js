@@ -36,7 +36,7 @@ function t(key, lang = 'vi', replace = {}) {
         value = value[part];
     }
 
-    if (typeof value !== 'string') return key;
+    if (typeof value !== 'string') return value;
 
     // Handle replacements {{var}}
     Object.entries(replace).forEach(([k, v]) => {

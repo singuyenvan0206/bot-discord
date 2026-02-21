@@ -104,17 +104,137 @@
         "success": "💼 You worked as a **{{job}}** and earned **{{amount}}** coins! {{emoji}}",
         "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
         "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
-        "jobs": [
-            "Programmer",
-            "Builder",
-            "Waiter",
-            "Chef",
-            "Mechanic",
-            "Doctor",
-            "Artist",
-            "Streamer",
-            "Shipper",
-            "Accountant"
+        "job_bonus": "\n✨ **Job Bonus ({{job}}):** +{{amount}} coins ({{percent}}%)!",
+        "job_categories": {
+            "tier0": [
+                "Delivery Driver",
+                "Janitor",
+                "Waiter",
+                "Street Vendor",
+                "Scrap Collector",
+                "Bricklayer Helper",
+                "Cleaner",
+                "Parking Guard",
+                "Dishwasher",
+                "Flyer Distributor"
+            ],
+            "tier5": [
+                "Construction Worker",
+                "Chef",
+                "Mechanic",
+                "Security Guard",
+                "Ride-share Driver",
+                "Barber",
+                "Tattoo Artist",
+                "Fitness Trainer",
+                "Bank Clerk",
+                "Warehouse Manager"
+            ],
+            "tier10": [
+                "Programmer",
+                "Doctor",
+                "Artist",
+                "Streamer",
+                "Architect",
+                "Lawyer",
+                "AI Engineer",
+                "Writer",
+                "Translator",
+                "Musician",
+                "Ethical Hacker"
+            ],
+            "tier20": [
+                "CEO",
+                "Politician",
+                "Astronaut",
+                "Inventor",
+                "Billionaire",
+                "Group Chairman",
+                "President",
+                "Hollywood Superstar",
+                "Space Explorer"
+            ]
+        }
+    },
+    "crime": {
+        "cooldown": "❌ You are being watched by the police! Wait **{{hours}}h {{minutes}}m** before your next heist.",
+        "success": "💰 You successfully **{{action}}** and walked away with **{{amount}}** coins! {{emoji}}",
+        "failure": "🚔 Heist failed! You were caught by the police and fined **{{amount}}** coins. (10% of balance)",
+        "actions": [
+            "stole a neighbor's bicycle",
+            "robbed a jewelry store",
+            "hacked a bank account",
+            "trafficked contraband",
+            "pickpocketed a tourist",
+            "manipulated the stock market"
+        ]
+    },
+    "beg": {
+        "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
+        "success": "💰 A kind stranger gave you **{{amount}}** coins! {{emoji}}",
+        "failure": "😢 You begged all day but nobody gave you anything.",
+        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "search": {
+        "cooldown": "❌ You've searched everywhere! Rest for **{{minutes}} minutes** before searching again.",
+        "success": "🔍 You searched the **{{location}}** and found **{{amount}}** coins! {{emoji}}",
+        "locations": [
+            "trash can",
+            "sidewalk",
+            "grass",
+            "under a bridge",
+            "park bench",
+            "old pocket",
+            "sofa cushions",
+            "closet corner",
+            "parking lot",
+            "sewer"
+        ],
+        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "rob": {
+        "cooldown": "❌ You are wanted by the police! Hide for another **{{minutes}} minutes**.",
+        "success": "🥷 You sneaked in and stole **{{amount}}** coins from {{user}}! {{emoji}}",
+        "failure": "🚔 {{user}} caught you red-handed! You had to pay them **{{amount}}** coins as compensation.",
+        "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
+        "no_money_self": "❌ You need at least **100 coins** in your wallet to cover potential fines!",
+        "invalid_user": "❌ You can't rob yourself!",
+        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
+    },
+    "job": {
+        "title": "Job System",
+        "name_field": "Job",
+        "list_desc": "⚠️ All careers require **Level 20** to unlock.",
+        "current": "💼 Current Job: **{{job}}**",
+        "none": "None",
+        "list_title": "Available Jobs",
+        "set_success": "✅ Congratulations! You are now a **{{job}}**.",
+        "set_error_level": "❌ You need Level **{{level}}** to take this job!",
+        "set_error_invalid": "❌ Invalid job. Use `$job list` to see the list.",
+        "already_has": "❌ You are already working this job!",
+        "info_police": "Police: Receive fines from arrested criminals.",
+        "info_criminal": "Criminal: Increased success and rewards for robberies.",
+        "info_doctor": "Doctor: Reduced medical fees on failure.",
+        "info_programmer": "Programmer: High salary and big work bonuses.",
+        "info_farmer": "Farmer: Stable job for beginners.",
+        "info_hacker": "Hacker: Bonus rewards for scavenging ($search) and heists ($crime).",
+        "info_streamer": "Streamer: Receive extra donations while working ($work).",
+        "milestone_title": "🎉 LEVEL 20 REACHED!",
+        "milestone_desc": "Congratulations on reaching veteran status! It's time to choose a professional career path to unlock unique perks.",
+        "choose_button": "Choose Career 💼",
+        "select_placeholder": "Select your career path...",
+        "police_notification": "👮 **On Duty:** You caught a criminal and received **{{amount}}** coins in fines! 💰",
+        "doctor_notification": "👨‍⚕️ **Hospital:** A patient has just been admitted! You received **{{amount}}** coins in medical fees. 🏥"
+    },
+    "slut": {
+        "cooldown": "❌ You need to rest and recover! Come back in **{{hours}}h {{minutes}}m**.",
+        "success": "💋 You successfully went out and received **{{amount}}** coins from a kind customer! {{emoji}}",
+        "failure": "👠 Unlucky! You met a 'dine and dash' customer or got harassed, spending **{{amount}}** coins on medical bills.",
+        "actions": [
+            "worked the streets at the park",
+            "entertained guests at a karaoke bar",
+            "went on a tour with a tycoon",
+            "became a sugar baby"
         ]
     },
     "balance": {
@@ -295,6 +415,10 @@
         "38": {
             "name": "⏳ Time Machine",
             "desc": "Rewrite history (+50% Gamble Win)"
+        },
+        "39": {
+            "name": "🎟️ Career Change Voucher",
+            "desc": "Use to switch to a different job path! (High cost)"
         }
     },
     "shop": {
@@ -394,12 +518,21 @@
         "ranking": "🏆 Ranking",
         "wealth_rank": "**Wealth Rank:** {{rank}}",
         "unranked": "Unranked (>100)",
-        "collection": "🎒 Collection",
-        "total_items": "**Total Items:** {{count}}",
+        "inventory_value": "💰 Inventory Value: {{amount}}",
+        "active_buffs": "Active Buffs",
+        "total_items": "📦 Total Items: {{count}}",
         "item_types": "**Item Types:** {{count}}",
         "joined": "📅 Joined Since",
         "id": "🆔 Identity (ID)",
         "footer": "Type {{prefix}}inventory to see item details"
+    },
+    "use": {
+        "prompt": "❌ Please specify an item to use (e.g., `{{prefix}}use 39`).",
+        "not_found": "❌ This item was not found in your inventory!",
+        "not_usable": "❌ This item cannot be used directly.",
+        "success": "✅ Successfully used **{{item}}**!",
+        "career_reset": "🔄 Your career has been reset. Choose a new path!",
+        "no_job_to_reset": "❌ You don't have a job to reset!"
     },
     "serverinfo": {
         "title": "📊  Server Info: {{name}}",
@@ -747,7 +880,12 @@
             "rps": "🌟 **Description:** Rock, Paper, Scissors! A classic game of prediction available in Solo or PvP mode.\n\n🕹️ **How to Play:**\n- Choose your weapon: 🪨 Rock, 📄 Paper, or ✂️ Scissors.\n- **Solo:** Play against the bot for a bet.\n- **PvP:** Challenge another user to a high-stakes duel.\n\n⚖️ **Counters:** Rock beats Scissors, Scissors beats Paper, Paper beats Rock.",
             "tictactoe": "🌟 **Description:** The timeless 3x3 strategy game. Get three in a row to win.\n\n🕹️ **How to Play:**\n1. Challenge another user: `$ttt @user [bet]`.\n2. Take turns placing your mark (❌ or ⭕).\n\n💰 **Outcome:** Winner takes the pot. Refund on draw.",
             "fish": "🌟 **Description:** Relax and cast your line! Catch a variety of fish from common sardines to legendary sea monsters.\n\n🎣 **Gear Needed:**\n- **Rod:** Get a Bamboo, Fiberglass, or Carbon Fiber rod from the `$shop`.\n- **Bait:** Buy worms, crickets, or squid to attract different fish species.\n\n🕹️ **How to Play:**\n- Just type `$fish`. The bot automatically selects your highest-tier equipment.\n- Every catch uses 1 bait and has a small cooldown.\n\n✨ **Luck Factor:** Better equipment grants higher 'Luck', which drastically improves the chances of catching rare, high-value fish.",
-            "work": "🌟 **Description:** Build your career and earn a steady income.\n\n🕹️ **Mechanics:**\n- Work every hour to gain **XP** and **Coins**.\n- The higher your level, the larger the bonus payout for every job.\n\n💰 **Daily Streak:** Working consistently increases your streak, providing daily bonus coins.",
+            "work": "🌟 **Description:** Build your career and earn a steady income.\n\n🕹️ **Mechanics:**\n- Work every hour to gain **XP** and **Coins**.\n- The higher your level, the larger the bonus payout for every job.\n- High-tier jobs (Doctor, CEO...) require a higher Level to unlock.\n\n💰 **Daily Streak:** Working consistently increases your streak, providing daily bonus coins.",
+            "crime": "🌟 **Description:** Execute illegal heists for fast cash.\n\n⚠️ **Risks:**\n- Success rate is only 40%.\n- If you fail, you'll be fined **10% of your total balance**.\n\n💰 **Rewards:** Massive payouts and much more XP than `$work`.",
+            "beg": "🌟 **Description:** Try your luck by begging strangers for money.\n\n💰 **Rewards:** Very small payouts, but low risk.",
+            "search": "🌟 **Description:** Scavenge random locations for dropped coins.\n\n💰 **Rewards:** Moderate income, usually found in trash cans or under sofa cushions.",
+            "rob": "🌟 **Description:** Break in and steal coins from another user.\n\n⚠️ **Risks:**\n- If you fail, you'll pay a 20% fine of your balance to the victim.\n\n💰 **Rewards:** Steal a portion of someone else's wealth.",
+            "slut": "🌟 **Description:** Go out and earn extra income through 'side' services.\n\n⚠️ **Risks:**\n- Success rate is 60%.\n- If you fail, you'll pay a fixed medical fee.\n\n💰 **Rewards:** Moderate payouts, balancing risk and profit.",
             "profile": "🌟 **Description:** Your digital passport! View a deep dive into any user's progress and wealth.\n\n📊 **Detailed Stats:**\n- **Personal Balance:** Your spendable cash.\n- **Net Worth:** Total value of your cash + all items in your inventory.\n- **Rankings:** Your position on the global wealth leaderboard.\n- **Experience:** Your current level and XP progression.",
             "leaderboard": "🌟 **Description:** The hall of fame! See who rules the server's economy.\n\n🏆 **Structure:**\n- Top rankings are based on **Net Worth** (Total Assets).\n- Special medals (🥇 🥈 🥉) are awarded to the Top 3 earners.\n- Updates in real-time as users gain or lose wealth.",
             "addmoney": "🌟 **Description:** Add any amount of coins to a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$addmoney @user <amount>`",

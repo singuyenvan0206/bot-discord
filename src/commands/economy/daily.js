@@ -1,6 +1,6 @@
 const db = require('../../database');
 const { getUserMultiplier } = require('../../utils/multiplier');
-const { addXp, getLevelMultiplier } = require('../../utils/leveling');
+const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -33,7 +33,7 @@ module.exports = {
         const total = baseReward + itemBonus + levelBonus;
 
         // Add 50 XP for claiming daily
-        addXp(message.author.id, 50);
+        const xpResult = addXp(message.author.id, 50);
 
         db.updateUser(message.author.id, { last_daily: now });
         db.addBalance(message.author.id, total);
@@ -46,6 +46,7 @@ module.exports = {
             msg += t('daily.level_bonus', lang, { amount: levelBonus.toLocaleString(), percent: Math.round(levelMultiplier * 100) });
         }
 
-        return message.reply(msg);
+        await message.reply(msg);
+        return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
     }
 };

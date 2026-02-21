@@ -31,11 +31,19 @@ module.exports = {
             const itemsList = currentItems.length > 0 ? currentItems.map(i => {
                 const name = t(`items.${i.id}.name`, lang);
                 const description = t(`items.${i.id}.desc`, lang);
+
                 let desc = `*${description}*`;
+                let durationExtra = '';
+                if (i.duration) {
+                    const hours = Math.floor(i.duration / 3600);
+                    const timeStr = hours > 0 ? `${hours}h` : `${Math.floor(i.duration / 60)}m`;
+                    durationExtra = ` [⏳ ${timeStr}]`;
+                }
+
                 if (i.multiplier) {
                     desc += t('shop.bonus_label', lang, { percent: Math.round(i.multiplier * 100) });
                 }
-                return `**${name}** — ${config.EMOJIS.COIN} ${i.price.toLocaleString()}\n${desc}\nID: \`${i.id}\``;
+                return `**${name}** — ${config.EMOJIS.COIN} ${i.price.toLocaleString()}${durationExtra}\n${desc}\nID: \`${i.id}\``;
             }).join('\n\n') : t('shop.empty', lang);
 
             const categoryName = t(`shop.categories.${category}`, lang);

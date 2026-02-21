@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const { startCooldown } = require('../../utils/cooldown');
+const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -136,11 +136,22 @@ module.exports = {
             }
 
             embed.setFooter({ text: t('fish.footer_success', lang, { bait: baitName }) });
+
+            // Add XP for success
+            const xpGained = Math.floor(Math.random() * 21) + 20; // 20-40 XP
+            const xpResult = addXp(message.author.id, xpGained);
+
+            await message.reply({ embeds: [embed] });
+            await checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
         } else {
             embed.setFooter({ text: t('fish.footer_fail', lang) });
+            const xpResult = addXp(message.author.id, 5); // 5 XP for fail
+
+            await message.reply({ embeds: [embed] });
+            await checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
         }
 
-        message.reply({ embeds: [embed] });
+        const { startCooldown } = require('../../utils/cooldown');
         startCooldown(message.client, 'fish', message.author.id);
     }
 };
