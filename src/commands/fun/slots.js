@@ -6,9 +6,9 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'slots',
-    aliases: ['slot'],
-    description: 'Quay máy đánh bạc (Slot machine)!',
-    cooldown: 30,
+    aliases: ['slot', 'sl'],
+    description: 'Quay slot machine!',
+    cooldown: 5,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild.id);
@@ -25,7 +25,7 @@ module.exports = {
         }
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        const weights = [40, 30, 15, 8, 4, 2, 1]; // Heavier weight on common symbols
+        const weights = [22, 20, 18, 15, 12, 9, 4]; // Flatter distribution makes matching significantly harder
         const totalWeight = weights.reduce((a, b) => a + b, 0);
 
         function weightedRandom() {
@@ -45,7 +45,8 @@ module.exports = {
         const allMatch = r2[0] === r2[1] && r2[1] === r2[2];
         const twoMatch = r2[0] === r2[1] || r2[1] === r2[2] || r2[0] === r2[2];
 
-        const multiplierMap = { '7️⃣': 100, '💎': 50, '⭐': 25, '🍉': 10, '🍊': 5, '🍋': 3, '🍒': 2 };
+        // Adjusted multipliers for extreme difficulty
+        const multiplierMap = { '7️⃣': 150, '💎': 75, '⭐': 40, '🍉': 20, '🍊': 10, '🍋': 5, '🍒': 3 };
 
         let result, color;
         let payout = 0;
@@ -55,11 +56,11 @@ module.exports = {
             payout = bet ? bet * mult : 0;
             color = r2[0] === '7️⃣' ? 0xFF9900 : config.COLORS.GAMBLE_WIN;
         } else if (twoMatch) {
-            // Difficulty Increase: Two match payout nerfed from 1.5x to 0.5x
-            const mult = 0.5;
-            result = t('slots.win_small', lang);
-            payout = bet ? Math.floor(bet * mult) : 0;
-            color = config.COLORS.GAMBLE_LOSS; // It's technically a loss of half
+            // Further Difficulty Increase: Two match payout completely removed - pure loss
+            const mult = 0;
+            result = t('slots.lose', lang); // Treat as a complete lose now
+            payout = 0;
+            color = config.COLORS.GAMBLE_LOSS;
         } else {
             result = t('slots.lose', lang);
             color = config.COLORS.GAMBLE_LOSS;

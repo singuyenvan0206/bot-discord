@@ -4,14 +4,12 @@ const config = require('../../config');
 
 module.exports = {
     name: 'ping',
-    aliases: ['p', 'pong'],
-    description: 'Kiểm tra độ trễ và trạng thái hoạt động của bot',
+    aliases: ['pong'],
+    description: 'Kiểm tra độ trễ của bot',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const sent = await message.reply(t('ping.checking', lang));
-        const roundtrip = sent.createdTimestamp - message.createdTimestamp;
-        const heartbeat = message.client.ws.ping;
-        const uptime = process.uptime();
+            const roundtrip = sent.createdTimestamp - message.createdTimestamp;
+            const heartbeat = message.client.ws.ping;
+            const uptime = process.uptime();
 
         // Format uptime
         const days = Math.floor(uptime / 86400);

@@ -5,8 +5,8 @@ const config = require('../../config');
 module.exports = {
     name: 'serverinfo',
     aliases: ['server', 'si'],
-    description: 'Xem thông tin chi tiết về máy chủ',
-    async execute(message, args) {
+    description: 'Hiển thị thông tin máy chủ',
+    async execute(message) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const guild = message.guild;
         const owner = await guild.fetchOwner().catch(() => null);

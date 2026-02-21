@@ -6,7 +6,7 @@ const config = require('../../config');
 
 module.exports = {
     name: 'reaction',
-    aliases: ['react'],
+    aliases: ['react', 'rt'],
     description: 'Test your reaction speed',
     cooldown: 30,
     manualCooldown: true,

@@ -8,7 +8,7 @@ const { getUserMultiplier } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'rps',
-    aliases: ['rock'],
+    aliases: ['rock', 'paper', 'scissors'],
     description: 'Trò chơi Kéo Búa Bao',
     cooldown: 30,
     manualCooldown: true,
@@ -21,15 +21,20 @@ module.exports = {
 
         let userChoice = args[0]?.toLowerCase();
 
-        // Support Vietnamese inputs
-        if (userChoice === 'bua' || userChoice === 'búa') userChoice = 'rock';
-        if (userChoice === 'bao') userChoice = 'paper';
-        if (userChoice === 'keo' || userChoice === 'kéo') userChoice = 'scissors';
+        // Support Vietnamese inputs and shorthands
+        const rockAliases = ['bua', 'búa', 'r', 'b'];
+        const paperAliases = ['bao', 'p'];
+        const scissorsAliases = ['keo', 'kéo', 's', 'k'];
+
+        if (rockAliases.includes(userChoice)) userChoice = 'rock';
+        if (paperAliases.includes(userChoice)) userChoice = 'paper';
+        if (scissorsAliases.includes(userChoice)) userChoice = 'scissors';
 
         let bet = 0;
 
-        // Check if first arg is a bet amount
-        if (args[0] && !choices.includes(userChoice) && !['bua', 'búa', 'bao', 'keo', 'kéo'].includes(args[0]?.toLowerCase())) {
+        // Check if first arg is a bet amount using all known aliases
+        const allValidChoices = [...choices, ...rockAliases, ...paperAliases, ...scissorsAliases];
+        if (args[0] && !allValidChoices.includes(args[0]?.toLowerCase())) {
             bet = parseAmount(args[0], user.balance);
             userChoice = null; // No choice made yet
         } else if (args[1]) {

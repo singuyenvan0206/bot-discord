@@ -1,0 +1,275 @@
+[
+  {
+    "f": "./src/commands/economy/balance.js",
+    "name": "balance",
+    "aliases": [
+      "bal",
+      "bl"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/buy.js",
+    "name": "buy",
+    "aliases": [
+      "b"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/daily.js",
+    "name": "daily",
+    "aliases": [
+      "d",
+      "dy"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/fish.js",
+    "name": "fish",
+    "aliases": [
+      "fishing",
+      "cast"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/inventory.js",
+    "name": "inventory",
+    "aliases": [
+      "inv"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/iteminfo.js",
+    "name": "iteminfo",
+    "aliases": [
+      "item",
+      "info",
+      "ii"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/leaderboard.js",
+    "name": "leaderboard",
+    "aliases": [
+      "lb",
+      "top"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/sell.js",
+    "name": "sell",
+    "aliases": [
+      "s"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/shop.js",
+    "name": "shop",
+    "aliases": [
+      "store",
+      "sh"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/transfer.js",
+    "name": "transfer",
+    "aliases": [
+      "pay",
+      "tf"
+    ]
+  },
+  {
+    "f": "./src/commands/economy/work.js",
+    "name": "work",
+    "aliases": [
+      "w",
+      "wk"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/blackjack.js",
+    "name": "blackjack",
+    "aliases": [
+      "bj"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/coinflip.js",
+    "name": "coinflip",
+    "aliases": [
+      "flip",
+      "cf"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/connect4.js",
+    "name": "connect4",
+    "aliases": [
+      "c4"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/dice.js",
+    "name": "dice",
+    "aliases": [
+      "roll",
+      "d"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/emojiquiz.js",
+    "name": "emojiquiz",
+    "aliases": [
+      "quiz",
+      "eq"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/guess.js",
+    "name": "guess",
+    "aliases": [
+      "gn"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/hangman.js",
+    "name": "hangman",
+    "aliases": [
+      "hang",
+      "hm"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/memory.js",
+    "name": "memory",
+    "aliases": [
+      "mem",
+      "match"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/minesweeper.js",
+    "name": "minesweeper",
+    "aliases": [
+      "mine",
+      "ms"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/poker.js",
+    "name": "poker",
+    "aliases": [
+      "pk"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/reaction.js",
+    "name": "reaction",
+    "aliases": [
+      "react"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/rps.js",
+    "name": "rps",
+    "aliases": [
+      "rock"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/scramble.js",
+    "name": "scramble",
+    "aliases": [
+      "scram"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/slots.js",
+    "name": "slots",
+    "aliases": [
+      "slot"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/tictactoe.js",
+    "name": "tictactoe",
+    "aliases": [
+      "ttt"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/trivia.js",
+    "name": "trivia",
+    "aliases": [
+      "triv"
+    ]
+  },
+  {
+    "f": "./src/commands/fun/wordchain.js",
+    "name": "wordchain",
+    "aliases": [
+      "wc"
+    ]
+  },
+  {
+    "f": "./src/commands/giveaway.js",
+    "name": "giveaway",
+    "aliases": [
+      "g"
+    ]
+  },
+  {
+    "f": "./src/commands/help.js",
+    "name": "help"
+  },
+  {
+    "f": "./src/commands/utility/avatar.js",
+    "name": "avatar",
+    "aliases": [
+      "av",
+      "pfp"
+    ]
+  },
+  {
+    "f": "./src/commands/utility/language.js",
+    "name": "language",
+    "aliases": [
+      "lang",
+      "ngonngu",
+      "setlanguage",
+      "setlang"
+    ]
+  },
+  {
+    "f": "./src/commands/utility/ping.js",
+    "name": "ping",
+    "aliases": [
+      "p",
+      "pong"
+    ]
+  },
+  {
+    "f": "./src/commands/utility/profile.js",
+    "name": "profile",
+    "aliases": [
+      "p",
+      "prof"
+    ]
+  },
+  {
+    "f": "./src/commands/utility/serverinfo.js",
+    "name": "serverinfo",
+    "aliases": [
+      "server",
+      "si"
+    ]
+  },
+  {
+    "f": "./src/commands/utility/userinfo.js",
+    "name": "userinfo",
+    "aliases": [
+      "user",
+      "ui",
+      "whois"
+    ]
+  }
+]

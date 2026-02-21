@@ -8,7 +8,7 @@ const { getUserMultiplier } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'dice',
-    aliases: ['roll', 'd'],
+    aliases: ['roll', 'di', 'd'],
     description: 'Đổ 2 xúc xắc và đặt cược vào kết quả!',
     cooldown: 30,
     manualCooldown: true,

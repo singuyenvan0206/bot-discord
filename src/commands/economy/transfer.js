@@ -4,7 +4,7 @@ const config = require('../../config');
 
 module.exports = {
     name: 'transfer',
-    aliases: ['pay', 'tf'],
+    aliases: ['pay', 'tf', 'tr'],
     description: 'Chuyển tiền cho người dùng khác',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

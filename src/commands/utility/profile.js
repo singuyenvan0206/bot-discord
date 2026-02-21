@@ -6,8 +6,8 @@ const { calculateNetWorth } = require('../../utils/economy');
 
 module.exports = {
     name: 'profile',
-    aliases: ['p', 'prof'],
-    description: 'Xem hồ sơ cá nhân toàn diện của bạn',
+    aliases: ['p', 'pr', 'prof'],
+    description: 'Hiển thị hồ sơ người dùng đầy đủ',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()

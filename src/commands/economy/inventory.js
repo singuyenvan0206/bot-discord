@@ -6,7 +6,7 @@ const config = require('../../config');
 
 module.exports = {
     name: 'inventory',
-    aliases: ['inv'],
+    aliases: ['inv', 'i', 'bag'],
     description: 'Xem túi đồ của bạn',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

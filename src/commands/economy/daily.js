@@ -5,8 +5,9 @@ const config = require('../../config');
 
 module.exports = {
     name: 'daily',
-    aliases: ['d', 'dy'],
-    description: 'Nhận phần thưởng hàng ngày của bạn',
+    aliases: ['dy', 'day'],
+    description: 'Nhận phần thưởng điểm danh hàng ngày',
+    cooldown: 5,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 

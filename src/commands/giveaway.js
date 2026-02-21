@@ -7,8 +7,9 @@ const config = require('../config');
 
 module.exports = {
     name: 'giveaway',
-    aliases: ['g'],
-    description: 'Quản lý sự kiện tặng quà (Giveaway)',
+    aliases: ['g', 'gw'],
+    description: 'Quản lý giveaway',
+    cooldown: 5,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         if (!isManager(message.member)) {
@@ -17,7 +18,7 @@ module.exports = {
 
         const subcommand = args[0]?.toLowerCase();
 
-        if (subcommand === 'start') {
+        if (subcommand === 'start' || subcommand === 's' || subcommand === 'st') {
             // $giveaway start <time> <winners> <prize>
             const durationInput = args[1];
             const winnersInput = args[2];
@@ -66,7 +67,7 @@ module.exports = {
                 hostId: message.author.id,
             });
 
-        } else if (subcommand === 'end') {
+        } else if (subcommand === 'end' || subcommand === 'e' || subcommand === 'en') {
             const messageId = args[1];
             if (!messageId) return message.reply(`❌ ${t('giveaway.usage_end', lang, { prefix: config.PREFIX })}`);
 
@@ -77,7 +78,7 @@ module.exports = {
             db.updateGiveaway(giveaway.message_id, { endsAt: Math.floor(Date.now() / 1000) - 1 });
             message.reply(`✅ ${t('giveaway.ending_msg', lang)}`);
 
-        } else if (subcommand === 'reroll') {
+        } else if (subcommand === 'reroll' || subcommand === 'r' || subcommand === 'rr') {
             const messageId = args[1];
             if (!messageId) return message.reply(`❌ ${t('giveaway.usage_reroll', lang, { prefix: config.PREFIX })}`);
 
@@ -95,14 +96,14 @@ module.exports = {
             }
             message.reply(`✅ ${t('giveaway.rerolled', lang)}`);
 
-        } else if (subcommand === 'list') {
+        } else if (subcommand === 'list' || subcommand === 'l' || subcommand === 'li') {
             const giveaways = db.getActiveGiveaways().filter(g => g.guild_id === message.guild.id);
             if (giveaways.length === 0) return message.reply(`❌ ${t('giveaway.no_active', lang)}`);
 
             const list = giveaways.map(g => `ID: \`${g.message_id}\` | ${t('giveaway.prize', lang)}: **${g.prize}** | ${t('giveaway.ends', lang)}: <t:${g.ends_at}:R>`).join('\n');
             message.reply(`🎉 **${t('giveaway.active_list_title', lang)}**\n${list}`);
 
-        } else if (subcommand === 'delete') {
+        } else if (subcommand === 'delete' || subcommand === 'd' || subcommand === 'del') {
             const messageId = args[1];
             if (!messageId) return message.reply(`❌ ${t('giveaway.usage_delete', lang, { prefix: config.PREFIX })}`);
 

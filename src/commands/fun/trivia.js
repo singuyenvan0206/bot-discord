@@ -25,7 +25,7 @@ function decodeHtml(html) {
 
 module.exports = {
     name: 'trivia',
-    aliases: ['triv'],
+    aliases: ['triv', 'tv'],
     description: 'Kiểm tra kiến thức của bạn với trò chơi Đố Vui (Trivia)!',
     cooldown: 30,
     manualCooldown: true,

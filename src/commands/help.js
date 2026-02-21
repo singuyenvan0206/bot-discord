@@ -1,10 +1,12 @@
+
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ComponentType } = require('discord.js');
 const config = require('../config');
 const { t, getLanguage } = require('../utils/i18n');
 
 module.exports = {
     name: 'help',
-    description: 'Shows a list of all available commands',
+    aliases: ['h'],
+    description: 'Hiển thị danh sách lệnh',
     async execute(message, args) {
         const prefix = config.PREFIX;
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -87,10 +89,10 @@ module.exports = {
                 message.client.commands.find(c => c.aliases && c.aliases.includes(name));
 
             if (!command) {
-                return message.reply(`❌ Could not find command **${name}**!`);
+                return message.reply(`❌ Could not find command ** ${name}** !`);
             }
 
-            const guide = t(`help.guides.${command.name}`, lang).replace(/\$/g, prefix);
+            const guide = t(`help.guides.${command.name} `, lang).replace(/\$/g, prefix);
             const usage = command.usage || '';
 
             const embed = new EmbedBuilder()
@@ -98,7 +100,7 @@ module.exports = {
                 .setDescription(command.description || t('help.no_description', lang))
                 .setColor(config.COLORS.INFO)
                 .addFields(
-                    { name: `📝 ${t('help.aliases', lang)}`, value: command.aliases ? command.aliases.map(a => `\`${prefix}${a}\``).join(', ') : t('help.none', lang), inline: true },
+                    { name: `📝 ${t('help.aliases', lang)} `, value: command.aliases ? command.aliases.map(a => `\`${prefix}${a}\``).join(', ') : t('help.none', lang), inline: true },
                     { name: `⏱️ ${t('help.cooldown', lang)}`, value: `${command.cooldown || 3}s`, inline: true },
                     { name: `💡 ${t('help.usage_title', lang)}`, value: `\`${prefix}${command.name} ${usage}\``.trim(), inline: true },
                     { name: `🔍 ${t('help.guide_title', lang)}`, value: guide.startsWith('help.guides') ? t('help.no_guide', lang) : guide, inline: false }

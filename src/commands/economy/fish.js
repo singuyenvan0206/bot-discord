@@ -39,7 +39,7 @@ const CATCHES = [
 
 module.exports = {
     name: 'fish',
-    aliases: ['fishing', 'cast'],
+    aliases: ['f', 'fishing', 'cast'],
     description: 'Đi câu cá! Đòi hỏi phải có cần câu và mồi.',
     cooldown: 60,
     async execute(message, args) {

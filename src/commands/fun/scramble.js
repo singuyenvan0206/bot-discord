@@ -6,7 +6,7 @@ const config = require('../../config');
 
 module.exports = {
     name: 'scramble',
-    aliases: ['scram'],
+    aliases: ['scram', 'scr'],
     description: 'Sắp xếp lại từ đã bị xáo trộn',
     cooldown: 30,
     manualCooldown: true,
