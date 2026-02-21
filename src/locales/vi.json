@@ -899,7 +899,21 @@
             "setlevel": "🌟 **Mô tả:** Đặt trực tiếp cấp độ hiện tại của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setlevel @user <cấp_độ>`",
             "resetuser": "🌟 **Mô tả:** Xóa hoàn toàn toàn bộ dữ liệu (tiền, kho đồ, cấp độ) của người chơi. Hành động này không thể hoàn tác. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$resetuser @user`",
             "setowner": "🌟 **Mô tả:** Chuyển giao quyền sở hữu Bot cho người dùng khác. Hành động này rất nguy hiểm và yêu cầu đổi `.env`. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setowner @user confirm`",
-            "shutdown": "🌟 **Mô tả:** Tắt tiến trình hoạt động của Bot một cách an toàn. Cần khởi động lại thủ công bằng terminal. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$shutdown`"
+            "shutdown": "🌟 **Mô tả:** Tắt tiến trình hoạt động của Bot một cách an toàn. Cần khởi động lại thủ công bằng terminal. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$shutdown`",
+            "balance": "🌟 **Mô tả:** Kiểm tra số dư tài khoản của bạn hoặc người khác.\n\n🕹️ **Cách dùng:**\n- `$balance`: Xem ví cá nhân.\n- `$balance @user`: Xem ví của người khác.",
+            "daily": "🌟 **Mô tả:** Nhận quà tặng coins miễn phí mỗi 24 giờ.\n\n🕹️ **Cách dùng:**\n- `$daily`\n\n💡 **Mẹo:** Duy trì điểm danh hàng ngày để tăng chuỗi streak và nhận nhiều quà hơn!",
+            "job": "🌟 **Mô tả:** Hệ thống sự nghiệp chuyên sâu mở khóa tại Cấp độ 20.\n\n🕹️ **Lệnh con:**\n- `$job list`: Xem danh sách nghề và đặc quyền.\n- `$job info`: Xem chi tiết nghề hiện tại.\n\n💼 **Lưu ý:** Dùng 'Thẻ Chuyển Nghề' để đổi con đường sự nghiệp.",
+            "inventory": "🌟 **Mô tả:** Xem toàn bộ vật phẩm bạn đang sở hữu và các buff đang hoạt động.\n\n🕹️ **Cách dùng:**\n- `$inventory`\n- `$inventory @user`: Xem kho đồ người khác.",
+            "buy": "🌟 **Mô tả:** Mua các vật phẩm từ cửa hàng.\n\n🕹️ **Cách dùng:**\n- `$buy <ID/Tên> [số lượng]`\n\n💡 **Mẹo:** Xem ID vật phẩm tại `$shop`.",
+            "sell": "🌟 **Mô tả:** Bán vật phẩm trong kho để lấy lại coins.\n\n🕹️ **Cách dùng:**\n- `$sell <ID/Tên> [số lượng]`\n\n⚖️ **Hoàn tiền:** Nhận lại 70% giá trị ban đầu.",
+            "iteminfo": "🌟 **Mô tả:** Xem thông tin chi tiết, tác dụng và nghề nghiệp phù hợp của vật phẩm.\n\n🕹️ **Cách dùng:**\n- `$iteminfo <ID/Tên>`",
+            "use": "🌟 **Mô tả:** Sử dụng vật phẩm để kích hoạt hiệu ứng buff.\n\n🕹️ **Cách dùng:**\n- `$use <ID_vật_phẩm>`",
+            "transfer": "🌟 **Mô tả:** Chuyển coins an toàn cho người dùng khác.\n\n🕹️ **Cách dùng:**\n- `$transfer @user <số_tiền>`",
+            "ping": "🌟 **Mô tả:** Kiểm tra độ trễ phản hồi của Bot và thông tin hệ thống.\n\n🕹️ **Cách dùng:**\n- `$ping`",
+            "avatar": "🌟 **Mô tả:** Xem ảnh đại diện của bạn hoặc người dùng khác ở kích thước lớn.\n\n🕹️ **Cách dùng:**\n- `$avatar [@user]`",
+            "language": "🌟 **Mô tả:** Thay đổi ngôn ngữ hiển thị của Bot (vi/en).\n\n🕹️ **Cách dùng:**\n- `$language <vi|en>`: Đổi ngôn ngữ cá nhân.\n- `$language server <vi|en>`: Đổi ngôn ngữ toàn máy chủ (Admin).",
+            "serverinfo": "🌟 **Mô tả:** Xem thông tin tổng quan về máy chủ Discord này.\n\n🕹️ **Cách dùng:**\n- `$serverinfo`",
+            "userinfo": "🌟 **Mô tả:** Xem thông tin chi tiết về một người dùng (Ngày tham gia, vai trò...).\n\n🕹️ **Cách dùng:**\n- `$userinfo [@user]`"
         }
     },
     "iteminfo": {

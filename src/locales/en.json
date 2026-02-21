@@ -902,8 +902,20 @@
             "leaveserver": "🌟 **Description:** Force the bot to leave a specific server by its ID. (Owner Only)\n\n🕹️ **Usage:**\n`$leaveserver <server_id>`",
             "setstatus": "🌟 **Description:** Change the bot's custom rich presence status text. (Owner Only)\n\n🕹️ **Usage:**\n`$setstatus <type> <text>`\n(Types: play, watch, listen, stream, compete)",
             "shutdown": "🌟 **Description:** Safely terminate the bot process. Cannot be restarted via Discord; requires terminal access. (Owner Only)\n\n🕹️ **Usage:**\n`$shutdown`",
-            "job": "🌟 **Description:** Advanced career system. Upon reaching Level 20, you can choose a profession to unlock unique perks.\n\n⚙️ **Sub-commands:**\n- `$job list`: View all available jobs and their perks.\n- `$job info`: View detailed info about your current job.\n\n💼 **Note:** Professions unlock at level 20. To switch careers, purchase a 'Career Change Voucher' in `$shop`.",
-            "use": "🌟 **Description:** Consume usable items from your inventory to activate temporary buff effects.\n\n🕹️ **Usage:**\n`$use <item_id>` (e.g., `$use 1` to eat a cookie).\n\n✨ **Effects:**\n- Most items provide a % earnings bonus for a limited duration.\n- View your active buffs anytime using `$inventory`."
+            "balance": "🌟 **Description:** Check your own or another user's coin balance.\n\n🕹️ **Usage:**\n- `$balance`: View your own wallet.\n- `$balance @user`: View the specified user's wallet.",
+            "daily": "🌟 **Description:** Claim your free daily coin reward every 24 hours.\n\n🕹️ **Usage:**\n- `$daily`\n\n💡 **Tip:** Maintain a daily streak to increase your rewards!",
+            "job": "🌟 **Description:** Advanced career system that unlocks at Level 20.\n\n⚙️ **Sub-commands:**\n- `$job list`: View all available jobs and their perks.\n- `$job info`: View detailed info about your current job.\n\n💼 **Note:** Use a 'Career Change Voucher' to switch paths.",
+            "inventory": "🌟 **Description:** View all items you own and any currently active buffs.\n\n🕹️ **Usage:**\n- `$inventory`\n- `$inventory @user`: View someone else's inventory.",
+            "buy": "🌟 **Description:** Purchase items from the global shop.\n\n🕹️ **Usage:**\n- `$buy <ID/Name> [quantity]`\n\n💡 **Tip:** Find item IDs using `$shop`.",
+            "sell": "🌟 **Description:** Sell items from your inventory back for coins.\n\n🕹️ **Usage:**\n- `$sell <ID/Name> [quantity]`\n\n⚖️ **Refund:** Receive 70% of the original purchase price.",
+            "iteminfo": "🌟 **Description:** View detailed stats, effects, and job synergy for a specific item.\n\n🕹️ **Usage:**\n- `$iteminfo <ID/Name>`",
+            "use": "🌟 **Description:** Consume a usable item from your inventory to activate its effect.\n\n🕹️ **Usage:**\n- `$use <item_id>`",
+            "transfer": "🌟 **Description:** Securely send coins to another user.\n\n🕹️ **Usage:**\n- `$transfer @user <amount>`",
+            "ping": "🌟 **Description:** Check the bot's response latency and system statistics.\n\n🕹️ **Usage:**\n- `$ping`",
+            "avatar": "🌟 **Description:** View your own or another user's avatar in full size.\n\n🕹️ **Usage:**\n- `$avatar [@user]`",
+            "language": "🌟 **Description:** Change the bot's display language (vi/en).\n\n🕹️ **Usage:**\n- `$language <vi|en>`: Update your personal setting.\n- `$language server <vi|en>`: Update the server-wide default (Admin only).",
+            "serverinfo": "🌟 **Description:** View a comprehensive overview of this Discord server.\n\n🕹️ **Usage:**\n- `$serverinfo`",
+            "userinfo": "🌟 **Description:** View detailed information about a user (Join date, roles, etc.).\n\n🕹️ **Usage:**\n- `$userinfo [@user]`"
         }
     },
     "iteminfo": {
