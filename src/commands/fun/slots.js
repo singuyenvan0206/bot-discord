@@ -25,7 +25,7 @@ module.exports = {
         }
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        const weights = [22, 20, 18, 15, 12, 9, 4]; // Flatter distribution makes matching significantly harder
+        const weights = [30, 25, 20, 12, 8, 4, 1]; // Giảm độ khó một chút so với bản hardcore trước đó
         const totalWeight = weights.reduce((a, b) => a + b, 0);
 
         function weightedRandom() {
@@ -45,7 +45,7 @@ module.exports = {
         const allMatch = r2[0] === r2[1] && r2[1] === r2[2];
         const twoMatch = r2[0] === r2[1] || r2[1] === r2[2] || r2[0] === r2[2];
 
-        // Adjusted multipliers for extreme difficulty
+        // Giữ nguyên phần thưởng khổng lồ
         const multiplierMap = { '7️⃣': 150, '💎': 75, '⭐': 40, '🍉': 20, '🍊': 10, '🍋': 5, '🍒': 3 };
 
         let result, color;
@@ -56,11 +56,11 @@ module.exports = {
             payout = bet ? bet * mult : 0;
             color = r2[0] === '7️⃣' ? 0xFF9900 : config.COLORS.GAMBLE_WIN;
         } else if (twoMatch) {
-            // Further Difficulty Increase: Two match payout completely removed - pure loss
-            const mult = 0;
-            result = t('slots.lose', lang); // Treat as a complete lose now
-            payout = 0;
-            color = config.COLORS.GAMBLE_LOSS;
+            // Giảm độ khó: Hoàn lại 1/4 tiền cược (0.25x) thay vì thua trắng mặt
+            const mult = 0.5;
+            result = t('slots.win_small', lang);
+            payout = bet ? Math.floor(bet * mult) : 0;
+            color = config.COLORS.GAMBLE_LOSS; // Vẫn tính là màu thua vì lỗ
         } else {
             result = t('slots.lose', lang);
             color = config.COLORS.GAMBLE_LOSS;
