@@ -49,16 +49,6 @@ module.exports = {
             console.error('Error fetching trivia question from API, trying fallback:', error);
         }
 
-        if (!q) {
-            try {
-                const localQuestions = require('../../data/trivia_questions.json');
-                if (localQuestions && localQuestions.length > 0) {
-                    q = localQuestions[Math.floor(Math.random() * localQuestions.length)];
-                }
-            } catch (err) {
-                console.error('Error loading local trivia questions:', err);
-            }
-        }
 
         if (!q) {
             return message.reply(t('trivia.load_error', lang));
