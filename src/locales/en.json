@@ -96,12 +96,14 @@
     "daily": {
         "cooldown": "❌ You can claim your daily reward in **{{hours}}h {{minutes}}m**.",
         "success": "✅ You received your daily reward of **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!"
+        "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
+        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
     },
     "work": {
         "cooldown": "❌ You need to rest! Come back to work in **{{minutes}} minutes**.",
         "success": "💼 You worked as a **{{job}}** and earned **{{amount}}** coins! {{emoji}}",
         "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
+        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
         "jobs": [
             "Programmer",
             "Builder",
@@ -384,6 +386,8 @@
     },
     "profile": {
         "title": "Profile of {{user}}",
+        "experience": "✨ Experience",
+        "level": "**Level:** {{level}}",
         "economy": "💰 Economy",
         "balance": "**Balance:** {{emoji}} {{amount}}",
         "net_worth": "**Net Worth:** {{emoji}} {{amount}}",
@@ -743,8 +747,8 @@
             "rps": "🌟 **Description:** Rock, Paper, Scissors! A classic game of prediction available in Solo or PvP mode.\n\n🕹️ **How to Play:**\n- Choose your weapon: 🪨 Rock, 📄 Paper, or ✂️ Scissors.\n- **Solo:** Play against the bot for a bet.\n- **PvP:** Challenge another user to a high-stakes duel.\n\n⚖️ **Counters:** Rock beats Scissors, Scissors beats Paper, Paper beats Rock.",
             "tictactoe": "🌟 **Description:** The timeless 3x3 strategy game. Get three in a row to win.\n\n🕹️ **How to Play:**\n1. Challenge another user: `$ttt @user [bet]`.\n2. Take turns placing your mark (❌ or ⭕).\n\n💰 **Outcome:** Winner takes the pot. Refund on draw.",
             "fish": "🌟 **Description:** Relax and cast your line! Catch a variety of fish from common sardines to legendary sea monsters.\n\n🎣 **Gear Needed:**\n- **Rod:** Get a Bamboo, Fiberglass, or Carbon Fiber rod from the `$shop`.\n- **Bait:** Buy worms, crickets, or squid to attract different fish species.\n\n🕹️ **How to Play:**\n- Just type `$fish`. The bot automatically selects your highest-tier equipment.\n- Every catch uses 1 bait and has a small cooldown.\n\n✨ **Luck Factor:** Better equipment grants higher 'Luck', which drastically improves the chances of catching rare, high-value fish.",
-            "work": "🌟 **Description:** Build your career and earn a steady income. Level up to increase your hourly wage!\n\n🕹️ **Mechanics:**\n- Work every hour to gain **XP** and **Coins**.\n- As you gain XP, you will **Level Up**.\n- Higher levels unlock better jobs and significant pay raises.\n\n💰 **Daily Streak:** Working consistently increases your streak, providing daily bonus coins.",
-            "profile": "🌟 **Description:** Your digital passport! View a deep dive into any user's progress and wealth.\n\n📊 **Detailed Stats:**\n- **Personal Balance:** Your spendable cash.\n- **Net Worth:** Total value of your cash + all items in your inventory.\n- **Rankings:** Your position on the global wealth leaderboard.\n- **Experience:** Current level and progress toward the next one.",
+            "work": "🌟 **Description:** Build your career and earn a steady income.\n\n🕹️ **Mechanics:**\n- Work every hour to gain **XP** and **Coins**.\n- The higher your level, the larger the bonus payout for every job.\n\n💰 **Daily Streak:** Working consistently increases your streak, providing daily bonus coins.",
+            "profile": "🌟 **Description:** Your digital passport! View a deep dive into any user's progress and wealth.\n\n📊 **Detailed Stats:**\n- **Personal Balance:** Your spendable cash.\n- **Net Worth:** Total value of your cash + all items in your inventory.\n- **Rankings:** Your position on the global wealth leaderboard.\n- **Experience:** Your current level and XP progression.",
             "leaderboard": "🌟 **Description:** The hall of fame! See who rules the server's economy.\n\n🏆 **Structure:**\n- Top rankings are based on **Net Worth** (Total Assets).\n- Special medals (🥇 🥈 🥉) are awarded to the Top 3 earners.\n- Updates in real-time as users gain or lose wealth.",
             "addmoney": "🌟 **Description:** Add any amount of coins to a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$addmoney @user <amount>`",
             "removemoney": "🌟 **Description:** Remove any amount of coins from a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$removemoney @user <amount>`",

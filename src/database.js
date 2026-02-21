@@ -78,8 +78,6 @@ function initSchema() {
         CREATE TABLE IF NOT EXISTS guild_users (
             guild_id TEXT NOT NULL,
             user_id TEXT NOT NULL,
-            xp INTEGER DEFAULT 0,
-            level INTEGER DEFAULT 0,
             warnings INTEGER DEFAULT 0,
             json_data TEXT DEFAULT '{}',
             PRIMARY KEY (guild_id, user_id)
@@ -90,8 +88,6 @@ function initSchema() {
         CREATE TABLE IF NOT EXISTS guild_users (
             guild_id TEXT NOT NULL,
             user_id TEXT NOT NULL,
-            xp INTEGER DEFAULT 0,
-            level INTEGER DEFAULT 0,
             warnings INTEGER DEFAULT 0,
             json_data TEXT DEFAULT '{}',
             PRIMARY KEY (guild_id, user_id)
@@ -331,7 +327,7 @@ function getUser(userId) {
     let user = queryOne('SELECT * FROM users WHERE id = ?', [userId]);
     if (!user) {
         execute('INSERT INTO users (id) VALUES (?)', [userId]);
-        user = { id: userId, balance: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}', language: null };
+        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, inventory: '{}', language: null };
     }
     return user;
 }
@@ -395,7 +391,7 @@ function getGuildUser(guildId, userId) {
     let user = queryOne('SELECT * FROM guild_users WHERE guild_id = ? AND user_id = ?', [guildId, userId]);
     if (!user) {
         execute('INSERT INTO guild_users (guild_id, user_id) VALUES (?, ?)', [guildId, userId]);
-        user = { guild_id: guildId, user_id: userId, xp: 0, level: 0, warnings: 0, json_data: '{}' };
+        user = { guild_id: guildId, user_id: userId, warnings: 0, json_data: '{}' };
     }
     return user;
 }

@@ -1,5 +1,6 @@
 const db = require('../../database');
 const { getUserMultiplier } = require('../../utils/multiplier');
+const { addXp, getLevelMultiplier } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -24,20 +25,31 @@ module.exports = {
         const job = jobs[Math.floor(Math.random() * jobs.length)];
 
         // Base earnings from config
-        const minEanings = config.ECONOMY.MIN_WORK_EARNINGS;
+        const minEarnings = config.ECONOMY.MIN_WORK_EARNINGS;
         const maxEarnings = config.ECONOMY.MAX_WORK_EARNINGS;
-        const baseEarnings = Math.floor(Math.random() * (maxEarnings - minEanings + 1)) + minEanings;
+        const baseEarnings = Math.floor(Math.random() * (maxEarnings - minEarnings + 1)) + minEarnings;
 
-        const multiplier = getUserMultiplier(message.author.id, 'income');
-        const bonus = Math.floor(baseEarnings * multiplier);
-        const total = baseEarnings + bonus;
+        const itemMultiplier = getUserMultiplier(message.author.id, 'income');
+        const levelMultiplier = getLevelMultiplier(user.level);
+
+        const itemBonus = Math.floor(baseEarnings * itemMultiplier);
+        const levelBonus = Math.floor(baseEarnings * levelMultiplier);
+
+        const total = baseEarnings + itemBonus + levelBonus;
+
+        // Add random XP between 15-30 for working
+        const xpGained = Math.floor(Math.random() * 16) + 15;
+        addXp(message.author.id, xpGained);
 
         db.updateUser(message.author.id, { last_work: now });
         db.addBalance(message.author.id, total);
 
         let msg = t('work.success', lang, { job, amount: baseEarnings.toLocaleString(), emoji: config.EMOJIS.COIN });
-        if (bonus > 0) {
-            msg += t('work.bonus', lang, { amount: bonus.toLocaleString(), percent: Math.round(multiplier * 100) });
+        if (itemBonus > 0) {
+            msg += t('work.bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMultiplier * 100) });
+        }
+        if (levelBonus > 0) {
+            msg += t('work.level_bonus', lang, { amount: levelBonus.toLocaleString(), percent: Math.round(levelMultiplier * 100) });
         }
 
         return message.reply(msg);

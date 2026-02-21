@@ -3,6 +3,7 @@ const db = require('../../database');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { calculateNetWorth } = require('../../utils/economy');
+const { calculateLevel } = require('../../utils/leveling');
 
 module.exports = {
     name: 'profile',
@@ -26,11 +27,24 @@ module.exports = {
         const rankIndex = topBalance.findIndex(u => u.id === user.id);
         const rank = rankIndex === -1 ? t('profile.unranked', lang) : `#${rankIndex + 1}`;
 
+        // Calculate XP Progress
+        const currentLevelXp = (dbUser.level / 0.1) ** 2;
+        const nextLevelXp = ((dbUser.level + 1) / 0.1) ** 2;
+        const xpNeeded = nextLevelXp - currentLevelXp;
+        const xpProgress = dbUser.xp - currentLevelXp;
+        const progressPercent = Math.min(100, Math.max(0, (xpProgress / xpNeeded) * 100));
+
+        // Create Progress Bar (10 blocks)
+        const filledBlocks = Math.floor(progressPercent / 10);
+        const emptyBlocks = 10 - filledBlocks;
+        const progressBar = '▮'.repeat(filledBlocks) + '▯'.repeat(emptyBlocks);
+
         const embed = new EmbedBuilder()
             .setAuthor({ name: t('profile.title', lang, { user: user.tag }), iconURL: user.displayAvatarURL({ dynamic: true }) })
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 512 }))
             .setColor(config.COLORS.INFO)
             .addFields(
+                { name: t('profile.experience', lang), value: t('profile.level', lang, { level: dbUser.level }) + `\n\`${progressBar}\` ${Math.floor(progressPercent)}%\n(${Math.floor(dbUser.xp)}/${Math.floor(nextLevelXp)} XP)`, inline: false },
                 { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
                 { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
                 { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length }), inline: true },

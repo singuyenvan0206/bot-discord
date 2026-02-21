@@ -16,7 +16,7 @@ module.exports = {
 
         // Require confirmation to prevent accidents
         if (args[1] !== 'confirm') {
-            return message.reply(lang === 'vi' ? `⚠️ Bạn đang chuẩn bị xóa **TOÀN BỘ** dữ liệu của <@${target.id}> (tiền, đồ, cấp, v.v.).\nHãy gõ lệnh \`$resetuser ${target.id} confirm\` để xác nhận.` : `⚠️ You are about to wipe **ALL** data for <@${target.id}> (money, items, level, etc.).\nType \`$resetuser ${target.id} confirm\` to proceed.`);
+            return message.reply(lang === 'vi' ? `⚠️ Bạn đang chuẩn bị xóa **TOÀN BỘ** dữ liệu của <@${target.id}> (tiền, đồ, cấp độ, v.v.).\nHãy gõ lệnh \`$resetuser ${target.id} confirm\` để xác nhận.` : `⚠️ You are about to wipe **ALL** data for <@${target.id}> (money, items, level, etc.).\nType \`$resetuser ${target.id} confirm\` to proceed.`);
         }
 
         try {
