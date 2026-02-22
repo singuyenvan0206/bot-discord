@@ -78,7 +78,14 @@ module.exports = {
         const baitName = t(`items.${bait.id}.name`, lang);
 
         // 3. Consume Bait
-        db.removeItem(message.author.id, bait.id, 1);
+        let baitSaved = false;
+        if (user.job === 'farmer' && Math.random() < 0.25) {
+            baitSaved = true;
+        }
+
+        if (!baitSaved) {
+            db.removeItem(message.author.id, bait.id, 1);
+        }
 
         // 4. Calculate Total Luck (Farmer Job Bonus)
         let totalLuck = rod.luck + bait.luck;
