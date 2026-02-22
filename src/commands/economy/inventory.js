@@ -77,6 +77,7 @@ module.exports = {
                 if (validBuffs.length > 0) {
                     const buffList = validBuffs.map(b => {
                         const item = SHOP_ITEMS.find(i => i.id === b.itemId);
+                        if (!item) return null; // Guard: skip unknown buff items
                         const itemName = t(`items.${b.itemId}.name`, lang);
                         const remaining = b.expiresAt - now;
                         const hours = Math.floor(remaining / 3600);
@@ -89,7 +90,7 @@ module.exports = {
                         if (item.id === 502) displayPercent = 100;
 
                         return `✨ **${itemName}:** +${displayPercent}% ${effectType} (${timeStr})`;
-                    }).join('\n');
+                    }).filter(Boolean).join('\n');
 
                     embed.addFields({ name: `⏳ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`, value: buffList, inline: false });
                 } else {
