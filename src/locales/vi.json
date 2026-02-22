@@ -950,6 +950,8 @@
             "slut": "Làm thêm công việc 'nhạy cảm' để kiếm tiền.",
             "fish": "Thả câu bắt cá đổi lấy coins.",
             "job": "Hệ thống nghề nghiệp và đặc quyền Level 20.",
+            "jobdetail": "Xem thông tin chi tiết về từng nghề nghiệp.",
+            "balance": "Kiểm tra số tài khoản của bạn.",
             "shop": "Cửa hàng vật phẩm hỗ trợ.",
             "inventory": "Xem kho đồ và buff đang hoạt động.",
             "buy": "Mua vật phẩm từ cửa hàng.",
@@ -958,12 +960,18 @@
             "transfer": "Chuyển tiền cho người chơi khác.",
             "use": "Sử dụng vật phẩm trong kho đồ.",
             "leaderboard": "Bảng xếp hạng đại gia máy chủ.",
+            "rank": "Bảng xếp hạng cấp độ và kinh nghiệm.",
             "profile": "Xem hồ sơ và chỉ số cá nhân.",
             "ping": "Kiểm tra độ trễ mạng của Bot.",
             "avatar": "Xem ảnh đại diện kích thước lớn.",
+            "help": "Xem danh sách lệnh và hướng dẫn.",
             "language": "Cài đặt ngôn ngữ hiển thị.",
+            "giveaway": "Quản lý và tổ chức sự kiện quà tặng.",
             "serverinfo": "Xem thông tin máy chủ Discord.",
-            "userinfo": "Xem thông tin chi tiết người dùng."
+            "userinfo": "Xem thông tin chi tiết người dùng.",
+            "serverlist": "Danh sách máy chủ bot đang tham gia. (Owner)",
+            "leaveserver": "Rời khỏi một máy chủ cụ thể. (Owner)",
+            "setstatus": "Thay đổi trạng thái hoạt động của Bot. (Owner)"
         },
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
