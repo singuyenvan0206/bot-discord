@@ -90,6 +90,9 @@ module.exports = {
             soldier: { id: 'soldier', bonus: 0.10, color: '#95a5a6', icon: '🪖' },
             trader: { id: 'trader', bonus: 0.15, color: '#f39c12', icon: '📈' },
             teacher: { id: 'teacher', bonus: 0.08, color: '#3498db', icon: '📚' }
+        },
+        LEVELING: {
+            XP_MULTIPLIER: 3.0 // Triple the XP gain for faster progression
         }
     }
 };

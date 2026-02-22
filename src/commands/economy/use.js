@@ -40,10 +40,7 @@ module.exports = {
             db.removeItem(message.author.id, itemId, 1);
             db.updateUser(message.author.id, { job: null });
 
-            await message.reply(t('use.success', lang, { item: itemName }));
-            await message.channel.send(t('use.career_reset', lang));
-
-            return checkAndSendMilestone(message, true, lang);
+            return message.reply(t('use.career_reset', lang, { prefix: config.PREFIX }));
         }
 
         // --- Duration-based Buffs ---

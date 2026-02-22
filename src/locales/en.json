@@ -253,14 +253,27 @@
         "info_soldier": "Soldier: +10% rob rate, -30% crime fine, +100 per work.",
         "info_trader": "Trader: +50 per search, buff all gambling commands.",
         "info_teacher": "Teacher: XP ×1.5 on all commands (×2 with Whiteboard).",
-        "milestone_title": "🎉 LEVEL 20 REACHED!",
-        "milestone_desc": "Congratulations on reaching veteran status! It's time to choose a professional career path to unlock unique perks.",
-        "choose_button": "Choose Career 💼",
-        "select_placeholder": "Select your career path...",
+        "milestone_title": "🎉 CONGRATULATIONS! YOU REACHED LEVEL 20!",
+        "milestone_desc": "You have become a true expert! The city council has officially granted you a professional license.",
+        "milestone_assigned": "🎯 You have been assigned the career: **{{job}}** {{icon}}\n\n💡 **Fun Fact:** {{fact}}\n\n*(Use `{{prefix}}job me` to see your professional perks)*",
         "police_notification": "👮 **On Duty:** You caught a criminal and received **{{amount}}** coins in fines! 💰",
         "doctor_notification": "👨‍⚕️ **Hospital:** A patient has just been admitted! You received **{{amount}}** coins in medical fees. 🏥",
         "dm_disabled_random": "📬 Since your DMs are off, I've assigned you a random job: **{{job}}**! (Use {{prefix}}job me to check)",
         "detail_usage": "❌ Please provide a job name. Usage: `{{prefix}}jobdetail <job_name>`",
+        "job_facts": {
+            "police": "Did you know? The first modern police force was established in London in 1829!",
+            "criminal": "Stay in the shadows, wait for the perfect moment... This path is risky but extremely thrilling! 🥷",
+            "doctor": "An apple a day keeps the doctor away! But as a doctor, you might hope they... forget to eat it. 🍎",
+            "programmer": "01001000 01100101 01101100 01101100 01101111! If you understand this, you know you've picked the right job. 💻",
+            "farmer": "Nothing beats the smell of fresh soil and the feeling of harvesting your own bountiful crops. 🚜",
+            "hacker": "I'm in. The digital world is now in your hands! 💻",
+            "streamer": "Don't forget to like and subscribe! The spotlight is currently on you. 🎥",
+            "chef": "Gordon Ramsay would be proud of your cutting and seasoning skills. Don't let the food be raw! 👨‍🍳",
+            "musician": "Life is a song, and you are the one writing the most enchanting melodies. 🎸",
+            "soldier": "Honor and duty above all. You are a solid shield protecting peace. 🪖",
+            "trader": "Buy low, sell high! The financial market is now your playground. 📉",
+            "teacher": "Knowledge is the only wealth you can give away and still keep for yourself. Light up the future! 📚"
+        },
         "job_details": {
             "police": "👮 **Police**: Protect the city and arrest criminals. You receive a portion of the fines collected from them.\n✨ **Perk**: Receive random fine collection notifications.",
             "criminal": "🥷 **Criminal**: Live outside the law with expert theft skills.\n✨ **Perk**: Increased success rate and rewards when using `rob` and `crime` commands.",
@@ -625,7 +638,7 @@
         "not_found": "❌ This item was not found in your inventory!",
         "not_usable": "❌ This item cannot be used directly.",
         "success": "✅ Successfully used **{{item}}**!",
-        "career_reset": "🔄 Your career has been reset. Choose a new path!",
+        "career_reset": "✅ Career Change Voucher used successfully! You currently have no job, please choose a new career using `{{prefix}}job set <job_name>`.",
         "no_job_to_reset": "❌ You don't have a job to reset!",
         "buff_activated": "\n✨ **Buff Activated:** +{{percent}}% {{type}} for **{{duration}}**!"
     },
@@ -1147,6 +1160,21 @@
         },
         "streamer": {
             "name": "Streamer"
+        },
+        "chef": {
+            "name": "Chef"
+        },
+        "musician": {
+            "name": "Musician"
+        },
+        "soldier": {
+            "name": "Soldier"
+        },
+        "trader": {
+            "name": "Trader"
+        },
+        "teacher": {
+            "name": "Teacher"
         }
     },
     "giveaway": {

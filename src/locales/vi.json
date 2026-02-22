@@ -309,14 +309,27 @@
         "info_soldier": "Quân nhân: +10% rob, -30% crime fine, +100 mỗi work.",
         "info_trader": "Thương nhân: +50 mỗi search, buff gamble.",
         "info_teacher": "Giáo viên: XP ×1.5 ở mọi lệnh, ×2 với Whiteboard.",
-        "milestone_title": "🎉 ĐẠT CẤP ĐỘ 20!",
-        "milestone_desc": "Chúc mừng bạn đã đạt cấp độ chuyên gia! Đã đến lúc chọn một con đường sự nghiệp chính thức để nhận thêm các đặc quyền độc nhất.",
-        "choose_button": "Chọn Nghề Nghiệp 💼",
-        "select_placeholder": "Chọn sự nghiệp của bạn...",
+        "milestone_title": "🎉 CHÚC MỪNG BẠN ĐÃ ĐẠT CẤP ĐỘ 20!",
+        "milestone_desc": "Bạn đã trở thành một chuyên gia thực thụ! Hội đồng thành phố đã chính thức cấp chứng chỉ hành nghề cho bạn.",
+        "milestone_assigned": "🎯 Bạn đã được gán nghề nghiệp: **{{job}}** {{icon}}\n\n💡 **Sự thật thú vị:** {{fact}}\n\n*(Dùng `{{prefix}}job me` để xem chi tiết đặc quyền của bạn)*",
         "police_notification": "👮 **Trực ban:** Bạn vừa bắt được một tên tội phạm và nhận được **{{amount}}** coins tiền phạt! 💰",
         "doctor_notification": "👨‍⚕️ **Bệnh viện:** Một bệnh nhân vừa nhập viện! Bạn nhận được **{{amount}}** coins phí điều trị. 🏥",
         "dm_disabled_random": "📬 Vì DM của bạn đang tắt, tôi đã gán cho bạn nghề ngẫu nhiên: **{{job}}**! (Dùng {{prefix}}job me để xem)",
         "detail_usage": "❌ Vui lòng cung cấp tên nghề. Cách dùng: `{{prefix}}jobdetail <tên_nghề>`",
+        "job_facts": {
+            "police": "Bạn có biết? Lực lượng cảnh sát hiện đại đầu tiên được thành lập tại London vào năm 1829!",
+            "criminal": "Ẩn mình trong bóng tối, chờ đợi thời cơ chín muồi... Con đường này đầy rẫy hiểm nguy nhưng cũng cực kỳ kích thích! 🥷",
+            "doctor": "Mỗi ngày một quả táo, bác sĩ không tới nhà! Nhưng nếu bạn là bác sĩ, bạn sẽ hy vọng họ... quên ăn táo. 🍎",
+            "programmer": "01001000 01100101 01101100 01101100 01101111! Bạn chỉ cần hiểu dòng này để biết mình đã chọn đúng nghề. 💻",
+            "farmer": "Không gì sánh bằng mùi đất mới và cảm giác tự tay thu hoạch mùa màng bội thu. 🚜",
+            "hacker": "Tôi đã xâm nhập thành công. Thế giới số giờ đây nằm trong tay bạn! 💻",
+            "streamer": "Đừng quên like và subscribe nhé! Ánh đèn sân khấu đang hướng về phía bạn. 🎥",
+            "chef": "Gordon Ramsay sẽ tự hào về kỹ năng dao kéo và nêm nếm của bạn. Đừng để món ăn bị sống nhé! 👨‍🍳",
+            "musician": "Cuộc đời là một bài hát, và bạn chính là người viết nên những giai điệu say đắm lòng người. 🎸",
+            "soldier": "Danh dự và trách nhiệm là trên hết. Bạn là lá chắn vững chắc bảo vệ hòa bình. 🪖",
+            "trader": "Mua thấp, bán cao! Thị trường tài chính giờ là sân chơi của bạn. 📉",
+            "teacher": "Kiến thức là tài sản duy nhất bạn có thể cho đi mà vẫn giữ lại được cho mình. Hãy thắp sáng tương lai! 📚"
+        },
         "job_details": {
             "police": "👮 **Cảnh sát**: Bảo vệ thành phố và bắt giữ tội phạm. Khi tội phạm bị bắt, bạn sẽ nhận được một phần tiền phạt từ chúng.\n✨ **Đặc quyền**: Nhận thông báo thu tiền phạt ngẫu nhiên.",
             "criminal": "🥷 **Tội phạm**: Sống ngoài vòng pháp luật với kỹ năng trộm cắp điêu luyện.\n✨ **Đặc quyền**: Tăng tỷ lệ thành công và số tiền nhận được khi thực hiện các lệnh `rob` và `crime`.",
@@ -703,7 +716,7 @@
         "not_found": "❌ Không tìm thấy vật phẩm này trong túi đồ của bạn!",
         "not_usable": "❌ Vật phẩm này không thể sử dụng trực tiếp.",
         "success": "✅ Bạn đã sử dụng thành công **{{item}}**!",
-        "career_reset": "🔄 Nghề nghiệp của bạn đã được thiết lập lại. Hãy chọn một con đường mới!",
+        "career_reset": "✅ Đã dùng thẻ chuyển nghề thành công! Bạn hiện đang không có nghề nghiệp, vui lòng chọn nghề nghiệp mới bằng cách dùng `{{prefix}}job set <tên_nghề>`.",
         "no_job_to_reset": "❌ Bạn hiện không có nghề nghiệp nào để chuyển đổi!"
     },
     "serverinfo": {
@@ -1148,6 +1161,21 @@
         },
         "streamer": {
             "name": "Streamer"
+        },
+        "chef": {
+            "name": "Đầu bếp"
+        },
+        "musician": {
+            "name": "Nhạc sĩ"
+        },
+        "soldier": {
+            "name": "Quân nhân"
+        },
+        "trader": {
+            "name": "Thương nhân"
+        },
+        "teacher": {
+            "name": "Giáo viên"
         }
     },
     "giveaway": {

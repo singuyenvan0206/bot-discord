@@ -17,8 +17,14 @@ function calculateLevel(xp) {
  * @returns {object} - Object chứa thông tin cấp độ hiện tại và việc có thăng cấp hay không { level, leveledUp }
  */
 function addXp(userId, amount) {
+    const config = require('../config');
     const user = db.getUser(userId);
-    const newXp = user.xp + amount;
+
+    // Apply global XP multiplier
+    const multiplier = config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0;
+    const finalAmount = Math.floor(amount * multiplier);
+
+    const newXp = user.xp + finalAmount;
     const newLevel = calculateLevel(newXp);
 
     const leveledUp = newLevel > user.level;
@@ -56,50 +62,43 @@ function getLevelMultiplier(level) {
 async function checkAndSendMilestone(message, reachedLevel20, lang) {
     if (!reachedLevel20) return;
 
-    const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+    const { EmbedBuilder } = require('discord.js');
     const { t } = require('./i18n');
+    const config = require('../config');
+
+    // 1. Pick a random job
+    const jobKeys = Object.keys(config.ECONOMY.JOBS);
+    const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
+    const jobConfig = config.ECONOMY.JOBS[randomJobId];
+
+    // 2. Update user in database
+    db.updateUser(message.author.id, { job: randomJobId });
+
+    // 3. Prepare announcement
+    const jobName = t(`jobs.${randomJobId}.name`, lang) || randomJobId;
+    const jobFact = t(`job.job_facts.${randomJobId}`, lang) || "...";
 
     const embed = new EmbedBuilder()
         .setTitle(t('job.milestone_title', lang))
         .setDescription(t('job.milestone_desc', lang))
-        .setColor('#f1c40f');
+        .addFields({
+            name: t('job.name_field', lang) || "Nghề nghiệp",
+            value: t('job.milestone_assigned', lang, {
+                job: jobName,
+                icon: jobConfig.icon,
+                fact: jobFact,
+                prefix: config.PREFIX
+            })
+        })
+        .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 256 }))
+        .setColor(jobConfig.color || '#f1c40f')
+        .setTimestamp();
 
-    const btn = new ButtonBuilder()
-        .setCustomId('choose_job_btn')
-        .setLabel(t('job.choose_button', lang))
-        .setStyle(ButtonStyle.Success)
-        .setEmoji('💼');
-
-    const row = new ActionRowBuilder().addComponents(btn);
-
-    // Nếu là interaction (Slash command), gửi ephemeral
-    if (message.deferred || message.replied || typeof message.editReply === 'function') {
-        return message.followUp({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true
-        }).catch(() => { });
-    } else {
-        // Gửi DM riêng tư cho người chơi — người khác không nhìn thấy
-        try {
-            const dmChannel = await message.author.createDM();
-            await dmChannel.send({ embeds: [embed], components: [row] });
-        } catch {
-            // Assign random job if DM fails
-            const config = require('../config');
-            const jobKeys = Object.keys(config.ECONOMY.JOBS);
-            const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
-            const job = config.ECONOMY.JOBS[randomJobId];
-
-            db.updateUser(message.author.id, { job: randomJobId });
-
-            const jobName = randomJobId.charAt(0).toUpperCase() + randomJobId.slice(1);
-            const notice = await message.channel.send({
-                content: `<@${message.author.id}> ${t('job.dm_disabled_random', lang, { job: jobName, prefix: config.PREFIX })}`,
-            }).catch(() => null);
-            if (notice) setTimeout(() => notice.delete().catch(() => { }), 15000);
-        }
-    }
+    // 4. Send announcement
+    return message.channel.send({
+        content: `<@${message.author.id}>`,
+        embeds: [embed]
+    }).catch(() => { });
 }
 
 module.exports = {
