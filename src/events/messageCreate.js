@@ -1,0 +1,72 @@
+const { Events, Collection } = require('discord.js');
+const config = require('../config');
+const { getLanguage, t } = require('../utils/i18n');
+const { addXp, checkAndSendMilestone } = require('../utils/leveling');
+const { formatDuration } = require('../utils/time');
+
+const xpCooldowns = new Set();
+
+module.exports = {
+    name: Events.MessageCreate,
+    async execute(message) {
+        if (message.author.bot || !message.guild) return;
+
+        // ─── EXP System ───
+        if (!xpCooldowns.has(message.author.id)) {
+            const xpAmount = Math.floor(Math.random() * 11) + 5; // 5-15 XP
+            const { leveledUp, reachedLevel20 } = addXp(message.author.id, xpAmount);
+
+            if (leveledUp) {
+                const lang = getLanguage(message.author.id, message.guild.id);
+                await checkAndSendMilestone(message, reachedLevel20, lang);
+            }
+
+            xpCooldowns.add(message.author.id);
+            setTimeout(() => xpCooldowns.delete(message.author.id), 60000); // 1 minute cooldown
+        }
+
+        // ─── Command Handling ───
+        if (!message.content.startsWith(config.PREFIX)) return;
+
+        const args = message.content.slice(config.PREFIX.length).trim().split(/ +/);
+        const commandName = args.shift().toLowerCase();
+
+        const { client } = message;
+        const command = client.commands.get(commandName) ||
+            client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+        if (!command) return;
+
+        const lang = getLanguage(message.author.id, message.guild?.id);
+
+        // Cooldown handling
+        if (!client.cooldowns.has(command.name)) {
+            client.cooldowns.set(command.name, new Collection());
+        }
+
+        const now = Date.now();
+        const timestamps = client.cooldowns.get(command.name);
+        const cooldownAmount = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+
+        if (timestamps.has(message.author.id)) {
+            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+                return message.reply(t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }));
+            }
+        }
+
+        if (!command.manualCooldown) {
+            timestamps.set(message.author.id, now);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        }
+
+        try {
+            await command.execute(message, args);
+        } catch (error) {
+            console.error(`[Command] Error executing !${commandName}:`, error);
+            message.reply(t('common.error', lang)).catch(() => { });
+        }
+    },
+};
