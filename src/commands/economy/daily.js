@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -30,10 +30,26 @@ module.exports = {
         const itemBonus = Math.floor(baseReward * itemMultiplier);
         const levelBonus = Math.floor(baseReward * levelMultiplier);
 
-        const total = baseReward + itemBonus + levelBonus;
+        // Doctor Interaction: +15% daily bonus (free check-up)
+        let doctorBonus = 0;
+        let doctorMsg = '';
+        if (user.job === 'doctor') {
+            doctorBonus = Math.floor(baseReward * 0.15);
+            doctorMsg = t('daily_events.doctor_bonus', lang, { amount: doctorBonus.toLocaleString() });
+        }
 
-        // Add 50 XP for claiming daily
-        const xpResult = addXp(message.author.id, 50);
+        let total = baseReward + itemBonus + levelBonus + doctorBonus;
+
+        // Chef Interaction: Michelin Star (5% chance — daily ×3)
+        let michelinMsg = '';
+        if (user.job === 'chef' && Math.random() < 0.05) {
+            total = Math.floor(total * 3);
+            michelinMsg = t('daily_events.michelin_star', lang);
+        }
+
+        // Add 50 XP for claiming daily (with teacher multiplier)
+        const xpMulti = getXpMultiplier(message.author.id);
+        const xpResult = addXp(message.author.id, Math.floor(50 * xpMulti));
 
         db.updateUser(message.author.id, { last_daily: now });
         db.addBalance(message.author.id, total);
@@ -45,6 +61,8 @@ module.exports = {
         if (levelBonus > 0) {
             msg += t('daily.level_bonus', lang, { amount: levelBonus.toLocaleString(), percent: Math.round(levelMultiplier * 100) });
         }
+        if (doctorMsg) msg += doctorMsg;
+        if (michelinMsg) msg += michelinMsg;
 
         await message.reply(msg);
         return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);

@@ -46,7 +46,21 @@ module.exports = {
         const itemMulti = getUserMultiplier(message.author.id, 'income');
         const itemBonus = Math.floor(baseReward * itemMulti);
 
-        const total = baseReward + levelBonus + jobBonusAmount + itemBonus;
+        let total = baseReward + levelBonus + jobBonusAmount + itemBonus;
+
+        // Hacker Interaction: Data Mine (15% chance ×2)
+        let dataMineMsg = '';
+        if (user.job === 'hacker' && Math.random() < 0.15) {
+            total = Math.floor(total * 2);
+            dataMineMsg = t('search.data_mine', lang);
+        }
+
+        // Trader Interaction: Market Tip (+50 flat)
+        let marketTipMsg = '';
+        if (user.job === 'trader') {
+            total += 50;
+            marketTipMsg = t('search.market_tip', lang);
+        }
 
         // Medium XP (10-20)
         const xpGained = Math.floor(Math.random() * 11) + 10;
@@ -74,6 +88,8 @@ module.exports = {
         if (itemBonus > 0) {
             msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
         }
+        if (dataMineMsg) msg += dataMineMsg;
+        if (marketTipMsg) msg += marketTipMsg;
 
         await message.reply(msg);
         return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);

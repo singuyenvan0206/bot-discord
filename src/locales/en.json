@@ -171,7 +171,9 @@
             ]
         },
         "viral": "\n🚀 **Going Viral!** Your stream reached the front page! Reward multiplied by **5x**!",
-        "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **2.5x**!"
+        "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **2.5x**!",
+        "special_order": "\n👨‍🍳 **Special Order!** A VIP menu was requested, income doubled **×2**!",
+        "mission_bonus": "\n🪖 **Mission Bonus!** Completed a special mission, earned an extra **+100** coins!"
     },
     "crime": {
         "cooldown": "❌ You are being watched by the police! Wait **{{hours}}h {{minutes}}m** before your next heist.",
@@ -186,7 +188,8 @@
             "manipulated the stock market"
         ],
         "hacker_hacked": "\n💻 **Hacked!** Your expert skills doubled the total reward!",
-        "criminal_escaped": "\n👟 **Escaped!** You outran the police using your gear. Fine reduced to **{{amount}}** coins!"
+        "criminal_escaped": "\n👟 **Escaped!** You outran the police using your gear. Fine reduced to **{{amount}}** coins!",
+        "soldier_armed": "\n🪖 **Armed and Ready!** You negotiated down with the police. Fine reduced by **30%**!"
     },
     "beg": {
         "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
@@ -209,7 +212,9 @@
             "parking lot",
             "sewer"
         ],
-        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
+        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
+        "data_mine": "\n💻 **Data Mine!** Hacker found valuable data, income doubled ×**2**!",
+        "market_tip": "\n📈 **Market Tip!** Trader leveraged insider info, extra **+50** coins!"
     },
     "rob": {
         "cooldown": "❌ You are wanted by the police! Hide for another **{{minutes}} minutes**.",
@@ -221,7 +226,9 @@
         "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
         "thief_edge": "\n💨 **Thief's Edge:** +{{amount}} coins from your gear!",
         "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
-        "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder."
+        "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder.",
+        "police_bounty": "\n💰 **Police Bounty!** Robbing an officer earns +**50%** bonus!",
+        "rob_shield_blocked": "\n🔰 **Shield of Protection!** The victim is protected — robbery completely blocked!"
     },
     "job": {
         "title": "Job System",
@@ -235,12 +242,17 @@
         "set_error_invalid": "❌ Invalid job. Use `$job list` to see the list.",
         "already_has": "❌ You are already working this job!",
         "info_police": "Police: Receive fines from arrested criminals.",
-        "info_criminal": "Criminal: Increased success and rewards for robberies.",
-        "info_doctor": "Doctor: Reduced medical fees on failure.",
-        "info_programmer": "Programmer: High salary and big work bonuses.",
-        "info_farmer": "Farmer: Stable job for beginners.",
-        "info_hacker": "Hacker: Bonus rewards for scavenging ($search) and heists ($crime).",
-        "info_streamer": "Streamer: Receive extra donations while working ($work).",
+        "info_criminal": "Criminal: Increased success, +50% bonus when robbing police.",
+        "info_doctor": "Doctor: +15% daily bonus, earns from failed slut attempts.",
+        "info_programmer": "Programmer: High salary, work cooldown -10%.",
+        "info_farmer": "Farmer: Stable job, strongest fishing buffs.",
+        "info_hacker": "Hacker: Data Mine ×2 on search, crime double with Laptop.",
+        "info_streamer": "Streamer: Viral ×5 on work, +15% perform reward.",
+        "info_chef": "Chef: Special Order ×2 on work, Michelin Star ×3 on daily.",
+        "info_musician": "Musician: +20% perform reward, Flow State ×2 gamble.",
+        "info_soldier": "Soldier: +10% rob rate, -30% crime fine, +100 per work.",
+        "info_trader": "Trader: +50 per search, buff all gambling commands.",
+        "info_teacher": "Teacher: XP ×1.5 on all commands (×2 with Whiteboard).",
         "milestone_title": "🎉 LEVEL 20 REACHED!",
         "milestone_desc": "Congratulations on reaching veteran status! It's time to choose a professional career path to unlock unique perks.",
         "choose_button": "Choose Career 💼",
@@ -254,15 +266,22 @@
             "criminal": "🥷 **Criminal**: Live outside the law with expert theft skills.\n✨ **Perk**: Increased success rate and rewards when using `rob` and `crime` commands.",
             "doctor": "👨‍⚕️ **Doctor**: Save lives and care for public health.\n✨ **Perk**: Receive random medical fees and 50% reduced penalties/medical bills on failures.",
             "programmer": "💻 **Programmer**: Build the digital world.\n✨ **Perk**: Very high base salary and larger bonuses when using Work (`work`).",
-            "farmer": "👨‍🌾 **Farmer**: Stable career close to nature.\n✨ **Perk**: Increases **Luck by 50%** from gear, 15% **Trophy Catch** rate, 10% **Bumper Crop** rate (2.5x rewards), and 25% **Bait Salvage** rate.",
-            "hacker": "👨‍💻 **Hacker**: Expert at data exploitation.\n✨ **Perk**: Earn significantly more money from Scavenging (`search`) and Heists (`crime`).",
-            "streamer": "🎥 **Streamer**: Star of the online community.\n✨ **Perk**: Receive random Donations from fans every time you use Work (`work`)."
+            "farmer": "👨‍🌾 **Farmer**: Stable career close to nature.\n✨ **Perk**: +50% Luck from gear, 15% Trophy Catch, 10% Bumper Crop (×2.5), 25% Bait Salvage.",
+            "hacker": "👨‍💻 **Hacker**: Expert at data exploitation.\n✨ **Perk**: 15% Data Mine (×2) on `search`, 20% double crime reward with Laptop.",
+            "streamer": "🎥 **Streamer**: Star of the online community.\n✨ **Perk**: 5% Viral (×5) on `work` with Chair/Mansion, +15% perform reward.",
+            "chef": "👨‍🍳 **Chef**: Culinary artist extraordinaire.\n✨ **Perk**: 8% Special Order (×2) on `work`, 5% Michelin Star (×3) on `daily`.",
+            "musician": "🎸 **Musician**: Artist of sound and emotion.\n✨ **Perk**: +20% reward when performing (`slut`), 10% Flow State (×2 gamble) with Guitar.",
+            "soldier": "🪖 **Soldier**: Disciplined and courageous warrior.\n✨ **Perk**: +10% success rate on `rob`, -30% fine on failed `crime`, +100 coins every `work`.",
+            "trader": "📈 **Trader**: Business and investment expert.\n✨ **Perk**: +50 coins every `search`, buffs all gambling commands.",
+            "teacher": "📚 **Teacher**: Knowledge sharer for the next generation.\n✨ **Perk**: XP ×1.5 on ALL commands (×2 with Whiteboard)."
         }
     },
     "slut": {
         "cooldown": "❌ You need to rest and recover! Come back in **{{hours}}h {{minutes}}m**.",
         "success": "💋 You successfully went out and received **{{amount}}** coins from a kind customer! {{emoji}}",
         "failure": "👠 Unlucky! You met a 'dine and dash' customer or got harassed, spending **{{amount}}** coins on medical bills.",
+        "musician_bonus": "\n🎸 **Outstanding Performance!** The musician set the stage on fire! +{{amount}} coins!",
+        "streamer_bonus": "\n🎥 **Live on Air!** Fans donated to support your performance! +{{amount}} coins!",
         "actions": [
             "worked the streets at the park",
             "entertained guests at a karaoke bar",
@@ -270,14 +289,18 @@
             "became a sugar baby"
         ]
     },
+    "daily_events": {
+        "doctor_bonus": "\n👨‍⚕️ **Free Check-up!** Doctor takes care of themselves! +{{amount}} coins!",
+        "michelin_star": "\n⭐ **Michelin Star!** Your special meal was recognized! Reward ×**3**!"
+    },
     "balance": {
         "title": "💰 Wallet: {{user}}",
         "description": "💸 Cash: **{{balance}}** coins"
     },
     "fish": {
         "title": "🎣 Fishing Trip",
-        "rod_needed": "❌ You need a **Fishing Rod** to fish! Buy one in the shop (`{{prefix}}buy 11`).",
-        "bait_needed": "❌ You need **Bait** to fish! Buy bait in the shop (e.g., `{{prefix}}buy 2`).",
+        "rod_needed": "❌ You need a **Fishing Rod** to fish! Buy one in the shop (`{{prefix}}buy 404`).",
+        "bait_needed": "❌ You need **Bait** to fish! Buy bait in the shop (e.g., `{{prefix}}buy 401`).",
         "description": "Using **{{rod}}** and **{{bait}}**...",
         "caught": "Caught",
         "income": "Income",

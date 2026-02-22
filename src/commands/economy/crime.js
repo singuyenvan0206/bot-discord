@@ -1,5 +1,6 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { getUserMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -43,22 +44,23 @@ module.exports = {
             const levelMultiplier = getLevelMultiplier(user.level);
             const levelBonus = Math.floor(baseReward * levelMultiplier);
 
-            // Item Interaction: Multipliers (Shared with work/fish)
-            const { getUserMultiplier, hasActiveItem } = require('../../utils/multiplier');
+            // Item Interaction: Multipliers
             const itemMulti = getUserMultiplier(message.author.id, 'income');
             const itemBonus = Math.floor(baseReward * itemMulti);
 
             let total = baseReward + levelBonus + jobBonusAmount + itemBonus;
 
-            // Hacker Interaction: Chance to double reward if using laptop or better
+            // Hacker Interaction: Chance to double reward if using Laptop (209)
             let hackedMsg = '';
-            if (isHacker && hasActiveItem(message.author.id, 18) && Math.random() < 0.2) {
+            if (isHacker && hasActiveItem(message.author.id, 209) && Math.random() < 0.2) {
                 total *= 2;
                 hackedMsg = t('crime.hacker_hacked', lang);
             }
 
-            // Crimes give more XP (50-100)
-            const xpGained = Math.floor(Math.random() * 51) + 50;
+            // Crimes give more XP (50-100) with teacher multiplier
+            const xpBase = Math.floor(Math.random() * 51) + 50;
+            const xpMulti = getXpMultiplier(message.author.id);
+            const xpGained = Math.floor(xpBase * xpMulti);
             const xpResult = addXp(message.author.id, xpGained);
 
             db.addBalance(message.author.id, total);
@@ -92,12 +94,17 @@ module.exports = {
         } else {
             let fine = Math.floor(user.balance * config.ECONOMY.CRIME_FINE_PERCENT);
 
-            // Criminal Interaction: Escape chance with Sneakers (10) or Supercar (32)
-            const { hasActiveItem } = require('../../utils/multiplier');
+            // Criminal Interaction: Escape chance with Sneakers (204) or Supercar (212)
             let escapeMsg = '';
-            if (isCriminal && (hasActiveItem(message.author.id, 10) || hasActiveItem(message.author.id, 32)) && Math.random() < 0.5) {
+            if (isCriminal && (hasActiveItem(message.author.id, 204) || hasActiveItem(message.author.id, 212)) && Math.random() < 0.5) {
                 fine = Math.floor(fine * 0.2); // 80% reduction
                 escapeMsg = t('crime.criminal_escaped', lang, { amount: fine.toLocaleString() });
+            }
+
+            // Soldier Interaction: Armed — always reduces fine by 30%
+            if (user.job === 'soldier') {
+                fine = Math.floor(fine * 0.7);
+                escapeMsg = (escapeMsg || '') + t('crime.soldier_armed', lang);
             }
 
             db.addBalance(message.author.id, -fine);

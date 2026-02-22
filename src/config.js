@@ -78,13 +78,18 @@ module.exports = {
         MAX_BET: 250000,
         DEFAULT_COOLDOWN: 3,
         JOBS: {
-            police: { id: 'police', bonus: 0.1, color: '#3498db', icon: '👮' },
+            police: { id: 'police', bonus: 0.10, color: '#3498db', icon: '👮' },
             criminal: { id: 'criminal', bonus: 0.15, color: '#e74c3c', icon: '🥷' },
             doctor: { id: 'doctor', bonus: 0.05, color: '#2ecc71', icon: '👨‍⚕️' },
-            programmer: { id: 'programmer', bonus: 0.2, color: '#9b59b6', icon: '💻' },
-            farmer: { id: 'farmer', bonus: 0.1, color: '#f1c40f', icon: '👨‍🌾' },
+            programmer: { id: 'programmer', bonus: 0.20, color: '#9b59b6', icon: '💻' },
+            farmer: { id: 'farmer', bonus: 0.10, color: '#f1c40f', icon: '👨‍🌾' },
             hacker: { id: 'hacker', bonus: 0.25, color: '#27ae60', icon: '👨‍💻' },
-            streamer: { id: 'streamer', bonus: 0.12, color: '#6441a5', icon: '🎥' }
+            streamer: { id: 'streamer', bonus: 0.12, color: '#6441a5', icon: '🎥' },
+            chef: { id: 'chef', bonus: 0.12, color: '#e67e22', icon: '👨‍🍳' },
+            musician: { id: 'musician', bonus: 0.10, color: '#1abc9c', icon: '🎸' },
+            soldier: { id: 'soldier', bonus: 0.10, color: '#95a5a6', icon: '🪖' },
+            trader: { id: 'trader', bonus: 0.15, color: '#f39c12', icon: '📈' },
+            teacher: { id: 'teacher', bonus: 0.08, color: '#3498db', icon: '📚' }
         }
     }
 };

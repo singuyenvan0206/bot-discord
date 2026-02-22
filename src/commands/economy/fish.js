@@ -4,18 +4,19 @@ const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../util
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
-// Rod Definitions (Ids must match locale keys in items block)
+// Rod Definitions (IDs match new category 400s)
 const RODS = [
-    { id: '31', luck: 2.5 },
-    { id: '26', luck: 1.5 },
-    { id: '11', luck: 1.0 } // Tier 1
+    { id: '407', luck: 4.0 },  // Titanium Rod
+    { id: '406', luck: 2.5 },  // Carbon Rod
+    { id: '405', luck: 1.5 },  // Fiberglass Rod
+    { id: '404', luck: 1.0 }   // Bamboo Rod
 ];
 
 // Bait Definitions
 const BAITS = [
-    { id: '4', luck: 0.8 },
-    { id: '3', luck: 0.3 },
-    { id: '2', luck: 0.1 }
+    { id: '403', luck: 0.8 },  // Squid Bait
+    { id: '402', luck: 0.3 },  // Cricket Bait
+    { id: '401', luck: 0.1 }   // Worm Bait
 ];
 
 // Fish Table
@@ -145,8 +146,8 @@ module.exports = {
             let finalValue = caughtItem.value;
             let trophyMsg = '';
 
-            // Farmer Interaction: Trophy Fish (15% chance for 3x value if using fiber/carbon rod)
-            if (user.job === 'farmer' && (hasActiveItem(message.author.id, 26) || hasActiveItem(message.author.id, 31)) && Math.random() < 0.15) {
+            // Farmer Interaction: Trophy Fish (15% chance for 3x if using Fiberglass/Carbon/Titanium)
+            if (user.job === 'farmer' && (hasActiveItem(message.author.id, 405) || hasActiveItem(message.author.id, 406) || hasActiveItem(message.author.id, 407)) && Math.random() < 0.15) {
                 finalValue *= 3;
                 trophyMsg = t('fish.trophy_catch', lang);
             }

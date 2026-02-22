@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -55,28 +55,43 @@ module.exports = {
 
         let total = baseReward + itemBonus + levelBonus + jobBonusAmount;
 
-        // Streamer Interaction: Go Viral (5% chance for 5x reward if using Chair or Mansion)
-        const { hasActiveItem } = require('../../utils/multiplier');
+        // Streamer Interaction: Go Viral (5% chance ×5 if using Chair/Mansion)
         let viralMsg = '';
-        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 24) || hasActiveItem(message.author.id, 33)) && Math.random() < 0.05) {
+        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 220) || hasActiveItem(message.author.id, 107)) && Math.random() < 0.05) {
             total *= 5;
             viralMsg = t('work.viral', lang);
         }
 
-        // Farmer Interaction: Bumper Crop (10% chance for 2.5x reward)
+        // Farmer Interaction: Bumper Crop (10% chance ×2.5)
         let bumperMsg = '';
         if (user.job === 'farmer' && Math.random() < 0.1) {
             total = Math.floor(total * 2.5);
             bumperMsg = t('work.bumper_crop', lang);
         }
 
-        // Add random XP
-        const xpGained = Math.floor(Math.random() * 16) + 15;
+        // Chef Interaction: Special Order (8% chance ×2)
+        let specialOrderMsg = '';
+        if (user.job === 'chef' && Math.random() < 0.08) {
+            total = Math.floor(total * 2);
+            specialOrderMsg = t('work.special_order', lang);
+        }
+
+        // Soldier Interaction: Mission Bonus (+100 flat)
+        let missionMsg = '';
+        if (user.job === 'soldier') {
+            total += 100;
+            missionMsg = t('work.mission_bonus', lang);
+        }
+
+        // Add random XP (with teacher multiplier)
+        const xpBase = Math.floor(Math.random() * 16) + 15;
+        const xpMulti = getXpMultiplier(message.author.id);
+        const xpGained = Math.floor(xpBase * xpMulti);
         const xpResult = addXp(message.author.id, xpGained);
 
-        // Programmer Interaction: Tech Buff (Cooldown reduction)
+        // Programmer Interaction: Tech Buff (Cooldown reduction with new IDs)
         let finalCooldown = cooldown;
-        if (user.job === 'programmer' && (hasActiveItem(message.author.id, 13) || hasActiveItem(message.author.id, 14))) {
+        if (user.job === 'programmer' && (hasActiveItem(message.author.id, 206) || hasActiveItem(message.author.id, 207))) {
             finalCooldown = Math.floor(cooldown * 0.9); // 10% faster
         }
 
@@ -97,6 +112,8 @@ module.exports = {
 
         if (viralMsg) msg += viralMsg;
         if (bumperMsg) msg += bumperMsg;
+        if (specialOrderMsg) msg += specialOrderMsg;
+        if (missionMsg) msg += missionMsg;
 
         await message.reply(msg);
 

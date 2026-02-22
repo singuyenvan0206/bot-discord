@@ -34,7 +34,23 @@ module.exports = {
 
             const levelMultiplier = getLevelMultiplier(user.level);
             const levelBonus = Math.floor(baseReward * levelMultiplier);
-            const total = baseReward + levelBonus;
+
+            // Musician Interaction: Performance Bonus (+20%)
+            let performMsg = '';
+            let jobBonus = 0;
+            if (user.job === 'musician') {
+                jobBonus = Math.floor(baseReward * 0.20);
+                performMsg = t('slut.musician_bonus', lang, { amount: jobBonus.toLocaleString() });
+            }
+
+            // Streamer Interaction: Stage Presence (+15%)
+            let streamMsg = '';
+            if (user.job === 'streamer') {
+                jobBonus = Math.floor(baseReward * 0.15);
+                streamMsg = t('slut.streamer_bonus', lang, { amount: jobBonus.toLocaleString() });
+            }
+
+            const total = baseReward + levelBonus + jobBonus;
 
             // Slut gives medium XP (30-60)
             const xpGained = Math.floor(Math.random() * 31) + 30;
@@ -54,6 +70,8 @@ module.exports = {
                     percent: Math.round(levelMultiplier * 100)
                 });
             }
+            if (performMsg) msg += performMsg;
+            if (streamMsg) msg += streamMsg;
 
             await message.reply(msg);
             return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);

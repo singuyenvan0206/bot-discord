@@ -227,7 +227,9 @@
             ]
         },
         "viral": "\n🚀 **Lên xu hướng!** Buổi stream của bạn đã lọt vào trang chủ! Phần thưởng nhân **5x**!",
-        "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!"
+        "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!",
+        "special_order": "\n👨‍🍳 **Đơn đặc biệt!** Thực đơn VIP được gọi, thu nhập nhân **2x**!",
+        "mission_bonus": "\n🪖 **Thưởng nhiệm vụ!** Hoàn thành nhiệm vụ đặc biệt, nhận thêm **+100** coins!"
     },
     "crime": {
         "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{hours}} giờ {{minutes}} phút** nữa để thực hiện phi vụ tiếp theo.",
@@ -242,7 +244,8 @@
             "thao túng thị trường chứng khoán"
         ],
         "hacker_hacked": "\n💻 **Đã Hack!** Kỹ năng chuyên gia của bạn đã nhân đôi tổng phần thưởng!",
-        "criminal_escaped": "\n👟 **Đã tẩu thoát!** Bạn đã cắt đuôi cảnh sát nhờ trang bị của mình. Tiền phạt giảm còn **{{amount}}** coins!"
+        "criminal_escaped": "\n👟 **Đã tẩu thoát!** Bạn đã cắt đuôi cảnh sát nhờ trang bị của mình. Tiền phạt giảm còn **{{amount}}** coins!",
+        "soldier_armed": "\n🪖 **Vũ trang đầy đủ!** Bạn đàm phán được với cảnh sát. Tiền phạt giảm thêm **30%**!"
     },
     "beg": {
         "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
@@ -265,7 +268,9 @@
             "bãi đậu xe",
             "cống rãnh"
         ],
-        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!"
+        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!",
+        "data_mine": "\n💻 **Data Mine!** Hacker tìm thấy dữ liệu giá trị, thu nhập nhân **2x**!",
+        "market_tip": "\n📈 **Mẹo thị trường!** Trader tận dụng thông tin nội bộ, nhận thêm **+50** coins!"
     },
     "rob": {
         "cooldown": "❌ Bạn đang bị truy nã! Hãy lẩn trốn trong **{{minutes}} phút** nữa.",
@@ -277,7 +282,9 @@
         "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!",
         "thief_edge": "\n💨 **Lợi thế trộm cướp:** +{{amount}} coins từ trang bị của bạn!",
         "police_busted": "\n👮 **Bị tóm!** Bạn định trộm của cảnh sát và phải nộp phạt gấp đôi!",
-        "shield_blocked": "\n🛡️ **Bị chặn!** Khiên của nạn nhân khiến việc trộm cướp khó khăn hơn nhiều."
+        "shield_blocked": "\n🛡️ **Bị chặn!** Khiên của nạn nhân khiến việc trộm cướp khó khăn hơn nhiều.",
+        "police_bounty": "\n💰 **Tiền thưởng cảnh sát!** Trộm đồn cảnh sát — bạn nhận thêm **+50%** tiền!",
+        "rob_shield_blocked": "\n🔰 **Khiên Bảo Vệ!** Nạn nhân đang được bảo vệ bởi Khiên Bảo Vệ — cuộc cướp thất bại hoàn toàn!"
     },
     "job": {
         "title": "Hệ Thống Nghề Nghiệp",
@@ -291,12 +298,17 @@
         "set_error_invalid": "❌ Nghề nghiệp không hợp lệ. Hãy dùng `$job list` để xem danh sách.",
         "already_has": "❌ Bạn đã làm nghề này rồi!",
         "info_police": "Cảnh sát: Nhận tiền phạt từ các tội phạm bị bắt.",
-        "info_criminal": "Tội phạm: Tăng tỉ lệ thành công và tiền thưởng khi trộm cắp.",
-        "info_doctor": "Bác sĩ: Giảm viện phí khi gặp rủi ro.",
-        "info_programmer": "Lập trình viên: Lương cao, thưởng lớn khi làm việc.",
-        "info_farmer": "Nông dân: Nghề nghiệp ổn định cho người mới.",
-        "info_hacker": "Hacker: Tăng bội phần thưởng khi lục lọi ($search) và phi vụ ($crime).",
-        "info_streamer": "Streamer: Nhận thêm tiền donate mỗi khi làm việc ($work).",
+        "info_criminal": "Tội phạm: Tăng tỉ lệ thành công, +50% khi cướp đồn cảnh sát.",
+        "info_doctor": "Bác sĩ: +15% daily, nhận tiền từ người slut thất bại.",
+        "info_programmer": "Lập trình viên: Lương cao, cooldown work -10%.",
+        "info_farmer": "Nông dân: Nghề nghiệp ổn định, buff câu cá mạnh nhất.",
+        "info_hacker": "Hacker: Data Mine ×2 khi search, double crime với Laptop.",
+        "info_streamer": "Streamer: Viral ×5 khi work, +15% thưởng perform.",
+        "info_chef": "Đầu bếp: Đơn đặc biệt ×2 khi work, Michelin Star ×3 daily.",
+        "info_musician": "Nhạc sĩ: +20% khi biểu diễn, Flow State ×2 gamble.",
+        "info_soldier": "Quân nhân: +10% rob, -30% crime fine, +100 mỗi work.",
+        "info_trader": "Thương nhân: +50 mỗi search, buff gamble.",
+        "info_teacher": "Giáo viên: XP ×1.5 ở mọi lệnh, ×2 với Whiteboard.",
         "milestone_title": "🎉 ĐẠT CẤP ĐỘ 20!",
         "milestone_desc": "Chúc mừng bạn đã đạt cấp độ chuyên gia! Đã đến lúc chọn một con đường sự nghiệp chính thức để nhận thêm các đặc quyền độc nhất.",
         "choose_button": "Chọn Nghề Nghiệp 💼",
@@ -310,15 +322,22 @@
             "criminal": "🥷 **Tội phạm**: Sống ngoài vòng pháp luật với kỹ năng trộm cắp điêu luyện.\n✨ **Đặc quyền**: Tăng tỷ lệ thành công và số tiền nhận được khi thực hiện các lệnh `rob` và `crime`.",
             "doctor": "👨‍⚕️ **Bác sĩ**: Cứu người và chăm sóc sức khỏe cộng đồng.\n✨ **Đặc quyền**: Nhận phí điều trị ngẫu nhiên và giảm 50% tiền phạt/viện phí khi thất bại trong các hoạt động rủi ro.",
             "programmer": "💻 **Lập trình viên**: Sáng tạo trong thế giới số.\n✨ **Đặc quyền**: Mức lương cơ bản rất cao và nhận thưởng lớn hơn khi Làm việc (`work`).",
-            "farmer": "👨‍🌾 **Nông dân**: Nghề nghiệp ổn định và gần gũi thiên nhiên.\n✨ **Đặc quyền**: Tăng thêm **50% May mắn** từ trang bị, 15% tỷ lệ **Cá Khổng Lồ**, 10% tỷ lệ **Mùa màng bội thu** (2.5x tiền) và 25% tỷ lệ **Giữ lại mồi**.",
-            "hacker": "👨‍💻 **Hacker**: Chuyên gia khai thác dữ liệu.\n✨ **Đặc quyền**: Nhận thêm nhiều tiền hơn khi Lục lọi (`search`) và thực hiện Phi vụ (`crime`).",
-            "streamer": "🎥 **Streamer**: Ngôi sao của cộng đồng mạng.\n✨ **Đặc quyền**: Nhận thêm tiền Donate ngẫu nhiên từ người hâm mộ mỗi khi Làm việc (`work`)."
+            "farmer": "👨‍🌾 **Nông dân**: Nghề nghiệp ổn định và gần gũi thiên nhiên.\n✨ **Đặc quyền**: +50% May mắn câu cá, 15% Cá Khổng Lồ, 10% Mùa màng bội thu (×2.5), 25% giữ lại mồi.",
+            "hacker": "👨‍💻 **Hacker**: Chuyên gia khai thác dữ liệu.\n✨ **Đặc quyền**: 15% Data Mine (×2) khi `search`, 20% double khi `crime` nếu có Laptop.",
+            "streamer": "🎥 **Streamer**: Ngôi sao của cộng đồng mạng.\n✨ **Đặc quyền**: 5% Viral (×5) khi `work` với Ghế/Mansion, +15% thưởng khi biểu diễn.",
+            "chef": "👨‍🍳 **Đầu bếp**: Nghệ nhân ẩm thực tài ba.\n✨ **Đặc quyền**: 8% Đơn đặc biệt (×2) khi `work`, 5% Michelin Star (×3) khi `daily`.",
+            "musician": "🎸 **Nhạc sĩ**: Nghệ sĩ của âm thanh và cảm xúc.\n✨ **Đặc quyền**: +20% thưởng khi biểu diễn (`slut`), 10% Flow State (×2 gamble) với Guitar.",
+            "soldier": "🪖 **Quân nhân**: Chiến binh kỷ luật và dũng cảm.\n✨ **Đặc quyền**: +10% tỷ lệ thành công `rob`, -30% tiền phạt khi `crime` thất bại, +100 coins mỗi `work`.",
+            "trader": "📈 **Thương nhân**: Chuyên gia kinh doanh và đầu tư.\n✨ **Đặc quyền**: +50 coins mỗi `search`, buff toàn bộ lệnh cờ bạc.",
+            "teacher": "📚 **Giáo viên**: Người truyền đạt tri thức thế hệ tương lai.\n✨ **Đặc quyền**: XP nhận được ×1.5 ở MỌI lệnh (×2 khi có Whiteboard)."
         }
     },
     "slut": {
         "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{hours}} giờ {{minutes}} phút**.",
         "success": "💋 Bạn đã đi khách thành công và nhận được **{{amount}}** coins từ khách hàng tốt bụng! {{emoji}}",
         "failure": "👠 Xui quá! Bạn gặp phải khách 'bùng' tiền hoặc bị bảo kê đánh, tốn **{{amount}}** coins tiền thuốc men.",
+        "musician_bonus": "\n🎸 **Màn trình diễn xuất sắc!** Nhạc sĩ đốt cháy sân khấu! +{{amount}} coins!",
+        "streamer_bonus": "\n🎥 **Lên sóng trực tiếp!** Fans donate ủng hộ! +{{amount}} coins!",
         "actions": [
             "đứng đường ở Công viên Gia Định",
             "tiếp khách trong quán karaoke",
@@ -326,14 +345,18 @@
             "làm sugar baby"
         ]
     },
+    "daily_events": {
+        "doctor_bonus": "\n👨‍⚕️ **Khám sức khỏe miễn phí!** Bác sĩ tự chăm sóc bản thân! +{{amount}} coins!",
+        "michelin_star": "\n⭐ **Sao Michelin!** Bữa ăn đặc biệt được công nhận! Phần thưởng ×**3**!"
+    },
     "balance": {
         "title": "💰 Tài khoản: {{user}}",
         "description": "💸 Tiền mặt: **{{balance}}** coins"
     },
     "fish": {
         "title": "🎣 Chuyến Câu Cá",
-        "rod_needed": "❌ Bạn cần một cái **Cần câu** để đi câu! Hãy mua một cái trong cửa hàng (`{{prefix}}buy 11`).",
-        "bait_needed": "❌ Bạn cần **Mồi câu** để đi câu! Hãy mua mồi trong cửa hàng (vđ: `{{prefix}}buy 2`).",
+        "rod_needed": "❌ Bạn cần một cái **Cần câu** để đi câu! Hãy mua một cái trong cửa hàng (`{{prefix}}buy 404`).",
+        "bait_needed": "❌ Bạn cần **Mồi câu** để đi câu! Hãy mua mồi trong cửa hàng (vđ: `{{prefix}}buy 401`).",
         "description": "Sử dụng **{{rod}}** và **{{bait}}**...",
         "caught": "Đã bắt được",
         "income": "Thu nhập",

@@ -1,6 +1,7 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
+const { hasActiveItem, isProtectedFromRob, getXpMultiplier } = require('../../utils/multiplier');
 const config = require('../../config');
 
 module.exports = {
@@ -32,15 +33,18 @@ module.exports = {
         db.updateUser(message.author.id, { last_rob: now });
 
         const isCriminal = user.job === 'criminal';
+        const isSoldier = user.job === 'soldier';
         const isVictimPolice = victim.job === 'police';
 
-        const { hasActiveItem } = require('../../utils/multiplier');
-        const hasVictimShield = hasActiveItem(target.id, 6); // Shield item ID
+        const hasVictimShield = hasActiveItem(target.id, 202); // Shield (ID 202)
+        const hasVictimRobShield = isProtectedFromRob(target.id); // Shield of Protection (503)
 
-        let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE + (isCriminal ? 0.1 : 0);
+        let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
+        if (isCriminal) baseSuccessChance += 0.10;
+        if (isSoldier) baseSuccessChance += 0.10;
 
-        // Interaction: Police Protection / Shield
-        if (isVictimPolice || hasVictimShield) {
+        // Interaction: Police/Shield protection
+        if (isVictimPolice || hasVictimShield || hasVictimRobShield) {
             baseSuccessChance /= 2;
         }
 
@@ -51,6 +55,13 @@ module.exports = {
             if (isCriminal) percent += 0.05; // Extra 5% for criminals
 
             let stolen = Math.floor(victim.balance * percent);
+
+            // Bonus: if robbing a Police officer, criminal earns +50%
+            let policeRobMsg = '';
+            if (isVictimPolice && isCriminal) {
+                stolen = Math.floor(stolen * 1.5);
+                policeRobMsg = t('rob.police_bounty', lang);
+            }
 
             // Item Interaction: Multipliers
             const { getUserMultiplier } = require('../../utils/multiplier');
@@ -77,6 +88,7 @@ module.exports = {
             if (itemBonus > 0) {
                 msg += t('rob.thief_edge', lang, { amount: itemBonus.toLocaleString() });
             }
+            if (policeRobMsg) msg += policeRobMsg;
 
             await message.reply(msg);
 
@@ -101,6 +113,8 @@ module.exports = {
 
             if (isVictimPolice) {
                 msg += t('rob.police_busted', lang);
+            } else if (hasVictimRobShield) {
+                msg += t('rob.rob_shield_blocked', lang);
             } else if (hasVictimShield) {
                 msg += t('rob.shield_blocked', lang);
             }
