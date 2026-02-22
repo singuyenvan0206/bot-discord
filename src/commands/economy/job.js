@@ -6,7 +6,14 @@ const config = require('../../config');
 module.exports = {
     name: 'job',
     aliases: ['career', 'occup'],
-    description: 'View or set your career',
+    description: 'Quản lý nghề nghiệp của bạn.',
+    cooldown: 5,
+    subcommands: {
+        'list': 'Xem danh sách các nghề nghiệp có sẵn và đặc quyền.',
+        'info': 'Xem thông tin chi tiết về nghề nghiệp hiện tại của bạn.',
+        'select <id>': 'Chọn một nghề nghiệp mới.'
+    },
+    examples: ['list', 'info', 'select 1'],
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);

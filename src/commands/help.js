@@ -1,9 +1,10 @@
-
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ComponentType } = require('discord.js');
 const config = require('../config');
 const { t, getLanguage } = require('../utils/i18n');
 const db = require('../database');
 const { formatDuration } = require('../utils/time');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
     name: 'help',
@@ -14,138 +15,97 @@ module.exports = {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const isOwner = db.isOwner(message.author.id);
 
+        // 1. Dynamic Command Discovery
         const categories = {
-            fun: {
-                label: t('help.categories.fun.label', lang),
-                description: t('help.categories.fun.description', lang),
-                emoji: '🎮',
-                commands: [
-                    '`$coinflip` (`$cf`, `$flip`)',
-                    '`$dice` (`$roll`)',
-                    '`$rps` (`$rock`)',
-                    '`$blackjack` (`$bj`)',
-                    '`$slots`',
-                    '`$poker` (`$pk`)',
-                    '`$tictactoe` (`$ttt`)',
-                    '`$connect4` (`$c4`)',
-                    '`$memory` (`$mem`, `$match`)',
-                    '`$minesweeper` (`$mine`, `$ms`)',
-                    '`$trivia`',
-                    '`$emojiquiz` (`$eq`, `$quiz`)',
-                    '`$hangman` (`$hang`, `$hm`)',
-                    '`$wordchain` (`$wc`)',
-                    '`$scramble` (`$scram`)',
-                    '`$guess` (`$gn`)',
-                    '`$reaction` (`$react`)',
-                ]
-            },
-            economy: {
-                label: t('help.categories.economy.label', lang),
-                description: t('help.categories.economy.description', lang),
-                emoji: '💰',
-                commands: [
-                    '`$balance` (`$bal`, `$bl`)',
-                    '`$daily` (`$d`, `$dy`)',
-                    '`$work` (`$w`, `$wk`)',
-                    '`$beg`',
-                    '`$search`',
-                    '`$crime`',
-                    '`$slut`',
-                    '`$rob`',
-                    '`$job` (`$j`)',
-                    '`$fish` (`$fishing`, `$cast`)',
-                    '`$shop` (`$sh`, `$store`)',
-                    '`$inventory` (`$inv`)',
-                    '`$buy` (`$b`)',
-                    '`$sell` (`$s`)',
-                    '`$iteminfo` (`$ii`)',
-                    '`$use` <id>',
-                    '`$transfer` (`$pay`, `$tf`)',
-                    '`$leaderboard` (`$lb`, `$top`)',
-                ]
-            },
-            utility: {
-                label: t('help.categories.utility.label', lang),
-                description: t('help.categories.utility.description', lang),
-                emoji: '🔧',
-                commands: [
-                    '`$ping` (`$p`)',
-                    '`$profile` (`$pf`)',
-                    '`$userinfo` (`$ui`)',
-                    '`$serverinfo` (`$si`)',
-                    '`$avatar` (`$av`)',
-                    '`$language` (`$lang`)',
-                ]
-            },
-            giveaway: {
-                label: t('help.categories.giveaway.label', lang),
-                description: t('help.categories.giveaway.description', lang),
-                emoji: '🎉',
-                commands: [
-                    '`$giveaway start`',
-                    '`$giveaway end`',
-                    '`$giveaway reroll`',
-                    '`$giveaway list`',
-                    '`$giveaway pause`',
-                    '`$giveaway resume`',
-                    '`$giveaway delete`',
-                ]
-            }
+            fun: { label: t('help.categories.fun.label', lang), description: t('help.categories.fun.description', lang), emoji: '🎮', commands: [] },
+            economy: { label: t('help.categories.economy.label', lang), description: t('help.categories.economy.description', lang), emoji: '💰', commands: [] },
+            utility: { label: t('help.categories.utility.label', lang), description: t('help.categories.utility.description', lang), emoji: '🔧', commands: [] },
+            giveaway: { label: t('help.categories.giveaway.label', lang), description: t('help.categories.giveaway.description', lang), emoji: '🎉', commands: [] }
         };
 
         if (isOwner) {
-            categories.owner = {
-                label: t('help.categories.owner.label', lang),
-                description: t('help.categories.owner.description', lang),
-                emoji: '👑',
-                commands: [
-                    '`$addmoney` (`$am`)',
-                    '`$removemoney` (`$rm`)',
-                    '`$additem` (`$ai`)',
-                    '`$removeitem` (`$ri`)',
-                    '`$setlevel`',
-                    '`$resetuser`',
-                    '`$serverlist`',
-                    '`$leaveserver`',
-                    '`$setstatus`',
-                    '`$shutdown`',
-                ]
-            };
+            categories.owner = { label: t('help.categories.owner.label', lang), description: t('help.categories.owner.description', lang), emoji: '👑', commands: [] };
         }
 
-        // 1. Check if user wants specific command help
+        // Map commands to categories based on their folder
+        const commandsPath = path.join(__dirname, '../commands');
+        const commandFolders = fs.readdirSync(commandsPath);
+
+        for (const folder of commandFolders) {
+            const folderPath = path.join(commandsPath, folder);
+            if (!fs.lstatSync(folderPath).isDirectory()) continue;
+            if (folder === 'owner' && !isOwner) continue;
+            if (!categories[folder]) continue;
+
+            const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
+            for (const file of commandFiles) {
+                const command = require(`./${folder}/${file}`);
+                let cmdStr = `\`${prefix}${command.name}\``;
+                if (command.aliases && command.aliases.length > 0) {
+                    cmdStr += ` (\`${command.aliases.map(a => `${prefix}${a}`).join('`, `')}\`)`;
+                }
+                categories[folder].commands.push(cmdStr);
+            }
+        }
+
+        // 2. Specific Command Help
         if (args.length > 0) {
             const name = args[0].toLowerCase();
             const command = message.client.commands.get(name) ||
                 message.client.commands.find(c => c.aliases && c.aliases.includes(name));
 
             if (!command) {
-                return message.reply(`❌ Could not find command ** ${name}** !`);
+                return message.reply(`❌ Could not find command **${name}**!`);
             }
 
             const guide = t(`help.guides.${command.name}`, lang).replace(/\$/g, prefix);
             const usage = command.usage || '';
             const description = t(`help.descriptions.${command.name}`, lang) || command.description || t('help.no_description', lang);
 
+            // Find category emoji
+            let categoryEmoji = '❓';
+            for (const cat of Object.values(categories)) {
+                if (cat.commands.some(c => c.includes(`\`${prefix}${command.name}\``))) {
+                    categoryEmoji = cat.emoji;
+                    break;
+                }
+            }
+
             const embed = new EmbedBuilder()
                 .setTitle(t('help.title', lang, { emoji: '📖', prefix, name: command.name }))
                 .setDescription(description)
                 .setColor(config.COLORS.INFO)
                 .addFields(
-                    { name: `📝 ${t('help.aliases', lang)} `, value: command.aliases ? command.aliases.map(a => `\`${prefix}${a}\``).join(', ') : t('help.none', lang), inline: true },
+                    { name: `📝 ${t('help.aliases', lang)}`, value: command.aliases ? command.aliases.map(a => `\`${prefix}${a}\``).join(', ') : t('help.none', lang), inline: true },
                     { name: `⏱️ ${t('help.cooldown', lang)}`, value: `${formatDuration(command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN, lang)}`, inline: true },
-                    { name: `💡 ${t('help.usage_title', lang)}`, value: `\`${prefix}${command.name} ${usage}\``.trim(), inline: true },
-                    { name: `🔍 ${t('help.guide_title', lang)}`, value: guide.startsWith('help.guides') ? t('help.no_guide', lang) : guide, inline: false }
-                )
-                .setFooter({ text: t('help.footer_all', lang, { prefix }) });
+                    { name: `💡 ${t('help.usage_title', lang)}`, value: `\`${prefix}${command.name}${usage ? ' ' + usage : ''}\``.trim(), inline: true }
+                );
+
+            if (command.subcommands) {
+                const subs = Object.entries(command.subcommands).map(([sub, desc]) => `• \`${prefix}${command.name} ${sub}\`: ${desc}`).join('\n');
+                embed.addFields({ name: t('help.subcommands_title', lang), value: subs, inline: false });
+            }
+
+            embed.addFields({ name: `🔍 ${t('help.guide_title', lang)}`, value: guide.startsWith('help.guides') ? t('help.no_guide', lang) : guide, inline: false });
+
+            if (command.examples) {
+                embed.addFields({ name: t('help.examples_title', lang), value: command.examples.map(ex => `\`${prefix}${command.name} ${ex}\``).join('\n'), inline: false });
+            }
+
+            embed.setFooter({ text: t('help.footer_all', lang, { prefix }) });
 
             return message.reply({ embeds: [embed] });
         }
 
-        // 2. Default Behavior: Show Category Menu
+        // 3. Home View with Random Tip
+        const tips = t('help.tips', lang);
+        const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
         const generateHomeEmbed = () => new EmbedBuilder()
             .setTitle(t('help.menu_title', lang, { emoji: '📖' }))
-            .setDescription(`${t('help.menu_desc', lang, { prefix })}\n\n**🚀 ${t('help.stats_title', lang)}:**\n` +
+            .setDescription(`${t('help.menu_desc', lang, { prefix })}\n\n` +
+                `**${t('help.tip_title', lang)}:**\n> *${randomTip}*\n\n` +
+                `**🚀 ${t('help.stats_title', lang)}:**\n` +
                 `> 📋 **${t('help.stats_commands', lang)}:** ${message.client.commands.size}\n` +
                 `> 🌐 **${t('help.stats_servers', lang)}:** ${message.client.guilds.cache.size}\n` +
                 `> 👥 **${t('help.stats_users', lang)}:** ${message.client.users.cache.size}`)

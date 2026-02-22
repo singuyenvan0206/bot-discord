@@ -8,8 +8,16 @@ const config = require('../config');
 module.exports = {
     name: 'giveaway',
     aliases: ['g', 'gw'],
-    description: 'Quản lý giveaway',
+    description: 'Quản lý sự kiện giveaway.',
     cooldown: 5,
+    subcommands: {
+        'start <time> <winners> <prize>': 'Bắt đầu một giveaway mới.',
+        'end <message_id>': 'Kết thúc một giveaway đang diễn ra sớm.',
+        'reroll <message_id>': 'Chọn lại người chiến thắng cho một giveaway đã kết thúc.',
+        'list': 'Xem danh sách các giveaway đang diễn ra.',
+        'delete <message_id>': 'Hủy bỏ và xóa một giveaway.'
+    },
+    examples: ['start 1h 1 1000 Coins', 'list', 'end 1234567890'],
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         if (!isManager(message.member)) {
