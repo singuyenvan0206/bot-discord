@@ -14,13 +14,15 @@ module.exports = {
         let currentPage = 0;
 
         const getCategoryItems = (cat) => {
+            let items;
             if (cat === 'tools') {
-                return SHOP_ITEMS.filter(i => i.type === 'tool' || i.type === 'bait');
+                items = SHOP_ITEMS.filter(i => i.type === 'tool' || i.type === 'bait');
+            } else if (cat === 'other') {
+                items = SHOP_ITEMS.filter(i => i.type === 'other' || i.type === 'xpboost' || i.type === 'robshield');
+            } else {
+                items = SHOP_ITEMS.filter(i => i.type === cat);
             }
-            if (cat === 'other') {
-                return SHOP_ITEMS.filter(i => i.type === 'other' || i.type === 'xpboost' || i.type === 'robshield');
-            }
-            return SHOP_ITEMS.filter(i => i.type === cat);
+            return items.sort((a, b) => a.price - b.price);
         };
 
         const generateEmbed = (category, page) => {

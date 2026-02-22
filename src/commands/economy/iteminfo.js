@@ -56,7 +56,8 @@ module.exports = {
             );
 
         if (item.multiplier) {
-            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang) || 'Hiệu ứng'}`, value: `+${Math.round(item.multiplier * 100)}%`, inline: true });
+            const effectType = t(`effects.${item.type}`, lang) || item.type;
+            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang) || 'Hiệu ứng'}`, value: `+${Math.round(item.multiplier * 100)}% ${effectType}`, inline: true });
         }
 
         if (item.duration) {

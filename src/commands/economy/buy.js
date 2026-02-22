@@ -88,7 +88,8 @@ module.exports = {
         for (const purchase of itemsToBuy) {
             db.addItem(message.author.id, purchase.item.id, purchase.quantity);
             if (purchase.item.multiplier && itemsToBuy.length === 1) {
-                effectMsg += t('buy.effect_activated', lang, { percent: Math.round(purchase.item.multiplier * 100) });
+                const effectType = t(`effects.${purchase.item.type}`, lang) || purchase.item.type;
+                effectMsg += t('buy.effect_activated', lang, { percent: Math.round(purchase.item.multiplier * 100), type: effectType });
             }
         }
 

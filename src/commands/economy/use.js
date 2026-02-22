@@ -65,7 +65,8 @@ module.exports = {
             const hours = Math.floor(item.duration / 3600);
             const durationStr = hours > 0 ? `${hours}h` : `${Math.floor(item.duration / 60)}m`;
 
-            return message.reply(`${t('use.success', lang, { item: itemName })}\n✨ **Buff Activated:** +${Math.round(item.multiplier * 100)}% ${item.type} bonus for **${durationStr}**!`);
+            const effectType = t(`effects.${item.type}`, lang) || item.type;
+            return message.reply(`${t('use.success', lang, { item: itemName })}${t('use.buff_activated', lang, { percent: Math.round(item.multiplier * 100), type: effectType, duration: durationStr })}`);
         }
 
         // Add other usable items here if needed in the future

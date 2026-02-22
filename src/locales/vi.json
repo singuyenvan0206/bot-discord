@@ -395,36 +395,36 @@
             "desc": "Cảm giác thư thái (+8% Thưởng Thêm | 7 ngày)"
         },
         "103": {
-            "name": "🧸 Thảm Lông",
-            "desc": "Mềm mại đôi chân (+15% Thưởng Thêm | 7 ngày)"
-        },
-        "104": {
-            "name": "🎨 Tranh Trừu Tượng",
-            "desc": "Trang trí đẳng cấp (+20% Thưởng Thêm | 30 ngày)"
-        },
-        "105": {
-            "name": "🗿 Tượng Đá Moai",
-            "desc": "Vững như bàn thạch (+35% Thưởng Thêm | 30 ngày)"
-        },
-        "106": {
-            "name": "🎫 Vé Vàng VIP",
-            "desc": "Đặc quyền VIP (+100% Thưởng Thêm | 30 ngày)"
-        },
-        "107": {
-            "name": "🏰 Biệt Thự",
-            "desc": "Sống đời thượng lưu (+200% Thưởng Thêm | 30 ngày)"
-        },
-        "108": {
-            "name": "🚀 Trạm Không Gian",
-            "desc": "Phần thưởng từ quỹ đạo (+500% Thưởng Thêm | 30 ngày)"
-        },
-        "109": {
             "name": "👨‍🍳 Mũ Đầu Bếp",
             "desc": "Đẳng cấp bếp trưởng (+20% Thưởng Thêm | 7 ngày)"
         },
-        "110": {
+        "104": {
+            "name": "🧸 Thảm Lông",
+            "desc": "Mềm mại đôi chân (+15% Thưởng Thêm | 7 ngày)"
+        },
+        "105": {
+            "name": "🎨 Tranh Trừu Tượng",
+            "desc": "Trang trí đẳng cấp (+20% Thưởng Thêm | 30 ngày)"
+        },
+        "106": {
             "name": "📖 Sách Nấu Ăn",
             "desc": "Bí kíp ẩm thực (+40% Thưởng Thêm | 30 ngày)"
+        },
+        "107": {
+            "name": "🗿 Tượng Đá Moai",
+            "desc": "Vững như bàn thạch (+35% Thưởng Thêm | 30 ngày)"
+        },
+        "108": {
+            "name": "🎫 Vé Vàng VIP",
+            "desc": "Đặc quyền VIP (+100% Thưởng Thêm | 30 ngày)"
+        },
+        "109": {
+            "name": "🏰 Biệt Thự",
+            "desc": "Sống đời thượng lưu (+200% Thưởng Thêm | 30 ngày)"
+        },
+        "110": {
+            "name": "🚀 Trạm Không Gian",
+            "desc": "Phần thưởng từ quỹ đạo (+500% Thưởng Thêm | 30 ngày)"
         },
         "201": {
             "name": "📱 Điện Thoại",
@@ -455,56 +455,56 @@
             "desc": "Click chuột chính xác (+10% Thu Nhập | 7 ngày)"
         },
         "208": {
-            "name": "🖥️ Màn Hình 4K",
-            "desc": "Rõ nét từng chi tiết (+20% Thu Nhập | 7 ngày)"
+            "name": "📋 Bảng Trắng",
+            "desc": "Truyền đạt kiến thức (+15% Thu Nhập | 7 ngày)"
         },
         "209": {
-            "name": "💻 Laptop",
-            "desc": "Làm việc chăm chỉ hơn! (+30% Thu Nhập | 30 ngày)"
-        },
-        "210": {
-            "name": "🪑 Bàn Đứng",
-            "desc": "Tư thế tốt hơn (+25% Thu Nhập | 30 ngày)"
-        },
-        "211": {
-            "name": "👔 Bộ Vest Công Sở",
-            "desc": "Trông chuyên nghiệp hơn (+40% Thu Nhập | 30 ngày)"
-        },
-        "212": {
-            "name": "🏎️ Siêu Xe",
-            "desc": "Vút bay trên đường! (+80% Thu Nhập | 30 ngày)"
-        },
-        "213": {
-            "name": "🛥️ Siêu Du Thuyền",
-            "desc": "Văn phòng trên biển (+300% Thu Nhập | 30 ngày)"
-        },
-        "214": {
             "name": "🎸 Đàn Guitar",
             "desc": "Giai điệu lôi cuốn (+15% Thu Nhập | 7 ngày)"
         },
-        "215": {
-            "name": "🎹 Đàn Piano",
-            "desc": "Nghệ thuật đích thực (+50% Thu Nhập | 30 ngày)"
+        "210": {
+            "name": "🖥️ Màn Hình 4K",
+            "desc": "Rõ nét từng chi tiết (+20% Thu Nhập | 7 ngày)"
         },
-        "216": {
+        "211": {
             "name": "🔫 Súng Trường",
             "desc": "Sức mạnh quân đội (+20% Thu Nhập | 7 ngày)"
+        },
+        "212": {
+            "name": "💻 Laptop",
+            "desc": "Làm việc chăm chỉ hơn! (+30% Thu Nhập | 30 ngày)"
+        },
+        "213": {
+            "name": "🪑 Bàn Đứng",
+            "desc": "Tư thế tốt hơn (+25% Thu Nhập | 30 ngày)"
+        },
+        "214": {
+            "name": "📈 Máy Tính Giao Dịch",
+            "desc": "Phân tích thị trường (+35% Thu Nhập | 30 ngày)"
+        },
+        "215": {
+            "name": "💺 Ghế Công Thái Học",
+            "desc": "Ngồi làm việc cả ngày (+35% Thu Nhập | 30 ngày)"
+        },
+        "216": {
+            "name": "👔 Bộ Vest Công Sở",
+            "desc": "Trông chuyên nghiệp hơn (+40% Thu Nhập | 30 ngày)"
         },
         "217": {
             "name": "🛡️ Giáp Chiến Đấu",
             "desc": "Phòng thủ kiên cố (+40% Thu Nhập | 30 ngày)"
         },
         "218": {
-            "name": "📋 Bảng Trắng",
-            "desc": "Truyền đạt kiến thức (+15% Thu Nhập | 7 ngày)"
+            "name": "🎹 Đàn Piano",
+            "desc": "Nghệ thuật đích thực (+50% Thu Nhập | 30 ngày)"
         },
         "219": {
-            "name": "📈 Máy Tính Giao Dịch",
-            "desc": "Phân tích thị trường (+35% Thu Nhập | 30 ngày)"
+            "name": "🏎️ Siêu Xe",
+            "desc": "Vút bay trên đường! (+80% Thu Nhập | 30 ngày)"
         },
         "220": {
-            "name": "💺 Ghế Công Thái Học",
-            "desc": "Ngồi làm việc cả ngày (+35% Thu Nhập | 30 ngày)"
+            "name": "🛥️ Siêu Du Thuyền",
+            "desc": "Văn phòng trên biển (+300% Thu Nhập | 30 ngày)"
         },
         "301": {
             "name": "🎲 Xúc Xắc Vàng",
@@ -515,76 +515,76 @@
             "desc": "Biết khi nào nên theo (+20% Gamble | 7 ngày)"
         },
         "303": {
+            "name": "🪙 Đồng Tiền May Mắn",
+            "desc": "Sấp hay ngửa (+18% Gamble | 7 ngày)"
+        },
+        "304": {
             "name": "💍 Nhẫn Vàng",
             "desc": "Sáng bóng và quý giá (+15% Gamble | 30 ngày)"
         },
-        "304": {
+        "305": {
             "name": "🪙 Chip Đất Sét",
             "desc": "Cảm giác chuyên nghiệp (+20% Gamble | 30 ngày)"
         },
-        "305": {
-            "name": "🍀 Cỏ 4 Lá",
-            "desc": "Cảm thấy may mắn? (+30% Gamble | 30 ngày)"
-        },
         "306": {
-            "name": "⌚ Đồng Hồ Rolex",
-            "desc": "Thời gian là tiền bạc (+30% Gamble | 30 ngày)"
-        },
-        "307": {
-            "name": "🐴 Móng Ngựa Vàng",
-            "desc": "May mắn thuần khiết (+50% Gamble | 30 ngày)"
-        },
-        "308": {
-            "name": "⏳ Cỗ Máy Thời Gian",
-            "desc": "Viết lại lịch sử (+1000% Gamble | 30 ngày)"
-        },
-        "309": {
             "name": "📊 Biểu Đồ Chứng Khoán",
             "desc": "Dự đoán xu hướng (+25% Gamble | 30 ngày)"
         },
+        "307": {
+            "name": "🍀 Cỏ 4 Lá",
+            "desc": "Cảm thấy may mắn? (+30% Gamble | 30 ngày)"
+        },
+        "308": {
+            "name": "⌚ Đồng Hồ Rolex",
+            "desc": "Thời gian là tiền bạc (+30% Gamble | 30 ngày)"
+        },
+        "309": {
+            "name": "🐴 Móng Ngựa Vàng",
+            "desc": "May mắn thuần khiết (+50% Gamble | 30 ngày)"
+        },
         "310": {
-            "name": "🪙 Đồng Xu May Mắn",
-            "desc": "Tài hay xỉu (+18% Gamble | 7 ngày)"
+            "name": "⏳ Cỗ Máy Thời Gian",
+            "desc": "Viết lại lịch sử (+1000% Gamble | 30 ngày)"
         },
         "401": {
             "name": "🪱 Mồi Giun",
-            "desc": "Mồi câu cơ bản. (Luck: +10%)"
+            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +10%)"
         },
         "402": {
             "name": "🦗 Mồi Dế",
-            "desc": "Món khoái khẩu của cá. (Luck: +30%)"
+            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +30%)"
         },
         "403": {
             "name": "🦑 Mồi Mực",
-            "desc": "Không loài cá nào cưỡng lại được. (Luck: +80%)"
+            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +80%)"
         },
         "404": {
             "name": "🎣 Cần Tre",
-            "desc": "Cần câu đơn giản. (Luck: 1.0x)"
+            "desc": "Cần câu cơ bản. (May mắn: 1.0x)"
         },
         "405": {
             "name": "🎣 Cần Sợi Thủy Tinh",
-            "desc": "Bền bỉ và dẻo dai. (Luck: 1.5x)"
+            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.5x)"
         },
         "406": {
-            "name": "🎣 Cần Sợi Carbon",
-            "desc": "Đỉnh cao công nghệ. (Luck: 2.5x)"
+            "name": "🎣 Cần Carbon",
+            "desc": "Đẳng cấp hàng đầu. (May mắn: 2.5x)"
         },
         "407": {
-            "name": "🎣 Cần Titan",
-            "desc": "Sức mạnh tuyệt đối. (Luck: 4.0x)"
+            "name": "🎣 Cần Titanium",
+            "desc": "Sức mạnh tuyệt đối. (May mắn: 4.0x)"
         },
         "501": {
-            "name": "🎟️ Thẻ Chuyển Nghề",
-            "desc": "Thay đổi định hướng nghề nghiệp của bạn."
+            "name": "🧪 Thuốc Tăng XP",
+            "desc": "Nhận thêm +50% XP khi thực hiện các hoạt động | 1 ngày"
         },
         "502": {
-            "name": "🧪 Thuốc Tăng XP",
-            "desc": "Nhận thêm 50% XP khi thực hiện các hoạt động | 1 ngày"
+            "name": "🛡️ Khiên Bảo Vệ",
+            "desc": "Chặn một lần bị người khác cướp tiền | 1 ngày"
         },
         "503": {
-            "name": "🛡️ Khiên Bảo Vệ",
-            "desc": "Chặn một lần bị cướp bởi người dùng khác | 1 ngày"
+            "name": "🎟️ Thẻ Chuyển Nghề",
+            "desc": "Dùng để thay đổi định hướng nghề nghiệp của bạn."
         }
     },
     "shop": {
@@ -622,7 +622,8 @@
         "active_buffs": "Buff Đang Hoạt Động",
         "total_items": "Tổng vật phẩm: **{{count}}**",
         "inventory_value": "Giá trị kho đồ: **{{emoji}} {{amount}}**",
-        "sell_tip": "💡 Mẹo: Dùng {{prefix}}sell <vật_phẩm> để quy đổi vật phẩm thành coins!"
+        "sell_tip": "💡 Mẹo: Dùng {{prefix}}sell <vật_phẩm> để quy đổi vật phẩm thành coins!",
+        "buff_activated": "\n✨ **Buff đã kích hoạt:** +{{percent}}% {{type}} trong **{{duration}}**!"
     },
     "buy": {
         "prompt": "❌ Vui lòng chỉ định vật phẩm muốn mua (vđ: `{{prefix}}buy 1` hoặc `{{prefix}}buy cookies`).",
@@ -631,7 +632,7 @@
         "insufficient_funds": "❌ Bạn cần **{{price}}** coins để mua **{{quantity}}x {{item}}**!",
         "success": "✅ Bạn đã mua **{{quantity}}x {{item}}** với giá **{{price}}** coins! 🛍️",
         "success_multiple": "✅ Bạn đã mua **{{items}}** với tổng giá **{{price}}** coins! 🛍️",
-        "effect_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% hiệu quả!"
+        "effect_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% {{type}}!"
     },
     "sell": {
         "prompt": "❌ Vui lòng chỉ định vật phẩm muốn bán (vđ: `{{prefix}}sell 1` hoặc `{{prefix}}sell cookies`).",
@@ -1112,12 +1113,19 @@
         "not_found": "Không tìm thấy vật phẩm.",
         "title": "Thông Tin: {{name}}",
         "details_label": "Chi Tiết",
-        "no_details": "Không có mô tả chi tiết.",
+        "no_details": "Vật phẩm này hiện chưa có thông tin chi tiết.",
         "price_label": "Giá Mua",
         "sell_label": "Giá Bán",
         "category_label": "Danh Mục",
         "effect_label": "Tác Dụng",
         "owned_label": "Sở Hữu"
+    },
+    "effects": {
+        "income": "Thu Nhập",
+        "daily": "Hàng Ngày",
+        "gamble": "Cược",
+        "xpboost": "XP Bonus",
+        "robshield": "Bảo Vệ"
     },
     "jobs": {
         "police": {

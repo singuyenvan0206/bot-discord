@@ -339,36 +339,36 @@
             "desc": "Chill vibes (+8% Extra Bonus | 7 days)"
         },
         "103": {
-            "name": "🧸 Shag Rug",
-            "desc": "Soft on the feet (+15% Extra Bonus | 7 days)"
-        },
-        "104": {
-            "name": "🎨 Abstract Painting",
-            "desc": "Classy decoration (+20% Extra Bonus | 30 days)"
-        },
-        "105": {
-            "name": "🗿 Moai Statue",
-            "desc": "Steady as a rock (+35% Extra Bonus | 30 days)"
-        },
-        "106": {
-            "name": "🎫 VIP Golden Ticket",
-            "desc": "VIP perks (+100% Extra Bonus | 30 days)"
-        },
-        "107": {
-            "name": "🏰 Mansion",
-            "desc": "High life (+200% Extra Bonus | 30 days)"
-        },
-        "108": {
-            "name": "🚀 Space Station",
-            "desc": "Orbital rewards (+500% Extra Bonus | 30 days)"
-        },
-        "109": {
             "name": "👨‍🍳 Chef's Hat",
             "desc": "Executive level (+20% Extra Bonus | 7 days)"
         },
-        "110": {
+        "104": {
+            "name": "🧸 Shag Rug",
+            "desc": "Soft on the feet (+15% Extra Bonus | 7 days)"
+        },
+        "105": {
+            "name": "🎨 Abstract Painting",
+            "desc": "Classy decoration (+20% Extra Bonus | 30 days)"
+        },
+        "106": {
             "name": "📖 Cookbook",
             "desc": "Culinary secrets (+40% Extra Bonus | 30 days)"
+        },
+        "107": {
+            "name": "🗿 Moai Statue",
+            "desc": "Steady as a rock (+35% Extra Bonus | 30 days)"
+        },
+        "108": {
+            "name": "🎫 VIP Golden Ticket",
+            "desc": "VIP perks (+100% Extra Bonus | 30 days)"
+        },
+        "109": {
+            "name": "🏰 Mansion",
+            "desc": "High life (+200% Extra Bonus | 30 days)"
+        },
+        "110": {
+            "name": "🚀 Space Station",
+            "desc": "Orbital rewards (+500% Extra Bonus | 30 days)"
         },
         "201": {
             "name": "📱 Smartphone",
@@ -399,56 +399,56 @@
             "desc": "Precise clicks (+10% Income | 7 days)"
         },
         "208": {
-            "name": "🖥️ 4K Monitor",
-            "desc": "Clear vision (+20% Income | 7 days)"
+            "name": "📋 Whiteboard",
+            "desc": "Share knowledge (+15% Income | 7 days)"
         },
         "209": {
-            "name": "💻 Laptop",
-            "desc": "Work harder! (+30% Income | 30 days)"
-        },
-        "210": {
-            "name": "🪑 Standing Desk",
-            "desc": "Better posture (+25% Income | 30 days)"
-        },
-        "211": {
-            "name": "👔 Business Suit",
-            "desc": "Look professional (+40% Income | 30 days)"
-        },
-        "212": {
-            "name": "🏎️ Supercar",
-            "desc": "Zoom zoom! (+80% Income | 30 days)"
-        },
-        "213": {
-            "name": "🛥️ Superyacht",
-            "desc": "Ocean office (+300% Income | 30 days)"
-        },
-        "214": {
             "name": "🎸 Guitar",
             "desc": "Catchy melodies (+15% Income | 7 days)"
         },
-        "215": {
-            "name": "🎹 Grand Piano",
-            "desc": "Pure artistry (+50% Income | 30 days)"
+        "210": {
+            "name": "🖥️ 4K Monitor",
+            "desc": "Clear vision (+20% Income | 7 days)"
         },
-        "216": {
+        "211": {
             "name": "🔫 Rifle",
             "desc": "Military grade strength (+20% Income | 7 days)"
+        },
+        "212": {
+            "name": "💻 Laptop",
+            "desc": "Work harder! (+30% Income | 30 days)"
+        },
+        "213": {
+            "name": "🪑 Standing Desk",
+            "desc": "Better posture (+25% Income | 30 days)"
+        },
+        "214": {
+            "name": "📈 Trading Terminal",
+            "desc": "Analyze the market (+35% Income | 30 days)"
+        },
+        "215": {
+            "name": "💺 Ergonomic Chair",
+            "desc": "Sit comfortably all day (+35% Income | 30 days)"
+        },
+        "216": {
+            "name": "👔 Business Suit",
+            "desc": "Look professional (+40% Income | 30 days)"
         },
         "217": {
             "name": "🛡️ Combat Armor",
             "desc": "Solid defense (+40% Income | 30 days)"
         },
         "218": {
-            "name": "📋 Whiteboard",
-            "desc": "Share knowledge (+15% Income | 7 days)"
+            "name": "🎹 Grand Piano",
+            "desc": "Pure artistry (+50% Income | 30 days)"
         },
         "219": {
-            "name": "📈 Trading Terminal",
-            "desc": "Analyze the market (+35% Income | 30 days)"
+            "name": "🏎️ Supercar",
+            "desc": "Zoom zoom! (+80% Income | 30 days)"
         },
         "220": {
-            "name": "💺 Ergonomic Chair",
-            "desc": "Sit comfortably all day (+35% Income | 30 days)"
+            "name": "🛥️ Superyacht",
+            "desc": "Ocean office (+300% Income | 30 days)"
         },
         "301": {
             "name": "🎲 Golden Dice",
@@ -459,36 +459,36 @@
             "desc": "Know when to hold 'em (+20% Gamble | 7 days)"
         },
         "303": {
+            "name": "🪙 Lucky Coin",
+            "desc": "Heads or tails (+18% Gamble | 7 days)"
+        },
+        "304": {
             "name": "💍 Gold Ring",
             "desc": "Shiny and precious (+15% Gamble | 30 days)"
         },
-        "304": {
+        "305": {
             "name": "🪙 Clay Chips",
             "desc": "Professional feel (+20% Gamble | 30 days)"
         },
-        "305": {
-            "name": "🍀 4-Leaf Clover",
-            "desc": "Feeling lucky? (+30% Gamble | 30 days)"
-        },
         "306": {
-            "name": "⌚ Rolex",
-            "desc": "Time is money (+30% Gamble | 30 days)"
-        },
-        "307": {
-            "name": "🐴 Golden Horseshoe",
-            "desc": "Pure luck (+50% Gamble | 30 days)"
-        },
-        "308": {
-            "name": "⏳ Time Machine",
-            "desc": "Rewrite history (+1000% Gamble | 30 days)"
-        },
-        "309": {
             "name": "📊 Stock Chart",
             "desc": "Predict trends (+25% Gamble | 30 days)"
         },
+        "307": {
+            "name": "🍀 4-Leaf Clover",
+            "desc": "Feeling lucky? (+30% Gamble | 30 days)"
+        },
+        "308": {
+            "name": "⌚ Rolex",
+            "desc": "Time is money (+30% Gamble | 30 days)"
+        },
+        "309": {
+            "name": "🐴 Golden Horseshoe",
+            "desc": "Pure luck (+50% Gamble | 30 days)"
+        },
         "310": {
-            "name": "🪙 Lucky Coin",
-            "desc": "Heads or tails (+18% Gamble | 7 days)"
+            "name": "⏳ Time Machine",
+            "desc": "Rewrite history (+1000% Gamble | 30 days)"
         },
         "401": {
             "name": "🪱 Worm Bait",
@@ -519,16 +519,16 @@
             "desc": "Absolute power. (Luck: 4.0x)"
         },
         "501": {
-            "name": "🎟️ Career Change Voucher",
-            "desc": "Use to switch to a different job path."
-        },
-        "502": {
             "name": "🧪 XP Boost Potion",
             "desc": "Gain +50% XP when performing activities | 1 day"
         },
-        "503": {
+        "502": {
             "name": "🛡️ Shield of Protection",
             "desc": "Block one robbery attempt from other users | 1 day"
+        },
+        "503": {
+            "name": "🎟️ Career Change Voucher",
+            "desc": "Use to switch to a different job path."
         }
     },
     "shop": {
@@ -574,7 +574,7 @@
         "insufficient_funds": "❌ You need **{{price}}** coins to buy **{{quantity}}x {{item}}**!",
         "success": "✅ You bought **{{quantity}}x {{item}}** for **{{price}}** coins! 🛍️",
         "success_multiple": "✅ You bought **{{items}}** for a total of **{{price}}** coins! 🛍️",
-        "effect_activated": "\n✨ **Effect activated:** +{{percent}}% efficiency!"
+        "effect_activated": "\n✨ **Effect activated:** +{{percent}}% {{type}}!"
     },
     "sell": {
         "prompt": "❌ Please specify the item you want to sell (e.g., `{{prefix}}sell 1` or `{{prefix}}sell cookies`).",
@@ -626,7 +626,8 @@
         "not_usable": "❌ This item cannot be used directly.",
         "success": "✅ Successfully used **{{item}}**!",
         "career_reset": "🔄 Your career has been reset. Choose a new path!",
-        "no_job_to_reset": "❌ You don't have a job to reset!"
+        "no_job_to_reset": "❌ You don't have a job to reset!",
+        "buff_activated": "\n✨ **Buff Activated:** +{{percent}}% {{type}} for **{{duration}}**!"
     },
     "serverinfo": {
         "title": "📊  Server Info: {{name}}",
@@ -1111,12 +1112,19 @@
         "not_found": "Item not found.",
         "title": "Item Info: {{name}}",
         "details_label": "Details",
-        "no_details": "No detailed description available.",
+        "no_details": "No detailed information for this item.",
         "price_label": "Buy Price",
         "sell_label": "Sell Price",
         "category_label": "Category",
         "effect_label": "Effect",
         "owned_label": "Owned"
+    },
+    "effects": {
+        "income": "Income",
+        "daily": "Daily",
+        "gamble": "Gamble",
+        "xpboost": "XP Bonus",
+        "robshield": "Protection"
     },
     "jobs": {
         "police": {
