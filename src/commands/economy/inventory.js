@@ -83,7 +83,12 @@ module.exports = {
                         const mins = Math.ceil((remaining % 3600) / 60);
                         const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
                         const effectType = t(`effects.${item.type}`, lang) || item.type;
-                        return `✨ **${itemName}:** +${Math.round(item.multiplier * 100)}% ${effectType} (${timeStr})`;
+
+                        let displayPercent = Math.round(item.multiplier * 100);
+                        if (item.id === 501) displayPercent = 50;
+                        if (item.id === 502) displayPercent = 100;
+
+                        return `✨ **${itemName}:** +${displayPercent}% ${effectType} (${timeStr})`;
                     }).join('\n');
 
                     embed.addFields({ name: `⏳ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`, value: buffList, inline: false });

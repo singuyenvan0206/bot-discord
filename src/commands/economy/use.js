@@ -32,7 +32,7 @@ module.exports = {
         const itemName = t(`items.${itemId}.name`, lang);
 
         // Usage Logic
-        if (itemId === '37') { // Career Change Voucher (ID updated by user)
+        if (itemId === '503') { // Career Change Voucher
             if (!user.job) {
                 return message.reply(t('use.no_job_to_reset', lang));
             }
@@ -66,7 +66,13 @@ module.exports = {
             const durationStr = hours > 0 ? `${hours}h` : `${Math.floor(item.duration / 60)}m`;
 
             const effectType = t(`effects.${item.type}`, lang) || item.type;
-            return message.reply(`${t('use.success', lang, { item: itemName })}${t('use.buff_activated', lang, { percent: Math.round(item.multiplier * 100), type: effectType, duration: durationStr })}`);
+            let displayPercent = Math.round(item.multiplier * 100);
+
+            // Special handling for hardcoded bonus values in multiplier.js
+            if (item.id === 501) displayPercent = 50; // XP Boost Potion: +50% XP
+            if (item.id === 502) displayPercent = 100; // Shield: 100% Protection
+
+            return message.reply(`${t('use.success', lang, { item: itemName })}${t('use.buff_activated', lang, { percent: displayPercent, type: effectType, duration: durationStr })}`);
         }
 
         // Add other usable items here if needed in the future
