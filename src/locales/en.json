@@ -861,6 +861,16 @@
         "set_success": "Language has been updated to **{{lang}}**.",
         "reset_success": "Your personal language preference has been cleared."
     },
+    "time": {
+        "day": "day",
+        "days": "days",
+        "hour": "hour",
+        "hours": "hours",
+        "minute": "minute",
+        "minutes": "minutes",
+        "second": "second",
+        "seconds": "seconds"
+    },
     "help": {
         "title": "{{emoji}} Command: {{prefix}}{{name}}",
         "stats_title": "📊 System Statistics",

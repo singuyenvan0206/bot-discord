@@ -862,6 +862,16 @@
         "set_success": "Ngôn ngữ đã được thiết lập thành **{{lang}}**.",
         "reset_success": "Lựa chọn ngôn ngữ cá nhân của bạn đã được xóa."
     },
+    "time": {
+        "day": "ngày",
+        "days": "ngày",
+        "hour": "giờ",
+        "hours": "giờ",
+        "minute": "phút",
+        "minutes": "phút",
+        "second": "giây",
+        "seconds": "giây"
+    },
     "help": {
         "title": "{{emoji}} Lệnh: {{prefix}}{{name}}",
         "stats_title": "📊 Thống kê Hệ thống",

@@ -134,39 +134,3 @@ function getStraight(cards) {
 }
 
 module.exports = { Deck, evaluateHand };
-
-function getFlushSuit(cards) {
-    const counts = {};
-    for (const c of cards) counts[c.suit] = (counts[c.suit] || 0) + 1;
-    return Object.keys(counts).find(s => counts[s] >= 5);
-}
-
-function getFlush(cards) {
-    const suit = getFlushSuit(cards);
-    if (!suit) return null;
-    return cards.filter(c => c.suit === suit).slice(0, 5);
-}
-
-function getStraight(cards) {
-    // Dedup by value for straight check
-    const uniqueValues = [...new Set(cards.map(c => c.value))].sort((a, b) => b - a);
-
-    // Check for 5 consecutive
-    for (let i = 0; i <= uniqueValues.length - 5; i++) {
-        const subset = uniqueValues.slice(i, i + 5);
-        if (subset[0] - subset[4] === 4) {
-            // Found it! Map back to cards (just return the first one as high card representation)
-            return cards.filter(c => c.value === subset[0]);
-        }
-    }
-
-    // Wheel (A-2-3-4-5)
-    // A=14. If we have 14, 5, 4, 3, 2
-    if (uniqueValues.includes(14) && uniqueValues.includes(2) && uniqueValues.includes(3) && uniqueValues.includes(4) && uniqueValues.includes(5)) {
-        return cards.filter(c => c.value === 5); // 5-high straight
-    }
-
-    return null;
-}
-
-module.exports = { Deck, evaluateHand };
