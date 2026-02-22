@@ -13,7 +13,15 @@
         "requested_by": "Requested by {{user}}"
     },
     "rank": {
-        "title": "🎖️ User Rank"
+        "leaderboard_title": "🏆 Level Leaderboard - {{server}}",
+        "leaderboard_job_title": "🏆 {{job}} Leaderboard - {{server}}",
+        "leaderboard_balance_title": "💰 Wealth Leaderboard - {{server}}",
+        "sort_xp": "Experience (XP)",
+        "sort_balance": "Balance (Coins)",
+        "select_job": "Select Job",
+        "select_sort": "Select Sort Order",
+        "all_jobs": "All Jobs",
+        "footer": "Chat actively to climb the ranks!"
     },
     "connect4": {
         "title": "🔴 Connect 4 🟡",

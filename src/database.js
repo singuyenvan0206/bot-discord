@@ -380,7 +380,10 @@ function removeBalance(userId, amount) {
     execute('UPDATE users SET balance = MAX(0, balance - ?) WHERE id = ?', [amount, userId]);
 }
 
-function getTopUsers(limit = 100, type = 'balance') {
+function getTopUsers(limit = 100, type = 'balance', filter = null) {
+    if (filter && filter.column && filter.value !== undefined) {
+        return queryAll(`SELECT * FROM users WHERE ${filter.column} = ? ORDER BY ${type} DESC LIMIT ?`, [filter.value, limit]);
+    }
     return queryAll(`SELECT * FROM users ORDER BY ${type} DESC LIMIT ?`, [limit]);
 }
 

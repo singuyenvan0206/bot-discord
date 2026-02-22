@@ -127,6 +127,7 @@ Earn, spend, and compete. All data flawlessly persists across restarts.
 | Command | Aliases | Description |
 |---------|---------|-------------|
 | `$balance` | `$bal`, `$bl` | Check your current coin balance |
+| `$rank` | `$lvl`, `$level` | Server-wide leaderboard for Levels and Jobs! |
 | `$profile` | `$p`, `$prof` | Comprehensive overview: Wallet, Level, Ranking, Total Net Worth, and Collection. |
 | `$daily` | `$d`, `$dy` | Claim daily rewards. Boosted by items like Smartphones & Mansions! |
 | `$work` | `$w`, `$wk` | Work a job (Programmer, Chef, Doctor...) for hourly income! |

@@ -13,7 +13,15 @@
         "requested_by": "Yêu cầu bởi {{user}}"
     },
     "rank": {
-        "title": "🎖️ Thứ hạng người dùng"
+        "leaderboard_title": "🏆 Bảng Xếp Hạng Cấp Độ - {{server}}",
+        "leaderboard_job_title": "🏆 Bảng Xếp Hạng {{job}} - {{server}}",
+        "leaderboard_balance_title": "💰 Bảng Xếp Hạng Giàu Có - {{server}}",
+        "sort_xp": "Kinh nghiệm (XP)",
+        "sort_balance": "Số dư (Coins)",
+        "select_job": "Chọn nghề nghiệp",
+        "select_sort": "Chọn kiểu sắp xếp",
+        "all_jobs": "Tất cả nghề nghiệp",
+        "footer": "Hãy nhắn tin tích cực để thăng hạng!"
     },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",

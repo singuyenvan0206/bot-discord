@@ -311,6 +311,29 @@ client.on(Events.InteractionCreate, async interaction => {
                 components: []
             });
         }
+
+        if (interaction.customId.startsWith('rank_job_select_')) {
+            const lang = getLanguage(interaction.user.id, interaction.guildId);
+            const sortBy = interaction.customId.split('_').pop();
+            const jobId = interaction.values[0] === 'all' ? null : interaction.values[0];
+
+            const rankCmd = client.commands.get('rank');
+            const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
+
+            return interaction.update(data);
+        }
+
+        if (interaction.customId.startsWith('rank_sort_select_')) {
+            const lang = getLanguage(interaction.user.id, interaction.guildId);
+            const jobIdPart = interaction.customId.split('_').pop();
+            const jobId = jobIdPart === 'all' ? null : jobIdPart;
+            const sortBy = interaction.values[0];
+
+            const rankCmd = client.commands.get('rank');
+            const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
+
+            return interaction.update(data);
+        }
     }
 });
 
