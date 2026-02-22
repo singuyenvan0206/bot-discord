@@ -40,9 +40,11 @@ module.exports = {
             const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
             for (const file of commandFiles) {
                 const command = require(`../${folder}/${file}`);
-                let cmdStr = `\`${prefix}${command.name}\``;
+                const description = t(`help.descriptions.${command.name}`, lang) || command.description || t('help.no_description', lang);
+
+                let cmdStr = `\`${prefix}${command.name}\` - ${description}`;
                 if (command.aliases && command.aliases.length > 0) {
-                    cmdStr += ` (\`${command.aliases.map(a => `${prefix}${a}`).join('`, `')}\`)`;
+                    cmdStr = `\`${prefix}${command.name}\` (\`${command.aliases.map(a => `${prefix}${a}`).join('`, `')}\`) - ${description}`;
                 }
 
                 // If command has subcommands, list them briefly
