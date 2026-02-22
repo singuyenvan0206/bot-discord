@@ -44,6 +44,13 @@ module.exports = {
                 if (command.aliases && command.aliases.length > 0) {
                     cmdStr += ` (\`${command.aliases.map(a => `${prefix}${a}`).join('`, `')}\`)`;
                 }
+
+                // If command has subcommands, list them briefly
+                if (command.subcommands) {
+                    const subList = Object.keys(command.subcommands).map(s => `  ┗ \`${prefix}${command.name} ${s.split(' ')[0]}\``).join('\n');
+                    cmdStr += `\n${subList}`;
+                }
+
                 categories[folder].commands.push(cmdStr);
             }
         }
