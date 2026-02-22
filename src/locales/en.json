@@ -639,7 +639,9 @@
         "success": "✅ Successfully used **{{item}}**!",
         "career_reset": "✅ Career Change Voucher used successfully! You currently have no job, please choose a new career using `{{prefix}}job set <job_name>`.",
         "no_job_to_reset": "❌ You don't have a job to reset!",
-        "buff_activated": "\n✨ **Buff Activated:** +{{percent}}% {{type}} for **{{duration}}**!"
+        "buff_activated": "\n✨ **Buff Activated:** +{{percent}}% {{type}} for **{{duration}}**!",
+        "all_success": "✅ Successfully activated **{{count}}** item(s)!",
+        "all_nothing": "❌ You have no usable buff items in your inventory."
     },
     "serverinfo": {
         "title": "📊  Server Info: {{name}}",

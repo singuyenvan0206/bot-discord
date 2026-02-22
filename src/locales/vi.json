@@ -717,7 +717,9 @@
         "success": "✅ Bạn đã sử dụng thành công 🎮 **{{item}}**!",
         "buff_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% {{type}} trong **{{duration}}**!",
         "career_reset": "✅ Đã dùng thẻ chuyển nghề thành công! Bạn hiện đang không có nghề nghiệp, sử dụng `{{prefix}}job set <tên_nghề>` để chọn nghề mới.",
-        "no_job_to_reset": "❌ Bạn hiện không có nghề nghiệp nào để chuyển đổi!"
+        "no_job_to_reset": "❌ Bạn hiện không có nghề nghiệp nào để chuyển đổi!",
+        "all_success": "✅ Đã kích hoạt **{{count}}** vật phẩm thành công!",
+        "all_nothing": "❌ Không có vật phẩm nào có thể sử dụng trong túi đồ của bạn."
     },
     "serverinfo": {
         "title": "📊  Thông tin máy chủ: {{name}}",

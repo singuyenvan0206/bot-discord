@@ -1,8 +1,18 @@
 const db = require('../../database');
 const SHOP_ITEMS = require('../../utils/shopItems');
 const { t, getLanguage } = require('../../utils/i18n');
-const { checkAndSendMilestone } = require('../../utils/leveling');
 const config = require('../../config');
+
+// Helper: activate a single buff item for a user
+function activateBuff(userId, item, buffs, isChef) {
+    let duration = item.duration;
+    if (isChef) duration *= 2;
+    const expiresAt = Math.floor(Date.now() / 1000) + duration;
+    buffs.push({ itemId: item.id, expiresAt });
+    db.removeItem(userId, String(item.id), 1);
+    const hours = Math.floor(duration / 3600);
+    return hours > 0 ? `${hours}h` : `${Math.floor(duration / 60)}m`;
+}
 
 module.exports = {
     name: 'use',
@@ -16,9 +26,47 @@ module.exports = {
         }
 
         const user = db.getUser(message.author.id);
-        const inv = JSON.parse(user.inventory || '{}');
+        let inv = {};
+        try { inv = JSON.parse(user.inventory || '{}'); } catch { inv = {}; }
 
-        // Find item in inventory
+        // ─── USE ALL ──────────────────────────────────
+        if (itemQuery === 'all') {
+            let buffs = [];
+            try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+
+            const activated = [];
+            const isChef = user.job === 'chef';
+
+            for (const [id, count] of Object.entries(inv)) {
+                if (!count || count <= 0) continue;
+                const item = SHOP_ITEMS.find(i => String(i.id) === id);
+                if (!item || !item.duration) continue; // Skip non-buff items
+                if (id === '503') continue; // Skip Career Change Voucher
+
+                // Activate all stacks of this item
+                for (let n = 0; n < count; n++) {
+                    const durationStr = activateBuff(message.author.id, item, buffs, isChef);
+                    const itemName = t(`items.${id}.name`, lang);
+                    const effectType = t(`effects.${item.type}`, lang) || item.type;
+                    let displayPercent = Math.round(item.multiplier * 100);
+                    if (item.id === 501) displayPercent = 50;
+                    if (item.id === 502) displayPercent = 100;
+                    activated.push(`🎮 **${itemName}** — +${displayPercent}% ${effectType} (${durationStr})`);
+                }
+            }
+
+            db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
+
+            if (activated.length === 0) {
+                return message.reply(t('use.all_nothing', lang));
+            }
+
+            return message.reply(
+                `${t('use.all_success', lang, { count: activated.length })}\n${activated.join('\n')}`
+            );
+        }
+
+        // ─── USE SINGLE ITEM ──────────────────────────
         const itemId = Object.keys(inv).find(id =>
             id === itemQuery ||
             (SHOP_ITEMS.find(i => String(i.id) === id)?.name.toLowerCase().includes(itemQuery))
@@ -31,53 +79,34 @@ module.exports = {
         const item = SHOP_ITEMS.find(i => String(i.id) === itemId);
         const itemName = t(`items.${itemId}.name`, lang);
 
-        // Usage Logic
-        if (itemId === '503') { // Career Change Voucher
+        // Career Change Voucher
+        if (itemId === '503') {
             if (!user.job) {
                 return message.reply(t('use.no_job_to_reset', lang));
             }
-
             db.removeItem(message.author.id, itemId, 1);
             db.updateUser(message.author.id, { job: null });
-
             return message.reply(t('use.career_reset', lang, { prefix: config.PREFIX }));
         }
 
-        // --- Duration-based Buffs ---
+        // Duration-based Buffs
         if (item && item.duration) {
-            db.removeItem(message.author.id, itemId, 1);
-
             let buffs = [];
-            try {
-                buffs = JSON.parse(user.active_buffs || '[]');
-            } catch (e) {
-                buffs = [];
-            }
+            try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
-            let duration = item.duration;
-            if (user.job === 'chef') {
-                duration *= 2;
-            }
-
-            const expiresAt = Math.floor(Date.now() / 1000) + duration;
-            buffs.push({ itemId: item.id, expiresAt });
+            const isChef = user.job === 'chef';
+            const durationStr = activateBuff(message.author.id, item, buffs, isChef);
 
             db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
 
-            const hours = Math.floor(duration / 3600);
-            const durationStr = hours > 0 ? `${hours}h` : `${Math.floor(duration / 60)}m`;
-
             const effectType = t(`effects.${item.type}`, lang) || item.type;
             let displayPercent = Math.round(item.multiplier * 100);
-
-            // Special handling for hardcoded bonus values in multiplier.js
-            if (item.id === 501) displayPercent = 50; // XP Boost Potion: +50% XP
-            if (item.id === 502) displayPercent = 100; // Shield: 100% Protection
+            if (item.id === 501) displayPercent = 50;
+            if (item.id === 502) displayPercent = 100;
 
             return message.reply(`${t('use.success', lang, { item: itemName })}${t('use.buff_activated', lang, { percent: displayPercent, type: effectType, duration: durationStr })}`);
         }
 
-        // Add other usable items here if needed in the future
         return message.reply(t('use.not_usable', lang));
     }
 };
