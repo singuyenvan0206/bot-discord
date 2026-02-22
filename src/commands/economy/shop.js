@@ -17,6 +17,9 @@ module.exports = {
             if (cat === 'tools') {
                 return SHOP_ITEMS.filter(i => i.type === 'tool' || i.type === 'bait');
             }
+            if (cat === 'other') {
+                return SHOP_ITEMS.filter(i => i.type === 'other' || i.type === 'xpboost' || i.type === 'robshield');
+            }
             return SHOP_ITEMS.filter(i => i.type === cat);
         };
 
