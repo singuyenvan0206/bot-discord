@@ -58,8 +58,8 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
     const medals = ['🥇', '🥈', '🥉'];
     const lines = guildMembers.map((u, i) => {
         const rankLabel = medals[i] || `**${i + 1}.**`;
-        const isAuthor = authorId && u.userId === authorId ? t('leaderboard.you', lang) : '';
-        const jobDisplay = u.job && !jobId ? ` | ${u.job.charAt(0).toUpperCase() + u.job.slice(1)}` : '';
+        const isAuthor = authorId && u.userId === authorId ? ` **(${t('rank.you', lang)})**` : '';
+        const jobDisplay = u.job && !jobId ? ` | ${t(`job.name_${u.job}`, lang) || u.job}` : '';
         const valueDisplay = sortBy === 'xp'
             ? `${t('profile.level_label', lang)} **${u.level}**`
             : `${config.EMOJIS.COIN} **${u.balance.toLocaleString()}**`;

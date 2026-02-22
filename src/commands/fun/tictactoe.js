@@ -28,14 +28,19 @@ module.exports = {
                 const row = new ActionRowBuilder();
                 for (let c = 0; c < 3; c++) {
                     const idx = r * 3 + c;
-                    row.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId(`ttt_${idx}_${uid}`)
-                            .setLabel(board[idx] ? ' ' : `${idx + 1}`)
-                            .setEmoji(board[idx] ? emojis[board[idx]] : undefined)
-                            .setStyle(board[idx] === 'X' ? ButtonStyle.Danger : board[idx] === 'O' ? ButtonStyle.Primary : ButtonStyle.Secondary)
-                            .setDisabled(board[idx] !== null)
-                    );
+                    const emojis = { X: '❌', O: '⭕' };
+                    const btn = new ButtonBuilder()
+                        .setCustomId(`ttt_${idx}_${uid}`)
+                        .setStyle(board[idx] === 'X' ? ButtonStyle.Danger : board[idx] === 'O' ? ButtonStyle.Primary : ButtonStyle.Secondary)
+                        .setDisabled(board[idx] !== null);
+
+                    if (board[idx]) {
+                        btn.setLabel(' ').setEmoji(emojis[board[idx]]);
+                    } else {
+                        btn.setLabel(`${idx + 1}`);
+                    }
+
+                    row.addComponents(btn);
                 }
                 rows.push(row);
             }
@@ -51,11 +56,55 @@ module.exports = {
         }
 
         function botMove() {
-            const empty = board.map((v, i) => v === null ? i : -1).filter(i => i >= 0);
-            if (empty.includes(4)) return 4;
-            const corners = [0, 2, 6, 8].filter(i => empty.includes(i));
-            if (corners.length > 0) return corners[Math.floor(Math.random() * corners.length)];
-            return empty[Math.floor(Math.random() * empty.length)];
+            // Minimax: find the optimal move for 'O' (bot)
+            function score(b, depth) {
+                const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+                for (const [a, x, c] of lines) {
+                    if (b[a] && b[a] === b[x] && b[a] === b[c]) {
+                        return b[a] === 'O' ? 10 - depth : depth - 10;
+                    }
+                }
+                return 0;
+            }
+
+            function minimax(b, depth, isMaximizing) {
+                const s = score(b, depth);
+                if (s !== 0) return s;
+                if (b.every(c => c !== null)) return 0;
+
+                if (isMaximizing) {
+                    let best = -Infinity;
+                    for (let i = 0; i < 9; i++) {
+                        if (b[i] === null) {
+                            b[i] = 'O';
+                            best = Math.max(best, minimax(b, depth + 1, false));
+                            b[i] = null;
+                        }
+                    }
+                    return best;
+                } else {
+                    let best = Infinity;
+                    for (let i = 0; i < 9; i++) {
+                        if (b[i] === null) {
+                            b[i] = 'X';
+                            best = Math.min(best, minimax(b, depth + 1, true));
+                            b[i] = null;
+                        }
+                    }
+                    return best;
+                }
+            }
+
+            let bestScore = -Infinity, bestMove = -1;
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === null) {
+                    board[i] = 'O';
+                    const s = minimax(board, 0, false);
+                    board[i] = null;
+                    if (s > bestScore) { bestScore = s; bestMove = i; }
+                }
+            }
+            return bestMove;
         }
 
         const turnPlayer = () => currentTurn === 'X' ? playerX : playerO;

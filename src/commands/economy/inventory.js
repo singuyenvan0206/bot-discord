@@ -68,33 +68,64 @@ module.exports = {
                     inline: false
                 });
 
-                // Active Buffs
+                // Active Buffs — aggregated by type
                 let activeBuffs = [];
                 try { activeBuffs = JSON.parse(userData.active_buffs || '[]'); } catch (e) { }
                 const now = Math.floor(Date.now() / 1000);
                 const validBuffs = activeBuffs.filter(b => b.expiresAt > now);
 
                 if (validBuffs.length > 0) {
-                    const buffList = validBuffs.map(b => {
+                    // Group by type: { type -> { total, earliestExpiry, count } }
+                    const typeMap = {};
+                    for (const b of validBuffs) {
                         const item = SHOP_ITEMS.find(i => i.id === b.itemId);
-                        if (!item) return null; // Guard: skip unknown buff items
-                        const itemName = t(`items.${b.itemId}.name`, lang);
-                        const remaining = b.expiresAt - now;
-                        const hours = Math.floor(remaining / 3600);
-                        const mins = Math.ceil((remaining % 3600) / 60);
-                        const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
-                        const effectType = t(`effects.${item.type}`, lang) || item.type;
+                        if (!item) continue;
 
-                        let displayPercent = Math.round(item.multiplier * 100);
-                        if (item.id === 501) displayPercent = 50;
-                        if (item.id === 502) displayPercent = 100;
+                        const type = item.type;
+                        let multiplier = item.multiplier;
+                        // Special cases
+                        if (item.id === 501) multiplier = 0.5; // XP Boost Potion: +50% XP
+                        if (item.id === 502) multiplier = 1.0; // Shield of Protection: 100%
 
-                        return `✨ **${itemName}:** +${displayPercent}% ${effectType} (${timeStr})`;
-                    }).filter(Boolean).join('\n');
+                        if (!typeMap[type]) {
+                            typeMap[type] = { total: 0, earliestExpiry: b.expiresAt, count: 0 };
+                        }
+                        typeMap[type].total += multiplier;
+                        typeMap[type].count += 1;
+                        if (b.expiresAt < typeMap[type].earliestExpiry) {
+                            typeMap[type].earliestExpiry = b.expiresAt;
+                        }
+                    }
 
-                    embed.addFields({ name: `⏳ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`, value: buffList, inline: false });
+                    // Diminishing returns: same as multiplier.js
+                    const effectiveTotal = (raw) => raw > 1.0 ? 1.0 + (raw - 1.0) * 0.5 : raw;
+
+                    const TYPE_EMOJIS = {
+                        daily: '📅', income: '💼', gamble: '🎲',
+                        xpboost: '✨', robshield: '🛡️', bait: '🪱', tool: '🎣', other: '📦'
+                    };
+
+                    const lines = Object.entries(typeMap).map(([type, data]) => {
+                        const effectType = t(`effects.${type}`, lang) || type;
+                        const eff = effectiveTotal(data.total);
+                        const pct = Math.round(eff * 100);
+                        const remaining = data.earliestExpiry - now;
+                        let h = Math.floor(remaining / 3600);
+                        let m = Math.round((remaining % 3600) / 60);
+                        if (m === 60) { h += 1; m = 0; }
+                        const timeStr = h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m`;
+                        const emoji = TYPE_EMOJIS[type] || '⚡';
+                        const countNote = data.count > 1 ? ` ×${data.count}` : '';
+                        return `${emoji} **${effectType}:** +${pct}%${countNote} *(next: ${timeStr})*`;
+                    });
+
+                    embed.addFields({
+                        name: `⚡ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`,
+                        value: lines.join('\n') || '\u200b',
+                        inline: false
+                    });
                 } else {
-                    embed.addFields({ name: `⏳ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`, value: t('common.none', lang), inline: false });
+                    embed.addFields({ name: `⚡ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`, value: t('common.none', lang), inline: false });
                 }
 
                 embed.setDescription(t('inventory.empty', lang, { prefix: config.PREFIX }));

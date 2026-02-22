@@ -12,7 +12,8 @@
         "opponent_insufficient_funds": "❌ {{opponent}} không đủ tiền! Số dư của họ: **{{balance}}**",
         "requested_by": "Yêu cầu bởi {{user}}",
         "balance": "Số dư:",
-        "timeout": "Hết thời gian!"
+        "timeout": "Hết thời gian!",
+        "none": "Không có"
     },
     "economy": {
         "item_bonus": "\n🎁 **Thưởng Vật phẩm:** +{{amount}} coins ({{percent}}%)!",
@@ -27,6 +28,7 @@
         "select_job": "Chọn nghề nghiệp",
         "select_sort": "Chọn kiểu sắp xếp",
         "all_jobs": "Tất cả nghề nghiệp",
+        "you": "Bạn",
         "footer": "Hãy nhắn tin tích cực để thăng hạng!"
     },
     "connect4": {
@@ -297,6 +299,18 @@
         "current": "💼 Nghề nghiệp hiện tại: **{{job}}**",
         "none": "Chưa có",
         "list_title": "Danh Sách Nghề Nghiệp",
+        "name_police": "👮 Cảnh Sát",
+        "name_criminal": "🥷 Tội Phạm",
+        "name_doctor": "👨‍⚕️ Bác Sĩ",
+        "name_programmer": "💻 Lập Trình Viên",
+        "name_farmer": "👨‍🌾 Nông Dân",
+        "name_hacker": "👨‍💻 Hacker",
+        "name_streamer": "🎥 Streamer",
+        "name_chef": "👨‍🍳 Đầu Bếp",
+        "name_musician": "🎸 Nhạc Sĩ",
+        "name_soldier": "🪖 Quân Nhân",
+        "name_trader": "📈 Thương Nhân",
+        "name_teacher": "📚 Giáo Viên",
         "set_success": "✅ Chúc mừng! Bạn đã trở thành **{{job}}**.",
         "set_error_level": "❌ Bạn cần đạt cấp độ **{{level}}** để nhận công việc này!",
         "set_error_invalid": "❌ Nghề nghiệp không hợp lệ. Hãy dùng `$job list` để xem danh sách.",

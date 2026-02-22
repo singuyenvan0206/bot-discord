@@ -12,7 +12,8 @@
         "opponent_insufficient_funds": "❌ {{opponent}} does not have enough coins! Their balance: **{{balance}}**",
         "requested_by": "Requested by {{user}}",
         "balance": "Balance:",
-        "timeout": "Timeout!"
+        "timeout": "Timeout!",
+        "none": "None"
     },
     "economy": {
         "item_bonus": "\n🎁 **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
@@ -27,6 +28,7 @@
         "select_job": "Select Job",
         "select_sort": "Select Sort Order",
         "all_jobs": "All Jobs",
+        "you": "You",
         "footer": "Chat actively to climb the ranks!"
     },
     "connect4": {
@@ -241,6 +243,18 @@
         "current": "💼 Current Job: **{{job}}**",
         "none": "None",
         "list_title": "Available Jobs",
+        "name_police": "👮 Police",
+        "name_criminal": "🥷 Criminal",
+        "name_doctor": "👨‍⚕️ Doctor",
+        "name_programmer": "💻 Programmer",
+        "name_farmer": "👨‍🌾 Farmer",
+        "name_hacker": "👨‍💻 Hacker",
+        "name_streamer": "🎥 Streamer",
+        "name_chef": "👨‍🍳 Chef",
+        "name_musician": "🎸 Musician",
+        "name_soldier": "🪖 Soldier",
+        "name_trader": "📈 Trader",
+        "name_teacher": "📚 Teacher",
         "set_success": "✅ Congratulations! You are now a **{{job}}**.",
         "set_error_level": "❌ You need Level **{{level}}** to take this job!",
         "set_error_invalid": "❌ Invalid job. Use `$job list` to see the list.",
