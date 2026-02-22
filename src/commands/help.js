@@ -3,6 +3,7 @@ const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ComponentType }
 const config = require('../config');
 const { t, getLanguage } = require('../utils/i18n');
 const db = require('../database');
+const { formatDuration } = require('../utils/time');
 
 module.exports = {
     name: 'help',
