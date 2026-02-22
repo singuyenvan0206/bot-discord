@@ -7,9 +7,12 @@ module.exports = {
     aliases: ['pong'],
     description: 'Kiểm tra độ trễ của bot',
     async execute(message, args) {
-            const roundtrip = sent.createdTimestamp - message.createdTimestamp;
-            const heartbeat = message.client.ws.ping;
-            const uptime = process.uptime();
+        const lang = getLanguage(message.author.id, message.guild?.id);
+        const sent = await message.reply(t('ping.checking', lang));
+
+        const roundtrip = sent.createdTimestamp - message.createdTimestamp;
+        const heartbeat = message.client.ws.ping;
+        const uptime = process.uptime();
 
         // Format uptime
         const days = Math.floor(uptime / 86400);

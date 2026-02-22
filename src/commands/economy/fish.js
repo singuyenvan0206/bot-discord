@@ -6,7 +6,7 @@ const config = require('../../config');
 
 // Rod Definitions (Ids must match locale keys in items block)
 const RODS = [
-    { id: '33', luck: 2.5 },
+    { id: '31', luck: 2.5 },
     { id: '26', luck: 1.5 },
     { id: '11', luck: 1.0 } // Tier 1
 ];

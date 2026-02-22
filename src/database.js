@@ -151,9 +151,9 @@ function migrateInventoryIds() {
         'mouse': 14, 'rug': 15, 'cards': 16, 'monitor': 17, 'laptop': 18,
         'ring': 19, 'painting': 20, 'poker_chips': 21, 'desk': 22,
         'lucky_clover': 23, 'chair': 24, 'business_suit': 25, 'fiberglass_rod': 26,
-        'watch': 27, 'statue': 28, 'slot_token': 29, 'vip_card': 30,
-        'horseshoe': 31, 'golden_ticket': 32, 'carbon_rod': 33, 'car': 34,
-        'mansion': 35, 'yacht': 36, 'space_station': 37, 'time_machine': 38
+        'watch': 27, 'statue': 28, 'horseshoe': 29, 'vip_card': 30,
+        'carbon_rod': 31, 'car': 32, 'mansion': 33, 'yacht': 34,
+        'space_station': 35, 'time_machine': 36
     };
 
     const users = queryAll('SELECT id, inventory FROM users');
