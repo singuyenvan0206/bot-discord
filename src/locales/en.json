@@ -3,7 +3,7 @@
         "error": "❌ An error occurred.",
         "insufficient_funds": "❌ You don't have enough money! Balance: **{{balance}}**",
         "invalid_amount": "❌ Invalid amount.",
-        "cooldown": "❌ Please wait **{{time}}s** before using this command again!",
+        "cooldown": "❌ Please wait **{{time}}** before using this command again!",
         "success": "✅ Success!",
         "max_bet_error": "❌ The maximum bet is **{{limit}}** coins!",
         "mention_opponent": "❌ Please mention an opponent to play with!",
@@ -11,6 +11,9 @@
         "no_challenge_self": "❌ You cannot challenge yourself!",
         "opponent_insufficient_funds": "❌ {{opponent}} does not have enough coins! Their balance: **{{balance}}**",
         "requested_by": "Requested by {{user}}"
+    },
+    "rank": {
+        "title": "🎖️ User Rank"
     },
     "connect4": {
         "title": "🔴 Connect 4 🟡",

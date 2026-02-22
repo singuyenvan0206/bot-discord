@@ -7,6 +7,8 @@ const db = require('./database');
 const { EMOJI, BUTTON_ID, createGiveawayEmbed } = require('./utils/embeds');
 const { startTimer } = require('./utils/timer');
 const { t, getLanguage } = require('./utils/i18n');
+const { addXp, checkAndSendMilestone } = require('./utils/leveling');
+const { formatDuration } = require('./utils/time');
 
 // ─── Config ──────────────────────────────────────────────────────
 
@@ -224,7 +226,7 @@ client.on(Events.InteractionCreate, async interaction => {
                 const timeLeft = (expirationTime - now) / 1000;
                 const lang = getLanguage(interaction.user.id, interaction.guild?.id);
                 return interaction.reply({
-                    content: t('common.cooldown', lang, { time: timeLeft.toFixed(1) }),
+                    content: t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }),
                     ephemeral: true
                 });
             }
@@ -315,7 +317,21 @@ client.on(Events.InteractionCreate, async interaction => {
 const xpCooldowns = new Set();
 
 client.on(Events.MessageCreate, async message => {
-    if (message.author.bot) return;
+    if (message.author.bot || !message.guild) return;
+
+    // ─── EXP System ───
+    if (!xpCooldowns.has(message.author.id)) {
+        const xpAmount = Math.floor(Math.random() * 11) + 5; // 5-15 XP
+        const { level, leveledUp, reachedLevel20 } = addXp(message.author.id, xpAmount);
+
+        if (leveledUp) {
+            const lang = getLanguage(message.author.id, message.guild.id);
+            await checkAndSendMilestone(message, reachedLevel20, lang);
+        }
+
+        xpCooldowns.add(message.author.id);
+        setTimeout(() => xpCooldowns.delete(message.author.id), 60000); // 1 minute cooldown
+    }
 
     // ─── Command Handling ───
     if (!message.content.startsWith(config.PREFIX)) return;
@@ -344,7 +360,7 @@ client.on(Events.MessageCreate, async message => {
 
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
-            return message.reply(t('common.cooldown', lang, { time: timeLeft.toFixed(1) }));
+            return message.reply(t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }));
         }
     }
 

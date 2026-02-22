@@ -3,7 +3,7 @@
         "error": "❌ Đã có lỗi xảy ra.",
         "insufficient_funds": "❌ Bạn không đủ tiền! Số dư: **{{balance}}**",
         "invalid_amount": "❌ Số tiền không hợp lệ.",
-        "cooldown": "❌ Vui lòng đợi **{{time}}s** nữa để sử dụng lại lệnh này!",
+        "cooldown": "❌ Vui lòng đợi **{{time}}** nữa để sử dụng lại lệnh này!",
         "success": "✅ Thành công!",
         "max_bet_error": "❌ Mức cược tối đa là **{{limit}}** coins!",
         "mention_opponent": "❌ Vui lòng nhắc tên (mention) đối thủ để chơi cùng!",
@@ -11,6 +11,9 @@
         "no_challenge_self": "❌ Bạn không thể thách đấu với chính mình!",
         "opponent_insufficient_funds": "❌ {{opponent}} không đủ tiền! Số dư của họ: **{{balance}}**",
         "requested_by": "Yêu cầu bởi {{user}}"
+    },
+    "rank": {
+        "title": "🎖️ Thứ hạng người dùng"
     },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",
