@@ -35,6 +35,7 @@ module.exports = {
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
             const activated = [];
+            let totalCount = 0;
             const isChef = user.job === 'chef';
 
             for (const [id, count] of Object.entries(inv)) {
@@ -43,27 +44,48 @@ module.exports = {
                 if (!item || !item.duration) continue; // Skip non-buff items
                 if (id === '503') continue; // Skip Career Change Voucher
 
-                // Activate all stacks of this item
-                for (let n = 0; n < count; n++) {
-                    const durationStr = activateBuff(message.author.id, item, buffs, isChef);
-                    const itemName = t(`items.${id}.name`, lang);
-                    const effectType = t(`effects.${item.type}`, lang) || item.type;
-                    let displayPercent = Math.round(item.multiplier * 100);
-                    if (item.id === 501) displayPercent = 50;
-                    if (item.id === 502) displayPercent = 100;
-                    activated.push(`🎮 **${itemName}** — +${displayPercent}% ${effectType} (${durationStr})`);
+                // Activate all stacks of this item (compact display)
+                const qty = Number(count);
+                for (let n = 0; n < qty; n++) {
+                    let duration = item.duration;
+                    if (isChef) duration *= 2;
+                    const expiresAt = Math.floor(Date.now() / 1000) + duration;
+                    buffs.push({ itemId: item.id, expiresAt });
+                    db.removeItem(message.author.id, String(item.id), 1);
                 }
+
+                const durationStr = (() => {
+                    let d = item.duration;
+                    if (isChef) d *= 2;
+                    const h = Math.floor(d / 3600);
+                    return h > 0 ? `${h}h` : `${Math.floor(d / 60)}m`;
+                })();
+
+                const itemName = t(`items.${id}.name`, lang);
+                const effectType = t(`effects.${item.type}`, lang) || item.type;
+                let displayPercent = Math.round(item.multiplier * 100);
+                if (item.id === 501) displayPercent = 50;
+                if (item.id === 502) displayPercent = 100;
+
+                const label = qty > 1
+                    ? `🎮 **${qty}x ${itemName}** — +${displayPercent}% ${effectType} (${durationStr})`
+                    : `🎮 **${itemName}** — +${displayPercent}% ${effectType} (${durationStr})`;
+                activated.push(label);
+                totalCount += qty;
             }
 
             db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
 
-            if (activated.length === 0) {
+            if (totalCount === 0) {
                 return message.reply(t('use.all_nothing', lang));
             }
 
-            return message.reply(
-                `${t('use.all_success', lang, { count: activated.length })}\n${activated.join('\n')}`
-            );
+            const lines = [`${t('use.all_success', lang, { count: totalCount })}`, ...activated];
+            // Safe truncate if somehow too long
+            let reply = lines.join('\n');
+            if (reply.length > 1900) reply = reply.slice(0, 1900) + '…';
+
+            return message.reply(reply);
         }
 
         // ─── USE SINGLE ITEM ──────────────────────────
