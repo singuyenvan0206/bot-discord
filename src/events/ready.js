@@ -20,6 +20,7 @@ module.exports = {
 
         startTimer(client);
 
-        client.user.setActivity(`/help | /giveaway`, { type: ActivityType.Listening });
+
+        client.user.setActivity(`${client.user.username} $help | $giveaway`, { type: ActivityType.Listening });
     },
 };

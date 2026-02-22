@@ -4,9 +4,7 @@ const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
 const { getUserMultiplier } = require('../../utils/multiplier');
-const fs = require('fs');
-const path = require('path');
-const EMOJI_QUIZ = JSON.parse(fs.readFileSync(path.join(__dirname, '../../data/quiz.json'), 'utf8'));
+const { getRandomQuestion } = require('../../utils/quizGenerator');
 
 module.exports = {
     name: 'emojiquiz',
@@ -16,7 +14,8 @@ module.exports = {
     manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);
-        const q = EMOJI_QUIZ[Math.floor(Math.random() * EMOJI_QUIZ.length)];
+        const q = getRandomQuestion();
+        if (!q) return message.reply('⚠️ Quiz pool is empty. Please try again later.');
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case
 
         // Generate Hint: Match words and replace non-first letters with underscores
