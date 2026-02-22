@@ -73,15 +73,22 @@ module.exports = {
 
             const winner = collected.first();
             const baseReward = config.ECONOMY.SCRAMBLE_REWARD;
-            const { getUserMultiplier } = require('../../utils/multiplier');
+            const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+            const { addXp } = require('../../utils/leveling');
+
             const multiplier = getUserMultiplier(winner.author.id, 'income');
             const bonus = Math.floor(baseReward * multiplier);
             const totalReward = baseReward + bonus;
 
+            const xpMultiplier = getXpMultiplier(winner.author.id);
+            const baseXp = 20;
+            const totalXp = Math.floor(baseXp * xpMultiplier);
+
             db.addBalance(winner.author.id, totalReward);
+            addXp(winner.author.id, totalXp);
 
             const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
-            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${baseReward}** coins!`;
+            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${baseReward}** coins & ✨ **${totalXp}** XP!`;
             if (bonus > 0) msgText += ` ✨ *(${t('fish.item_bonus', lang)} +${bonus})*`;
 
             message.channel.send(msgText);

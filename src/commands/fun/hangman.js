@@ -79,15 +79,20 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const baseReward = config.ECONOMY.HANGMAN_REWARD;
-                    const { getUserMultiplier } = require('../../utils/multiplier');
+                    const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+                    const { addXp } = require('../../utils/leveling');
                     const multiplier = getUserMultiplier(message.author.id, 'income');
                     const bonus = Math.floor(baseReward * multiplier);
                     const totalReward = baseReward + bonus;
 
-                    db.addBalance(message.author.id, totalReward);
+                    const xpMultiplier = getXpMultiplier(message.author.id);
+                    const baseXp = 40; // Base hangman XP
+                    const totalXp = Math.floor(baseXp * xpMultiplier);
 
-                    let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${baseReward} coins!**`;
+                    db.addBalance(message.author.id, totalReward);
+                    addXp(message.author.id, totalXp);
+
+                    let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${baseReward} coins & ✨ ${totalXp} XP!**`;
                     if (bonus > 0) resultStr += `\n✨ **${t('fish.item_bonus', lang)}:** +${bonus} (${Math.round(multiplier * 100)}%)`;
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
@@ -114,14 +119,20 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
-                    const baseReward = config.ECONOMY.HANGMAN_REWARD;
-                    const { getUserMultiplier } = require('../../utils/multiplier');
+                    const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+                    const { addXp } = require('../../utils/leveling');
                     const multiplier = getUserMultiplier(message.author.id, 'income');
                     const bonus = Math.floor(baseReward * multiplier);
                     const totalReward = baseReward + bonus;
 
+                    const xpMultiplier = getXpMultiplier(message.author.id);
+                    const baseXp = 40; // Base hangman XP
+                    const totalXp = Math.floor(baseXp * xpMultiplier);
+
                     db.addBalance(message.author.id, totalReward);
-                    resultText += `\n${config.EMOJIS.COIN} **+${baseReward}** coins!`;
+                    addXp(message.author.id, totalXp);
+
+                    resultText += `\n${config.EMOJIS.COIN} **+${baseReward}** coins & ✨ **${totalXp}** XP!`;
                     if (bonus > 0) resultText += ` *(${t('fish.item_bonus', lang)} +${bonus})*`;
                 }
                 embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)

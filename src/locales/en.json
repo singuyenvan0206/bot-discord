@@ -330,153 +330,205 @@
         }
     },
     "items": {
-        "1": {
+        "101": {
             "name": "🍪 Cookie",
             "desc": "Sugar rush! (+5% Extra Bonus | 1 day)"
         },
-        "2": {
-            "name": "🪱 Worm Bait",
-            "desc": "One-time use bait. Required for fishing. (Luck: +10%)"
-        },
-        "3": {
-            "name": "🦗 Cricket Bait",
-            "desc": "Favorited by many fish. (Luck: +30%)"
-        },
-        "4": {
-            "name": "🦑 Squid Bait",
-            "desc": "Irresistible to big fish. (Luck: +80%)"
-        },
-        "5": {
-            "name": "📱 Smartphone",
-            "desc": "Stay connected (+10% Extra Bonus | 7 days)"
-        },
-        "6": {
-            "name": "🛡️ Shield",
-            "desc": "Protects 50% bet in Minesweeper! (+5% Extra Bonus | 7 days)"
-        },
-        "7": {
-            "name": "⚔️ Knight Sword",
-            "desc": "Become a mercenary (+15% Income | 7 days)"
-        },
-        "8": {
+        "102": {
             "name": "🛋️ Lava Lamp",
             "desc": "Chill vibes (+8% Extra Bonus | 7 days)"
         },
-        "9": {
-            "name": "🎲 Golden Dice",
-            "desc": "Roll high (+10% Gamble | 7 days)"
-        },
-        "10": {
-            "name": "👟 Sneakers",
-            "desc": "Run faster (+12% Income | 7 days)"
-        },
-        "11": {
-            "name": "🎣 Bamboo Rod (Tier 1)",
-            "desc": "Basic fishing rod. (Luck: 1.0x)"
-        },
-        "12": {
-            "name": "⛏️ Pickaxe",
-            "desc": "Dig for treasure! (+15% Income | 7 days)"
-        },
-        "13": {
-            "name": "⌨️ RGB Keyboard",
-            "desc": "Clicky keys (+10% Income | 7 days)"
-        },
-        "14": {
-            "name": "🖱️ Gaming Mouse",
-            "desc": "Precise clicks (+10% Income | 7 days)"
-        },
-        "15": {
+        "103": {
             "name": "🧸 Shag Rug",
             "desc": "Soft on the feet (+15% Extra Bonus | 7 days)"
         },
-        "16": {
-            "name": "🃏 Marked Deck",
-            "desc": "Know when to fold (+20% Gamble | 7 days)"
-        },
-        "17": {
-            "name": "🖥️ 4K Monitor",
-            "desc": "Clear vision (+20% Income | 7 days)"
-        },
-        "18": {
-            "name": "💻 Laptop",
-            "desc": "Work harder! (+30% Income | 30 days)"
-        },
-        "19": {
-            "name": "💍 Gold Ring",
-            "desc": "Shiny and precious (+15% Gamble | 30 days)"
-        },
-        "20": {
+        "104": {
             "name": "🎨 Abstract Painting",
             "desc": "Classy decoration (+20% Extra Bonus | 30 days)"
         },
-        "21": {
-            "name": "🪙 Clay Chips",
-            "desc": "Pro feel (+20% Gamble | 30 days)"
-        },
-        "22": {
-            "name": "🪑 Standing Desk",
-            "desc": "Better posture (+25% Income | 30 days)"
-        },
-        "23": {
-            "name": "🍀 4-Leaf Clover",
-            "desc": "Feeling lucky? (+30% Gamble | 30 days)"
-        },
-        "24": {
-            "name": "💺 Ergonomic Chair",
-            "desc": "Sit comfortably (+35% Income | 30 days)"
-        },
-        "25": {
-            "name": "👔 Business Suit",
-            "desc": "Look professional (+40% Income | 30 days)"
-        },
-        "26": {
-            "name": "🎣 Fiberglass Rod (Tier 2)",
-            "desc": "Catch better fish! (Luck: 1.5x)"
-        },
-        "27": {
-            "name": "⌚ Rolex",
-            "desc": "Time is money (+30% Gamble | 30 days)"
-        },
-        "28": {
+        "105": {
             "name": "🗿 Moai Statue",
             "desc": "Steady as a rock (+35% Extra Bonus | 30 days)"
         },
-        "29": {
-            "name": "🐴 Golden Horseshoe",
-            "desc": "Pure luck (+50% Gamble | 30 days)"
-        },
-        "30": {
+        "106": {
             "name": "🎫 VIP Golden Ticket",
             "desc": "VIP perks (+100% Extra Bonus | 30 days)"
         },
-        "31": {
-            "name": "🎣 Carbon Rod (Tier 3)",
-            "desc": "Top of the line. (Luck: 2.5x)"
-        },
-        "32": {
-            "name": "🏎️ Supercar",
-            "desc": "Zoom zoom! (+80% Income | 30 days)"
-        },
-        "33": {
+        "107": {
             "name": "🏰 Mansion",
             "desc": "High life (+200% Extra Bonus | 30 days)"
         },
-        "34": {
-            "name": "🛥️ Superyacht",
-            "desc": "Ocean office (+300% Income | 30 days)"
-        },
-        "35": {
+        "108": {
             "name": "🚀 Space Station",
             "desc": "Orbital rewards (+500% Extra Bonus | 30 days)"
         },
-        "36": {
+        "109": {
+            "name": "👨‍🍳 Chef's Hat",
+            "desc": "Executive level (+20% Extra Bonus | 7 days)"
+        },
+        "110": {
+            "name": "📖 Cookbook",
+            "desc": "Culinary secrets (+40% Extra Bonus | 30 days)"
+        },
+        "201": {
+            "name": "📱 Smartphone",
+            "desc": "Stay connected (+10% Income | 7 days)"
+        },
+        "202": {
+            "name": "🛡️ Shield",
+            "desc": "Protect justice (+5% Income | 7 days)"
+        },
+        "203": {
+            "name": "⚔️ Knight Sword",
+            "desc": "Become a mercenary (+15% Income | 7 days)"
+        },
+        "204": {
+            "name": "👟 Sneakers",
+            "desc": "Run faster (+12% Income | 7 days)"
+        },
+        "205": {
+            "name": "⛏️ Pickaxe",
+            "desc": "Dig for treasure! (+15% Income | 7 days)"
+        },
+        "206": {
+            "name": "⌨️ RGB Keyboard",
+            "desc": "Clicky keys (+10% Income | 7 days)"
+        },
+        "207": {
+            "name": "🖱️ Gaming Mouse",
+            "desc": "Precise clicks (+10% Income | 7 days)"
+        },
+        "208": {
+            "name": "🖥️ 4K Monitor",
+            "desc": "Clear vision (+20% Income | 7 days)"
+        },
+        "209": {
+            "name": "💻 Laptop",
+            "desc": "Work harder! (+30% Income | 30 days)"
+        },
+        "210": {
+            "name": "🪑 Standing Desk",
+            "desc": "Better posture (+25% Income | 30 days)"
+        },
+        "211": {
+            "name": "👔 Business Suit",
+            "desc": "Look professional (+40% Income | 30 days)"
+        },
+        "212": {
+            "name": "🏎️ Supercar",
+            "desc": "Zoom zoom! (+80% Income | 30 days)"
+        },
+        "213": {
+            "name": "🛥️ Superyacht",
+            "desc": "Ocean office (+300% Income | 30 days)"
+        },
+        "214": {
+            "name": "🎸 Guitar",
+            "desc": "Catchy melodies (+15% Income | 7 days)"
+        },
+        "215": {
+            "name": "🎹 Grand Piano",
+            "desc": "Pure artistry (+50% Income | 30 days)"
+        },
+        "216": {
+            "name": "🔫 Rifle",
+            "desc": "Military grade strength (+20% Income | 7 days)"
+        },
+        "217": {
+            "name": "🛡️ Combat Armor",
+            "desc": "Solid defense (+40% Income | 30 days)"
+        },
+        "218": {
+            "name": "📋 Whiteboard",
+            "desc": "Share knowledge (+15% Income | 7 days)"
+        },
+        "219": {
+            "name": "📈 Trading Terminal",
+            "desc": "Analyze the market (+35% Income | 30 days)"
+        },
+        "220": {
+            "name": "💺 Ergonomic Chair",
+            "desc": "Sit comfortably all day (+35% Income | 30 days)"
+        },
+        "301": {
+            "name": "🎲 Golden Dice",
+            "desc": "Roll high (+10% Gamble | 7 days)"
+        },
+        "302": {
+            "name": "🃏 Marked Deck",
+            "desc": "Know when to hold 'em (+20% Gamble | 7 days)"
+        },
+        "303": {
+            "name": "💍 Gold Ring",
+            "desc": "Shiny and precious (+15% Gamble | 30 days)"
+        },
+        "304": {
+            "name": "🪙 Clay Chips",
+            "desc": "Professional feel (+20% Gamble | 30 days)"
+        },
+        "305": {
+            "name": "🍀 4-Leaf Clover",
+            "desc": "Feeling lucky? (+30% Gamble | 30 days)"
+        },
+        "306": {
+            "name": "⌚ Rolex",
+            "desc": "Time is money (+30% Gamble | 30 days)"
+        },
+        "307": {
+            "name": "🐴 Golden Horseshoe",
+            "desc": "Pure luck (+50% Gamble | 30 days)"
+        },
+        "308": {
             "name": "⏳ Time Machine",
             "desc": "Rewrite history (+1000% Gamble | 30 days)"
         },
-        "37": {
+        "309": {
+            "name": "📊 Stock Chart",
+            "desc": "Predict trends (+25% Gamble | 30 days)"
+        },
+        "310": {
+            "name": "🪙 Lucky Coin",
+            "desc": "Heads or tails (+18% Gamble | 7 days)"
+        },
+        "401": {
+            "name": "🪱 Worm Bait",
+            "desc": "One-time use bait. Required for fishing. (Luck: +10%)"
+        },
+        "402": {
+            "name": "🦗 Cricket Bait",
+            "desc": "Favorited by many fish. (Luck: +30%)"
+        },
+        "403": {
+            "name": "🦑 Squid Bait",
+            "desc": "Irresistible to big fish. (Luck: +80%)"
+        },
+        "404": {
+            "name": "🎣 Bamboo Rod",
+            "desc": "Basic fishing rod. (Luck: 1.0x)"
+        },
+        "405": {
+            "name": "🎣 Fiberglass Rod",
+            "desc": "Durable and flexible. (Luck: 1.5x)"
+        },
+        "406": {
+            "name": "🎣 Carbon Rod",
+            "desc": "Top of the line. (Luck: 2.5x)"
+        },
+        "407": {
+            "name": "🎣 Titanium Rod",
+            "desc": "Absolute power. (Luck: 4.0x)"
+        },
+        "501": {
             "name": "🎟️ Career Change Voucher",
-            "desc": "Use to switch to a different job path! (High cost)"
+            "desc": "Use to switch to a different job path."
+        },
+        "502": {
+            "name": "🧪 XP Boost Potion",
+            "desc": "Gain +50% XP when performing activities | 1 day"
+        },
+        "503": {
+            "name": "🛡️ Shield of Protection",
+            "desc": "Block one robbery attempt from other users | 1 day"
         }
     },
     "shop": {

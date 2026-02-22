@@ -108,10 +108,17 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
+                        const { getXpMultiplier } = require('../../utils/multiplier');
+                        const { addXp } = require('../../utils/leveling');
+                        const xpMultiplier = getXpMultiplier(message.author.id);
+                        const baseXp = 25; // Base memory XP
+                        const totalXp = Math.floor(baseXp * xpMultiplier);
+
                         db.addBalance(message.author.id, reward);
+                        addXp(message.author.id, totalXp);
 
                         embed.setTitle(t('memory.win_title', lang))
-                            .setDescription(t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: reward }))
+                            .setDescription(t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: reward }) + `\n✨ **XP:** +${totalXp}`)
                             .setColor(config.COLORS.SUCCESS);
 
                         await i.update({ embeds: [embed], components: getButtonGrid(true) });

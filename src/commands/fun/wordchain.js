@@ -95,13 +95,18 @@ module.exports = {
             turn = m.author.id;
 
             // Reward per valid word + income bonus
-            const baseReward = config.ECONOMY.WORDCHAIN_REWARD;
-            const { getUserMultiplier } = require('../../utils/multiplier');
+            const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+            const { addXp } = require('../../utils/leveling');
             const multiplier = getUserMultiplier(m.author.id, 'income');
             const bonus = Math.floor(baseReward * multiplier);
             const totalReward = baseReward + bonus;
 
+            const xpMultiplier = getXpMultiplier(m.author.id);
+            const baseXp = 5; // Base XP per word
+            const totalXp = Math.floor(baseXp * xpMultiplier);
+
             db.addBalance(m.author.id, totalReward);
+            addXp(m.author.id, totalXp);
             playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
 
             await m.react(config.EMOJIS.SUCCESS);

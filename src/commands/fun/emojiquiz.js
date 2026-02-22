@@ -49,10 +49,18 @@ module.exports = {
             const bonus = Math.floor(baseReward * multiplier);
             const totalReward = baseReward + bonus;
 
+            const { getXpMultiplier } = require('../../utils/multiplier');
+            const { addXp } = require('../../utils/leveling');
+            const xpMultiplier = getXpMultiplier(winnerMsg.author.id);
+            const baseXp = 20; // Base emojiquiz XP
+            const totalXp = Math.floor(baseXp * xpMultiplier);
+
             db.addBalance(winnerMsg.author.id, totalReward);
+            addXp(winnerMsg.author.id, totalXp);
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
-                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: baseReward });
+                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: baseReward }) +
+                ` & ✨ **${totalXp}** XP!`;
 
             if (bonus > 0) resultDesc += `\n✨ **Item Bonus:** +${bonus} (${Math.round(multiplier * 100)}%)`;
 

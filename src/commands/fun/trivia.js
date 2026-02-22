@@ -97,14 +97,22 @@ module.exports = {
 
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
-                const { getUserMultiplier } = require('../../utils/multiplier');
+                const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+                const { addXp } = require('../../utils/leveling');
+
                 const multiplier = getUserMultiplier(i.user.id, 'income');
                 const bonus = Math.floor(baseReward * multiplier);
                 const totalReward = baseReward + bonus;
 
+                const xpMultiplier = getXpMultiplier(i.user.id);
+                const baseXp = 30; // Base trivia XP
+                const totalXp = Math.floor(baseXp * xpMultiplier);
+
                 db.addBalance(i.user.id, totalReward);
+                addXp(i.user.id, totalXp);
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: baseReward });
+                resultMsg += ` & ✨ **${totalXp}** XP!`;
                 if (bonus > 0) resultMsg += ` ✨ *(Thưởng item +${bonus})*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
