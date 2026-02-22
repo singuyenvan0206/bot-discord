@@ -581,6 +581,7 @@
     "profile": {
         "title": "Hồ sơ của {{user}}",
         "experience": "✨ Kinh nghiệm",
+        "level_label": "Cấp",
         "level": "**Cấp độ:** {{level}}",
         "economy": "💰 Kinh tế",
         "balance": "**Số dư:** {{emoji}} {{amount}}",

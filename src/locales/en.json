@@ -521,25 +521,6 @@
         "platform": "💻 Platform",
         "uptime_format": "{{d}}d {{h}}h {{m}}m {{s}}s"
     },
-    "profile": {
-        "title": "Profile of {{user}}",
-        "experience": "✨ Experience",
-        "level": "**Level:** {{level}}",
-        "economy": "💰 Economy",
-        "balance": "**Balance:** {{emoji}} {{amount}}",
-        "net_worth": "**Net Worth:** {{emoji}} {{amount}}",
-        "ranking": "🏆 Ranking",
-        "wealth_rank": "**Wealth Rank:** {{rank}}",
-        "unranked": "Unranked (>100)",
-        "collection": "🎒 Collection",
-        "inventory_value": "💰 Inventory Value: {{amount}}",
-        "active_buffs": "Active Buffs",
-        "total_items": "📦 Total Items: {{count}}",
-        "item_types": "**Item Types:** {{count}}",
-        "joined": "📅 Joined Since",
-        "id": "🆔 Identity (ID)",
-        "footer": "Type {{prefix}}inventory to see item details"
-    },
     "use": {
         "prompt": "❌ Please specify an item to use (e.g., `{{prefix}}use 39`).",
         "not_found": "❌ This item was not found in your inventory!",
@@ -637,6 +618,26 @@
         "bet_lost": "Bet lost: **{{amount}}**",
         "win_title": "Victory!",
         "win_desc": "You cleared the minefield!"
+    },
+    "profile": {
+        "title": "{{user}}'s Profile",
+        "experience": "✨ Experience",
+        "level_label": "Level",
+        "level": "**Level:** {{level}}",
+        "economy": "💰 Economy",
+        "balance": "**Balance:** {{emoji}} {{amount}}",
+        "net_worth": "**Net Worth:** {{emoji}} {{amount}}",
+        "ranking": "🏆 Ranking",
+        "wealth_rank": "**Wealth Rank:** {{rank}}",
+        "unranked": "Unranked (>100)",
+        "inventory_value": "💰 Inventory Value: {{amount}}",
+        "collection": "🎒 Collection",
+        "active_buffs": "⚡ Active Buffs",
+        "total_items": "**Total Items:** {{count}}",
+        "item_types": "**Item Types:** {{count}}",
+        "joined": "📅 Joined on",
+        "id": "🆔 User ID",
+        "footer": "Type {{prefix}}inventory to see item details"
     },
     "wordchain": {
         "title": "🔗  Word Chain",
