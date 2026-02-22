@@ -10,7 +10,9 @@
         "no_challenge_bot": "❌ Bạn không thể thách đấu với bot!",
         "no_challenge_self": "❌ Bạn không thể thách đấu với chính mình!",
         "opponent_insufficient_funds": "❌ {{opponent}} không đủ tiền! Số dư của họ: **{{balance}}**",
-        "requested_by": "Yêu cầu bởi {{user}}"
+        "requested_by": "Yêu cầu bởi {{user}}",
+        "balance": "Số dư:",
+        "timeout": "Hết thời gian!"
     },
     "economy": {
         "item_bonus": "\n🎁 **Thưởng Vật phẩm:** +{{amount}} coins ({{percent}}%)!",
@@ -243,9 +245,10 @@
             "móc túi khách du lịch",
             "thao túng thị trường chứng khoán"
         ],
-        "hacker_hacked": "\n💻 **Đã Hack!** Kỹ năng chuyên gia của bạn đã nhân đôi tổng phần thưởng!",
-        "criminal_escaped": "\n👟 **Đã tẩu thoát!** Bạn đã cắt đuôi cảnh sát nhờ trang bị của mình. Tiền phạt giảm còn **{{amount}}** coins!",
-        "soldier_armed": "\n🪖 **Vũ trang đầy đủ!** Bạn đàm phán được với cảnh sát. Tiền phạt giảm thêm **30%**!"
+        "hacker_hacked": "\n💻 **Hacker:** Bạn đã xâm nhập thành công hệ thống, phần thưởng được nhân đôi!",
+        "criminal_escaped": "\n🥷 **Tội phạm:** Bạn đã trốn thoát thành công nhưng bị phạt {{amount}} coins!",
+        "soldier_armed": "\n🪖 **Binh lính:** Bạn có vũ khí tự vệ, giảm 30% mức phạt!",
+        "teacher_penalty": "Vì vi phạm đạo đức nghề nghiệp, bạn đã bị giáng xuống Cấp độ **{{level}}**! 📉"
     },
     "beg": {
         "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
@@ -275,7 +278,7 @@
     "rob": {
         "cooldown": "❌ Bạn đang bị truy nã! Hãy lẩn trốn trong **{{minutes}} phút** nữa.",
         "success": "🥷 Bạn đã lẻn vào và trộm được **{{amount}}** coins từ {{user}}! {{emoji}}",
-        "failure": "🚔 Bạn bị {{user}} phát hiện và bắt quả tang! Bạn phải bồi thường **{{amount}}** coins cho họ.",
+        "failure": "🚔 Bạn bị {{user}} phát hiện và bắt quả tang! Bạn phải bồi thường **{{amount}}** coins cho họ. (10% số dư)",
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
         "no_money_self": "❌ Bạn cần ít nhất **100 coins** trong ví để làm vốn nếu chẳng may bị bắt!",
         "invalid_user": "❌ Bạn không thể tự trộm chính mình!",
@@ -284,7 +287,8 @@
         "police_busted": "\n👮 **Bị tóm!** Bạn định trộm của cảnh sát và phải nộp phạt gấp đôi!",
         "shield_blocked": "\n🛡️ **Bị chặn!** Khiên của nạn nhân khiến việc trộm cướp khó khăn hơn nhiều.",
         "police_bounty": "\n💰 **Tiền thưởng cảnh sát!** Trộm đồn cảnh sát — bạn nhận thêm **+50%** tiền!",
-        "rob_shield_blocked": "\n🔰 **Khiên Bảo Vệ!** Nạn nhân đang được bảo vệ bởi Khiên Bảo Vệ — cuộc cướp thất bại hoàn toàn!"
+        "rob_shield_blocked": "\n🔰 **Khiên Bảo Vệ!** Nạn nhân đang được bảo vệ bởi Khiên Bảo Vệ — cuộc cướp thất bại hoàn toàn!",
+        "teacher_penalty": "Thật là một tấm gương xấu! Bạn đã bị giáng xuống Cấp độ **{{level}}** do hành vi này. 📉"
     },
     "job": {
         "title": "Hệ Thống Nghề Nghiệp",
@@ -334,15 +338,15 @@
             "police": "👮 **Cảnh sát**: Bảo vệ thành phố và bắt giữ tội phạm. Khi tội phạm bị bắt, bạn sẽ nhận được một phần tiền phạt từ chúng.\n✨ **Đặc quyền**: Nhận thông báo thu tiền phạt ngẫu nhiên.",
             "criminal": "🥷 **Tội phạm**: Sống ngoài vòng pháp luật với kỹ năng trộm cắp điêu luyện.\n✨ **Đặc quyền**: Tăng tỷ lệ thành công và số tiền nhận được khi thực hiện các lệnh `rob` và `crime`.",
             "doctor": "👨‍⚕️ **Bác sĩ**: Cứu người và chăm sóc sức khỏe cộng đồng.\n✨ **Đặc quyền**: Nhận phí điều trị ngẫu nhiên và giảm 50% tiền phạt/viện phí khi thất bại trong các hoạt động rủi ro.",
-            "programmer": "💻 **Lập trình viên**: Sáng tạo trong thế giới số.\n✨ **Đặc quyền**: Mức lương cơ bản rất cao và nhận thưởng lớn hơn khi Làm việc (`work`).",
+            "programmer": "💻 **Lập trình viên**: Sáng tạo trong thế giới số.\n✨ **Đặc quyền**: +20% Thưởng trò chơi nối chữ/scramble, mức lương cơ bản rất cao khi Làm việc (`work`).",
             "farmer": "👨‍🌾 **Nông dân**: Nghề nghiệp ổn định và gần gũi thiên nhiên.\n✨ **Đặc quyền**: +50% May mắn câu cá, 15% Cá Khổng Lồ, 10% Mùa màng bội thu (×2.5), 25% giữ lại mồi.",
-            "hacker": "👨‍💻 **Hacker**: Chuyên gia khai thác dữ liệu.\n✨ **Đặc quyền**: 15% Data Mine (×2) khi `search`, 20% double khi `crime` nếu có Laptop.",
+            "hacker": "👨‍💻 **Hacker**: Chuyên gia khai thác dữ liệu.\n✨ **Đặc quyền**: Tự động dò 1 mìn (`minesweeper`), 20% double khi `crime` nếu có Laptop, 15% Data Mine (×2) khi `search`.",
             "streamer": "🎥 **Streamer**: Ngôi sao của cộng đồng mạng.\n✨ **Đặc quyền**: 5% Viral (×5) khi `work` với Ghế/Mansion, +15% thưởng khi biểu diễn.",
-            "chef": "👨‍🍳 **Đầu bếp**: Nghệ nhân ẩm thực tài ba.\n✨ **Đặc quyền**: 8% Đơn đặc biệt (×2) khi `work`, 5% Michelin Star (×3) khi `daily`.",
+            "chef": "👨‍🍳 **Đầu bếp**: Nghệ nhân ẩm thực tài ba.\n✨ **Đặc quyền**: x2 Thời gian mọi Buff, 8% Đơn đặc biệt (×2) khi `work`, 5% Michelin Star (×3) khi `daily`.",
             "musician": "🎸 **Nhạc sĩ**: Nghệ sĩ của âm thanh và cảm xúc.\n✨ **Đặc quyền**: +20% thưởng khi biểu diễn (`slut`), 10% Flow State (×2 gamble) với Guitar.",
             "soldier": "🪖 **Quân nhân**: Chiến binh kỷ luật và dũng cảm.\n✨ **Đặc quyền**: +10% tỷ lệ thành công `rob`, -30% tiền phạt khi `crime` thất bại, +100 coins mỗi `work`.",
-            "trader": "📈 **Thương nhân**: Chuyên gia kinh doanh và đầu tư.\n✨ **Đặc quyền**: +50 coins mỗi `search`, buff toàn bộ lệnh cờ bạc.",
-            "teacher": "📚 **Giáo viên**: Người truyền đạt tri thức thế hệ tương lai.\n✨ **Đặc quyền**: XP nhận được ×1.5 ở MỌI lệnh (×2 khi có Whiteboard)."
+            "trader": "📈 **Thương nhân**: Chuyên gia kinh doanh và đầu tư.\n✨ **Đặc quyền**: Hoàn tiền 85% khi Bán (`sell`), +50 coins mỗi `search`, buff toàn bộ lệnh cờ bạc.",
+            "teacher": "📚 **Giáo viên**: Người truyền đạt tri thức thế hệ tương lai.\n✨ **Đặc quyền**: x1.5 XP mọi lệnh (x2 với Whiteboard), +20% Thưởng trò chơi nối chữ/hangman."
         }
     },
     "slut": {
@@ -356,7 +360,8 @@
             "tiếp khách trong quán karaoke",
             "đi tour với đại gia",
             "làm sugar baby"
-        ]
+        ],
+        "teacher_penalty": "Là một giáo viên, hành động này thật không thể chấp nhận được. Bạn bị giáng xuống Cấp độ **{{level}}**! 📉"
     },
     "daily_events": {
         "doctor_bonus": "\n👨‍⚕️ **Khám sức khỏe miễn phí!** Bác sĩ tự chăm sóc bản thân! +{{amount}} coins!",
@@ -793,6 +798,7 @@
     "minesweeper": {
         "title": "💣  Dò Mìn (Minesweeper)",
         "description": "Số mìn: **{{mineCount}}**\nTiền cược: **{{bet}}**\n\nNhấn để mở ô. Bật chế độ Cắm cờ để đánh dấu mìn.",
+        "hacker_detected": "💻 **Hacker:** Bạn đã dò được một quả mìn!",
         "flag_on": "Cắm cờ: BẬT",
         "flag_off": "Cắm cờ: TẮT",
         "unflag_first": "❌ Hãy bỏ cắm cờ ô này trước!",

@@ -23,6 +23,10 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle(`${job.icon} ${jobName.charAt(0).toUpperCase() + jobName.slice(1)}`)
             .setDescription(description)
+            .addFields(
+                { name: '💎 ' + (lang === 'vi' ? 'Tiền lương' : 'Salary'), value: `+${(job.bonus * 100).toFixed(0)}%`, inline: true },
+                { name: '⭐ ' + (lang === 'vi' ? 'Yêu cầu' : 'Requirement'), value: `Level 20`, inline: true }
+            )
             .setColor(job.color || config.COLORS.INFO)
             .setThumbnail(message.client.user.displayAvatarURL())
             .setFooter({ text: t('common.requested_by', lang, { user: message.author.tag }) });

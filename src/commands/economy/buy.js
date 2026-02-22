@@ -55,9 +55,10 @@ module.exports = {
                 quantityStr = lastWord;
             }
 
+            const isNumericQuery = /^\d+$/.test(itemQuery);
             const item = SHOP_ITEMS.find(i =>
                 String(i.id) === itemQuery ||
-                i.name.toLowerCase().includes(itemQuery)
+                (!isNumericQuery && i.name.toLowerCase().includes(itemQuery))
             );
 
             if (!item) return message.reply(`❌ ${t('buy.not_found', lang, { prefix: config.PREFIX })} (Tìm kiếm: \`${itemQuery}\`)`);

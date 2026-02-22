@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -89,6 +89,11 @@ module.exports = {
                 const doctorUser = message.guild.members.cache.get(randomDoctor.id);
                 let failureMsg = t('slut.failure', lang, { amount: penalty.toLocaleString() });
 
+                if (user.job === 'teacher') {
+                    const result = deductLevel(message.author.id);
+                    failureMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;
+                }
+
                 if (doctorUser) {
                     failureMsg += `\n${t('job.doctor_notification', lang, { amount: penalty.toLocaleString() }).replace('👨‍⚕️ **Bệnh viện:** ', '').replace('👨‍⚕️ **Hospital:** ', '')} (<@${randomDoctor.id}>)`;
                 }
@@ -98,7 +103,13 @@ module.exports = {
                 return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
             }
 
-            await message.reply(t('slut.failure', lang, { amount: penalty.toLocaleString() }));
+            let failMsg = t('slut.failure', lang, { amount: penalty.toLocaleString() });
+            if (user.job === 'teacher') {
+                const result = deductLevel(message.author.id);
+                failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;
+            }
+
+            await message.reply(failMsg);
             const xpResult = addXp(message.author.id, 5);
             return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
         }

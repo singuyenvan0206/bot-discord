@@ -95,11 +95,21 @@ module.exports = {
             turn = m.author.id;
 
             // Reward per valid word + income bonus
+            const userData = db.getUser(m.author.id);
+            const isProgrammer = userData.job === 'programmer';
+            const isTeacher = userData.job === 'teacher';
+            const baseReward = config.ECONOMY.WORDCHAIN_REWARD;
             const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
             const { addXp } = require('../../utils/leveling');
             const multiplier = getUserMultiplier(m.author.id, 'income');
             const bonus = Math.floor(baseReward * multiplier);
-            const totalReward = baseReward + bonus;
+
+            let jobBonus = 0;
+            if (isProgrammer || isTeacher) {
+                jobBonus = Math.floor(baseReward * 0.20);
+            }
+
+            const totalReward = baseReward + bonus + jobBonus;
 
             const xpMultiplier = getXpMultiplier(m.author.id);
             const baseXp = 5; // Base XP per word

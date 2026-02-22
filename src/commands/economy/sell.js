@@ -26,10 +26,13 @@ module.exports = {
             let totalEarned = 0;
             let totalItemsCount = 0;
 
+            const isTrader = user.job === 'trader';
+            const recoveryRate = isTrader ? 0.85 : config.ECONOMY.SELL_RECOVERY;
+
             for (const [idStr, count] of Object.entries(inv)) {
                 const item = SHOP_ITEMS.find(i => String(i.id) === idStr);
                 if (item) {
-                    const sellPrice = Math.floor(item.price * config.ECONOMY.SELL_RECOVERY) * count;
+                    const sellPrice = Math.floor(item.price * recoveryRate) * count;
                     totalEarned += sellPrice;
                     totalItemsCount += count;
                 }
@@ -84,7 +87,9 @@ module.exports = {
         }
 
         // Calculate sell price from config
-        const sellPrice = Math.floor(item.price * config.ECONOMY.SELL_RECOVERY) * quantity;
+        const isTrader = user.job === 'trader';
+        const recoveryRate = isTrader ? 0.85 : config.ECONOMY.SELL_RECOVERY;
+        const sellPrice = Math.floor(item.price * recoveryRate) * quantity;
 
         // Perform transaction
         const success = db.removeItem(message.author.id, String(item.id), quantity);
@@ -97,7 +102,7 @@ module.exports = {
             item: itemName,
             price: sellPrice.toLocaleString(),
             emoji: config.EMOJIS.COIN,
-            percent: Math.round(config.ECONOMY.SELL_RECOVERY * 100)
+            percent: Math.round(recoveryRate * 100)
         }));
     }
 };

@@ -73,8 +73,8 @@ module.exports = {
         SEARCH_MIN_REWARD: 50,
         SEARCH_MAX_REWARD: 200,
         ROB_COOLDOWN: 3600, // 1 hour
-        ROB_SUCCESS_CHANCE: 0.3,
-        ROB_FAIL_PENALTY_PERCENT: 0.2, // Loser pays 20% to victim
+        ROB_SUCCESS_CHANCE: 0.5,
+        ROB_FAIL_PENALTY_PERCENT: 0.1, // Loser pays 10% to victim
         MAX_BET: 250000,
         DEFAULT_COOLDOWN: 3,
         JOBS: {

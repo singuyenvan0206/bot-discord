@@ -101,9 +101,38 @@ async function checkAndSendMilestone(message, reachedLevel20, lang) {
     }).catch(() => { });
 }
 
+/**
+ * Giảm cấp độ của người dùng.
+ * Thường dùng làm hình phạt cho các hành vi vi phạm (ví dụ: Teacher làm việc xấu).
+ * 
+ * @param {string} userId - ID người dùng
+ * @param {number} levels - Số cấp độ muốn giảm (mặc định là 1)
+ * @returns {object} - Object chứa thông tin cấp độ cũ và mới
+ */
+function deductLevel(userId, levels = 1) {
+    const user = db.getUser(userId);
+    const oldLevel = user.level;
+    const newLevel = Math.max(0, oldLevel - levels);
+
+    // Tính toán lại XP tối thiểu cho cấp độ mới
+    // XP = (Level / 0.1)^2
+    const newXp = Math.floor(Math.pow(newLevel / 0.1, 2));
+
+    db.updateUser(userId, {
+        xp: newXp,
+        level: newLevel
+    });
+
+    return {
+        oldLevel,
+        newLevel
+    };
+}
+
 module.exports = {
     calculateLevel,
     addXp,
     getLevelMultiplier,
-    checkAndSendMilestone
+    checkAndSendMilestone,
+    deductLevel
 };

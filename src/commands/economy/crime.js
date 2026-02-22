@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
 const { getUserMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -23,7 +23,14 @@ module.exports = {
         }
 
         const isCriminal = user.job === 'criminal';
-        const successRate = config.ECONOMY.CRIME_SUCCESS_RATE + (isCriminal ? 0.1 : 0);
+        const isHacker = user.job === 'hacker';
+        let successRate = config.ECONOMY.CRIME_SUCCESS_RATE + (isCriminal ? 0.1 : 0);
+
+        // Hacker Synergy: +5% success with high-tech gear
+        if (isHacker && (hasActiveItem(message.author.id, 212) || hasActiveItem(message.author.id, 220))) {
+            successRate += 0.05;
+        }
+
         const isSuccess = Math.random() < successRate;
         const actions = t('crime.actions', lang);
         const action = actions[Math.floor(Math.random() * actions.length)];
@@ -50,9 +57,9 @@ module.exports = {
 
             let total = baseReward + levelBonus + jobBonusAmount + itemBonus;
 
-            // Hacker Interaction: Chance to double reward if using Laptop (209)
+            // Hacker Interaction: Chance to double reward if using Laptop (212) or Superyacht (220)
             let hackedMsg = '';
-            if (isHacker && hasActiveItem(message.author.id, 209) && Math.random() < 0.2) {
+            if (isHacker && (hasActiveItem(message.author.id, 212) || hasActiveItem(message.author.id, 220)) && Math.random() < 0.2) {
                 total *= 2;
                 hackedMsg = t('crime.hacker_hacked', lang);
             }
@@ -94,6 +101,11 @@ module.exports = {
         } else {
             let fine = Math.floor(user.balance * config.ECONOMY.CRIME_FINE_PERCENT);
 
+            // Doctor Interaction: Medical knowledge prevents heavy losses (50% reduction)
+            if (user.job === 'doctor') {
+                fine = Math.floor(fine * 0.5);
+            }
+
             // Criminal Interaction: Escape chance with Sneakers (204) or Supercar (212)
             let escapeMsg = '';
             if (isCriminal && (hasActiveItem(message.author.id, 204) || hasActiveItem(message.author.id, 212)) && Math.random() < 0.5) {
@@ -117,6 +129,11 @@ module.exports = {
                 const policeUser = message.guild.members.cache.get(randomPolice.id);
                 let failureMsg = escapeMsg ? `❌ ${escapeMsg}` : t('crime.failure', lang, { amount: fine.toLocaleString() });
 
+                if (user.job === 'teacher') {
+                    const result = deductLevel(message.author.id);
+                    failureMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
+                }
+
                 if (policeUser && !escapeMsg) {
                     failureMsg += `\n${t('job.police_notification', lang, { amount: fine.toLocaleString() }).replace('👮 **Trực ban:** ', '').replace('👮 **On Duty:** ', '')} (<@${randomPolice.id}>)`;
                 }
@@ -128,7 +145,13 @@ module.exports = {
                 return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
             }
 
-            await message.reply(t('crime.failure', lang, { amount: fine.toLocaleString() }));
+            let failMsg = t('crime.failure', lang, { amount: fine.toLocaleString() });
+            if (user.job === 'teacher') {
+                const result = deductLevel(message.author.id);
+                failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
+            }
+
+            await message.reply(failMsg);
             const xpGained = 10;
             const xpResult = addXp(message.author.id, xpGained);
             return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);

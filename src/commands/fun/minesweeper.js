@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
@@ -40,7 +41,8 @@ module.exports = {
             flagged: new Set(),
             isFlagging: false,
             minesPlaced: false,
-            startTime: Date.now()
+            startTime: Date.now(),
+            hackerUsed: false
         };
 
         const generateGrid = (safeIndex) => {
@@ -61,6 +63,19 @@ module.exports = {
                 gameState.grid[i] = getNeighbors(i).filter(n => gameState.grid[n] === 'M').length;
             }
             gameState.minesPlaced = true;
+
+            // Hacker Synergy: Automatically flag one mine
+            if (user.job === 'hacker') {
+                const mineIndexes = [];
+                for (let i = 0; i < size; i++) {
+                    if (gameState.grid[i] === 'M') mineIndexes.push(i);
+                }
+                if (mineIndexes.length > 0) {
+                    const randomMine = mineIndexes[Math.floor(Math.random() * mineIndexes.length)];
+                    gameState.flagged.add(randomMine);
+                    gameState.hackerUsed = true;
+                }
+            }
         };
 
         const getNeighbors = (index) => {
@@ -162,6 +177,10 @@ module.exports = {
             .setDescription(t('minesweeper.description', lang, { mineCount, bet: bet || 0 }))
             .setColor(0xE67E22);
 
+        if (gameState.hackerUsed) {
+            embed.setDescription(t('minesweeper.hacker_detected', lang) + '\n' + embed.data.description);
+        }
+
         const reply = await message.reply({ embeds: [embed], components: renderComponents() });
         const collector = reply.createMessageComponentCollector({
             componentType: ComponentType.Button,
@@ -208,9 +227,11 @@ module.exports = {
                     let loseAmount = bet;
                     let shieldUsed = false;
 
-                    // Check for Shield (Item ID 6)
-                    const inv = JSON.parse(user.inventory || '{}');
-                    if (inv['6'] && inv['6'] > 0) {
+                    // Check for Shield (Item ID 502)
+                    let invData = {};
+                    try { invData = JSON.parse(user.inventory || '{}'); } catch { invData = {}; }
+
+                    if (invData['502'] && invData['502'] > 0) {
                         loseAmount = Math.floor(bet * 0.5);
                         shieldUsed = true;
                         db.addBalance(user.id, loseAmount); // Refund 50% (since 100% was already removed)
@@ -241,7 +262,7 @@ module.exports = {
 
                             const winEmbed = new EmbedBuilder()
                                 .setTitle(`${config.EMOJIS.SUCCESS}  ${t('minesweeper.win_title', lang)}`)
-                                .setDescription(t('minesweeper.win_desc', lang) + `\n\n**${t('fish.income', lang)}:** ${config.EMOJIS.COIN} +${baseWin}\n**${t('fish.item_bonus', lang)}:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**${t('balance.description', lang, { balance: prize })}**`)
+                                .setDescription(t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${baseWin}\n**${t('economy.item_bonus_short', lang)}:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**${t('balance.description', lang) || 'Balance:'}** ${prize.toLocaleString()} coins`)
                                 .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         } else {
@@ -262,7 +283,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time') {
-                reply.edit({ content: `⏰ ${t('tictactoe.timeout_title', lang)}`, components: [] }).catch(() => { });
+                reply.edit({ content: `⏰ ${t('common.timeout', lang)}`, components: [] }).catch(() => { });
             }
             startCooldown(message.client, 'minesweeper', message.author.id);
         });

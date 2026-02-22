@@ -10,7 +10,9 @@
         "no_challenge_bot": "❌ You cannot challenge a bot!",
         "no_challenge_self": "❌ You cannot challenge yourself!",
         "opponent_insufficient_funds": "❌ {{opponent}} does not have enough coins! Their balance: **{{balance}}**",
-        "requested_by": "Requested by {{user}}"
+        "requested_by": "Requested by {{user}}",
+        "balance": "Balance:",
+        "timeout": "Timeout!"
     },
     "economy": {
         "item_bonus": "\n🎁 **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
@@ -187,9 +189,10 @@
             "pickpocketed a tourist",
             "manipulated the stock market"
         ],
-        "hacker_hacked": "\n💻 **Hacked!** Your expert skills doubled the total reward!",
-        "criminal_escaped": "\n👟 **Escaped!** You outran the police using your gear. Fine reduced to **{{amount}}** coins!",
-        "soldier_armed": "\n🪖 **Armed and Ready!** You negotiated down with the police. Fine reduced by **30%**!"
+        "hacker_hacked": "\n💻 **Hacker:** You bypassed the security, reward doubled!",
+        "criminal_escaped": "\n🥷 **Criminal:** You escaped successfully but were fined {{amount}} coins!",
+        "soldier_armed": "\n🪖 **Soldier:** You are armed, fine reduced by 30%!",
+        "teacher_penalty": "Due to professional misconduct, you have been demoted to Level **{{level}}**! 📉"
     },
     "beg": {
         "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
@@ -219,7 +222,7 @@
     "rob": {
         "cooldown": "❌ You are wanted by the police! Hide for another **{{minutes}} minutes**.",
         "success": "🥷 You sneaked in and stole **{{amount}}** coins from {{user}}! {{emoji}}",
-        "failure": "🚔 {{user}} caught you red-handed! You had to pay them **{{amount}}** coins as compensation.",
+        "failure": "🚔 {{user}} caught you red-handed! You had to pay them **{{amount}}** coins as compensation. (10% of balance)",
         "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
         "no_money_self": "❌ You need at least **100 coins** in your wallet to cover potential fines!",
         "invalid_user": "❌ You can't rob yourself!",
@@ -228,7 +231,8 @@
         "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
         "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder.",
         "police_bounty": "\n💰 **Police Bounty!** Robbing an officer earns +**50%** bonus!",
-        "rob_shield_blocked": "\n🔰 **Shield of Protection!** The victim is protected — robbery completely blocked!"
+        "rob_shield_blocked": "\n🔰 **Shield of Protection!** The victim is protected — robbery completely blocked!",
+        "teacher_penalty": "What a terrible role model! You have been demoted to Level **{{level}}** for this behavior. 📉"
     },
     "job": {
         "title": "Job System",
@@ -278,15 +282,15 @@
             "police": "👮 **Police**: Protect the city and arrest criminals. You receive a portion of the fines collected from them.\n✨ **Perk**: Receive random fine collection notifications.",
             "criminal": "🥷 **Criminal**: Live outside the law with expert theft skills.\n✨ **Perk**: Increased success rate and rewards when using `rob` and `crime` commands.",
             "doctor": "👨‍⚕️ **Doctor**: Save lives and care for public health.\n✨ **Perk**: Receive random medical fees and 50% reduced penalties/medical bills on failures.",
-            "programmer": "💻 **Programmer**: Build the digital world.\n✨ **Perk**: Very high base salary and larger bonuses when using Work (`work`).",
+            "programmer": "💻 **Programmer**: Build the digital world.\n✨ **Perk**: +20% coins in Word Chain/Scramble, very high base salary when using Work (`work`).",
             "farmer": "👨‍🌾 **Farmer**: Stable career close to nature.\n✨ **Perk**: +50% Luck from gear, 15% Trophy Catch, 10% Bumper Crop (×2.5), 25% Bait Salvage.",
-            "hacker": "👨‍💻 **Hacker**: Expert at data exploitation.\n✨ **Perk**: 15% Data Mine (×2) on `search`, 20% double crime reward with Laptop.",
+            "hacker": "👨‍💻 **Hacker**: Expert at data exploitation.\n✨ **Perk**: Auto-detect 1 mine in `minesweeper`, 20% double crime reward with Laptop, 15% Data Mine (×2) on `search`.",
             "streamer": "🎥 **Streamer**: Star of the online community.\n✨ **Perk**: 5% Viral (×5) on `work` with Chair/Mansion, +15% perform reward.",
-            "chef": "👨‍🍳 **Chef**: Culinary artist extraordinaire.\n✨ **Perk**: 8% Special Order (×2) on `work`, 5% Michelin Star (×3) on `daily`.",
+            "chef": "👨‍🍳 **Chef**: Culinary artist extraordinaire.\n✨ **Perk**: x2 duration for all Buffs, 8% Special Order (×2) on `work`, 5% Michelin Star (×3) on `daily`.",
             "musician": "🎸 **Musician**: Artist of sound and emotion.\n✨ **Perk**: +20% reward when performing (`slut`), 10% Flow State (×2 gamble) with Guitar.",
             "soldier": "🪖 **Soldier**: Disciplined and courageous warrior.\n✨ **Perk**: +10% success rate on `rob`, -30% fine on failed `crime`, +100 coins every `work`.",
-            "trader": "📈 **Trader**: Business and investment expert.\n✨ **Perk**: +50 coins every `search`, buffs all gambling commands.",
-            "teacher": "📚 **Teacher**: Knowledge sharer for the next generation.\n✨ **Perk**: XP ×1.5 on ALL commands (×2 with Whiteboard)."
+            "trader": "📈 **Trader**: Business and investment expert.\n✨ **Perk**: 85% Sell recovery, +50 coins every `search`, buffs all gambling commands.",
+            "teacher": "📚 **Teacher**: Knowledge sharer for the next generation.\n✨ **Perk**: x1.5 XP on ALL commands (x2 with Whiteboard), +20% coins in Word Chain/Hangman."
         }
     },
     "slut": {
@@ -300,7 +304,8 @@
             "entertained guests at a karaoke bar",
             "went on a tour with a tycoon",
             "became a sugar baby"
-        ]
+        ],
+        "teacher_penalty": "As a teacher, this action is unacceptable. You have been demoted to Level **{{level}}**! 📉"
     },
     "daily_events": {
         "doctor_bonus": "\n👨‍⚕️ **Free Check-up!** Doctor takes care of themselves! +{{amount}} coins!",
@@ -716,6 +721,7 @@
     "minesweeper": {
         "title": "💣  Minesweeper",
         "description": "Mines: **{{mineCount}}**\nBet: **{{bet}}**\n\nClick to open cells. Toggle Flag mode to mark mines.",
+        "hacker_detected": "💻 **Hacker:** You have detected a mine!",
         "flag_on": "Flag: ON",
         "flag_off": "Flag: OFF",
         "unflag_first": "❌ Please unflag this cell first!",
@@ -1131,7 +1137,11 @@
             "coinflip": "🌟 **Description:** Test your luck with a coin flip to double your bet!\n\n🕹️ **Usage:**\n- `$coinflip <amount> <heads|tails>`\n- `$cf <amount> <h|t>`",
             "dice": "🌟 **Description:** Roll the dice and bet on the outcome (1-6)!\n\n🕹️ **Usage:**\n- `$dice <amount> <1-6>`\n- `$roll <amount> <1-6>`",
             "rank": "🌟 **Description:** The global leaderboard for ranking players!\n\n⚙️ **Modes:**\n- Experience (XP): Default ranking.\n- Wealth (Balance): Toggle via menu.\n- Career: Filter by specific job categories.",
-            "setexp": "🌟 **Description:** Adjust a player's experience points directly. (Admin Only)\n\n🕹️ **Usage:**\n`$setexp @user <amount>`"
+            "setexp": "🌟 **Description:** Adjust a player's experience points directly. (Admin Only)\n\n🕹️ **Usage:**\n`$setexp @user <amount>`",
+            "jobdetail": "🌟 **Description:** View in-depth details about specific jobs.\n\n🕹️ **Usage:**\n`$jobdetail <job_id>`\n\n💡 **Tip:** Find job IDs using `$job list`.",
+            "shop": "🌟 **Description:** Browse and purchase items from the shop.\n\n🕹️ **Usage:**\n`$shop`",
+            "giveaway": "🌟 **Description:** Host and manage giveaway events in your server.\n\n🕹️ **Usage:**\n`$giveaway <subcommand>`",
+            "help": "🌟 **Description:** View the full list of commands or get detailed help for a specific one.\n\n🕹️ **Usage:**\n`$help [command]`"
         }
     },
     "iteminfo": {

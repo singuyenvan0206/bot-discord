@@ -54,13 +54,18 @@ module.exports = {
                 buffs = [];
             }
 
-            const expiresAt = Math.floor(Date.now() / 1000) + item.duration;
+            let duration = item.duration;
+            if (user.job === 'chef') {
+                duration *= 2;
+            }
+
+            const expiresAt = Math.floor(Date.now() / 1000) + duration;
             buffs.push({ itemId: item.id, expiresAt });
 
             db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
 
-            const hours = Math.floor(item.duration / 3600);
-            const durationStr = hours > 0 ? `${hours}h` : `${Math.floor(item.duration / 60)}m`;
+            const hours = Math.floor(duration / 3600);
+            const durationStr = hours > 0 ? `${hours}h` : `${Math.floor(duration / 60)}m`;
 
             const effectType = t(`effects.${item.type}`, lang) || item.type;
             let displayPercent = Math.round(item.multiplier * 100);

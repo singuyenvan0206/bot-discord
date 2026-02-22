@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const { hasActiveItem, isProtectedFromRob, getXpMultiplier } = require('../../utils/multiplier');
 const config = require('../../config');
@@ -106,20 +106,25 @@ module.exports = {
             db.addBalance(message.author.id, -penalty);
             db.addBalance(target.id, penalty);
 
-            let msg = t('rob.failure', lang, {
+            let failMsg = t('rob.failure', lang, {
                 user: target.username,
                 amount: penalty.toLocaleString()
             });
 
-            if (isVictimPolice) {
-                msg += t('rob.police_busted', lang);
-            } else if (hasVictimRobShield) {
-                msg += t('rob.rob_shield_blocked', lang);
-            } else if (hasVictimShield) {
-                msg += t('rob.shield_blocked', lang);
+            if (user.job === 'teacher') {
+                const result = deductLevel(message.author.id);
+                failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('rob.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 
-            await message.reply(msg);
+            if (isVictimPolice) {
+                failMsg += t('rob.police_busted', lang);
+            } else if (hasVictimRobShield) {
+                failMsg += t('rob.rob_shield_blocked', lang);
+            } else if (hasVictimShield) {
+                failMsg += t('rob.shield_blocked', lang);
+            }
+
+            await message.reply(failMsg);
 
             const xpResult = addXp(message.author.id, 5); // 5 XP for failed robbery
             return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
