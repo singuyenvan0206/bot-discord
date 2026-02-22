@@ -714,8 +714,9 @@
         "prompt": "❌ Vui lòng chỉ định vật phẩm muốn sử dụng (vđ: `{{prefix}}use 39`).",
         "not_found": "❌ Không tìm thấy vật phẩm này trong túi đồ của bạn!",
         "not_usable": "❌ Vật phẩm này không thể sử dụng trực tiếp.",
-        "success": "✅ Bạn đã sử dụng thành công **{{item}}**!",
-        "career_reset": "✅ Đã dùng thẻ chuyển nghề thành công! Bạn hiện đang không có nghề nghiệp, vui lòng chọn nghề nghiệp mới bằng cách dùng `{{prefix}}job set <tên_nghề>`.",
+        "success": "✅ Bạn đã sử dụng thành công 🎮 **{{item}}**!",
+        "buff_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% {{type}} trong **{{duration}}**!",
+        "career_reset": "✅ Đã dùng thẻ chuyển nghề thành công! Bạn hiện đang không có nghề nghiệp, sử dụng `{{prefix}}job set <tên_nghề>` để chọn nghề mới.",
         "no_job_to_reset": "❌ Bạn hiện không có nghề nghiệp nào để chuyển đổi!"
     },
     "serverinfo": {
