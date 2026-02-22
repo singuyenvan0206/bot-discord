@@ -94,11 +94,16 @@ async function checkAndSendMilestone(message, reachedLevel20, lang) {
         .setColor(jobConfig.color || '#f1c40f')
         .setTimestamp();
 
-    // 4. Send announcement
-    return message.channel.send({
-        content: `<@${message.author.id}>`,
-        embeds: [embed]
-    }).catch(() => { });
+    // 4. Send announcement as DM (only visible to the user)
+    try {
+        await message.author.send({ embeds: [embed] });
+    } catch {
+        // Fallback: user has DMs disabled
+        await message.channel.send({
+            content: `<@${message.author.id}>`,
+            embeds: [embed]
+        }).catch(() => { });
+    }
 }
 
 /**
