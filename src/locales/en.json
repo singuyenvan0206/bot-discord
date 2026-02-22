@@ -596,12 +596,6 @@
         "fail": "❌ Could not remove item from your inventory.",
         "success": "✅ You sold **{{quantity}}x {{item}}** and received **{{price}}** coins! {{emoji}} (Refund {{percent}}%)"
     },
-    "leaderboard": {
-        "title": "🏆 Richest Users: {{server}}",
-        "empty": "*No data available for this server yet.*",
-        "footer": "Net Worth (Wallet + Inventory)",
-        "you": " ⬅️ **You**"
-    },
     "transfer": {
         "mention": "❌ Please mention (@mention) the user you want to transfer money to.",
         "invalid": "❌ Please enter a valid amount.",
@@ -1028,21 +1022,21 @@
             }
         },
         "descriptions": {
-            "poker": "Play Texas Hold'em Poker with friends or Bots!",
-            "blackjack": "Test your luck with the classic game of 21.",
-            "slots": "Spin the reels for a chance to win big prizes.",
-            "coinflip": "Bet on a 50/50 coin toss.",
+            "poker": "Play Texas Hold'em Poker with others.",
+            "blackjack": "Play Blackjack against the dealer.",
+            "slots": "Spin the slots for a chance to win big.",
+            "coinflip": "Flip a coin to double your bet.",
             "dice": "Roll the dice and bet on the outcome.",
-            "rps": "The classic Rock Paper Scissors game.",
-            "tictactoe": "A strategic 3x3 duel.",
-            "connect4": "Be the first to line up 4 pieces.",
-            "memory": "Match pairs of icons to win.",
+            "rps": "Classic Rock Paper Scissors game.",
+            "tictactoe": "Play a strategic 3x3 Tic-Tac-Toe game.",
+            "connect4": "Be the first to connect four in a row.",
+            "memory": "Test your memory with matching pairs.",
             "minesweeper": "Navigate the minefield for multipliers.",
-            "emojiquiz": "Guess the phrase or object from emojis.",
-            "trivia": "Answer multiple-choice knowledge questions.",
-            "hangman": "Guess the word to save the drawing.",
-            "wordchain": "Link English words in a chain.",
-            "scramble": "Unscramble jumbled letters into words.",
+            "emojiquiz": "Guess the phrase described by emojis.",
+            "trivia": "Answer trivia questions for coins.",
+            "hangman": "Guess the word and save the hangman.",
+            "wordchain": "Link English words in a competitive chain.",
+            "scramble": "Unscramble the jumbled letters.",
             "guess": "Guess the mystery number from 1 to 100.",
             "reaction": "Test your reflexes against the clock.",
             "work": "Perform various jobs for coins and XP.",
@@ -1063,7 +1057,6 @@
             "iteminfo": "View detailed stats and job synergy of an item.",
             "transfer": "Send coins securely to another user.",
             "use": "Activate usable items from your inventory.",
-            "leaderboard": "See the wealthiest users on the server.",
             "rank": "View the EXP and level leaderboard.",
             "profile": "View your own or others' stats and progress.",
             "ping": "Check bot latency and system info.",
@@ -1072,7 +1065,19 @@
             "language": "Configure your display language.",
             "giveaway": "Manage and host giveaway events.",
             "serverinfo": "Display technical info about the server.",
-            "userinfo": "View deep-dive info about a user."
+            "userinfo": "View deep-dive info about a user.",
+            "serverlist": "Administrative list of all guilds. (Owner)",
+            "leaveserver": "Force bot to leave a guild by ID. (Owner)",
+            "setstatus": "Change the bot's rich presence status. (Owner)",
+            "additem": "Grant items directly to a player. (Owner)",
+            "addmoney": "Add coins to a player's account. (Owner)",
+            "removeitem": "Revoke items from a player. (Owner)",
+            "removemoney": "Remove coins from a player. (Owner)",
+            "resetuser": "Wipe all data for a specific user. (Owner)",
+            "setexp": "Modify a player's experience points. (Owner)",
+            "setlevel": "Instantly change a player's level. (Owner)",
+            "setowner": "Transfer bot ownership status. (Owner)",
+            "shutdown": "Safely terminate the bot process. (Owner)"
         },
         "guides": {
             "trivia": "🌟 **Description:** Challenge your knowledge with a huge question bank covering Science, History, Entertainment, and more!\n\n🕹️ **How to Play:**\n1. Use the command to receive a multiple-choice question.\n2. You have **15 seconds** to analyze and answer.\n3. Click the button (A, B, C, D) corresponding to the correct answer.\n\n💰 **Rewards:** Correct answers earn coins instantly. If no one answers, the coins remain in the bank!",
@@ -1098,7 +1103,6 @@
             "rob": "🌟 **Description:** Break in and steal coins from another user.\n\n⚠️ **Risks:**\n- If you fail, you'll pay a 20% fine of your balance to the victim.\n\n💰 **Rewards:** Steal a portion of someone else's wealth.",
             "slut": "🌟 **Description:** Go out and earn extra income through 'side' services.\n\n⚠️ **Risks:**\n- Success rate is 60%.\n- If you fail, you'll pay a fixed medical fee.\n\n💰 **Rewards:** Moderate payouts, balancing risk and profit.",
             "profile": "🌟 **Description:** Your digital passport! View a deep dive into any user's progress and wealth.\n\n📊 **Detailed Stats:**\n- **Personal Balance:** Your spendable cash.\n- **Net Worth:** Total value of your cash + all items in your inventory.\n- **Rankings:** Your position on the global wealth leaderboard.\n- **Experience:** Your current level and XP progression.",
-            "leaderboard": "🌟 **Description:** The hall of fame! See who rules the server's economy.\n\n🏆 **Structure:**\n- Top rankings are based on **Net Worth** (Total Assets).\n- Special medals (🥇 🥈 🥉) are awarded to the Top 3 earners.\n- Updates in real-time as users gain or lose wealth.",
             "addmoney": "🌟 **Description:** Add any amount of coins to a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$addmoney @user <amount>`",
             "removemoney": "🌟 **Description:** Remove any amount of coins from a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$removemoney @user <amount>`",
             "additem": "🌟 **Description:** Grant items directly to a player's inventory. (Owner Only)\n\n🕹️ **Usage:**\n`$additem @user <item_id> [quantity]`",
@@ -1123,7 +1127,11 @@
             "avatar": "🌟 **Description:** View your own or another user's avatar in full size.\n\n🕹️ **Usage:**\n- `$avatar [@user]`",
             "language": "🌟 **Description:** Change the bot's display language (vi/en).\n\n🕹️ **Usage:**\n- `$language <vi|en>`: Update your personal setting.\n- `$language server <vi|en>`: Update the server-wide default (Admin only).",
             "serverinfo": "🌟 **Description:** View a comprehensive overview of this Discord server.\n\n🕹️ **Usage:**\n- `$serverinfo`",
-            "userinfo": "🌟 **Description:** View detailed information about a user (Join date, roles, etc.).\n\n🕹️ **Usage:**\n- `$userinfo [@user]`"
+            "userinfo": "🌟 **Description:** View detailed information about a user (Join date, roles, etc.).\n\n🕹️ **Usage:**\n- `$userinfo [@user]`",
+            "coinflip": "🌟 **Description:** Test your luck with a coin flip to double your bet!\n\n🕹️ **Usage:**\n- `$coinflip <amount> <heads|tails>`\n- `$cf <amount> <h|t>`",
+            "dice": "🌟 **Description:** Roll the dice and bet on the outcome (1-6)!\n\n🕹️ **Usage:**\n- `$dice <amount> <1-6>`\n- `$roll <amount> <1-6>`",
+            "rank": "🌟 **Description:** The global leaderboard for ranking players!\n\n⚙️ **Modes:**\n- Experience (XP): Default ranking.\n- Wealth (Balance): Toggle via menu.\n- Career: Filter by specific job categories.",
+            "setexp": "🌟 **Description:** Adjust a player's experience points directly. (Admin Only)\n\n🕹️ **Usage:**\n`$setexp @user <amount>`"
         }
     },
     "iteminfo": {

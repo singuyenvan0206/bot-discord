@@ -654,12 +654,6 @@
         "fail": "❌ Không thể xóa vật phẩm khỏi túi đồ của bạn.",
         "success": "✅ Bạn đã bán **{{quantity}}x {{item}}** và nhận được **{{price}}** coins! {{emoji}} (Hoàn tiền {{percent}}%)"
     },
-    "leaderboard": {
-        "title": "🏆 Bảng Xếp Hạng Đại Gia: {{server}}",
-        "empty": "*Chưa có dữ liệu cho máy chủ này.*",
-        "footer": "Tổng Tài Sản (Ví + Túi đồ)",
-        "you": " ⬅️ **Bạn**"
-    },
     "transfer": {
         "mention": "❌ Vui lòng nhắc tên (@mention) người bạn muốn chuyển tiền.",
         "invalid": "❌ Vui lòng nhập số tiền hợp lệ.",
@@ -1029,20 +1023,20 @@
             }
         },
         "descriptions": {
-            "poker": "Chơi Texas Hold'em Poker cùng bạn bè hoặc Bot!",
-            "blackjack": "Thử vận may với trò chơi bài Blackjack (21 điểm).",
-            "slots": "Quay máy hũ để nhận những phần thưởng giá trị.",
-            "coinflip": "Tung đồng xu đặt cược 50/50.",
-            "dice": "Đổ xúc xắc và đặt cược vào kết quả.",
-            "rps": "Trò chơi Kéo-Búa-Bao kinh điển.",
-            "tictactoe": "Cờ Ca-rô 3x3 đối kháng.",
-            "connect4": "Xếp 4 quân cờ cùng màu thành hàng.",
-            "memory": "Tìm các cặp hình giống nhau để ghi điểm.",
-            "minesweeper": "Dò mìn và nhân số tiền thưởng.",
-            "emojiquiz": "Đoán tên phim, đồ vật qua biểu tượng cảm xúc.",
-            "trivia": "Trả lời các câu hỏi kiến thức trắc nghiệm.",
-            "hangman": "Đoán từ ẩn để giải cứu hình nhân.",
-            "wordchain": "Nối chữ tiếng Anh theo chuỗi.",
+            "poker": "Chơi Poker Texas Hold'em đỉnh cao.",
+            "blackjack": "Chơi bài Xì Dách (Blackjack) đối kháng.",
+            "slots": "Quay hũ thử vận may đổi đời.",
+            "coinflip": "Tung đồng xu cá cược may rủi.",
+            "dice": "Đổ xúc xắc cá cược.",
+            "rps": "Trò chơi Kéo Búa Bao.",
+            "tictactoe": "Chơi cờ ca-rô 3x3 chiến thuật.",
+            "connect4": "Chơi cờ Connect4 (4 hàng) với người khác.",
+            "memory": "Thử thách trí nhớ tìm cặp hình giống nhau.",
+            "minesweeper": "Dò mìn cá cược mạo hiểm.",
+            "emojiquiz": "Đoán nghĩa cụm từ qua biểu tượng cảm xúc.",
+            "trivia": "Trả lời câu hỏi kiến thức đa lĩnh vực.",
+            "hangman": "Trò chơi đoán chữ Người treo cổ kinh điển.",
+            "wordchain": "Trò chơi nối chữ tiếng Anh.",
             "scramble": "Sắp xếp lại các chữ cái bị xáo trộn.",
             "guess": "Đoán con số may mắn từ 1 đến 100.",
             "reaction": "Kiểm tra tốc độ phản xạ của bạn.",
@@ -1064,7 +1058,6 @@
             "iteminfo": "Xem thông tin chi tiết vật phẩm.",
             "transfer": "Chuyển tiền cho người chơi khác.",
             "use": "Sử dụng vật phẩm trong kho đồ.",
-            "leaderboard": "Bảng xếp hạng đại gia máy chủ.",
             "rank": "Bảng xếp hạng cấp độ và kinh nghiệm.",
             "profile": "Xem hồ sơ và chỉ số cá nhân.",
             "ping": "Kiểm tra độ trễ mạng của Bot.",
@@ -1076,7 +1069,16 @@
             "userinfo": "Xem thông tin chi tiết người dùng.",
             "serverlist": "Danh sách máy chủ bot đang tham gia. (Owner)",
             "leaveserver": "Rời khỏi một máy chủ cụ thể. (Owner)",
-            "setstatus": "Thay đổi trạng thái hoạt động của Bot. (Owner)"
+            "setstatus": "Thay đổi trạng thái hoạt động của Bot. (Owner)",
+            "additem": "Thêm vật phẩm vào kho đồ người chơi. (Owner)",
+            "addmoney": "Thêm tiền vào tài khoản người chơi. (Owner)",
+            "removeitem": "Thu hồi vật phẩm từ người chơi. (Owner)",
+            "removemoney": "Trừ tiền từ người chơi. (Owner)",
+            "resetuser": "Xóa sạch dữ liệu một người chơi. (Owner)",
+            "setexp": "Đặt điểm kinh nghiệm cho người chơi. (Owner)",
+            "setlevel": "Đặt cấp độ cho người chơi. (Owner)",
+            "setowner": "Chuyển quyền sở hữu bot. (Owner)",
+            "shutdown": "Tắt bot an toàn. (Owner)"
         },
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
@@ -1102,7 +1104,6 @@
             "rob": "🌟 **Mô tả:** Đột nhập và trộm tiền của người dùng khác.\n\n⚠️ **Rủi ro:**\n- Nếu thất bại, bạn sẽ phải nộp phạt và bồi thường 20% số dư của mình cho nạn nhân.\n\n💰 **Phần thưởng:** Cướp được một phần tài sản của người khác.",
             "slut": "🌟 **Mô tả:** Đi khách để kiếm thêm thu nhập.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công 60%.\n- Nếu thất bại, bạn sẽ mất một khoản tiền thuốc men cố định.\n\n💰 **Phần thưởng:** Tiền thưởng ở mức trung bình, cân bằng giữa rủi ro và lợi nhuận.",
             "profile": "🌟 **Mô tả:** Hộ chiếu số của bạn! Xem chi tiết tiến trình và sự giàu có của bất kỳ ai.\n\n📊 **Thông số chi tiết:**\n- **Số dư ví:** Tiền mặt bạn đang có.\n- **Tổng tài sản (Net Worth):** Tổng giá trị tiền mặt + toàn bộ vật phẩm trong kho đồ.\n- **Thứ hạng:** Vị trí của bạn trên bảng xếp hạng giàu có toàn cầu.\n- **Kinh nghiệm:** Cấp độ hiện tại và tiến trình điểm để lên cấp.",
-            "leaderboard": "🌟 **Mô tả:** Bảng vàng danh dự! Xem ai đang thống trị nền kinh tế của máy chủ.\n\n🏆 **Cấu trúc:**\n- Xếp hạng dựa trên **Tổng tài sản (Net Worth)**.\n- Huy chương đặc biệt (🥇 🥈 🥉) cho Top 3 người giàu nhất.\n- Cập nhật thời gian thực khi người dùng tăng hoặc giảm tài sản.",
             "addmoney": "🌟 **Mô tả:** Thêm số tiền tùy ý vào tài khoản của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$addmoney @user <số_tiền>`",
             "removemoney": "🌟 **Mô tả:** Trừ số tiền tùy ý khỏi tài khoản của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$removemoney @user <số_tiền>`",
             "additem": "🌟 **Mô tả:** Thêm vật phẩm vào kho đồ của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$additem @user <ID_vật_phẩm> [số_lượng]`",
@@ -1124,7 +1125,14 @@
             "avatar": "🌟 **Mô tả:** Xem ảnh đại diện của bạn hoặc người dùng khác ở kích thước lớn.\n\n🕹️ **Cách dùng:**\n- `$avatar [@user]`",
             "language": "🌟 **Mô tả:** Thay đổi ngôn ngữ hiển thị của Bot (vi/en).\n\n🕹️ **Cách dùng:**\n- `$language <vi|en>`: Đổi ngôn ngữ cá nhân.\n- `$language server <vi|en>`: Đổi ngôn ngữ toàn máy chủ (Admin).",
             "serverinfo": "🌟 **Mô tả:** Xem thông tin tổng quan về máy chủ Discord này.\n\n🕹️ **Cách dùng:**\n- `$serverinfo`",
-            "userinfo": "🌟 **Mô tả:** Xem thông tin chi tiết về một người dùng (Ngày tham gia, vai trò...).\n\n🕹️ **Cách dùng:**\n- `$userinfo [@user]`"
+            "userinfo": "🌟 **Mô tả:** Xem thông tin chi tiết về một người dùng (Ngày tham gia, vai trò...).\n\n🕹️ **Cách dùng:**\n- `$userinfo [@user]`",
+            "coinflip": "🌟 **Mô tả:** Tung đồng xu may rủi để nhân đôi số tiền cược của bạn!\n\n🕹️ **Cách dùng:**\n- `$coinflip <số_tiền> <heads|tails>`\n- `$cf <số_tiền> <h|t>`",
+            "dice": "🌟 **Mô tả:** Đổ xúc xắc và đặt cược vào kết quả!\n\n🕹️ **Cách dùng:**\n- `$dice <số_tiền> <1-6>`\n- `$roll <số_tiền> <1-6>`",
+            "rank": "🌟 **Mô tả:** Bảng vàng vinh danh những người chơi xuất sắc nhất!\n\n⚙️ **Chế độ:**\n- Cấp độ (XP): Mặc định.\n- Tiền tệ (Balance): Chuyển đổi qua menu.\n- Nghề nghiệp: Lọc bảng xếp hạng theo từng nghề cụ thể.",
+            "setexp": "🌟 **Mô tả:** Điều chỉnh điểm kinh nghiệm của người chơi. (Admin Only)\n\n🕹️ **Cách dùng:**\n`$setexp @user <số_xp>`",
+            "serverlist": "🌟 **Mô tả:** Xem danh sách toàn bộ máy chủ Discord mà bot đang phục vụ. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$serverlist`",
+            "leaveserver": "🌟 **Mô tả:** Yêu cầu bot rời khỏi một máy chủ cụ thể bằng ID. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$leaveserver <id_server>`",
+            "setstatus": "🌟 **Mô tả:** Cập nhật trạng thái hiển thị (Activity) của bot. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$setstatus <type> <nội_dung>`\n(Các loại: playing, watching, listening, streaming, competing)"
         }
     },
     "iteminfo": {
