@@ -988,7 +988,13 @@
             "Criminals have a better chance to escape the police when equipped with Sneakers.",
             "Hackers can double their crime rewards if they use a Laptop.",
             "You can use `$iteminfo <id>` to see exactly what an item does before buying.",
-            "Transfer coins to friends with `$tf @user <amount>`."
+            "Transfer coins to friends with `$tf @user <amount>`.",
+            "Reach Level 20 to be automatically assigned a profession with unique perks!",
+            "Use a 'Career Change Voucher' to reset your job and pick a new path with the `$job set` command.",
+            "Leveling is now 3x faster! Stay active in chat and work hard to climb the ranks.",
+            "The 'Summary' button in `$inventory` shows your total assets and all active buffs at a glance.",
+            "Use category buttons in `$inventory` to quickly filter between tools, income boosters, or lucky charms.",
+            "Check your Level 20 announcement for a cool fun fact about your newly assigned career!"
         ],
         "footer_all": "Type {{prefix}}help to see all categories",
         "menu_title": "{{emoji}} Bot Guide Menu",
