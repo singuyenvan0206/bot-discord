@@ -51,7 +51,7 @@ module.exports = {
         WORK_COOLDOWN: 3600, // 1 hour in seconds
         DAILY_COOLDOWN: 86400, // 24 hours in seconds
         DAILY_REWARD: 500,
-        FISH_COOLDOWN: 60,
+        FISH_COOLDOWN: 15,
         SELL_RECOVERY: 0.7, // 70% return
         MIN_WORK_EARNINGS: 100,
         MAX_WORK_EARNINGS: 300,
