@@ -83,6 +83,9 @@ Full-featured giveaway management with clickable buttons. Requires `Manage Messa
 
 All games feature interactive button-based UIs and rich embeds. Many support **coin betting** — win to grow your wealth!
 
+> [!NOTE]
+> **Manual Cooldowns:** For most games, the cooldown timer starts *after* the game concludes, rather than when the command is first issued. This ensures fair play and prevents spamming during active game sessions.
+
 ### 🃏 Card & Casino Games
 
 | Command | Aliases | Description |
@@ -127,14 +130,28 @@ Earn, spend, and compete. All data flawlessly persists across restarts.
 | `$profile` | `$p`, `$prof` | Comprehensive overview: Wallet, Level, Ranking, Total Net Worth, and Collection. |
 | `$daily` | `$d`, `$dy` | Claim daily rewards. Boosted by items like Smartphones & Mansions! |
 | `$work` | `$w`, `$wk` | Work a job (Programmer, Chef, Doctor...) for hourly income! |
+| `$job` | `$j` | Set or view your current career to earn specialized bonuses. |
+| `$beg` | — | Beg for coins. A quick way to get some pocket change! |
+| `$search` | — | Search various locations (Bus, Trash, Bed) for hidden loot. |
+| `$crime` | — | High-risk, high-reward! Commit a crime for massive gains or heavy fines. |
+| `$slut` | — | Similar to crime, but with different success rates and payouts. |
+| `$rob` | — | Risk your reputation to steal coins from another user! |
 | `$fish` | `$fishing` | The fishing minigame! Requires Rod & Bait to catch common and legendary sea creatures. |
 | `$shop` | `$sh`, `$store` | Browse the item shop by category (Tools, Baits, Income, Daily, Gamble). |
 | `$buy` | `$b` | Buy an item (e.g. `$buy 13` or `$buy laptop`) |
 | `$sell` | `$s` | Sell items back to the shop for a 70% refund. |
-| `$inventory` | `$inv` | View your sorted inventory, total items, and absolute property value (`Net Worth`). |
+| `$use` | — | Use a consumable item from your inventory to trigger its effects. |
 | `$iteminfo` | `$item`, `$info`| Read detailed lore, multiplier stats, and pricing for any specific item! |
+| `$inventory` | `$inv` | View your sorted inventory, total items, and absolute property value (`Net Worth`). |
 | `$transfer` | `$pay`, `$tf` | Send coins seamlessly to another user. |
 | `$leaderboard` | `$lb`, `$top` | Global server ranking based strictly on accurate **Net Worth** (Wallet + Inventory). |
+
+### 💸 Money Shorthand
+Simsimi supports shorthand for betting and economy inputs to save you time.
+- `k` — Thousands (e.g., `$bj 5k` = 5,000)
+- `m` — Millions (e.g., `$bj 2m` = 2,000,000)
+- `b` — Billions (e.g., `$bj 1b` = 1,000,000,000)
+- `all` — Your entire wallet balance (e.g., `$cf all`)
 
 ---
 
@@ -219,9 +236,10 @@ bot-discord/
 │   ├── commands/
 │   │   ├── giveaway.js        # Giveaway subsystem
 │   │   ├── help.js            # Unified dynamic help generator
-│   │   ├── fun/               # 18+ game implementations
+│   │   ├── fun/               # 17+ game implementations
 │   │   ├── economy/           # Economy features (Shop, Fish, Work, Profile, Inventory)
-│   │   └── utility/           # Core platform status and inspection tools (Language, Ping, Info)
+│   │   ├── utility/           # Core platform status and inspection tools (Language, Ping, Info)
+│   │   └── owner/             # (Restricted) Administrative & debug tools for bot owners
 │   └── utils/
 │       ├── i18n.js            # Internationalization dynamic fallback engine
 │       ├── economy.js         # Parsing and Net-Worth recalculation algorithms
