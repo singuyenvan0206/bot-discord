@@ -67,5 +67,5 @@ module.exports = [
     // ==========================================
     { id: 501, name: 'XP Boost Potion', price: 5000, multiplier: 0, duration: 86400, type: 'xpboost' },
     { id: 502, name: 'Shield of Protection', price: 10000, multiplier: 0, duration: 86400, type: 'robshield' },
-    { id: 503, name: 'Career Change Voucher', price: 50000, multiplier: 0, type: 'other' },
+    { id: 503, name: 'Career Change Voucher', price: 200000, multiplier: 0, type: 'other' },
 ];
