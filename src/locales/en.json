@@ -12,6 +12,10 @@
         "opponent_insufficient_funds": "❌ {{opponent}} does not have enough coins! Their balance: **{{balance}}**",
         "requested_by": "Requested by {{user}}"
     },
+    "economy": {
+        "item_bonus": "\n🎁 **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
+        "item_bonus_short": "\n🎁 **Item Bonus:** +{{amount}} coins!"
+    },
     "rank": {
         "leaderboard_title": "🏆 Level Leaderboard - {{server}}",
         "leaderboard_job_title": "🏆 {{job}} Leaderboard - {{server}}",
@@ -165,7 +169,9 @@
                 "Hollywood Superstar",
                 "Space Explorer"
             ]
-        }
+        },
+        "viral": "\n🚀 **Going Viral!** Your stream reached the front page! Reward multiplied by **5x**!",
+        "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **2.5x**!"
     },
     "crime": {
         "cooldown": "❌ You are being watched by the police! Wait **{{hours}}h {{minutes}}m** before your next heist.",
@@ -178,7 +184,9 @@
             "trafficked contraband",
             "pickpocketed a tourist",
             "manipulated the stock market"
-        ]
+        ],
+        "hacker_hacked": "\n💻 **Hacked!** Your expert skills doubled the total reward!",
+        "criminal_escaped": "\n👟 **Escaped!** You outran the police using your gear. Fine reduced to **{{amount}}** coins!"
     },
     "beg": {
         "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
@@ -210,7 +218,10 @@
         "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
         "no_money_self": "❌ You need at least **100 coins** in your wallet to cover potential fines!",
         "invalid_user": "❌ You can't rob yourself!",
-        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
+        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
+        "thief_edge": "\n💨 **Thief's Edge:** +{{amount}} coins from your gear!",
+        "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
+        "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder."
     },
     "job": {
         "title": "Job System",
@@ -235,7 +246,18 @@
         "choose_button": "Choose Career 💼",
         "select_placeholder": "Select your career path...",
         "police_notification": "👮 **On Duty:** You caught a criminal and received **{{amount}}** coins in fines! 💰",
-        "doctor_notification": "👨‍⚕️ **Hospital:** A patient has just been admitted! You received **{{amount}}** coins in medical fees. 🏥"
+        "doctor_notification": "👨‍⚕️ **Hospital:** A patient has just been admitted! You received **{{amount}}** coins in medical fees. 🏥",
+        "dm_disabled_random": "📬 Since your DMs are off, I've assigned you a random job: **{{job}}**! (Use {{prefix}}job me to check)",
+        "detail_usage": "❌ Please provide a job name. Usage: `{{prefix}}jobdetail <job_name>`",
+        "job_details": {
+            "police": "👮 **Police**: Protect the city and arrest criminals. You receive a portion of the fines collected from them.\n✨ **Perk**: Receive random fine collection notifications.",
+            "criminal": "🥷 **Criminal**: Live outside the law with expert theft skills.\n✨ **Perk**: Increased success rate and rewards when using `rob` and `crime` commands.",
+            "doctor": "👨‍⚕️ **Doctor**: Save lives and care for public health.\n✨ **Perk**: Receive random medical fees and 50% reduced penalties/medical bills on failures.",
+            "programmer": "💻 **Programmer**: Build the digital world.\n✨ **Perk**: Very high base salary and larger bonuses when using Work (`work`).",
+            "farmer": "👨‍🌾 **Farmer**: Stable career close to nature.\n✨ **Perk**: Increases **Luck by 50%** from gear, 15% **Trophy Catch** rate, 10% **Bumper Crop** rate (2.5x rewards), and 25% **Bait Salvage** rate.",
+            "hacker": "👨‍💻 **Hacker**: Expert at data exploitation.\n✨ **Perk**: Earn significantly more money from Scavenging (`search`) and Heists (`crime`).",
+            "streamer": "🎥 **Streamer**: Star of the online community.\n✨ **Perk**: Receive random Donations from fans every time you use Work (`work`)."
+        }
     },
     "slut": {
         "cooldown": "❌ You need to rest and recover! Come back in **{{hours}}h {{minutes}}m**.",
@@ -264,6 +286,8 @@
         "bonus_percent": "✨ +{{amount}} ({{percent}}%)",
         "footer_success": "Bait used: -1 {{bait}}",
         "footer_fail": "Better luck next time! (-1 Bait)",
+        "bait_salvaged": "\n♻️ **Bait Salvaged!** Your farming skills helped you reuse the bait.",
+        "trophy_catch": "\n🏆 **Trophy Catch!** Your expertise helped you land a massive specimen! (3x value)",
         "items": {
             "old_boot": "Old Boot",
             "rusty_can": "Rusty Can",
@@ -285,7 +309,7 @@
     "items": {
         "1": {
             "name": "🍪 Cookie",
-            "desc": "Sugar rush! (+1% Daily Bonus)"
+            "desc": "Sugar rush! (+5% Extra Bonus | 1 day)"
         },
         "2": {
             "name": "🪱 Worm Bait",
@@ -301,27 +325,27 @@
         },
         "5": {
             "name": "📱 Smartphone",
-            "desc": "Stay connected (+5% Daily Bonus)"
+            "desc": "Stay connected (+10% Extra Bonus | 7 days)"
         },
         "6": {
             "name": "🛡️ Shield",
-            "desc": "Protects 50% bet in Minesweeper! (+3% Daily)"
+            "desc": "Protects 50% bet in Minesweeper! (+5% Extra Bonus | 7 days)"
         },
         "7": {
             "name": "⚔️ Knight Sword",
-            "desc": "Become a mercenary (+5% Work Income)"
+            "desc": "Become a mercenary (+15% Income | 7 days)"
         },
         "8": {
             "name": "🛋️ Lava Lamp",
-            "desc": "Chill vibes (+2% Daily)"
+            "desc": "Chill vibes (+8% Extra Bonus | 7 days)"
         },
         "9": {
             "name": "🎲 Golden Dice",
-            "desc": "Roll high (+2% Gamble)"
+            "desc": "Roll high (+10% Gamble | 7 days)"
         },
         "10": {
             "name": "👟 Sneakers",
-            "desc": "Run faster (+2% Work)"
+            "desc": "Run faster (+12% Income | 7 days)"
         },
         "11": {
             "name": "🎣 Bamboo Rod (Tier 1)",
@@ -329,59 +353,59 @@
         },
         "12": {
             "name": "⛏️ Pickaxe",
-            "desc": "Dig for treasure! (+5% Income)"
+            "desc": "Dig for treasure! (+15% Income | 7 days)"
         },
         "13": {
             "name": "⌨️ RGB Keyboard",
-            "desc": "Clicky keys (+3% Work)"
+            "desc": "Clicky keys (+10% Income | 7 days)"
         },
         "14": {
             "name": "🖱️ Gaming Mouse",
-            "desc": "Precise clicks (+3% Work)"
+            "desc": "Precise clicks (+10% Income | 7 days)"
         },
         "15": {
             "name": "🧸 Shag Rug",
-            "desc": "Soft on the feet (+4% Daily)"
+            "desc": "Soft on the feet (+15% Extra Bonus | 7 days)"
         },
         "16": {
             "name": "🃏 Marked Deck",
-            "desc": "Know when to fold (+4% Gamble)"
+            "desc": "Know when to fold (+20% Gamble | 7 days)"
         },
         "17": {
             "name": "🖥️ 4K Monitor",
-            "desc": "Clear vision (+5% Work)"
+            "desc": "Clear vision (+20% Income | 7 days)"
         },
         "18": {
             "name": "💻 Laptop",
-            "desc": "Work harder! (+10% Income)"
+            "desc": "Work harder! (+30% Income | 30 days)"
         },
         "19": {
             "name": "💍 Gold Ring",
-            "desc": "Shiny and precious (+5% Gamble Win)"
+            "desc": "Shiny and precious (+15% Gamble | 30 days)"
         },
         "20": {
             "name": "🎨 Abstract Painting",
-            "desc": "Classy decoration (+6% Daily)"
+            "desc": "Classy decoration (+20% Extra Bonus | 30 days)"
         },
         "21": {
             "name": "🪙 Clay Chips",
-            "desc": "Pro feel (+6% Gamble)"
+            "desc": "Pro feel (+20% Gamble | 30 days)"
         },
         "22": {
             "name": "🪑 Standing Desk",
-            "desc": "Better posture (+7% Work)"
+            "desc": "Better posture (+25% Income | 30 days)"
         },
         "23": {
             "name": "🍀 4-Leaf Clover",
-            "desc": "Feeling lucky? (+7% Gamble Win)"
+            "desc": "Feeling lucky? (+30% Gamble | 30 days)"
         },
         "24": {
             "name": "💺 Ergonomic Chair",
-            "desc": "Sit comfortably (+9% Work)"
+            "desc": "Sit comfortably (+35% Income | 30 days)"
         },
         "25": {
             "name": "👔 Business Suit",
-            "desc": "Look professional (+20% Income)"
+            "desc": "Look professional (+40% Income | 30 days)"
         },
         "26": {
             "name": "🎣 Fiberglass Rod (Tier 2)",
@@ -389,19 +413,19 @@
         },
         "27": {
             "name": "⌚ Rolex",
-            "desc": "Time is money (+10% Gamble Win)"
+            "desc": "Time is money (+30% Gamble | 30 days)"
         },
         "28": {
             "name": "🗿 Moai Statue",
-            "desc": "Steady as a rock (+12% Daily)"
+            "desc": "Steady as a rock (+35% Extra Bonus | 30 days)"
         },
         "29": {
             "name": "🐴 Golden Horseshoe",
-            "desc": "Pure luck (+25% Gamble)"
+            "desc": "Pure luck (+50% Gamble | 30 days)"
         },
         "30": {
             "name": "🎫 VIP Golden Ticket",
-            "desc": "VIP perks (+50% Daily Bonus)"
+            "desc": "VIP perks (+100% Extra Bonus | 30 days)"
         },
         "31": {
             "name": "🎣 Carbon Rod (Tier 3)",
@@ -409,23 +433,23 @@
         },
         "32": {
             "name": "🏎️ Supercar",
-            "desc": "Zoom zoom! (+25% Income)"
+            "desc": "Zoom zoom! (+80% Income | 30 days)"
         },
         "33": {
             "name": "🏰 Mansion",
-            "desc": "High life (+100% Daily Bonus)"
+            "desc": "High life (+200% Extra Bonus | 30 days)"
         },
         "34": {
             "name": "🛥️ Superyacht",
-            "desc": "Ocean office (+50% Income)"
+            "desc": "Ocean office (+300% Income | 30 days)"
         },
         "35": {
             "name": "🚀 Space Station",
-            "desc": "Orbital rewards (+200% Daily Bonus)"
+            "desc": "Orbital rewards (+500% Extra Bonus | 30 days)"
         },
         "36": {
             "name": "⏳ Time Machine",
-            "desc": "Rewrite history (+50% Gamble Win)"
+            "desc": "Rewrite history (+1000% Gamble | 30 days)"
         },
         "37": {
             "name": "🎟️ Career Change Voucher",

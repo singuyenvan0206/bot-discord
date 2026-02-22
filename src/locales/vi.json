@@ -12,6 +12,10 @@
         "opponent_insufficient_funds": "❌ {{opponent}} không đủ tiền! Số dư của họ: **{{balance}}**",
         "requested_by": "Yêu cầu bởi {{user}}"
     },
+    "economy": {
+        "item_bonus": "\n🎁 **Thưởng Vật phẩm:** +{{amount}} coins ({{percent}}%)!",
+        "item_bonus_short": "\n🎁 **Thưởng Vật phẩm:** +{{amount}} coins!"
+    },
     "rank": {
         "leaderboard_title": "🏆 Bảng Xếp Hạng Cấp Độ - {{server}}",
         "leaderboard_job_title": "🏆 Bảng Xếp Hạng {{job}} - {{server}}",
@@ -221,7 +225,9 @@
                 "Siêu sao Hollywood",
                 "Nhà thám hiểm vũ trụ"
             ]
-        }
+        },
+        "viral": "\n🚀 **Lên xu hướng!** Buổi stream của bạn đã lọt vào trang chủ! Phần thưởng nhân **5x**!",
+        "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!"
     },
     "crime": {
         "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{hours}} giờ {{minutes}} phút** nữa để thực hiện phi vụ tiếp theo.",
@@ -234,7 +240,9 @@
             "buôn bán đồ lậu",
             "móc túi khách du lịch",
             "thao túng thị trường chứng khoán"
-        ]
+        ],
+        "hacker_hacked": "\n💻 **Đã Hack!** Kỹ năng chuyên gia của bạn đã nhân đôi tổng phần thưởng!",
+        "criminal_escaped": "\n👟 **Đã tẩu thoát!** Bạn đã cắt đuôi cảnh sát nhờ trang bị của mình. Tiền phạt giảm còn **{{amount}}** coins!"
     },
     "beg": {
         "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
@@ -266,7 +274,10 @@
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
         "no_money_self": "❌ Bạn cần ít nhất **100 coins** trong ví để làm vốn nếu chẳng may bị bắt!",
         "invalid_user": "❌ Bạn không thể tự trộm chính mình!",
-        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!"
+        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!",
+        "thief_edge": "\n💨 **Lợi thế trộm cướp:** +{{amount}} coins từ trang bị của bạn!",
+        "police_busted": "\n👮 **Bị tóm!** Bạn định trộm của cảnh sát và phải nộp phạt gấp đôi!",
+        "shield_blocked": "\n🛡️ **Bị chặn!** Khiên của nạn nhân khiến việc trộm cướp khó khăn hơn nhiều."
     },
     "job": {
         "title": "Hệ Thống Nghề Nghiệp",
@@ -291,7 +302,18 @@
         "choose_button": "Chọn Nghề Nghiệp 💼",
         "select_placeholder": "Chọn sự nghiệp của bạn...",
         "police_notification": "👮 **Trực ban:** Bạn vừa bắt được một tên tội phạm và nhận được **{{amount}}** coins tiền phạt! 💰",
-        "doctor_notification": "👨‍⚕️ **Bệnh viện:** Một bệnh nhân vừa nhập viện! Bạn nhận được **{{amount}}** coins phí điều trị. 🏥"
+        "doctor_notification": "👨‍⚕️ **Bệnh viện:** Một bệnh nhân vừa nhập viện! Bạn nhận được **{{amount}}** coins phí điều trị. 🏥",
+        "dm_disabled_random": "📬 Vì DM của bạn đang tắt, tôi đã gán cho bạn nghề ngẫu nhiên: **{{job}}**! (Dùng {{prefix}}job me để xem)",
+        "detail_usage": "❌ Vui lòng cung cấp tên nghề. Cách dùng: `{{prefix}}jobdetail <tên_nghề>`",
+        "job_details": {
+            "police": "👮 **Cảnh sát**: Bảo vệ thành phố và bắt giữ tội phạm. Khi tội phạm bị bắt, bạn sẽ nhận được một phần tiền phạt từ chúng.\n✨ **Đặc quyền**: Nhận thông báo thu tiền phạt ngẫu nhiên.",
+            "criminal": "🥷 **Tội phạm**: Sống ngoài vòng pháp luật với kỹ năng trộm cắp điêu luyện.\n✨ **Đặc quyền**: Tăng tỷ lệ thành công và số tiền nhận được khi thực hiện các lệnh `rob` và `crime`.",
+            "doctor": "👨‍⚕️ **Bác sĩ**: Cứu người và chăm sóc sức khỏe cộng đồng.\n✨ **Đặc quyền**: Nhận phí điều trị ngẫu nhiên và giảm 50% tiền phạt/viện phí khi thất bại trong các hoạt động rủi ro.",
+            "programmer": "💻 **Lập trình viên**: Sáng tạo trong thế giới số.\n✨ **Đặc quyền**: Mức lương cơ bản rất cao và nhận thưởng lớn hơn khi Làm việc (`work`).",
+            "farmer": "👨‍🌾 **Nông dân**: Nghề nghiệp ổn định và gần gũi thiên nhiên.\n✨ **Đặc quyền**: Tăng thêm **50% May mắn** từ trang bị, 15% tỷ lệ **Cá Khổng Lồ**, 10% tỷ lệ **Mùa màng bội thu** (2.5x tiền) và 25% tỷ lệ **Giữ lại mồi**.",
+            "hacker": "👨‍💻 **Hacker**: Chuyên gia khai thác dữ liệu.\n✨ **Đặc quyền**: Nhận thêm nhiều tiền hơn khi Lục lọi (`search`) và thực hiện Phi vụ (`crime`).",
+            "streamer": "🎥 **Streamer**: Ngôi sao của cộng đồng mạng.\n✨ **Đặc quyền**: Nhận thêm tiền Donate ngẫu nhiên từ người hâm mộ mỗi khi Làm việc (`work`)."
+        }
     },
     "slut": {
         "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{hours}} giờ {{minutes}} phút**.",
@@ -320,6 +342,8 @@
         "bonus_percent": "✨ +{{amount}} ({{percent}}%)",
         "footer_success": "Mồi đã dùng: -1 {{bait}}",
         "footer_fail": "Chúc bạn may mắn lần sau! (-1 Mồi câu)",
+        "bait_salvaged": "\n♻️ **Tiết kiệm mồi!** Kỹ năng nông dân giúp bạn tái sử dụng mồi câu.",
+        "trophy_catch": "\n🏆 **Cá Khổng Lồ!** Kinh nghiệm của bạn giúp bạn bắt được một mẫu vật khổng lồ! (3x giá trị)",
         "items": {
             "old_boot": "Chiếc Ủng Cũ",
             "rusty_can": "Vỏ Lon Gỉ",
@@ -341,7 +365,7 @@
     "items": {
         "1": {
             "name": "🍪 Bánh Quy",
-            "desc": "Bổ sung đường! (+1% Thưởng Hàng Ngày)"
+            "desc": "Bổ sung đường! (+5% Thưởng Thêm | 1 ngày)"
         },
         "2": {
             "name": "🪱 Mồi Giun",
@@ -357,27 +381,27 @@
         },
         "5": {
             "name": "📱 Điện Thoại",
-            "desc": "Luôn kết nối (+5% Thưởng Hàng Ngày)"
+            "desc": "Luôn kết nối (+10% Thưởng Thêm | 7 ngày)"
         },
         "6": {
             "name": "🛡️ Khiên Bảo Vệ",
-            "desc": "Bảo vệ 50% tiền cược trong Dò Mìn! (+3% Daily)"
+            "desc": "Bảo vệ 50% tiền cược trong Dò Mìn! (+5% Thưởng Thêm | 7 ngày)"
         },
         "7": {
             "name": "⚔️ Kiếm Hiệp Sĩ",
-            "desc": "Trở thành lính đánh mercenary (+5% Thu Nhập Làm Việc)"
+            "desc": "Trở thành lính đánh thuê (+15% Thu Nhập | 7 ngày)"
         },
         "8": {
             "name": "🛋️ Đèn Dung Nham",
-            "desc": "Cảm giác thư thái (+2% Daily)"
+            "desc": "Cảm giác thư thái (+8% Thưởng Thêm | 7 ngày)"
         },
         "9": {
             "name": "🎲 Xúc Xắc Vàng",
-            "desc": "Đổ số cao (+2% Gamble)"
+            "desc": "Đổ số cao (+10% Gamble | 7 ngày)"
         },
         "10": {
             "name": "👟 Giày Thể Thao",
-            "desc": "Chạy nhanh hơn (+2% Work)"
+            "desc": "Chạy nhanh hơn (+12% Thu Nhập | 7 ngày)"
         },
         "11": {
             "name": "🎣 Cần Tre (Bậc 1)",
@@ -385,59 +409,59 @@
         },
         "12": {
             "name": "⛏️ Cuốc Khai Thác",
-            "desc": "Đào tìm kho báu! (+5% Thu Nhập)"
+            "desc": "Đào tìm kho báu! (+15% Thu Nhập | 7 ngày)"
         },
         "13": {
             "name": "⌨️ Bàn Phím RGB",
-            "desc": "Gõ phím lạch cạch (+3% Work)"
+            "desc": "Gõ phím lạch cạch (+10% Thu Nhập | 7 ngày)"
         },
         "14": {
             "name": "🖱️ Chuột Gaming",
-            "desc": "Click chuột chính xác (+3% Work)"
+            "desc": "Click chuột chính xác (+10% Thu Nhập | 7 ngày)"
         },
         "15": {
             "name": "🧸 Thảm Lông",
-            "desc": "Mềm mại đôi chân (+4% Daily)"
+            "desc": "Mềm mại đôi chân (+15% Thưởng Thêm | 7 ngày)"
         },
         "16": {
             "name": "🃏 Bộ Bài Ám Hiệu",
-            "desc": "Biết khi nào nên theo (+4% Gamble)"
+            "desc": "Biết khi nào nên theo (+20% Gamble | 7 ngày)"
         },
         "17": {
             "name": "🖥️ Màn Hình 4K",
-            "desc": "Rõ nét từng chi tiết (+5% Work)"
+            "desc": "Rõ nét từng chi tiết (+20% Thu Nhập | 7 ngày)"
         },
         "18": {
             "name": "💻 Laptop",
-            "desc": "Làm việc chăm chỉ hơn! (+10% Thu Nhập)"
+            "desc": "Làm việc chăm chỉ hơn! (+30% Thu Nhập | 30 ngày)"
         },
         "19": {
             "name": "💍 Nhẫn Vàng",
-            "desc": "Sáng bóng và quý giá (+5% Gamble Win)"
+            "desc": "Sáng bóng và quý giá (+15% Gamble | 30 ngày)"
         },
         "20": {
             "name": "🎨 Tranh Trừu Tượng",
-            "desc": "Trang trí đẳng cấp (+6% Daily)"
+            "desc": "Trang trí đẳng cấp (+20% Thưởng Thêm | 30 ngày)"
         },
         "21": {
             "name": "🪙 Chip Đất Sét",
-            "desc": "Cảm giác chuyên nghiệp (+6% Gamble)"
+            "desc": "Cảm giác chuyên nghiệp (+20% Gamble | 30 ngày)"
         },
         "22": {
             "name": "🪑 Bàn Đứng",
-            "desc": "Tư thế tốt hơn (+7% Work)"
+            "desc": "Tư thế tốt hơn (+25% Thu Nhập | 30 ngày)"
         },
         "23": {
             "name": "🍀 Cỏ 4 Lá",
-            "desc": "Cảm thấy may mắn? (+7% Tiền Thắng Cược)"
+            "desc": "Cảm thấy may mắn? (+30% Gamble | 30 ngày)"
         },
         "24": {
             "name": "💺 Ghế Công Thái Học",
-            "desc": "Làm việc thoải mái (+9% Work)"
+            "desc": "Làm việc thoải mái (+35% Thu Nhập | 30 ngày)"
         },
         "25": {
             "name": "👔 Bộ Vest Công Sở",
-            "desc": "Trông chuyên nghiệp hơn (+20% Thu Nhập)"
+            "desc": "Trông chuyên nghiệp hơn (+40% Thu Nhập | 30 ngày)"
         },
         "26": {
             "name": "🎣 Cần Sợi Thủy Tinh (Bậc 2)",
@@ -445,19 +469,19 @@
         },
         "27": {
             "name": "⌚ Đồng Hồ Rolex",
-            "desc": "Thời gian là tiền bạc (+10% Gamble Win)"
+            "desc": "Thời gian là tiền bạc (+30% Gamble | 30 ngày)"
         },
         "28": {
             "name": "🗿 Tượng Đá",
-            "desc": "Vững như bàn thạch (+12% Daily)"
+            "desc": "Vững như bàn thạch (+35% Thưởng Thêm | 30 ngày)"
         },
         "29": {
             "name": "🐴 Móng Ngựa Vàng",
-            "desc": "May mắn thuần khiết (+25% Gamble)"
+            "desc": "May mắn thuần khiết (+50% Gamble | 30 ngày)"
         },
         "30": {
             "name": "🎫 Vé Vàng VIP",
-            "desc": "Đặc quyền VIP (+50% Thưởng Hàng Ngày)"
+            "desc": "Đặc quyền VIP (+100% Thưởng Thêm | 30 ngày)"
         },
         "31": {
             "name": "🎣 Cần Sợi Carbon (Bậc 3)",
@@ -465,23 +489,23 @@
         },
         "32": {
             "name": "🏎️ Siêu Xe",
-            "desc": "Vút bay trên đường! (+25% Income)"
+            "desc": "Vút bay trên đường! (+80% Thu Nhập | 30 ngày)"
         },
         "33": {
             "name": "🏰 Biệt Thự",
-            "desc": "Sống đời thượng lưu (+100% Thưởng Hàng Ngày)"
+            "desc": "Sống đời thượng lưu (+200% Thưởng Thêm | 30 ngày)"
         },
         "34": {
             "name": "🛥️ Siêu Du Thuyền",
-            "desc": "Văn phòng trên biển (+50% Thu Nhập)"
+            "desc": "Văn phòng trên biển (+300% Thu Nhập | 30 ngày)"
         },
         "35": {
             "name": "🚀 Trạm Không Gian",
-            "desc": "Phần thưởng từ quỹ đạo (+200% Thưởng Hàng Ngày)"
+            "desc": "Phần thưởng từ quỹ đạo (+500% Thưởng Thêm | 30 ngày)"
         },
         "36": {
             "name": "⏳ Cỗ Máy Thời Gian",
-            "desc": "Viết lại lịch sử (+50% Tiền Thắng Cược)"
+            "desc": "Viết lại lịch sử (+1000% Gamble | 30 ngày)"
         },
         "37": {
             "name": "🎟️ Thẻ Chuyển Nghề",

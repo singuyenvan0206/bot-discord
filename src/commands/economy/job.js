@@ -25,7 +25,7 @@ module.exports = {
                 desc += `${j.icon} **${j.id.charAt(0).toUpperCase() + j.id.slice(1)}**\n*${name}*\n\n`;
             });
 
-            embed.setDescription(t('job.list_desc', lang) + '\n\n' + desc);
+            embed.setDescription(t('job.list_desc', lang) + '\n\n' + desc + `\n💡 *Tip: ${lang === 'vi' ? 'Dùng `$jobdetail <tên_nghề>` để xem chi tiết.' : 'Use `$jobdetail <job_name>` for details.'}*`);
             return message.reply({ embeds: [embed] });
         }
 

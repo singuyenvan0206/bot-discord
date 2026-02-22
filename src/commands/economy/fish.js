@@ -116,10 +116,15 @@ module.exports = {
         const caughtName = t(`fish.items.${caughtItem.key}`, lang);
 
         // 6. Respond
+        let description = t('fish.description', lang, { rod: rodName, bait: baitName });
+        if (baitSaved) {
+            description += t('fish.bait_salvaged', lang);
+        }
+
         const embed = new EmbedBuilder()
             .setTitle(t('fish.title', lang))
             .setColor(caughtItem.value > 0 ? config.COLORS.INFO : config.COLORS.NEUTRAL)
-            .setDescription(t('fish.description', lang, { rod: rodName, bait: baitName }))
+            .setDescription(description)
             .addFields(
                 { name: t('fish.caught', lang), value: `${caughtItem.emoji} **${caughtName}**`, inline: true },
                 { name: t('fish.income', lang), value: `${config.EMOJIS.COIN} **+${caughtItem.value.toLocaleString()}**`, inline: true },
@@ -127,12 +132,26 @@ module.exports = {
             );
 
         if (caughtItem.value > 0) {
-            const { getUserMultiplier } = require('../../utils/multiplier');
+            const { getUserMultiplier, hasActiveItem } = require('../../utils/multiplier');
             const multiplier = getUserMultiplier(message.author.id, 'income');
-            const bonus = Math.floor(caughtItem.value * multiplier);
-            const totalValue = caughtItem.value + bonus;
+
+            let finalValue = caughtItem.value;
+            let trophyMsg = '';
+
+            // Farmer Interaction: Trophy Fish (15% chance for 3x value if using fiber/carbon rod)
+            if (user.job === 'farmer' && (hasActiveItem(message.author.id, 26) || hasActiveItem(message.author.id, 31)) && Math.random() < 0.15) {
+                finalValue *= 3;
+                trophyMsg = t('fish.trophy_catch', lang);
+            }
+
+            const bonus = Math.floor(finalValue * multiplier);
+            const totalValue = finalValue + bonus;
 
             db.addBalance(message.author.id, totalValue);
+
+            if (trophyMsg) {
+                embed.addFields({ name: '🏆 Achievement', value: trophyMsg, inline: false });
+            }
 
             if (bonus > 0) {
                 embed.addFields({ name: t('fish.item_bonus', lang), value: t('fish.bonus_percent', lang, { amount: bonus.toLocaleString(), percent: Math.round(multiplier * 100) }), inline: true });

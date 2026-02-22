@@ -53,11 +53,32 @@ module.exports = {
         const levelBonus = Math.floor(baseReward * levelMultiplier);
         const jobBonusAmount = Math.floor(baseReward * jobMultiplier);
 
-        const total = baseReward + itemBonus + levelBonus + jobBonusAmount;
+        let total = baseReward + itemBonus + levelBonus + jobBonusAmount;
+
+        // Streamer Interaction: Go Viral (5% chance for 5x reward if using Chair or Mansion)
+        const { hasActiveItem } = require('../../utils/multiplier');
+        let viralMsg = '';
+        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 24) || hasActiveItem(message.author.id, 33)) && Math.random() < 0.05) {
+            total *= 5;
+            viralMsg = t('work.viral', lang);
+        }
+
+        // Farmer Interaction: Bumper Crop (10% chance for 2.5x reward)
+        let bumperMsg = '';
+        if (user.job === 'farmer' && Math.random() < 0.1) {
+            total = Math.floor(total * 2.5);
+            bumperMsg = t('work.bumper_crop', lang);
+        }
 
         // Add random XP
         const xpGained = Math.floor(Math.random() * 16) + 15;
         const xpResult = addXp(message.author.id, xpGained);
+
+        // Programmer Interaction: Tech Buff (Cooldown reduction)
+        let finalCooldown = cooldown;
+        if (user.job === 'programmer' && (hasActiveItem(message.author.id, 13) || hasActiveItem(message.author.id, 14))) {
+            finalCooldown = Math.floor(cooldown * 0.9); // 10% faster
+        }
 
         db.updateUser(message.author.id, { last_work: now });
         db.addBalance(message.author.id, total);
@@ -73,6 +94,9 @@ module.exports = {
         if (jobBonusAmount > 0) {
             msg += t('work.job_bonus', lang, { job: jobName, amount: jobBonusAmount.toLocaleString(), percent: Math.round(jobMultiplier * 100) });
         }
+
+        if (viralMsg) msg += viralMsg;
+        if (bumperMsg) msg += bumperMsg;
 
         await message.reply(msg);
 

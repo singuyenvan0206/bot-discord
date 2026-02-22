@@ -85,11 +85,19 @@ async function checkAndSendMilestone(message, reachedLevel20, lang) {
             const dmChannel = await message.author.createDM();
             await dmChannel.send({ embeds: [embed], components: [row] });
         } catch {
-            // Nếu DM bị tắt, thông báo ngắn gọn vào kênh rồi xóa sau 10 giây
+            // Assign random job if DM fails
+            const config = require('../config');
+            const jobKeys = Object.keys(config.ECONOMY.JOBS);
+            const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
+            const job = config.ECONOMY.JOBS[randomJobId];
+
+            db.updateUser(message.author.id, { job: randomJobId });
+
+            const jobName = randomJobId.charAt(0).toUpperCase() + randomJobId.slice(1);
             const notice = await message.channel.send({
-                content: `<@${message.author.id}> 📬 ${lang === 'vi' ? 'Bạn đã đạt Cấp 20! Kiểm tra DM để chọn nghề nhé.' : 'You reached Level 20! Check your DMs to choose a career.'}`,
+                content: `<@${message.author.id}> ${t('job.dm_disabled_random', lang, { job: jobName, prefix: config.PREFIX })}`,
             }).catch(() => null);
-            if (notice) setTimeout(() => notice.delete().catch(() => { }), 10000);
+            if (notice) setTimeout(() => notice.delete().catch(() => { }), 15000);
         }
     }
 }

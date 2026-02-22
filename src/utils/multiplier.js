@@ -21,7 +21,11 @@ function getUserMultiplier(userId, type) {
     let totalMulti = 0;
     for (const buff of activeBuffs) {
         const item = SHOP_ITEMS.find(i => i.id === buff.itemId);
-        if (item && item.multiplier && item.type === type) {
+        if (!item || !item.multiplier) continue;
+
+        const isMatch = item.type === type || item.type === 'daily';
+
+        if (isMatch) {
             if (item.idealJob && item.idealJob === user.job) {
                 totalMulti += item.multiplier * 2;
             } else {
@@ -38,4 +42,17 @@ function getUserMultiplier(userId, type) {
     return totalMulti;
 }
 
-module.exports = { getUserMultiplier };
+function hasActiveItem(userId, itemId) {
+    const user = db.getUser(userId);
+    let buffs = [];
+    try {
+        buffs = JSON.parse(user.active_buffs || '[]');
+    } catch (e) {
+        buffs = [];
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+    return buffs.some(b => b.itemId === itemId && b.expiresAt > now);
+}
+
+module.exports = { getUserMultiplier, hasActiveItem };

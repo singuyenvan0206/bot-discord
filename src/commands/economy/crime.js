@@ -42,7 +42,20 @@ module.exports = {
             const jobBonusAmount = Math.floor(baseReward * jobMultiplier);
             const levelMultiplier = getLevelMultiplier(user.level);
             const levelBonus = Math.floor(baseReward * levelMultiplier);
-            const total = baseReward + levelBonus + jobBonusAmount;
+
+            // Item Interaction: Multipliers (Shared with work/fish)
+            const { getUserMultiplier, hasActiveItem } = require('../../utils/multiplier');
+            const itemMulti = getUserMultiplier(message.author.id, 'income');
+            const itemBonus = Math.floor(baseReward * itemMulti);
+
+            let total = baseReward + levelBonus + jobBonusAmount + itemBonus;
+
+            // Hacker Interaction: Chance to double reward if using laptop or better
+            let hackedMsg = '';
+            if (isHacker && hasActiveItem(message.author.id, 18) && Math.random() < 0.2) {
+                total *= 2;
+                hackedMsg = t('crime.hacker_hacked', lang);
+            }
 
             // Crimes give more XP (50-100)
             const xpGained = Math.floor(Math.random() * 51) + 50;
@@ -64,14 +77,29 @@ module.exports = {
             }
 
             if (jobBonusAmount > 0) {
-                const jName = isCriminal ? t('job.info_criminal', lang).split(':')[0] : t('job.info_hacker', lang).split(':')[0];
+                const jName = isCriminal ? t('job.job_details.criminal', lang).split(':')[0] : t('job.job_details.hacker', lang).split(':')[0];
                 msg += `\n✨ **${t('job.name_field', lang)} Bonus (${jName}):** +${jobBonusAmount.toLocaleString()} coins (${Math.round(jobMultiplier * 100)}%)!`;
             }
+
+            if (itemBonus > 0) {
+                msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
+            }
+
+            if (hackedMsg) msg += hackedMsg;
 
             await message.reply(msg);
             return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
         } else {
-            const fine = Math.floor(user.balance * config.ECONOMY.CRIME_FINE_PERCENT);
+            let fine = Math.floor(user.balance * config.ECONOMY.CRIME_FINE_PERCENT);
+
+            // Criminal Interaction: Escape chance with Sneakers (10) or Supercar (32)
+            const { hasActiveItem } = require('../../utils/multiplier');
+            let escapeMsg = '';
+            if (isCriminal && (hasActiveItem(message.author.id, 10) || hasActiveItem(message.author.id, 32)) && Math.random() < 0.5) {
+                fine = Math.floor(fine * 0.2); // 80% reduction
+                escapeMsg = t('crime.criminal_escaped', lang, { amount: fine.toLocaleString() });
+            }
+
             db.addBalance(message.author.id, -fine);
 
             // Interaction: Transfer fine to a random Police
@@ -79,12 +107,10 @@ module.exports = {
             if (randomPolice) {
                 db.addBalance(randomPolice.id, fine);
 
-                // If the user is cached/fetched, we could send them a DM, but for now we've added the balance.
-                // We'll mention them in the message if they are in the guild.
                 const policeUser = message.guild.members.cache.get(randomPolice.id);
-                let failureMsg = t('crime.failure', lang, { amount: fine.toLocaleString() });
+                let failureMsg = escapeMsg ? `❌ ${escapeMsg}` : t('crime.failure', lang, { amount: fine.toLocaleString() });
 
-                if (policeUser) {
+                if (policeUser && !escapeMsg) {
                     failureMsg += `\n${t('job.police_notification', lang, { amount: fine.toLocaleString() }).replace('👮 **Trực ban:** ', '').replace('👮 **On Duty:** ', '')} (<@${randomPolice.id}>)`;
                 }
 

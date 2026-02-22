@@ -55,7 +55,7 @@ module.exports = {
         SELL_RECOVERY: 0.7, // 70% return
         MIN_WORK_EARNINGS: 100,
         MAX_WORK_EARNINGS: 300,
-        CRIME_COOLDOWN: 14400, // 4 hours
+        CRIME_COOLDOWN: 3600, // 4 hours
         CRIME_SUCCESS_RATE: 0.4,
         CRIME_MIN_REWARD: 1000,
         CRIME_MAX_REWARD: 3000,
@@ -82,7 +82,7 @@ module.exports = {
             criminal: { id: 'criminal', bonus: 0.15, color: '#e74c3c', icon: '🥷' },
             doctor: { id: 'doctor', bonus: 0.05, color: '#2ecc71', icon: '👨‍⚕️' },
             programmer: { id: 'programmer', bonus: 0.2, color: '#9b59b6', icon: '💻' },
-            farmer: { id: 'farmer', bonus: 0.05, color: '#f1c40f', icon: '👨‍🌾' },
+            farmer: { id: 'farmer', bonus: 0.1, color: '#f1c40f', icon: '👨‍🌾' },
             hacker: { id: 'hacker', bonus: 0.25, color: '#27ae60', icon: '👨‍💻' },
             streamer: { id: 'streamer', bonus: 0.12, color: '#6441a5', icon: '🎥' }
         }

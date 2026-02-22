@@ -40,7 +40,13 @@ module.exports = {
         }
 
         const jobBonusAmount = Math.floor(baseReward * jobMultiplier);
-        const total = baseReward + levelBonus + jobBonusAmount;
+
+        // Item Interaction: Multipliers
+        const { getUserMultiplier } = require('../../utils/multiplier');
+        const itemMulti = getUserMultiplier(message.author.id, 'income');
+        const itemBonus = Math.floor(baseReward * itemMulti);
+
+        const total = baseReward + levelBonus + jobBonusAmount + itemBonus;
 
         // Medium XP (10-20)
         const xpGained = Math.floor(Math.random() * 11) + 10;
@@ -63,6 +69,10 @@ module.exports = {
 
         if (jobBonusAmount > 0) {
             msg += `\n✨ **${t('job.name_field', lang)} Bonus (${jobName}):** +${jobBonusAmount.toLocaleString()} coins (${Math.round(jobMultiplier * 100)}%)!`;
+        }
+
+        if (itemBonus > 0) {
+            msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
         }
 
         await message.reply(msg);
