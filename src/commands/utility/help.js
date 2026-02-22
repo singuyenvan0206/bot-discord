@@ -40,7 +40,13 @@ module.exports = {
             const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
             for (const file of commandFiles) {
                 const command = require(`../${folder}/${file}`);
-                const description = t(`help.descriptions.${command.name}`, lang) || command.description || t('help.no_description', lang);
+                const transKey = `help.descriptions.${command.name}`;
+                let description = t(transKey, lang);
+
+                // If translation doesn't exist (returns the key), fall back to internal description
+                if (description === transKey) {
+                    description = command.description || t('help.no_description', lang);
+                }
 
                 let cmdStr = `\`${prefix}${command.name}\` - ${description}`;
                 if (command.aliases && command.aliases.length > 0) {
@@ -69,7 +75,12 @@ module.exports = {
 
             const guide = t(`help.guides.${command.name}`, lang).replace(/\$/g, prefix);
             const usage = command.usage || '';
-            const description = t(`help.descriptions.${command.name}`, lang) || command.description || t('help.no_description', lang);
+            const transKey = `help.descriptions.${command.name}`;
+            let description = t(transKey, lang);
+
+            if (description === transKey) {
+                description = command.description || t('help.no_description', lang);
+            }
 
             // Find category emoji
             let categoryEmoji = '❓';
