@@ -1,8 +1,8 @@
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ComponentType } = require('discord.js');
-const config = require('../config');
-const { t, getLanguage } = require('../utils/i18n');
-const db = require('../database');
-const { formatDuration } = require('../utils/time');
+const config = require('../../config');
+const { t, getLanguage } = require('../../utils/i18n');
+const db = require('../../database');
+const { formatDuration } = require('../../utils/time');
 const fs = require('fs');
 const path = require('path');
 
@@ -28,7 +28,7 @@ module.exports = {
         }
 
         // Map commands to categories based on their folder
-        const commandsPath = path.join(__dirname, '../commands');
+        const commandsPath = path.join(__dirname, '..');
         const commandFolders = fs.readdirSync(commandsPath);
 
         for (const folder of commandFolders) {
@@ -39,7 +39,7 @@ module.exports = {
 
             const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
             for (const file of commandFiles) {
-                const command = require(`./${folder}/${file}`);
+                const command = require(`../${folder}/${file}`);
                 let cmdStr = `\`${prefix}${command.name}\``;
                 if (command.aliases && command.aliases.length > 0) {
                     cmdStr += ` (\`${command.aliases.map(a => `${prefix}${a}`).join('`, `')}\`)`;

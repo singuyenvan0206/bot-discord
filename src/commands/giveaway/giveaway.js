@@ -1,9 +1,9 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
-const db = require('../database');
-const { createGiveawayEmbed, createEntryButton } = require('../utils/embeds');
-const { isManager } = require('../utils/permissions');
-const { t, getLanguage } = require('../utils/i18n');
-const config = require('../config');
+const db = require('../../database');
+const { createGiveawayEmbed, createEntryButton } = require('../../utils/embeds');
+const { isManager } = require('../../utils/permissions');
+const { t, getLanguage } = require('../../utils/i18n');
+const config = require('../../config');
 
 module.exports = {
     name: 'giveaway',
