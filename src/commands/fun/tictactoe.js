@@ -56,7 +56,14 @@ module.exports = {
         }
 
         function botMove() {
-            // Minimax: find the optimal move for 'O' (bot)
+            const emptyCells = board.map((v, i) => v === null ? i : -1).filter(i => i !== -1);
+
+            // 30% chance to make a random move (easy mode)
+            if (Math.random() < 0.4) {
+                return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            }
+
+            // Otherwise use Minimax for optimal play
             function score(b, depth) {
                 const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
                 for (const [a, x, c] of lines) {
