@@ -58,7 +58,7 @@ module.exports = {
             color = r2[0] === '7️⃣' ? 0xFF9900 : config.COLORS.GAMBLE_WIN;
         } else if (twoMatch) {
             // Giảm độ khó: Hoàn lại 1/4 tiền cược (0.25x) thay vì thua trắng mặt
-            const mult = 0.5;
+            const mult = 0.25;
             result = t('slots.win_small', lang);
             payout = bet ? Math.floor(bet * mult) : 0;
             color = config.COLORS.GAMBLE_LOSS; // Vẫn tính là màu thua vì lỗ
