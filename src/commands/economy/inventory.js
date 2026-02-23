@@ -75,7 +75,7 @@ module.exports = {
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),
-                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 200%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 200%`,
+                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 250%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 250%`,
                     inline: true
                 });
 
@@ -108,8 +108,11 @@ module.exports = {
                         }
                     }
 
-                    // Diminishing returns: same as multiplier.js
-                    const effectiveTotal = (raw) => raw > 1.0 ? 1.0 + (raw - 1.0) * 0.5 : raw;
+                    // Diminishing returns + Hard Cap 2.5
+                    const effectiveTotal = (raw) => {
+                        const eff = raw > 1.0 ? 1.0 + (raw - 1.0) * 0.5 : raw;
+                        return Math.min(eff, 2.5);
+                    };
 
                     const TYPE_EMOJIS = {
                         daily: '📅', income: '💼', gamble: '🎲',

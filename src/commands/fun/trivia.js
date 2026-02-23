@@ -113,7 +113,7 @@ module.exports = {
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward });
                 resultMsg += ` & ✨ **${totalXp}** XP!`;
-                if (bonusAmount > 0) resultMsg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                if (bonusAmount > 0) resultMsg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {

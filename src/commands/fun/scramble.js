@@ -90,7 +90,7 @@ module.exports = {
             const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
             let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${totalReward.toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
 
-            if (bonusAmount > 0) msgText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+            if (bonusAmount > 0) msgText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);

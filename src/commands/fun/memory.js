@@ -122,7 +122,7 @@ module.exports = {
                         addXp(message.author.id, totalXp);
 
                         let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward }) + `\n✨ **XP:** +${totalXp}`;
-                        if (bonusAmount > 0) winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                        if (bonusAmount > 0) winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                         embed.setTitle(t('memory.win_title', lang))
                             .setDescription(winDesc)

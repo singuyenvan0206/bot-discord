@@ -62,7 +62,7 @@ module.exports = {
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward }) +
                 ` & ✨ **${totalXp}** XP!`;
 
-            if (bonusAmount > 0) resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+            if (bonusAmount > 0) resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
             await winnerMsg.reply({
                 embeds: [new EmbedBuilder()

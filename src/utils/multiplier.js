@@ -88,9 +88,8 @@ function getXpMultiplier(userId) {
     // XP Boost Potion (501)
     if (hasActiveItem(userId, 501)) multi += 0.5;
 
-    // Hard cap at 200% (actually the multiplier above is total, 200% bonus = 3.0 total)
-    // But user said "limit 200% at all", so I'll cap the multiplier at 3.0 (which is base 1.0 + 2.0 bonus)
-    return Math.min(multi, 3.0);
+    // Hard cap at 250% bonus (base 1.0 + 2.5 bonus = 3.5 total multiplier)
+    return Math.min(multi, 3.5);
 }
 
 /**

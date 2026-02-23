@@ -199,7 +199,7 @@ module.exports = {
                             resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                                 t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
                             if (bonusAmount > 0) {
-                                resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                                resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                             }
                         }
                     }

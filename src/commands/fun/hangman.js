@@ -95,7 +95,7 @@ module.exports = {
                     addXp(message.author.id, totalXp);
 
                     let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins & ✨ ${totalXp} XP!**`;
-                    if (bonusAmount > 0) resultStr += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                    if (bonusAmount > 0) resultStr += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
                     collector.stop();
@@ -127,7 +127,7 @@ module.exports = {
                     addXp(message.author.id, totalXp);
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
-                    if (bonusAmount > 0) resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                    if (bonusAmount > 0) resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                 }
                 embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);
