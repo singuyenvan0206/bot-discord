@@ -1258,7 +1258,6 @@
         "usage_start": "Usage: `{{prefix}}giveaway start <duration> <winners> <prize>`",
         "invalid_duration": "Invalid duration. Example: 1h, 30m, 1d",
         "invalid_winners": "Invalid number of winners (min 1).",
-        "channel_not_found": "Giveaway channel not found in this server. Check that the channel ID in config is from this server.",
         "channel_not_text": "Giveaway channel must be a text channel.",
         "send_failed": "Could not send giveaway to that channel. Bot needs **View Channel** and **Send Messages** permission there.",
         "usage_end": "Usage: `{{prefix}}giveaway end <message_id>`",

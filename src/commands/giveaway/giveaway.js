@@ -48,23 +48,12 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.invalid_winners', lang)}`);
             }
 
-            let giveawayChannel;
-
-            try {
-                giveawayChannel = await message.guild.channels.fetch(config.GIVEAWAY_CHANNEL_ID);
-            } catch (err) {
-                console.error(err);
-            }
-
-            if (!giveawayChannel) {
-                return message.reply(`❌ ${t('giveaway.channel_not_found', lang)}`);
-            }
-
-            if (!giveawayChannel.isTextBased?.() || giveawayChannel.isDMBased?.()) {
+            if (!message.channel?.isTextBased?.() || message.channel.isDMBased?.()) {
                 return message.reply(`❌ ${t('giveaway.channel_not_text', lang)}`);
             }
 
             const endTime = Math.floor((Date.now() + duration) / 1000);
+            const channel = message.channel;
 
             const giveaway = {
                 prize: prize,
@@ -74,21 +63,21 @@ module.exports = {
                 description: null,
                 required_role_id: null,
                 guild_id: message.guild.id,
-                channel_id: giveawayChannel.id,
+                channel_id: channel.id,
                 message_id: null
             };
 
             const embed = createGiveawayEmbed(giveaway, 0, lang);
 
             try {
-                const sentMsg = await giveawayChannel.send({
+                const sentMsg = await channel.send({
                     embeds: [embed],
                     components: [createEntryButton(false, lang)]
                 });
 
                 db.createGiveaway({
                     messageId: sentMsg.id,
-                    channelId: giveawayChannel.id,
+                    channelId: channel.id,
                     guildId: message.guild.id,
                     prize: prize,
                     winnerCount: winnerCount,

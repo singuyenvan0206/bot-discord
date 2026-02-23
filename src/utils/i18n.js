@@ -50,9 +50,11 @@ function t(key, lang = 'vi', replace = {}) {
  * Resolve language for a given context (user/guild)
  */
 function getLanguage(userId, guildId = null) {
-    // 1. Check User setting
-    const user = db.getUser(userId);
-    if (user && user.language && user.language !== 'null') return user.language;
+    // 1. Check User setting (skip if no userId to avoid creating null user)
+    if (userId) {
+        const user = db.getUser(userId);
+        if (user && user.language && user.language !== 'null') return user.language;
+    }
 
     // 2. Check Guild setting
     if (guildId) {

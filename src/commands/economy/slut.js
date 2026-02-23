@@ -67,14 +67,14 @@ module.exports = {
             let penalty = config.ECONOMY.SLUT_FAIL_PENALTY;
             if (user.job === 'doctor') penalty = Math.floor(penalty / 2); // 50% discount for doctors
 
-            db.addBalance(message.author.id, -penalty);
+            db.removeBalance(message.author.id, penalty);
 
             // Interaction: Transfer penalty to a random Doctor
-            const randomDoctor = db.getRandomUserByJob('doctor', message.author.id);
-            if (randomDoctor) {
-                db.addBalance(randomDoctor.id, penalty);
+            const randomDoctorId = db.getRandomUserByJob('doctor');
+            if (randomDoctorId) {
+                db.addBalance(randomDoctorId, penalty);
 
-                const doctorUser = message.guild.members.cache.get(randomDoctor.id);
+                const doctorUser = message.guild?.members?.cache.get(randomDoctorId);
                 let failureMsg = t('slut.failure', lang, { amount: penalty.toLocaleString() });
 
                 if (user.job === 'teacher') {
@@ -83,10 +83,10 @@ module.exports = {
                 }
 
                 if (doctorUser) {
-                    failureMsg += `\n${t('job.doctor_notification', lang, { amount: penalty.toLocaleString() }).replace('👨‍⚕️ **Bệnh viện:** ', '').replace('👨‍⚕️ **Hospital:** ', '')} (<@${randomDoctor.id}>)`;
+                    failureMsg += `\n${t('job.doctor_notification', lang, { amount: penalty.toLocaleString() }).replace('👨‍⚕️ **Bệnh viện:** ', '').replace('👨‍⚕️ **Hospital:** ', '')} (<@${randomDoctorId}>)`;
                 }
 
-                return;
+                return message.reply(failureMsg);
             }
 
             let failMsg = t('slut.failure', lang, { amount: penalty.toLocaleString() });

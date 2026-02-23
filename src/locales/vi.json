@@ -1256,7 +1256,6 @@
         "usage_start": "Cách dùng: `{{prefix}}giveaway start <thời_gian> <số_người_thắng> <giải_thưởng>`",
         "invalid_duration": "Thời gian không hợp lệ. Ví dụ: 1h, 30m, 1d",
         "invalid_winners": "Số người thắng không hợp lệ (tối thiểu 1).",
-        "channel_not_found": "Không tìm thấy kênh giveaway trong server này. Kiểm tra ID kênh trong config thuộc đúng server.",
         "channel_not_text": "Kênh giveaway phải là kênh văn bản (text).",
         "send_failed": "Không gửi được tin vào kênh đó. Bot cần quyền **Xem kênh** và **Gửi tin nhắn** trong kênh giveaway.",
         "usage_end": "Cách dùng: `{{prefix}}giveaway end <message_id>`",

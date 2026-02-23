@@ -274,6 +274,8 @@ function updateGiveaway(messageId, updates) {
     if (updates.description !== undefined) { fields.push('description = ?'); values.push(updates.description); }
     if (updates.winnerCount !== undefined) { fields.push('winner_count = ?'); values.push(updates.winnerCount); }
     if (updates.endsAt !== undefined) { fields.push('ends_at = ?'); values.push(updates.endsAt); }
+    if (updates.scheduledStart !== undefined) { fields.push('scheduled_start = ?'); values.push(updates.scheduledStart); }
+    if (updates.paused !== undefined) { fields.push('paused = ?'); values.push(updates.paused ? 1 : 0); }
     if (fields.length === 0) return;
     values.push(messageId);
     execute(`UPDATE giveaways SET ${fields.join(', ')} WHERE message_id = ?`, values);
@@ -312,7 +314,7 @@ function getParticipantUserIds(giveawayId) {
 
 function getParticipantCount(giveawayId) {
     const row = queryOne('SELECT COUNT(*) as count FROM participants WHERE giveaway_id = ?', [giveawayId]);
-    return row ? row.count : 0;
+    return row ? Number(row.count) : 0;
 }
 
 function getTotalEntries(giveawayId) {

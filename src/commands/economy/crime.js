@@ -89,14 +89,14 @@ module.exports = {
                 escapeMsg = (escapeMsg || '') + t('crime.soldier_armed', lang);
             }
 
-            db.addBalance(message.author.id, -fine);
+            db.removeBalance(message.author.id, fine);
 
             // Interaction: Transfer fine to a random Police
-            const randomPolice = db.getRandomUserByJob('police', message.author.id);
-            if (randomPolice) {
-                db.addBalance(randomPolice.id, fine);
+            const randomPoliceId = db.getRandomUserByJob('police');
+            if (randomPoliceId) {
+                db.addBalance(randomPoliceId, fine);
 
-                const policeUser = message.guild.members.cache.get(randomPolice.id);
+                const policeUser = message.guild?.members?.cache.get(randomPoliceId);
                 let failureMsg = escapeMsg ? `❌ ${escapeMsg}` : t('crime.failure', lang, { amount: fine.toLocaleString() });
 
                 if (user.job === 'teacher') {
@@ -105,10 +105,10 @@ module.exports = {
                 }
 
                 if (policeUser && !escapeMsg) {
-                    failureMsg += `\n${t('job.police_notification', lang, { amount: fine.toLocaleString() }).replace('👮 **Trực ban:** ', '').replace('👮 **On Duty:** ', '')} (<@${randomPolice.id}>)`;
+                    failureMsg += `\n${t('job.police_notification', lang, { amount: fine.toLocaleString() }).replace('👮 **Trực ban:** ', '').replace('👮 **On Duty:** ', '')} (<@${randomPoliceId}>)`;
                 }
 
-                return;
+                return message.reply(failureMsg);
             }
 
             let failMsg = t('crime.failure', lang, { amount: fine.toLocaleString() });

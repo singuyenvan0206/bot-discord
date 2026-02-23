@@ -220,13 +220,21 @@ async function handleButtonEntry(interaction) {
         db.removeParticipant(giveaway.id, interaction.user.id);
         const newCount = db.getParticipantCount(giveaway.id);
         const embed = createGiveawayEmbed(giveaway, newCount, lang);
-        await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
-        return interaction.followUp({ content: t('giveaway.left_giveaway', lang), ephemeral: true });
+        try {
+            await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
+            return interaction.followUp({ content: t('giveaway.left_giveaway', lang), ephemeral: true });
+        } catch (err) {
+            return interaction.reply({ content: t('giveaway.left_giveaway', lang), ephemeral: true }).catch(() => { });
+        }
     }
 
     db.addParticipant(giveaway.id, interaction.user.id);
     const newCount = db.getParticipantCount(giveaway.id);
     const embed = createGiveawayEmbed(giveaway, newCount, lang);
-    await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
-    return interaction.followUp({ content: t('giveaway.joined_giveaway', lang), ephemeral: true });
+    try {
+        await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
+        return interaction.followUp({ content: t('giveaway.joined_giveaway', lang), ephemeral: true });
+    } catch (err) {
+        return interaction.reply({ content: t('giveaway.joined_giveaway', lang), ephemeral: true }).catch(() => { });
+    }
 }
