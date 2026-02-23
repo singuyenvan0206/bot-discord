@@ -104,7 +104,7 @@ module.exports = {
                 db.addBalance(i.user.id, totalReward);
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward });
-                if (bonusAmount > 0) resultMsg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {

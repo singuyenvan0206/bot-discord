@@ -13,18 +13,15 @@ for (const file of files) {
 }
 
 /**
- * Get a translated string.
- * @param {string} key Key in dot notation (e.g., 'common.error')
- * @param {string} lang Language code ('en', 'vi')
- * @param {object} replace Replacement variables
+ * Internal helper to get a single translation.
  */
-function t(key, lang = 'vi', replace = {}) {
+function getTranslation(key, lang, replace = {}) {
     const parts = key.split('.');
     let value = locales[lang] || locales['vi'];
 
     for (const part of parts) {
         if (!value || value[part] === undefined) {
-            // Fallback to Vietnamese if key is missing in English
+            // Fallback to Vietnamese if key is missing
             let fallback = locales['vi'];
             for (const fPart of parts) {
                 if (!fallback || fallback[fPart] === undefined) return key;
@@ -44,6 +41,28 @@ function t(key, lang = 'vi', replace = {}) {
     });
 
     return value;
+}
+
+/**
+ * Get a translated string (Bilingual: VI & EN).
+ * @param {string} key Key in dot notation (e.g., 'common.error')
+ * @param {string} lang Primary language (used for fallback logic)
+ * @param {object} replace Replacement variables
+ * @param {boolean} singleLine If true, joins with ' | ' instead of newline and subtext
+ */
+function t(key, lang = 'vi', replace = {}, singleLine = false) {
+    const valVi = getTranslation(key, 'vi', replace);
+    const valEn = getTranslation(key, 'en', replace);
+
+    // If they are the same (e.g. key itself or identical strings), just return one
+    if (valVi === valEn) return valVi;
+
+    if (singleLine) {
+        return `${valVi} | ${valEn}`;
+    }
+
+    // Return combined (Bilingual). Subtext for the second language.
+    return `${valVi}\n-# *(${valEn})*`;
 }
 
 /**

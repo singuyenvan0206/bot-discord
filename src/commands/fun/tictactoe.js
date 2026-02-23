@@ -171,7 +171,7 @@ module.exports = {
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
                         if (bonusAmount > 0) {
-                            resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
                         }
                     } else {
                         const baseReward = config.ECONOMY.TICTACTOE_REWARD;

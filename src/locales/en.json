@@ -13,7 +13,8 @@
         "requested_by": "Requested by {{user}}",
         "balance": "Balance:",
         "timeout": "Timeout!",
-        "none": "None"
+        "none": "None",
+        "bonus_capped": "\n-# *(Includes 🎁 Bonus (Capped 250%): +{{amount}} coins)*"
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -827,6 +828,7 @@
         "footer": "You have 30 seconds!",
         "correct": "Correct!",
         "found_word": "found the word",
+        "success_msg": "✅ **Correct!** {{winner}} found the word **{{word}}** and received {{emoji}} **{{amount}}** coins!",
         "category": "Category",
         "cat_random": "Random",
         "cat_def": "Definition",
@@ -899,6 +901,7 @@
     "emojiquiz": {
         "title": "🧩  Emoji Quiz",
         "question": "What is this? {{emojis}}",
+        "pool_empty": "⚠️ Quiz pool is empty. Please try again later.",
         "footer": "You have 30 seconds to answer!",
         "correct": "✅ **Correct!** The answer is **{{answer}}**.",
         "reward": "\n{{emoji}} Reward: **{{amount}}** coins",

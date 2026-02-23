@@ -13,7 +13,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = await getLanguage(message.author.id);
+        const lang = getLanguage(message.author.id);
         const user = db.getUser(message.author.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
         const minBuyIn = args[0] ? parseAmount(args[0], user.balance) : 50;
@@ -47,10 +47,10 @@ module.exports = {
 
         function getLobbyButtons() {
             return new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId(`join_poker_${hostId}`).setLabel(t('poker.btn_join', lang)).setStyle(ButtonStyle.Success),
-                new ButtonBuilder().setCustomId(`add_bot_poker_${hostId}`).setLabel(t('poker.btn_add_bot', lang)).setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId(`leave_poker_${hostId}`).setLabel(t('poker.btn_leave', lang)).setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId(`start_poker_${hostId}`).setLabel(t('poker.btn_start', lang)).setStyle(ButtonStyle.Primary)
+                new ButtonBuilder().setCustomId(`join_poker_${hostId}`).setLabel(t('poker.btn_join', lang, {}, true)).setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId(`add_bot_poker_${hostId}`).setLabel(t('poker.btn_add_bot', lang, {}, true)).setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId(`leave_poker_${hostId}`).setLabel(t('poker.btn_leave', lang, {}, true)).setStyle(ButtonStyle.Danger),
+                new ButtonBuilder().setCustomId(`start_poker_${hostId}`).setLabel(t('poker.btn_start', lang, {}, true)).setStyle(ButtonStyle.Primary)
             );
         }
 
@@ -421,10 +421,10 @@ module.exports = {
             const toCall = currentBet - (currentPlayer ? currentPlayer.currentBet : 0);
 
             const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('fold').setLabel(t('poker.action_fold', lang)).setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? t('poker.action_check', lang) : t('poker.action_call', lang, { amount: toCall })).setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('raise').setLabel(t('poker.action_raise', lang)).setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId('allin').setLabel(t('poker.action_allin', lang)).setStyle(ButtonStyle.Danger)
+                new ButtonBuilder().setCustomId('fold').setLabel(t('poker.action_fold', lang, {}, true)).setStyle(ButtonStyle.Danger),
+                new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? t('poker.action_check', lang, {}, true) : t('poker.action_call', lang, { amount: toCall }, true)).setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId('raise').setLabel(t('poker.action_raise', lang, {}, true)).setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId('allin').setLabel(t('poker.action_allin', lang, {}, true)).setStyle(ButtonStyle.Danger)
             );
             return [row];
         }

@@ -70,11 +70,11 @@ module.exports = {
 
             const categoryRow = new ActionRowBuilder()
                 .addComponents(
-                    new ButtonBuilder().setCustomId('cat_income').setLabel(t('shop.labels.income', lang)).setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_daily').setLabel(t('shop.labels.daily', lang)).setStyle(category === 'daily' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_gamble').setLabel(t('shop.labels.gamble', lang)).setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_tools').setLabel(t('shop.labels.tools', lang)).setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                    new ButtonBuilder().setCustomId('cat_other').setLabel(t('shop.labels.other', lang)).setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary)
+                    new ButtonBuilder().setCustomId('cat_income').setLabel(t('shop.labels.income', lang, {}, true)).setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_daily').setLabel(t('shop.labels.daily', lang, {}, true)).setStyle(category === 'daily' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_gamble').setLabel(t('shop.labels.gamble', lang, {}, true)).setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_tools').setLabel(t('shop.labels.tools', lang, {}, true)).setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_other').setLabel(t('shop.labels.other', lang, {}, true)).setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary)
                 );
 
             const navRow = new ActionRowBuilder()

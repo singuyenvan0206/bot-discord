@@ -39,8 +39,8 @@ module.exports = {
             .setColor(config.COLORS.WARNING);
 
         const confirmRow = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId('c4_accept').setLabel(t('connect4.accept', lang)).setEmoji(config.EMOJIS.SUCCESS).setStyle(ButtonStyle.Success),
-            new ButtonBuilder().setCustomId('c4_deny').setLabel(t('connect4.deny', lang)).setEmoji(config.EMOJIS.ERROR).setStyle(ButtonStyle.Danger)
+            new ButtonBuilder().setCustomId('c4_accept').setLabel(t('connect4.accept', lang, {}, true)).setEmoji(config.EMOJIS.SUCCESS).setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId('c4_deny').setLabel(t('connect4.deny', lang, {}, true)).setEmoji(config.EMOJIS.ERROR).setStyle(ButtonStyle.Danger)
         );
 
         const confirmMsg = await message.reply({ content: opponent.toString(), embeds: [confirmEmbed], components: [confirmRow] });

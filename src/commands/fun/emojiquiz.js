@@ -15,7 +15,7 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);
         const q = getRandomQuestion();
-        if (!q) return message.reply('⚠️ Quiz pool is empty. Please try again later.');
+        if (!q) return message.reply(t('emojiquiz.pool_empty', lang));
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case
 
         // Generate Hint: Match words and replace non-first letters with underscores
@@ -53,7 +53,7 @@ module.exports = {
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
 
-            if (bonusAmount > 0) resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+            if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
 
             await winnerMsg.reply({
                 embeds: [new EmbedBuilder()

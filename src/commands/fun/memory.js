@@ -115,7 +115,7 @@ module.exports = {
                         db.addBalance(message.author.id, totalReward);
 
                         let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward });
-                        if (bonusAmount > 0) winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                        if (bonusAmount > 0) winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
 
                         embed.setTitle(t('memory.win_title', lang))
                             .setDescription(winDesc)

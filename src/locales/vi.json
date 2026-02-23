@@ -13,7 +13,8 @@
         "requested_by": "Yêu cầu bởi {{user}}",
         "balance": "Số dư:",
         "timeout": "Hết thời gian!",
-        "none": "Không có"
+        "none": "Không có",
+        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng (Capped 250%): +{{amount}} coins)*"
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -885,6 +886,7 @@
         "footer": "Bạn có 30 giây!",
         "correct": "Chính xác!",
         "found_word": "đã tìm ra từ",
+        "success_msg": "✅ **Chính xác!** {{winner}} đã tìm ra từ **{{word}}** và nhận được {{emoji}} **{{amount}}** coins!",
         "category": "Thể loại",
         "cat_random": "Ngẫu nhiên",
         "cat_def": "Định nghĩa",
@@ -957,6 +959,7 @@
     "emojiquiz": {
         "title": "🧩  Emoji Quiz",
         "question": "Đây là gì? {{emojis}}",
+        "pool_empty": "⚠️ Kho câu hỏi đang trống. Vui lòng quay lại sau.",
         "footer": "Bạn có 30 giây để trả lời!",
         "correct": "✅ **Chính xác!** Đáp án là **{{answer}}**.",
         "reward": "\n{{emoji}} Phần thưởng: **{{amount}}** coins",

@@ -81,9 +81,14 @@ module.exports = {
             db.addBalance(winner.author.id, totalReward);
 
             const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
-            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${totalReward.toLocaleString()}** coins!`;
+            let msgText = t('scramble.success_msg', lang, {
+                winner: winner.author.toString(),
+                word: word,
+                emoji: config.EMOJIS.COIN,
+                amount: totalReward.toLocaleString()
+            });
 
-            if (bonusAmount > 0) msgText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+            if (bonusAmount > 0) msgText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);
