@@ -190,6 +190,9 @@ async function tick(client) {
 
         // 3. Update active embeds periodically
         await updateActiveEmbeds(client);
+
+        // 4. House Profit Distribution
+        await processHouseDistribution(client);
     } catch (error) {
         console.error('[Timer] Error in timer tick:', error);
     }
@@ -209,6 +212,65 @@ function startTimer(client) {
 /**
  * Stop the giveaway timer.
  */
+/**
+ * Distribute bot's profits back to all users.
+ */
+async function processHouseDistribution(client) {
+    const config = require('../config');
+    const { EmbedBuilder } = require('discord.js');
+    const { t } = require('./i18n');
+
+    const now = Math.floor(Date.now() / 1000);
+    const lastDist = parseInt(db.getGlobalSetting('last_house_distribution', '0'));
+    const interval = config.ECONOMY.HOUSE_DISTRIBUTION_INTERVAL;
+
+    if (now - lastDist < interval) return;
+
+    // Time to distribute!
+    const botId = client.user.id;
+    const botUser = db.getUser(botId);
+    const balance = botUser.balance;
+
+    if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) return;
+
+    const userCount = db.getUserCount();
+    if (userCount <= 1) return;
+
+    // Bot is also counted in userCount (it's in the users table), 
+    // but distributeBalanceToAll resets bot to 0 anyway.
+    const amountPerUser = Math.floor(balance / userCount);
+    if (amountPerUser <= 0) return;
+
+    console.log(`[Timer] Distributing ${balance} coins to ${userCount} users (${amountPerUser}/each)`);
+
+    db.distributeBalanceToAll(amountPerUser, botId);
+    db.setGlobalSetting('last_house_distribution', now);
+
+    // Announce to all guilds
+    for (const guild of client.guilds.cache.values()) {
+        const lang = getLanguage(null, guild.id);
+        const channel = guild.systemChannel ||
+            guild.channels.cache.find(c => c.name.includes('chat') || c.name.includes('general')) ||
+            guild.channels.cache.filter(c => c.isTextBased()).first();
+
+        if (channel && channel.send) {
+            const embed = new EmbedBuilder()
+                .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
+                .setDescription(t('economy.distribution_desc', lang, {
+                    total: balance.toLocaleString(),
+                    amount: amountPerUser.toLocaleString(),
+                    count: userCount,
+                    emoji: config.EMOJIS.COIN
+                }) || `Bot đã chia đều **${balance.toLocaleString()}** coins cho **${userCount}** người dùng. Mỗi người nhận được **${amountPerUser.toLocaleString()}** coins!`)
+                .setColor(config.COLORS.SUCCESS)
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                .setTimestamp();
+
+            channel.send({ embeds: [embed] }).catch(() => { });
+        }
+    }
+}
+
 function stopTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);

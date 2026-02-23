@@ -109,6 +109,13 @@ function initSchema() {
         )
     `);
 
+    db.run(`
+        CREATE TABLE IF NOT EXISTS global_settings (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        )
+    `);
+
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_guild ON giveaways(guild_id)');
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
     db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_active ON giveaways(ended, ends_at)');
