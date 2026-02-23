@@ -458,8 +458,17 @@ function updateGuild(guildId, updates) {
     execute(`UPDATE guilds SET ${fields.join(', ')} WHERE id = ?`, values);
 }
 
-function getRandomUserByJob(jobId) {
-    const users = queryAll('SELECT id FROM users WHERE job = ?', [jobId]);
+function getRandomUserByJob(jobId, excludeIds = []) {
+    let query = 'SELECT id FROM users WHERE job = ?';
+    const params = [jobId];
+
+    if (excludeIds.length > 0) {
+        const placeholders = excludeIds.map(() => '?').join(', ');
+        query += ` AND id NOT IN (${placeholders})`;
+        params.push(...excludeIds);
+    }
+
+    const users = queryAll(query, params);
     if (!users || users.length === 0) return null;
     return users[Math.floor(Math.random() * users.length)].id;
 }
@@ -491,6 +500,15 @@ function distributeBalanceToAll(amount, excludeUserId = null) {
         execute('UPDATE users SET balance = COALESCE(balance, 0) + ?', [amount]);
     }
 }
+
+function clearAllData() {
+    execute('DELETE FROM users');
+    execute('DELETE FROM giveaways');
+    execute('DELETE FROM participants');
+    execute('DELETE FROM guild_users');
+    execute('VACUUM');
+}
+
 module.exports = {
     getDb,
     createGiveaway,
@@ -528,5 +546,6 @@ module.exports = {
     getGlobalSetting,
     setGlobalSetting,
     getUserCount,
-    distributeBalanceToAll
+    distributeBalanceToAll,
+    clearAllData
 };

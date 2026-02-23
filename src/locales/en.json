@@ -79,7 +79,7 @@
         "win": "🎉 **Dealer BUSTED! You won{{amount}}!**",
         "win_amount": " {{amount}} coins",
         "win_simple": "🎉 **You won{{amount}}!**",
-        "lose": "😔 **Dealer wins{{amount}}!**",
+        "lose": "😔 **You lost{{amount}}!**",
         "tie": "🤝 **Push!**{{refund}}",
         "refund": " Bet has been refunded.",
         "natural_title": "🃏 Blackjack — 🎉 BLACKJACK!",
@@ -1105,7 +1105,9 @@
             "setexp": "Modify a player's experience points. (Owner)",
             "setlevel": "Instantly change a player's level. (Owner)",
             "setowner": "Transfer bot ownership status. (Owner)",
-            "shutdown": "Safely terminate the bot process. (Owner)"
+            "shutdown": "Safely terminate the bot process. (Owner)",
+            "resetdatabase": "Wipe all system data. (Owner)",
+            "update": "Update source code and reload commands. (Owner)"
         },
         "guides": {
             "trivia": "🌟 **Description:** Challenge your knowledge with a huge question bank covering Science, History, Entertainment, and more!\n\n🕹️ **How to Play:**\n1. Use the command to receive a multiple-choice question.\n2. You have **15 seconds** to analyze and answer.\n3. Click the button (A, B, C, D) corresponding to the correct answer.\n\n💰 **Rewards:** Correct answers earn coins instantly. If no one answers, the coins remain in the bank!",
@@ -1163,7 +1165,9 @@
             "jobdetail": "🌟 **Description:** View in-depth details about specific jobs.\n\n🕹️ **Usage:**\n`$jobdetail <job_id>`\n\n💡 **Tip:** Find job IDs using `$job list`.",
             "shop": "🌟 **Description:** Browse and purchase items from the shop.\n\n🕹️ **Usage:**\n`$shop`",
             "giveaway": "🌟 **Description:** Host and manage giveaway events in your server.\n\n🕹️ **Usage:**\n`$giveaway <subcommand>`",
-            "help": "🌟 **Description:** View the full list of commands or get detailed help for a specific one.\n\n🕹️ **Usage:**\n`$help [command]`"
+            "help": "🌟 **Description:** View the full list of commands or get detailed help for a specific one.\n\n🕹️ **Usage:**\n`$help [command]`",
+            "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`",
+            "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`"
         }
     },
     "iteminfo": {

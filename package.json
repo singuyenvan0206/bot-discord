@@ -1,7 +1,7 @@
 {
   "name": "giveaway-discord-bot",
   "version": "1.0.0",
-  "description": "A feature-rich Discord giveaway bot",
+  "description": "A comprehensive Discord Bot with Economy, Fun Games, Giveaway system, and multi-language support.",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",

@@ -145,7 +145,7 @@
         "win": "🎉 **Nhà cái bị quắc! Bạn thắng{{amount}}!**",
         "win_amount": " {{amount}} coins",
         "win_simple": "🎉 **Bạn thắng{{amount}}!**",
-        "lose": "😔 **Nhà cái thắng{{amount}}!**",
+        "lose": "😔 **Bạn đã thua{{amount}}!**",
         "tie": "🤝 **Hòa (Push)!**{{refund}}",
         "refund": " Tiền cược được hoàn trả.",
         "natural_title": "🃏 Xì Dách — 🎉 XÌ DÁCH!",
@@ -1107,7 +1107,9 @@
             "setexp": "Đặt điểm kinh nghiệm cho người chơi. (Owner)",
             "setlevel": "Đặt cấp độ cho người chơi. (Owner)",
             "setowner": "Chuyển quyền sở hữu bot. (Owner)",
-            "shutdown": "Tắt bot an toàn. (Owner)"
+            "shutdown": "Tắt bot an toàn. (Owner)",
+            "resetdatabase": "Xóa toàn bộ dữ liệu hệ thống. (Owner)",
+            "update": "Cập nhật mã nguồn và tải lại lệnh. (Owner)"
         },
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
@@ -1161,7 +1163,9 @@
             "setexp": "🌟 **Mô tả:** Điều chỉnh điểm kinh nghiệm của người chơi. (Admin Only)\n\n🕹️ **Cách dùng:**\n`$setexp @user <số_xp>`",
             "serverlist": "🌟 **Mô tả:** Xem danh sách toàn bộ máy chủ Discord mà bot đang phục vụ. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$serverlist`",
             "leaveserver": "🌟 **Mô tả:** Yêu cầu bot rời khỏi một máy chủ cụ thể bằng ID. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$leaveserver <id_server>`",
-            "setstatus": "🌟 **Mô tả:** Cập nhật trạng thái hiển thị (Activity) của bot. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$setstatus <type> <nội_dung>`\n(Các loại: playing, watching, listening, streaming, competing)"
+            "setstatus": "🌟 **Mô tả:** Cập nhật trạng thái hiển thị (Activity) của bot. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$setstatus <type> <nội_dung>`\n(Các loại: playing, watching, listening, streaming, competing)",
+            "resetdatabase": "🌟 **Mô tả:** Xóa hoàn toàn toàn bộ dữ liệu của hệ thống bao gồm người dùng, tiền, kho đồ, cấp độ, giveaway. Đây là hành động cực kỳ nguy hiểm và không thể hoàn tác. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$resetdatabase confirm YES`",
+            "update": "🌟 **Mô tả:** Tải mã nguồn mới nhất từ kho lưu trữ Git và tải lại tất cả các lệnh của bot mà không cần khởi động lại. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$update`"
         }
     },
     "iteminfo": {

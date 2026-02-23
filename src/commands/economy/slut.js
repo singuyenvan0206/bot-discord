@@ -69,8 +69,8 @@ module.exports = {
 
             db.removeBalance(message.author.id, penalty);
 
-            // Interaction: Transfer penalty to a random Doctor
-            const randomDoctorId = db.getRandomUserByJob('doctor');
+            // Interaction: Transfer penalty to a random Doctor (exclude bot)
+            const randomDoctorId = db.getRandomUserByJob('doctor', [message.client.user.id]);
             if (randomDoctorId) {
                 db.addBalance(randomDoctorId, penalty);
 

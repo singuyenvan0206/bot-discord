@@ -35,7 +35,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     const dealerVal = handValue(dealerHand);
 
     let result, color, payout = 0;
-    const amountStr = bet ? t('blackjack.win_amount', lang, { amount: bet }) : '';
+    const amountStr = bet ? t('blackjack.win_amount', lang, { amount: bet.toLocaleString() }) : '';
 
     if (dealerVal > 21) {
         result = t('blackjack.win', lang, { amount: amountStr });
@@ -64,7 +64,6 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         color = config.COLORS.GAMBLE_LOSS;
         if (bet) {
             addHouseProfit(i, bet);
-            result += `\n${t('blackjack.won_coins', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN })}`;
         }
     }
     else {

@@ -91,8 +91,8 @@ module.exports = {
 
             db.removeBalance(message.author.id, fine);
 
-            // Interaction: Transfer fine to a random Police
-            const randomPoliceId = db.getRandomUserByJob('police');
+            // Interaction: Transfer fine to a random Police (exclude bot)
+            const randomPoliceId = db.getRandomUserByJob('police', [message.client.user.id]);
             if (randomPoliceId) {
                 db.addBalance(randomPoliceId, fine);
 
