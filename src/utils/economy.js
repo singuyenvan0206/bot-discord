@@ -79,9 +79,9 @@ function addHouseProfit(context, amount) {
         const guildId = context.guild?.id || (context.guildId && typeof context.guildId === 'string' ? context.guildId : null);
         const lang = getLanguage(botId, guildId);
         const job = assignRandomJob(botId, lang);
-        const channel = context.channel;
+        const channel = context.channel || (context.interaction && context.interaction.channel) || context.client?.channels?.cache?.get(context.channelId);
 
-        if (channel) {
+        if (channel && channel.send) {
             const embed = new EmbedBuilder()
                 .setTitle(t('job.milestone_title', lang))
                 .setDescription(`**${client.user.username}** ${t('job.milestone_desc', lang)}`)

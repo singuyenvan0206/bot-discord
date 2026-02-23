@@ -154,6 +154,7 @@
         "total_payout": "Tổng nhận",
         "bust_title": "🃏 Xì Dách — 💥 QUẮC!",
         "bust_msg": "💥 **Bạn đã bị quắc (quá 21)! Nhà cái thắng.**",
+        "won_coins": "\n{{emoji}} **Nhà cái thắng {{amount}} coins!**",
         "timeout_title": "🃏 Xì Dách — {{emoji}} Hết Thời Gian"
     },
     "tictactoe": {

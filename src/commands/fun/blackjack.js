@@ -62,7 +62,10 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     else if (playerVal < dealerVal) {
         result = t('blackjack.lose', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_LOSS;
-        if (bet) addHouseProfit(i, bet);
+        if (bet) {
+            addHouseProfit(i, bet);
+            result += `\n${t('blackjack.won_coins', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN })}`;
+        }
     }
     else {
         result = t('blackjack.tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
@@ -160,11 +163,17 @@ module.exports = {
                 playerHand.push(drawCard());
                 if (handValue(playerHand) > 21) {
                     const bustEmbed = buildEmbed(true).setTitle(t('blackjack.bust_title', lang)).setColor(config.COLORS.GAMBLE_LOSS);
-                    bustEmbed.setDescription(bustEmbed.data.description + `\n\n${t('blackjack.bust_msg', lang)}`);
-                    if (bet) addHouseProfit(i, bet);
+                    let bustDesc = bustEmbed.data.description + `\n\n${t('blackjack.bust_msg', lang)}`;
+                    if (bet) {
+                        addHouseProfit(i, bet);
+                        bustDesc += `\n${t('blackjack.won_coins', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN })}`;
+                    }
+                    bustEmbed.setDescription(bustDesc);
                     await i.update({ embeds: [bustEmbed], components: [] });
+                    startCooldown(i.client, 'blackjack', message.author.id);
                     collector.stop();
-                } else if (handValue(playerHand) === 21) {
+                }
+                else if (handValue(playerHand) === 21) {
                     collector.stop('stand');
                     await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
                 } else {

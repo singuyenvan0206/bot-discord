@@ -88,6 +88,7 @@
         "total_payout": "Total Payout",
         "bust_title": "🃏 Blackjack — 💥 BUST!",
         "bust_msg": "💥 **You busted (over 21)! Dealer wins.**",
+        "won_coins": "\n{{emoji}} **Dealer won {{amount}} coins!**",
         "timeout_title": "🃏 Blackjack — {{emoji}} Timeout"
     },
     "tictactoe": {
