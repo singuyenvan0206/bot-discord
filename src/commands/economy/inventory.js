@@ -65,7 +65,18 @@ module.exports = {
                 embed.addFields({
                     name: t('inventory.info', lang),
                     value: `${t('inventory.total_items', lang, { count: totalItems.toLocaleString() })}\n${t('inventory.inventory_value', lang, { emoji: config.EMOJIS.COIN, amount: totalValue.toLocaleString() })}`,
-                    inline: false
+                    inline: true
+                });
+
+                // Global Multipliers (Capped 200%)
+                const { getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+                const incomeBonus = Math.round(getTotalIncomeMultiplier(target.id) * 100);
+                const xpBonus = Math.round((getXpMultiplier(target.id) - 1.0) * 100);
+
+                embed.addFields({
+                    name: t('inventory.global_multipliers', lang),
+                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 200%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 200%`,
+                    inline: true
                 });
 
                 // Active Buffs — aggregated by type

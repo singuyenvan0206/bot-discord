@@ -68,7 +68,7 @@ function getTotalIncomeMultiplier(userId) {
     const totalBonusMulti = itemMulti + levelMulti + jobMulti;
 
     // Hard cap at 200% (2.0)
-    return Math.min(totalBonusMulti, 5.0);
+    return Math.min(totalBonusMulti, 2.0);
 }
 
 /**

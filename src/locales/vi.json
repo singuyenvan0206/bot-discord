@@ -656,6 +656,9 @@
         "total_items": "Tổng vật phẩm: **{{count}}**",
         "inventory_value": "Giá trị kho đồ: **{{emoji}} {{amount}}**",
         "sell_tip": "💡 Mẹo: Dùng {{prefix}}sell <vật_phẩm> để quy đổi vật phẩm thành coins!",
+        "global_multipliers": "🚀 Hệ Số Thưởng (Capped 200%)",
+        "income_bonus": "Thu nhập",
+        "xp_bonus": "XP",
         "buff_activated": "\n✨ **Buff đã kích hoạt:** +{{percent}}% {{type}} trong **{{duration}}**!"
     },
     "buy": {

@@ -598,7 +598,10 @@
         "active_buffs": "⚡ Active Buffs",
         "total_items": "Total Items: **{{count}}**",
         "inventory_value": "Inventory Value: **{{emoji}} {{amount}}**",
-        "sell_tip": "💡 Tip: Use {{prefix}}sell <item> to turn items back into coins!"
+        "sell_tip": "💡 Tip: Use {{prefix}}sell <item> to turn items back into coins!",
+        "global_multipliers": "🚀 Global Multipliers (Capped 200%)",
+        "income_bonus": "Income",
+        "xp_bonus": "XP"
     },
     "buy": {
         "prompt": "❌ Please specify the item you want to buy (e.g., `{{prefix}}buy 1` or `{{prefix}}buy cookies`).",
