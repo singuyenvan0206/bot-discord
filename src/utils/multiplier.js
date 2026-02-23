@@ -34,12 +34,12 @@ function getUserMultiplier(userId, type) {
         }
     }
 
-    // Diminishing returns above 1.0
+    // Diminishing returns above 1.0, hard cap at 2.5 (250%)
     if (totalMulti > 1.0) {
         totalMulti = 1.0 + (totalMulti - 1.0) * 0.5;
     }
 
-    return totalMulti;
+    return Math.min(totalMulti, 2.5);
 }
 
 /**
@@ -67,8 +67,8 @@ function getTotalIncomeMultiplier(userId) {
 
     const totalBonusMulti = itemMulti + levelMulti + jobMulti;
 
-    // Hard cap at 200% (2.0)
-    return Math.min(totalBonusMulti, 2.0);
+    // Hard cap at 250% (2.5)
+    return Math.min(totalBonusMulti, 2.5);
 }
 
 /**
