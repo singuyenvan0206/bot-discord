@@ -1,3 +1,4 @@
+process.env.DB_NAME = 'wordchain.db';
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, Events } = require('discord.js');
 const db = require('./database');
