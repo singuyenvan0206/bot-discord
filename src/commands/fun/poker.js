@@ -15,7 +15,7 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);
         const user = db.getUser(message.author.id);
-        const { parseAmount } = require('../../utils/economy');
+        const { parseAmount, addHouseProfit } = require('../../utils/economy');
         const minBuyIn = args[0] ? parseAmount(args[0], user.balance) : 50;
         const hostId = message.author.id;
 
@@ -513,7 +513,11 @@ module.exports = {
             });
 
             players.forEach(p => {
-                if (!p.isBot && p.chips > 0) db.addBalance(p.id, p.chips);
+                if (p.isBot && p.chips > 0) {
+                    addHouseProfit(message, p.chips);
+                } else if (!p.isBot && p.chips > 0) {
+                    db.addBalance(p.id, p.chips);
+                }
             });
 
             const winnerNames = winners.map(w => w.name).join(', ');

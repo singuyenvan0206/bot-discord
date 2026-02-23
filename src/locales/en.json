@@ -107,7 +107,7 @@
         "title": "🎰  Slot Machine",
         "rolling": "🎰  Rolling...",
         "win_jackpot": "🎰 **JACKPOT! THREE {{symbol}} SYMBOLS!**",
-        "win_small": "🎰 **Two matching symbols.** (50% Refund)",
+        "win_small": "🎰 **Two matching symbols.** (25% Refund)",
         "lose": "🎰 No matches. Better luck next time!",
         "won_coins": "\n{{emoji}} **Won {{amount}} coins!**",
         "lost_coins": "\n💸 **Lost {{amount}} coins.**",

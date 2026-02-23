@@ -3,7 +3,7 @@ const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
 const { startCooldown } = require('../../utils/cooldown');
-const { parseAmount } = require('../../utils/economy');
+const { parseAmount, addHouseProfit } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
@@ -52,6 +52,7 @@ module.exports = {
             }
         } else {
             flavorText = t('coinflip.lose', lang, { amount: bet });
+            if (bet) addHouseProfit(message, bet);
         }
 
         const embed = new EmbedBuilder()

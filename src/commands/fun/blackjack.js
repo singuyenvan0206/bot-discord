@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
-const { parseAmount } = require('../../utils/economy');
+const { parseAmount, addHouseProfit } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 const CARD_SUITS = config.CARDS.SUITS;
@@ -62,6 +62,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     else if (playerVal < dealerVal) {
         result = t('blackjack.lose', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_LOSS;
+        if (bet) addHouseProfit(i, bet);
     }
     else {
         result = t('blackjack.tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
@@ -160,6 +161,7 @@ module.exports = {
                 if (handValue(playerHand) > 21) {
                     const bustEmbed = buildEmbed(true).setTitle(t('blackjack.bust_title', lang)).setColor(config.COLORS.GAMBLE_LOSS);
                     bustEmbed.setDescription(bustEmbed.data.description + `\n\n${t('blackjack.bust_msg', lang)}`);
+                    if (bet) addHouseProfit(i, bet);
                     await i.update({ embeds: [bustEmbed], components: [] });
                     collector.stop();
                 } else if (handValue(playerHand) === 21) {

@@ -57,6 +57,9 @@ module.exports = {
         collector.on('collect', async m => {
             const word = m.content.toLowerCase().trim();
 
+            // Ignore command-like messages unless it's the stop command
+            if (word.startsWith(config.PREFIX) && word !== `${config.PREFIX}stop`) return;
+
             // Stop command (manager only)
             if (word === `${config.PREFIX}stop`) {
                 if (isManager(m.member)) {
@@ -71,7 +74,7 @@ module.exports = {
                 return m.react(config.EMOJIS.WAITING);
             }
 
-            // Word validation
+            // Word validation - Local checks first
             let invalidReason = null;
             if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
             else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
@@ -85,8 +88,17 @@ module.exports = {
                 return;
             }
 
+            // Show "thinking" state while checking dictionary
+            const waitReaction = await m.react(config.EMOJIS.WAITING).catch(() => null);
+
             // Dictionary check
             const valid = await isValidWord(word);
+
+            // Remove waiting reaction before showing result
+            if (waitReaction) {
+                waitReaction.users.remove(message.client.user.id).catch(() => { });
+            }
+
             if (!valid) return m.react(config.EMOJIS.ERROR);
 
             // Accept word

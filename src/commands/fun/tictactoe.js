@@ -4,6 +4,7 @@ const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require
 const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
+const { addHouseProfit } = require('../../utils/economy');
 
 module.exports = {
     name: 'tictactoe',
@@ -173,6 +174,8 @@ module.exports = {
                             resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                         }
                     } else {
+                        const baseReward = config.ECONOMY.TICTACTOE_REWARD;
+                        addHouseProfit(i, baseReward);
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' });
                     }
                 }

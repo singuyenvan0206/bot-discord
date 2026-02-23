@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
-const { parseAmount } = require('../../utils/economy');
+const { parseAmount, addHouseProfit } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
@@ -113,7 +113,7 @@ module.exports = {
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
                     (won
                         ? t('dice.payout', lang, { amount: prize.toLocaleString(), multiplier: winMultiplier }) + bonusText
-                        : t('dice.lose_msg', lang, { amount: bet }))
+                        : (addHouseProfit(i, bet), t('dice.lose_msg', lang, { amount: bet })))
                 )
                 .setColor(won ? config.COLORS.GAMBLE_WIN : config.COLORS.GAMBLE_LOSS);
 

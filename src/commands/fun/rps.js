@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
-const { parseAmount } = require('../../utils/economy');
+const { parseAmount, addHouseProfit } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
@@ -137,6 +137,7 @@ module.exports = {
                     result += t('rps.refund', lang);
                 } else {
                     result += t('rps.lost_coins', lang, { amount: betAmount });
+                    addHouseProfit(interaction || msgObj, betAmount);
                 }
             }
 

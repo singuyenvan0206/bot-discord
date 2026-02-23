@@ -66,44 +66,57 @@ function getLevelMultiplier(level) {
 }
 
 /**
+ * Assigns a random job to a user.
+ */
+function assignRandomJob(userId, lang) {
+    const config = require('../config');
+    const { t } = require('./i18n');
+
+    const jobKeys = Object.keys(config.ECONOMY.JOBS);
+    const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
+    const jobConfig = config.ECONOMY.JOBS[randomJobId];
+
+    db.updateUser(userId, { job: randomJobId });
+
+    return {
+        id: randomJobId,
+        config: jobConfig,
+        name: t(`jobs.${randomJobId}.name`, lang) || randomJobId,
+        fact: t(`job.job_facts.${randomJobId}`, lang) || "..."
+    };
+}
+
+/**
  * Kiểm tra và gửi thông báo đạt mốc Cấp độ 20.
  */
 async function checkAndSendMilestone(message, reachedLevel20, lang) {
     if (!reachedLevel20) return;
 
     const { EmbedBuilder } = require('discord.js');
-    const { t } = require('./i18n');
     const config = require('../config');
+    const { t } = require('./i18n');
 
-    // 1. Pick a random job
-    const jobKeys = Object.keys(config.ECONOMY.JOBS);
-    const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
-    const jobConfig = config.ECONOMY.JOBS[randomJobId];
+    // Assign job
+    const job = assignRandomJob(message.author.id, lang);
 
-    // 2. Update user in database
-    db.updateUser(message.author.id, { job: randomJobId });
-
-    // 3. Prepare announcement
-    const jobName = t(`jobs.${randomJobId}.name`, lang) || randomJobId;
-    const jobFact = t(`job.job_facts.${randomJobId}`, lang) || "...";
-
+    // Prepare announcement
     const embed = new EmbedBuilder()
         .setTitle(t('job.milestone_title', lang))
         .setDescription(t('job.milestone_desc', lang))
         .addFields({
             name: t('job.name_field', lang) || "Nghề nghiệp",
             value: t('job.milestone_assigned', lang, {
-                job: jobName,
-                icon: jobConfig.icon,
-                fact: jobFact,
+                job: job.name,
+                icon: job.config.icon,
+                fact: job.fact,
                 prefix: config.PREFIX
             })
         })
         .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 256 }))
-        .setColor(jobConfig.color || '#f1c40f')
+        .setColor(job.config.color || '#f1c40f')
         .setTimestamp();
 
-    // 4. Send announcement as DM (only visible to the user)
+    // Send announcement as DM (only visible to the user)
     try {
         await message.author.send({ embeds: [embed] });
     } catch {
@@ -147,6 +160,7 @@ module.exports = {
     calculateLevel,
     addXp,
     getLevelMultiplier,
+    assignRandomJob,
     checkAndSendMilestone,
     deductLevel,
     XP_AMOUNTS

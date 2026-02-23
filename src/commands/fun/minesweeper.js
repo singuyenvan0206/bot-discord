@@ -14,7 +14,7 @@ module.exports = {
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
-        const { parseAmount } = require('../../utils/economy');
+        const { parseAmount, addHouseProfit } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance) : 0;
 
         if (args[0] && bet <= 0) return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
@@ -245,6 +245,7 @@ module.exports = {
                                 ? t('minesweeper.shield_used', lang, { amount: loseAmount })
                                 : t('minesweeper.bet_lost', lang, { amount: loseAmount })))
                         .setColor(0xE74C3C);
+                    if (bet) addHouseProfit(message, loseAmount);
                     await i.update({ embeds: [loseEmbed], components: renderComponents(true, false) });
                 } else {
                     // Check Win

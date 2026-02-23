@@ -74,7 +74,7 @@
         "title": "🎰  Máy Quay Slots",
         "rolling": "🎰  Đang quay...",
         "win_jackpot": "🎰 **SIÊU CẤP NỔ HŨ! BA BIỂU TƯỢNG {{symbol}}!**",
-        "win_small": "🎰 **Hai biểu tượng trùng nhau.** (Hoàn trả lại 50%)",
+        "win_small": "🎰 **Hai biểu tượng trùng nhau.** (Hoàn trả lại 25%)",
         "lose": "🎰 Không có cặp nào. Chúc bạn may mắn lần sau!",
         "won_coins": "\n{{emoji}} **Thắng {{amount}} coins!**",
         "lost_coins": "\n💸 **Mất {{amount}} coins.**",
