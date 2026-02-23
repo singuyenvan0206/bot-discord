@@ -26,7 +26,7 @@ module.exports = {
         }
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        const weights = [50, 30, 25, 15, 10, 5, 1]; // Giảm độ khó một chút so với bản hardcore trước đó
+        const weights = [50, 35, 30, 20, 15, 10, 5];
         const totalWeight = weights.reduce((a, b) => a + b, 0);
 
         function weightedRandom() {
