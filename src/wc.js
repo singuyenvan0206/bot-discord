@@ -1,0 +1,152 @@
+require('dotenv').config();
+const { Client, GatewayIntentBits, Partials, EmbedBuilder } = require('discord.js');
+const db = require('./database');
+const config = require('./config');
+const { t, getLanguage } = require('./utils/i18n');
+const { calculateReward } = require('./utils/multiplier');
+const { isManager } = require('./utils/permissions');
+
+// Validate Environment
+const TOKEN = process.env.WORDCHAIN_TOKEN || process.env.DISCORD_TOKEN;
+if (!TOKEN) {
+    console.error('❌ Missing DISCORD_TOKEN or WORDCHAIN_TOKEN in .env file');
+    process.exit(1);
+}
+
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ],
+    partials: [Partials.Message, Partials.Channel, Partials.User],
+});
+
+// Mock collections to support shared utilities if needed
+const { Collection } = require('discord.js');
+client.commands = new Collection();
+client.cooldowns = new Collection();
+
+// Module-level Map: channelId → collector (game runs independently per channel)
+const activeGames = new Map();
+
+client.once('ready', () => {
+    console.log(`✅ Word Chain Standalone Bot is ready as ${client.user.tag}`);
+});
+
+// Helper: validate word via dictionary API
+const isValidWord = async (word) => {
+    try {
+        const response = await fetch(`${config.API_URLS.DICTIONARY}${encodeURIComponent(word)}`);
+        return response.status === 200;
+    } catch (e) {
+        console.warn('⚠️ Dictionary API error, skipping validation:', e.message);
+        return true; // Allow if API is down
+    }
+};
+
+client.on('messageCreate', async (message) => {
+    if (message.author.bot || !message.guild) return;
+
+    const lang = getLanguage(message.author.id, message.guild.id);
+    const prefix = config.PREFIX;
+    const content = message.content.toLowerCase().trim();
+
+    // Command Check: $wordchain or $wc
+    if (content.startsWith(`${prefix}wordchain`) || content.startsWith(`${prefix}wc`)) {
+        if (activeGames.has(message.channel.id)) {
+            return message.reply(t('wordchain.already_running', lang, { prefix }));
+        }
+
+        // Game state
+        const usedWords = new Set();
+        const playerScores = new Map();
+        let lastChar = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+        let lastPlayerId = null;
+
+        const embed = new EmbedBuilder()
+            .setTitle(t('wordchain.title', lang))
+            .setDescription(t('wordchain.start_desc', lang, { char: lastChar.toUpperCase() }))
+            .setColor(config.COLORS.INFO)
+            .setFooter({ text: t('wordchain.stop_footer', lang, { prefix }) });
+
+        await message.channel.send({ embeds: [embed] });
+
+        const collector = message.channel.createMessageCollector({
+            filter: m => !m.author.bot,
+        });
+
+        activeGames.set(message.channel.id, collector);
+
+        collector.on('collect', async m => {
+            const word = m.content.toLowerCase().trim();
+
+            if (word.startsWith(prefix) && word !== `${prefix}stop`) return;
+
+            if (word === `${prefix}stop`) {
+                if (isManager(m.member)) {
+                    collector.stop('stopped');
+                    return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author.username })}**`);
+                }
+                return;
+            }
+
+            if (m.author.id === lastPlayerId) {
+                return m.react(config.EMOJIS.WAITING).catch(() => { });
+            }
+
+            let invalidReason = null;
+            if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
+            else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
+            else if (word.length < 3) invalidReason = t('wordchain.too_short', lang);
+            else if (!/^[a-z]+$/.test(word)) invalidReason = t('wordchain.invalid_chars', lang);
+
+            if (invalidReason) {
+                await m.react(config.EMOJIS.ERROR).catch(() => { });
+                const warn = await message.channel.send(`⚠️ ${m.author}, ${invalidReason}`);
+                setTimeout(() => warn.delete().catch(() => { }), 3000);
+                return;
+            }
+
+            const waitReaction = await m.react(config.EMOJIS.WAITING).catch(() => null);
+            const valid = await isValidWord(word);
+
+            if (waitReaction) {
+                waitReaction.users.remove(client.user.id).catch(() => { });
+            }
+
+            if (!valid) return m.react(config.EMOJIS.ERROR).catch(() => { });
+
+            // Accept word
+            usedWords.add(word);
+            lastChar = word.slice(-1);
+            lastPlayerId = m.author.id;
+
+            const baseReward = config.ECONOMY.WORDCHAIN_REWARD || 5;
+            const { total: totalReward } = calculateReward(baseReward, m.author.id);
+
+            db.addBalance(m.author.id, totalReward);
+            playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
+
+            await m.react(config.EMOJIS.SUCCESS).catch(() => { });
+        });
+
+        collector.on('end', (_, reason) => {
+            activeGames.delete(message.channel.id);
+
+            const scoreboard = [...playerScores.entries()]
+                .sort((a, b) => b[1] - a[1])
+                .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} **${coins.toLocaleString()}**`)
+                .join('\n') || t('wordchain.no_participants', lang);
+
+            const endEmbed = new EmbedBuilder()
+                .setTitle(t('wordchain.end_title', lang))
+                .setDescription(`**${t('wordchain.total_words', lang)}:** ${usedWords.size}\n\n${scoreboard}`)
+                .setColor(config.COLORS.ERROR);
+
+            message.channel.send({ embeds: [endEmbed] });
+        });
+    }
+});
+
+client.login(TOKEN);
