@@ -6,7 +6,7 @@ const config = require('../../config');
 
 module.exports = {
     name: 'slut',
-    aliases: ['sl'],
+    aliases: ['slt'],
     description: 'Đi khách để kiếm tiền',
     cooldown: config.ECONOMY.SLUT_COOLDOWN,
     async execute(message, args) {

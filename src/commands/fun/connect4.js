@@ -5,6 +5,7 @@ const { startCooldown } = require('../../utils/cooldown');
 const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { parseAmount } = require('../../utils/economy');
 
 module.exports = {
     name: 'connect4',
@@ -19,8 +20,7 @@ module.exports = {
         if (opponent.bot) return message.reply(t('common.no_challenge_bot', lang));
         if (opponent.id === message.author.id) return message.reply(t('common.no_challenge_self', lang));
 
-        let bet = parseInt(args[1]); // args[0] is user mention
-        if (!args[1]) bet = 0;
+        let bet = args[1] ? parseAmount(args[1], authorUser.balance, config.ECONOMY.MAX_BET) : 0;
 
         const authorUser = db.getUser(message.author.id);
         const opponentUser = db.getUser(opponent.id);
