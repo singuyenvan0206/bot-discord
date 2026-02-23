@@ -29,8 +29,21 @@ module.exports = {
                 // Clear command collection
                 message.client.commands.clear();
 
-                const commandsPath = path.join(__dirname, '../'); // Go up to /commands/
+                // Clear all files in src from require cache to ensure utilities like database are reloaded
+                const srcPath = path.join(__dirname, '../../'); // The src/ directory
+                Object.keys(require.cache).forEach(cacheKey => {
+                    if (cacheKey.startsWith(srcPath)) {
+                        delete require.cache[cacheKey];
+                    }
+                });
+
+                // Re-require and load all commands
+                const commandsPath = path.join(__dirname, '../'); // /src/commands/
                 const commandFolders = fs.readdirSync(commandsPath);
+
+                // Re-initialize database after reloading
+                const db = require('../../database');
+                await db.getDb();
 
                 for (const folder of commandFolders) {
                     const folderPath = path.join(commandsPath, folder);
@@ -38,10 +51,6 @@ module.exports = {
                         const commandFiles = fs.readdirSync(folderPath).filter(f => f.endsWith('.js'));
                         for (const file of commandFiles) {
                             const filePath = path.join(folderPath, file);
-
-                            // Delete from cache
-                            delete require.cache[require.resolve(filePath)];
-
                             const command = require(filePath);
                             if ('name' in command && 'execute' in command) {
                                 message.client.commands.set(command.name, command);
@@ -53,8 +62,8 @@ module.exports = {
                     }
                 }
 
-                await msg.edit(`✅ **Update and Reload complete!**\n\`\`\`${output.substring(0, 500)}\`\`\``);
-                console.log('🔄 All commands have been hot-reloaded.');
+                await msg.edit(`✅ **Update and Reload complete!**\nUtilities and commands have been hot-reloaded.\n\`\`\`${output.substring(0, 400)}\`\`\``);
+                console.log('🔄 All commands and utilities have been hot-reloaded.');
             } catch (reloadError) {
                 console.error('Reload error:', reloadError);
                 await msg.edit(`❌ **Commands reloaded with errors:**\n\`\`\`${reloadError.message}\`\`\``);
