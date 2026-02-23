@@ -39,7 +39,8 @@ function getUserMultiplier(userId, type) {
         totalMulti = 1.0 + (totalMulti - 1.0) * 0.5;
     }
 
-    return totalMulti;
+    // Hard cap at 200% (2.0)
+    return Math.min(totalMulti, 2.0);
 }
 
 /**
