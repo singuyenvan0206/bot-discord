@@ -15,6 +15,7 @@ module.exports = {
         GAMBLE_WIN: 0x2ECC71,    // Green
         GAMBLE_LOSS: 0xE74C3C    // Red
     },
+    GIVEAWAY_CHANNEL_ID: '855289694559928330', // ID kênh cố định
     EMOJIS: {
         GIVEAWAY: '🎉',
         SUCCESS: '✅',

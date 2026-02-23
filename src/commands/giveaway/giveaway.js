@@ -4,6 +4,7 @@ const { createGiveawayEmbed, createEntryButton } = require('../../utils/embeds')
 const { isManager } = require('../../utils/permissions');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const ms = require('ms');
 
 module.exports = {
     name: 'giveaway',
@@ -13,21 +14,23 @@ module.exports = {
     subcommands: {
         'start <time> <winners> <prize>': 'Bắt đầu một giveaway mới.',
         'end <message_id>': 'Kết thúc một giveaway đang diễn ra sớm.',
-        'reroll <message_id>': 'Chọn lại người chiến thắng cho một giveaway đã kết thúc.',
+        'reroll <message_id>': 'Chọn lại người chiến thắng.',
         'list': 'Xem danh sách các giveaway đang diễn ra.',
-        'delete <message_id>': 'Hủy bỏ và xóa một giveaway.'
+        'delete <message_id>': 'Hủy và xóa một giveaway.'
     },
-    examples: ['start 1h 1 1000 Coins', 'list', 'end 1234567890'],
+
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
+
         if (!isManager(message.member)) {
             return message.reply(`❌ ${t('giveaway.no_permission', lang)}`);
         }
 
         const subcommand = args[0]?.toLowerCase();
 
-        if (subcommand === 'start' || subcommand === 's' || subcommand === 'st') {
-            // $giveaway start <time> <winners> <prize>
+        /* ================= START ================= */
+
+        if (['start', 's', 'st'].includes(subcommand)) {
             const durationInput = args[1];
             const winnersInput = args[2];
             const prize = args.slice(3).join(' ');
@@ -36,18 +39,26 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.usage_start', lang, { prefix: config.PREFIX })}`);
             }
 
-            const ms = require('ms');
             const duration = ms(durationInput);
-            if (!duration) return message.reply(`❌ ${t('giveaway.invalid_duration', lang)}`);
+            if (!duration) {
+                return message.reply(`❌ ${t('giveaway.invalid_duration', lang)}`);
+            }
 
             const winnerCount = parseInt(winnersInput);
-            if (isNaN(winnerCount) || winnerCount < 1) return message.reply(`❌ ${t('giveaway.invalid_winners', lang)}`);
+            if (isNaN(winnerCount) || winnerCount < 1) {
+                return message.reply(`❌ ${t('giveaway.invalid_winners', lang)}`);
+            }
+
+            const giveawayChannel = message.guild.channels.cache.get(config.GIVEAWAY_CHANNEL_ID);
+
+            if (!giveawayChannel) {
+                return message.reply('❌ Không tìm thấy kênh giveaway trong config.');
+            }
 
             const endTime = Math.floor((Date.now() + duration) / 1000);
 
             message.delete().catch(() => { });
 
-            // Create giveaway object for embed (matches DB column names used by embeds.js)
             const giveaway = {
                 prize: prize,
                 ends_at: endTime,
@@ -56,18 +67,22 @@ module.exports = {
                 description: null,
                 required_role_id: null,
                 guild_id: message.guild.id,
-                channel_id: message.channel.id,
+                channel_id: giveawayChannel.id,
                 message_id: null
             };
 
             const embed = createGiveawayEmbed(giveaway, 0, lang);
-            const sentMsg = await message.channel.send({ embeds: [embed], components: [createEntryButton(false, lang)] });
+
+            const sentMsg = await giveawayChannel.send({
+                embeds: [embed],
+                components: [createEntryButton(false, lang)]
+            });
+
             giveaway.message_id = sentMsg.id;
 
-            // Save to DB (matches db.createGiveaway camelCase parameter names)
             db.createGiveaway({
                 messageId: sentMsg.id,
-                channelId: message.channel.id,
+                channelId: giveawayChannel.id,
                 guildId: message.guild.id,
                 prize: prize,
                 winnerCount: winnerCount,
@@ -75,57 +90,105 @@ module.exports = {
                 hostId: message.author.id,
             });
 
-        } else if (subcommand === 'end' || subcommand === 'e' || subcommand === 'en') {
+            return;
+        }
+
+        /* ================= END ================= */
+
+        if (['end', 'e', 'en'].includes(subcommand)) {
             const messageId = args[1];
-            if (!messageId) return message.reply(`❌ ${t('giveaway.usage_end', lang, { prefix: config.PREFIX })}`);
+            if (!messageId) {
+                return message.reply(`❌ ${t('giveaway.usage_end', lang, { prefix: config.PREFIX })}`);
+            }
 
             const giveaway = db.getGiveaway(messageId);
-            if (!giveaway || giveaway.ended) return message.reply(`❌ ${t('giveaway.not_found_or_ended', lang)}`);
+            if (!giveaway || giveaway.ended) {
+                return message.reply(`❌ ${t('giveaway.not_found_or_ended', lang)}`);
+            }
 
-            // Set end time to past so the timer picks it up and finishes it properly
-            db.updateGiveaway(giveaway.message_id, { endsAt: Math.floor(Date.now() / 1000) - 1 });
-            message.reply(`✅ ${t('giveaway.ending_msg', lang)}`);
+            db.updateGiveaway(giveaway.message_id, {
+                endsAt: Math.floor(Date.now() / 1000) - 1
+            });
 
-        } else if (subcommand === 'reroll' || subcommand === 'r' || subcommand === 'rr') {
+            return message.reply(`✅ ${t('giveaway.ending_msg', lang)}`);
+        }
+
+        /* ================= REROLL ================= */
+
+        if (['reroll', 'r', 'rr'].includes(subcommand)) {
             const messageId = args[1];
-            if (!messageId) return message.reply(`❌ ${t('giveaway.usage_reroll', lang, { prefix: config.PREFIX })}`);
+            if (!messageId) {
+                return message.reply(`❌ ${t('giveaway.usage_reroll', lang, { prefix: config.PREFIX })}`);
+            }
 
             const giveaway = db.getGiveaway(messageId);
-            if (!giveaway) return message.reply(`❌ ${t('giveaway.not_found', lang)}`);
-            if (!giveaway.ended) return message.reply(`❌ ${t('giveaway.not_ended', lang)}`);
+            if (!giveaway) {
+                return message.reply(`❌ ${t('giveaway.not_found', lang)}`);
+            }
+
+            if (!giveaway.ended) {
+                return message.reply(`❌ ${t('giveaway.not_ended', lang)}`);
+            }
 
             const participants = db.getParticipantUserIds(giveaway.id);
-            if (participants.length === 0) return message.reply(`❌ ${t('giveaway.no_participants', lang)}`);
+            if (!participants.length) {
+                return message.reply(`❌ ${t('giveaway.no_participants', lang)}`);
+            }
 
             const winnerId = participants[Math.floor(Math.random() * participants.length)];
+
             const channel = message.guild.channels.cache.get(giveaway.channel_id);
             if (channel) {
                 channel.send(`🎉 **${t('giveaway.new_winner', lang)}:** <@${winnerId}>!`);
             }
-            message.reply(`✅ ${t('giveaway.rerolled', lang)}`);
 
-        } else if (subcommand === 'list' || subcommand === 'l' || subcommand === 'li') {
-            const giveaways = db.getActiveGiveaways().filter(g => g.guild_id === message.guild.id);
-            if (giveaways.length === 0) return message.reply(`❌ ${t('giveaway.no_active', lang)}`);
+            return message.reply(`✅ ${t('giveaway.rerolled', lang)}`);
+        }
 
-            const list = giveaways.map(g => `ID: \`${g.message_id}\` | ${t('giveaway.prize', lang)}: **${g.prize}** | ${t('giveaway.ends', lang)}: <t:${g.ends_at}:R>`).join('\n');
-            message.reply(`🎉 **${t('giveaway.active_list_title', lang)}**\n${list}`);
+        /* ================= LIST ================= */
 
-        } else if (subcommand === 'delete' || subcommand === 'd' || subcommand === 'del') {
+        if (['list', 'l', 'li'].includes(subcommand)) {
+            const giveaways = db.getActiveGiveaways()
+                .filter(g => g.guild_id === message.guild.id);
+
+            if (!giveaways.length) {
+                return message.reply(`❌ ${t('giveaway.no_active', lang)}`);
+            }
+
+            const list = giveaways.map(g =>
+                `ID: \`${g.message_id}\` | ${t('giveaway.prize', lang)}: **${g.prize}** | ${t('giveaway.ends', lang)}: <t:${g.ends_at}:R>`
+            ).join('\n');
+
+            return message.reply(`🎉 **${t('giveaway.active_list_title', lang)}**\n${list}`);
+        }
+
+        /* ================= DELETE ================= */
+
+        if (['delete', 'd', 'del'].includes(subcommand)) {
             const messageId = args[1];
-            if (!messageId) return message.reply(`❌ ${t('giveaway.usage_delete', lang, { prefix: config.PREFIX })}`);
+            if (!messageId) {
+                return message.reply(`❌ ${t('giveaway.usage_delete', lang, { prefix: config.PREFIX })}`);
+            }
 
             const giveaway = db.getGiveaway(messageId);
-            if (!giveaway) return message.reply(`❌ ${t('giveaway.not_found', lang)}`);
+            if (!giveaway) {
+                return message.reply(`❌ ${t('giveaway.not_found', lang)}`);
+            }
 
             db.deleteGiveaway(giveaway.message_id);
+
             const channel = message.guild.channels.cache.get(giveaway.channel_id);
             if (channel) {
-                channel.messages.fetch(giveaway.message_id).then(m => m.delete()).catch(() => { });
+                channel.messages.fetch(giveaway.message_id)
+                    .then(m => m.delete())
+                    .catch(() => { });
             }
-            message.reply(`✅ ${t('giveaway.deleted', lang)}`);
-        } else {
-            message.reply(`❌ ${t('giveaway.invalid_subcommand', lang, { prefix: config.PREFIX })}`);
+
+            return message.reply(`✅ ${t('giveaway.deleted', lang)}`);
         }
+
+        /* ================= INVALID ================= */
+
+        return message.reply(`❌ ${t('giveaway.invalid_subcommand', lang, { prefix: config.PREFIX })}`);
     }
 };
