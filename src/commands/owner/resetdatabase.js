@@ -26,6 +26,7 @@ module.exports = {
 
         try {
             db.clearAllData();
+            message.client.cooldowns.clear();
 
             const embed = new EmbedBuilder()
                 .setTitle('✅ Database Reset')

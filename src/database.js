@@ -507,6 +507,8 @@ function clearAllData() {
     execute('DELETE FROM giveaways');
     execute('DELETE FROM participants');
     execute('DELETE FROM guild_users');
+    execute('DELETE FROM guilds');
+    execute('DELETE FROM global_settings');
     execute('VACUUM');
 }
 
