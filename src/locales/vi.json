@@ -256,8 +256,28 @@
     },
     "beg": {
         "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
-        "success": "💰 Bạn gặp một người tốt bụng và được họ cho **{{amount}}** coins! {{emoji}}",
+        "success": "💰 **{{person}}** đã tặng bạn **{{amount}}** coins! {{emoji}}",
         "failure": "😢 Bạn đứng xin cả buổi nhưng chẳng ai thèm cho xu nào.",
+        "persons": [
+            "Elon Musk",
+            "MrBeast",
+            "Một bà lão",
+            "Bill Gates",
+            "Một người lạ tốt bụng",
+            "Satoshi Nakamoto",
+            "Simsimi",
+            "Một lập trình viên",
+            "Một nghệ sĩ"
+        ],
+        "fail_messages": [
+            "Biến đi nhóc!",
+            "Tôi cũng đang nghèo đây này.",
+            "Làm việc đi rồi có tiền.",
+            "Không có tiền lẻ đâu.",
+            "Đừng làm phiền tôi.",
+            "Tôi trông giống ATM à?",
+            "Xin lỗi, tôi không mang theo tiền."
+        ],
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*"
     },
     "search": {

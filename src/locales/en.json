@@ -200,8 +200,28 @@
     },
     "beg": {
         "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
-        "success": "💰 A kind stranger gave you **{{amount}}** coins! {{emoji}}",
+        "success": "💰 **{{person}}** gave you **{{amount}}** coins! {{emoji}}",
         "failure": "😢 You begged all day but nobody gave you anything.",
+        "persons": [
+            "Elon Musk",
+            "MrBeast",
+            "An old lady",
+            "Bill Gates",
+            "A kind stranger",
+            "Satoshi Nakamoto",
+            "Simsimi",
+            "A programmer",
+            "An artist"
+        ],
+        "fail_messages": [
+            "Get lost, kid!",
+            "I'm broke too.",
+            "Get a job.",
+            "I don't have any change.",
+            "Don't bother me.",
+            "Do I look like an ATM?",
+            "Sorry, I don't carry cash."
+        ],
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*"
     },
     "search": {
