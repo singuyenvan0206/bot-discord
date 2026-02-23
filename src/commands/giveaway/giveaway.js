@@ -49,10 +49,16 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.invalid_winners', lang)}`);
             }
 
-            const giveawayChannel = message.guild.channels.cache.get(config.GIVEAWAY_CHANNEL_ID);
+            let giveawayChannel;
+
+            try {
+                giveawayChannel = await message.guild.channels.fetch(config.GIVEAWAY_CHANNEL_ID);
+            } catch (err) {
+                console.error(err);
+            }
 
             if (!giveawayChannel) {
-                return message.reply('❌ Không tìm thấy kênh giveaway trong config.');
+                return message.reply('❌ Không tìm thấy kênh giveaway. Kiểm tra ID hoặc quyền của bot.');
             }
 
             const endTime = Math.floor((Date.now() + duration) / 1000);
