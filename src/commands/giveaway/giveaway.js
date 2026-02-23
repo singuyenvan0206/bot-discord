@@ -1,10 +1,9 @@
-const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const db = require('../../database');
+const config = require('../../config');
+const ms = require('ms');
 const { createGiveawayEmbed, createEntryButton } = require('../../utils/embeds');
 const { isManager } = require('../../utils/permissions');
 const { t, getLanguage } = require('../../utils/i18n');
-const config = require('../../config');
-const ms = require('ms');
 
 module.exports = {
     name: 'giveaway',
@@ -58,12 +57,14 @@ module.exports = {
             }
 
             if (!giveawayChannel) {
-                return message.reply('❌ Không tìm thấy kênh giveaway. Kiểm tra ID hoặc quyền của bot.');
+                return message.reply(`❌ ${t('giveaway.channel_not_found', lang)}`);
+            }
+
+            if (!giveawayChannel.isTextBased?.() || giveawayChannel.isDMBased?.()) {
+                return message.reply(`❌ ${t('giveaway.channel_not_text', lang)}`);
             }
 
             const endTime = Math.floor((Date.now() + duration) / 1000);
-
-            message.delete().catch(() => { });
 
             const giveaway = {
                 prize: prize,
@@ -79,22 +80,27 @@ module.exports = {
 
             const embed = createGiveawayEmbed(giveaway, 0, lang);
 
-            const sentMsg = await giveawayChannel.send({
-                embeds: [embed],
-                components: [createEntryButton(false, lang)]
-            });
+            try {
+                const sentMsg = await giveawayChannel.send({
+                    embeds: [embed],
+                    components: [createEntryButton(false, lang)]
+                });
 
-            giveaway.message_id = sentMsg.id;
+                db.createGiveaway({
+                    messageId: sentMsg.id,
+                    channelId: giveawayChannel.id,
+                    guildId: message.guild.id,
+                    prize: prize,
+                    winnerCount: winnerCount,
+                    endsAt: endTime,
+                    hostId: message.author.id,
+                });
 
-            db.createGiveaway({
-                messageId: sentMsg.id,
-                channelId: giveawayChannel.id,
-                guildId: message.guild.id,
-                prize: prize,
-                winnerCount: winnerCount,
-                endsAt: endTime,
-                hostId: message.author.id,
-            });
+                message.delete().catch(() => { });
+            } catch (err) {
+                console.error('[Giveaway] Send failed:', err);
+                return message.reply(`❌ ${t('giveaway.send_failed', lang)}`);
+            }
 
             return;
         }

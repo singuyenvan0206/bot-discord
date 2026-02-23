@@ -30,7 +30,8 @@ module.exports = {
         if (!message.content.startsWith(config.PREFIX)) return;
 
         const args = message.content.slice(config.PREFIX.length).trim().split(/ +/);
-        const commandName = args.shift().toLowerCase();
+        const commandName = (args.shift() || '').toLowerCase();
+        if (!commandName) return;
 
         const { client } = message;
         const command = client.commands.get(commandName) ||

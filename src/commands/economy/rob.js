@@ -1,8 +1,8 @@
 const db = require('../../database');
-const { getLevelMultiplier, deductLevel } = require('../../utils/leveling');
-const { t, getLanguage } = require('../../utils/i18n');
-const { hasActiveItem, isProtectedFromRob, calculateReward } = require('../../utils/multiplier');
 const config = require('../../config');
+const { t, getLanguage } = require('../../utils/i18n');
+const { deductLevel } = require('../../utils/leveling');
+const { hasActiveItem, isProtectedFromRob, calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'rob',
@@ -37,7 +37,7 @@ module.exports = {
         const isVictimPolice = victim.job === 'police';
 
         const hasVictimShield = hasActiveItem(target.id, 202); // Shield (ID 202)
-        const hasVictimRobShield = isProtectedFromRob(target.id); // Shield of Protection (503)
+        const hasVictimRobShield = isProtectedFromRob(target.id); // Shield of Protection (502)
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
         if (isCriminal) baseSuccessChance += 0.10;
@@ -67,7 +67,7 @@ module.exports = {
             const finalStolen = Math.min(stolen, victim.balance);
 
             db.addBalance(message.author.id, finalStolen);
-            db.addBalance(target.id, -finalStolen);
+            db.removeBalance(target.id, finalStolen);
 
 
 
@@ -93,7 +93,7 @@ module.exports = {
             }
 
             const penalty = Math.floor(user.balance * penaltyPercent);
-            db.addBalance(message.author.id, -penalty);
+            db.removeBalance(message.author.id, penalty);
             db.addBalance(target.id, penalty);
 
             let failMsg = t('rob.failure', lang, {

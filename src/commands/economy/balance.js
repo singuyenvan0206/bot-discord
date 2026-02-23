@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'balance',

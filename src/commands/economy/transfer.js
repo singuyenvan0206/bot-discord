@@ -1,6 +1,7 @@
 const db = require('../../database');
-const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { t, getLanguage } = require('../../utils/i18n');
+const { parseAmount } = require('../../utils/economy');
 
 module.exports = {
     name: 'transfer',
@@ -11,7 +12,6 @@ module.exports = {
 
         const targetUser = message.mentions.users.first();
         const user = db.getUser(message.author.id);
-        const { parseAmount } = require('../../utils/economy');
         const amount = parseAmount(args[1], user.balance);
 
         if (!targetUser) return message.reply(t('transfer.mention', lang));

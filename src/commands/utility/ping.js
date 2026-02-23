@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
-const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'ping',

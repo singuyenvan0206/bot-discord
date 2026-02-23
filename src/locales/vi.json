@@ -1251,6 +1251,26 @@
         "joined_giveaway": "✅ Bạn đã tham gia giveaway! Chúc bạn may mắn! 🍀",
         "not_exists": "❌ Giveaway này không còn tồn tại.",
         "already_ended": "❌ Giveaway này đã kết thúc.",
-        "role_required_msg": "❌ Bạn cần vai trò <@&{{roleId}}> để tham gia."
+        "role_required_msg": "❌ Bạn cần vai trò <@&{{roleId}}> để tham gia.",
+        "no_permission": "Bạn không có quyền quản lý giveaway.",
+        "usage_start": "Cách dùng: `{{prefix}}giveaway start <thời_gian> <số_người_thắng> <giải_thưởng>`",
+        "invalid_duration": "Thời gian không hợp lệ. Ví dụ: 1h, 30m, 1d",
+        "invalid_winners": "Số người thắng không hợp lệ (tối thiểu 1).",
+        "channel_not_found": "Không tìm thấy kênh giveaway trong server này. Kiểm tra ID kênh trong config thuộc đúng server.",
+        "channel_not_text": "Kênh giveaway phải là kênh văn bản (text).",
+        "send_failed": "Không gửi được tin vào kênh đó. Bot cần quyền **Xem kênh** và **Gửi tin nhắn** trong kênh giveaway.",
+        "usage_end": "Cách dùng: `{{prefix}}giveaway end <message_id>`",
+        "not_found_or_ended": "Không tìm thấy giveaway hoặc đã kết thúc.",
+        "ending_msg": "Giveaway sẽ kết thúc trong giây lát.",
+        "usage_reroll": "Cách dùng: `{{prefix}}giveaway reroll <message_id>`",
+        "not_found": "Không tìm thấy giveaway.",
+        "not_ended": "Giveaway chưa kết thúc.",
+        "new_winner": "Người thắng mới",
+        "rerolled": "Đã chọn lại người thắng.",
+        "no_active": "Không có giveaway đang diễn ra.",
+        "active_list_title": "Giveaway đang diễn ra",
+        "usage_delete": "Cách dùng: `{{prefix}}giveaway delete <message_id>`",
+        "deleted": "Đã xóa giveaway.",
+        "invalid_subcommand": "Cách dùng: `{{prefix}}giveaway start|end|reroll|list|delete`"
     }
 }

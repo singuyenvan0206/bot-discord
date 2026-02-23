@@ -91,16 +91,6 @@ function initSchema() {
     `);
 
     db.run(`
-        CREATE TABLE IF NOT EXISTS guild_users (
-            guild_id TEXT NOT NULL,
-            user_id TEXT NOT NULL,
-            warnings INTEGER DEFAULT 0,
-            json_data TEXT DEFAULT '{}',
-            PRIMARY KEY (guild_id, user_id)
-        )
-    `);
-
-    db.run(`
         CREATE TABLE IF NOT EXISTS guilds (
             id TEXT PRIMARY KEY,
             language TEXT DEFAULT 'vi',
