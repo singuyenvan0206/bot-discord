@@ -26,7 +26,7 @@ module.exports = {
         }
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        const weights = [50, 35, 30, 20, 15, 10, 1000];
+        const weights = [50, 35, 30, 20, 15, 10, 100000];
         const totalWeight = weights.reduce((a, b) => a + b, 0);
 
         function weightedRandom() {
