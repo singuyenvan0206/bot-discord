@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, Partials, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, EmbedBuilder, Events } = require('discord.js');
 const db = require('./database');
 const config = require('./config');
 const { t, getLanguage } = require('./utils/i18n');
@@ -30,7 +30,7 @@ client.cooldowns = new Collection();
 // Module-level Map: channelId → collector (game runs independently per channel)
 const activeGames = new Map();
 
-client.once('ready', () => {
+client.once(Events.ClientReady, () => {
     console.log(`✅ Word Chain Standalone Bot is ready as ${client.user.tag}`);
 });
 
@@ -149,4 +149,10 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.login(TOKEN);
+const start = async () => {
+    await db.getDb();
+    console.log('💾 Database initialized');
+    client.login(TOKEN);
+};
+
+start();
