@@ -76,7 +76,7 @@ function addHouseProfit(context, amount) {
     const { reachedLevel20 } = addXp(botId, xpAmount);
 
     if (reachedLevel20) {
-        const guildId = context.guild?.id || context.guildId;
+        const guildId = context.guild?.id || (context.guildId && typeof context.guildId === 'string' ? context.guildId : null);
         const lang = getLanguage(botId, guildId);
         const job = assignRandomJob(botId, lang);
         const channel = context.channel;

@@ -237,7 +237,6 @@ module.exports = {
                         shieldUsed = true;
                         db.addBalance(user.id, loseAmount); // Refund 50% (since 100% was already removed)
                     }
-
                     const loseEmbed = new EmbedBuilder()
                         .setTitle(t('minesweeper.lose_title', lang))
                         .setDescription(t('minesweeper.lose_desc', lang) + '\n' +
@@ -254,6 +253,7 @@ module.exports = {
                         collector.stop('win');
                         let prize = 0;
                         if (bet > 0) {
+                            const baseWin = Math.floor(bet * 1.5);
                             const { total: totalReward, bonus: bonusAmount } = calculateReward(baseWin, user.id, 'gamble');
                             db.addBalance(user.id, totalReward);
 

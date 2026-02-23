@@ -176,7 +176,8 @@ module.exports = {
                     } else {
                         const baseReward = config.ECONOMY.TICTACTOE_REWARD;
                         addHouseProfit(i, baseReward);
-                        resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' });
+                        resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
+                            t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: baseReward.toLocaleString() });
                     }
                 }
 
