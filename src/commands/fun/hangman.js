@@ -89,7 +89,7 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const { totalReward, itemBonus, jobBonus, totalXp, multiplier, isProgrammer, isTeacher } = calcReward(message.author.id);
+                    const { totalReward, bonusAmount, totalXp } = calcReward(message.author.id);
 
                     db.addBalance(message.author.id, totalReward);
                     addXp(message.author.id, totalXp);
@@ -121,7 +121,7 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
-                    const { totalReward, itemBonus, jobBonus, totalXp, multiplier, isProgrammer, isTeacher } = calcReward(message.author.id);
+                    const { totalReward, bonusAmount, totalXp } = calcReward(message.author.id);
 
                     db.addBalance(message.author.id, totalReward);
                     addXp(message.author.id, totalXp);

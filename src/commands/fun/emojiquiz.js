@@ -35,8 +35,8 @@ module.exports = {
         try {
             const collected = await message.channel.awaitMessages({
                 filter: m => !m.author.bot && q.answers.some(a =>
-                    m.content.toLowerCase().trim() === a ||
-                    m.content.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '') === a.replace(/[^a-z0-9\s]/g, '')
+                    m.content.toLowerCase().trim() === a.toLowerCase() ||
+                    m.content.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '') === a.toLowerCase().replace(/[^a-z0-9\s]/g, '')
                 ),
                 max: 1,
                 time: 30_000,

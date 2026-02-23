@@ -23,6 +23,9 @@ module.exports = {
         db.updateUser(message.author.id, { last_search: now });
 
         const locations = t('search.locations', lang);
+        if (!Array.isArray(locations) || locations.length === 0) {
+            return message.reply('❌ Error: Random locations not found. Please contact admin.');
+        }
         const location = locations[Math.floor(Math.random() * locations.length)];
 
         const minReward = config.ECONOMY.SEARCH_MIN_REWARD;

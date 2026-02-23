@@ -67,7 +67,7 @@ module.exports = {
 
         try {
             const collected = await message.channel.awaitMessages({
-                filter: m => m.content.toLowerCase() === word && !m.author.bot,
+                filter: m => m.content.toLowerCase() === word.toLowerCase() && !m.author.bot,
                 max: 1,
                 time: 30_000,
                 errors: ['time']
