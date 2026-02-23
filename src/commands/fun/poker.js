@@ -16,7 +16,7 @@ module.exports = {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
-        const minBuyIn = args[0] ? parseAmount(args[0], user.balance) : 50;
+        const minBuyIn = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
         const hostId = message.author.id;
 
         // Game State

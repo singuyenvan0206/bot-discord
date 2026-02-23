@@ -3,12 +3,15 @@ const SHOP_ITEMS = require('./shopItems');
 /**
  * Parses a string amount into a number, supporting abbreviations (k, m, b) and shorthand like "all".
  */
-function parseAmount(input, balance = 0) {
+function parseAmount(input, balance = 0, cap = null) {
     if (typeof input === 'number') return Math.floor(input);
     if (!input || typeof input !== 'string') return 0;
 
     const str = input.toLowerCase().trim();
-    if (str === 'all' || str === 'max' || str === 'a') return balance;
+    if (str === 'all' || str === 'max' || str === 'a') {
+        if (cap !== null) return Math.min(balance, cap);
+        return balance;
+    }
 
     const units = {
         'k': 1000,

@@ -15,7 +15,7 @@ module.exports = {
         const lang = getLanguage(message.author.id, message.guild.id);
         const user = db.getUser(message.author.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
-        let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
+        let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
 
         if (args[0] && (isNaN(bet) || bet <= 0)) return message.reply(t('common.invalid_amount', lang));
 

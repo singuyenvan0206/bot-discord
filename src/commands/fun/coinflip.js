@@ -16,7 +16,7 @@ module.exports = {
         const user = db.getUser(message.author.id);
 
         let call = args[0] ? args[0].toLowerCase() : null;
-        let bet = args[1] ? parseAmount(args[1], user.balance) : 0;
+        let bet = args[1] ? parseAmount(args[1], user.balance, config.ECONOMY.MAX_BET) : 0;
 
         // Support vn side names and shorthands
         if (call === 'ngửa' || call === 'ngua' || call === 'h' || call === 'n') call = 'heads';

@@ -35,10 +35,10 @@ module.exports = {
         // Check if first arg is a bet amount using all known aliases
         const allValidChoices = [...choices, ...rockAliases, ...paperAliases, ...scissorsAliases];
         if (args[0] && !allValidChoices.includes(args[0]?.toLowerCase())) {
-            bet = parseAmount(args[0], user.balance);
+            bet = parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET);
             userChoice = null; // No choice made yet
         } else if (args[1]) {
-            bet = parseAmount(args[1], user.balance);
+            bet = parseAmount(args[1], user.balance, config.ECONOMY.MAX_BET);
         }
 
         // Default Bet if none provided

@@ -17,7 +17,7 @@ module.exports = {
         const user = db.getUser(message.author.id);
 
         // Parse bet amount: $dice <bet> or $dice (default 50)
-        let bet = args[0] ? parseAmount(args[0], user.balance) : 50;
+        let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
 
         if (isNaN(bet) || bet <= 0) return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
         if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));

@@ -31,9 +31,8 @@ module.exports = {
         let jobName;
 
         if (user.job) {
-            jobName = user.job.charAt(0).toUpperCase() + user.job.slice(1);
+            jobName = t(`job.name_${user.job}`, lang) || user.job.charAt(0).toUpperCase() + user.job.slice(1);
         } else {
-            const categories = t('work.job_categories', lang);
             let jobs = categories.tier0;
             if (level >= 20) jobs = categories.tier20;
             else if (level >= 10) jobs = categories.tier10;
