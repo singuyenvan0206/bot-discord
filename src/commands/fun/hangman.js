@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
 const { addXp } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -57,16 +57,13 @@ module.exports = {
 
         function calcReward(userId) {
             const userData = db.getUser(userId);
-            const isProgrammer = userData.job === 'programmer';
-            const isTeacher = userData.job === 'teacher';
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
-            const multiplier = getUserMultiplier(userId, 'income');
-            const itemBonus = Math.floor(baseReward * multiplier);
-            const jobBonus = (isProgrammer || isTeacher) ? Math.floor(baseReward * 0.20) : 0;
-            const totalReward = baseReward + itemBonus + jobBonus;
+            const totalMulti = getTotalIncomeMultiplier(userId);
+            const bonusAmount = Math.floor(baseReward * totalMulti);
+            const totalReward = baseReward + bonusAmount;
             const xpMultiplier = getXpMultiplier(userId);
             const totalXp = Math.floor(40 * xpMultiplier);
-            return { totalReward, itemBonus, jobBonus, totalXp, multiplier, isProgrammer, isTeacher };
+            return { totalReward, bonusAmount, totalXp };
         }
 
         const embed = new EmbedBuilder()
@@ -98,11 +95,7 @@ module.exports = {
                     addXp(message.author.id, totalXp);
 
                     let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins & ✨ ${totalXp} XP!**`;
-                    if (jobBonus > 0) {
-                        const jName = isProgrammer ? 'Programmer' : 'Teacher';
-                        resultStr += `\n-# *(Gồm 💼 +${jobBonus.toLocaleString()} ${jName} bonus: 20%)*`;
-                    }
-                    if (itemBonus > 0) resultStr += `\n-# *(Gồm 🎁 +${itemBonus.toLocaleString()} thưởng item: ${Math.round(multiplier * 100)}%)*`;
+                    if (bonusAmount > 0) resultStr += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
                     collector.stop();
@@ -134,11 +127,7 @@ module.exports = {
                     addXp(message.author.id, totalXp);
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
-                    if (jobBonus > 0) {
-                        const jName = isProgrammer ? 'Programmer' : 'Teacher';
-                        resultText += `\n-# *(Gồm 💼 +${jobBonus.toLocaleString()} ${jName} bonus: 20%)*`;
-                    }
-                    if (itemBonus > 0) resultText += `\n-# *(Gồm 🎁 +${itemBonus.toLocaleString()} thưởng item: ${Math.round(multiplier * 100)}%)*`;
+                    if (bonusAmount > 0) resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                 }
                 embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);

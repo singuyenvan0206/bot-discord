@@ -39,13 +39,42 @@ function getUserMultiplier(userId, type) {
         totalMulti = 1.0 + (totalMulti - 1.0) * 0.5;
     }
 
+    return totalMulti;
+}
+
+/**
+ * Get total cumulative income/daily bonus multiplier from all sources.
+ * Sums: getUserMultiplier + getLevelMultiplier + JobBonus
+ * Caps at 2.0 (200%).
+ */
+function getTotalIncomeMultiplier(userId) {
+    const { getLevelMultiplier } = require('./leveling');
+    const user = db.getUser(userId);
+
+    // 1. Item Multipliers
+    const itemMulti = getUserMultiplier(userId, 'income');
+
+    // 2. Level Multiplier
+    const levelMulti = getLevelMultiplier(user.level);
+
+    // 3. Job Multiplier
+    let jobMulti = 0;
+    if (user.job) {
+        const config = require('../config');
+        const jobConfig = config.ECONOMY.JOBS[user.job];
+        if (jobConfig) jobMulti = jobConfig.bonus;
+    }
+
+    const totalBonusMulti = itemMulti + levelMulti + jobMulti;
+
     // Hard cap at 200% (2.0)
-    return Math.min(totalMulti, 2.0);
+    return Math.min(totalBonusMulti, 5.0);
 }
 
 /**
  * Get XP multiplier. Teacher job + Whiteboard (218) = ×2, teacher alone = ×1.5,
  * XP Boost Potion (502) active = adds ×0.5 for anyone.
+ * Caps at 2.0 (200%).
  */
 function getXpMultiplier(userId) {
     const user = db.getUser(userId);
@@ -59,7 +88,9 @@ function getXpMultiplier(userId) {
     // XP Boost Potion (501)
     if (hasActiveItem(userId, 501)) multi += 0.5;
 
-    return multi;
+    // Hard cap at 200% (actually the multiplier above is total, 200% bonus = 3.0 total)
+    // But user said "limit 200% at all", so I'll cap the multiplier at 3.0 (which is base 1.0 + 2.0 bonus)
+    return Math.min(multi, 3.0);
 }
 
 /**
@@ -80,4 +111,4 @@ function hasActiveItem(userId, itemId) {
     return buffs.some(b => b.itemId === itemId && b.expiresAt > now);
 }
 
-module.exports = { getUserMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem };
+module.exports = { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem };

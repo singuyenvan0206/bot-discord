@@ -1,7 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
 const { addXp } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -110,9 +110,9 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
-                        const itemMulti = getUserMultiplier(message.author.id, 'income');
-                        const itemBonus = itemMulti > 0 ? Math.floor(reward * itemMulti) : 0;
-                        const totalReward = reward + itemBonus;
+                        const totalMulti = getTotalIncomeMultiplier(message.author.id);
+                        const bonusAmount = Math.floor(reward * totalMulti);
+                        const totalReward = reward + bonusAmount;
 
                         const xpMultiplier = getXpMultiplier(message.author.id);
                         const baseXp = 25; // Base memory XP
@@ -122,7 +122,7 @@ module.exports = {
                         addXp(message.author.id, totalXp);
 
                         let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward }) + `\n✨ **XP:** +${totalXp}`;
-                        if (itemBonus > 0) winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 +' + itemBonus + ' thưởng item: ' + Math.round(itemMulti * 100) : 'Includes 🎁 +' + itemBonus + ' item bonus: ' + Math.round(itemMulti * 100)}%)*`;
+                        if (bonusAmount > 0) winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                         embed.setTitle(t('memory.win_title', lang))
                             .setDescription(winDesc)

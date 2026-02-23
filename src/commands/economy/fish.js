@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
-const { getUserMultiplier, hasActiveItem } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, hasActiveItem } = require('../../utils/multiplier');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -142,7 +142,7 @@ module.exports = {
             );
 
         if (caughtItem.value > 0) {
-            const multiplier = getUserMultiplier(message.author.id, 'income');
+            const totalMulti = getTotalIncomeMultiplier(message.author.id);
 
             let finalValue = caughtItem.value;
             let trophyMsg = '';
@@ -153,8 +153,8 @@ module.exports = {
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 
-            const bonus = Math.floor(finalValue * multiplier);
-            const totalValue = finalValue + bonus;
+            const bonusAmount = Math.floor(finalValue * totalMulti);
+            const totalValue = finalValue + bonusAmount;
 
             db.addBalance(message.author.id, totalValue);
 
@@ -165,8 +165,11 @@ module.exports = {
             // Update income field to show total
             embed.spliceFields(1, 1, { name: t('fish.income', lang), value: `${config.EMOJIS.COIN} **+${totalValue.toLocaleString()}**`, inline: true });
 
-            if (bonus > 0) {
-                embed.addFields({ name: t('fish.item_bonus', lang), value: t('fish.bonus_percent', lang, { amount: bonus.toLocaleString(), percent: Math.round(multiplier * 100) }), inline: true });
+            if (bonusAmount > 0) {
+                embed.addFields({
+                    name: t('fish.item_bonus', lang, { amount: bonusAmount.toLocaleString(), emoji: config.EMOJIS.COIN }),
+                    value: `-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'})*`
+                });
             }
 
             embed.setFooter({ text: t('fish.footer_success', lang, { bait: baitName }) });

@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { getUserMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -46,14 +46,10 @@ module.exports = {
         }
 
         const baseReward = Math.floor(Math.random() * 401) + 100; // 100-500
-        const multiplier = getUserMultiplier(message.author.id, 'income');
-        const levelMultiplier = getLevelMultiplier(level);
+        const totalMulti = getTotalIncomeMultiplier(message.author.id);
+        const bonusAmount = Math.floor(baseReward * totalMulti);
 
-        const itemBonus = Math.floor(baseReward * multiplier);
-        const levelBonus = Math.floor(baseReward * levelMultiplier);
-        const jobBonusAmount = Math.floor(baseReward * jobMultiplier);
-
-        let total = baseReward + itemBonus + levelBonus + jobBonusAmount;
+        let total = baseReward + bonusAmount;
 
         // Streamer Interaction: Go Viral (5% chance ×5 if using Chair/Mansion)
         let viralMsg = '';
@@ -99,15 +95,8 @@ module.exports = {
         db.addBalance(message.author.id, total);
 
         let msg = t('work.success', lang, { job: jobName, amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
-        if (itemBonus > 0) {
-            msg += t('work.bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(multiplier * 100) });
-        }
-        if (levelBonus > 0) {
-            msg += t('work.level_bonus', lang, { amount: levelBonus.toLocaleString(), percent: Math.round(levelMultiplier * 100) });
-        }
-
-        if (jobBonusAmount > 0) {
-            msg += t('work.job_bonus', lang, { job: jobName, amount: jobBonusAmount.toLocaleString(), percent: Math.round(jobMultiplier * 100) });
+        if (bonusAmount > 0) {
+            msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
         }
 
         if (viralMsg) msg += viralMsg;

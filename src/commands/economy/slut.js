@@ -1,6 +1,6 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -33,29 +33,9 @@ module.exports = {
             const maxReward = config.ECONOMY.SLUT_MAX_REWARD;
             const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            const levelMultiplier = getLevelMultiplier(user.level);
-            const levelBonus = Math.floor(baseReward * levelMultiplier);
-
-            // Musician Interaction: Performance Bonus (+20%)
-            let performMsg = '';
-            let jobBonus = 0;
-            if (user.job === 'musician') {
-                jobBonus = Math.floor(baseReward * 0.20);
-                performMsg = t('slut.musician_bonus', lang, { amount: jobBonus.toLocaleString() });
-            }
-
-            // Streamer Interaction: Stage Presence (+15%)
-            let streamMsg = '';
-            if (user.job === 'streamer') {
-                jobBonus = Math.floor(baseReward * 0.15);
-                streamMsg = t('slut.streamer_bonus', lang, { amount: jobBonus.toLocaleString() });
-            }
-
-            // Item Interaction: Multipliers
-            const itemMulti = getUserMultiplier(message.author.id, 'income');
-            const itemBonus = Math.floor(baseReward * itemMulti);
-
-            const total = baseReward + levelBonus + jobBonus + itemBonus;
+            const totalMulti = getTotalIncomeMultiplier(message.author.id);
+            const bonusAmount = Math.floor(baseReward * totalMulti);
+            const total = baseReward + bonusAmount;
 
             // Slut gives medium XP (30-60)
             const xpGained = Math.floor(Math.random() * 31) + 30;
@@ -69,14 +49,8 @@ module.exports = {
                 emoji: config.EMOJIS.COIN
             });
 
-            if (levelBonus > 0) {
-                msg += t('work.level_bonus', lang, {
-                    amount: levelBonus.toLocaleString(),
-                    percent: Math.round(levelMultiplier * 100)
-                });
-            }
-            if (itemBonus > 0) {
-                msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
+            if (bonusAmount > 0) {
+                msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
             }
             if (performMsg) msg += performMsg;
             if (streamMsg) msg += streamMsg;

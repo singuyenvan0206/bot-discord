@@ -1,7 +1,7 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
-const { hasActiveItem, isProtectedFromRob, getXpMultiplier, getUserMultiplier } = require('../../utils/multiplier');
+const { hasActiveItem, isProtectedFromRob, getXpMultiplier, getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
 const config = require('../../config');
 
 module.exports = {
@@ -63,10 +63,10 @@ module.exports = {
                 policeRobMsg = t('rob.police_bounty', lang);
             }
 
-            // Item Interaction: Multipliers
-            const itemMulti = getUserMultiplier(message.author.id, 'income');
-            const itemBonus = Math.floor(stolen * itemMulti);
-            stolen += itemBonus;
+            // Multipliers
+            const totalMulti = getTotalIncomeMultiplier(message.author.id);
+            const bonusAmount = Math.floor(stolen * totalMulti);
+            stolen += bonusAmount;
 
             // Ensure we don't steal more than they have total
             stolen = Math.min(stolen, victim.balance);
@@ -84,8 +84,8 @@ module.exports = {
                 emoji: config.EMOJIS.COIN
             });
 
-            if (itemBonus > 0) {
-                msg += t('rob.thief_edge', lang, { amount: itemBonus.toLocaleString() });
+            if (bonusAmount > 0) {
+                msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
             }
             if (policeRobMsg) msg += policeRobMsg;
 

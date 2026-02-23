@@ -97,12 +97,12 @@ module.exports = {
 
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
-                const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+                const { getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
                 const { addXp } = require('../../utils/leveling');
 
-                const multiplier = getUserMultiplier(i.user.id, 'income');
-                const bonus = Math.floor(baseReward * multiplier);
-                const totalReward = baseReward + bonus;
+                const totalMulti = getTotalIncomeMultiplier(i.user.id);
+                const bonusAmount = Math.floor(baseReward * totalMulti);
+                const totalReward = baseReward + bonusAmount;
 
                 const xpMultiplier = getXpMultiplier(i.user.id);
                 const baseXp = 30; // Base trivia XP
@@ -113,7 +113,7 @@ module.exports = {
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward });
                 resultMsg += ` & ✨ **${totalXp}** XP!`;
-                if (bonus > 0) resultMsg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 +' + bonus + ' thưởng item: ' + Math.round(multiplier * 100) : 'Includes 🎁 +' + bonus + ' item bonus: ' + Math.round(multiplier * 100)}%)*`;
+                if (bonusAmount > 0) resultMsg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {

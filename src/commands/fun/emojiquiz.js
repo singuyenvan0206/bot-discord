@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getTotalIncomeMultiplier } = require('../../utils/multiplier');
 const { getRandomQuestion } = require('../../utils/quizGenerator');
 
 module.exports = {
@@ -45,9 +45,9 @@ module.exports = {
 
             const winnerMsg = collected.first();
             const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD;
-            const multiplier = getUserMultiplier(winnerMsg.author.id, 'income');
-            const bonus = Math.floor(baseReward * multiplier);
-            const totalReward = baseReward + bonus;
+            const totalMulti = getTotalIncomeMultiplier(winnerMsg.author.id);
+            const bonusAmount = Math.floor(baseReward * totalMulti);
+            const totalReward = baseReward + bonusAmount;
 
             const { getXpMultiplier } = require('../../utils/multiplier');
             const { addXp } = require('../../utils/leveling');
@@ -62,7 +62,7 @@ module.exports = {
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward }) +
                 ` & ✨ **${totalXp}** XP!`;
 
-            if (bonus > 0) resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 +' + bonus + ' thưởng item: ' + Math.round(multiplier * 100) : 'Includes 🎁 +' + bonus + ' item bonus: ' + Math.round(multiplier * 100)}%)*`;
+            if (bonusAmount > 0) resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
             await winnerMsg.reply({
                 embeds: [new EmbedBuilder()

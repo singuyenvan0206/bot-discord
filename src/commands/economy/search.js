@@ -1,5 +1,6 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { getTotalIncomeMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -28,25 +29,9 @@ module.exports = {
         const maxReward = config.ECONOMY.SEARCH_MAX_REWARD;
         const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-        const levelMultiplier = getLevelMultiplier(user.level);
-        const levelBonus = Math.floor(baseReward * levelMultiplier);
-
-        let jobMultiplier = 0;
-        let jobName = '';
-        if (user.job === 'hacker') {
-            const jobConfig = config.ECONOMY.JOBS.hacker;
-            jobMultiplier = jobConfig.bonus;
-            jobName = t('job.info_hacker', lang).split(':')[0]; // Get the name
-        }
-
-        const jobBonusAmount = Math.floor(baseReward * jobMultiplier);
-
-        // Item Interaction: Multipliers
-        const { getUserMultiplier } = require('../../utils/multiplier');
-        const itemMulti = getUserMultiplier(message.author.id, 'income');
-        const itemBonus = Math.floor(baseReward * itemMulti);
-
-        let total = baseReward + levelBonus + jobBonusAmount + itemBonus;
+        const totalMulti = getTotalIncomeMultiplier(message.author.id);
+        const bonusAmount = Math.floor(baseReward * totalMulti);
+        let total = baseReward + bonusAmount;
 
         // Hacker Interaction: Data Mine (15% chance ×2)
         let dataMineMsg = '';
@@ -74,19 +59,8 @@ module.exports = {
             emoji: config.EMOJIS.COIN
         });
 
-        if (levelBonus > 0) {
-            msg += t('search.level_bonus', lang, {
-                amount: levelBonus.toLocaleString(),
-                percent: Math.round(levelMultiplier * 100)
-            });
-        }
-
-        if (jobBonusAmount > 0) {
-            msg += `\n✨ **${t('job.name_field', lang)} Bonus (${jobName}):** +${jobBonusAmount.toLocaleString()} coins (${Math.round(jobMultiplier * 100)}%)!`;
-        }
-
-        if (itemBonus > 0) {
-            msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
+        if (bonusAmount > 0) {
+            msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
         }
         if (dataMineMsg) msg += dataMineMsg;
         if (marketTipMsg) msg += marketTipMsg;

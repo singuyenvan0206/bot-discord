@@ -2,7 +2,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -192,15 +192,14 @@ module.exports = {
                         } else {
                             // No bet: give base reward with item multiplier
                             const baseReward = config.ECONOMY.TICTACTOE_REWARD ?? 100;
-                            const itemMulti = getUserMultiplier(winId, 'income');
-                            const bonus = itemMulti > 0 ? Math.floor(baseReward * itemMulti) : 0;
-                            const totalReward = baseReward + bonus;
+                            const totalMulti = getTotalIncomeMultiplier(winId);
+                            const bonusAmount = Math.floor(baseReward * totalMulti);
+                            const totalReward = baseReward + bonusAmount;
                             db.addBalance(winId, totalReward);
                             resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                                 t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
-                            if (bonus > 0) {
-                                const percent = Math.round(itemMulti * 100);
-                                resultText += `\n-# *(${lang === 'vi' ? 'Gồm' : 'Includes'} 🎁 +${bonus} ${lang === 'vi' ? 'thưởng item' : 'item bonus'}: ${percent}%)*`;
+                            if (bonusAmount > 0) {
+                                resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                             }
                         }
                     }

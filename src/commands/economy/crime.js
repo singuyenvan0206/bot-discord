@@ -1,6 +1,6 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
-const { getUserMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -42,20 +42,10 @@ module.exports = {
             const maxReward = config.ECONOMY.CRIME_MAX_REWARD;
             let baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            let jobMultiplier = 0;
-            if (isCriminal) jobMultiplier = 0.2;
-            const isHacker = user.job === 'hacker';
-            if (isHacker) jobMultiplier = 0.25;
+            const totalMulti = getTotalIncomeMultiplier(message.author.id);
+            const bonusAmount = Math.floor(baseReward * totalMulti);
 
-            const jobBonusAmount = Math.floor(baseReward * jobMultiplier);
-            const levelMultiplier = getLevelMultiplier(user.level);
-            const levelBonus = Math.floor(baseReward * levelMultiplier);
-
-            // Item Interaction: Multipliers
-            const itemMulti = getUserMultiplier(message.author.id, 'income');
-            const itemBonus = Math.floor(baseReward * itemMulti);
-
-            let total = baseReward + levelBonus + jobBonusAmount + itemBonus;
+            let total = baseReward + bonusAmount;
 
             // Hacker Interaction: Chance to double reward if using Laptop (212) or Superyacht (220)
             let hackedMsg = '';
@@ -78,20 +68,8 @@ module.exports = {
                 emoji: config.EMOJIS.COIN
             });
 
-            if (levelBonus > 0) {
-                msg += t('work.level_bonus', lang, {
-                    amount: levelBonus.toLocaleString(),
-                    percent: Math.round(levelMultiplier * 100)
-                });
-            }
-
-            if (jobBonusAmount > 0) {
-                const jName = isCriminal ? t('job.job_details.criminal', lang).split(':')[0] : t('job.job_details.hacker', lang).split(':')[0];
-                msg += `\n✨ **${t('job.name_field', lang)} Bonus (${jName}):** +${jobBonusAmount.toLocaleString()} coins (${Math.round(jobMultiplier * 100)}%)!`;
-            }
-
-            if (itemBonus > 0) {
-                msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
+            if (bonusAmount > 0) {
+                msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
             }
 
             if (hackedMsg) msg += hackedMsg;

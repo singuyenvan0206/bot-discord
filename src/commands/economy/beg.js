@@ -1,6 +1,6 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 

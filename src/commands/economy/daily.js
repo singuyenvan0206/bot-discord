@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -24,21 +24,10 @@ module.exports = {
         }
 
         const baseReward = config.ECONOMY.DAILY_REWARD;
-        const itemMultiplier = getUserMultiplier(message.author.id, 'daily');
-        const levelMultiplier = getLevelMultiplier(user.level);
+        const totalMulti = getTotalIncomeMultiplier(message.author.id);
+        const bonusAmount = Math.floor(baseReward * totalMulti);
 
-        const itemBonus = Math.floor(baseReward * itemMultiplier);
-        const levelBonus = Math.floor(baseReward * levelMultiplier);
-
-        // Doctor Interaction: +15% daily bonus (free check-up)
-        let doctorBonus = 0;
-        let doctorMsg = '';
-        if (user.job === 'doctor') {
-            doctorBonus = Math.floor(baseReward * 0.15);
-            doctorMsg = t('daily_events.doctor_bonus', lang, { amount: doctorBonus.toLocaleString() });
-        }
-
-        let total = baseReward + itemBonus + levelBonus + doctorBonus;
+        let total = baseReward + bonusAmount;
 
         // Chef Interaction: Michelin Star (5% chance — daily ×3)
         let michelinMsg = '';
@@ -55,13 +44,9 @@ module.exports = {
         db.addBalance(message.author.id, total);
 
         let msg = t('daily.success', lang, { amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
-        if (itemBonus > 0) {
-            msg += t('daily.bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMultiplier * 100) });
+        if (bonusAmount > 0) {
+            msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 200%)' : 'Includes 🎁 Bonus (Capped 200%)'}: +${bonusAmount.toLocaleString()} coins)*`;
         }
-        if (levelBonus > 0) {
-            msg += t('daily.level_bonus', lang, { amount: levelBonus.toLocaleString(), percent: Math.round(levelMultiplier * 100) });
-        }
-        if (doctorMsg) msg += doctorMsg;
         if (michelinMsg) msg += michelinMsg;
 
         await message.reply(msg);
