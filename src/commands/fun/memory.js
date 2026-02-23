@@ -1,7 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
 const { addXp } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -110,9 +110,7 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
-                        const totalMulti = getTotalIncomeMultiplier(message.author.id);
-                        const bonusAmount = Math.floor(reward * totalMulti);
-                        const totalReward = reward + bonusAmount;
+                        const { total: totalReward, bonus: bonusAmount } = calculateReward(reward, message.author.id);
 
                         const xpMultiplier = getXpMultiplier(message.author.id);
                         const baseXp = 25; // Base memory XP

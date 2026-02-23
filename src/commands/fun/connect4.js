@@ -2,7 +2,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -190,14 +190,12 @@ module.exports = {
                             resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                                 t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: prize });
                         } else {
-                            // No bet: give base reward with item multiplier
-                            const baseReward = config.ECONOMY.TICTACTOE_REWARD ?? 100;
-                            const totalMulti = getTotalIncomeMultiplier(winId);
-                            const bonusAmount = Math.floor(baseReward * totalMulti);
-                            const totalReward = baseReward + bonusAmount;
+                            // No bet: give base reward with unified calculation
+                            const baseReward = config.ECONOMY.TICTACTOE_REWARD || 100;
+                            const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, winId);
                             db.addBalance(winId, totalReward);
                             resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
-                                t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
+                                t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
                             if (bonusAmount > 0) {
                                 resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                             }

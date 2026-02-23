@@ -1,7 +1,7 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
-const { hasActiveItem, isProtectedFromRob, getXpMultiplier, getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
+const { hasActiveItem, isProtectedFromRob, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
 const config = require('../../config');
 
 module.exports = {
@@ -51,28 +51,23 @@ module.exports = {
         const isSuccess = Math.random() < baseSuccessChance;
 
         if (isSuccess) {
-            let percent = Math.random() * 0.4 + 0.1;
-            if (isCriminal) percent += 0.05; // Extra 5% for criminals
-
-            let stolen = Math.floor(victim.balance * percent);
+            const targetBalance = victim.balance;
+            let baseSteal = Math.floor(targetBalance * (Math.random() * 0.15 + 0.1)); // 10-25% of victim's balance
 
             // Bonus: if robbing a Police officer, criminal earns +50%
             let policeRobMsg = '';
             if (isVictimPolice && isCriminal) {
-                stolen = Math.floor(stolen * 1.5);
+                baseSteal = Math.floor(baseSteal * 1.5);
                 policeRobMsg = t('rob.police_bounty', lang);
             }
 
-            // Multipliers
-            const totalMulti = getTotalIncomeMultiplier(message.author.id);
-            const bonusAmount = Math.floor(stolen * totalMulti);
-            stolen += bonusAmount;
+            const { total: stolen, bonus: bonusAmount } = calculateReward(baseSteal, message.author.id);
 
             // Ensure we don't steal more than they have total
-            stolen = Math.min(stolen, victim.balance);
+            const finalStolen = Math.min(stolen, victim.balance);
 
-            db.addBalance(message.author.id, stolen);
-            db.addBalance(target.id, -stolen);
+            db.addBalance(message.author.id, finalStolen);
+            db.addBalance(target.id, -finalStolen);
 
             // Robbery gives high XP (30-60)
             const xpGained = Math.floor(Math.random() * 31) + 30;
@@ -80,7 +75,7 @@ module.exports = {
 
             let msg = t('rob.success', lang, {
                 user: target.username,
-                amount: stolen.toLocaleString(),
+                amount: finalStolen.toLocaleString(),
                 emoji: config.EMOJIS.COIN
             });
 
@@ -90,7 +85,6 @@ module.exports = {
             if (policeRobMsg) msg += policeRobMsg;
 
             await message.reply(msg);
-
             return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
         } else {
             // Pay 20% of your balance to the victim

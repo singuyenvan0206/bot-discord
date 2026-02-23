@@ -2,7 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
-const config = require('../../config');
+const { getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
 
 
 // Helper function to decode HTML entities
@@ -97,12 +97,9 @@ module.exports = {
 
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
-                const { getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
                 const { addXp } = require('../../utils/leveling');
 
-                const totalMulti = getTotalIncomeMultiplier(i.user.id);
-                const bonusAmount = Math.floor(baseReward * totalMulti);
-                const totalReward = baseReward + bonusAmount;
+                const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, i.user.id);
 
                 const xpMultiplier = getXpMultiplier(i.user.id);
                 const baseXp = 30; // Base trivia XP

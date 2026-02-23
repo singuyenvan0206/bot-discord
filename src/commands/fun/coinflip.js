@@ -4,7 +4,7 @@ const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
 const { startCooldown } = require('../../utils/cooldown');
 const { parseAmount } = require('../../utils/economy');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'coinflip',
@@ -42,14 +42,14 @@ module.exports = {
         let flavorText = '';
 
         if (won) {
-            payout = bet * 2;
-            const multiplier = getUserMultiplier(user.id, 'gamble');
-            const bonus = Math.floor(payout * multiplier);
-            payout += bonus;
+            const { total: totalReward, bonus: bonusAmount } = calculateReward(bet * 2, user.id, 'gamble');
+            payout = totalReward;
 
             if (payout > 0) db.addBalance(user.id, payout);
-            flavorText = t('coinflip.win', lang, { amount: payout });
-            if (bonus > 0) flavorText += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+            flavorText = t('coinflip.win', lang, { amount: payout.toLocaleString() });
+            if (bonusAmount > 0) {
+                flavorText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+            }
         } else {
             flavorText = t('coinflip.lose', lang, { amount: bet });
         }

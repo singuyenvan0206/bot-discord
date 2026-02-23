@@ -1,12 +1,12 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
-const { getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
     name: 'beg',
-    description: 'Beg kind strangers for some coins',
+    description: 'Xin tiền từ những người lạ tốt bụng',
     cooldown: config.ECONOMY.BEG_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -29,39 +29,37 @@ module.exports = {
             const maxReward = config.ECONOMY.BEG_MAX_REWARD;
             const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            const levelMultiplier = getLevelMultiplier(user.level);
-            const levelBonus = Math.floor(baseReward * levelMultiplier);
-            const itemMulti = getUserMultiplier(message.author.id, 'income');
-            const itemBonus = Math.floor(baseReward * itemMulti);
-            const total = baseReward + levelBonus + itemBonus;
-
-            // Low XP (5-10)
-            const xpGained = Math.floor(Math.random() * 6) + 5;
-            const xpResult = addXp(message.author.id, xpGained);
+            const { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
 
             db.addBalance(message.author.id, total);
 
+            // Low XP (5-10)
+            const { getXpMultiplier } = require('../../utils/multiplier');
+            const xpGained = Math.floor(Math.random() * 6) + 5;
+            const xpResult = addXp(message.author.id, Math.floor(xpGained * getXpMultiplier(message.author.id)));
+
+            const persons = t('beg.persons', lang);
+            const person = persons[Math.floor(Math.random() * persons.length)];
+
             let msg = t('beg.success', lang, {
+                person: person,
                 amount: total.toLocaleString(),
                 emoji: config.EMOJIS.COIN
             });
 
-            if (levelBonus > 0) {
-                msg += t('beg.level_bonus', lang, {
-                    amount: levelBonus.toLocaleString(),
-                    percent: Math.round(levelMultiplier * 100)
-                });
-            }
-            if (itemBonus > 0) {
-                msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
+            if (bonusAmount > 0) {
+                msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
             }
 
             await message.reply(msg);
             return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
         } else {
-            await message.reply(t('beg.failure', lang));
-            const xpResult = addXp(message.author.id, 2); // 2 XP for begging even if fail
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            const persons = t('beg.persons', lang);
+            const person = persons[Math.floor(Math.random() * persons.length)];
+            const failMsgs = t('beg.fail_messages', lang);
+            const failMsg = failMsgs[Math.floor(Math.random() * failMsgs.length)];
+
+            return message.reply(`${person}: "${failMsg}"`);
         }
     }
 };

@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
 const { addXp } = require('../../utils/leveling');
 const { isManager } = require('../../utils/permissions');
 const { t, getLanguage } = require('../../utils/i18n');
@@ -95,10 +95,7 @@ module.exports = {
             lastPlayerId = m.author.id;
 
             // Reward
-            const baseReward = config.ECONOMY.WORDCHAIN_REWARD;
-            const totalMulti = getTotalIncomeMultiplier(m.author.id);
-            const bonusAmount = Math.floor(baseReward * totalMulti);
-            const totalReward = baseReward + bonusAmount;
+            const { total: totalReward } = calculateReward(baseReward, m.author.id);
 
             const xpMulti = getXpMultiplier(m.author.id);
             const totalXp = Math.floor(5 * xpMulti);

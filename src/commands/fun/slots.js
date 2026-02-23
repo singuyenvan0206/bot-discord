@@ -3,6 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
+const { calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'slots',
@@ -67,14 +68,14 @@ module.exports = {
         }
 
         if (payout > 0) {
-            const { getUserMultiplier } = require('../../utils/multiplier');
-            const multiplier = getUserMultiplier(user.id, 'gamble');
-            const bonus = Math.floor(payout * multiplier);
-            payout += bonus;
+            const { total: totalReward, bonus: bonusAmount } = calculateReward(payout, user.id, 'gamble');
+            payout = totalReward;
 
             db.addBalance(user.id, payout);
-            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: payout });
-            if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: payout.toLocaleString() });
+            if (bonusAmount > 0) {
+                result += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+            }
         } else if (bet) {
             result += t('slots.lost_coins', lang, { amount: bet });
         }

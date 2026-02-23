@@ -43,16 +43,16 @@ function getUserMultiplier(userId, type) {
 }
 
 /**
- * Get total cumulative income/daily bonus multiplier from all sources.
- * Sums: getUserMultiplier + getLevelMultiplier + JobBonus
- * Caps at 2.0 (200%).
+ * Get total cumulative bonus multiplier from all sources.
+ * Sums: getUserMultiplier(type) + getLevelMultiplier + JobBonus
+ * Caps at 2.5 (250%).
  */
-function getTotalIncomeMultiplier(userId) {
+function getTotalMultiplier(userId, type = 'income') {
     const { getLevelMultiplier } = require('./leveling');
     const user = db.getUser(userId);
 
-    // 1. Item Multipliers
-    const itemMulti = getUserMultiplier(userId, 'income');
+    // 1. Item Multipliers (Income, Daily, or Gamble)
+    const itemMulti = getUserMultiplier(userId, type);
 
     // 2. Level Multiplier
     const levelMulti = getLevelMultiplier(user.level);
@@ -72,9 +72,16 @@ function getTotalIncomeMultiplier(userId) {
 }
 
 /**
+ * Legacy wrapper for backward compatibility
+ */
+function getTotalIncomeMultiplier(userId) {
+    return getTotalMultiplier(userId, 'income');
+}
+
+/**
  * Get XP multiplier. Teacher job + Whiteboard (218) = ×2, teacher alone = ×1.5,
  * XP Boost Potion (502) active = adds ×0.5 for anyone.
- * Caps at 2.0 (200%).
+ * Caps at 3.5 total (250% bonus).
  */
 function getXpMultiplier(userId) {
     const user = db.getUser(userId);
@@ -110,4 +117,16 @@ function hasActiveItem(userId, itemId) {
     return buffs.some(b => b.itemId === itemId && b.expiresAt > now);
 }
 
-module.exports = { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem };
+/**
+ * Helper to calculate final reward with capped bonus.
+ * type = 'income' | 'gamble'
+ * Returns { total, bonus, percent }
+ */
+function calculateReward(base, userId, type = 'income') {
+    const bonusPart = getTotalMultiplier(userId, type);
+    const bonus = Math.floor(base * bonusPart);
+    const total = base + bonus;
+    return { total, bonus, percent: Math.round(bonusPart * 100) };
+}
+
+module.exports = { getUserMultiplier, getTotalMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem, calculateReward };

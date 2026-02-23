@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { startCooldown } = require('../../utils/cooldown');
-const { getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
 const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
@@ -163,13 +163,11 @@ module.exports = {
                     const baseReward = config.ECONOMY.TICTACTOE_REWARD;
 
                     if (winnerId !== message.client.user.id) {
-                        const totalMulti = getTotalIncomeMultiplier(winnerId);
-                        const bonusAmount = Math.floor(baseReward * totalMulti);
-                        const totalReward = baseReward + bonusAmount;
+                        const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, winnerId);
                         db.addBalance(winnerId, totalReward);
 
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
-                            t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
+                            t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
                         if (bonusAmount > 0) {
                             resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;

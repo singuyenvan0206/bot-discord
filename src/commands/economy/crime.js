@@ -1,6 +1,6 @@
 const db = require('../../database');
-const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
-const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
+const { addXp, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
+const { calculateReward, hasActiveItem, getXpMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -42,17 +42,14 @@ module.exports = {
             const maxReward = config.ECONOMY.CRIME_MAX_REWARD;
             let baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            const totalMulti = getTotalIncomeMultiplier(message.author.id);
-            const bonusAmount = Math.floor(baseReward * totalMulti);
-
-            let total = baseReward + bonusAmount;
-
-            // Hacker Interaction: Chance to double reward if using Laptop (212) or Superyacht (220)
+            // Hacker Interaction: Chance to double base reward if using Laptop (212) or Superyacht (220)
             let hackedMsg = '';
             if (isHacker && (hasActiveItem(message.author.id, 212) || hasActiveItem(message.author.id, 220)) && Math.random() < 0.2) {
-                total *= 2;
+                baseReward *= 2;
                 hackedMsg = t('crime.hacker_hacked', lang);
             }
+
+            const { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
 
             // Crimes give more XP (50-100) with teacher multiplier
             const xpBase = Math.floor(Math.random() * 51) + 50;
@@ -117,7 +114,6 @@ module.exports = {
                 }
 
                 await message.reply(failureMsg);
-                // Even on failure, XP is added (but not yet in the original code, let's add it)
                 const xpGained = 10;
                 const xpResult = addXp(message.author.id, xpGained);
                 return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);

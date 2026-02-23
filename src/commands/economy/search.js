@@ -1,12 +1,13 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
-const { getTotalIncomeMultiplier } = require('../../utils/multiplier');
+const { getTotalIncomeMultiplier, calculateReward, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
     name: 'search',
-    description: 'Search random locations for some coins',
+    aliases: ['s', 'find', 'sc'],
+    description: 'Tìm kiếm tiền rơi ở các địa điểm ngẫu nhiên',
     cooldown: config.ECONOMY.SEARCH_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -32,32 +33,32 @@ module.exports = {
         const maxReward = config.ECONOMY.SEARCH_MAX_REWARD;
         const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-        const totalMulti = getTotalIncomeMultiplier(message.author.id);
-        const bonusAmount = Math.floor(baseReward * totalMulti);
-        let total = baseReward + bonusAmount;
+        let { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
 
-        // Hacker Interaction: Data Mine (15% chance ×2)
+        // Job Bonus: Hacker Data Mine (15% chance for 2x if having Laptop)
         let dataMineMsg = '';
-        if (user.job === 'hacker' && Math.random() < 0.15) {
-            total = Math.floor(total * 2);
+        if (user.job === 'hacker' && hasActiveItem(message.author.id, 201) && Math.random() < 0.15) {
+            total *= 2;
+            bonusAmount *= 2;
             dataMineMsg = t('search.data_mine', lang);
         }
 
-        // Trader Interaction: Market Tip (+50 flat)
+        // Job Bonus: Trader Market Tip (+50 flat)
         let marketTipMsg = '';
         if (user.job === 'trader') {
             total += 50;
             marketTipMsg = t('search.market_tip', lang);
         }
 
-        // Medium XP (10-20)
-        const xpGained = Math.floor(Math.random() * 11) + 10;
-        const xpResult = addXp(message.author.id, xpGained);
-
         db.addBalance(message.author.id, total);
 
+        // Add 5-15 XP (with teacher multiplier)
+        const { getXpMultiplier } = require('../../utils/multiplier');
+        const xpGained = Math.floor(Math.random() * 11) + 5;
+        const xpResult = addXp(message.author.id, Math.floor(xpGained * getXpMultiplier(message.author.id)));
+
         let msg = t('search.success', lang, {
-            location,
+            location: location,
             amount: total.toLocaleString(),
             emoji: config.EMOJIS.COIN
         });

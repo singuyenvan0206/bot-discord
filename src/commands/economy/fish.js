@@ -91,7 +91,7 @@ module.exports = {
         }
 
         // 4. Calculate Total Luck (Farmer Job Bonus)
-        let totalLuck = rod.luck + bait.luck;
+        let totalLuck = rod.luck * (1 + bait.luck);
         if (user.job === 'farmer') {
             totalLuck *= 1.5; // Farmers get 50% more luck from gear
         }
@@ -142,19 +142,18 @@ module.exports = {
             );
 
         if (caughtItem.value > 0) {
-            const totalMulti = getTotalIncomeMultiplier(message.author.id);
+            const { calculateReward } = require('../../utils/multiplier');
 
-            let finalValue = caughtItem.value;
+            let baseValue = caughtItem.value;
             let trophyMsg = '';
 
             // Farmer Interaction: Trophy Fish (15% chance for 3x if using Fiberglass/Carbon/Titanium)
             if (user.job === 'farmer' && (hasActiveItem(message.author.id, 405) || hasActiveItem(message.author.id, 406) || hasActiveItem(message.author.id, 407)) && Math.random() < 0.15) {
-                finalValue *= 3;
+                baseValue *= 3;
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 
-            const bonusAmount = Math.floor(finalValue * totalMulti);
-            const totalValue = finalValue + bonusAmount;
+            const { total: totalValue, bonus: bonusAmount } = calculateReward(baseValue, message.author.id);
 
             db.addBalance(message.author.id, totalValue);
 

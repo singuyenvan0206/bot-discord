@@ -4,7 +4,7 @@ const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount } = require('../../utils/economy');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'rps',
@@ -124,14 +124,14 @@ module.exports = {
             // Payout Handling
             if (betAmount > 0) {
                 if (outcome === 'win') {
-                    let prize = betAmount * 2;
-                    const multiplier = getUserMultiplier(user.id, 'gamble');
-                    const bonus = Math.floor(prize * multiplier);
-                    prize += bonus;
+                    const { total: totalPrize, bonus: bonusAmount } = calculateReward(betAmount * 2, user.id, 'gamble');
+                    let prize = totalPrize;
 
                     db.addBalance(user.id, prize);
-                    result += t('rps.won_coins', lang, { amount: prize, emoji: config.EMOJIS.COIN });
-                    if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+                    result += t('rps.won_coins', lang, { amount: prize.toLocaleString(), emoji: config.EMOJIS.COIN });
+                    if (bonusAmount > 0) {
+                        result += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                    }
                 } else if (outcome === 'tie') {
                     db.addBalance(user.id, betAmount); // Refund
                     result += t('rps.refund', lang);

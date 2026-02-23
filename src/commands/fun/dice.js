@@ -4,7 +4,7 @@ const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount } = require('../../utils/economy');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'dice',
@@ -88,12 +88,11 @@ module.exports = {
             let bonusText = '';
 
             if (won) {
-                const multiplier = getUserMultiplier(message.author.id, 'gamble');
-                const bonus = Math.floor(prize * multiplier);
-                prize += bonus;
+                const { total: totalPrize, bonus: bonusAmount } = calculateReward(bet * winMultiplier, message.author.id, 'gamble');
+                prize = totalPrize;
                 db.addBalance(message.author.id, prize);
-                if (bonus > 0) {
-                    bonusText = t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+                if (bonusAmount > 0) {
+                    bonusText = `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                 }
             }
 
@@ -113,7 +112,7 @@ module.exports = {
                     `**${t('rps.betting', lang, { amount: bet })}\n\n` +
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
                     (won
-                        ? t('dice.payout', lang, { amount: prize, multiplier: winMultiplier }) + bonusText
+                        ? t('dice.payout', lang, { amount: prize.toLocaleString(), multiplier: winMultiplier }) + bonusText
                         : t('dice.lose_msg', lang, { amount: bet }))
                 )
                 .setColor(won ? config.COLORS.GAMBLE_WIN : config.COLORS.GAMBLE_LOSS);

@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -23,11 +23,7 @@ module.exports = {
             return message.reply(t('daily.cooldown', lang, { hours, minutes }));
         }
 
-        const baseReward = config.ECONOMY.DAILY_REWARD;
-        const totalMulti = getTotalIncomeMultiplier(message.author.id);
-        const bonusAmount = Math.floor(baseReward * totalMulti);
-
-        let total = baseReward + bonusAmount;
+        let { total, bonus: bonusAmount } = calculateReward(config.ECONOMY.DAILY_REWARD, message.author.id);
 
         // Chef Interaction: Michelin Star (5% chance — daily ×3)
         let michelinMsg = '';

@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, hasActiveItem } = require('../../utils/multiplier');
+const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, hasActiveItem, calculateReward } = require('../../utils/multiplier');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -29,12 +29,9 @@ module.exports = {
         if (user.level >= 10) availableJobs.push(...categories.tier10);
         const level = user.level;
         let jobName;
-        let jobMultiplier = 0;
 
         if (user.job) {
-            const jobConfig = config.ECONOMY.JOBS[user.job];
             jobName = user.job.charAt(0).toUpperCase() + user.job.slice(1);
-            jobMultiplier = jobConfig ? jobConfig.bonus : 0;
         } else {
             const categories = t('work.job_categories', lang);
             let jobs = categories.tier0;
@@ -46,15 +43,13 @@ module.exports = {
         }
 
         const baseReward = Math.floor(Math.random() * 401) + 100; // 100-500
-        const totalMulti = getTotalIncomeMultiplier(message.author.id);
-        const bonusAmount = Math.floor(baseReward * totalMulti);
-
-        let total = baseReward + bonusAmount;
+        let { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
 
         // Streamer Interaction: Go Viral (5% chance ×5 if using Chair/Mansion)
         let viralMsg = '';
         if (user.job === 'streamer' && (hasActiveItem(message.author.id, 220) || hasActiveItem(message.author.id, 107)) && Math.random() < 0.05) {
             total *= 5;
+            bonusAmount *= 5;
             viralMsg = t('work.viral', lang);
         }
 
@@ -62,6 +57,7 @@ module.exports = {
         let bumperMsg = '';
         if (user.job === 'farmer' && Math.random() < 0.1) {
             total = Math.floor(total * 2.5);
+            bonusAmount = Math.floor(bonusAmount * 2.5);
             bumperMsg = t('work.bumper_crop', lang);
         }
 
@@ -69,6 +65,7 @@ module.exports = {
         let specialOrderMsg = '';
         if (user.job === 'chef' && Math.random() < 0.08) {
             total = Math.floor(total * 2);
+            bonusAmount = Math.floor(bonusAmount * 2);
             specialOrderMsg = t('work.special_order', lang);
         }
 
@@ -85,14 +82,8 @@ module.exports = {
         const xpGained = Math.floor(xpBase * xpMulti);
         const xpResult = addXp(message.author.id, xpGained);
 
-        // Programmer Interaction: Tech Buff (Cooldown reduction with new IDs)
-        let finalCooldown = cooldown;
-        if (user.job === 'programmer' && (hasActiveItem(message.author.id, 206) || hasActiveItem(message.author.id, 207))) {
-            finalCooldown = Math.floor(cooldown * 0.9); // 10% faster
-        }
-
-        db.updateUser(message.author.id, { last_work: now });
         db.addBalance(message.author.id, total);
+        db.updateUser(message.author.id, { last_work: now });
 
         let msg = t('work.success', lang, { job: jobName, amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (bonusAmount > 0) {
@@ -105,8 +96,6 @@ module.exports = {
         if (missionMsg) msg += missionMsg;
 
         await message.reply(msg);
-
-        // Trigger Level 20 milestone if reached
         return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
     }
 };

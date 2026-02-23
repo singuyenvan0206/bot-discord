@@ -4,7 +4,7 @@ const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount } = require('../../utils/economy');
-const { getUserMultiplier } = require('../../utils/multiplier');
+const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 
 const CARD_SUITS = config.CARDS.SUITS;
 const CARD_VALUES = config.CARDS.VALUES;
@@ -43,10 +43,9 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         payout = bet ? bet * 2 : 0;
 
         if (payout > 0) {
-            const multiplier = getUserMultiplier(i.user.id, 'gamble');
-            const bonus = Math.floor(payout * multiplier);
-            payout += bonus;
-            if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+            const { total: totalReward, bonus: bonusAmount } = calculateReward(bet * 2, i.user.id, 'gamble');
+            payout = totalReward;
+            if (bonusAmount > 0) result += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
         }
     }
     else if (playerVal > dealerVal) {
@@ -55,10 +54,9 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         payout = bet ? bet * 2 : 0;
 
         if (payout > 0) {
-            const multiplier = getUserMultiplier(i.user.id, 'gamble');
-            const bonus = Math.floor(payout * multiplier);
-            payout += bonus;
-            if (bonus > 0) result += t('slots.bonus_item', lang, { amount: bonus, percent: Math.round(multiplier * 100) });
+            const { total: totalReward, bonus: bonusAmount } = calculateReward(bet * 2, i.user.id, 'gamble');
+            payout = totalReward;
+            if (bonusAmount > 0) result += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
         }
     }
     else if (playerVal < dealerVal) {
@@ -121,16 +119,19 @@ module.exports = {
         if (handValue(playerHand) === 21) {
             if (bet) {
                 const baseProfit = Math.ceil(bet * 1.5);
-                const prize = bet + baseProfit;
-                const multiplier = getUserMultiplier(message.author.id, 'gamble');
-                const bonus = Math.floor(prize * multiplier);
-                const totalPayout = prize + bonus; // Refund bet + 1.5x profit + bonus
+                const winBase = bet + baseProfit;
+                const { total: totalPayout, bonus: bonusAmount } = calculateReward(winBase, message.author.id, 'gamble');
 
                 db.addBalance(message.author.id, totalPayout);
 
+                let naturalWinDesc = buildEmbed(true).data.description + `\n\n${t('blackjack.natural_win', lang)}\n**${t('blackjack.base_win', lang)}:** ${config.EMOJIS.COIN} +${baseProfit}\n**${t('blackjack.total_payout', lang)}:** ${config.EMOJIS.COIN} **${totalPayout.toLocaleString()}** coins`;
+                if (bonusAmount > 0) {
+                    naturalWinDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                }
+
                 const embed = buildEmbed(true)
                     .setTitle(t('blackjack.natural_title', lang))
-                    .setDescription(buildEmbed(true).data.description + `\n\n${t('blackjack.natural_win', lang)}\n**${t('blackjack.base_win', lang)}:** ${config.EMOJIS.COIN} +${baseProfit}\n**${t('daily.bonus', lang, { amount: bonus, percent: Math.round(multiplier * 100) })}**\n**${t('blackjack.total_payout', lang)}:** ${config.EMOJIS.COIN} **${totalPayout}** coins`);
+                    .setDescription(naturalWinDesc);
 
                 startCooldown(message.client, 'blackjack', message.author.id);
                 return message.reply({ embeds: [embed] });

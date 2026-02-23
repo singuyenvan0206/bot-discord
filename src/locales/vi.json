@@ -17,7 +17,7 @@
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
-        "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item)*"
+        "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped 250%))*"
     },
     "rank": {
         "leaderboard_title": "🏆 Bảng Xếp Hạng Cấp Độ - {{server}}",
@@ -78,7 +78,7 @@
         "lose": "🎰 Không có cặp nào. Chúc bạn may mắn lần sau!",
         "won_coins": "\n{{emoji}} **Thắng {{amount}} coins!**",
         "lost_coins": "\n💸 **Mất {{amount}} coins.**",
-        "bonus_item": " *(Thêm +{{amount}} thưởng item: {{percent}}%)*"
+        "bonus_item": " *(Thêm +{{amount}} thưởng (Capped 250%): {{percent}}%)*"
     },
     "coinflip": {
         "title": "🪙  Tung Đồng Xu",
@@ -165,22 +165,22 @@
         "draw": "🤝 **Hòa rồi!**",
         "winner_msg": "🏆 **{{winner}} đã thắng!** ({{symbol}})",
         "reward_msg": "\n{{emoji}} **+{{amount}} coins!**",
-        "reward_bonus_note": "\n-# *(Gồm {{emoji}} +{{bonus}} thưởng item: {{percent}}%)*",
+        "reward_bonus_note": "\n-# *(Gồm {{emoji}} +{{bonus}} thưởng item (Capped 250%): {{percent}}%)*",
         "ending_title": "❌⭕  Cờ Ca-rô — Kết thúc ván đấu",
         "timeout_title": "❌⭕  Cờ Ca-rô — {{emoji}} Hết thời gian"
     },
     "daily": {
         "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{hours}} giờ {{minutes}} phút** nữa.",
         "success": "✅ Bạn đã nhận phần thưởng hàng ngày là **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
-        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*"
+        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped 250%): {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*"
     },
     "work": {
         "cooldown": "❌ Bạn cần nghỉ ngơi! Hãy quay lại làm việc sau **{{minutes}} phút**.",
         "success": "💼 Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
-        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*",
-        "job_bonus": "\n-# *(Gồm 💼 +{{amount}} thưởng nghề {{job}}: {{percent}}%)*",
+        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped 250%): {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*",
+        "job_bonus": "\n-# *(Gồm 💼 +{{amount}} thưởng nghề {{job}} (Capped 250%): {{percent}}%)*",
         "job_categories": {
             "tier0": [
                 "Shipper",
@@ -257,7 +257,7 @@
         "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
         "success": "💰 Bạn gặp một người tốt bụng và được họ cho **{{amount}}** coins! {{emoji}}",
         "failure": "😢 Bạn đứng xin cả buổi nhưng chẳng ai thèm cho xu nào.",
-        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*"
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*"
     },
     "search": {
         "cooldown": "❌ Bạn đã tìm khắp nơi rồi! Hãy nghỉ ngơi **{{minutes}} phút** trước khi tìm tiếp.",
@@ -274,7 +274,7 @@
             "bãi đậu xe",
             "cống rãnh"
         ],
-        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*",
         "data_mine": "\n💻 **Data Mine!** Hacker tìm thấy dữ liệu giá trị, thu nhập nhân **2x**!",
         "market_tip": "\n📈 **Mẹo thị trường!** Trader tận dụng thông tin nội bộ, nhận thêm **+50** coins!"
     },
@@ -285,7 +285,7 @@
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
         "no_money_self": "❌ Bạn cần ít nhất **100 coins** trong ví để làm vốn nếu chẳng may bị bắt!",
         "invalid_user": "❌ Bạn không thể tự trộm chính mình!",
-        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*",
         "thief_edge": "\n-# *(Gồm 🎁 +{{amount}} thưởng item)*",
         "police_busted": "\n👮 **Bị tóm!** Bạn định trộm của cảnh sát và phải nộp phạt gấp đôi!",
         "shield_blocked": "\n🛡️ **Bị chặn!** Khiên của nạn nhân khiến việc trộm cướp khó khăn hơn nhiều.",
@@ -394,8 +394,8 @@
         "caught": "Đã bắt được",
         "income": "Thu nhập",
         "luck": "May mắn",
-        "item_bonus": "Thưởng Item",
-        "bonus_percent": "✨ +{{amount}} ({{percent}}%)",
+        "item_bonus": "Thưởng Item: +{{amount}} {{emoji}}",
+        "bonus_percent": "✨ +{{amount}} (Capped 250%: {{percent}}%)",
         "footer_success": "Mồi đã dùng: -1 {{bait}}",
         "footer_fail": "Chúc bạn may mắn lần sau! (-1 Mồi câu)",
         "bait_salvaged": "\n♻️ **Tiết kiệm mồi!** Kỹ năng nông dân giúp bạn tái sử dụng mồi câu.",
@@ -657,8 +657,9 @@
         "inventory_value": "Giá trị kho đồ: **{{emoji}} {{amount}}**",
         "sell_tip": "💡 Mẹo: Dùng {{prefix}}sell <vật_phẩm> để quy đổi vật phẩm thành coins!",
         "global_multipliers": "🚀 Hệ Số Thưởng (Capped 250%)",
-        "income_bonus": "Thu nhập",
-        "xp_bonus": "XP",
+        "income_bonus": "Thưởng Thu Nhập",
+        "gamble_bonus": "Thưởng Cờ Bạc",
+        "xp_bonus": "Thưởng XP",
         "buff_activated": "\n✨ **Buff đã kích hoạt:** +{{percent}}% {{type}} trong **{{duration}}**!"
     },
     "buy": {

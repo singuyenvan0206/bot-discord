@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
-const { getTotalIncomeMultiplier } = require('../../utils/multiplier');
+const { getTotalIncomeMultiplier, calculateReward, getXpMultiplier } = require('../../utils/multiplier');
 const { getRandomQuestion } = require('../../utils/quizGenerator');
 
 module.exports = {
@@ -44,12 +44,9 @@ module.exports = {
             });
 
             const winnerMsg = collected.first();
-            const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD;
-            const totalMulti = getTotalIncomeMultiplier(winnerMsg.author.id);
-            const bonusAmount = Math.floor(baseReward * totalMulti);
-            const totalReward = baseReward + bonusAmount;
+            const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD || 50;
+            const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, winnerMsg.author.id);
 
-            const { getXpMultiplier } = require('../../utils/multiplier');
             const { addXp } = require('../../utils/leveling');
             const xpMultiplier = getXpMultiplier(winnerMsg.author.id);
             const baseXp = 20; // Base emojiquiz XP

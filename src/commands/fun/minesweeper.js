@@ -3,6 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'minesweeper',
@@ -252,17 +253,17 @@ module.exports = {
                         collector.stop('win');
                         let prize = 0;
                         if (bet > 0) {
-                            const baseWin = Math.ceil(bet * 1.5);
-                            const { getUserMultiplier } = require('../../utils/multiplier');
-                            const multiplier = getUserMultiplier(user.id, 'gamble');
-                            const bonus = Math.floor(baseWin * multiplier);
-                            prize = baseWin + bonus;
+                            const { total: totalReward, bonus: bonusAmount } = calculateReward(baseWin, user.id, 'gamble');
+                            db.addBalance(user.id, totalReward);
 
-                            db.addBalance(user.id, prize);
+                            let winDesc = t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${totalReward.toLocaleString()} coins`;
+                            if (bonusAmount > 0) {
+                                winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                            }
 
                             const winEmbed = new EmbedBuilder()
                                 .setTitle(`${config.EMOJIS.SUCCESS}  ${t('minesweeper.win_title', lang)}`)
-                                .setDescription(t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${baseWin}\n**${t('economy.item_bonus_short', lang)}:** ✨ +${bonus} (${Math.round(multiplier * 100)}%)\n**${t('balance.description', lang) || 'Balance:'}** ${prize.toLocaleString()} coins`)
+                                .setDescription(winDesc)
                                 .setColor(config.COLORS.SUCCESS);
                             await i.update({ embeds: [winEmbed], components: renderComponents(true, true) });
                         } else {

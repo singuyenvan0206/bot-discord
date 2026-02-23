@@ -4,6 +4,7 @@ const { Deck, evaluateHand } = require('../../utils/pokerLogic');
 const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
+const { calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'poker',
@@ -502,17 +503,28 @@ module.exports = {
                     .join('\n');
             }
 
-            const prize = Math.floor(pot / winners.length);
-            winners.forEach(w => { w.chips += prize; });
+            const prizePerWinner = Math.floor(pot / winners.length);
+            let totalBonusGiven = 0;
+
+            winners.forEach(w => {
+                const { total: totalPrize, bonus: bonusAmount } = calculateReward(prizePerWinner, w.id, 'gamble');
+                w.chips += totalPrize;
+                totalBonusGiven += bonusAmount;
+            });
 
             players.forEach(p => {
                 if (!p.isBot && p.chips > 0) db.addBalance(p.id, p.chips);
             });
 
             const winnerNames = winners.map(w => w.name).join(', ');
+            let footerText = t('poker.pot', lang, { amount: pot.toLocaleString() });
+            if (totalBonusGiven > 0) {
+                footerText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${totalBonusGiven.toLocaleString()} coins)*`;
+            }
+
             const embed = new EmbedBuilder()
                 .setTitle(t('poker.end_title', lang))
-                .setDescription(`**${t('poker.winners', lang, { names: winnerNames })}\n**${t('poker.pot', lang, { amount: pot })}\n\n${resultText}`)
+                .setDescription(`**${t('poker.winners', lang, { names: winnerNames })}\n**${footerText}\n\n${resultText}`)
                 .setColor(config.COLORS.WARNING);
 
             await reply.edit({ embeds: [embed], components: [] });

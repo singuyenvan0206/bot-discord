@@ -3,6 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
+const { calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'guess',
@@ -35,15 +36,20 @@ module.exports = {
             const attemptsLeft = maxAttempts - attempts;
 
             if (guess === number) {
-                const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
-                const reward = Math.max(10, baseReward - (attempts * 5));
+                const { total: reward, bonus: bonusAmount } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.author.id);
                 db.addBalance(m.author.id, reward);
 
-                await m.reply(t('guess.win', lang, {
+                let msg = t('guess.win', lang, {
                     number,
                     emoji: config.EMOJIS.COIN,
-                    amount: reward
-                }));
+                    amount: reward.toLocaleString()
+                });
+
+                if (bonusAmount > 0) {
+                    msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                }
+
+                await m.reply(msg);
                 collector.stop('win');
             } else if (attempts < maxAttempts) {
                 const hintKey = guess < number ? 'guess.higher' : 'guess.lower';

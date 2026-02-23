@@ -3,6 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
+const { calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'reaction',
@@ -52,13 +53,19 @@ module.exports = {
                 const diff = m.createdTimestamp - signalTime;
                 collector.stop('win');
 
-                let reward = config.ECONOMY.REACTION_REWARD_BASE || 15;
-                if (diff < 300) { reward = reward * 3 + 5; }
-                else if (diff < 500) { reward = reward * 2; }
+                let baseReward = config.ECONOMY.REACTION_REWARD_BASE || 15;
+                if (diff < 300) { baseReward = baseReward * 3 + 5; }
+                else if (diff < 500) { baseReward = baseReward * 2; }
+
+                const { total: reward, bonus: bonusAmount } = calculateReward(baseReward, m.author.id);
                 db.addBalance(m.author.id, reward);
 
                 let resultDesc = t('reaction.result', lang, { time: diff });
-                resultDesc += t('reaction.win', lang, { emoji: config.EMOJIS.COIN, amount: reward });
+                resultDesc += t('reaction.win', lang, { emoji: config.EMOJIS.COIN, amount: reward.toLocaleString() });
+
+                if (bonusAmount > 0) {
+                    resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                }
 
                 await m.reply({
                     embeds: [new EmbedBuilder()

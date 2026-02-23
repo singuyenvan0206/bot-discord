@@ -1,6 +1,6 @@
 const db = require('../../database');
-const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
-const { getUserMultiplier, getTotalIncomeMultiplier } = require('../../utils/multiplier');
+const { addXp, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
+const { calculateReward, getXpMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -31,15 +31,24 @@ module.exports = {
         if (isSuccess) {
             const minReward = config.ECONOMY.SLUT_MIN_REWARD;
             const maxReward = config.ECONOMY.SLUT_MAX_REWARD;
-            const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
+            let baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            const totalMulti = getTotalIncomeMultiplier(message.author.id);
-            const bonusAmount = Math.floor(baseReward * totalMulti);
-            const total = baseReward + bonusAmount;
+            // Job Bonus: Musician (20%) or Streamer (15%)
+            let performMsg = '';
+            let streamMsg = '';
+            if (user.job === 'musician') {
+                baseReward = Math.floor(baseReward * 1.2);
+                performMsg = t('slut.musician_bonus', lang, { amount: Math.floor(baseReward * 0.2).toLocaleString() });
+            } else if (user.job === 'streamer') {
+                baseReward = Math.floor(baseReward * 1.15);
+                streamMsg = t('slut.streamer_bonus', lang, { amount: Math.floor(baseReward * 0.15).toLocaleString() });
+            }
+
+            const { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
 
             // Slut gives medium XP (30-60)
             const xpGained = Math.floor(Math.random() * 31) + 30;
-            const xpResult = addXp(message.author.id, xpGained);
+            const xpResult = addXp(message.author.id, Math.floor(xpGained * getXpMultiplier(message.author.id)));
 
             db.addBalance(message.author.id, total);
 

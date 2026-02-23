@@ -68,14 +68,15 @@ module.exports = {
                     inline: true
                 });
 
-                // Global Multipliers (Capped 200%)
-                const { getTotalIncomeMultiplier, getXpMultiplier } = require('../../utils/multiplier');
-                const incomeBonus = Math.round(getTotalIncomeMultiplier(target.id) * 100);
+                // Global Multipliers (Capped 250%)
+                const { getTotalMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+                const incomeBonus = Math.round(getTotalMultiplier(target.id, 'income') * 100);
+                const gambleBonus = Math.round(getTotalMultiplier(target.id, 'gamble') * 100);
                 const xpBonus = Math.round((getXpMultiplier(target.id) - 1.0) * 100);
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),
-                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 250%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 250%`,
+                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 250%\n**${t('inventory.gamble_bonus', lang) || '🎲 Gamble Bonus'}:** +${gambleBonus}% / 250%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 250%`,
                     inline: true
                 });
 
