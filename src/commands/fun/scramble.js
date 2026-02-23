@@ -1,8 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
-const { addXp } = require('../../utils/leveling');
+const { getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
+
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -78,15 +78,10 @@ module.exports = {
 
             const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, winner.author.id);
 
-            const xpMultiplier = getXpMultiplier(winner.author.id);
-            const baseXp = 20;
-            const totalXp = Math.floor(baseXp * xpMultiplier);
-
             db.addBalance(winner.author.id, totalReward);
-            addXp(winner.author.id, totalXp);
 
             const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
-            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${totalReward.toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
+            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${totalReward.toLocaleString()}** coins!`;
 
             if (bonusAmount > 0) msgText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 

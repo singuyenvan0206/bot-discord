@@ -1,6 +1,6 @@
 const db = require('../../database');
-const { addXp, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
-const { calculateReward, hasActiveItem, getXpMultiplier } = require('../../utils/multiplier');
+const { deductLevel } = require('../../utils/leveling');
+const { calculateReward, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -51,11 +51,7 @@ module.exports = {
 
             const { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
 
-            // Crimes give more XP (50-100) with teacher multiplier
-            const xpBase = Math.floor(Math.random() * 51) + 50;
-            const xpMulti = getXpMultiplier(message.author.id);
-            const xpGained = Math.floor(xpBase * xpMulti);
-            const xpResult = addXp(message.author.id, xpGained);
+
 
             db.addBalance(message.author.id, total);
 
@@ -71,8 +67,7 @@ module.exports = {
 
             if (hackedMsg) msg += hackedMsg;
 
-            await message.reply(msg);
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            return message.reply(msg);
         } else {
             let fine = Math.floor(user.balance * config.ECONOMY.CRIME_FINE_PERCENT);
 
@@ -113,10 +108,7 @@ module.exports = {
                     failureMsg += `\n${t('job.police_notification', lang, { amount: fine.toLocaleString() }).replace('👮 **Trực ban:** ', '').replace('👮 **On Duty:** ', '')} (<@${randomPolice.id}>)`;
                 }
 
-                await message.reply(failureMsg);
-                const xpGained = 10;
-                const xpResult = addXp(message.author.id, xpGained);
-                return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+                return;
             }
 
             let failMsg = t('crime.failure', lang, { amount: fine.toLocaleString() });
@@ -125,10 +117,7 @@ module.exports = {
                 failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 
-            await message.reply(failMsg);
-            const xpGained = 10;
-            const xpResult = addXp(message.author.id, xpGained);
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            return message.reply(failMsg);
         }
     }
 };

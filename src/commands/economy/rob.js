@@ -1,7 +1,7 @@
 const db = require('../../database');
-const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
+const { getLevelMultiplier, deductLevel } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
-const { hasActiveItem, isProtectedFromRob, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
+const { hasActiveItem, isProtectedFromRob, calculateReward } = require('../../utils/multiplier');
 const config = require('../../config');
 
 module.exports = {
@@ -69,9 +69,7 @@ module.exports = {
             db.addBalance(message.author.id, finalStolen);
             db.addBalance(target.id, -finalStolen);
 
-            // Robbery gives high XP (30-60)
-            const xpGained = Math.floor(Math.random() * 31) + 30;
-            const xpResult = addXp(message.author.id, xpGained);
+
 
             let msg = t('rob.success', lang, {
                 user: target.username,
@@ -84,8 +82,7 @@ module.exports = {
             }
             if (policeRobMsg) msg += policeRobMsg;
 
-            await message.reply(msg);
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            return message.reply(msg);
         } else {
             // Pay 20% of your balance to the victim
             let penaltyPercent = config.ECONOMY.ROB_FAIL_PENALTY_PERCENT;
@@ -119,8 +116,7 @@ module.exports = {
 
             await message.reply(failMsg);
 
-            const xpResult = addXp(message.author.id, 5); // 5 XP for failed robbery
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            return;
         }
     }
 };

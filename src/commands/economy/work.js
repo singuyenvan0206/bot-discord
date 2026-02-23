@@ -1,6 +1,6 @@
 const db = require('../../database');
-const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, hasActiveItem, calculateReward } = require('../../utils/multiplier');
-const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { getUserMultiplier, getTotalIncomeMultiplier, hasActiveItem, calculateReward } = require('../../utils/multiplier');
+const { getLevelMultiplier } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -76,11 +76,7 @@ module.exports = {
             missionMsg = t('work.mission_bonus', lang);
         }
 
-        // Add random XP (with teacher multiplier)
-        const xpBase = Math.floor(Math.random() * 16) + 15;
-        const xpMulti = getXpMultiplier(message.author.id);
-        const xpGained = Math.floor(xpBase * xpMulti);
-        const xpResult = addXp(message.author.id, xpGained);
+
 
         db.addBalance(message.author.id, total);
         db.updateUser(message.author.id, { last_work: now });
@@ -96,6 +92,5 @@ module.exports = {
         if (missionMsg) msg += missionMsg;
 
         await message.reply(msg);
-        return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
     }
 };

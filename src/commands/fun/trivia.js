@@ -2,7 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
-const { getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
+const { getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
 
 
 // Helper function to decode HTML entities
@@ -97,19 +97,12 @@ module.exports = {
 
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
-                const { addXp } = require('../../utils/leveling');
 
                 const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, i.user.id);
 
-                const xpMultiplier = getXpMultiplier(i.user.id);
-                const baseXp = 30; // Base trivia XP
-                const totalXp = Math.floor(baseXp * xpMultiplier);
-
                 db.addBalance(i.user.id, totalReward);
-                addXp(i.user.id, totalXp);
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward });
-                resultMsg += ` & ✨ **${totalXp}** XP!`;
                 if (bonusAmount > 0) resultMsg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });

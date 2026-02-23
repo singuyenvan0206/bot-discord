@@ -1,6 +1,6 @@
 const db = require('../../database');
-const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
-const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
+const { getLevelMultiplier } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -32,9 +32,7 @@ module.exports = {
             michelinMsg = t('daily_events.michelin_star', lang);
         }
 
-        // Add 50 XP for claiming daily (with teacher multiplier)
-        const xpMulti = getXpMultiplier(message.author.id);
-        const xpResult = addXp(message.author.id, Math.floor(50 * xpMulti));
+
 
         db.updateUser(message.author.id, { last_daily: now });
         db.addBalance(message.author.id, total);
@@ -45,7 +43,6 @@ module.exports = {
         }
         if (michelinMsg) msg += michelinMsg;
 
-        await message.reply(msg);
-        return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+        return message.reply(msg);
     }
 };

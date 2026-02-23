@@ -1,6 +1,15 @@
 const db = require('../database');
 
 /**
+ * XP Constants
+ */
+const XP_AMOUNTS = {
+    MESSAGE: { min: 5, max: 15 },
+    COMMAND_SUCCESS: { min: 20, max: 40 },
+    COMMAND_FAILURE: { min: 5, max: 10 }
+};
+
+/**
  * Tính toán cấp độ hiện tại dựa trên số XP.
  * Công thức: Level = 0.1 * sqrt(XP)  =>  XP = (Level / 0.1)^2
  */
@@ -139,5 +148,6 @@ module.exports = {
     addXp,
     getLevelMultiplier,
     checkAndSendMilestone,
-    deductLevel
+    deductLevel,
+    XP_AMOUNTS
 };

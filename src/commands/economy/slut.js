@@ -1,6 +1,6 @@
 const db = require('../../database');
-const { addXp, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
-const { calculateReward, getXpMultiplier } = require('../../utils/multiplier');
+const { deductLevel } = require('../../utils/leveling');
+const { calculateReward } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -46,9 +46,7 @@ module.exports = {
 
             const { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
 
-            // Slut gives medium XP (30-60)
-            const xpGained = Math.floor(Math.random() * 31) + 30;
-            const xpResult = addXp(message.author.id, Math.floor(xpGained * getXpMultiplier(message.author.id)));
+
 
             db.addBalance(message.author.id, total);
 
@@ -64,8 +62,7 @@ module.exports = {
             if (performMsg) msg += performMsg;
             if (streamMsg) msg += streamMsg;
 
-            await message.reply(msg);
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            return message.reply(msg);
         } else {
             let penalty = config.ECONOMY.SLUT_FAIL_PENALTY;
             if (user.job === 'doctor') penalty = Math.floor(penalty / 2); // 50% discount for doctors
@@ -89,9 +86,7 @@ module.exports = {
                     failureMsg += `\n${t('job.doctor_notification', lang, { amount: penalty.toLocaleString() }).replace('👨‍⚕️ **Bệnh viện:** ', '').replace('👨‍⚕️ **Hospital:** ', '')} (<@${randomDoctor.id}>)`;
                 }
 
-                await message.reply(failureMsg);
-                const xpResult = addXp(message.author.id, 5); // 5 XP for failed attempt
-                return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+                return;
             }
 
             let failMsg = t('slut.failure', lang, { amount: penalty.toLocaleString() });
@@ -100,9 +95,7 @@ module.exports = {
                 failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 
-            await message.reply(failMsg);
-            const xpResult = addXp(message.author.id, 5);
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            return message.reply(failMsg);
         }
     }
 };

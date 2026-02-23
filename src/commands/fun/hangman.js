@@ -1,8 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
-const { addXp } = require('../../utils/leveling');
+const { getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
+
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -58,9 +58,7 @@ module.exports = {
         function calcReward(userId) {
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
             const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, userId);
-            const xpMultiplier = getXpMultiplier(userId);
-            const totalXp = Math.floor(40 * xpMultiplier);
-            return { totalReward, bonusAmount, totalXp };
+            return { totalReward, bonusAmount };
         }
 
         const embed = new EmbedBuilder()
@@ -86,12 +84,11 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const { totalReward, bonusAmount, totalXp } = calcReward(message.author.id);
+                    const { totalReward, bonusAmount } = calcReward(message.author.id);
 
                     db.addBalance(message.author.id, totalReward);
-                    addXp(message.author.id, totalXp);
 
-                    let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins & ✨ ${totalXp} XP!**`;
+                    let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins!**`;
                     if (bonusAmount > 0) resultStr += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
@@ -118,12 +115,11 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
-                    const { totalReward, bonusAmount, totalXp } = calcReward(message.author.id);
+                    const { totalReward, bonusAmount } = calcReward(message.author.id);
 
                     db.addBalance(message.author.id, totalReward);
-                    addXp(message.author.id, totalXp);
 
-                    resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
+                    resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins!`;
                     if (bonusAmount > 0) resultText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
                 }
                 embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)

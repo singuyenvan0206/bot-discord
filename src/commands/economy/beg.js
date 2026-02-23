@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { getLevelMultiplier } = require('../../utils/leveling');
 const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -33,10 +33,7 @@ module.exports = {
 
             db.addBalance(message.author.id, total);
 
-            // Low XP (5-10)
-            const { getXpMultiplier } = require('../../utils/multiplier');
-            const xpGained = Math.floor(Math.random() * 6) + 5;
-            const xpResult = addXp(message.author.id, Math.floor(xpGained * getXpMultiplier(message.author.id)));
+
 
             const persons = t('beg.persons', lang);
             const person = persons[Math.floor(Math.random() * persons.length)];
@@ -51,8 +48,7 @@ module.exports = {
                 msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
             }
 
-            await message.reply(msg);
-            return checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
+            return message.reply(msg);
         } else {
             const persons = t('beg.persons', lang);
             const person = persons[Math.floor(Math.random() * persons.length)];

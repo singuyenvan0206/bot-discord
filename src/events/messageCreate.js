@@ -1,7 +1,7 @@
 const { Events, Collection } = require('discord.js');
 const config = require('../config');
 const { getLanguage, t } = require('../utils/i18n');
-const { addXp, checkAndSendMilestone } = require('../utils/leveling');
+const { addXp, checkAndSendMilestone, XP_AMOUNTS } = require('../utils/leveling');
 const { formatDuration } = require('../utils/time');
 
 const xpCooldowns = new Set();
@@ -11,9 +11,10 @@ module.exports = {
     async execute(message) {
         if (message.author.bot || !message.guild) return;
 
-        // ─── EXP System ───
+        // ─── EXP System (Chatting) ───
         if (!xpCooldowns.has(message.author.id)) {
-            const xpAmount = Math.floor(Math.random() * 11) + 5; // 5-15 XP
+            const { MESSAGE } = XP_AMOUNTS;
+            const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
             const { leveledUp, reachedLevel20 } = addXp(message.author.id, xpAmount);
 
             if (leveledUp) {
@@ -64,9 +65,16 @@ module.exports = {
 
         try {
             await command.execute(message, args);
+            // Grant Command Success XP
+            const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
+            addXp(message.author.id, xpAmount);
         } catch (error) {
             console.error(`[Command] Error executing !${commandName}:`, error);
             message.reply(t('common.error', lang)).catch(() => { });
+
+            // Grant Command Failure XP
+            const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
+            addXp(message.author.id, xpAmount);
         }
     },
 };

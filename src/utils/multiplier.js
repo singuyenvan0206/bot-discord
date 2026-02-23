@@ -123,7 +123,14 @@ function hasActiveItem(userId, itemId) {
  * Returns { total, bonus, percent }
  */
 function calculateReward(base, userId, type = 'income') {
-    const bonusPart = getTotalMultiplier(userId, type);
+    let bonusPart = getTotalMultiplier(userId, type);
+
+    // Safety fail-safe clamp: never exceed 250% (2.5) bonus
+    if (bonusPart > 2.5) {
+        console.warn(`[Multiplier] Safety clamp triggered for ${userId}: ${bonusPart} -> 2.5`);
+        bonusPart = 2.5;
+    }
+
     const bonus = Math.floor(base * bonusPart);
     const total = base + bonus;
     return { total, bonus, percent: Math.round(bonusPart * 100) };

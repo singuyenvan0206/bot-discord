@@ -1,8 +1,8 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getUserMultiplier, getTotalIncomeMultiplier, getXpMultiplier, calculateReward } = require('../../utils/multiplier');
-const { addXp } = require('../../utils/leveling');
+const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
+
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -112,14 +112,9 @@ module.exports = {
 
                         const { total: totalReward, bonus: bonusAmount } = calculateReward(reward, message.author.id);
 
-                        const xpMultiplier = getXpMultiplier(message.author.id);
-                        const baseXp = 25; // Base memory XP
-                        const totalXp = Math.floor(baseXp * xpMultiplier);
-
                         db.addBalance(message.author.id, totalReward);
-                        addXp(message.author.id, totalXp);
 
-                        let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward }) + `\n✨ **XP:** +${totalXp}`;
+                        let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward });
                         if (bonusAmount > 0) winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
 
                         embed.setTitle(t('memory.win_title', lang))
