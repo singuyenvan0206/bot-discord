@@ -52,7 +52,7 @@ module.exports = {
 
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
-                    .setLabel(t('avatar.view_banner', lang, {}, true))
+                    .setLabel(t('avatar.view_banner', lang))
                     .setStyle(ButtonStyle.Link)
                     .setURL(bannerUrl)
                     .setEmoji('🎨')

@@ -13,7 +13,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = await getLanguage(message.author.id);
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const q = getRandomQuestion();
         if (!q) return message.reply(t('emojiquiz.pool_empty', lang));
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case

@@ -76,7 +76,7 @@ module.exports = {
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),
-                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 250%\n**${t('inventory.gamble_bonus', lang) || '🎲 Gamble Bonus'}:** +${gambleBonus}% / 250%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 250%`,
+                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 250%\n**${t('inventory.gamble_bonus', lang)}:** +${gambleBonus}% / 250%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 250%`,
                     inline: true
                 });
 
@@ -121,7 +121,7 @@ module.exports = {
                     };
 
                     const lines = Object.entries(typeMap).map(([type, data]) => {
-                        const effectType = t(`effects.${type}`, lang) || type;
+                        const effectType = t(`effects.${type}`, lang);
                         const eff = effectiveTotal(data.total);
                         const pct = Math.round(eff * 100);
                         const remaining = data.earliestExpiry - now;
@@ -131,16 +131,16 @@ module.exports = {
                         const timeStr = h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m`;
                         const emoji = TYPE_EMOJIS[type] || '⚡';
                         const countNote = data.count > 1 ? ` ×${data.count}` : '';
-                        return `${emoji} **${effectType}:** +${pct}%${countNote} *(next: ${timeStr})*`;
+                        return `${emoji} **${effectType}:** +${pct}%${countNote} ${t('common.next_expiry', lang, { time: timeStr })}`;
                     });
 
                     embed.addFields({
-                        name: `⚡ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`,
+                        name: `⚡ ${t('inventory.active_buffs', lang)}`,
                         value: lines.join('\n') || '\u200b',
                         inline: false
                     });
                 } else {
-                    embed.addFields({ name: `⚡ ${t('inventory.active_buffs', lang) || 'Active Buffs'}`, value: t('common.none', lang), inline: false });
+                    embed.addFields({ name: `⚡ ${t('inventory.active_buffs', lang)}`, value: t('common.none', lang), inline: false });
                 }
 
                 embed.setDescription(t('inventory.empty', lang, { prefix: config.PREFIX }));

@@ -44,25 +44,13 @@ function getTranslation(key, lang, replace = {}) {
 }
 
 /**
- * Get a translated string (Bilingual: VI & EN).
+ * Get a translated string.
  * @param {string} key Key in dot notation (e.g., 'common.error')
- * @param {string} lang Primary language (used for fallback logic)
+ * @param {string} lang Language code ('en', 'vi')
  * @param {object} replace Replacement variables
- * @param {boolean} singleLine If true, joins with ' | ' instead of newline and subtext
  */
-function t(key, lang = 'vi', replace = {}, singleLine = false) {
-    const valVi = getTranslation(key, 'vi', replace);
-    const valEn = getTranslation(key, 'en', replace);
-
-    // If they are the same (e.g. key itself or identical strings), just return one
-    if (valVi === valEn) return valVi;
-
-    if (singleLine) {
-        return `${valVi} | ${valEn}`;
-    }
-
-    // Return combined (Bilingual). Subtext for the second language.
-    return `${valVi}\n-# *(${valEn})*`;
+function t(key, lang = 'vi', replace = {}) {
+    return getTranslation(key, lang, replace);
 }
 
 /**

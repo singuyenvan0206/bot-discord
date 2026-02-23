@@ -62,7 +62,7 @@ module.exports = {
             });
 
             if (bonusAmount > 0) {
-                msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
             }
 
             if (hackedMsg) msg += hackedMsg;

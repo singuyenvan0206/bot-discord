@@ -167,7 +167,7 @@ module.exports = {
             if (bonusAmount > 0) {
                 embed.addFields({
                     name: t('fish.item_bonus', lang, { amount: bonusAmount.toLocaleString(), emoji: config.EMOJIS.COIN }),
-                    value: `-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'})*`
+                    value: t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() })
                 });
             }
 

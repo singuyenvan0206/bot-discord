@@ -208,7 +208,7 @@ async function handleButtonEntry(interaction) {
     const giveaway = db.getGiveaway(interaction.message.id);
 
     if (!giveaway) return interaction.reply({ content: t('giveaway.not_exists', lang), ephemeral: true });
-    if (giveaway.ended) return interaction.reply({ content: t('giveaway.already_ended', lang), ephemeral: true });
+    if (giveaway.ended) return interaction.reply({ content: t('giveaway.already_ended_error', lang), ephemeral: true });
     if (giveaway.paused) return interaction.reply({ content: t('giveaway.paused_title', lang), ephemeral: true });
 
     if (giveaway.required_role_id && !interaction.member.roles.cache.has(giveaway.required_role_id)) {

@@ -45,7 +45,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         if (payout > 0) {
             const { total: totalReward, bonus: bonusAmount } = calculateReward(bet * 2, i.user.id, 'gamble');
             payout = totalReward;
-            if (bonusAmount > 0) result += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+            if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
         }
     }
     else if (playerVal > dealerVal) {
@@ -145,8 +145,8 @@ module.exports = {
         }
 
         const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId(`bj_hit_${uid}`).setLabel(t('blackjack.label_hit', lang, {}, true)).setEmoji(config.EMOJIS.BLACKJACK).setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId(`bj_stand_${uid}`).setLabel(t('blackjack.label_stand', lang, {}, true)).setEmoji(config.EMOJIS.STOP).setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId(`bj_hit_${uid}`).setLabel(t('blackjack.label_hit', lang)).setEmoji(config.EMOJIS.BLACKJACK).setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`bj_stand_${uid}`).setLabel(t('blackjack.label_stand', lang)).setEmoji(config.EMOJIS.STOP).setStyle(ButtonStyle.Danger),
         );
 
         const reply = await message.reply({ embeds: [buildEmbed()], components: [row] });

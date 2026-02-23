@@ -64,7 +64,7 @@ module.exports = {
             if (word === `${config.PREFIX}stop`) {
                 if (isManager(m.member)) {
                     collector.stop('stopped');
-                    return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author })}**`);
+                    return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author.username })}**`);
                 }
                 return;
             }
@@ -122,7 +122,7 @@ module.exports = {
 
             const scoreboard = [...playerScores.entries()]
                 .sort((a, b) => b[1] - a[1])
-                .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} ${coins} coins`)
+                .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} **${coins.toLocaleString()}**`)
                 .join('\n') || t('wordchain.no_participants', lang);
 
             const endEmbed = new EmbedBuilder()

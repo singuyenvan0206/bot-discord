@@ -21,17 +21,12 @@ function formatDuration(ms, lang = 'vi') {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (lang === 'vi') {
-        if (days > 0) return `${days} ngày ${hours % 24} giờ ${minutes % 60} phút`;
-        if (hours > 0) return `${hours} giờ ${minutes % 60} phút ${seconds % 60} giây`;
-        if (minutes > 0) return `${minutes} phút ${seconds % 60} giây`;
-        return `${seconds} giây`;
-    } else {
-        if (days > 0) return `${days}d ${hours % 24}h ${minutes % 60}m`;
-        if (hours > 0) return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
-        if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
-        return `${seconds}s`;
-    }
+    const daysStr = days > 0 ? t('common.duration_days', lang, { days }) + ' ' : '';
+    const hoursStr = (days > 0 || hours > 0) ? t('common.duration_hours', lang, { hours: hours % 24 }) + ' ' : '';
+    const minutesStr = (days > 0 || hours > 0 || minutes > 0) ? t('common.duration_minutes', lang, { minutes: minutes % 60 }) + ' ' : '';
+    const secondsStr = t('common.duration_seconds', lang, { seconds: seconds % 60 });
+
+    return `${daysStr}${hoursStr}${minutesStr}${secondsStr}`.trim();
 }
 
 /**
@@ -68,9 +63,7 @@ function createGiveawayEmbed(giveaway, participantCount = 0, lang = 'vi') {
             '',
             `📥 ${t('giveaway.entries', lang, { count: participantCount })}`,
             '',
-            lang === 'vi'
-                ? `Thả cảm xúc ${EMOJI} hoặc nhấn nút bên dưới để tham gia!`
-                : `React with ${EMOJI} or click the button below to join!`,
+            t('giveaway.join_instruction', lang, { emoji: EMOJI }),
         ].filter(Boolean).join('\n'))
         .setColor(color)
         .setFooter({ text: `${t('giveaway.footer_id', lang, { id: giveaway.message_id || '...' })}` })

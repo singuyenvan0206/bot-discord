@@ -20,7 +20,7 @@ module.exports = {
         if (fullArg === 'all') {
             const keys = Object.keys(inv);
             if (keys.length === 0) {
-                return message.reply(`❌ Túi đồ của bạn đang trống! Không có gì để bán.`);
+                return message.reply(t('sell.all_empty', lang));
             }
 
             let totalEarned = 0;
@@ -42,7 +42,7 @@ module.exports = {
             db.updateUser(user.id, { inventory: '{}' });
             db.addBalance(user.id, totalEarned);
 
-            return message.reply(`✅ **Đã thanh lý toàn bộ kho đồ!**\nBạn đã bán tổng cộng **${totalItemsCount}** vật phẩm và thu về **${totalEarned.toLocaleString()} ${config.EMOJIS.COIN}**.`);
+            return message.reply(t('sell.all_success', lang, { count: totalItemsCount, price: totalEarned.toLocaleString(), emoji: config.EMOJIS.COIN }));
         }
 
         const query = fullArg;

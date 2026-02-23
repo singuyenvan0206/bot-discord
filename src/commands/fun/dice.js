@@ -40,11 +40,11 @@ module.exports = {
             .setFooter({ text: t('dice.balance_footer', lang, { balance: user.balance }) });
 
         const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId(`dice_high_${uid}`).setLabel(t('dice.label_high', lang, {}, true)).setEmoji('🔼').setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId(`dice_low_${uid}`).setLabel(t('dice.label_low', lang, {}, true)).setEmoji('🔽').setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId(`dice_odd_${uid}`).setLabel(t('dice.label_odd', lang, {}, true)).setEmoji('🔢').setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder().setCustomId(`dice_even_${uid}`).setLabel(t('dice.label_even', lang, {}, true)).setEmoji('#️⃣').setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder().setCustomId(`dice_7_${uid}`).setLabel(t('dice.label_7', lang, {}, true)).setEmoji(config.EMOJIS.LUCKY).setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId(`dice_high_${uid}`).setLabel(t('dice.label_high', lang)).setEmoji('🔼').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`dice_low_${uid}`).setLabel(t('dice.label_low', lang)).setEmoji('🔽').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId(`dice_odd_${uid}`).setLabel(t('dice.label_odd', lang)).setEmoji('🔢').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`dice_even_${uid}`).setLabel(t('dice.label_even', lang)).setEmoji('#️⃣').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`dice_7_${uid}`).setLabel(t('dice.label_7', lang)).setEmoji(config.EMOJIS.LUCKY).setStyle(ButtonStyle.Success),
         );
 
         const reply = await message.reply({ embeds: [embed], components: [row] });
@@ -92,7 +92,7 @@ module.exports = {
                 prize = totalPrize;
                 db.addBalance(message.author.id, prize);
                 if (bonusAmount > 0) {
-                    bonusText = `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                    bonusText = t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
                 }
             }
 

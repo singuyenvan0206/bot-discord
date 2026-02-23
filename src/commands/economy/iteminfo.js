@@ -56,25 +56,25 @@ module.exports = {
             );
 
         if (item.multiplier) {
-            const effectType = t(`effects.${item.type}`, lang) || item.type;
-            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang) || 'Hiệu ứng'}`, value: `+${Math.round(item.multiplier * 100)}% ${effectType}`, inline: true });
+            const effectType = t(`effects.${item.type}`, lang);
+            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang)}`, value: `+${Math.round(item.multiplier * 100)}% ${effectType}`, inline: true });
         }
 
         if (item.duration) {
             let durationStr = '';
             if (item.duration >= 86400) {
-                durationStr = `${Math.round(item.duration / 86400)} ${lang === 'vi' ? 'ngày' : 'days'}`;
+                durationStr = t('common.duration_days', lang, { days: Math.round(item.duration / 86400) });
             } else if (item.duration >= 3600) {
-                durationStr = `${Math.round(item.duration / 3600)} ${lang === 'vi' ? 'giờ' : 'hours'}`;
+                durationStr = t('common.duration_hours', lang, { hours: Math.round(item.duration / 3600) });
             } else {
-                durationStr = `${Math.round(item.duration / 60)} ${lang === 'vi' ? 'phút' : 'minutes'}`;
+                durationStr = t('common.duration_minutes', lang, { minutes: Math.round(item.duration / 60) });
             }
-            embed.addFields({ name: `⏳ ${lang === 'vi' ? 'Thời lượng' : 'Duration'}`, value: durationStr, inline: true });
+            embed.addFields({ name: `⏳ ${t('iteminfo.duration_label', lang)}`, value: durationStr, inline: true });
         }
 
         if (item.idealJob) {
-            const jobName = t(`jobs.${item.idealJob}.name`, lang) || item.idealJob;
-            embed.addFields({ name: `💼 ${lang === 'vi' ? 'Nghề Phù Hợp' : 'Job Synergy'}`, value: jobName, inline: true });
+            const jobNameLoc = t(`job.name_${item.idealJob}`, lang);
+            embed.addFields({ name: `💼 ${t('iteminfo.synergy_label', lang)}`, value: jobNameLoc, inline: true });
         }
 
         embed.addFields({ name: `🎒 ${t('iteminfo.owned_label', lang)}`, value: `${count.toLocaleString()}`, inline: true });

@@ -59,9 +59,9 @@ module.exports = {
             // Interactive mode
             const uid = Date.now().toString(36);
             const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId(`rps_rock_${uid}`).setLabel(t('rps.rock', lang, {}, true)).setEmoji('🪨').setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId(`rps_paper_${uid}`).setLabel(t('rps.paper', lang, {}, true)).setEmoji('📄').setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId(`rps_scissors_${uid}`).setLabel(t('rps.scissors', lang, {}, true)).setEmoji('✂️').setStyle(ButtonStyle.Primary)
+                new ButtonBuilder().setCustomId(`rps_rock_${uid}`).setLabel(t('rps.rock', lang)).setEmoji('🪨').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId(`rps_paper_${uid}`).setLabel(t('rps.paper', lang)).setEmoji('📄').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId(`rps_scissors_${uid}`).setLabel(t('rps.scissors', lang)).setEmoji('✂️').setStyle(ButtonStyle.Primary)
             );
 
             const embed = new EmbedBuilder()

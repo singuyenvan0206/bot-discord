@@ -18,7 +18,7 @@ module.exports = {
             // Find total price of 1 of every item
             const totalCost = SHOP_ITEMS.reduce((sum, item) => sum + item.price, 0);
             if (user.balance < totalCost) {
-                return message.reply(`❌ Bạn cần ít nhất **${totalCost.toLocaleString()} ${config.EMOJIS.COIN}** để mua toàn bộ cửa hàng! (Số dư: **${user.balance.toLocaleString()}**)`);
+                return message.reply(t('buy.all_insufficient', lang, { price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN, balance: user.balance.toLocaleString() }));
             }
 
             db.removeBalance(user.id, totalCost);
@@ -28,7 +28,7 @@ module.exports = {
                 db.addItem(user.id, item.id, 1);
             }
 
-            return message.reply(`✅ **Đã thầu toàn bộ cửa hàng!**\nBạn đã mua mỗi vật phẩm trong shop 1 cái (Tổng cộng **${SHOP_ITEMS.length}** món) với giá **${totalCost.toLocaleString()} ${config.EMOJIS.COIN}**.`);
+            return message.reply(t('buy.all_success', lang, { count: SHOP_ITEMS.length, price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN }));
         }
 
         const requests = fullArg.split(',').map(s => s.trim()).filter(s => s.length > 0);
@@ -61,14 +61,14 @@ module.exports = {
                 (!isNumericQuery && i.name.toLowerCase().includes(itemQuery))
             );
 
-            if (!item) return message.reply(`❌ ${t('buy.not_found', lang, { prefix: config.PREFIX })} (Tìm kiếm: \`${itemQuery}\`)`);
+            if (!item) return message.reply(`❌ ${t('buy.not_found', lang)} (Tìm kiếm: \`${itemQuery}\`)`);
 
             // Calculate max affordable, considering items already pending in this multi-buy
             const availableBalance = Math.max(0, user.balance - totalCost);
             let quantity = parseAmount(quantityStr, Math.floor(availableBalance / item.price));
 
             if (isNaN(quantity) || quantity <= 0) {
-                return message.reply(`❌ Bạn không đủ tiền trả cho vật phẩm này.`);
+                return message.reply(t('buy.insufficient_item', lang));
             }
 
             const itemName = t(`items.${item.id}.name`, lang);

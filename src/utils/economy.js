@@ -86,7 +86,7 @@ function addHouseProfit(context, amount) {
                 .setTitle(t('job.milestone_title', lang))
                 .setDescription(`**${client.user.username}** ${t('job.milestone_desc', lang)}`)
                 .addFields({
-                    name: t('job.name_field', lang) || "Nghề nghiệp",
+                    name: t('job.name_field', lang),
                     value: t('job.milestone_assigned', lang, {
                         job: job.name,
                         icon: job.config.icon,

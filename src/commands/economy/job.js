@@ -29,10 +29,10 @@ module.exports = {
             let desc = '';
             Object.values(jobs).forEach(j => {
                 const name = t(`job.info_${j.id}`, lang);
-                desc += `${j.icon} **${j.id.charAt(0).toUpperCase() + j.id.slice(1)}**\n*${name}*\n\n`;
+                desc += `${j.icon} **${t(`job.name_${j.id}`, lang)}**\n*${name}*\n\n`;
             });
 
-            embed.setDescription(t('job.list_desc', lang) + '\n\n' + desc + `\n💡 *Tip: ${lang === 'vi' ? 'Dùng `$jobdetail <tên_nghề>` để xem chi tiết.' : 'Use `$jobdetail <job_name>` for details.'}*`);
+            embed.setDescription(t('job.list_desc', lang) + '\n\n' + desc + `\n${t('job.tip_detail', lang, { prefix: config.PREFIX })}`);
             return message.reply({ embeds: [embed] });
         }
 

@@ -21,11 +21,11 @@ module.exports = {
 
         const description = t(`job.job_details.${jobName}`, lang, { prefix: config.PREFIX });
         const embed = new EmbedBuilder()
-            .setTitle(`${job.icon} ${jobName.charAt(0).toUpperCase() + jobName.slice(1)}`)
+            .setTitle(`${job.icon} ${t(`job.name_${jobName}`, lang)}`)
             .setDescription(description)
             .addFields(
-                { name: '💎 ' + (lang === 'vi' ? 'Tiền lương' : 'Salary'), value: `+${(job.bonus * 100).toFixed(0)}%`, inline: true },
-                { name: '⭐ ' + (lang === 'vi' ? 'Yêu cầu' : 'Requirement'), value: `Level 20`, inline: true }
+                { name: '💎 ' + t('job.salary_label', lang), value: `+${(job.bonus * 100).toFixed(0)}%`, inline: true },
+                { name: '⭐ ' + t('job.requirement_label', lang), value: `Level 20`, inline: true }
             )
             .setColor(job.color || config.COLORS.INFO)
             .setThumbnail(message.client.user.displayAvatarURL())

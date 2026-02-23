@@ -69,7 +69,7 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
 
     let title;
     if (jobId) {
-        const jobName = jobId.charAt(0).toUpperCase() + jobId.slice(1);
+        const jobName = t(`job.name_${jobId}`, lang);
         title = t('rank.leaderboard_job_title', lang, { server: guild.name, job: jobName });
     } else if (sortBy === 'balance') {
         title = t('rank.leaderboard_balance_title', lang, { server: guild.name });
@@ -92,7 +92,7 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
         .addOptions([
             { label: t('rank.all_jobs', lang), value: 'all', emoji: '🏆', default: !jobId },
             ...Object.values(jobs).map(j => ({
-                label: j.id.charAt(0).toUpperCase() + j.id.slice(1),
+                label: t(`job.name_${j.id}`, lang),
                 value: j.id,
                 emoji: j.icon,
                 default: jobId === j.id

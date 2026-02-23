@@ -58,7 +58,7 @@ module.exports = {
                     let d = item.duration;
                     if (isChef) d *= 2;
                     const h = Math.floor(d / 3600);
-                    return h > 0 ? `${h}h` : `${Math.floor(d / 60)}m`;
+                    return h > 0 ? t('common.duration_hours', lang, { hours: h }) : t('common.duration_minutes', lang, { minutes: Math.floor(d / 60) });
                 })();
 
                 const itemName = t(`items.${id}.name`, lang);
@@ -68,8 +68,8 @@ module.exports = {
                 if (item.id === 502) displayPercent = 100;
 
                 const label = qty > 1
-                    ? `🎮 **${qty}x ${itemName}** — +${displayPercent}% ${effectType} (${durationStr})`
-                    : `🎮 **${itemName}** — +${displayPercent}% ${effectType} (${durationStr})`;
+                    ? t('use.multi_label', lang, { qty, itemName, percent: displayPercent, type: effectType, duration: durationStr })
+                    : t('use.single_label', lang, { itemName, percent: displayPercent, type: effectType, duration: durationStr });
                 activated.push(label);
                 totalCount += qty;
             }

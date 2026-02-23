@@ -78,7 +78,7 @@ module.exports = {
             });
 
             if (bonusAmount > 0) {
-                msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
             }
             if (policeRobMsg) msg += policeRobMsg;
 
@@ -103,7 +103,7 @@ module.exports = {
 
             if (user.job === 'teacher') {
                 const result = deductLevel(message.author.id);
-                failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('rob.teacher_penalty', lang, { level: result.newLevel })}`;
+                failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('rob.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 
             if (isVictimPolice) {

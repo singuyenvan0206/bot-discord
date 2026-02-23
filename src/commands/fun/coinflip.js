@@ -48,7 +48,7 @@ module.exports = {
             if (payout > 0) db.addBalance(user.id, payout);
             flavorText = t('coinflip.win', lang, { amount: payout.toLocaleString() });
             if (bonusAmount > 0) {
-                flavorText += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
             }
         } else {
             flavorText = t('coinflip.lose', lang, { amount: bet });

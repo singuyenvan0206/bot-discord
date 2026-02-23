@@ -70,7 +70,7 @@ module.exports = {
                 message.client.commands.find(c => c.aliases && c.aliases.includes(name));
 
             if (!command) {
-                return message.reply(`❌ Could not find command **${name}**!`);
+                return message.reply(`❌ ${t('help.command_not_found', lang, { name })}`);
             }
 
             const guide = t(`help.guides.${command.name}`, lang).replace(/\$/g, prefix);
