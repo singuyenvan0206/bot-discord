@@ -30,9 +30,11 @@ module.exports = {
                 message.client.commands.clear();
 
                 // Clear all files in src from require cache to ensure utilities like database are reloaded
-                const srcPath = path.join(__dirname, '../../'); // The src/ directory
+                const srcPath = path.resolve(__dirname, '../../'); // The src/ directory
+                const normalizedSrcPath = srcPath.toLowerCase();
+
                 Object.keys(require.cache).forEach(cacheKey => {
-                    if (cacheKey.startsWith(srcPath)) {
+                    if (cacheKey.toLowerCase().startsWith(normalizedSrcPath)) {
                         delete require.cache[cacheKey];
                     }
                 });
