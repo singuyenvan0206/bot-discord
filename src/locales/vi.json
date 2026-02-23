@@ -16,8 +16,8 @@
         "none": "Không có"
     },
     "economy": {
-        "item_bonus": "\n🎁 **Thưởng Vật phẩm:** +{{amount}} coins ({{percent}}%)!",
-        "item_bonus_short": "\n🎁 **Thưởng Vật phẩm:** +{{amount}} coins!"
+        "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
+        "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item)*"
     },
     "rank": {
         "leaderboard_title": "🏆 Bảng Xếp Hạng Cấp Độ - {{server}}",
@@ -165,21 +165,22 @@
         "draw": "🤝 **Hòa rồi!**",
         "winner_msg": "🏆 **{{winner}} đã thắng!** ({{symbol}})",
         "reward_msg": "\n{{emoji}} **+{{amount}} coins!**",
+        "reward_bonus_note": "\n-# *(Gồm {{emoji}} +{{bonus}} thưởng item: {{percent}}%)*",
         "ending_title": "❌⭕  Cờ Ca-rô — Kết thúc ván đấu",
         "timeout_title": "❌⭕  Cờ Ca-rô — {{emoji}} Hết thời gian"
     },
     "daily": {
         "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{hours}} giờ {{minutes}} phút** nữa.",
         "success": "✅ Bạn đã nhận phần thưởng hàng ngày là **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n✨ **Thưởng thêm vật phẩm:** +{{amount}} coins ({{percent}}%)!",
-        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!"
+        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*"
     },
     "work": {
         "cooldown": "❌ Bạn cần nghỉ ngơi! Hãy quay lại làm việc sau **{{minutes}} phút**.",
         "success": "💼 Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n✨ **Thưởng thêm vật phẩm:** +{{amount}} coins ({{percent}}%)!",
-        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!",
-        "job_bonus": "\n✨ **Thưởng nghề nghiệp ({{job}}):** +{{amount}} coins ({{percent}}%)!",
+        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*",
+        "job_bonus": "\n-# *(Gồm 💼 +{{amount}} thưởng nghề {{job}}: {{percent}}%)*",
         "job_categories": {
             "tier0": [
                 "Shipper",
@@ -256,7 +257,7 @@
         "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
         "success": "💰 Bạn gặp một người tốt bụng và được họ cho **{{amount}}** coins! {{emoji}}",
         "failure": "😢 Bạn đứng xin cả buổi nhưng chẳng ai thèm cho xu nào.",
-        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!"
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*"
     },
     "search": {
         "cooldown": "❌ Bạn đã tìm khắp nơi rồi! Hãy nghỉ ngơi **{{minutes}} phút** trước khi tìm tiếp.",
@@ -273,7 +274,7 @@
             "bãi đậu xe",
             "cống rãnh"
         ],
-        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*",
         "data_mine": "\n💻 **Data Mine!** Hacker tìm thấy dữ liệu giá trị, thu nhập nhân **2x**!",
         "market_tip": "\n📈 **Mẹo thị trường!** Trader tận dụng thông tin nội bộ, nhận thêm **+50** coins!"
     },
@@ -284,8 +285,8 @@
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
         "no_money_self": "❌ Bạn cần ít nhất **100 coins** trong ví để làm vốn nếu chẳng may bị bắt!",
         "invalid_user": "❌ Bạn không thể tự trộm chính mình!",
-        "level_bonus": "\n✨ **Thưởng thêm Cấp độ:** +{{amount}} coins ({{percent}}%)!",
-        "thief_edge": "\n💨 **Lợi thế trộm cướp:** +{{amount}} coins từ trang bị của bạn!",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ: {{percent}}%)*",
+        "thief_edge": "\n-# *(Gồm 🎁 +{{amount}} thưởng item)*",
         "police_busted": "\n👮 **Bị tóm!** Bạn định trộm của cảnh sát và phải nộp phạt gấp đôi!",
         "shield_blocked": "\n🛡️ **Bị chặn!** Khiên của nạn nhân khiến việc trộm cướp khó khăn hơn nhiều.",
         "police_bounty": "\n💰 **Tiền thưởng cảnh sát!** Trộm đồn cảnh sát — bạn nhận thêm **+50%** tiền!",

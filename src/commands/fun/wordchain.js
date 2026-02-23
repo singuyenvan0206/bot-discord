@@ -1,8 +1,14 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { addXp } = require('../../utils/leveling');
+const { isManager } = require('../../utils/permissions');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+
+// Module-level Map: channelId → collector (game runs independently per channel)
+const activeGames = new Map();
 
 module.exports = {
     name: 'wordchain',
@@ -12,18 +18,16 @@ module.exports = {
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        if (message.client.activeChainGames?.has(message.channel.id)) {
+
+        if (activeGames.has(message.channel.id)) {
             return message.reply(t('wordchain.already_running', lang, { prefix: config.PREFIX }));
         }
 
-        if (!message.client.activeChainGames) message.client.activeChainGames = new Set();
-        message.client.activeChainGames.add(message.channel.id);
-
-        let usedWords = new Set();
-        let playerScores = new Map();
+        // Game state — fully local to this invocation
+        const usedWords = new Set();
+        const playerScores = new Map();
         let lastChar = String.fromCharCode(97 + Math.floor(Math.random() * 26));
-        let turn = null;
-        let players = [message.author.id];
+        let lastPlayerId = null;
 
         const embed = new EmbedBuilder()
             .setTitle(t('wordchain.title', lang))
@@ -33,44 +37,41 @@ module.exports = {
 
         await message.channel.send({ embeds: [embed] });
 
+        // Helper: validate word via dictionary API
+        const isValidWord = async (word) => {
+            try {
+                const res = await fetch(`${config.API_URLS.DICTIONARY}${encodeURIComponent(word)}`);
+                return res.status === 200;
+            } catch {
+                return true; // Allow if API is down
+            }
+        };
+
         const collector = message.channel.createMessageCollector({
             filter: m => !m.author.bot,
         });
 
-        // Helper function for word validation
-        const isValidWord = async (word) => {
-            try {
-                const response = await fetch(`${config.API_URLS.DICTIONARY}${encodeURIComponent(word)}`);
-                return response.status === 200;
-            } catch (error) {
-                console.error('Dictionary API Error:', error);
-                return true; // Fallback to allow words if API is down
-            }
-        };
+        // Register game AFTER collector is created so cleanup is reliable
+        activeGames.set(message.channel.id, collector);
 
         collector.on('collect', async m => {
             const word = m.content.toLowerCase().trim();
 
-            // Check for stop command
+            // Stop command (manager only)
             if (word === `${config.PREFIX}stop`) {
-                const { isManager } = require('../../utils/permissions');
                 if (isManager(m.member)) {
                     collector.stop('stopped');
                     return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author })}**`);
                 }
+                return;
             }
 
-            // Join game logic
-            if (!players.includes(m.author.id)) {
-                players.push(m.author.id);
-            }
-
-            // Anti-spam: cannot answer twice in a row
-            if (m.author.id === turn) {
+            // Anti-spam: same player cannot go twice in a row
+            if (m.author.id === lastPlayerId) {
                 return m.react(config.EMOJIS.WAITING);
             }
 
-            // Invalid word checks
+            // Word validation
             let invalidReason = null;
             if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
             else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
@@ -79,41 +80,31 @@ module.exports = {
 
             if (invalidReason) {
                 await m.react(config.EMOJIS.ERROR);
-                const warningMsg = await message.channel.send(`⚠️ ${m.author}, ${invalidReason}`);
-                setTimeout(() => warningMsg.delete().catch(() => { }), 3000);
+                const warn = await message.channel.send(`⚠️ ${m.author}, ${invalidReason}`);
+                setTimeout(() => warn.delete().catch(() => { }), 3000);
                 return;
             }
 
-            // Additional Dictionary Check
+            // Dictionary check
             const valid = await isValidWord(word);
-            if (!valid) {
-                return m.react(config.EMOJIS.ERROR);
-            }
+            if (!valid) return m.react(config.EMOJIS.ERROR);
 
+            // Accept word
             usedWords.add(word);
             lastChar = word.slice(-1);
-            turn = m.author.id;
+            lastPlayerId = m.author.id;
 
-            // Reward per valid word + income bonus
+            // Reward
             const userData = db.getUser(m.author.id);
-            const isProgrammer = userData.job === 'programmer';
-            const isTeacher = userData.job === 'teacher';
             const baseReward = config.ECONOMY.WORDCHAIN_REWARD;
-            const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
-            const { addXp } = require('../../utils/leveling');
-            const multiplier = getUserMultiplier(m.author.id, 'income');
-            const bonus = Math.floor(baseReward * multiplier);
+            const itemMulti = getUserMultiplier(m.author.id, 'income');
+            const itemBonus = Math.floor(baseReward * itemMulti);
+            const jobBonus = (userData.job === 'programmer' || userData.job === 'teacher')
+                ? Math.floor(baseReward * 0.20) : 0;
+            const totalReward = baseReward + itemBonus + jobBonus;
 
-            let jobBonus = 0;
-            if (isProgrammer || isTeacher) {
-                jobBonus = Math.floor(baseReward * 0.20);
-            }
-
-            const totalReward = baseReward + bonus + jobBonus;
-
-            const xpMultiplier = getXpMultiplier(m.author.id);
-            const baseXp = 5; // Base XP per word
-            const totalXp = Math.floor(baseXp * xpMultiplier);
+            const xpMulti = getXpMultiplier(m.author.id);
+            const totalXp = Math.floor(5 * xpMulti);
 
             db.addBalance(m.author.id, totalReward);
             addXp(m.author.id, totalXp);
@@ -122,8 +113,10 @@ module.exports = {
             await m.react(config.EMOJIS.SUCCESS);
         });
 
-        collector.on('end', (collected, reason) => {
-            message.client.activeChainGames.delete(message.channel.id);
+        collector.on('end', (_, reason) => {
+            // Always clean up — game is done
+            activeGames.delete(message.channel.id);
+
             const scoreboard = [...playerScores.entries()]
                 .sort((a, b) => b[1] - a[1])
                 .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} ${coins} coins`)
@@ -133,6 +126,7 @@ module.exports = {
                 .setTitle(t('wordchain.end_title', lang))
                 .setDescription(`**${t('wordchain.total_words', lang)}:** ${usedWords.size}\n\n${scoreboard}`)
                 .setColor(config.COLORS.ERROR);
+
             message.channel.send({ embeds: [endEmbed] });
             startCooldown(message.client, 'wordchain', message.author.id);
         });

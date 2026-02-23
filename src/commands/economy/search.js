@@ -70,7 +70,7 @@ module.exports = {
 
         let msg = t('search.success', lang, {
             location,
-            amount: baseReward.toLocaleString(),
+            amount: total.toLocaleString(),
             emoji: config.EMOJIS.COIN
         });
 

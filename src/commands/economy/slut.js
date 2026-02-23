@@ -1,5 +1,6 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
+const { getUserMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -50,7 +51,11 @@ module.exports = {
                 streamMsg = t('slut.streamer_bonus', lang, { amount: jobBonus.toLocaleString() });
             }
 
-            const total = baseReward + levelBonus + jobBonus;
+            // Item Interaction: Multipliers
+            const itemMulti = getUserMultiplier(message.author.id, 'income');
+            const itemBonus = Math.floor(baseReward * itemMulti);
+
+            const total = baseReward + levelBonus + jobBonus + itemBonus;
 
             // Slut gives medium XP (30-60)
             const xpGained = Math.floor(Math.random() * 31) + 30;
@@ -60,7 +65,7 @@ module.exports = {
 
             let msg = t('slut.success', lang, {
                 action,
-                amount: baseReward.toLocaleString(),
+                amount: total.toLocaleString(),
                 emoji: config.EMOJIS.COIN
             });
 
@@ -69,6 +74,9 @@ module.exports = {
                     amount: levelBonus.toLocaleString(),
                     percent: Math.round(levelMultiplier * 100)
                 });
+            }
+            if (itemBonus > 0) {
+                msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
             }
             if (performMsg) msg += performMsg;
             if (streamMsg) msg += streamMsg;

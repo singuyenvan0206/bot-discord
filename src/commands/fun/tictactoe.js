@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { startCooldown } = require('../../utils/cooldown');
+const { getUserMultiplier } = require('../../utils/multiplier');
 const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
@@ -159,12 +160,21 @@ module.exports = {
                 } else {
                     const winnerId = winner === 'X' ? playerX.id : playerO.id;
                     const winnerName = winner === 'X' ? playerX.username : playerO.username;
-                    const reward = config.ECONOMY.TICTACTOE_REWARD;
+                    const baseReward = config.ECONOMY.TICTACTOE_REWARD;
 
                     if (winnerId !== message.client.user.id) {
-                        db.addBalance(winnerId, reward);
+                        const multi = getUserMultiplier(winnerId, 'income');
+                        const bonus = multi > 0 ? Math.floor(baseReward * multi) : 0;
+                        const totalReward = baseReward + bonus;
+                        db.addBalance(winnerId, totalReward);
+
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
-                            t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: reward });
+                            t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
+
+                        if (bonus > 0) {
+                            const percent = Math.round(multi * 100);
+                            resultText += t('tictactoe.reward_bonus_note', lang, { emoji: config.EMOJIS.COIN, bonus, percent });
+                        }
                     } else {
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' });
                     }

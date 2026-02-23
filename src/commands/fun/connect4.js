@@ -2,6 +2,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getUserMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -182,14 +183,25 @@ module.exports = {
                     } else {
                         const winId = winner === P1 ? p1Id : p2Id;
                         const winName = winner === P1 ? message.author.username : opponent.username;
-                        const prize = bet * 2;
 
                         if (bet > 0) {
+                            const prize = bet * 2;
                             db.addBalance(winId, prize);
                             resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                                 t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: prize });
                         } else {
-                            resultText = t('connect4.win', lang, { winner: winName, symbol: winner });
+                            // No bet: give base reward with item multiplier
+                            const baseReward = config.ECONOMY.TICTACTOE_REWARD ?? 100;
+                            const itemMulti = getUserMultiplier(winId, 'income');
+                            const bonus = itemMulti > 0 ? Math.floor(baseReward * itemMulti) : 0;
+                            const totalReward = baseReward + bonus;
+                            db.addBalance(winId, totalReward);
+                            resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
+                                t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
+                            if (bonus > 0) {
+                                const percent = Math.round(itemMulti * 100);
+                                resultText += `\n-# *(${lang === 'vi' ? 'Gồm' : 'Includes'} 🎁 +${bonus} ${lang === 'vi' ? 'thưởng item' : 'item bonus'}: ${percent}%)*`;
+                            }
                         }
                     }
 

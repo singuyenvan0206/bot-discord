@@ -16,8 +16,8 @@
         "none": "None"
     },
     "economy": {
-        "item_bonus": "\n🎁 **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
-        "item_bonus_short": "\n🎁 **Item Bonus:** +{{amount}} coins!"
+        "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
+        "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus)*"
     },
     "rank": {
         "leaderboard_title": "🏆 Level Leaderboard - {{server}}",
@@ -99,6 +99,7 @@
         "draw": "🤝 **It's a draw!**",
         "winner_msg": "🏆 **{{winner}} has won!** ({{symbol}})",
         "reward_msg": "\n{{emoji}} **+{{amount}} coins!**",
+        "reward_bonus_note": "\n-# *(Includes {{emoji}} +{{bonus}} item bonus: {{percent}}%)*",
         "ending_title": "❌⭕  Tic-Tac-Toe — Game Over",
         "timeout_title": "❌⭕  Tic-Tac-Toe — {{emoji}} Timeout"
     },
@@ -115,15 +116,15 @@
     "daily": {
         "cooldown": "❌ You can claim your daily reward in **{{hours}}h {{minutes}}m**.",
         "success": "✅ You received your daily reward of **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
-        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
+        "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
+        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus: {{percent}}%)*"
     },
     "work": {
         "cooldown": "❌ You need to rest! Come back to work in **{{minutes}} minutes**.",
         "success": "💼 You worked as a **{{job}}** and earned **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n✨ **Item Bonus:** +{{amount}} coins ({{percent}}%)!",
-        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
-        "job_bonus": "\n✨ **Job Bonus ({{job}}):** +{{amount}} coins ({{percent}}%)!",
+        "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
+        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus: {{percent}}%)*",
+        "job_bonus": "\n-# *(Includes 💼 +{{amount}} job bonus ({{job}}): {{percent}}%)*",
         "job_categories": {
             "tier0": [
                 "Delivery Driver",
@@ -200,7 +201,7 @@
         "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
         "success": "💰 A kind stranger gave you **{{amount}}** coins! {{emoji}}",
         "failure": "😢 You begged all day but nobody gave you anything.",
-        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!"
+        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus: {{percent}}%)*"
     },
     "search": {
         "cooldown": "❌ You've searched everywhere! Rest for **{{minutes}} minutes** before searching again.",
@@ -217,7 +218,7 @@
             "parking lot",
             "sewer"
         ],
-        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
+        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus: {{percent}}%)*",
         "data_mine": "\n💻 **Data Mine!** Hacker found valuable data, income doubled ×**2**!",
         "market_tip": "\n📈 **Market Tip!** Trader leveraged insider info, extra **+50** coins!"
     },
@@ -228,8 +229,8 @@
         "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
         "no_money_self": "❌ You need at least **100 coins** in your wallet to cover potential fines!",
         "invalid_user": "❌ You can't rob yourself!",
-        "level_bonus": "\n✨ **Level Bonus:** +{{amount}} coins ({{percent}}%)!",
-        "thief_edge": "\n💨 **Thief's Edge:** +{{amount}} coins from your gear!",
+        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus: {{percent}}%)*",
+        "thief_edge": "\n-# *(Includes 🎁 +{{amount}} item bonus)*",
         "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
         "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder.",
         "police_bounty": "\n💰 **Police Bounty!** Robbing an officer earns +**50%** bonus!",

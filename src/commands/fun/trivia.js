@@ -111,9 +111,9 @@ module.exports = {
                 db.addBalance(i.user.id, totalReward);
                 addXp(i.user.id, totalXp);
 
-                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: baseReward });
+                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward });
                 resultMsg += ` & ✨ **${totalXp}** XP!`;
-                if (bonus > 0) resultMsg += ` ✨ *(Thưởng item +${bonus})*`;
+                if (bonus > 0) resultMsg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 +' + bonus + ' thưởng item: ' + Math.round(multiplier * 100) : 'Includes 🎁 +' + bonus + ' item bonus: ' + Math.round(multiplier * 100)}%)*`;
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {

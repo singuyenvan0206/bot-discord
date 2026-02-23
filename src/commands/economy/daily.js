@@ -54,7 +54,7 @@ module.exports = {
         db.updateUser(message.author.id, { last_daily: now });
         db.addBalance(message.author.id, total);
 
-        let msg = t('daily.success', lang, { amount: baseReward.toLocaleString(), emoji: config.EMOJIS.COIN });
+        let msg = t('daily.success', lang, { amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (itemBonus > 0) {
             msg += t('daily.bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMultiplier * 100) });
         }

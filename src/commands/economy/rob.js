@@ -1,7 +1,7 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone, deductLevel } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
-const { hasActiveItem, isProtectedFromRob, getXpMultiplier } = require('../../utils/multiplier');
+const { hasActiveItem, isProtectedFromRob, getXpMultiplier, getUserMultiplier } = require('../../utils/multiplier');
 const config = require('../../config');
 
 module.exports = {
@@ -64,7 +64,6 @@ module.exports = {
             }
 
             // Item Interaction: Multipliers
-            const { getUserMultiplier } = require('../../utils/multiplier');
             const itemMulti = getUserMultiplier(message.author.id, 'income');
             const itemBonus = Math.floor(stolen * itemMulti);
             stolen += itemBonus;

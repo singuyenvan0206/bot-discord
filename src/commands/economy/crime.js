@@ -74,7 +74,7 @@ module.exports = {
 
             let msg = t('crime.success', lang, {
                 action,
-                amount: baseReward.toLocaleString(),
+                amount: total.toLocaleString(),
                 emoji: config.EMOJIS.COIN
             });
 

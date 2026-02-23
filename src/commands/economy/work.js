@@ -98,7 +98,7 @@ module.exports = {
         db.updateUser(message.author.id, { last_work: now });
         db.addBalance(message.author.id, total);
 
-        let msg = t('work.success', lang, { job: jobName, amount: baseReward.toLocaleString(), emoji: config.EMOJIS.COIN });
+        let msg = t('work.success', lang, { job: jobName, amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (itemBonus > 0) {
             msg += t('work.bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(multiplier * 100) });
         }

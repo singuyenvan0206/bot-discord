@@ -1,6 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { addXp } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -73,18 +75,18 @@ module.exports = {
 
             const winner = collected.first();
             const baseReward = config.ECONOMY.SCRAMBLE_REWARD;
-            const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
-            const { addXp } = require('../../utils/leveling');
 
             const winnerData = db.getUser(winner.author.id);
             const isProgrammer = winnerData.job === 'programmer';
             const isTeacher = winnerData.job === 'teacher';
+            const itemMulti = getUserMultiplier(winner.author.id, 'income');
+            const itemBonus = Math.floor(baseReward * itemMulti);
             let jobBonus = 0;
             if (isProgrammer || isTeacher) {
                 jobBonus = Math.floor(baseReward * 0.20);
             }
 
-            const totalReward = baseReward + bonus + jobBonus;
+            const totalReward = baseReward + itemBonus + jobBonus;
 
             const xpMultiplier = getXpMultiplier(winner.author.id);
             const baseXp = 20;
@@ -94,14 +96,13 @@ module.exports = {
             addXp(winner.author.id, totalXp);
 
             const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
-            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${baseReward}** coins & ✨ **${totalXp}** XP!`;
+            let msgText = `${config.EMOJIS.SUCCESS} **${t('scramble.correct', lang)}** ${winner.author} ${t('scramble.found_word', lang)} **${word}** ${receivedText} ${config.EMOJIS.COIN} **${totalReward.toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
 
             if (jobBonus > 0) {
-                const jName = isProgrammer ? t('jobs.programmer.name', lang) : t('jobs.teacher.name', lang);
-                msgText += `\n✨ **${jName} Bonus:** +${jobBonus.toLocaleString()} coins (20%)`;
+                const jName = isProgrammer ? 'Programmer' : 'Teacher';
+                msgText += `\n-# *(Gồm 💼 +${jobBonus.toLocaleString()} ${jName} bonus: 20%)*`;
             }
-
-            if (bonus > 0) msgText += `\n✨ **${t('fish.item_bonus', lang)}:** +${bonus.toLocaleString()}`;
+            if (itemBonus > 0) msgText += `\n-# *(Gồm 🎁 +${itemBonus.toLocaleString()} thưởng item: ${Math.round(itemMulti * 100)}%)*`;
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);

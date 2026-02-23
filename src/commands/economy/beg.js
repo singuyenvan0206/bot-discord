@@ -1,5 +1,6 @@
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { getUserMultiplier } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -30,7 +31,9 @@ module.exports = {
 
             const levelMultiplier = getLevelMultiplier(user.level);
             const levelBonus = Math.floor(baseReward * levelMultiplier);
-            const total = baseReward + levelBonus;
+            const itemMulti = getUserMultiplier(message.author.id, 'income');
+            const itemBonus = Math.floor(baseReward * itemMulti);
+            const total = baseReward + levelBonus + itemBonus;
 
             // Low XP (5-10)
             const xpGained = Math.floor(Math.random() * 6) + 5;
@@ -39,7 +42,7 @@ module.exports = {
             db.addBalance(message.author.id, total);
 
             let msg = t('beg.success', lang, {
-                amount: baseReward.toLocaleString(),
+                amount: total.toLocaleString(),
                 emoji: config.EMOJIS.COIN
             });
 
@@ -48,6 +51,9 @@ module.exports = {
                     amount: levelBonus.toLocaleString(),
                     percent: Math.round(levelMultiplier * 100)
                 });
+            }
+            if (itemBonus > 0) {
+                msg += t('economy.item_bonus', lang, { amount: itemBonus.toLocaleString(), percent: Math.round(itemMulti * 100) });
             }
 
             await message.reply(msg);

@@ -59,10 +59,10 @@ module.exports = {
             addXp(winnerMsg.author.id, totalXp);
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
-                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: baseReward }) +
+                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward }) +
                 ` & ✨ **${totalXp}** XP!`;
 
-            if (bonus > 0) resultDesc += `\n✨ **Item Bonus:** +${bonus} (${Math.round(multiplier * 100)}%)`;
+            if (bonus > 0) resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 +' + bonus + ' thưởng item: ' + Math.round(multiplier * 100) : 'Includes 🎁 +' + bonus + ' item bonus: ' + Math.round(multiplier * 100)}%)*`;
 
             await winnerMsg.reply({
                 embeds: [new EmbedBuilder()

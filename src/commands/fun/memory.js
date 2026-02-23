@@ -1,6 +1,8 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { addXp } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -108,17 +110,22 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
-                        const { getXpMultiplier } = require('../../utils/multiplier');
-                        const { addXp } = require('../../utils/leveling');
+                        const itemMulti = getUserMultiplier(message.author.id, 'income');
+                        const itemBonus = itemMulti > 0 ? Math.floor(reward * itemMulti) : 0;
+                        const totalReward = reward + itemBonus;
+
                         const xpMultiplier = getXpMultiplier(message.author.id);
                         const baseXp = 25; // Base memory XP
                         const totalXp = Math.floor(baseXp * xpMultiplier);
 
-                        db.addBalance(message.author.id, reward);
+                        db.addBalance(message.author.id, totalReward);
                         addXp(message.author.id, totalXp);
 
+                        let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward }) + `\n✨ **XP:** +${totalXp}`;
+                        if (itemBonus > 0) winDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 +' + itemBonus + ' thưởng item: ' + Math.round(itemMulti * 100) : 'Includes 🎁 +' + itemBonus + ' item bonus: ' + Math.round(itemMulti * 100)}%)*`;
+
                         embed.setTitle(t('memory.win_title', lang))
-                            .setDescription(t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: reward }) + `\n✨ **XP:** +${totalXp}`)
+                            .setDescription(winDesc)
                             .setColor(config.COLORS.SUCCESS);
 
                         await i.update({ embeds: [embed], components: getButtonGrid(true) });

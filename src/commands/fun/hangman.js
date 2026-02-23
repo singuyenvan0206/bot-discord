@@ -1,6 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
+const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+const { addXp } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -15,14 +17,12 @@ module.exports = {
         let word, hint;
 
         try {
-            // Try fetching from Random Word API
             const response = await fetch('https://random-word-api.herokuapp.com/word?number=1');
             const data = await response.json();
 
             if (data && data.length > 0) {
                 word = data[0].toUpperCase();
 
-                // Try fetching definition for hint
                 try {
                     const defResponse = await fetch(`${config.API_URLS.DICTIONARY}${word}`);
                     const defData = await defResponse.json();
@@ -43,7 +43,6 @@ module.exports = {
             console.error('Error fetching random word:', error);
         }
 
-        // If API fails to provide a word
         if (!word) {
             return message.reply(`${config.EMOJIS.ERROR} ${t('hangman.fetch_error', lang)}`);
         }
@@ -54,6 +53,20 @@ module.exports = {
 
         function getDisplay() {
             return word.split('').map(l => guessed.has(l) ? l : '\\_').join(' ');
+        }
+
+        function calcReward(userId) {
+            const userData = db.getUser(userId);
+            const isProgrammer = userData.job === 'programmer';
+            const isTeacher = userData.job === 'teacher';
+            const baseReward = config.ECONOMY.HANGMAN_REWARD;
+            const multiplier = getUserMultiplier(userId, 'income');
+            const itemBonus = Math.floor(baseReward * multiplier);
+            const jobBonus = (isProgrammer || isTeacher) ? Math.floor(baseReward * 0.20) : 0;
+            const totalReward = baseReward + itemBonus + jobBonus;
+            const xpMultiplier = getXpMultiplier(userId);
+            const totalXp = Math.floor(40 * xpMultiplier);
+            return { totalReward, itemBonus, jobBonus, totalXp, multiplier, isProgrammer, isTeacher };
         }
 
         const embed = new EmbedBuilder()
@@ -79,42 +92,17 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const { getUserMultiplier, getXpMultiplier } = require('../../utils/multiplier');
-                    const { addXp } = require('../../utils/leveling');
-                    const userData = db.getUser(message.author.id);
-                    const isProgrammer = userData.job === 'programmer';
-                    const isTeacher = userData.job === 'teacher';
-                    const baseReward = config.ECONOMY.HANGMAN_REWARD;
-                    const multiplier = getUserMultiplier(message.author.id, 'income');
-                    const bonus = Math.floor(baseReward * multiplier);
-
-                    let jobBonus = 0;
-                    if (isProgrammer || isTeacher) {
-                        jobBonus = Math.floor(baseReward * 0.20);
-                    }
-
-                    const totalReward = baseReward + bonus + jobBonus;
-
-                    const xpMultiplier = getXpMultiplier(message.author.id);
-                    const baseXp = 40; // Base hangman XP
-                    const totalXp = Math.floor(baseXp * xpMultiplier);
+                    const { totalReward, itemBonus, jobBonus, totalXp, multiplier, isProgrammer, isTeacher } = calcReward(message.author.id);
 
                     db.addBalance(message.author.id, totalReward);
                     addXp(message.author.id, totalXp);
 
-                    let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${(baseReward + jobBonus).toLocaleString()} coins & ✨ ${totalXp} XP!**`;
+                    let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins & ✨ ${totalXp} XP!**`;
                     if (jobBonus > 0) {
-                        const jName = isProgrammer ? t('jobs.programmer.name', lang) : t('jobs.teacher.name', lang);
-                        resultStr += `\n✨ **${jName} Bonus:** +${jobBonus.toLocaleString()} coins (20%)`;
+                        const jName = isProgrammer ? 'Programmer' : 'Teacher';
+                        resultStr += `\n-# *(Gồm 💼 +${jobBonus.toLocaleString()} ${jName} bonus: 20%)*`;
                     }
-                    if (bonus > 0) resultStr += `\n✨ **${t('fish.item_bonus', lang)}:** +${bonus.toLocaleString()} (${Math.round(multiplier * 100)}%)`;
-
-                    if (jobBonus > 0) {
-                        const jName = isProgrammer ? t('jobs.programmer.name', lang) : t('jobs.teacher.name', lang);
-                        resultStr += `\n✨ **${jName} Bonus:** +${jobBonus.toLocaleString()} coins (20%)`;
-                    }
-
-                    if (bonus > 0) resultStr += `\n✨ **${t('fish.item_bonus', lang)}:** +${bonus.toLocaleString()} (${Math.round(multiplier * 100)}%)`;
+                    if (itemBonus > 0) resultStr += `\n-# *(Gồm 🎁 +${itemBonus.toLocaleString()} thưởng item: ${Math.round(multiplier * 100)}%)*`;
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
                     collector.stop();
@@ -140,35 +128,17 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
-                    const userData = db.getUser(message.author.id);
-                    const isProgrammer = userData.job === 'programmer';
-                    const isTeacher = userData.job === 'teacher';
-                    const baseReward = config.ECONOMY.HANGMAN_REWARD;
-                    const multiplier = getUserMultiplier(message.author.id, 'income');
-                    const bonus = Math.floor(baseReward * multiplier);
-
-                    let jobBonus = 0;
-                    if (isProgrammer || isTeacher) {
-                        jobBonus = Math.floor(baseReward * 0.20);
-                    }
-
-                    const totalReward = baseReward + bonus + jobBonus;
-
-                    const xpMultiplier = getXpMultiplier(message.author.id);
-                    const baseXp = 40; // Base hangman XP
-                    const totalXp = Math.floor(baseXp * xpMultiplier);
+                    const { totalReward, itemBonus, jobBonus, totalXp, multiplier, isProgrammer, isTeacher } = calcReward(message.author.id);
 
                     db.addBalance(message.author.id, totalReward);
                     addXp(message.author.id, totalXp);
 
-                    resultText += `\n${config.EMOJIS.COIN} **+${(baseReward + jobBonus).toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
-
+                    resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins & ✨ **${totalXp}** XP!`;
                     if (jobBonus > 0) {
-                        const jName = isProgrammer ? t('jobs.programmer.name', lang) : t('jobs.teacher.name', lang);
-                        resultText += `\n✨ **${jName} Bonus:** +${jobBonus.toLocaleString()} coins (20%)`;
+                        const jName = isProgrammer ? 'Programmer' : 'Teacher';
+                        resultText += `\n-# *(Gồm 💼 +${jobBonus.toLocaleString()} ${jName} bonus: 20%)*`;
                     }
-
-                    if (bonus > 0) resultText += ` \n✨ **${t('fish.item_bonus', lang)}:** +${bonus.toLocaleString()}`;
+                    if (itemBonus > 0) resultText += `\n-# *(Gồm 🎁 +${itemBonus.toLocaleString()} thưởng item: ${Math.round(multiplier * 100)}%)*`;
                 }
                 embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);
@@ -182,7 +152,7 @@ module.exports = {
 
         collector.on('end', (_, reason) => {
             if (reason === 'time' && !gameOver) {
-                embed.setDescription(`${config.EMOJIS.TIMER} **${t('wordchain.timeout', lang)}** ${t('hangman.word', lang)} ${t('tictactoe.winner_msg', lang === 'vi' ? 'là' : 'is')} **${word}**.`).setColor(config.COLORS.NEUTRAL);
+                embed.setDescription(`${config.EMOJIS.TIMER} **${t('wordchain.timeout', lang)}** ${t('hangman.word', lang)} is **${word}**.`).setColor(config.COLORS.NEUTRAL);
                 msg.edit({ embeds: [embed] });
             }
             startCooldown(message.client, 'hangman', message.author.id);

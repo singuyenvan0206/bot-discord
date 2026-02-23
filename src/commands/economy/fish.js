@@ -1,6 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { addXp, getLevelMultiplier, checkAndSendMilestone } = require('../../utils/leveling');
+const { getUserMultiplier, hasActiveItem } = require('../../utils/multiplier');
+const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -140,7 +142,6 @@ module.exports = {
             );
 
         if (caughtItem.value > 0) {
-            const { getUserMultiplier, hasActiveItem } = require('../../utils/multiplier');
             const multiplier = getUserMultiplier(message.author.id, 'income');
 
             let finalValue = caughtItem.value;
@@ -160,6 +161,9 @@ module.exports = {
             if (trophyMsg) {
                 embed.addFields({ name: '🏆 Achievement', value: trophyMsg, inline: false });
             }
+
+            // Update income field to show total
+            embed.spliceFields(1, 1, { name: t('fish.income', lang), value: `${config.EMOJIS.COIN} **+${totalValue.toLocaleString()}**`, inline: true });
 
             if (bonus > 0) {
                 embed.addFields({ name: t('fish.item_bonus', lang), value: t('fish.bonus_percent', lang, { amount: bonus.toLocaleString(), percent: Math.round(multiplier * 100) }), inline: true });
@@ -181,7 +185,6 @@ module.exports = {
             await checkAndSendMilestone(message, xpResult.reachedLevel20, lang);
         }
 
-        const { startCooldown } = require('../../utils/cooldown');
         startCooldown(message.client, 'fish', message.author.id);
     }
 };
