@@ -236,12 +236,12 @@ async function processHouseDistribution(client) {
     const userCount = db.getUserCount();
     if (userCount <= 1) return;
 
-    // Bot is also counted in userCount (it's in the users table), 
-    // but distributeBalanceToAll resets bot to 0 anyway.
-    const amountPerUser = Math.floor(balance / userCount);
+    // Exclude bot from distribution; split only among human users.
+    const humanCount = Math.max(1, userCount - 1);
+    const amountPerUser = Math.floor(balance / humanCount);
     if (amountPerUser <= 0) return;
 
-    console.log(`[Timer] Distributing ${balance} coins to ${userCount} users (${amountPerUser}/each)`);
+    console.log(`[Timer] Distributing ${balance} coins to ${humanCount} users (${amountPerUser}/each)`);
 
     db.distributeBalanceToAll(amountPerUser, botId);
     db.setGlobalSetting('last_house_distribution', now);
@@ -259,9 +259,9 @@ async function processHouseDistribution(client) {
                 .setDescription(t('economy.distribution_desc', lang, {
                     total: balance.toLocaleString(),
                     amount: amountPerUser.toLocaleString(),
-                    count: userCount,
+                    count: humanCount,
                     emoji: config.EMOJIS.COIN
-                }) || `Bot đã chia đều **${balance.toLocaleString()}** coins cho **${userCount}** người dùng. Mỗi người nhận được **${amountPerUser.toLocaleString()}** coins!`)
+                }) || `Bot đã chia đều **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng. Mỗi người nhận được **${amountPerUser.toLocaleString()}** coins!`)
                 .setColor(config.COLORS.SUCCESS)
                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 .setTimestamp();

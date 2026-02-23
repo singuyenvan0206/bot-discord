@@ -471,7 +471,34 @@ function getRandomUserByJob(jobId) {
     if (!users || users.length === 0) return null;
     return users[Math.floor(Math.random() * users.length)].id;
 }
+// ===== GLOBAL SETTINGS =====
 
+function getGlobalSetting(key, defaultValue = null) {
+    const row = queryOne('SELECT value FROM global_settings WHERE key = ?', [key]);
+    return row ? row.value : defaultValue;
+}
+
+function setGlobalSetting(key, value) {
+    execute(`
+        INSERT INTO global_settings (key, value)
+        VALUES (?, ?)
+        ON CONFLICT(key) DO UPDATE SET value = excluded.value
+    `, [key, value]);
+}
+
+function getUserCount() {
+    const row = queryOne('SELECT COUNT(*) as count FROM users');
+    return row ? Number(row.count) : 0;
+}
+
+function distributeBalanceToAll(amount, excludeUserId = null) {
+    if (excludeUserId) {
+        execute('UPDATE users SET balance = COALESCE(balance, 0) + ? WHERE id != ?', [amount, excludeUserId]);
+        execute('UPDATE users SET balance = 0 WHERE id = ?', [excludeUserId]);
+    } else {
+        execute('UPDATE users SET balance = COALESCE(balance, 0) + ?', [amount]);
+    }
+}
 module.exports = {
     getDb,
     createGiveaway,
@@ -506,4 +533,8 @@ module.exports = {
     isOwner,
     getGuild,
     updateGuild,
+    getGlobalSetting,
+    setGlobalSetting,
+    getUserCount,
+    distributeBalanceToAll
 };
