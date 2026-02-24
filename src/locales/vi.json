@@ -428,39 +428,40 @@
     "items": {
         "101": {
             "name": "🍪 Bánh Quy",
-            "desc": "Bổ sung đường! (+5% Thưởng Thêm | 1 ngày)"
+            "desc": "Bổ sung đường! (+10% Thưởng Thêm | 1 ngày)",
+            "details": "Một chiếc bánh quy sô-cô-la đơn giản. Đủ ngọt để giữ cho bạn động lực nhận thêm nhiều phần thưởng hàng ngày."
         },
         "102": {
             "name": "🛋️ Đèn Dung Nham",
-            "desc": "Cảm giác thư thái (+8% Thưởng Thêm | 7 ngày)"
+            "desc": "Cảm giác thư thái (+20% Thưởng Thêm | 7 ngày)"
         },
         "103": {
             "name": "👨‍🍳 Mũ Đầu Bếp",
-            "desc": "Đẳng cấp bếp trưởng (+20% Thưởng Thêm | 7 ngày)"
+            "desc": "Đẳng cấp bếp trưởng (+30% Thưởng Thêm | 7 ngày)"
         },
         "104": {
             "name": "🧸 Thảm Lông",
-            "desc": "Mềm mại đôi chân (+15% Thưởng Thêm | 7 ngày)"
+            "desc": "Mềm mại đôi chân (+40% Thưởng Thêm | 7 ngày)"
         },
         "105": {
             "name": "🎨 Tranh Trừu Tượng",
-            "desc": "Trang trí đẳng cấp (+20% Thưởng Thêm | 30 ngày)"
+            "desc": "Trang trí đẳng cấp (+40% Thưởng Thêm | 30 ngày)"
         },
         "106": {
             "name": "📖 Sách Nấu Ăn",
-            "desc": "Bí kíp ẩm thực (+40% Thưởng Thêm | 30 ngày)"
+            "desc": "Bí kíp ẩm thực (+60% Thưởng Thêm | 30 ngày)"
         },
         "107": {
             "name": "🗿 Tượng Đá Moai",
-            "desc": "Vững như bàn thạch (+35% Thưởng Thêm | 30 ngày)"
+            "desc": "Vững như bàn thạch (+80% Thưởng Thêm | 30 ngày)"
         },
         "108": {
             "name": "🎫 Vé Vàng VIP",
-            "desc": "Đặc quyền VIP (+100% Thưởng Thêm | 30 ngày)"
+            "desc": "Đặc quyền VIP (+150% Thưởng Thêm | 30 ngày)"
         },
         "109": {
             "name": "🏰 Biệt Thự",
-            "desc": "Sống đời thượng lưu (+200% Thưởng Thêm | 30 ngày)"
+            "desc": "Sống đời thượng lưu (+300% Thưởng Thêm | 30 ngày)"
         },
         "110": {
             "name": "🚀 Trạm Không Gian",
@@ -468,119 +469,123 @@
         },
         "201": {
             "name": "📱 Điện Thoại",
-            "desc": "Luôn kết nối (+10% Thu Nhập | 7 ngày)"
+            "desc": "Luôn kết nối (+15% Thu Nhập | 7 ngày)",
+            "details": "Điện thoại thông minh cao cấp với kết nối nhanh. Cần thiết để luôn dẫn đầu trong công việc của bạn."
         },
         "202": {
             "name": "🛡️ Khiên",
-            "desc": "Bảo vệ công lý (+5% Thu Nhập | 7 ngày)"
+            "desc": "Bảo vệ công lý (+12% Thu Nhập | 7 ngày)"
         },
         "203": {
             "name": "⚔️ Kiếm Hiệp Sĩ",
-            "desc": "Trở thành lính đánh thuê (+15% Thu Nhập | 7 ngày)"
+            "desc": "Trở thành lính đánh thuê (+30% Thu Nhập | 7 ngày)"
         },
         "204": {
             "name": "👟 Giày Thể Thao",
-            "desc": "Chạy nhanh hơn (+12% Thu Nhập | 7 ngày)"
+            "desc": "Chạy nhanh hơn (+25% Thu Nhập | 7 ngày)"
         },
         "205": {
             "name": "⛏️ Cuốc Khai Thác",
-            "desc": "Đào tìm kho báu! (+15% Thu Nhập | 7 ngày)"
+            "desc": "Đào tìm kho báu! (+35% Thu Nhập | 7 ngày)",
+            "details": "Công cụ hạng nặng giúp tăng thu nhập khi làm việc hoặc tìm kiếm tài nguyên."
         },
         "206": {
             "name": "⌨️ Bàn Phím RGB",
-            "desc": "Gõ phím lạch cạch (+10% Thu Nhập | 7 ngày)"
+            "desc": "Gõ phím lạch cạch (+40% Thu Nhập | 7 ngày)"
         },
         "207": {
             "name": "🖱️ Chuột Gaming",
-            "desc": "Click chuột chính xác (+10% Thu Nhập | 7 ngày)"
+            "desc": "Click chuột chính xác (+40% Thu Nhập | 7 ngày)"
         },
         "208": {
             "name": "📋 Bảng Trắng",
-            "desc": "Truyền đạt kiến thức (+15% Thu Nhập | 7 ngày)"
+            "desc": "Truyền đạt kiến thức (+50% Thu Nhập | 7 ngày)"
         },
         "209": {
             "name": "🎸 Đàn Guitar",
-            "desc": "Giai điệu lôi cuốn (+15% Thu Nhập | 7 ngày)"
+            "desc": "Giai điệu lôi cuốn (+60% Thu Nhập | 7 ngày)"
         },
         "210": {
             "name": "🖥️ Màn Hình 4K",
-            "desc": "Rõ nét từng chi tiết (+20% Thu Nhập | 7 ngày)"
+            "desc": "Rõ nét từng chi tiết (+70% Thu Nhập | 7 ngày)"
         },
         "211": {
             "name": "🔫 Súng Trường",
-            "desc": "Sức mạnh quân đội (+20% Thu Nhập | 7 ngày)"
+            "desc": "Sức mạnh quân đội (+80% Thu Nhập | 7 ngày)"
         },
         "212": {
             "name": "💻 Laptop",
-            "desc": "Làm việc chăm chỉ hơn! (+30% Thu Nhập | 30 ngày)"
+            "desc": "Làm việc chăm chỉ hơn! (+60% Thu Nhập | 30 ngày)",
+            "details": "Máy tính xách tay mạnh mẽ. Tuyệt vời cho việc đa nhiệm và tăng thu nhập lập trình của bạn."
         },
         "213": {
             "name": "🪑 Bàn Đứng",
-            "desc": "Tư thế tốt hơn (+25% Thu Nhập | 30 ngày)"
+            "desc": "Tư thế tốt hơn (+75% Thu Nhập | 30 ngày)"
         },
         "214": {
             "name": "📈 Máy Tính Giao Dịch",
-            "desc": "Phân tích thị trường (+35% Thu Nhập | 30 ngày)"
+            "desc": "Phân tích thị trường (+100% Thu Nhập | 30 ngày)"
         },
         "215": {
             "name": "💺 Ghế Công Thái Học",
-            "desc": "Ngồi làm việc cả ngày (+35% Thu Nhập | 30 ngày)"
+            "desc": "Ngồi làm việc cả ngày (+120% Thu Nhập | 30 ngày)"
         },
         "216": {
             "name": "👔 Bộ Vest Công Sở",
-            "desc": "Trông chuyên nghiệp hơn (+40% Thu Nhập | 30 ngày)"
+            "desc": "Trông chuyên nghiệp hơn (+150% Thu Nhập | 30 ngày)"
         },
         "217": {
             "name": "🛡️ Giáp Chiến Đấu",
-            "desc": "Phòng thủ kiên cố (+40% Thu Nhập | 30 ngày)"
+            "desc": "Phòng thủ kiên cố (+180% Thu Nhập | 30 ngày)"
         },
         "218": {
             "name": "🎹 Đàn Piano",
-            "desc": "Nghệ thuật đích thực (+50% Thu Nhập | 30 ngày)"
+            "desc": "Nghệ thuật đích thực (+220% Thu Nhập | 30 ngày)"
         },
         "219": {
             "name": "🏎️ Siêu Xe",
-            "desc": "Vút bay trên đường! (+80% Thu Nhập | 30 ngày)"
+            "desc": "Vút bay trên đường! (+350% Thu Nhập | 30 ngày)"
         },
         "220": {
             "name": "🛥️ Siêu Du Thuyền",
-            "desc": "Văn phòng trên biển (+300% Thu Nhập | 30 ngày)"
+            "desc": "Văn phòng trên biển (+600% Thu Nhập | 30 ngày)"
         },
         "301": {
             "name": "🎲 Xúc Xắc Vàng",
-            "desc": "Đổ số cao (+10% Gamble | 7 ngày)"
+            "desc": "Đổ số cao (+25% Gamble | 7 ngày)",
+            "details": "Xúc xắc vàng nặng tay cảm thấy rất may mắn. Cải thiện tỉ lệ thắng của bạn trong các trò chơi cá cược."
         },
         "302": {
             "name": "🃏 Bộ Bài Ám Hiệu",
-            "desc": "Biết khi nào nên theo (+20% Gamble | 7 ngày)"
+            "desc": "Biết khi nào nên theo (+40% Gamble | 7 ngày)"
         },
         "303": {
             "name": "🪙 Đồng Tiền May Mắn",
-            "desc": "Sấp hay ngửa (+18% Gamble | 7 ngày)"
+            "desc": "Sấp hay ngửa (+50% Gamble | 7 ngày)"
         },
         "304": {
             "name": "💍 Nhẫn Vàng",
-            "desc": "Sáng bóng và quý giá (+15% Gamble | 30 ngày)"
+            "desc": "Sáng bóng và quý giá (+50% Gamble | 30 ngày)"
         },
         "305": {
             "name": "🪙 Chip Đất Sét",
-            "desc": "Cảm giác chuyên nghiệp (+20% Gamble | 30 ngày)"
+            "desc": "Cảm giác chuyên nghiệp (+70% Gamble | 30 ngày)"
         },
         "306": {
             "name": "📊 Biểu Đồ Chứng Khoán",
-            "desc": "Dự đoán xu hướng (+25% Gamble | 30 ngày)"
+            "desc": "Dự đoán xu hướng (+100% Gamble | 30 ngày)"
         },
         "307": {
             "name": "🍀 Cỏ 4 Lá",
-            "desc": "Cảm thấy may mắn? (+30% Gamble | 30 ngày)"
+            "desc": "Cảm thấy may mắn? (+150% Gamble | 30 ngày)"
         },
         "308": {
             "name": "⌚ Đồng Hồ Rolex",
-            "desc": "Thời gian là tiền bạc (+30% Gamble | 30 ngày)"
+            "desc": "Thời gian là tiền bạc (+200% Gamble | 30 ngày)"
         },
         "309": {
             "name": "🐴 Móng Ngựa Vàng",
-            "desc": "May mắn thuần khiết (+50% Gamble | 30 ngày)"
+            "desc": "May mắn thuần khiết (+350% Gamble | 30 ngày)"
         },
         "310": {
             "name": "⏳ Cỗ Máy Thời Gian",
@@ -588,15 +593,15 @@
         },
         "401": {
             "name": "🪱 Mồi Giun",
-            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +10%)"
+            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +15%)"
         },
         "402": {
             "name": "🦗 Mồi Dế",
-            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +30%)"
+            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +75%)"
         },
         "403": {
             "name": "🦑 Mồi Mực",
-            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +80%)"
+            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +150%)"
         },
         "404": {
             "name": "🎣 Cần Tre",
@@ -604,51 +609,60 @@
         },
         "405": {
             "name": "🎣 Cần Sợi Thủy Tinh",
-            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.5x)"
+            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.8x)"
         },
         "406": {
             "name": "🎣 Cần Carbon",
-            "desc": "Đẳng cấp hàng đầu. (May mắn: 2.5x)"
+            "desc": "Đẳng cấp hàng đầu. (May mắn: 3.5x)"
         },
         "407": {
             "name": "🎣 Cần Titanium",
-            "desc": "Sức mạnh tuyệt đối. (May mắn: 4.0x)"
+            "desc": "Sức mạnh tuyệt đối. (May mắn: 5.0x)"
         },
         "408": {
             "name": "🎣 Cần Nhựa",
-            "desc": "Cần câu đồ chơi. (May mắn: 0.5x)"
+            "desc": "Cần câu đồ chơi. (May mắn: 0.5x)",
+            "details": "Cần câu giá rẻ làm từ nhựa tái chế. Không hiệu quả lắm nhưng phù hợp cho người mới."
         },
         "409": {
             "name": "🎣 Cần Thép",
-            "desc": "Nặng và đáng tin cậy. (May mắn: 2.5x)"
+            "desc": "Nặng và đáng tin cậy. (May mắn: 2.5x)",
+            "details": "Được gia cố bằng thép công nghiệp để chịu được những cú đớp mạnh hơn."
         },
         "410": {
             "name": "🔱 Cần Neptune",
-            "desc": "Món quà từ vị thần biển cả. (May mắn: 7.5x)"
+            "desc": "Món quà từ vị thần biển cả. (May mắn: 7.5x)",
+            "details": "Cần câu huyền thoại đúc từ tinh thể đại dương. Mang lại may mắn cực lớn cho người sử dụng."
         },
         "411": {
             "name": "🍞 Mồi Bánh Mì",
-            "desc": "Vụn bánh đơn giản cho cá nhỏ. (May mắn: +5%)"
+            "desc": "Vụn bánh đơn giản cho cá nhỏ. (May mắn: +5%)",
+            "details": "Những mẩu bánh mì vụn. Thu hút cá nhỏ nhưng hiếm khi bắt được cá lớn."
         },
         "412": {
             "name": "🦐 Mồi Tôm",
-            "desc": "Mặn và ngon miệng. (May mắn: +40%)"
+            "desc": "Mặn và ngon miệng. (May mắn: +40%)",
+            "details": "Tôm tươi sống, món khoái khẩu của những loài cá lớn hơn."
         },
         "413": {
             "name": "✨ Mồi Vàng",
-            "desc": "Mồi lấp lánh cho những phát hiện hiếm. (May mắn: +300%)"
+            "desc": "Mồi lấp lánh cho những phát hiện hiếm. (May mắn: +300%)",
+            "details": "Mồi câu được yểm bùa phát sáng dưới nước, thu hút những sinh vật hiếm nhất đại dương."
         },
         "501": {
             "name": "🧪 Thuốc Tăng XP",
-            "desc": "Nhận thêm +50% XP khi thực hiện các hoạt động | 1 ngày"
+            "desc": "Nhận thêm +50% XP khi thực hiện các hoạt động | 1 ngày",
+            "details": "Tiên dược màu xanh tỏa sáng giúp bạn tập trung cao độ. Nhận gấp đôi năng lượng và thăng cấp nhanh hơn."
         },
         "502": {
             "name": "🛡️ Khiên Bảo Vệ",
-            "desc": "Chặn một lần bị người khác cướp tiền | 1 ngày"
+            "desc": "Chặn một lần bị người khác cướp tiền | 1 ngày",
+            "details": "Một chiếc khiên vật lý chắc chắn có thể chặn một lần bị người khác cướp tiền."
         },
         "503": {
             "name": "🎟️ Thẻ Chuyển Nghề",
-            "desc": "Dùng để thay đổi định hướng nghề nghiệp của bạn."
+            "desc": "Dùng để thay đổi định hướng nghề nghiệp của bạn.",
+            "details": "Một văn bản uy tín cho phép bạn thay đổi định hướng nghề nghiệp của mình thông qua lệnh $job."
         }
     },
     "shop": {

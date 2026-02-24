@@ -386,39 +386,40 @@
     "items": {
         "101": {
             "name": "🍪 Cookie",
-            "desc": "Sugar rush! (+5% Extra Bonus | 1 day)"
+            "desc": "Sugar rush! (+10% Extra Bonus | 1 day)",
+            "details": "A simple chocolate chip cookie. Sweet enough to keep you motivated for more daily rewards."
         },
         "102": {
             "name": "🛋️ Lava Lamp",
-            "desc": "Chill vibes (+8% Extra Bonus | 7 days)"
+            "desc": "Chill vibes (+20% Extra Bonus | 7 days)"
         },
         "103": {
             "name": "👨‍🍳 Chef's Hat",
-            "desc": "Executive level (+20% Extra Bonus | 7 days)"
+            "desc": "Executive level (+30% Extra Bonus | 7 days)"
         },
         "104": {
             "name": "🧸 Shag Rug",
-            "desc": "Soft on the feet (+15% Extra Bonus | 7 days)"
+            "desc": "Soft on the feet (+40% Extra Bonus | 7 days)"
         },
         "105": {
             "name": "🎨 Abstract Painting",
-            "desc": "Classy decoration (+20% Extra Bonus | 30 days)"
+            "desc": "Classy decoration (+40% Extra Bonus | 30 days)"
         },
         "106": {
             "name": "📖 Cookbook",
-            "desc": "Culinary secrets (+40% Extra Bonus | 30 days)"
+            "desc": "Culinary secrets (+60% Extra Bonus | 30 days)"
         },
         "107": {
             "name": "🗿 Moai Statue",
-            "desc": "Steady as a rock (+35% Extra Bonus | 30 days)"
+            "desc": "Steady as a rock (+80% Extra Bonus | 30 days)"
         },
         "108": {
             "name": "🎫 VIP Golden Ticket",
-            "desc": "VIP perks (+100% Extra Bonus | 30 days)"
+            "desc": "VIP perks (+150% Extra Bonus | 30 days)"
         },
         "109": {
             "name": "🏰 Mansion",
-            "desc": "High life (+200% Extra Bonus | 30 days)"
+            "desc": "High life (+300% Extra Bonus | 30 days)"
         },
         "110": {
             "name": "🚀 Space Station",
@@ -426,119 +427,123 @@
         },
         "201": {
             "name": "📱 Smartphone",
-            "desc": "Stay connected (+10% Income | 7 days)"
+            "desc": "Stay connected (+15% Income | 7 days)",
+            "details": "A high-end smartphone with a fast connection. Essential for staying on top of your work."
         },
         "202": {
             "name": "🛡️ Shield",
-            "desc": "Protect justice (+5% Income | 7 days)"
+            "desc": "Protect justice (+12% Income | 7 days)"
         },
         "203": {
             "name": "⚔️ Knight Sword",
-            "desc": "Become a mercenary (+15% Income | 7 days)"
+            "desc": "Become a mercenary (+30% Income | 7 days)"
         },
         "204": {
             "name": "👟 Sneakers",
-            "desc": "Run faster (+12% Income | 7 days)"
+            "desc": "Run faster (+25% Income | 7 days)"
         },
         "205": {
             "name": "⛏️ Pickaxe",
-            "desc": "Dig for treasure! (+15% Income | 7 days)"
+            "desc": "Dig for treasure! (+35% Income | 7 days)",
+            "details": "A heavy-duty tool that boosts your income when working or searching for resources."
         },
         "206": {
             "name": "⌨️ RGB Keyboard",
-            "desc": "Clicky keys (+10% Income | 7 days)"
+            "desc": "Clicky keys (+40% Income | 7 days)"
         },
         "207": {
             "name": "🖱️ Gaming Mouse",
-            "desc": "Precise clicks (+10% Income | 7 days)"
+            "desc": "Precise clicks (+40% Income | 7 days)"
         },
         "208": {
             "name": "📋 Whiteboard",
-            "desc": "Share knowledge (+15% Income | 7 days)"
+            "desc": "Share knowledge (+50% Income | 7 days)"
         },
         "209": {
             "name": "🎸 Guitar",
-            "desc": "Catchy melodies (+15% Income | 7 days)"
+            "desc": "Catchy melodies (+60% Income | 7 days)"
         },
         "210": {
             "name": "🖥️ 4K Monitor",
-            "desc": "Clear vision (+20% Income | 7 days)"
+            "desc": "Clear vision (+70% Income | 7 days)"
         },
         "211": {
             "name": "🔫 Rifle",
-            "desc": "Military grade strength (+20% Income | 7 days)"
+            "desc": "Military grade strength (+80% Income | 7 days)"
         },
         "212": {
             "name": "💻 Laptop",
-            "desc": "Work harder! (+30% Income | 30 days)"
+            "desc": "Work harder! (+60% Income | 30 days)",
+            "details": "A powerful portable computer. Great for multitasking and boosting your programming income."
         },
         "213": {
             "name": "🪑 Standing Desk",
-            "desc": "Better posture (+25% Income | 30 days)"
+            "desc": "Better posture (+75% Income | 30 days)"
         },
         "214": {
             "name": "📈 Trading Terminal",
-            "desc": "Analyze the market (+35% Income | 30 days)"
+            "desc": "Analyze the market (+100% Income | 30 days)"
         },
         "215": {
             "name": "💺 Ergonomic Chair",
-            "desc": "Sit comfortably all day (+35% Income | 30 days)"
+            "desc": "Sit comfortably all day (+120% Income | 30 days)"
         },
         "216": {
             "name": "👔 Business Suit",
-            "desc": "Look professional (+40% Income | 30 days)"
+            "desc": "Look professional (+150% Income | 30 days)"
         },
         "217": {
             "name": "🛡️ Combat Armor",
-            "desc": "Solid defense (+40% Income | 30 days)"
+            "desc": "Solid defense (+180% Income | 30 days)"
         },
         "218": {
             "name": "🎹 Grand Piano",
-            "desc": "Pure artistry (+50% Income | 30 days)"
+            "desc": "Pure artistry (+220% Income | 30 days)"
         },
         "219": {
             "name": "🏎️ Supercar",
-            "desc": "Zoom zoom! (+80% Income | 30 days)"
+            "desc": "Zoom zoom! (+350% Income | 30 days)"
         },
         "220": {
             "name": "🛥️ Superyacht",
-            "desc": "Ocean office (+300% Income | 30 days)"
+            "desc": "Ocean office (+600% Income | 30 days)"
         },
         "301": {
             "name": "🎲 Golden Dice",
-            "desc": "Roll high (+10% Gamble | 7 days)"
+            "desc": "Roll high (+25% Gamble | 7 days)",
+            "details": "Weighted golden dice that feel lucky in your hand. Improves your odds in various gambling games."
         },
         "302": {
             "name": "🃏 Marked Deck",
-            "desc": "Know when to hold 'em (+20% Gamble | 7 days)"
+            "desc": "Know when to hold 'em (+40% Gamble | 7 days)"
         },
         "303": {
             "name": "🪙 Lucky Coin",
-            "desc": "Heads or tails (+18% Gamble | 7 days)"
+            "desc": "Heads or tails (+50% Gamble | 7 days)"
         },
         "304": {
             "name": "💍 Gold Ring",
-            "desc": "Shiny and precious (+15% Gamble | 30 days)"
+            "desc": "Shiny and precious (+50% Gamble | 30 days)"
         },
         "305": {
             "name": "🪙 Clay Chips",
-            "desc": "Professional feel (+20% Gamble | 30 days)"
+            "desc": "Professional feel (+70% Gamble | 30 days)"
         },
         "306": {
             "name": "📊 Stock Chart",
-            "desc": "Predict trends (+25% Gamble | 30 days)"
+            "desc": "Predict trends (+100% Gamble | 30 days)"
         },
         "307": {
             "name": "🍀 4-Leaf Clover",
-            "desc": "Feeling lucky? (+30% Gamble | 30 days)"
+            "desc": "Feeling lucky? (+150% Gamble | 30 days)"
         },
         "308": {
             "name": "⌚ Rolex",
-            "desc": "Time is money (+30% Gamble | 30 days)"
+            "desc": "Time is money (+200% Gamble | 30 days)"
         },
         "309": {
             "name": "🐴 Golden Horseshoe",
-            "desc": "Pure luck (+50% Gamble | 30 days)"
+            "desc": "Pure luck (+350% Gamble | 30 days)"
         },
         "310": {
             "name": "⏳ Time Machine",
@@ -546,15 +551,15 @@
         },
         "401": {
             "name": "🪱 Worm Bait",
-            "desc": "One-time use bait. Required for fishing. (Luck: +10%)"
+            "desc": "One-time use bait. Required for fishing. (Luck: +15%)"
         },
         "402": {
             "name": "🦗 Cricket Bait",
-            "desc": "Favorited by many fish. (Luck: +30%)"
+            "desc": "Favorited by many fish. (Luck: +75%)"
         },
         "403": {
             "name": "🦑 Squid Bait",
-            "desc": "Irresistible to big fish. (Luck: +80%)"
+            "desc": "Irresistible to big fish. (Luck: +150%)"
         },
         "404": {
             "name": "🎣 Bamboo Rod",
@@ -562,51 +567,60 @@
         },
         "405": {
             "name": "🎣 Fiberglass Rod",
-            "desc": "Durable and flexible. (Luck: 1.5x)"
+            "desc": "Durable and flexible. (Luck: 1.8x)"
         },
         "406": {
             "name": "🎣 Carbon Rod",
-            "desc": "Top of the line. (Luck: 2.5x)"
+            "desc": "Top of the line. (Luck: 3.5x)"
         },
         "407": {
             "name": "🎣 Titanium Rod",
-            "desc": "Absolute power. (Luck: 4.0x)"
+            "desc": "Absolute power. (Luck: 5.0x)"
         },
         "408": {
             "name": "🎣 Plastic Rod",
-            "desc": "Toy-grade rod. (Luck: 0.5x)"
+            "desc": "Toy-grade rod. (Luck: 0.5x)",
+            "details": "A cheap, flexible rod made of recycled plastic. Not very efficient, but it's a start."
         },
         "409": {
             "name": "🎣 Steel Rod",
-            "desc": "Heavy and reliable. (Luck: 2.5x)"
+            "desc": "Heavy and reliable. (Luck: 2.5x)",
+            "details": "Reinforced with industrial steel to handle heavier catches."
         },
         "410": {
             "name": "🔱 Neptune's Rod",
-            "desc": "Gift from the god of the sea. (Luck: 7.5x)"
+            "desc": "Gift from the god of the sea. (Luck: 7.5x)",
+            "details": "A legendary rod forged from ocean crystals. Grants incredible luck to the wielder."
         },
         "411": {
             "name": "🍞 Bread Bait",
-            "desc": "Simple scraps for small fish. (Luck: +5%)"
+            "desc": "Simple scraps for small fish. (Luck: +5%)",
+            "details": "Simple bread crumbs. Attracts small fish but rarely anything big."
         },
         "412": {
             "name": "🦐 Shrimp Bait",
-            "desc": "Salty and tasty. (Luck: +40%)"
+            "desc": "Salty and tasty. (Luck: +40%)",
+            "details": "Fresh shrimp that larger fish find irresistible."
         },
         "413": {
             "name": "✨ Golden Bait",
-            "desc": "Shimmering bait for rare finds. (Luck: +300%)"
+            "desc": "Shimmering bait for rare finds. (Luck: +300%)",
+            "details": "Enchanted bait that glows underwater, attracting the rarest creatures in the sea."
         },
         "501": {
             "name": "🧪 XP Boost Potion",
-            "desc": "Gain +50% XP when performing activities | 1 day"
+            "desc": "Gain +50% XP when performing activities | 1 day",
+            "details": "A glowing blue elixir that sharpens your focus. Grants double energy and faster experience gain."
         },
         "502": {
             "name": "🛡️ Shield of Protection",
-            "desc": "Block one robbery attempt from other users | 1 day"
+            "desc": "Block one robbery attempt from other users | 1 day",
+            "details": "A sturdy physical shield that can deflect one robbery attempt from other malicious users."
         },
         "503": {
             "name": "🎟️ Career Change Voucher",
-            "desc": "Use to switch to a different job path."
+            "desc": "Use to switch to a different job path.",
+            "details": "A prestigious document that allows you to legally change your career path through the $job command."
         }
     },
     "shop": {
