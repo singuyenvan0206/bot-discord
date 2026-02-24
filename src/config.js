@@ -51,16 +51,16 @@ module.exports = {
         REACTION_REWARD_BASE: 15,
         WORK_COOLDOWN: 3600, // 1 hour in seconds
         DAILY_COOLDOWN: 86400, // 24 hours in seconds
-        DAILY_REWARD: 500,
+        DAILY_REWARD: 300,
         FISH_COOLDOWN: 15,
         SELL_RECOVERY: 0.7, // 70% return
-        MIN_WORK_EARNINGS: 100,
-        MAX_WORK_EARNINGS: 300,
-        CRIME_COOLDOWN: 3600, // 4 hours
-        CRIME_SUCCESS_RATE: 0.4,
-        CRIME_MIN_REWARD: 1000,
-        CRIME_MAX_REWARD: 3000,
-        CRIME_FINE_PERCENT: 0.1, // Pay 10% of balance as fine
+        MIN_WORK_EARNINGS: 50,
+        MAX_WORK_EARNINGS: 200,
+        CRIME_COOLDOWN: 3600, // 1 hour
+        CRIME_SUCCESS_RATE: 0.3,
+        CRIME_MIN_REWARD: 500,
+        CRIME_MAX_REWARD: 2000,
+        CRIME_FINE_PERCENT: 0.15, // Pay 15% of balance as fine
         SLUT_COOLDOWN: 7200, // 2 hours
         SLUT_SUCCESS_RATE: 0.6,
         SLUT_MIN_REWARD: 400,
@@ -71,8 +71,8 @@ module.exports = {
         BEG_MIN_REWARD: 10,
         BEG_MAX_REWARD: 50,
         SEARCH_COOLDOWN: 600, // 10 minutes
-        SEARCH_MIN_REWARD: 50,
-        SEARCH_MAX_REWARD: 200,
+        SEARCH_MIN_REWARD: 25,
+        SEARCH_MAX_REWARD: 100,
         ROB_COOLDOWN: 3600, // 1 hour
         ROB_SUCCESS_CHANCE: 0.5,
         ROB_FAIL_PENALTY_PERCENT: 0.1, // Loser pays 10% to victim
