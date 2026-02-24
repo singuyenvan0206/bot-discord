@@ -6,7 +6,8 @@ const config = require('../../config');
 module.exports = {
     name: 'level',
     aliases: ['lvl'],
-    description: 'Hiển thị cấp độ và kinh nghiệm (EXP) hiện tại',
+    description: 'Hiển thị cấp độ và kinh nghiệm hiện tại (Displays current level and XP)',
+    skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()

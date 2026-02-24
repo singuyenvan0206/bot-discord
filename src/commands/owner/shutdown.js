@@ -6,7 +6,7 @@ const { getLanguage } = require('../../utils/i18n');
 module.exports = {
     name: 'shutdown',
     aliases: ['poweroff', 'kill', 'sd'],
-    description: '[OWNER] Tắt bot an toàn',
+    description: '[OWNER] Tắt bot an toàn (Safe bot shutdown)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

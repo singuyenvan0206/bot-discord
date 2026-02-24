@@ -8,7 +8,8 @@ const { calculateLevel } = require('../../utils/leveling');
 module.exports = {
     name: 'profile',
     aliases: ['p', 'pr', 'prof'],
-    description: 'Hiển thị hồ sơ người dùng đầy đủ',
+    description: 'Hiển thị hồ sơ người dùng đầy đủ (Displays full user profile)',
+    skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()

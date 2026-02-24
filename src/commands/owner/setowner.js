@@ -8,7 +8,7 @@ const { getLanguage } = require('../../utils/i18n');
 module.exports = {
     name: 'setowner',
     aliases: ['changeowner'],
-    description: '[OWNER] Chuyển quyền Owner sang ID mới (hoặc Tag)',
+    description: '[OWNER] Chuyển quyền Owner (Transfer bot ownership)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

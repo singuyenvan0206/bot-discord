@@ -5,8 +5,9 @@ const config = require('../../config');
 
 module.exports = {
     name: 'rank',
-    aliases: ['top', 'lb'],
-    description: 'Hiển thị bảng xếp hạng trên máy chủ này',
+    aliases: ['lb', 'leaderboard', 'top'],
+    description: 'Hiển thị bảng xếp hạng (Displays the leaderboard)',
+    skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 

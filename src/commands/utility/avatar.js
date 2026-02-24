@@ -1,11 +1,13 @@
+
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
     name: 'avatar',
-    aliases: ['av', 'pfp'],
-    description: 'Xem ảnh đại diện của người dùng với độ phân giải cao',
+    aliases: ['av', 'useravatar'],
+    description: 'Xem ảnh đại diện của người dùng (View user avatar)',
+    skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()

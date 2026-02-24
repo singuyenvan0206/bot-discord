@@ -7,6 +7,7 @@ module.exports = {
     name: 'language',
     aliases: ['lang', 'ngonngu', 'setlanguage', 'setlang'],
     description: 'Thiết lập ngôn ngữ cho bạn hoặc máy chủ (Set language for you or the server).',
+    skipXp: true,
     cooldown: 5,
     async execute(message, args) {
         const guildId = message.guild?.id;

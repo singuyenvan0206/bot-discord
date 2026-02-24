@@ -5,8 +5,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'resetuser',
-    aliases: ['wipeuser', 'ru'],
-    description: '[OWNER] Xóa toàn bộ dữ liệu của người dùng',
+    aliases: ['wipeuser'],
+    description: '[OWNER] Reset toàn bộ dữ liệu người dùng (Reset all data for a user)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

@@ -6,8 +6,8 @@ const items = require('../../utils/shopItems');
 
 module.exports = {
     name: 'additem',
-    aliases: ['ai'],
-    description: '[OWNER] Thêm vật phẩm cho người dùng',
+    aliases: ['ai', 'giveitem'],
+    description: '[OWNER] Thêm vật phẩm cho người dùng (Add item to user)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

@@ -5,8 +5,9 @@ const config = require('../../config');
 
 module.exports = {
     name: 'userinfo',
-    aliases: ['user', 'ui', 'whois'],
-    description: 'Xem thông tin chi tiết về người dùng',
+    aliases: ['ui', 'whois'],
+    description: 'Xem thông tin chi tiết về người dùng (Displays user information)',
+    skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()

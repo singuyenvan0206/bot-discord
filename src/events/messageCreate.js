@@ -22,8 +22,8 @@ module.exports = {
             const tempCommand = client.commands.get(tempCommandName) ||
                 client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
 
-            // Skip Chat XP if it's an owner/admin command
-            if (tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly)) {
+            // Skip Chat XP if it's an owner/admin/utility command
+            if (tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly || tempCommand.skipXp)) {
                 shouldSkipChatXp = true;
             }
         }
@@ -82,8 +82,8 @@ module.exports = {
 
         try {
             await command.execute(message, args);
-            // Grant Command Success XP (Skip for admin/owner commands to prevent imbalance)
-            if (!command.ownerOnly && !command.adminOnly) {
+            // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
+            if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
                 addXp(message.author.id, xpAmount);
             }
@@ -91,8 +91,8 @@ module.exports = {
             console.error(`[Command] Error executing !${commandName}:`, error);
             message.reply(t('common.error', lang)).catch(() => { });
 
-            // Grant Command Failure XP (Skip for admin/owner commands)
-            if (!command.ownerOnly && !command.adminOnly) {
+            // Grant Command Failure XP (Skip for admin/owner/utility commands)
+            if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
                 addXp(message.author.id, xpAmount);
             }

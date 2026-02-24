@@ -8,8 +8,9 @@ const path = require('path');
 
 module.exports = {
     name: 'help',
-    aliases: ['h'],
-    description: 'Shows the command guide and menu',
+    aliases: ['h', 'commands'],
+    description: 'Xem hướng dẫn và menu lệnh (Shows the command guide and menu)',
+    skipXp: true,
     async execute(message, args) {
         const prefix = config.PREFIX;
         const lang = getLanguage(message.author.id, message.guild?.id);

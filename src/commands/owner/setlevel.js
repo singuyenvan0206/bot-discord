@@ -5,8 +5,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'setlevel',
-    aliases: ['sl'],
-    description: '[OWNER] Chỉnh sửa cấp độ của người chơi',
+    aliases: ['slvl', 'setl'],
+    description: '[OWNER] Chỉnh sửa cấp độ người dùng (Set user level)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

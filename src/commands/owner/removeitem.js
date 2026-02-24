@@ -7,7 +7,7 @@ const items = require('../../utils/shopItems');
 module.exports = {
     name: 'removeitem',
     aliases: ['ri', 'takeitem'],
-    description: '[OWNER] Xóa vật phẩm khỏi kho đồ người dùng',
+    description: '[OWNER] Xóa vật phẩm khỏi kho đồ (Remove item from user inventory)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

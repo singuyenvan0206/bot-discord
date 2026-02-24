@@ -7,7 +7,7 @@ const { calculateLevel } = require('../../utils/leveling');
 module.exports = {
     name: 'setexp',
     aliases: ['setxp', 'se'],
-    description: '[OWNER] Đặt lại số XP cho người dùng',
+    description: '[OWNER] Đặt lại số XP cho người dùng (Set user XP balance)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

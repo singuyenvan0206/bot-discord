@@ -6,7 +6,7 @@ const { t, getLanguage } = require('../../utils/i18n');
 module.exports = {
     name: 'resetdatabase',
     aliases: ['wipeall', 'dbreset'],
-    description: '[OWNER] Xóa toàn bộ dữ liệu người dùng và hệ thống',
+    description: '[OWNER] Xóa toàn bộ dữ liệu (Wipe all database data)',
     ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;

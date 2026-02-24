@@ -128,8 +128,8 @@ module.exports = {
             try {
                 await command.execute(messageAdapter, args);
 
-                // Grant Command Success XP (Skip for admin/owner commands to prevent imbalance)
-                if (!command.ownerOnly && !command.adminOnly) {
+                // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
+                if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                     const { addXp, XP_AMOUNTS } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
                     addXp(interaction.user.id, xpAmount);
@@ -140,8 +140,8 @@ module.exports = {
                 if (!hasReplied) interaction.reply({ content: errMsg, ephemeral: true }).catch(() => { });
                 else interaction.followUp({ content: errMsg, ephemeral: true }).catch(() => { });
 
-                // Grant Command Failure XP (Skip for admin/owner commands)
-                if (!command.ownerOnly && !command.adminOnly) {
+                // Grant Command Failure XP (Skip for admin/owner/utility commands)
+                if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                     const { addXp, XP_AMOUNTS } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
                     addXp(interaction.user.id, xpAmount);
