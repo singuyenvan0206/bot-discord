@@ -43,6 +43,12 @@ function addXp(userId, amount) {
     const leveledUp = newLevel > level;
     const reachedLevel20 = leveledUp && newLevel >= 20 && level < 20;
 
+    let bonus = 0;
+    if (leveledUp) {
+        bonus = newLevel * 100;
+        db.addBalance(userId, bonus);
+    }
+
     db.updateUser(userId, {
         xp: newXp,
         level: newLevel
@@ -51,7 +57,8 @@ function addXp(userId, amount) {
     return {
         level: newLevel,
         leveledUp: leveledUp,
-        reachedLevel20: reachedLevel20
+        reachedLevel20: reachedLevel20,
+        bonus: bonus
     };
 }
 
@@ -133,6 +140,30 @@ async function checkAndSendMilestone(message, reachedLevel20, lang) {
 }
 
 /**
+ * Gửi thông báo thăng cấp cơ bản.
+ */
+async function sendLevelUpMessage(message, level, bonus, lang) {
+    const { EmbedBuilder } = require('discord.js');
+    const { t } = require('./i18n');
+    const config = require('../config');
+
+    const embed = new EmbedBuilder()
+        .setTitle(t('leveling.levelup_title', lang) || '🎉 Thăng cấp!')
+        .setDescription(t('leveling.levelup_desc', lang, {
+            level: level,
+            bonus: bonus,
+            emoji: config.EMOJIS.COIN
+        }) || `Chúc mừng! Bạn đã đạt cấp độ **${level}** và nhận được **${bonus}** ${config.EMOJIS.COIN}!`)
+        .setColor(config.COLORS.SUCCESS)
+        .setTimestamp();
+
+    await message.channel.send({
+        content: `<@${message.author.id}>`,
+        embeds: [embed]
+    }).catch(() => { });
+}
+
+/**
  * Giảm cấp độ của người dùng.
  * Thường dùng làm hình phạt cho các hành vi vi phạm (ví dụ: Teacher làm việc xấu).
  * 
@@ -166,6 +197,7 @@ module.exports = {
     getLevelMultiplier,
     assignRandomJob,
     checkAndSendMilestone,
+    sendLevelUpMessage,
     deductLevel,
     XP_AMOUNTS
 };

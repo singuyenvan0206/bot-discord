@@ -36,14 +36,14 @@ const CATCHES = [
     { key: 'tuna', emoji: '🐟', value: 7500, weight: 8, minLuck: 2.0 },
     { key: 'swordfish', emoji: '🗡️', value: 15000, weight: 5, minLuck: 2.2 },
     { key: 'manta_ray', emoji: '🐋', value: 25000, weight: 4, minLuck: 2.5 },
-    { key: 'shark', emoji: '🦈', value: 50000, weight: 3, minLuck: 2.8 },
-    { key: 'whale', emoji: '🐋', value: 100000, weight: 2, minLuck: 3.0 },
-    { key: 'anglerfish', emoji: '🏮', value: 200000, weight: 1.5, minLuck: 3.2 },
-    { key: 'treasure_chest', emoji: '💰', value: 350000, weight: 1, minLuck: 2.5 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 750000, weight: 0.5, minLuck: 3.5 },
-    { key: 'kraken', emoji: '🐙', value: 1500000, weight: 0.3, minLuck: 4.0 },
-    { key: 'megalodon', emoji: '🦈', value: 5000000, weight: 0.1, minLuck: 4.5 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 15000000, weight: 0.05, minLuck: 5.0 }
+    { key: 'shark', emoji: '🦈', value: 40000, weight: 3, minLuck: 2.8 },
+    { key: 'whale', emoji: '🐋', value: 75000, weight: 2, minLuck: 3.2 },
+    { key: 'anglerfish', emoji: '🏮', value: 150000, weight: 1.5, minLuck: 3.5 },
+    { key: 'treasure_chest', emoji: '💰', value: 250000, weight: 1, minLuck: 3.0 },
+    { key: 'mythical_pearl', emoji: '🔮', value: 500000, weight: 0.5, minLuck: 4.0 },
+    { key: 'kraken', emoji: '🐙', value: 1000000, weight: 0.3, minLuck: 4.5 },
+    { key: 'megalodon', emoji: '🦈', value: 2000000, weight: 0.1, minLuck: 5.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 5000000, weight: 0.05, minLuck: 5.5 }
 ];
 
 module.exports = {
@@ -107,9 +107,9 @@ module.exports = {
 
         let weightedPool = pool.map(c => {
             let modWeight = c.weight;
-            if (totalLuck > 2.0 && c.value > 500) modWeight *= 2;
-            if (totalLuck > 3.0 && c.value > 1000) modWeight *= 3;
-            if (totalLuck > 2.0 && c.value === 0) modWeight *= 0.5;
+            if (totalLuck > 2.0 && c.value > 500) modWeight *= 1.5;
+            if (totalLuck > 3.0 && c.value > 1000) modWeight *= 2;
+            if (totalLuck > 2.0 && c.value === 0) modWeight *= 0.7;
             return { ...c, weight: modWeight };
         });
 
@@ -153,9 +153,9 @@ module.exports = {
             let baseValue = caughtItem.value;
             let trophyMsg = '';
 
-            // Farmer Interaction: Trophy Fish (15% chance for 3x if using Fiberglass/Carbon/Titanium)
+            // Farmer Interaction: Trophy Fish (15% chance for 2x if using Fiberglass/Carbon/Titanium)
             if (user.job === 'farmer' && (hasActiveItem(message.author.id, 405) || hasActiveItem(message.author.id, 406) || hasActiveItem(message.author.id, 407)) && Math.random() < 0.15) {
-                baseValue *= 3;
+                baseValue *= 2;
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 

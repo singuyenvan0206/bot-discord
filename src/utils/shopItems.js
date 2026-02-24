@@ -54,9 +54,9 @@ module.exports = [
     // ==========================================
     // GROUP 400 — tool (fishing rods & baits, no duration)
     // ==========================================
-    { id: 401, name: 'Worm Bait', price: 50, multiplier: 0.10, type: 'bait' },
-    { id: 402, name: 'Cricket Bait', price: 150, multiplier: 0.30, type: 'bait' },
-    { id: 403, name: 'Squid Bait', price: 500, multiplier: 0.80, type: 'bait' },
+    { id: 401, name: 'Worm Bait', price: 200, multiplier: 0.10, type: 'bait' },
+    { id: 402, name: 'Cricket Bait', price: 600, multiplier: 0.30, type: 'bait' },
+    { id: 403, name: 'Squid Bait', price: 2000, multiplier: 0.80, type: 'bait' },
     { id: 404, name: 'Bamboo Rod', price: 2500, multiplier: 1.0, type: 'tool', idealJob: 'farmer' },
     { id: 405, name: 'Fiberglass Rod', price: 10000, multiplier: 1.5, type: 'tool', idealJob: 'farmer' },
     { id: 406, name: 'Carbon Rod', price: 50000, multiplier: 2.5, type: 'tool', idealJob: 'farmer' },
