@@ -124,6 +124,11 @@ client.on('messageCreate', async (message) => {
             db.addBalance(m.author.id, totalReward);
             playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
 
+            // Grant XP for valid word
+            const { addXp, XP_AMOUNTS } = require('./utils/leveling');
+            const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.MESSAGE.max - XP_AMOUNTS.MESSAGE.min + 1)) + XP_AMOUNTS.MESSAGE.min;
+            addXp(m.author.id, xpAmount);
+
             await m.react(config.EMOJIS.SUCCESS).catch(() => { });
         });
 

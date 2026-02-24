@@ -197,9 +197,15 @@ module.exports = {
                     collector.stop('stand');
                     await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
                 } else {
+                    // Grant Small XP for hitting
+                    const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                    addXp(message.author.id, Math.floor(XP_AMOUNTS.MESSAGE.min / 2));
                     await i.update({ embeds: [buildEmbed()], components: [row] });
                 }
             } else if (i.customId.startsWith('bj_stand')) {
+                // Grant Small XP for standing
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                addXp(message.author.id, Math.floor(XP_AMOUNTS.MESSAGE.min / 2));
                 collector.stop('stand');
                 await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
             }

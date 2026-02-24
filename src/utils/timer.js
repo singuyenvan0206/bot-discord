@@ -246,6 +246,8 @@ async function processHouseDistribution(client) {
     db.distributeBalanceToAll(amountPerUser, botId);
     db.setGlobalSetting('last_house_distribution', now);
 
+    console.log(`[Timer] Distribution complete! Each user received ${amountPerUser} coins.`);
+
     // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
         const lang = getLanguage(null, guild.id);
