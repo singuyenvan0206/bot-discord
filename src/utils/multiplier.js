@@ -34,12 +34,14 @@ function getUserMultiplier(userId, type) {
         }
     }
 
-    // Diminishing returns above 1.0, hard cap at 2.5 (250%)
+    const maxCap = getDynamicCap(userId);
+
+    // Diminishing returns above 1.0, hard cap at dynamic maxCap
     if (totalMulti > 1.0) {
         totalMulti = 1.0 + (totalMulti - 1.0) * 0.5;
     }
 
-    return Math.min(totalMulti, 2.5);
+    return Math.min(totalMulti, maxCap);
 }
 
 /**
@@ -66,9 +68,10 @@ function getTotalMultiplier(userId, type = 'income') {
     }
 
     const totalBonusMulti = itemMulti + levelMulti + jobMulti;
+    const maxCap = getDynamicCap(userId);
 
-    // Hard cap at 250% (2.5)
-    return Math.min(totalBonusMulti, 2.5);
+    // Hard cap at dynamic maxCap
+    return Math.min(totalBonusMulti, maxCap);
 }
 
 /**
@@ -118,17 +121,26 @@ function hasActiveItem(userId, itemId) {
 }
 
 /**
+ * Get dynamic cap based on VIP status (Item 108).
+ * Standard: 2.5 (250%), VIP: 5.0 (500%)
+ */
+function getDynamicCap(userId) {
+    return hasActiveItem(userId, 108) ? 5.0 : 2.5;
+}
+
+/**
  * Helper to calculate final reward with capped bonus.
  * type = 'income' | 'gamble'
  * Returns { total, bonus, percent }
  */
 function calculateReward(base, userId, type = 'income') {
     let bonusPart = getTotalMultiplier(userId, type);
+    const maxCap = getDynamicCap(userId);
 
-    // Safety fail-safe clamp: never exceed 250% (2.5) bonus
-    if (bonusPart > 2.5) {
-        console.warn(`[Multiplier] Safety clamp triggered for ${userId}: ${bonusPart} -> 2.5`);
-        bonusPart = 2.5;
+    // Safety fail-safe clamp: never exceed dynamic maxCap
+    if (bonusPart > maxCap) {
+        console.warn(`[Multiplier] Safety clamp triggered for ${userId}: ${bonusPart} -> ${maxCap}`);
+        bonusPart = maxCap;
     }
 
     const bonus = Math.floor(base * bonusPart);
