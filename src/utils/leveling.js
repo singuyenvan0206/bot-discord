@@ -62,8 +62,8 @@ function addXp(userId, amount) {
  * @returns {number} - Hệ số bonus, ví dụ: level 10 -> return 0.10 (tức +10%)
  */
 function getLevelMultiplier(level) {
-    const cap = 1.0;
-    const multiplier = level * 0.01;
+    const cap = 2.0;
+    const multiplier = level * 0.02;
     return Math.min(multiplier, cap);
 }
 
