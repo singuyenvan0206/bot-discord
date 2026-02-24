@@ -7,6 +7,7 @@ module.exports = {
     name: 'setlevel',
     aliases: ['sl'],
     description: '[OWNER] Chỉnh sửa cấp độ của người chơi',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 

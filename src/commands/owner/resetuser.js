@@ -7,6 +7,7 @@ module.exports = {
     name: 'resetuser',
     aliases: ['wipeuser', 'ru'],
     description: '[OWNER] Xóa toàn bộ dữ liệu của người dùng',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 

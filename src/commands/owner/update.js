@@ -7,6 +7,7 @@ const { t, getLanguage } = require('../../utils/i18n');
 module.exports = {
     name: 'update',
     description: 'Pulls the latest code from Git and reloads all commands.',
+    ownerOnly: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 

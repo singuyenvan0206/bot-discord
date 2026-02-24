@@ -66,16 +66,20 @@ module.exports = {
 
         try {
             await command.execute(message, args);
-            // Grant Command Success XP
-            const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-            addXp(message.author.id, xpAmount);
+            // Grant Command Success XP (Skip for admin/owner commands to prevent imbalance)
+            if (!command.ownerOnly && !command.adminOnly) {
+                const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
+                addXp(message.author.id, xpAmount);
+            }
         } catch (error) {
             console.error(`[Command] Error executing !${commandName}:`, error);
             message.reply(t('common.error', lang)).catch(() => { });
 
-            // Grant Command Failure XP
-            const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-            addXp(message.author.id, xpAmount);
+            // Grant Command Failure XP (Skip for admin/owner commands)
+            if (!command.ownerOnly && !command.adminOnly) {
+                const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
+                addXp(message.author.id, xpAmount);
+            }
         }
     },
 };

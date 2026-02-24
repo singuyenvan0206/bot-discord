@@ -5,8 +5,9 @@ const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'serverlist',
-    aliases: ['servers', 'guilds', 'sl'],
-    description: '[OWNER] Xem danh sách các máy chủ bot đang tham gia',
+    aliases: ['sl', 'guildlist'],
+    description: '[OWNER] Liệt kê danh sách các máy chủ bot đang tham gia',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 

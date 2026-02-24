@@ -7,6 +7,7 @@ module.exports = {
     name: 'setstatus',
     aliases: ['setactivity', 'ss'],
     description: '[OWNER] Chỉnh sửa trạng thái Custom Activity của bot',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 

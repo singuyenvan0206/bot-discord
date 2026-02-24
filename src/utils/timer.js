@@ -241,12 +241,12 @@ async function processHouseDistribution(client) {
     const amountPerUser = Math.floor(balance / humanCount);
     if (amountPerUser <= 0) return;
 
-    console.log(`[Timer] Distributing ${balance} coins to ${humanCount} users (${amountPerUser}/each)`);
+    console.log(`[Timer] Distributing ${balance.toLocaleString()} coins to ${humanCount} users (${amountPerUser.toLocaleString()}/each)`);
 
     db.distributeBalanceToAll(amountPerUser, botId);
-    db.setGlobalSetting('last_house_distribution', now);
+    db.setGlobalSetting('last_house_distribution', now.toString());
 
-    console.log(`[Timer] Distribution complete! Each user received ${amountPerUser} coins.`);
+    console.log(`[Timer] Distribution complete! Total: ${balance.toLocaleString()} coins. Users: ${humanCount}. Per-user: ${amountPerUser.toLocaleString()}`);
 
     // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {

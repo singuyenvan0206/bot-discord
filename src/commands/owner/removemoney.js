@@ -6,8 +6,9 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'removemoney',
-    aliases: ['rm'],
-    description: '[OWNER] Trừ tiền của người dùng',
+    aliases: ['rm', 'takemoney'],
+    description: '[OWNER] Trừ tiền người dùng',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 

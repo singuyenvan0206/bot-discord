@@ -7,6 +7,7 @@ module.exports = {
     name: 'resetdatabase',
     aliases: ['wipeall', 'dbreset'],
     description: '[OWNER] Xóa toàn bộ dữ liệu người dùng và hệ thống',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 

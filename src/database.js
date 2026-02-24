@@ -15,11 +15,20 @@ async function getDb() {
 
     // Load existing database or create new one
     if (fs.existsSync(DB_PATH)) {
-        const buffer = fs.readFileSync(DB_PATH);
-        db = new SQL.Database(buffer);
+        const stats = fs.statSync(DB_PATH);
+        if (stats.size === 0) {
+            console.error(`⚠️ Database file ${DB_NAME} is empty! Creating a new one to prevent crash.`);
+            db = new SQL.Database();
+        } else {
+            const buffer = fs.readFileSync(DB_PATH);
+            db = new SQL.Database(buffer);
+        }
     } else {
         db = new SQL.Database();
     }
+
+    // Enable foreign keys
+    db.run('PRAGMA foreign_keys = ON');
 
     initSchema();
     return db;
@@ -27,9 +36,17 @@ async function getDb() {
 
 function saveDb() {
     if (!db) return;
-    const data = db.export();
-    const buffer = Buffer.from(data);
-    fs.writeFileSync(DB_PATH, buffer);
+    try {
+        const data = db.export();
+        const buffer = Buffer.from(data);
+        const tmpPath = `${DB_PATH}.tmp`;
+
+        // Atomic save: write to tmp then rename
+        fs.writeFileSync(tmpPath, buffer);
+        fs.renameSync(tmpPath, DB_PATH);
+    } catch (err) {
+        console.error('❌ Failed to save database:', err);
+    }
 }
 
 function initSchema() {

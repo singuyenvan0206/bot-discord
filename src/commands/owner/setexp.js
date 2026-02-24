@@ -6,8 +6,9 @@ const { calculateLevel } = require('../../utils/leveling');
 
 module.exports = {
     name: 'setexp',
-    aliases: ['se', 'setxp'],
-    description: '[OWNER] Chỉnh sửa điểm kinh nghiệm của người chơi',
+    aliases: ['setxp', 'se'],
+    description: '[OWNER] Đặt lại số XP cho người dùng',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 

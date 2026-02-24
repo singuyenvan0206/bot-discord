@@ -8,6 +8,7 @@ module.exports = {
     name: 'additem',
     aliases: ['ai'],
     description: '[OWNER] Thêm vật phẩm cho người dùng',
+    ownerOnly: true,
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 
