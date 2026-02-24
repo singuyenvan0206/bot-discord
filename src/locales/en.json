@@ -90,7 +90,10 @@
         "bust_title": "🃏 Blackjack — 💥 BUST!",
         "bust_msg": "💥 **You busted (over 21)! Dealer wins.**",
         "won_coins": "\n{{emoji}} **Dealer won {{amount}} coins!**",
-        "timeout_title": "🃏 Blackjack — {{emoji}} Timeout"
+        "timeout_title": "🃏 Blackjack — {{emoji}} Timeout",
+        "ngu_linh_win": "🏆 **Five Card Charlie!** You won with 5 cards!{{amount}}",
+        "ngu_linh_lose": "😔 **Dealer has Five Card Charlie!** You lost{{amount}}!",
+        "ngu_linh_tie": "🤝 **Both have Five Card Charlie!**{{refund}}"
     },
     "tictactoe": {
         "title": "❌⭕  Tic-Tac-Toe",

@@ -29,47 +29,68 @@ function handValue(hand) {
 function handString(hand) { return hand.map(c => `\`${c.display}\``).join(' '); }
 
 async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang) {
-    while (handValue(dealerHand) < 17) dealerHand.push(drawCard());
-
     const playerVal = handValue(playerHand);
+    const playerIsNguLinh = playerHand.length === 5 && playerVal <= 21;
+
+    // Dealer draws only if player didn't bust and hasn't already won with a 5-card charlie (unless dealer could also get one)
+    // Actually, in many variants, if player gets 5 cards, dealer still tries to get 5 cards to compare.
+    while (handValue(dealerHand) < 17 || (dealerHand.length < 5 && handValue(dealerHand) <= 21)) {
+        if (dealerHand.length >= 5) break;
+        dealerHand.push(drawCard());
+    }
+
     const dealerVal = handValue(dealerHand);
+    const dealerIsNguLinh = dealerHand.length === 5 && dealerVal <= 21;
 
     let result, color, payout = 0;
     const amountStr = bet ? t('blackjack.win_amount', lang, { amount: bet.toLocaleString() }) : '';
 
-    if (dealerVal > 21) {
+    if (playerIsNguLinh && dealerIsNguLinh) {
+        if (playerVal < dealerVal) {
+            result = t('blackjack.ngu_linh_win', lang, { amount: amountStr });
+            color = config.COLORS.GAMBLE_WIN;
+            payout = bet ? Math.ceil(bet * 2.5) : 0;
+        } else if (playerVal > dealerVal) {
+            result = t('blackjack.ngu_linh_lose', lang, { amount: amountStr });
+            color = config.COLORS.GAMBLE_LOSS;
+            if (bet) addHouseProfit(i, bet);
+        } else {
+            result = t('blackjack.ngu_linh_tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
+            color = config.COLORS.GAMBLE_PUSH;
+            payout = bet ? bet : 0;
+        }
+    } else if (playerIsNguLinh) {
+        result = t('blackjack.ngu_linh_win', lang, { amount: amountStr });
+        color = config.COLORS.GAMBLE_WIN;
+        payout = bet ? Math.ceil(bet * 2.5) : 0;
+    } else if (dealerIsNguLinh) {
+        result = t('blackjack.ngu_linh_lose', lang, { amount: amountStr });
+        color = config.COLORS.GAMBLE_LOSS;
+        if (bet) addHouseProfit(i, bet);
+    } else if (dealerVal > 21) {
         result = t('blackjack.win', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
-
-        if (payout > 0) {
-            const { total: totalReward, bonus: bonusAmount } = calculateReward(bet * 2, i.user.id, 'gamble');
-            payout = totalReward;
-            if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
-        }
-    }
-    else if (playerVal > dealerVal) {
+    } else if (playerVal > dealerVal) {
         result = t('blackjack.win_simple', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
-
-        if (payout > 0) {
-            const { total: totalReward, bonus: bonusAmount } = calculateReward(bet * 2, i.user.id, 'gamble');
-            payout = totalReward;
-            if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
-        }
-    }
-    else if (playerVal < dealerVal) {
+    } else if (playerVal < dealerVal) {
         result = t('blackjack.lose', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_LOSS;
-        if (bet) {
-            addHouseProfit(i, bet);
-        }
-    }
-    else {
+        if (bet) addHouseProfit(i, bet);
+    } else {
         result = t('blackjack.tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
         color = config.COLORS.GAMBLE_PUSH;
         payout = bet ? bet : 0;
+    }
+
+    if (payout > 0 && bet) {
+        if (payout > bet) { // If it's a win (2x)
+            const { total: totalReward, bonus: bonusAmount } = calculateReward(payout, i.user.id, 'gamble');
+            payout = totalReward;
+            if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+        }
     }
 
     if (payout > 0) db.addBalance(i.user.id, payout);
@@ -172,7 +193,7 @@ module.exports = {
                     startCooldown(i.client, 'blackjack', message.author.id);
                     collector.stop();
                 }
-                else if (handValue(playerHand) === 21) {
+                else if (handValue(playerHand) === 21 || playerHand.length === 5) {
                     collector.stop('stand');
                     await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
                 } else {
