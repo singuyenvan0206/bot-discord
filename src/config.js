@@ -95,8 +95,8 @@ module.exports = {
             teacher: { id: 'teacher', bonus: 0.08, color: '#3498db', icon: '📚' }
         },
         LEVELING: {
-            XP_MULTIPLIER: 3.0 // Triple the XP gain for faster progression
+            XP_MULTIPLIER: 1.5 // Triple the XP gain for faster progression
         }
     },
-    BLACKLISTED_CHANNELS: ['842400189830529035'] 
+    BLACKLISTED_CHANNELS: ['842400189830529035']
 };
