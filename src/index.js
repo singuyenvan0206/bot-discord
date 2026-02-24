@@ -1,4 +1,5 @@
 require('dotenv').config();
+process.env.DB_NAME = 'databases.db';
 
 const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
 const fs = require('fs');
