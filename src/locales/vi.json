@@ -754,6 +754,20 @@
         "salary_label": "Hệ số lương",
         "requirement_label": "Yêu cầu",
         "detail_usage": "❌ Vui lòng nhập tên nghề nghiệp! (Ví dụ: `{{prefix}}jobdetail farmer`)",
+        "job_facts": {
+            "police": "Sở Cảnh sát Metropolitan có trung tâm dữ liệu lớn nhất thành phố.",
+            "criminal": "Một số tội phạm mạng có thể tấn công hệ thống chỉ bằng một chiếc điện thoại.",
+            "doctor": "Bác sĩ thực hiện hàng ngàn ca phẫu thuật cứu người mỗi năm.",
+            "programmer": "Dòng code đầu tiên được viết bởi Ada Lovelace vào thế kỷ 19.",
+            "farmer": "Nông dân cung cấp thực phẩm cho toàn bộ dân số thế giới.",
+            "hacker": "Không phải hacker nào cũng xấu, có những hacker chuyên bảo mật hệ thống.",
+            "streamer": "Streamer hàng đầu có thể thu hút hàng triệu người xem cùng lúc.",
+            "chef": "Đầu bếp trưởng thường dành 15 năm để hoàn thiện kỹ năng của mình.",
+            "musician": "Âm nhạc có thể thay đổi tâm trạng của con người chỉ trong vài giây.",
+            "soldier": "Kỷ luật và tinh thần đồng đội là yếu tố quan trọng nhất của quân nhân.",
+            "trader": "Thương nhân giúp kết nối hàng hóa giữa các châu lục.",
+            "teacher": "Giáo dục là vũ khí mạnh nhất để thay đổi thế giới."
+        },
         "job_details": {
             "police": "👮 **Cảnh Sát**\nNhiệm vụ của bạn là giữ gìn trật tự. Bạn sẽ nhận được một phần tiền phạt từ những người dùng bị bắt trong lệnh `crime` hoặc `rob`.",
             "criminal": "🥷 **Tội Phạm**\nKẻ sống ngoài vòng pháp luật. Bạn có tỉ lệ thành công cao hơn trong các phi vụ và nhận bonus lớn khi đột nhập đồn cảnh sát.",
