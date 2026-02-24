@@ -12,7 +12,23 @@ module.exports = {
         if (message.author.bot || !message.guild) return;
 
         // ─── EXP System (Chatting) ───
-        if (!xpCooldowns.has(message.author.id)) {
+        const { client } = message;
+        const isCommand = message.content.startsWith(config.PREFIX);
+        let shouldSkipChatXp = false;
+
+        if (isCommand) {
+            const tempArgs = message.content.slice(config.PREFIX.length).trim().split(/ +/);
+            const tempCommandName = (tempArgs.shift() || '').toLowerCase();
+            const tempCommand = client.commands.get(tempCommandName) ||
+                client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
+
+            // Skip Chat XP if it's an owner/admin command
+            if (tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly)) {
+                shouldSkipChatXp = true;
+            }
+        }
+
+        if (!shouldSkipChatXp && !xpCooldowns.has(message.author.id)) {
             const { MESSAGE } = XP_AMOUNTS;
             const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
             const { leveledUp, reachedLevel20 } = addXp(message.author.id, xpAmount);
@@ -33,7 +49,7 @@ module.exports = {
         const commandName = (args.shift() || '').toLowerCase();
         if (!commandName) return;
 
-        const { client } = message;
+        // const { client } = message;
         const command = client.commands.get(commandName) ||
             client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
