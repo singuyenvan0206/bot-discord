@@ -23,7 +23,15 @@ module.exports = {
             }
 
             let output = stdout || stderr;
-            await msg.edit(`✅ **Git Pull Successful:**\n\`\`\`${output.substring(0, 500)}\`\`\`\n🔄 **Restarting via PM2...**`);
+            await msg.edit(`✅ **Git Pull Successful:**\n\`\`\`${output.substring(0, 500)}\`\`\`\n🔄 **Saving DB & Restarting via PM2...**`);
+
+            try {
+                const db = require('../../database');
+                db.saveDb();
+                console.log(`[Update] Database saved. Bot ID: ${message.client.user.id} (${message.client.user.tag})`);
+            } catch (saveErr) {
+                console.error('[Update] Failed to save DB before restart:', saveErr);
+            }
 
             // Execute PM2 restart
             exec('pm2 restart index', async (pm2Error) => {

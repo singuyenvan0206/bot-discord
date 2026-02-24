@@ -6,6 +6,7 @@ const DB_NAME = process.env.DB_NAME || 'databases.db';
 const DB_PATH = path.join(__dirname, '..', DB_NAME);
 
 let db = null;
+const MIGRATION_LEVEL = 1; // Current system migration level
 
 async function getDb() {
     if (db) return db;
@@ -141,12 +142,24 @@ function initSchema() {
     safeAddColumn('users', 'language', 'TEXT DEFAULT NULL');
     safeAddColumn('users', 'active_buffs', "TEXT DEFAULT '[]'");
 
-    if (!isWordChain) {
-        migrateInventoryIds();
-    }
-    migrateUserLanguages();
-
     saveDb();
+
+    // Run one-time migrations
+    if (!isWordChain) {
+        const currentLevel = parseInt(getGlobalSetting('migration_level', '0'));
+
+        if (currentLevel < MIGRATION_LEVEL) {
+            console.log(`🚀 Running database migrations (v${currentLevel} -> v${MIGRATION_LEVEL})...`);
+
+            if (currentLevel < 1) {
+                migrateInventoryIds();
+                migrateUserLanguages();
+            }
+
+            setGlobalSetting('migration_level', MIGRATION_LEVEL.toString());
+            console.log('✅ Migrations completed.');
+        }
+    }
 }
 
 /**
@@ -525,6 +538,7 @@ function clearAllData() {
 
 module.exports = {
     getDb,
+    saveDb,
     createGiveaway,
     getGiveaway,
     getGiveawayById,
