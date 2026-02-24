@@ -98,5 +98,5 @@ module.exports = {
             XP_MULTIPLIER: 3.0 // Triple the XP gain for faster progression
         }
     },
-    BLACKLISTED_CHANNELS: [] // IDs of channels where the bot should not send messages
+    BLACKLISTED_CHANNELS: ['842400189830529035'] 
 };
