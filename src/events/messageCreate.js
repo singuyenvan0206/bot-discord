@@ -23,8 +23,11 @@ module.exports = {
             const tempCommand = client.commands.get(tempCommandName) ||
                 client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
 
-            // Skip Chat XP if it's an owner/admin/utility command
-            if (tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly || tempCommand.skipXp)) {
+            const isOwner = db.isOwner(message.author.id);
+            const isAdminCmd = tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly || tempCommand.skipXp);
+
+            // Skip Chat XP if it's an owner trying to run a command (even with typos) or if it's an admin/owner/skipped command
+            if (isOwner || isAdminCmd) {
                 shouldSkipChatXp = true;
             }
         }
