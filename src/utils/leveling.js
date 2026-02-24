@@ -33,11 +33,13 @@ function addXp(userId, amount) {
     const multiplier = config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0;
     const finalAmount = Math.floor(amount * multiplier);
 
-    const newXp = user.xp + finalAmount;
+    const xp = Number(user.xp || 0);
+    const level = Number(user.level || 0);
+    const newXp = xp + finalAmount;
     const newLevel = calculateLevel(newXp);
 
-    const leveledUp = newLevel > user.level;
-    const reachedLevel20 = leveledUp && newLevel >= 20 && user.level < 20;
+    const leveledUp = newLevel > level;
+    const reachedLevel20 = leveledUp && newLevel >= 20 && level < 20;
 
     db.updateUser(userId, {
         xp: newXp,
@@ -138,7 +140,7 @@ async function checkAndSendMilestone(message, reachedLevel20, lang) {
  */
 function deductLevel(userId, levels = 1) {
     const user = db.getUser(userId);
-    const oldLevel = user.level;
+    const oldLevel = Number(user.level || 0);
     const newLevel = Math.max(0, oldLevel - levels);
 
     // Tính toán lại XP tối thiểu cho cấp độ mới
