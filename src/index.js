@@ -4,8 +4,6 @@ process.env.DB_NAME = 'databases.db';
 const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const db = require('./database');
-const config = require('./config');
 
 // ─── Validate Environment ────────────────────────────────────────
 

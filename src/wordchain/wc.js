@@ -1,11 +1,11 @@
-process.env.DB_NAME = 'wordchain.db';
+process.env.DB_NAME = 'src/wordchain/wordchain.db';
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, Events } = require('discord.js');
-const db = require('./database');
-const config = require('./config');
-const { t, getLanguage } = require('./utils/i18n');
-const { calculateReward } = require('./utils/multiplier');
-const { isManager } = require('./utils/permissions');
+const db = require('../database');
+const config = require('../config');
+const { t, getLanguage } = require('../utils/i18n');
+const { calculateReward } = require('../utils/multiplier');
+const { isManager } = require('../utils/permissions');
 
 // Validate Environment
 const TOKEN = process.env.WORDCHAIN_TOKEN || process.env.DISCORD_TOKEN;
@@ -125,7 +125,7 @@ client.on('messageCreate', async (message) => {
             playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
 
             // Grant XP for valid word
-            const { addXp, XP_AMOUNTS } = require('./utils/leveling');
+            const { addXp, XP_AMOUNTS } = require('../utils/leveling');
             const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.MESSAGE.max - XP_AMOUNTS.MESSAGE.min + 1)) + XP_AMOUNTS.MESSAGE.min;
             addXp(m.author.id, xpAmount);
 

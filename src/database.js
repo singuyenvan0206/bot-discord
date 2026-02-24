@@ -32,7 +32,7 @@ function saveDb() {
 }
 
 function initSchema() {
-    const isWordChain = DB_NAME === 'wordchain.db';
+    const isWordChain = DB_NAME.includes('wordchain.db');
 
     if (!isWordChain) {
         db.run(`

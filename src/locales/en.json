@@ -370,9 +370,15 @@
             "clownfish": "Clownfish",
             "swordfish": "Swordfish",
             "shark": "Shark",
+            "stingray": "Stingray",
+            "manta_ray": "Manta Ray",
             "whale": "Whale",
+            "anglerfish": "Anglerfish",
             "treasure_chest": "Treasure Chest",
-            "kraken": "Kraken Monster"
+            "mythical_pearl": "Mythical Pearl",
+            "kraken": "Kraken Monster",
+            "megalodon": "Megalodon",
+            "poseidon_trident": "Poseidon Trident"
         }
     },
     "items": {

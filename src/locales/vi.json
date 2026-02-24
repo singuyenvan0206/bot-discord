@@ -412,9 +412,15 @@
             "clownfish": "Cá Hề",
             "swordfish": "Cá Kiếm",
             "shark": "Cá Mập",
+            "stingray": "Cá Đuối",
+            "manta_ray": "Cá Đuối Manta",
             "whale": "Cá Voi",
+            "anglerfish": "Cá Lồng Đèn",
             "treasure_chest": "Rương Kho Báu",
-            "kraken": "Quái Vật Kraken"
+            "mythical_pearl": "Ngọc Trai Huyền Thoại",
+            "kraken": "Quái Vật Kraken",
+            "megalodon": "Siêu Cá Mập Megalodon",
+            "poseidon_trident": "Đinh Ba Poseidon"
         }
     },
     "items": {
