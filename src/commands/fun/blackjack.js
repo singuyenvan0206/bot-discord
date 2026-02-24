@@ -46,71 +46,90 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     const dealerIsNguLinh = dealerHand.length === 5 && dealerVal <= 21;
 
     let result, color, payout = 0, title = t('blackjack.title', lang);
-    const amountStr = bet ? t('blackjack.win_amount', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN }) : '';
 
     if (playerIsNatural && dealerIsNatural) {
-        result = t('blackjack.tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
         color = config.COLORS.GAMBLE_PUSH;
         payout = bet ? bet : 0;
         title = t('blackjack.natural_title', lang);
     } else if (playerIsNatural) {
-        result = t('blackjack.natural_win', lang) + amountStr;
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? Math.ceil(bet * 2.5) : 0;
         title = t('blackjack.natural_title', lang);
     } else if (dealerIsNatural) {
-        result = t('blackjack.lose', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_LOSS;
         if (bet) addHouseProfit(i, bet);
         title = t('blackjack.natural_title', lang);
     } else if (playerIsNguLinh && dealerIsNguLinh) {
         if (playerVal < dealerVal) {
-            result = t('blackjack.ngu_linh_win', lang, { amount: amountStr });
             color = config.COLORS.GAMBLE_WIN;
             payout = bet ? Math.ceil(bet * 2.5) : 0;
         } else if (playerVal > dealerVal) {
-            result = t('blackjack.ngu_linh_lose', lang, { amount: amountStr });
             color = config.COLORS.GAMBLE_LOSS;
             if (bet) addHouseProfit(i, bet);
         } else {
-            result = t('blackjack.ngu_linh_tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
             color = config.COLORS.GAMBLE_PUSH;
             payout = bet ? bet : 0;
         }
         title = t('blackjack.ngu_linh_title', lang);
     } else if (playerIsNguLinh) {
-        result = t('blackjack.ngu_linh_win', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? Math.ceil(bet * 2.5) : 0;
         title = t('blackjack.ngu_linh_title', lang);
     } else if (dealerIsNguLinh) {
-        result = t('blackjack.ngu_linh_lose', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_LOSS;
         if (bet) addHouseProfit(i, bet);
         title = t('blackjack.ngu_linh_title', lang);
     } else if (dealerVal > 21) {
-        result = t('blackjack.win', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
     } else if (playerVal > dealerVal) {
-        result = t('blackjack.win_simple', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
     } else if (playerVal < dealerVal) {
-        result = t('blackjack.lose', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_LOSS;
         if (bet) addHouseProfit(i, bet);
     } else {
-        result = t('blackjack.tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
         color = config.COLORS.GAMBLE_PUSH;
         payout = bet ? bet : 0;
     }
 
     if (payout > 0 && bet) {
-        if (payout > bet) { // If it's a win (2x)
+        if (payout > bet) { // If it's a win (2x or 2.5x)
             const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(payout, i.user.id, 'gamble');
             payout = totalReward;
+
+            // Generate amount suffix for win
+            const winAmountStr = t('blackjack.win_amount', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
+
+            if (playerIsNatural) {
+                result = t('blackjack.natural_win', lang) + winAmountStr;
+            } else if (playerIsNguLinh) {
+                result = t('blackjack.ngu_linh_win', lang, { amount: winAmountStr });
+            } else if (dealerVal > 21) {
+                result = t('blackjack.win', lang, { amount: winAmountStr });
+            } else if (playerVal > dealerVal) {
+                result = t('blackjack.win_simple', lang, { amount: winAmountStr });
+            }
+
             if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+        } else {
+            // It's a tie (payout == bet)
+            result = t('blackjack.tie', lang, { refund: t('blackjack.refund', lang) });
+            if (playerIsNatural && dealerIsNatural) {
+                // Keep the natural tie title
+            } else if (playerIsNguLinh && dealerIsNguLinh) {
+                result = t('blackjack.ngu_linh_tie', lang, { refund: t('blackjack.refund', lang) });
+            }
+        }
+    } else {
+        // It's a loss
+        const lossAmountStr = t('blackjack.win_amount', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN });
+        if (dealerIsNatural) {
+            result = t('blackjack.lose', lang, { amount: lossAmountStr });
+        } else if (dealerIsNguLinh) {
+            result = t('blackjack.ngu_linh_lose', lang, { amount: lossAmountStr });
+        } else if (playerVal < dealerVal || playerVal > 21) {
+            result = t('blackjack.lose', lang, { amount: lossAmountStr });
         }
     }
 

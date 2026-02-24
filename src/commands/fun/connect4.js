@@ -193,21 +193,15 @@ module.exports = {
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                         addXp(winId, winXp);
 
-                        if (bet > 0) {
-                            const prize = bet * 2;
-                            db.addBalance(winId, prize);
-                            resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
-                                t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: prize });
-                        } else {
-                            // No bet: give base reward with unified calculation
-                            const baseReward = config.ECONOMY.TICTACTOE_REWARD || 100;
-                            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winId);
-                            db.addBalance(winId, totalReward);
-                            resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
-                                t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
-                            if (bonusAmount > 0) {
-                                resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
-                            }
+                        const baseReward = bet > 0 ? bet * 2 : (config.ECONOMY.TICTACTOE_REWARD || 100);
+                        const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winId);
+                        db.addBalance(winId, totalReward);
+
+                        resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
+                            t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
+
+                        if (bonusAmount > 0) {
+                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                         }
                     }
 

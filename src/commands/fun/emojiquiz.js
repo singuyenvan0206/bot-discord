@@ -56,7 +56,7 @@ module.exports = {
             addXp(winnerMsg.author.id, winXp);
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
-                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
+                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
             if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
 

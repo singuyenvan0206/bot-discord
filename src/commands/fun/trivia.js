@@ -103,7 +103,7 @@ module.exports = {
 
                 db.addBalance(i.user.id, totalReward);
 
-                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward });
+                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
                 if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
 
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');

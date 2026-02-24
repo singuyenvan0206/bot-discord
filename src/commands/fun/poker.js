@@ -532,7 +532,7 @@ module.exports = {
             });
 
             const winnerNames = winners.map(w => w.name).join(', ');
-            let footerText = t('poker.pot', lang, { amount: pot.toLocaleString(), emoji: config.EMOJIS.COIN });
+            let footerText = t('poker.pot', lang, { amount: (pot + totalBonusGiven).toLocaleString(), emoji: config.EMOJIS.COIN });
             if (totalBonusGiven > 0) {
                 footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString(), cap: totalCap });
             }

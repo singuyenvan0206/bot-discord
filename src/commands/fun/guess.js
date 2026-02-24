@@ -45,7 +45,7 @@ module.exports = {
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                 addXp(m.author.id, winXp);
 
-                let winMsg = t('guess.win', lang, { number, attempts });
+                let winMsg = t('guess.win', lang, { number, attempts, amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN });
                 if (bonusAmount > 0) winMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
 
                 await m.reply(winMsg);
