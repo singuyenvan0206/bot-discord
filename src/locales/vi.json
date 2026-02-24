@@ -614,6 +614,30 @@
             "name": "🎣 Cần Titanium",
             "desc": "Sức mạnh tuyệt đối. (May mắn: 4.0x)"
         },
+        "408": {
+            "name": "🎣 Cần Nhựa",
+            "desc": "Cần câu đồ chơi. (May mắn: 0.5x)"
+        },
+        "409": {
+            "name": "🎣 Cần Thép",
+            "desc": "Nặng và đáng tin cậy. (May mắn: 2.5x)"
+        },
+        "410": {
+            "name": "🔱 Cần Neptune",
+            "desc": "Món quà từ vị thần biển cả. (May mắn: 7.5x)"
+        },
+        "411": {
+            "name": "🍞 Mồi Bánh Mì",
+            "desc": "Vụn bánh đơn giản cho cá nhỏ. (May mắn: +5%)"
+        },
+        "412": {
+            "name": "🦐 Mồi Tôm",
+            "desc": "Mặn và ngon miệng. (May mắn: +40%)"
+        },
+        "413": {
+            "name": "✨ Mồi Vàng",
+            "desc": "Mồi lấp lánh cho những phát hiện hiếm. (May mắn: +300%)"
+        },
         "501": {
             "name": "🧪 Thuốc Tăng XP",
             "desc": "Nhận thêm +50% XP khi thực hiện các hoạt động | 1 ngày"

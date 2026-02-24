@@ -572,6 +572,30 @@
             "name": "🎣 Titanium Rod",
             "desc": "Absolute power. (Luck: 4.0x)"
         },
+        "408": {
+            "name": "🎣 Plastic Rod",
+            "desc": "Toy-grade rod. (Luck: 0.5x)"
+        },
+        "409": {
+            "name": "🎣 Steel Rod",
+            "desc": "Heavy and reliable. (Luck: 2.5x)"
+        },
+        "410": {
+            "name": "🔱 Neptune's Rod",
+            "desc": "Gift from the god of the sea. (Luck: 7.5x)"
+        },
+        "411": {
+            "name": "🍞 Bread Bait",
+            "desc": "Simple scraps for small fish. (Luck: +5%)"
+        },
+        "412": {
+            "name": "🦐 Shrimp Bait",
+            "desc": "Salty and tasty. (Luck: +40%)"
+        },
+        "413": {
+            "name": "✨ Golden Bait",
+            "desc": "Shimmering bait for rare finds. (Luck: +300%)"
+        },
         "501": {
             "name": "🧪 XP Boost Potion",
             "desc": "Gain +50% XP when performing activities | 1 day"
