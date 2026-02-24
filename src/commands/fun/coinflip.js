@@ -19,8 +19,8 @@ module.exports = {
         let bet = args[1] ? parseAmount(args[1], user.balance, config.ECONOMY.MAX_BET) : 0;
 
         // Support vn side names and shorthands
-        if (call === 'ngửa' || call === 'ngua' || call === 'h' || call === 'n') call = 'heads';
-        if (call === 'sấp' || call === 'sap' || call === 't' || call === 's') call = 'tails';
+        if (call === 'ngửa' || call === 'ngua' || call === 'h' || call === 'head' || call === 'n') call = 'heads';
+        if (call === 'sấp' || call === 'sap' || call === 't' || call === 'tail' || call === 's') call = 'tails';
 
         if (call !== 'heads' && call !== 'tails') {
             return message.reply(t('coinflip.invalid_side', lang, { prefix: config.PREFIX }));

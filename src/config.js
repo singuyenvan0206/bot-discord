@@ -1,5 +1,6 @@
 module.exports = {
     PREFIX: '$',
+    BUTTON_ID: 'join_giveaway_btn',
     COLORS: {
         ACTIVE: 0x5865F2,        // Discord Blurple
         ENDING_SOON: 0xFEE75C,   // Yellow

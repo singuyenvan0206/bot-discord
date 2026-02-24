@@ -1,8 +1,8 @@
 # 🎉 Simsimi — Discord Bot
 
-> A feature-rich, all-in-one Discord bot packed with **30+ commands** — including an interactive giveaway system, casino-style mini-games with coin betting, a full economy with shops & inventory, and handy utility commands. 
+> A feature-rich, all-in-one Discord bot packed with **30+ commands** — including a native **Slash Command** interface, interactive giveaway system, casino-style mini-games, and a full economy with shops & inventory.
 > 
-> 🌍 **Now featuring full Bilingual Support (English & Vietnamese) natively!**
+> 🌍 **Full Bilingual Support (English & Vietnamese)!**
 
 [![Discord.js](https://img.shields.io/badge/discord.js-v14-5865F2?logo=discord&logoColor=white)](https://discord.js.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
@@ -23,9 +23,9 @@
 - 🎮 **18+ Interactive Mini-Games** — From Blackjack & Poker to Minesweeper, Trivia, Emoji Quiz, Hangman, and more — all with rich embeds & interactive button UIs.
 - 💰 **Virtual Economy** — Earn coins through daily rewards and working, bet in games, buy items from the shop, and climb the leaderboard.
 - 🛒 **Dynamic Shop & Inventory** — Purchase items spanning Tools, Baits, Income Boosts, Daily Boosts, and Luck Boosts. Increase your earnings permanently!
-- 🔧 **Server Utilities** — Ping, avatar viewer, deeply detailed server & user info, and rich user profiles (featuring precise *Net Worth* tracking).
-- 💾 **Persistent Storage** — All data (balances, inventories, giveaways) securely saved in a local, fast SQLite database.
-- ⚡ **Lightweight** — No external database server needed; runs efficiently on a single Node.js process.
+- 🔧 **Server Utilities** — Ping, avatar viewer, server/user stats, and rich profiles with *Net Worth* tracking.
+- 💾 **Safe & Isolated Storage** — Securely saved in local SQLite databases. The main bot and specialized instances (like Word Chain) use separate isolated database files for maximum stability.
+- ⚡ **Native Slash Commands** — Modern interaction support with integrated help tooltips and autocomplete.
 
 ### Invite the Bot
 
@@ -179,7 +179,22 @@ The bot is fully localized!
 | `$avatar [user]` | `$av` | Display a user's avatar. Also supports rendering their Server Profile Avatar and Banner! |
 | `$serverinfo` | — | View deep server stats (Boost tiers, Offline ratios, Text/Voice channel split) |
 | `$userinfo [user]` | `$user`, `$ui` | View account age, Discord badges, highest roles, and Discord permissions. |
-| `$help [command]`| — | Displays a highly interactive dropdown menu of all categories. Pass a command name to generate a highly detailed **Strategy & Rules Guide** explicitly for that component! |
+| `$help [command]`| — | Displays a highly interactive dropdown menu of all categories. Pass a command name to generate a highly detailed Strategy & Rules Guide! |
+
+---
+
+## 🔡 Standalone Word Chain Bot
+
+For servers wanting a dedicated 24/7 **Word Chain (Nối Chữ)** experience without the clutter of other commands, you can run the bot in Standalone Mode.
+
+- **Independent Execution**: Runs on a separate process via `src/wc.js`.
+- **Isolated Database**: Uses `wordchain.db` which only stores necessary user & guild data.
+- **Continuous Play**: Players join by typing words directly; no prefix needed once a game starts in a channel.
+
+**Run Standalone:**
+```bash
+npm run wc
+```
 
 ---
 
@@ -228,26 +243,15 @@ The bot is fully localized!
 ```text
 bot-discord/
 ├── src/
-│   ├── index.js              # Bot entry point, event handlers
-│   ├── database.js            # SQLite database manager
+│   ├── index.js              # Main Bot entry point
+│   ├── wc.js                 # Standalone Word Chain Bot entry point
+│   ├── database.js            # SQLite database manager (Shared)
 │   ├── config.js              # Global configuration, prices, cooldowns
 │   ├── locales/               # i18n Translation dictionaries
-│   │   ├── en.json            #   English dictionary + comprehensive game guides & lore
-│   │   └── vi.json            #   Vietnamese dictionary
-│   ├── commands/
-│   │   ├── giveaway.js        # Giveaway subsystem
-│   │   ├── help.js            # Unified dynamic help generator
-│   │   ├── fun/               # 17+ game implementations
-│   │   ├── economy/           # Economy features (Shop, Fish, Work, Profile, Inventory)
-│   │   ├── utility/           # Core platform status and inspection tools (Language, Ping, Info)
-│   │   └── owner/             # (Restricted) Administrative & debug tools for bot owners
-│   └── utils/
-│       ├── i18n.js            # Internationalization dynamic fallback engine
-│       ├── economy.js         # Parsing and Net-Worth recalculation algorithms
-│       ├── pokerLogic.js      # Texas Hold'em Engine
-│       └── shopItems.js       # Hardcoded shop catalog parameters
-├── .data/
-│   └── database.sqlite        # SQLite database file (auto-generated)
+│   ├── commands/              # 50+ Implementations
+│   └── utils/                 # Core logic engines (i18n, Economy, Poker)
+├── databases.db               # Main SQLite database (auto-generated)
+├── wordchain.db               # Isolated Word Chain database (auto-generated)
 ├── package.json
 └── .env                       # Secrets
 ```

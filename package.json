@@ -1,11 +1,12 @@
 {
   "name": "giveaway-discord-bot",
   "version": "1.0.0",
-  "description": "A comprehensive Discord Bot with Economy, Fun Games, Giveaway system, and multi-language support.",
+  "description": "A comprehensive Discord Bot with Economy, Fun Games, Giveaway system, Slash Commands, and Bilingual support.",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
+    "wc": "node src/wc.js",
     "deploy-commands": "node src/deploy-commands.js",
     "test": "jest"
   },

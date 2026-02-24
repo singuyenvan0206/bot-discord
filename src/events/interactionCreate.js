@@ -152,18 +152,6 @@ module.exports = {
 
         // 4. Select Menu Interactions
         else if (interaction.isStringSelectMenu()) {
-            if (interaction.customId === 'job_select') {
-                const jobId = interaction.values[0];
-                const job = config.ECONOMY.JOBS[jobId];
-                if (!job) return interaction.reply({ content: t('job.set_error_invalid', lang), ephemeral: true });
-
-                db.updateUser(interaction.user.id, { job: jobId });
-                return interaction.update({
-                    content: t('job.set_success', lang, { job: jobId.charAt(0).toUpperCase() + jobId.slice(1) }),
-                    components: []
-                });
-            }
-
             if (interaction.customId.startsWith('rank_job_select_')) {
                 const sortBy = interaction.customId.split('_').pop();
                 const jobId = interaction.values[0] === 'all' ? null : interaction.values[0];

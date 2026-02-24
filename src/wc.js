@@ -23,11 +23,6 @@ const client = new Client({
     partials: [Partials.Message, Partials.Channel, Partials.User],
 });
 
-// Mock collections to support shared utilities if needed
-const { Collection } = require('discord.js');
-client.commands = new Collection();
-client.cooldowns = new Collection();
-
 // Module-level Map: channelId → collector (game runs independently per channel)
 const activeGames = new Map();
 
