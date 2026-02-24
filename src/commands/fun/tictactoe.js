@@ -142,6 +142,13 @@ module.exports = {
             if (board[idx] !== null) return i.reply({ content: t('tictactoe.already_taken', lang), ephemeral: true });
 
             board[idx] = currentTurn;
+
+            // Grant Action XP for the move
+            if (i.user.id !== message.client.user.id) {
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                addXp(i.user.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+            }
+
             let winner = checkWinner();
 
             if (!winner && isBot && currentTurn === 'X') {
@@ -167,6 +174,11 @@ module.exports = {
                         const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, winnerId);
                         db.addBalance(winnerId, totalReward);
 
+                        // Grant Win XP
+                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                        addXp(winnerId, winXp);
+
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
@@ -176,6 +188,12 @@ module.exports = {
                     } else {
                         const baseReward = config.ECONOMY.TICTACTOE_REWARD;
                         addHouseProfit(i, baseReward);
+
+                        // Grant Win XP to Bot
+                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                        addXp(message.client.user.id, winXp);
+
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: baseReward.toLocaleString() });
                     }

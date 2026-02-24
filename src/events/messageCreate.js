@@ -23,7 +23,7 @@ module.exports = {
             }
 
             xpCooldowns.add(message.author.id);
-            setTimeout(() => xpCooldowns.delete(message.author.id), 60000); // 1 minute cooldown
+            setTimeout(() => xpCooldowns.delete(message.author.id), 30000); // 30 seconds cooldown
         }
 
         // ─── Command Handling ───

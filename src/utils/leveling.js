@@ -6,7 +6,9 @@ const db = require('../database');
 const XP_AMOUNTS = {
     MESSAGE: { min: 5, max: 15 },
     COMMAND_SUCCESS: { min: 20, max: 40 },
-    COMMAND_FAILURE: { min: 5, max: 10 }
+    COMMAND_FAILURE: { min: 5, max: 10 },
+    GAME_WIN: { min: 30, max: 60 },
+    GAME_ACTION: { min: 5, max: 10 }
 };
 
 /**

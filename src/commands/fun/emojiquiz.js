@@ -50,6 +50,11 @@ module.exports = {
 
             db.addBalance(winnerMsg.author.id, totalReward);
 
+            // Grant XP
+            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+            const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+            addXp(winnerMsg.author.id, winXp);
+
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward });
 

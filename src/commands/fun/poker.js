@@ -406,10 +406,11 @@ module.exports = {
                 player.allIn = true;
                 player.hasActed = true;
 
-                if (player.currentBet > currentBet) {
-                    currentBet = player.currentBet;
-                    players.forEach(op => { if (op.id !== player.id && !op.folded && !op.allIn) op.hasActed = false; });
-                }
+            }
+            // Grant Action XP
+            if (!player.isBot) {
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                addXp(player.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
             }
 
             turnIndex = (turnIndex + 1) % players.length;
@@ -510,6 +511,13 @@ module.exports = {
                 const { total: totalPrize, bonus: bonusAmount } = calculateReward(prizePerWinner, w.id, 'gamble');
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
+
+                // Grant Win XP
+                if (!w.isBot) {
+                    const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                    const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                    addXp(w.id, winXp);
+                }
             });
 
             players.forEach(p => {

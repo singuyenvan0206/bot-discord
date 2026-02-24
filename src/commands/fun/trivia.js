@@ -106,6 +106,10 @@ module.exports = {
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward });
                 if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
 
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                addXp(i.user.id, winXp);
+
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {
                 await i.update({ content: t('trivia.incorrect', lang, { answer: q.a }), components: [], embeds: [] });

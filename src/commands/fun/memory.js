@@ -87,6 +87,11 @@ module.exports = {
             } else {
                 // Second card picked
                 attempts++;
+
+                // Grant Action XP
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+
                 const firstCell = grid[firstPick];
 
                 if (firstCell.emoji === cell.emoji) {
@@ -113,6 +118,11 @@ module.exports = {
                         const { total: totalReward, bonus: bonusAmount } = calculateReward(reward, message.author.id);
 
                         db.addBalance(message.author.id, totalReward);
+
+                        // Grant Win XP
+                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                        addXp(message.author.id, winXp);
 
                         let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward });
                         if (bonusAmount > 0) winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });

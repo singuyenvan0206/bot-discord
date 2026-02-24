@@ -93,7 +93,16 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         }
     }
 
-    if (payout > 0) db.addBalance(i.user.id, payout);
+    if (payout > 0) {
+        db.addBalance(i.user.id, payout);
+
+        // Grant Win XP if payout is more than original bet (actual win)
+        if (bet && payout > bet) {
+            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+            const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+            addXp(i.user.id, winXp);
+        }
+    }
 
     const finalEmbed = buildEmbed(true);
     finalEmbed.setDescription(finalEmbed.data.description + `\n\n${result}`).setColor(color);
@@ -148,6 +157,11 @@ module.exports = {
 
                 db.addBalance(message.author.id, totalPayout);
 
+                // Grant Win XP
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                addXp(message.author.id, winXp);
+
                 let naturalWinDesc = buildEmbed(true).data.description + `\n\n${t('blackjack.natural_win', lang)}\n**${t('blackjack.base_win', lang)}:** ${config.EMOJIS.COIN} +${baseProfit}\n**${t('blackjack.total_payout', lang)}:** ${config.EMOJIS.COIN} **${totalPayout.toLocaleString()}** coins`;
                 if (bonusAmount > 0) {
                     naturalWinDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
@@ -197,15 +211,15 @@ module.exports = {
                     collector.stop('stand');
                     await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
                 } else {
-                    // Grant Small XP for hitting
+                    // Grant Action XP for hitting
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                    addXp(message.author.id, Math.floor(XP_AMOUNTS.MESSAGE.min / 2));
+                    addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
                     await i.update({ embeds: [buildEmbed()], components: [row] });
                 }
             } else if (i.customId.startsWith('bj_stand')) {
-                // Grant Small XP for standing
+                // Grant Action XP for standing
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(message.author.id, Math.floor(XP_AMOUNTS.MESSAGE.min / 2));
+                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
                 collector.stop('stand');
                 await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
             }

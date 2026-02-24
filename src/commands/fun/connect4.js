@@ -166,6 +166,10 @@ module.exports = {
                 const success = dropToken(col, turn);
                 if (!success) return i.reply({ content: t('connect4.column_full', lang), ephemeral: true });
 
+                // Grant Action XP for the move
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                addXp(i.user.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+
                 const winner = checkWin();
 
                 if (winner) {
@@ -183,6 +187,11 @@ module.exports = {
                     } else {
                         const winId = winner === P1 ? p1Id : p2Id;
                         const winName = winner === P1 ? message.author.username : opponent.username;
+
+                        // Grant Win XP
+                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                        addXp(winId, winXp);
 
                         if (bet > 0) {
                             const prize = bet * 2;

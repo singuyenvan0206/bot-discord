@@ -116,8 +116,12 @@ module.exports = {
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
                     const { totalReward, bonusAmount } = calcReward(message.author.id);
-
                     db.addBalance(message.author.id, totalReward);
+
+                    // Grant Win XP
+                    const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                    const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                    addXp(message.author.id, winXp);
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins!`;
                     if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
@@ -126,6 +130,10 @@ module.exports = {
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);
                 collector.stop();
             } else {
+                // Grant Action XP for guessing correctly/wrongly but game continues
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+
                 embed.setDescription(`${t('hangman.hint', lang)}: ${hint}\n\n${t('hangman.word', lang)}: ${currentDisplay}\n${t('hangman.lives', lang)}: ${'❤️'.repeat(lives)}\n\n${t('hangman.guessed', lang)}: ${Array.from(guessed).join(', ') || t('userinfo.none', lang)}`);
             }
 

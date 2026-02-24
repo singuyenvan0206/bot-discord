@@ -60,6 +60,11 @@ module.exports = {
                 const { total: reward, bonus: bonusAmount } = calculateReward(baseReward, m.author.id);
                 db.addBalance(m.author.id, reward);
 
+                // Grant Win XP
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                addXp(m.author.id, winXp);
+
                 let resultDesc = t('reaction.result', lang, { time: diff });
                 resultDesc += t('reaction.win', lang, { emoji: config.EMOJIS.COIN, amount: reward.toLocaleString() });
 

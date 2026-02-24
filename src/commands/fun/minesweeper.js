@@ -222,6 +222,10 @@ module.exports = {
 
                 const result = reveal(idx);
 
+                // Grant Action XP
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+
                 if (result === 'BOOM') {
                     collector.stop('boom');
 
@@ -251,6 +255,12 @@ module.exports = {
                     const hiddenCount = size - gameState.revealed.size;
                     if (hiddenCount === mineCount) {
                         collector.stop('win');
+
+                        // Grant Win XP
+                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                        addXp(message.author.id, winXp);
+
                         let prize = 0;
                         if (bet > 0) {
                             const baseWin = Math.floor(bet * 1.5);

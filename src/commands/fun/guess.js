@@ -36,18 +36,14 @@ module.exports = {
             const attemptsLeft = maxAttempts - attempts;
 
             if (guess === number) {
+                const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
                 const { total: reward, bonus: bonusAmount } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.author.id);
                 db.addBalance(m.author.id, reward);
 
-                let msg = t('guess.win', lang, {
-                    number,
-                    emoji: config.EMOJIS.COIN,
-                    amount: reward.toLocaleString()
-                });
-
-                if (bonusAmount > 0) {
-                    msg += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
-                }
+                // Grant XP
+                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                addXp(m.author.id, winXp);
 
                 await m.reply(msg);
                 collector.stop('win');
