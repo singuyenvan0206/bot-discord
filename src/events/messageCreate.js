@@ -41,15 +41,11 @@ module.exports = {
             const { leveledUp, reachedLevel20, bonus, level } = result;
             db.addBalance(message.author.id, coinAmount);
 
-            /* Disable player-facing level-up notifications
             if (leveledUp) {
                 const lang = getLanguage(message.author.id, message.guild.id);
-                const { sendLevelUpMessage } = require('../utils/leveling');
-
-                await sendLevelUpMessage(message, level, bonus, lang);
+                // await sendLevelUpMessage(message, level, bonus, lang); // Disabled per request
                 await checkAndSendMilestone(message, reachedLevel20, lang);
             }
-            */
 
             xpCooldowns.add(message.author.id);
             setTimeout(() => xpCooldowns.delete(message.author.id), 30000); // 30 seconds cooldown

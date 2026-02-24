@@ -30,22 +30,40 @@ function handString(hand) { return hand.map(c => `\`${c.display}\``).join(' '); 
 
 async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang) {
     const playerVal = handValue(playerHand);
+    const playerIsNatural = playerHand.length === 2 && playerVal === 21;
     const playerIsNguLinh = playerHand.length === 5 && playerVal <= 21;
 
-    // Dealer draws only if player didn't bust and hasn't already won with a 5-card charlie (unless dealer could also get one)
-    // Actually, in many variants, if player gets 5 cards, dealer still tries to get 5 cards to compare.
-    while (handValue(dealerHand) < 17) {
-        if (dealerHand.length >= 5) break;
-        dealerHand.push(drawCard());
+    // Dealer draws only if player didn't bust and doesn't have a natural
+    if (playerVal <= 21 && !playerIsNatural) {
+        while (handValue(dealerHand) < 17) {
+            if (dealerHand.length >= 5) break;
+            dealerHand.push(drawCard());
+        }
     }
 
     const dealerVal = handValue(dealerHand);
+    const dealerIsNatural = dealerHand.length === 2 && dealerVal === 21;
     const dealerIsNguLinh = dealerHand.length === 5 && dealerVal <= 21;
 
-    let result, color, payout = 0;
+    let result, color, payout = 0, title = t('blackjack.title', lang);
     const amountStr = bet ? t('blackjack.win_amount', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN }) : '';
 
-    if (playerIsNguLinh && dealerIsNguLinh) {
+    if (playerIsNatural && dealerIsNatural) {
+        result = t('blackjack.tie', lang, { refund: bet ? t('blackjack.refund', lang) : '' });
+        color = config.COLORS.GAMBLE_PUSH;
+        payout = bet ? bet : 0;
+        title = t('blackjack.natural_title', lang);
+    } else if (playerIsNatural) {
+        result = t('blackjack.natural_win', lang) + amountStr;
+        color = config.COLORS.GAMBLE_WIN;
+        payout = bet ? Math.ceil(bet * 2.5) : 0;
+        title = t('blackjack.natural_title', lang);
+    } else if (dealerIsNatural) {
+        result = t('blackjack.lose', lang, { amount: amountStr });
+        color = config.COLORS.GAMBLE_LOSS;
+        if (bet) addHouseProfit(i, bet);
+        title = t('blackjack.natural_title', lang);
+    } else if (playerIsNguLinh && dealerIsNguLinh) {
         if (playerVal < dealerVal) {
             result = t('blackjack.ngu_linh_win', lang, { amount: amountStr });
             color = config.COLORS.GAMBLE_WIN;
@@ -59,14 +77,17 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             color = config.COLORS.GAMBLE_PUSH;
             payout = bet ? bet : 0;
         }
+        title = t('blackjack.ngu_linh_title', lang);
     } else if (playerIsNguLinh) {
         result = t('blackjack.ngu_linh_win', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? Math.ceil(bet * 2.5) : 0;
+        title = t('blackjack.ngu_linh_title', lang);
     } else if (dealerIsNguLinh) {
         result = t('blackjack.ngu_linh_lose', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_LOSS;
         if (bet) addHouseProfit(i, bet);
+        title = t('blackjack.ngu_linh_title', lang);
     } else if (dealerVal > 21) {
         result = t('blackjack.win', lang, { amount: amountStr });
         color = config.COLORS.GAMBLE_WIN;
@@ -105,7 +126,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     }
 
     const finalEmbed = buildEmbed(true);
-    finalEmbed.setDescription(finalEmbed.data.description + `\n\n${result}`).setColor(color);
+    finalEmbed.setTitle(title).setDescription(finalEmbed.data.description + `\n\n${result}`).setColor(color);
     await i.update({ embeds: [finalEmbed], components: [] });
     startCooldown(i.client, 'blackjack', i.user.id);
 }
@@ -149,34 +170,18 @@ module.exports = {
                 .setColor(playerVal > 21 ? config.COLORS.GAMBLE_LOSS : config.COLORS.GAMBLE_WIN).setTimestamp();
         }
 
-        if (handValue(playerHand) === 21) {
-            if (bet) {
-                const baseProfit = Math.ceil(bet * 1.5);
-                const winBase = bet + baseProfit;
-                const { total: totalPayout, bonus: bonusAmount } = calculateReward(winBase, message.author.id, 'gamble');
+        // --- Start of Game Checks (Natural) ---
+        const playerVal = handValue(playerHand);
+        const dealerVal = handValue(dealerHand);
+        const playerNatural = playerHand.length === 2 && playerVal === 21;
+        const dealerNatural = dealerHand.length === 2 && dealerVal === 21;
 
-                db.addBalance(message.author.id, totalPayout);
-
-                // Grant Win XP
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                addXp(message.author.id, winXp);
-
-                let naturalWinDesc = buildEmbed(true).data.description + `\n\n${t('blackjack.natural_win', lang)}\n**${t('blackjack.base_win', lang)}:** ${config.EMOJIS.COIN} +${baseProfit}\n**${t('blackjack.total_payout', lang)}:** ${config.EMOJIS.COIN} **${totalPayout.toLocaleString()}** coins`;
-                if (bonusAmount > 0) {
-                    naturalWinDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
-                }
-
-                const embed = buildEmbed(true)
-                    .setTitle(t('blackjack.natural_title', lang))
-                    .setDescription(naturalWinDesc);
-
-                startCooldown(message.client, 'blackjack', message.author.id);
-                return message.reply({ embeds: [embed] });
-            } else {
-                const embed = buildEmbed(true).setTitle(t('blackjack.natural_title', lang)).setDescription(buildEmbed(true).data.description + `\n\n${t('blackjack.natural_win', lang)}`);
-                return message.reply({ embeds: [embed] });
-            }
+        if (playerNatural || dealerNatural) {
+            return finishBlackjack({
+                user: message.author,
+                client: message.client,
+                update: (data) => message.reply(data)
+            }, playerHand, dealerHand, uid, buildEmbed, bet, lang);
         }
 
         const row = new ActionRowBuilder().addComponents(
