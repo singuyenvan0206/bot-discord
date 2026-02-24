@@ -29,6 +29,9 @@ module.exports = {
             }
         }
 
+        // ─── Channel Blacklist Check ───
+        if (config.BLACKLISTED_CHANNELS.includes(message.channel.id)) return;
+
         if (!shouldSkipChatXp && !xpCooldowns.has(message.author.id)) {
             const { MESSAGE } = XP_AMOUNTS;
             const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
@@ -38,6 +41,7 @@ module.exports = {
             const { leveledUp, reachedLevel20, bonus, level } = result;
             db.addBalance(message.author.id, coinAmount);
 
+            /* Disable player-facing level-up notifications
             if (leveledUp) {
                 const lang = getLanguage(message.author.id, message.guild.id);
                 const { sendLevelUpMessage } = require('../utils/leveling');
@@ -45,6 +49,7 @@ module.exports = {
                 await sendLevelUpMessage(message, level, bonus, lang);
                 await checkAndSendMilestone(message, reachedLevel20, lang);
             }
+            */
 
             xpCooldowns.add(message.author.id);
             setTimeout(() => xpCooldowns.delete(message.author.id), 30000); // 30 seconds cooldown

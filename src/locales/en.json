@@ -78,7 +78,7 @@
         "label_hit": "Hit",
         "label_stand": "Stand",
         "win": "🎉 **Dealer BUSTED! You won{{amount}}!**",
-        "win_amount": " {{amount}} coins",
+        "win_amount": " **{{amount}}** {{emoji}}",
         "win_simple": "🎉 **You won{{amount}}!**",
         "lose": "😔 **You lost{{amount}}!**",
         "tie": "🤝 **Push!**{{refund}}",
@@ -93,7 +93,9 @@
         "timeout_title": "🃏 Blackjack — {{emoji}} Timeout",
         "ngu_linh_win": "🏆 **Five Card Charlie!** You won with 5 cards!{{amount}}",
         "ngu_linh_lose": "😔 **Dealer has Five Card Charlie!** You lost{{amount}}!",
-        "ngu_linh_tie": "🤝 **Both have Five Card Charlie!**{{refund}}"
+        "ngu_linh_tie": "🤝 **Both have Five Card Charlie!**{{refund}}",
+        "ngu_linh_title": "FIVE CARD CHARLIE",
+        "ngu_linh_msg": "🏆 **Five Card Charlie!**"
     },
     "tictactoe": {
         "title": "❌⭕  Tic-Tac-Toe",

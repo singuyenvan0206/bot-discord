@@ -34,7 +34,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
 
     // Dealer draws only if player didn't bust and hasn't already won with a 5-card charlie (unless dealer could also get one)
     // Actually, in many variants, if player gets 5 cards, dealer still tries to get 5 cards to compare.
-    while (handValue(dealerHand) < 17 || (dealerHand.length < 5 && handValue(dealerHand) <= 21)) {
+    while (handValue(dealerHand) < 17) {
         if (dealerHand.length >= 5) break;
         dealerHand.push(drawCard());
     }
@@ -43,7 +43,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     const dealerIsNguLinh = dealerHand.length === 5 && dealerVal <= 21;
 
     let result, color, payout = 0;
-    const amountStr = bet ? t('blackjack.win_amount', lang, { amount: bet.toLocaleString() }) : '';
+    const amountStr = bet ? t('blackjack.win_amount', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN }) : '';
 
     if (playerIsNguLinh && dealerIsNguLinh) {
         if (playerVal < dealerVal) {

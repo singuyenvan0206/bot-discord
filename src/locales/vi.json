@@ -144,7 +144,7 @@
         "label_hit": "Rút bài",
         "label_stand": "Dừng bài",
         "win": "🎉 **Nhà cái bị quắc! Bạn thắng{{amount}}!**",
-        "win_amount": " {{amount}} coins",
+        "win_amount": " **{{amount}}** {{emoji}}",
         "win_simple": "🎉 **Bạn thắng{{amount}}!**",
         "lose": "😔 **Bạn đã thua{{amount}}!**",
         "tie": "🤝 **Hòa (Push)!**{{refund}}",
@@ -159,7 +159,9 @@
         "timeout_title": "🃏 Xì Dách — {{emoji}} Hết Thời Gian",
         "ngu_linh_win": "🏆 **Ngũ Linh!** Bạn đã thắng tuyệt đối với 5 lá bài!{{amount}}",
         "ngu_linh_lose": "😔 **Nhà cái có Ngũ Linh!** Bạn đã thua{{amount}}!",
-        "ngu_linh_tie": "🤝 **Cả hai đều có Ngũ Linh!**{{refund}}"
+        "ngu_linh_tie": "🤝 **Cả hai đều có Ngũ Linh!**{{refund}}",
+        "ngu_linh_title": "NGŨ LINH",
+        "ngu_linh_msg": "🏆 **Ngũ Linh!** (5 lá bài)"
     },
     "tictactoe": {
         "title": "❌⭕  Cờ Ca-rô (Tic-Tac-Toe)",

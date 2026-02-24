@@ -97,5 +97,6 @@ module.exports = {
         LEVELING: {
             XP_MULTIPLIER: 3.0 // Triple the XP gain for faster progression
         }
-    }
+    },
+    BLACKLISTED_CHANNELS: [] // IDs of channels where the bot should not send messages
 };

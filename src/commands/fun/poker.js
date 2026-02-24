@@ -447,7 +447,7 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setTitle(`${t('poker.title', lang)} - ${phase}`)
-                .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.pot', lang, { amount: pot })}\n**${t('poker.current_bet', lang, { amount: currentBet })}\n\n${statusTxt}`)
+                .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.pot', lang, { amount: pot, emoji: config.EMOJIS.COIN })}\n**${t('poker.current_bet', lang, { amount: currentBet, emoji: config.EMOJIS.COIN })}\n\n${statusTxt}`)
                 .setColor(config.COLORS.INFO);
 
             const components = (activeP && !activeP.isBot) ? getActionRow(activeP) : [];
@@ -529,7 +529,7 @@ module.exports = {
             });
 
             const winnerNames = winners.map(w => w.name).join(', ');
-            let footerText = t('poker.pot', lang, { amount: pot.toLocaleString() });
+            let footerText = t('poker.pot', lang, { amount: pot.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (totalBonusGiven > 0) {
                 footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString() });
             }
