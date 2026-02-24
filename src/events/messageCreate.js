@@ -97,7 +97,11 @@ module.exports = {
             // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
             if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                addXp(message.author.id, xpAmount);
+                const result = addXp(message.author.id, xpAmount);
+                if (result.leveledUp) {
+                    const lang = getLanguage(message.author.id, message.guild?.id);
+                    await checkAndSendMilestone(message, result.reachedLevel20, lang);
+                }
             }
         } catch (error) {
             console.error(`[Command] Error executing !${commandName}:`, error);
@@ -106,7 +110,11 @@ module.exports = {
             // Grant Command Failure XP (Skip for admin/owner/utility commands)
             if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                addXp(message.author.id, xpAmount);
+                const result = addXp(message.author.id, xpAmount);
+                if (result.leveledUp) {
+                    const lang = getLanguage(message.author.id, message.guild?.id);
+                    await checkAndSendMilestone(message, result.reachedLevel20, lang);
+                }
             }
         }
     },

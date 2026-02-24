@@ -41,7 +41,8 @@ function addXp(userId, amount) {
     const newLevel = calculateLevel(newXp);
 
     const leveledUp = newLevel > level;
-    const reachedLevel20 = leveledUp && newLevel >= 20 && level < 20;
+    // Milestone: Reaching level 20 (or higher if they somehow missed it/have no job)
+    const reachedLevel20 = newLevel >= 20 && !user.job;
 
     let bonus = 0;
     if (leveledUp) {

@@ -130,9 +130,12 @@ module.exports = {
 
                 // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
+                    const { addXp, XP_AMOUNTS, checkAndSendMilestone } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                    addXp(interaction.user.id, xpAmount);
+                    const result = addXp(interaction.user.id, xpAmount);
+                    if (result.leveledUp) {
+                        await checkAndSendMilestone(messageAdapter, result.reachedLevel20, lang);
+                    }
                 }
             } catch (error) {
                 console.error(`[Slash] Error executing /${commandName}:`, error);
@@ -142,9 +145,12 @@ module.exports = {
 
                 // Grant Command Failure XP (Skip for admin/owner/utility commands)
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
+                    const { addXp, XP_AMOUNTS, checkAndSendMilestone } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                    addXp(interaction.user.id, xpAmount);
+                    const result = addXp(interaction.user.id, xpAmount);
+                    if (result.leveledUp) {
+                        await checkAndSendMilestone(messageAdapter, result.reachedLevel20, lang);
+                    }
                 }
             }
         }
@@ -205,8 +211,11 @@ async function handleButtonEntry(interaction) {
     db.addParticipant(giveaway.id, interaction.user.id);
 
     // Grant Entry XP
-    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
-    addXp(interaction.user.id, XP_AMOUNTS.MESSAGE.min); // Minimal XP for joining giveaway
+    const { addXp, XP_AMOUNTS, checkAndSendMilestone } = require('../utils/leveling');
+    const result = addXp(interaction.user.id, XP_AMOUNTS.MESSAGE.min); // Minimal XP for joining giveaway
+    if (result.leveledUp) {
+        await checkAndSendMilestone(interaction, result.reachedLevel20, lang);
+    }
 
     const newCount = db.getParticipantCount(giveaway.id);
     const embed = createGiveawayEmbed(giveaway, newCount, lang);
