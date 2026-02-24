@@ -1,5 +1,6 @@
 const { Events, Collection } = require('discord.js');
 const config = require('../config');
+const db = require('../database');
 const { getLanguage, t } = require('../utils/i18n');
 const { addXp, checkAndSendMilestone, XP_AMOUNTS } = require('../utils/leveling');
 const { formatDuration } = require('../utils/time');
@@ -33,12 +34,12 @@ module.exports = {
             const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
             const coinAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min; // 5-15 coins
 
-            const { leveledUp, reachedLevel20 } = addXp(message.author.id, xpAmount);
+            const result = addXp(message.author.id, xpAmount);
+            const { leveledUp, reachedLevel20, bonus, level } = result;
             db.addBalance(message.author.id, coinAmount);
 
             if (leveledUp) {
                 const lang = getLanguage(message.author.id, message.guild.id);
-                const { bonus, level } = result;
                 const { sendLevelUpMessage } = require('../utils/leveling');
 
                 await sendLevelUpMessage(message, level, bonus, lang);

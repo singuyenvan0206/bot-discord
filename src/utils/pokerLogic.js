@@ -55,11 +55,12 @@ function evaluateHand(holeCards, communityCards, lang = 'vi') {
     const maxCount = Math.max(...countValues);
 
     // Check for Straight Flush
-    if (isFlush && isStraight) {
+    if (isFlush) {
         const flushSuit = getFlushSuit(allCards);
-        if (flushSuit) {
-            const flushCards = allCards.filter(c => c.suit === flushSuit);
-            if (getStraight(flushCards)) return { score: 900, name: t('poker.hand_names.straight_flush', lang), cards: flushCards.slice(0, 5) };
+        const flushCards = allCards.filter(c => c.suit === flushSuit);
+        const straightFlush = getStraight(flushCards);
+        if (straightFlush) {
+            return { score: 900 + straightFlush[0].value, name: t('poker.hand_names.straight_flush', lang), cards: straightFlush.slice(0, 5) };
         }
     }
 
@@ -70,14 +71,18 @@ function evaluateHand(holeCards, communityCards, lang = 'vi') {
     }
 
     // Full House (3 + 2)
-    if (maxCount === 3 && countValues.filter(c => c >= 2).length >= 2) {
-        const tripValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 3).map(Number));
-        return { score: 700 + tripValue, name: t('poker.hand_names.full_house', lang) };
+    const tripValues = Object.keys(rankCounts).filter(k => rankCounts[k] === 3).map(Number).sort((a, b) => b - a);
+    const pairValues = Object.keys(rankCounts).filter(k => rankCounts[k] >= 2).map(Number).sort((a, b) => b - a);
+
+    if (tripValues.length >= 1 && pairValues.length >= 2) {
+        const trips = tripValues[0];
+        const pair = pairValues.find(v => v !== trips);
+        return { score: 700 + trips + (pair / 100), name: t('poker.hand_names.full_house', lang) };
     }
 
     // Flush
     if (isFlush) {
-        return { score: 600 + isFlush[0].value, name: t('poker.hand_names.flush', lang) };
+        return { score: 600 + isFlush[0].value + (isFlush[1].value / 100), name: t('poker.hand_names.flush', lang) };
     }
 
     // Straight
@@ -94,13 +99,18 @@ function evaluateHand(holeCards, communityCards, lang = 'vi') {
     // Two Pair
     if (countValues.filter(c => c === 2).length >= 2) {
         const pairs = Object.keys(rankCounts).filter(k => rankCounts[k] === 2).map(Number).sort((a, b) => b - a);
-        return { score: 300 + pairs[0], name: t('poker.hand_names.two_pair', lang) };
+        const remaining = allCards.filter(c => c.value !== pairs[0] && c.value !== pairs[1]).sort((a, b) => b.value - a.value);
+        const kicker = remaining.length > 0 ? remaining[0].value : 0;
+        return { score: 300 + pairs[0] + (pairs[1] / 100) + (kicker / 10000), name: t('poker.hand_names.two_pair', lang) };
     }
 
     // Pair
     if (maxCount === 2) {
         const pairValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 2).map(Number));
-        return { score: 200 + pairValue, name: t('poker.hand_names.pair', lang) };
+        const remaining = allCards.filter(c => c.value !== pairValue).sort((a, b) => b.value - a.value);
+        const kicker1 = remaining.length > 0 ? remaining[0].value : 0;
+        const kicker2 = remaining.length > 1 ? remaining[1].value : 0;
+        return { score: 200 + pairValue + (kicker1 / 100) + (kicker2 / 10000), name: t('poker.hand_names.pair', lang) };
     }
 
     // High Card
@@ -124,11 +134,20 @@ function getStraight(cards) {
     for (let i = 0; i <= uniqueValues.length - 5; i++) {
         const subset = uniqueValues.slice(i, i + 5);
         if (subset[0] - subset[4] === 4) {
-            return cards.filter(c => c.value === subset[0]);
+            const straightCards = [];
+            for (const val of subset) {
+                straightCards.push(cards.find(c => c.value === val));
+            }
+            return straightCards;
         }
     }
     if (uniqueValues.includes(14) && uniqueValues.includes(2) && uniqueValues.includes(3) && uniqueValues.includes(4) && uniqueValues.includes(5)) {
-        return cards.filter(c => c.value === 5); // 5-high straight
+        const values = [5, 4, 3, 2, 14];
+        const straightCards = [];
+        for (const val of values) {
+            straightCards.push(cards.find(c => c.value === val));
+        }
+        return straightCards; // A-high (actually 5-high) straight
     }
     return null;
 }

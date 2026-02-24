@@ -51,6 +51,7 @@ module.exports = {
     aliases: ['f', 'fishing', 'cast'],
     description: 'Đi câu cá! Đòi hỏi phải có cần câu và mồi.',
     cooldown: config.ECONOMY.FISH_COOLDOWN,
+    manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
@@ -179,14 +180,12 @@ module.exports = {
 
             embed.setFooter({ text: t('fish.footer_success', lang, { bait: baitName }) });
 
-
-
+            startCooldown(message.client, 'fish', message.author.id);
             return message.reply({ embeds: [embed] });
         } else {
             embed.setFooter({ text: t('fish.footer_fail', lang) });
+            startCooldown(message.client, 'fish', message.author.id);
             return message.reply({ embeds: [embed] });
         }
-
-        startCooldown(message.client, 'fish', message.author.id);
     }
 };
