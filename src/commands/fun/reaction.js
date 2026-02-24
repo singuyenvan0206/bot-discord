@@ -57,7 +57,7 @@ module.exports = {
                 if (diff < 300) { baseReward = baseReward * 3 + 5; }
                 else if (diff < 500) { baseReward = baseReward * 2; }
 
-                const { total: reward, bonus: bonusAmount } = calculateReward(baseReward, m.author.id);
+                const { total: reward, bonus: bonusAmount, cap } = calculateReward(baseReward, m.author.id);
                 db.addBalance(m.author.id, reward);
 
                 // Grant Win XP
@@ -69,7 +69,7 @@ module.exports = {
                 resultDesc += t('reaction.win', lang, { emoji: config.EMOJIS.COIN, amount: reward.toLocaleString() });
 
                 if (bonusAmount > 0) {
-                    resultDesc += `\n-# *(${lang === 'vi' ? 'Gồm 🎁 Thưởng (Capped 250%)' : 'Includes 🎁 Bonus (Capped 250%)'}: +${bonusAmount.toLocaleString()} coins)*`;
+                    resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                 }
 
                 await m.reply({

@@ -14,7 +14,7 @@
         "balance": "Balance:",
         "timeout": "Timeout!",
         "none": "None",
-        "bonus_capped": "\n-# *(Includes 🎁 Bonus (Capped 250%): +{{amount}} coins)*",
+        "bonus_capped": "\n-# *(Includes 🎁 Bonus (Capped {{cap}}%): +{{amount}} coins)*",
         "hacked_msg": " (Hacked!)",
         "escaped_msg": "Escaped! (Fine: {{amount}})",
         "armed_msg": " (Armed!)",
@@ -30,7 +30,7 @@
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
-        "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped 250%))*"
+        "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%))*"
     },
     "connect4": {
         "title": "🔴 Connect 4 🟡",
@@ -106,7 +106,7 @@
         "draw": "🤝 **It's a draw!**",
         "winner_msg": "🏆 **{{winner}} has won!** ({{symbol}})",
         "reward_msg": "\n{{emoji}} **+{{amount}} coins!**",
-        "reward_bonus_note": "\n-# *(Includes {{emoji}} +{{bonus}} item bonus (Capped 250%): {{percent}}%)*",
+        "reward_bonus_note": "\n-# *(Includes {{emoji}} +{{bonus}} item bonus (Capped {{cap}}%): {{percent}}%)*",
         "ending_title": "❌⭕  Tic-Tac-Toe — Game Over",
         "timeout_title": "❌⭕  Tic-Tac-Toe — {{emoji}} Timeout"
     },
@@ -118,20 +118,20 @@
         "lose": "🎰 No matches. Better luck next time!",
         "won_coins": "\n{{emoji}} **Won {{amount}} coins!**",
         "lost_coins": "\n💸 **Lost {{amount}} coins.**",
-        "bonus_item": " *(Includes +{{amount}} bonus (Capped 250%): {{percent}}%)*"
+        "bonus_item": " *(Includes +{{amount}} bonus (Capped {{cap}}%): {{percent}}%)*"
     },
     "daily": {
         "cooldown": "❌ You can claim your daily reward in **{{hours}}h {{minutes}}m**.",
         "success": "✅ You received your daily reward of **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped 250%): {{percent}}%)*",
-        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*"
+        "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%): {{percent}}%)*",
+        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped {{cap}}%): {{percent}}%)*"
     },
     "work": {
         "cooldown": "❌ You need to rest! Come back to work in **{{minutes}} minutes**.",
         "success": "💼 You worked as a **{{job}}** and earned **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped 250%): {{percent}}%)*",
-        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*",
-        "job_bonus": "\n-# *(Includes 💼 +{{amount}} job bonus (Capped 250%) ({{job}}): {{percent}}%)*",
+        "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%): {{percent}}%)*",
+        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped {{cap}}%): {{percent}}%)*",
+        "job_bonus": "\n-# *(Includes 💼 +{{amount}} job bonus (Capped {{cap}}%) ({{job}}): {{percent}}%)*",
         "job_categories": {
             "tier0": [
                 "Delivery Driver",

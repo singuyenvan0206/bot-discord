@@ -23,7 +23,7 @@ module.exports = {
             return message.reply(t('daily.cooldown', lang, { hours, minutes }));
         }
 
-        let { total, bonus: bonusAmount } = calculateReward(config.ECONOMY.DAILY_REWARD, message.author.id);
+        let { total, bonus: bonusAmount, cap } = calculateReward(config.ECONOMY.DAILY_REWARD, message.author.id);
 
         // Chef Interaction: Michelin Star (5% chance — daily ×3)
         let michelinMsg = '';
@@ -39,7 +39,7 @@ module.exports = {
 
         let msg = t('daily.success', lang, { amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
         }
         if (michelinMsg) msg += michelinMsg;
 

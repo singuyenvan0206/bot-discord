@@ -507,10 +507,13 @@ module.exports = {
             const prizePerWinner = Math.floor(pot / winners.length);
             let totalBonusGiven = 0;
 
+            let totalCap = 250; // Default fallback for footer if multiple winners
+
             winners.forEach(w => {
-                const { total: totalPrize, bonus: bonusAmount } = calculateReward(prizePerWinner, w.id, 'gamble');
+                const { total: totalPrize, bonus: bonusAmount, cap } = calculateReward(prizePerWinner, w.id, 'gamble');
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
+                totalCap = cap; // Use the last winner's cap (usually same for all)
 
                 // Grant Win XP
                 if (!w.isBot) {
@@ -531,7 +534,7 @@ module.exports = {
             const winnerNames = winners.map(w => w.name).join(', ');
             let footerText = t('poker.pot', lang, { amount: pot.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (totalBonusGiven > 0) {
-                footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString() });
+                footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString(), cap: totalCap });
             }
 
             const embed = new EmbedBuilder()

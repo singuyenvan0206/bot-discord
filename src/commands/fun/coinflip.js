@@ -42,13 +42,13 @@ module.exports = {
         let flavorText = '';
 
         if (won) {
-            const { total: totalReward, bonus: bonusAmount } = calculateReward(bet * 2, user.id, 'gamble');
+            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(bet * 2, user.id, 'gamble');
             payout = totalReward;
 
             if (payout > 0) db.addBalance(user.id, payout);
             flavorText = t('coinflip.win', lang, { amount: payout.toLocaleString() });
             if (bonusAmount > 0) {
-                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
             }
         } else {
             flavorText = t('coinflip.lose', lang, { amount: bet });

@@ -115,7 +115,7 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
-                        const { total: totalReward, bonus: bonusAmount } = calculateReward(reward, message.author.id);
+                        const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(reward, message.author.id);
 
                         db.addBalance(message.author.id, totalReward);
 
@@ -125,7 +125,7 @@ module.exports = {
                         addXp(message.author.id, winXp);
 
                         let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward });
-                        if (bonusAmount > 0) winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                        if (bonusAmount > 0) winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
 
                         embed.setTitle(t('memory.win_title', lang))
                             .setDescription(winDesc)

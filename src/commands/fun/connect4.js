@@ -201,12 +201,12 @@ module.exports = {
                         } else {
                             // No bet: give base reward with unified calculation
                             const baseReward = config.ECONOMY.TICTACTOE_REWARD || 100;
-                            const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, winId);
+                            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winId);
                             db.addBalance(winId, totalReward);
                             resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                                 t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
                             if (bonusAmount > 0) {
-                                resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                                resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                             }
                         }
                     }

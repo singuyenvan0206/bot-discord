@@ -145,7 +145,7 @@ function calculateReward(base, userId, type = 'income') {
 
     const bonus = Math.floor(base * bonusPart);
     const total = base + bonus;
-    return { total, bonus, percent: Math.round(bonusPart * 100) };
+    return { total, bonus, percent: Math.round(bonusPart * 100), cap: Math.round(maxCap * 100) };
 }
 
 module.exports = { getUserMultiplier, getTotalMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem, calculateReward };

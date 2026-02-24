@@ -264,12 +264,12 @@ module.exports = {
                         let prize = 0;
                         if (bet > 0) {
                             const baseWin = Math.floor(bet * 1.5);
-                            const { total: totalReward, bonus: bonusAmount } = calculateReward(baseWin, user.id, 'gamble');
+                            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseWin, user.id, 'gamble');
                             db.addBalance(user.id, totalReward);
 
                             let winDesc = t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${totalReward.toLocaleString()} coins`;
                             if (bonusAmount > 0) {
-                                winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                                winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                             }
 
                             const winEmbed = new EmbedBuilder()

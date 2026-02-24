@@ -10,7 +10,6 @@ module.exports = [
     { id: 105, name: 'Abstract Painting', price: 60000, multiplier: 0.40, duration: 2592000, type: 'daily' }, // CMD 5000
     { id: 106, name: 'Cookbook', price: 80000, multiplier: 0.60, duration: 2592000, type: 'daily', idealJob: 'chef' }, // CMD 4444
     { id: 107, name: 'Moai Statue', price: 120000, multiplier: 0.80, duration: 2592000, type: 'daily' }, // CMD 5000
-    { id: 108, name: 'VIP Golden Ticket', price: 250000, multiplier: 1.50, duration: 2592000, type: 'daily' }, // CMD 5555
     { id: 109, name: 'Mansion', price: 750000, multiplier: 3.00, duration: 2592000, type: 'daily', idealJob: 'streamer' }, // CMD 8333
     { id: 110, name: 'Space Station', price: 2500000, multiplier: 5.00, duration: 2592000, type: 'daily', idealJob: 'hacker' }, // CMD 16666
 
@@ -55,18 +54,25 @@ module.exports = [
     // ==========================================
     // GROUP 400 — tool (fishing rods & baits, no duration)
     // ==========================================
-    { id: 401, name: 'Worm Bait', price: 100, multiplier: 0.10, type: 'bait' },
-    { id: 402, name: 'Cricket Bait', price: 500, multiplier: 0.30, type: 'bait' },
-    { id: 403, name: 'Squid Bait', price: 2500, multiplier: 0.80, type: 'bait' },
-    { id: 404, name: 'Bamboo Rod', price: 10000, multiplier: 1.0, type: 'tool', idealJob: 'farmer' },
-    { id: 405, name: 'Fiberglass Rod', price: 50000, multiplier: 1.5, type: 'tool', idealJob: 'farmer' },
-    { id: 406, name: 'Carbon Rod', price: 250000, multiplier: 2.5, type: 'tool', idealJob: 'farmer' },
-    { id: 407, name: 'Titanium Rod', price: 1000000, multiplier: 4.0, type: 'tool', idealJob: 'farmer' },
+    { id: 401, name: 'Worm Bait', price: 100, multiplier: 0.15, type: 'bait' },
+    { id: 402, name: 'Cricket Bait', price: 1500, multiplier: 0.75, type: 'bait' },
+    { id: 403, name: 'Squid Bait', price: 5000, multiplier: 1.50, type: 'bait' },
+    { id: 404, name: 'Bamboo Rod', price: 5000, multiplier: 1.0, type: 'tool', idealJob: 'farmer' },
+    { id: 405, name: 'Fiberglass Rod', price: 25000, multiplier: 1.8, type: 'tool', idealJob: 'farmer' },
+    { id: 406, name: 'Carbon Rod', price: 350000, multiplier: 3.5, type: 'tool', idealJob: 'farmer' },
+    { id: 407, name: 'Titanium Rod', price: 1200000, multiplier: 5.0, type: 'tool', idealJob: 'farmer' },
+    { id: 408, name: 'Plastic Rod', price: 1000, multiplier: 0.5, type: 'tool', idealJob: 'farmer' },
+    { id: 409, name: 'Steel Rod', price: 100000, multiplier: 2.5, type: 'tool', idealJob: 'farmer' },
+    { id: 410, name: "Neptune's Rod", price: 5000000, multiplier: 7.5, type: 'tool', idealJob: 'farmer' },
+    { id: 411, name: 'Bread Bait', price: 20, multiplier: 0.05, type: 'bait' },
+    { id: 412, name: 'Shrimp Bait', price: 500, multiplier: 0.40, type: 'bait' },
+    { id: 413, name: 'Golden Bait', price: 25000, multiplier: 3.00, type: 'bait' },
 
     // ==========================================
     // GROUP 500 — other (special utility items)
     // ==========================================
     { id: 501, name: 'XP Boost Potion', price: 100000, multiplier: 0, duration: 86400, type: 'xpboost' },
     { id: 502, name: 'Shield of Protection', price: 5000, multiplier: 0, duration: 86400, type: 'robshield' },
+    { id: 108, name: 'VIP Golden Ticket', price: 250000, multiplier: 1.50, duration: 2592000, type: 'daily' },
     { id: 503, name: 'Career Change Voucher', price: 2000000, multiplier: 0, type: 'other' },
 ];

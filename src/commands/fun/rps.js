@@ -124,13 +124,13 @@ module.exports = {
             // Payout Handling
             if (betAmount > 0) {
                 if (outcome === 'win') {
-                    const { total: totalPrize, bonus: bonusAmount } = calculateReward(betAmount * 2, user.id, 'gamble');
+                    const { total: totalPrize, bonus: bonusAmount, cap } = calculateReward(betAmount * 2, user.id, 'gamble');
                     let prize = totalPrize;
 
                     db.addBalance(user.id, prize);
                     result += t('rps.won_coins', lang, { amount: prize.toLocaleString(), emoji: config.EMOJIS.COIN });
                     if (bonusAmount > 0) {
-                        result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                        result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                     }
                 } else if (outcome === 'tie') {
                     db.addBalance(user.id, betAmount); // Refund

@@ -68,13 +68,13 @@ module.exports = {
         }
 
         if (payout > 0) {
-            const { total: totalReward, bonus: bonusAmount } = calculateReward(payout, user.id, 'gamble');
+            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(payout, user.id, 'gamble');
             payout = totalReward;
 
             db.addBalance(user.id, payout);
             result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: payout.toLocaleString() });
             if (bonusAmount > 0) {
-                result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
             }
         } else if (bet) {
             result += t('slots.lost_coins', lang, { amount: bet });

@@ -29,7 +29,7 @@ module.exports = {
             const maxReward = config.ECONOMY.BEG_MAX_REWARD;
             const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            const { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
+            const { total, bonus: bonusAmount, cap } = calculateReward(baseReward, message.author.id);
 
             db.addBalance(message.author.id, total);
 
@@ -45,7 +45,7 @@ module.exports = {
             });
 
             if (bonusAmount > 0) {
-                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
             }
 
             return message.reply(msg);

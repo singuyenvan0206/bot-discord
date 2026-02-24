@@ -61,7 +61,7 @@ module.exports = {
                 policeRobMsg = t('rob.police_bounty', lang);
             }
 
-            const { total: stolen, bonus: bonusAmount } = calculateReward(baseSteal, message.author.id);
+            const { total: stolen, bonus: bonusAmount, cap } = calculateReward(baseSteal, message.author.id);
 
             // Ensure we don't steal more than they have total
             const finalStolen = Math.min(stolen, victim.balance);
@@ -78,7 +78,7 @@ module.exports = {
             });
 
             if (bonusAmount > 0) {
-                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
             }
             if (policeRobMsg) msg += policeRobMsg;
 

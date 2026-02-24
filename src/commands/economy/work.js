@@ -42,7 +42,7 @@ module.exports = {
         }
 
         const baseReward = Math.floor(Math.random() * 401) + 100; // 100-500
-        let { total, bonus: bonusAmount } = calculateReward(baseReward, message.author.id);
+        let { total, bonus: bonusAmount, cap } = calculateReward(baseReward, message.author.id);
 
         // Streamer Interaction: Go Viral (5% chance ×5 if using Chair/Mansion)
         let viralMsg = '';
@@ -82,7 +82,7 @@ module.exports = {
 
         let msg = t('work.success', lang, { job: jobName, amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
         }
 
         if (viralMsg) msg += viralMsg;

@@ -14,7 +14,7 @@
         "balance": "Số dư:",
         "timeout": "Hết thời gian!",
         "none": "Không có",
-        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng (Capped 250%): +{{amount}} coins)*",
+        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng (Capped {{cap}}%): +{{amount}} coins)*",
         "hacked_msg": " (Hacked!)",
         "escaped_msg": "Đã tẩu thoát! (Phạt: {{amount}})",
         "armed_msg": " (Có vũ trang!)",
@@ -30,7 +30,7 @@
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
-        "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped 250%))*"
+        "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%))*"
     },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",
@@ -79,7 +79,7 @@
         "lose": "🎰 Không có cặp nào. Chúc bạn may mắn lần sau!",
         "won_coins": "\n{{emoji}} **Thắng {{amount}} coins!**",
         "lost_coins": "\n💸 **Mất {{amount}} coins.**",
-        "bonus_item": " *(Thêm +{{amount}} thưởng (Capped 250%): {{percent}}%)*"
+        "bonus_item": " *(Thêm +{{amount}} thưởng (Capped {{cap}}%): {{percent}}%)*"
     },
     "coinflip": {
         "title": "🪙  Tung Đồng Xu",
@@ -172,22 +172,22 @@
         "draw": "🤝 **Hòa rồi!**",
         "winner_msg": "🏆 **{{winner}} đã thắng!** ({{symbol}})",
         "reward_msg": "\n{{emoji}} **+{{amount}} coins!**",
-        "reward_bonus_note": "\n-# *(Gồm {{emoji}} +{{bonus}} thưởng item (Capped 250%): {{percent}}%)*",
+        "reward_bonus_note": "\n-# *(Gồm {{emoji}} +{{bonus}} thưởng item (Capped {{cap}}%): {{percent}}%)*",
         "ending_title": "❌⭕  Cờ Ca-rô — Kết thúc ván đấu",
         "timeout_title": "❌⭕  Cờ Ca-rô — {{emoji}} Hết thời gian"
     },
     "daily": {
         "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{hours}} giờ {{minutes}} phút** nữa.",
         "success": "✅ Bạn đã nhận phần thưởng hàng ngày là **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped 250%): {{percent}}%)*",
-        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*"
+        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%): {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped {{cap}}%): {{percent}}%)*"
     },
     "work": {
         "cooldown": "❌ Bạn cần nghỉ ngơi! Hãy quay lại làm việc sau **{{minutes}} phút**.",
         "success": "💼 Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** coins! {{emoji}}",
-        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped 250%): {{percent}}%)*",
-        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*",
-        "job_bonus": "\n-# *(Gồm 💼 +{{amount}} thưởng nghề {{job}} (Capped 250%): {{percent}}%)*",
+        "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%): {{percent}}%)*",
+        "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped {{cap}}%): {{percent}}%)*",
+        "job_bonus": "\n-# *(Gồm 💼 +{{amount}} thưởng nghề {{job}} (Capped {{cap}}%): {{percent}}%)*",
         "job_categories": {
             "tier0": [
                 "Shipper",

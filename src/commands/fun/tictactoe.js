@@ -171,7 +171,7 @@ module.exports = {
                     const baseReward = config.ECONOMY.TICTACTOE_REWARD;
 
                     if (winnerId !== message.client.user.id) {
-                        const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, winnerId);
+                        const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winnerId);
                         db.addBalance(winnerId, totalReward);
 
                         // Grant Win XP
@@ -183,7 +183,7 @@ module.exports = {
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
                         if (bonusAmount > 0) {
-                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                         }
                     } else {
                         const baseReward = config.ECONOMY.TICTACTOE_REWARD;

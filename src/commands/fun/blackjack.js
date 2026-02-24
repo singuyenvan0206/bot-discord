@@ -108,9 +108,9 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
 
     if (payout > 0 && bet) {
         if (payout > bet) { // If it's a win (2x)
-            const { total: totalReward, bonus: bonusAmount } = calculateReward(payout, i.user.id, 'gamble');
+            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(payout, i.user.id, 'gamble');
             payout = totalReward;
-            if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+            if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
         }
     }
 

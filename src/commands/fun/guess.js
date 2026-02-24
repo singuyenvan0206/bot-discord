@@ -37,7 +37,7 @@ module.exports = {
 
             if (guess === number) {
                 const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
-                const { total: reward, bonus: bonusAmount } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.author.id);
+                const { total: reward, bonus: bonusAmount, cap } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.author.id);
                 db.addBalance(m.author.id, reward);
 
                 // Grant XP
@@ -45,7 +45,10 @@ module.exports = {
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                 addXp(m.author.id, winXp);
 
-                await m.reply(msg);
+                let winMsg = t('guess.win', lang, { number, attempts });
+                if (bonusAmount > 0) winMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+
+                await m.reply(winMsg);
                 collector.stop('win');
             } else if (attempts < maxAttempts) {
                 const hintKey = guess < number ? 'guess.higher' : 'guess.lower';

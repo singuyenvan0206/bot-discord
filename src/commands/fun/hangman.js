@@ -57,8 +57,8 @@ module.exports = {
 
         function calcReward(userId) {
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
-            const { total: totalReward, bonus: bonusAmount } = calculateReward(baseReward, userId);
-            return { totalReward, bonusAmount };
+            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, userId);
+            return { totalReward, bonusAmount, cap };
         }
 
         const embed = new EmbedBuilder()
@@ -84,12 +84,12 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const { totalReward, bonusAmount } = calcReward(message.author.id);
+                    const { totalReward, bonusAmount, cap } = calcReward(message.author.id);
 
                     db.addBalance(message.author.id, totalReward);
 
                     let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins!**`;
-                    if (bonusAmount > 0) resultStr += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                    if (bonusAmount > 0) resultStr += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
                     collector.stop();
@@ -115,7 +115,7 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
-                    const { totalReward, bonusAmount } = calcReward(message.author.id);
+                    const { totalReward, bonusAmount, cap } = calcReward(message.author.id);
                     db.addBalance(message.author.id, totalReward);
 
                     // Grant Win XP
@@ -124,7 +124,7 @@ module.exports = {
                     addXp(message.author.id, winXp);
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins!`;
-                    if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString() });
+                    if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                 }
                 embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);
