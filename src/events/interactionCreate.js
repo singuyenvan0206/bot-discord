@@ -147,35 +147,7 @@ module.exports = {
 
         // 3. Other Button Interactions
         else if (interaction.isButton()) {
-            if (interaction.customId === 'choose_job_btn') {
-                const user = db.getUser(interaction.user.id);
-                if (user.level < 20) {
-                    return interaction.reply({
-                        content: t('job.set_error_level', lang, { level: 20 }),
-                        ephemeral: !!interaction.guildId
-                    });
-                }
-
-                const jobs = config.ECONOMY.JOBS;
-                const select = new StringSelectMenuBuilder()
-                    .setCustomId('job_select')
-                    .setPlaceholder(t('job.select_placeholder', lang))
-                    .addOptions(
-                        Object.values(jobs).map(j => ({
-                            label: j.id.charAt(0).toUpperCase() + j.id.slice(1),
-                            description: t(`job.info_${j.id}`, lang).substring(0, 100),
-                            value: j.id,
-                            emoji: j.icon
-                        }))
-                    );
-
-                const row = new ActionRowBuilder().addComponents(select);
-                return await interaction.reply({
-                    content: t('job.milestone_desc', lang),
-                    components: [row],
-                    ephemeral: !!interaction.guildId
-                });
-            }
+            // Placeholder for future button interactions
         }
 
         // 4. Select Menu Interactions
