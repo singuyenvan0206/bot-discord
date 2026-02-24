@@ -246,7 +246,7 @@
     "crime": {
         "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{hours}} giờ {{minutes}} phút** nữa để thực hiện phi vụ tiếp theo.",
         "success": "💰 Bạn đã **{{action}}** thành công và cuỗm được **{{amount}}** coins! {{emoji}}",
-        "failure": "🚔 Phi vụ thất bại! Bạn bị cảnh sát bắt và phải nộp phạt **{{amount}}** coins. (10% số dư)",
+        "failure": "🚔 Phi vụ thất bại! Bạn bị cảnh sát bắt và phải nộp phạt **{{amount}}** coins. ",
         "actions": [
             "trộm xe đạp của hàng xóm",
             "cướp tiệm vàng",
@@ -308,7 +308,7 @@
     "rob": {
         "cooldown": "❌ Bạn đang bị truy nã! Hãy lẩn trốn trong **{{minutes}} phút** nữa.",
         "success": "🥷 Bạn đã lẻn vào và trộm được **{{amount}}** coins từ {{user}}! {{emoji}}",
-        "failure": "🚔 Bạn bị {{user}} phát hiện và bắt quả tang! Bạn phải bồi thường **{{amount}}** coins cho họ. (10% số dư)",
+        "failure": "🚔 Bạn bị {{user}} phát hiện và bắt quả tang! Bạn phải bồi thường **{{amount}}** coins cho họ.",
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
         "no_money_self": "❌ Bạn cần ít nhất **100 coins** trong ví để làm vốn nếu chẳng may bị bắt!",
         "invalid_user": "❌ Bạn không thể tự trộm chính mình!",

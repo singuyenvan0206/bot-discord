@@ -60,7 +60,7 @@ module.exports = {
         CRIME_SUCCESS_RATE: 0.3,
         CRIME_MIN_REWARD: 500,
         CRIME_MAX_REWARD: 2000,
-        CRIME_FINE_PERCENT: 0.15, // Pay 15% of balance as fine
+        PENALTY_PER_LEVEL: 500, // Fixed penalty amount per level
         SLUT_COOLDOWN: 7200, // 2 hours
         SLUT_SUCCESS_RATE: 0.6,
         SLUT_MIN_REWARD: 400,
@@ -75,7 +75,6 @@ module.exports = {
         SEARCH_MAX_REWARD: 100,
         ROB_COOLDOWN: 3600, // 1 hour
         ROB_SUCCESS_CHANCE: 0.5,
-        ROB_FAIL_PENALTY_PERCENT: 0.1, // Loser pays 10% to victim
         MAX_BET: 250000,
         HOUSE_DISTRIBUTION_INTERVAL: 21600, // 6 hours in seconds
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins

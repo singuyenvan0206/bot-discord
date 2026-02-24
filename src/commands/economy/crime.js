@@ -69,7 +69,7 @@ module.exports = {
 
             return message.reply(msg);
         } else {
-            let fine = Math.floor(user.balance * config.ECONOMY.CRIME_FINE_PERCENT);
+            let fine = user.level * config.ECONOMY.PENALTY_PER_LEVEL;
 
             // Doctor Interaction: Medical knowledge prevents heavy losses (50% reduction)
             if (user.job === 'doctor') {

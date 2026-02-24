@@ -84,15 +84,12 @@ module.exports = {
 
             return message.reply(msg);
         } else {
-            // Pay 20% of your balance to the victim
-            let penaltyPercent = config.ECONOMY.ROB_FAIL_PENALTY_PERCENT;
+            let penalty = user.level * config.ECONOMY.PENALTY_PER_LEVEL;
 
             // Interaction: Counter-Rob (Penalty doubled if robbing police)
             if (isVictimPolice) {
-                penaltyPercent *= 2;
+                penalty *= 2;
             }
-
-            const penalty = Math.floor(user.balance * penaltyPercent);
             db.removeBalance(message.author.id, penalty);
             db.addBalance(target.id, penalty);
 

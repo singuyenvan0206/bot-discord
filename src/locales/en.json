@@ -190,7 +190,7 @@
     "crime": {
         "cooldown": "❌ You are being watched by the police! Wait **{{hours}}h {{minutes}}m** before your next heist.",
         "success": "💰 You successfully **{{action}}** and walked away with **{{amount}}** coins! {{emoji}}",
-        "failure": "🚔 Heist failed! You were caught by the police and fined **{{amount}}** coins. (10% of balance)",
+        "failure": "🚔 Heist failed! You were caught by the police and fined **{{amount}}** coins.",
         "actions": [
             "stole a neighbor's bicycle",
             "robbed a jewelry store",
@@ -252,11 +252,10 @@
     "rob": {
         "cooldown": "❌ You are wanted by the police! Hide for another **{{minutes}} minutes**.",
         "success": "🥷 You sneaked in and stole **{{amount}}** coins from {{user}}! {{emoji}}",
-        "failure": "🚔 {{user}} caught you red-handed! You had to pay them **{{amount}}** coins as compensation. (10% of balance)",
+        "failure": "🚔 {{user}} caught you red-handed! You had to pay them **{{amount}}** coins as compensation.",
         "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
         "no_money_self": "❌ You need at least **100 coins** in your wallet to cover potential fines!",
         "invalid_user": "❌ You can't rob yourself!",
-        "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*",
         "thief_edge": "\n-# *(Includes 🎁 +{{amount}} item bonus)*",
         "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
         "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder.",
