@@ -598,72 +598,72 @@
             "desc": "Viết lại lịch sử (+1000% Gamble | 30 ngày)"
         },
         "401": {
-            "name": "🪱 Mồi Giun",
-            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +15%)"
-        },
-        "402": {
-            "name": "🦗 Mồi Dế",
-            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +75%)"
-        },
-        "403": {
-            "name": "🦑 Mồi Mực",
-            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +150%)"
-        },
-        "404": {
-            "name": "🎣 Cần Tre",
-            "desc": "Cần câu cơ bản. (May mắn: 1.0x)"
-        },
-        "405": {
-            "name": "🎣 Cần Sợi Thủy Tinh",
-            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.8x)"
-        },
-        "406": {
-            "name": "🎣 Cần Carbon",
-            "desc": "Đẳng cấp hàng đầu. (May mắn: 3.5x)"
-        },
-        "407": {
-            "name": "🎣 Cần Titanium",
-            "desc": "Sức mạnh tuyệt đối. (May mắn: 5.0x)"
-        },
-        "408": {
-            "name": "🎣 Cần Nhựa",
-            "desc": "Cần câu đồ chơi. (May mắn: 0.5x)",
-            "details": "Cần câu giá rẻ làm từ nhựa tái chế. Không hiệu quả lắm nhưng phù hợp cho người mới."
-        },
-        "409": {
-            "name": "🎣 Cần Thép",
-            "desc": "Nặng và đáng tin cậy. (May mắn: 2.5x)",
-            "details": "Được gia cố bằng thép công nghiệp để chịu được những cú đớp mạnh hơn."
-        },
-        "410": {
-            "name": "🔱 Cần Neptune",
-            "desc": "Món quà từ vị thần biển cả. (May mắn: 7.5x)",
-            "details": "Cần câu huyền thoại đúc từ tinh thể đại dương. Mang lại may mắn cực lớn cho người sử dụng."
-        },
-        "411": {
             "name": "🍞 Mồi Bánh Mì",
             "desc": "Vụn bánh đơn giản cho cá nhỏ. (May mắn: +5%)",
             "details": "Những mẩu bánh mì vụn. Thu hút cá nhỏ nhưng hiếm khi bắt được cá lớn."
         },
-        "412": {
+        "402": {
+            "name": "🪱 Mồi Giun",
+            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +15%)"
+        },
+        "403": {
             "name": "🦐 Mồi Tôm",
             "desc": "Mặn và ngon miệng. (May mắn: +40%)",
             "details": "Tôm tươi sống, món khoái khẩu của những loài cá lớn hơn."
         },
-        "413": {
+        "404": {
+            "name": "🦗 Mồi Dế",
+            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +75%)"
+        },
+        "405": {
+            "name": "🦑 Mồi Mực",
+            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +150%)"
+        },
+        "406": {
             "name": "✨ Mồi Vàng",
             "desc": "Mồi lấp lánh cho những phát hiện hiếm. (May mắn: +300%)",
             "details": "Mồi câu được yểm bùa phát sáng dưới nước, thu hút những sinh vật hiếm nhất đại dương."
         },
-        "501": {
-            "name": "🧪 Thuốc Tăng XP",
-            "desc": "Nhận thêm +50% XP khi thực hiện các hoạt động | 1 ngày",
-            "details": "Tiên dược màu xanh tỏa sáng giúp bạn tập trung cao độ. Nhận gấp đôi năng lượng và thăng cấp nhanh hơn."
+        "407": {
+            "name": "🎣 Cần Nhựa",
+            "desc": "Cần câu đồ chơi. (May mắn: 0.5x)",
+            "details": "Cần câu giá rẻ làm từ nhựa tái chế. Không hiệu quả lắm nhưng phù hợp cho người mới."
         },
-        "502": {
+        "408": {
+            "name": "🎣 Cần Tre",
+            "desc": "Cần câu cơ bản. (May mắn: 1.0x)"
+        },
+        "409": {
+            "name": "🎣 Cần Sợi Thủy Tinh",
+            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.8x)"
+        },
+        "410": {
+            "name": "🎣 Cần Thép",
+            "desc": "Nặng và đáng tin cậy. (May mắn: 2.5x)",
+            "details": "Được gia cố bằng thép công nghiệp để chịu được những cú đớp mạnh hơn."
+        },
+        "411": {
+            "name": "🎣 Cần Carbon",
+            "desc": "Đẳng cấp hàng đầu. (May mắn: 3.5x)"
+        },
+        "412": {
+            "name": "🎣 Cần Titanium",
+            "desc": "Sức mạnh tuyệt đối. (May mắn: 5.0x)"
+        },
+        "413": {
+            "name": "🔱 Cần Neptune",
+            "desc": "Món quà từ vị thần biển cả. (May mắn: 7.5x)",
+            "details": "Cần câu huyền thoại đúc từ tinh thể đại dương. Mang lại may mắn cực lớn cho người sử dụng."
+        },
+        "501": {
             "name": "🛡️ Khiên Bảo Vệ",
             "desc": "Chặn một lần bị người khác cướp tiền | 1 ngày",
             "details": "Một chiếc khiên vật lý chắc chắn có thể chặn một lần bị người khác cướp tiền."
+        },
+        "502": {
+            "name": "🧪 Thuốc Tăng XP",
+            "desc": "Nhận thêm +50% XP khi thực hiện các hoạt động | 1 ngày",
+            "details": "Tiên dược màu xanh tỏa sáng giúp bạn tập trung cao độ. Nhận gấp đôi năng lượng và thăng cấp nhanh hơn."
         },
         "503": {
             "name": "🎟️ Thẻ Chuyển Nghề",

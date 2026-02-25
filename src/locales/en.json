@@ -555,72 +555,72 @@
             "desc": "Rewrite history (+1000% Gamble | 30 days)"
         },
         "401": {
-            "name": "🪱 Worm Bait",
-            "desc": "One-time use bait. Required for fishing. (Luck: +15%)"
-        },
-        "402": {
-            "name": "🦗 Cricket Bait",
-            "desc": "Favorited by many fish. (Luck: +75%)"
-        },
-        "403": {
-            "name": "🦑 Squid Bait",
-            "desc": "Irresistible to big fish. (Luck: +150%)"
-        },
-        "404": {
-            "name": "🎣 Bamboo Rod",
-            "desc": "Basic fishing rod. (Luck: 1.0x)"
-        },
-        "405": {
-            "name": "🎣 Fiberglass Rod",
-            "desc": "Durable and flexible. (Luck: 1.8x)"
-        },
-        "406": {
-            "name": "🎣 Carbon Rod",
-            "desc": "Top of the line. (Luck: 3.5x)"
-        },
-        "407": {
-            "name": "🎣 Titanium Rod",
-            "desc": "Absolute power. (Luck: 5.0x)"
-        },
-        "408": {
-            "name": "🎣 Plastic Rod",
-            "desc": "Toy-grade rod. (Luck: 0.5x)",
-            "details": "A cheap, flexible rod made of recycled plastic. Not very efficient, but it's a start."
-        },
-        "409": {
-            "name": "🎣 Steel Rod",
-            "desc": "Heavy and reliable. (Luck: 2.5x)",
-            "details": "Reinforced with industrial steel to handle heavier catches."
-        },
-        "410": {
-            "name": "🔱 Neptune's Rod",
-            "desc": "Gift from the god of the sea. (Luck: 7.5x)",
-            "details": "A legendary rod forged from ocean crystals. Grants incredible luck to the wielder."
-        },
-        "411": {
             "name": "🍞 Bread Bait",
             "desc": "Simple scraps for small fish. (Luck: +5%)",
             "details": "Simple bread crumbs. Attracts small fish but rarely anything big."
         },
-        "412": {
+        "402": {
+            "name": "🪱 Worm Bait",
+            "desc": "One-time use bait. Required for fishing. (Luck: +15%)"
+        },
+        "403": {
             "name": "🦐 Shrimp Bait",
             "desc": "Salty and tasty. (Luck: +40%)",
             "details": "Fresh shrimp that larger fish find irresistible."
         },
-        "413": {
+        "404": {
+            "name": "🦗 Cricket Bait",
+            "desc": "Favorited by many fish. (Luck: +75%)"
+        },
+        "405": {
+            "name": "🦑 Squid Bait",
+            "desc": "Irresistible to big fish. (Luck: +150%)"
+        },
+        "406": {
             "name": "✨ Golden Bait",
             "desc": "Shimmering bait for rare finds. (Luck: +300%)",
             "details": "Enchanted bait that glows underwater, attracting the rarest creatures in the sea."
         },
-        "501": {
-            "name": "🧪 XP Boost Potion",
-            "desc": "Gain +50% XP when performing activities | 1 day",
-            "details": "A glowing blue elixir that sharpens your focus. Grants double energy and faster experience gain."
+        "407": {
+            "name": "🎣 Plastic Rod",
+            "desc": "Toy-grade rod. (Luck: 0.5x)",
+            "details": "A cheap, flexible rod made of recycled plastic. Not very efficient, but it's a start."
         },
-        "502": {
+        "408": {
+            "name": "🎣 Bamboo Rod",
+            "desc": "Basic fishing rod. (Luck: 1.0x)"
+        },
+        "409": {
+            "name": "🎣 Fiberglass Rod",
+            "desc": "Durable and flexible. (Luck: 1.8x)"
+        },
+        "410": {
+            "name": "🎣 Steel Rod",
+            "desc": "Heavy and reliable. (Luck: 2.5x)",
+            "details": "Reinforced with industrial steel to handle heavier catches."
+        },
+        "411": {
+            "name": "🎣 Carbon Rod",
+            "desc": "Top of the line. (Luck: 3.5x)"
+        },
+        "412": {
+            "name": "🎣 Titanium Rod",
+            "desc": "Absolute power. (Luck: 5.0x)"
+        },
+        "413": {
+            "name": "🔱 Neptune's Rod",
+            "desc": "Gift from the god of the sea. (Luck: 7.5x)",
+            "details": "A legendary rod forged from ocean crystals. Grants incredible luck to the wielder."
+        },
+        "501": {
             "name": "🛡️ Shield of Protection",
             "desc": "Block one robbery attempt from other users | 1 day",
             "details": "A sturdy physical shield that can deflect one robbery attempt from other malicious users."
+        },
+        "502": {
+            "name": "🧪 XP Boost Potion",
+            "desc": "Gain +50% XP when performing activities | 1 day",
+            "details": "A glowing blue elixir that sharpens your focus. Grants double energy and faster experience gain."
         },
         "503": {
             "name": "🎟️ Career Change Voucher",

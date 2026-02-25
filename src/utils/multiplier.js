@@ -95,18 +95,18 @@ function getXpMultiplier(userId) {
     // Whiteboard bonus for teacher
     if (user.job === 'teacher' && hasActiveItem(userId, 208)) multi += 0.5; // +50% more
 
-    // XP Boost Potion (501)
-    if (hasActiveItem(userId, 501)) multi += 0.5;
+    // XP Boost Potion (502)
+    if (hasActiveItem(userId, 502)) multi += 0.5;
 
     // Hard cap at 250% bonus (base 1.0 + 2.5 bonus = 3.5 total multiplier)
     return Math.min(multi, 3.5);
 }
 
 /**
- * Check if a user has Shield of Protection (502) active — blocks one rob.
+ * Check if a user has Shield of Protection (501) active — blocks one rob.
  */
 function isProtectedFromRob(userId) {
-    return hasActiveItem(userId, 502);
+    return hasActiveItem(userId, 501);
 }
 
 /**

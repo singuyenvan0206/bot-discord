@@ -8,23 +8,23 @@ const config = require('../../config');
 
 // Rod Definitions (IDs match new category 400s)
 const RODS = [
-    { id: '410', luck: 7.5 },  // Neptune's Rod
-    { id: '407', luck: 5.0 },  // Titanium Rod
-    { id: '406', luck: 3.5 },  // Carbon Rod
-    { id: '409', luck: 2.5 },  // Steel Rod
-    { id: '405', luck: 1.8 },  // Fiberglass Rod
-    { id: '404', luck: 1.0 },  // Bamboo Rod
-    { id: '408', luck: 0.5 }   // Plastic Rod
+    { id: '413', luck: 7.5 },  // Neptune's Rod
+    { id: '412', luck: 5.0 },  // Titanium Rod
+    { id: '411', luck: 3.5 },  // Carbon Rod
+    { id: '410', luck: 2.5 },  // Steel Rod
+    { id: '409', luck: 1.8 },  // Fiberglass Rod
+    { id: '408', luck: 1.0 },  // Bamboo Rod
+    { id: '407', luck: 0.5 }   // Plastic Rod
 ];
 
 // Bait Definitions
 const BAITS = [
-    { id: '413', luck: 3.0 },  // Golden Bait
-    { id: '403', luck: 1.5 },  // Squid Bait
-    { id: '402', luck: 0.75 }, // Cricket Bait
-    { id: '412', luck: 0.4 },  // Shrimp Bait
-    { id: '401', luck: 0.15 }, // Worm Bait
-    { id: '411', luck: 0.05 }  // Bread Bait
+    { id: '406', luck: 3.0 },  // Golden Bait
+    { id: '405', luck: 1.5 },  // Squid Bait
+    { id: '404', luck: 0.75 }, // Cricket Bait
+    { id: '403', luck: 0.4 },  // Shrimp Bait
+    { id: '402', luck: 0.15 }, // Worm Bait
+    { id: '401', luck: 0.05 }  // Bread Bait
 ];
 
 // Fish Table
@@ -46,7 +46,7 @@ const CATCHES = [
     { key: 'whale', emoji: '🐋', value: 15000, weight: 27, minLuck: 22.0 },
     { key: 'anglerfish', emoji: '🏮', value: 30000, weight: 25, minLuck: 25.0 },
     { key: 'treasure_chest', emoji: '💰', value: 50000, weight: 20, minLuck: 28.0 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 80000, weight:20, minLuck: 32.0 },
+    { key: 'mythical_pearl', emoji: '🔮', value: 80000, weight: 20, minLuck: 32.0 },
     { key: 'kraken', emoji: '🐙', value: 150000, weight: 15, minLuck: 35.0 },
     { key: 'megalodon', emoji: '🦈', value: 300000, weight: 10, minLuck: 38.0 },
     { key: 'poseidon_trident', emoji: '🔱', value: 600000, weight: 5, minLuck: 42.0 }
@@ -191,8 +191,8 @@ module.exports = {
             let baseValue = caughtItem.value;
             let trophyMsg = '';
 
-            // Farmer Interaction: Trophy Fish (15% chance for 2x if using Fiberglass/Carbon/Titanium)
-            if (user.job === 'farmer' && (hasActiveItem(message.author.id, 405) || hasActiveItem(message.author.id, 406) || hasActiveItem(message.author.id, 407)) && Math.random() < 0.15) {
+            // Farmer Interaction: Trophy Fish (15% chance for 2x if using Fiberglass(409)/Carbon(411)/Titanium(412))
+            if (user.job === 'farmer' && (hasActiveItem(message.author.id, 409) || hasActiveItem(message.author.id, 411) || hasActiveItem(message.author.id, 412)) && Math.random() < 0.15) {
                 baseValue *= 2;
                 trophyMsg = t('fish.trophy_catch', lang);
             }
