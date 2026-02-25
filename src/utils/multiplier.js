@@ -45,7 +45,7 @@ function getUserMultiplier(userId, type) {
 }
 
 /**
- * Get total cumulative bonus multiplier from all sources.
+ * @returns {number} Bonus multiplier (e.g. 0.25 for +25%).
  * Sums: getUserMultiplier(type) + getLevelMultiplier + JobBonus
  * Caps at 2.5 (250%).
  */

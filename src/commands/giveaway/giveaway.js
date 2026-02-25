@@ -131,12 +131,13 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.not_ended', lang)}`);
             }
 
-            const participants = db.getParticipantUserIds(giveaway.id);
-            if (!participants.length) {
+            const winnersList = require('../../utils/timer').pickWinners(db.getParticipants(giveaway.id), giveaway.winner_count);
+
+            if (!winnersList.length) {
                 return message.reply(`❌ ${t('giveaway.no_participants', lang)}`);
             }
 
-            const winnerId = participants[Math.floor(Math.random() * participants.length)];
+            const winnerId = winnersList[0];
 
             const channel = message.guild.channels.cache.get(giveaway.channel_id);
             if (channel) {

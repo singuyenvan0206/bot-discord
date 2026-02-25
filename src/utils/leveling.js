@@ -31,8 +31,9 @@ function addXp(userId, amount) {
     const config = require('../config');
     const user = db.getUser(userId);
 
-    // Apply global XP multiplier
-    const multiplier = config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0;
+    // Apply global and user-specific XP multipliers
+    const { getXpMultiplier } = require('./multiplier');
+    const multiplier = (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * getXpMultiplier(userId);
     const finalAmount = Math.floor(amount * multiplier);
 
     const xp = Number(user.xp || 0);
@@ -65,8 +66,8 @@ function addXp(userId, amount) {
 
 /**
  * Trả về hệ số nhân (multiplier) dựa trên cấp độ hiện tại.
- * Mỗi cấp độ thưởng thêm 1% (0.01).
- * Giới hạn tối đa là +100% (1.0) ở cấp 100.
+ * Mỗi cấp độ thưởng thêm 2% (0.02).
+ * Giới hạn tối đa là +200% (2.0) ở cấp 100.
  * 
  * @param {number} level - Cấp độ người dùng 
  * @returns {number} - Hệ số bonus, ví dụ: level 10 -> return 0.10 (tức +10%)

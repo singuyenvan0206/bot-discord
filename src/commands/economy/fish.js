@@ -191,8 +191,8 @@ module.exports = {
             let baseValue = caughtItem.value;
             let trophyMsg = '';
 
-            // Farmer Interaction: Trophy Fish (15% chance for 2x if using Fiberglass(409)/Carbon(411)/Titanium(412))
-            if (user.job === 'farmer' && (hasActiveItem(message.author.id, 409) || hasActiveItem(message.author.id, 411) || hasActiveItem(message.author.id, 412)) && Math.random() < 0.15) {
+            // Farmer Interaction: Trophy Fish (15% chance for 2x if possessing Fiberglass(409)/Carbon(411)/Titanium(412)/Neptune(413))
+            if (user.job === 'farmer' && (inventory['409'] || inventory['411'] || inventory['412'] || inventory['413']) && Math.random() < 0.15) {
                 baseValue *= 2;
                 trophyMsg = t('fish.trophy_catch', lang);
             }

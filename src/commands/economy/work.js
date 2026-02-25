@@ -14,13 +14,6 @@ module.exports = {
 
         const user = db.getUser(message.author.id);
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = config.ECONOMY.WORK_COOLDOWN;
-
-        if (now - user.last_work < cooldown) {
-            const remaining = (user.last_work + cooldown) - now;
-            const minutes = Math.ceil(remaining / 60);
-            return message.reply(t('work.cooldown', lang, { minutes }));
-        }
 
         const categories = t('work.job_categories', lang);
         let availableJobs = [...categories.tier0];

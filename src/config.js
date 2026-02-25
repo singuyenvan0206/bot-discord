@@ -84,7 +84,7 @@ module.exports = {
             criminal: { id: 'criminal', bonus: 0.15, color: '#e74c3c', icon: '🥷' },
             doctor: { id: 'doctor', bonus: 0.05, color: '#2ecc71', icon: '👨‍⚕️' },
             programmer: { id: 'programmer', bonus: 0.20, color: '#9b59b6', icon: '💻' },
-            farmer: { id: 'farmer', bonus: 0.10, color: '#f1c40f', icon: '👨‍🌾' },
+            farmer: { id: 'farmer', bonus: 0.10, color: '#f1c40f', icon: '👨‍🌾', luck: 1.5 },
             hacker: { id: 'hacker', bonus: 0.25, color: '#27ae60', icon: '👨‍💻' },
             streamer: { id: 'streamer', bonus: 0.12, color: '#6441a5', icon: '🎥' },
             chef: { id: 'chef', bonus: 0.12, color: '#e67e22', icon: '👨‍🍳' },

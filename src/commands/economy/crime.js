@@ -13,14 +13,6 @@ module.exports = {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const user = db.getUser(message.author.id);
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = config.ECONOMY.CRIME_COOLDOWN;
-
-        if (now - user.last_crime < cooldown) {
-            const remaining = (user.last_crime + cooldown) - now;
-            const hours = Math.floor(remaining / 3600);
-            const minutes = Math.ceil((remaining % 3600) / 60);
-            return message.reply(t('crime.cooldown', lang, { hours, minutes }));
-        }
 
         const isCriminal = user.job === 'criminal';
         const isHacker = user.job === 'hacker';
@@ -103,8 +95,10 @@ module.exports = {
             let itemBrokenMsg = '';
             if (Math.random() < 0.1) {
                 if (removeActiveBuff(message.author.id, 212)) {
+                    db.removeItem(message.author.id, '212', 1);
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.212.name', lang) });
                 } else if (removeActiveBuff(message.author.id, 220)) {
+                    db.removeItem(message.author.id, '220', 1);
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.220.name', lang) });
                 }
             }
