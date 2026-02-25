@@ -112,6 +112,13 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             }
 
             if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+
+            // Musician Interaction: Flow State (10% chance to double final win)
+            const u = db.getUser(i.user.id);
+            if (u.job === 'musician' && Math.random() < 0.10) {
+                payout *= 2;
+                result += t('common.flow_state', lang);
+            }
         } else {
             // It's a tie (payout == bet)
             result = t('blackjack.tie', lang, { refund: t('blackjack.refund', lang) });
@@ -130,6 +137,14 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             result = t('blackjack.ngu_linh_lose', lang, { amount: lossAmountStr });
         } else if (playerVal < dealerVal || playerVal > 21) {
             result = t('blackjack.lose', lang, { amount: lossAmountStr });
+        }
+
+        // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
+        const u = db.getUser(i.user.id);
+        if (u.job === 'trader' && Math.random() < 0.15) {
+            const refund = Math.floor(bet * 0.5);
+            payout = refund;
+            result += t('common.market_tip', lang);
         }
     }
 

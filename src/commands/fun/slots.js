@@ -26,7 +26,13 @@ module.exports = {
         }
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        const weights = [50, 35, 30, 20, 15, 10, 5];
+        let weights = [50, 35, 30, 20, 15, 10, 5];
+
+        // Trader Interaction: Market Manipulation (Better odds)
+        if (user.job === 'trader') {
+            weights = [40, 30, 30, 25, 20, 12, 8]; // Reduced low symbols, increased high
+        }
+
         const totalWeight = weights.reduce((a, b) => a + b, 0);
 
         function weightedRandom() {
@@ -94,7 +100,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setTitle(t('slots.title', lang))
-            .setDescription(`${slotDisplay}\n\n${result}`)
+            .setDescription(`${slotDisplay}\n\n${result}${user.job === 'trader' ? t('common.market_tip_short', lang) : ''}`)
             .setColor(color).setTimestamp();
 
         startCooldown(message.client, 'slots', message.author.id);

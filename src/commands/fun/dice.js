@@ -94,6 +94,14 @@ module.exports = {
                 if (bonusAmount > 0) {
                     bonusText = t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                 }
+
+                // Musician Interaction: Flow State (10% chance to double final win)
+                const u = db.getUser(message.author.id);
+                if (u.job === 'musician' && Math.random() < 0.10) {
+                    prize *= 2;
+                    db.addBalance(message.author.id, prize / 2); // Add the extra half
+                    bonusText += t('common.flow_state', lang);
+                }
             }
 
             const diceEmojis = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
@@ -113,7 +121,18 @@ module.exports = {
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
                     (won
                         ? t('dice.payout', lang, { amount: prize.toLocaleString(), multiplier: winMultiplier }) + bonusText
-                        : (addHouseProfit(i, bet), t('dice.lose_msg', lang, { amount: bet })))
+                        : (() => {
+                            addHouseProfit(i, bet);
+                            let lossMsg = t('dice.lose_msg', lang, { amount: bet });
+                            // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
+                            const u = db.getUser(message.author.id);
+                            if (u.job === 'trader' && Math.random() < 0.15) {
+                                const refund = Math.floor(bet * 0.5);
+                                db.addBalance(message.author.id, refund);
+                                lossMsg += t('common.market_tip', lang);
+                            }
+                            return lossMsg;
+                        })())
                 )
                 .setColor(won ? config.COLORS.GAMBLE_WIN : config.COLORS.GAMBLE_LOSS);
 

@@ -68,6 +68,13 @@ module.exports = {
             specialOrderMsg = t('work.special_order', lang);
         }
 
+        // Programmer Interaction: Code Crunch (+200 flat)
+        let codeCrunchMsg = '';
+        if (user.job === 'programmer') {
+            total += 200;
+            codeCrunchMsg = t('work.code_crunch', lang);
+        }
+
         // Soldier Interaction: Mission Bonus (+100 flat)
         let missionMsg = '';
         if (user.job === 'soldier') {

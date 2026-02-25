@@ -20,13 +20,15 @@
         "armed_msg": " (Armed!)",
         "teacher_penalty": "Teacher Penalty! (New level: {{level}})",
         "data_mine": " (Data Mine!)",
-        "market_tip": " (Market Tip!)",
+        "market_tip_short": " (Market Tip!)",
         "next_expiry": "(next: {{time}})",
         "teacher_penalty_label": "👨‍🏫 **Teacher Penalty:** ",
         "duration_hours": "{{hours}}h",
         "duration_minutes": "{{minutes}}m",
         "duration_days": "{{days}}d",
-        "duration_seconds": "{{seconds}}s"
+        "duration_seconds": "{{seconds}}s",
+        "flow_state": "\n🎸 **Flow State!** Musician is in the zone, reward is doubled!",
+        "market_tip": "\n📈 **Market Tip!** Trader used inside info, 50% of bet refunded!"
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -185,7 +187,8 @@
         "viral": "\n🚀 **Going Viral!** Your stream reached the front page! Reward multiplied by **5x**!",
         "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **2.5x**!",
         "special_order": "\n👨‍🍳 **Special Order!** A VIP menu was requested, income doubled **×2**!",
-        "mission_bonus": "\n🪖 **Mission Bonus!** Completed a special mission, earned an extra **+100** coins!"
+        "mission_bonus": "\n🪖 **Mission Bonus!** Completed a special mission, earned an extra **+100** coins!",
+        "code_crunch": "\n💻 **Code Crunch!** Programmer optimized the code, received **+200** extra coins!"
     },
     "crime": {
         "cooldown": "❌ You are being watched by the police! Wait **{{hours}}h {{minutes}}m** before your next heist.",
@@ -1341,7 +1344,8 @@
         "effect_label": "Effect",
         "owned_label": "Owned",
         "duration_label": "Duration",
-        "synergy_label": "Job Synergy"
+        "synergy_label": "Ideal Job",
+        "luck_label": "Luck Stat"
     },
     "effects": {
         "income": "Income",
@@ -1386,7 +1390,20 @@
         },
         "teacher": {
             "name": "Teacher"
-        }
+        },
+        "perks_title": "🌟 Perks & Skills",
+        "perks_police": "• Receive 100% of fines from caught criminals.\n• Reduces rob success chance of others by 50%.\n• +10% Salary Bonus.",
+        "perks_criminal": "• +15% success rate for Crime & Rob.\n• +50% stolen amount when robbing Police.\n• 50% escape chance with fleeing gear.\n• +15% Salary Bonus.",
+        "perks_doctor": "• -50% fine when failing illegal actions.\n• Receive 100% of medical fines from Slut.\n• +5% Salary Bonus.",
+        "perks_programmer": "• 💻 Code Crunch: +200 coins per $work.\n• 🧠 Intelligence Bonus: +20% reward in Scramble/Wordchain.\n• Higher synergy with tech equipment.\n• +20% Salary Bonus.",
+        "perks_farmer": "• +50% luck from fishing rods & baits.\n• 25% chance to reuse bait after fishing.\n• 10% chance for Bumper Crop (x2.5 $work).\n• +10% Salary Bonus.",
+        "perks_hacker": "• +5% crime success with high-tech gear.\n• 20% chance to double crime rewards.\n• 15% chance to double search rewards (Data Mine).\n• +25% Salary Bonus.",
+        "perks_streamer": "• 5-25% chance to Go Viral (x5 $work) with gear.\n• +15% income from Slut.\n• +12% Salary Bonus.",
+        "perks_chef": "• 8% chance for Special Order (x2 $work).\n• +12% Salary Bonus.",
+        "perks_musician": "• 🎸 Flow State: 10% chance to double winnings (Gamble).\n• +20% income from Slut.\n• +10% Salary Bonus.",
+        "perks_soldier": "• Receive +100 coins mission bonus per $work.\n• -30% fine when failing crime missions.\n• +10% success rate for Rob.\n• +10% Salary Bonus.",
+        "perks_trader": "• 📉 Market Tip: 15% chance for 50% refund on loss (Gamble).\n• 🎰 Slightly boosted Slots win rate.\n• Receive +50 coins market tip during $search.\n• +15% Salary Bonus.",
+        "perks_teacher": "• 🎓 Knowledge Bonus: +20% reward in Hangman/Wordchain.\n• ⚠️ Deducts 1 level if failing Crime/Rob/Slut.\n• +8% Salary Bonus."
     },
     "giveaway": {
         "active_title": "{{emoji}}  GIVEAWAY EVENT  {{emoji}}",

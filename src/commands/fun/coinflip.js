@@ -50,9 +50,23 @@ module.exports = {
             if (bonusAmount > 0) {
                 flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
             }
+
+            // Musician Interaction: Flow State (10% chance to double final win)
+            if (user.job === 'musician' && Math.random() < 0.10) {
+                payout *= 2;
+                db.addBalance(user.id, payout - (payout / 2)); // Add the extra half
+                flavorText += t('common.flow_state', lang);
+            }
         } else {
             flavorText = t('coinflip.lose', lang, { amount: bet });
             if (bet) addHouseProfit(message, bet);
+
+            // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
+            if (user.job === 'trader' && Math.random() < 0.15) {
+                const refund = Math.floor(bet * 0.5);
+                db.addBalance(user.id, refund);
+                flavorText += t('common.market_tip', lang);
+            }
         }
 
         const embed = new EmbedBuilder()

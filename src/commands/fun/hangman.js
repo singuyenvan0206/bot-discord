@@ -57,7 +57,15 @@ module.exports = {
 
         function calcReward(userId) {
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
-            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, userId);
+            let { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, userId);
+
+            // Teacher Interaction: Knowledge Bonus (+20%)
+            const u = db.getUser(userId);
+            if (u.job === 'teacher') {
+                totalReward = Math.floor(totalReward * 1.2);
+                bonusAmount = Math.floor(bonusAmount * 1.2);
+            }
+
             return { totalReward, bonusAmount, cap };
         }
 

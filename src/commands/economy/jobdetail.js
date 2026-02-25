@@ -20,12 +20,15 @@ module.exports = {
         }
 
         const description = t(`job.job_details.${jobName}`, lang, { prefix: config.PREFIX });
+        const perks = t(`jobs.perks_${jobName}`, lang);
+
         const embed = new EmbedBuilder()
-            .setTitle(`${job.icon} ${t(`job.name_${jobName}`, lang)}`)
+            .setTitle(`${job.icon} ${t(`jobs.${jobName}.name`, lang)}`)
             .setDescription(description)
             .addFields(
                 { name: '💎 ' + t('job.salary_label', lang), value: `+${(job.bonus * 100).toFixed(0)}%`, inline: true },
-                { name: '⭐ ' + t('job.requirement_label', lang), value: `Level 20`, inline: true }
+                { name: '⭐ ' + t('job.requirement_label', lang), value: `Level 20`, inline: true },
+                { name: t('jobs.perks_title', lang), value: perks, inline: false }
             )
             .setColor(job.color || config.COLORS.INFO)
             .setThumbnail(message.client.user.displayAvatarURL())

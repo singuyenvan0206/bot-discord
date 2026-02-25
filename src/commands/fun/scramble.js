@@ -76,7 +76,14 @@ module.exports = {
             const winner = collected.first();
             const baseReward = config.ECONOMY.SCRAMBLE_REWARD;
 
-            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winner.author.id);
+            let { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winner.author.id);
+
+            // Programmer Interaction: Tech Bonus (+20%)
+            const winningUser = db.getUser(winner.author.id);
+            if (winningUser.job === 'programmer') {
+                totalReward = Math.floor(totalReward * 1.2);
+                bonusAmount = Math.floor(bonusAmount * 1.2);
+            }
 
             db.addBalance(winner.author.id, totalReward);
 

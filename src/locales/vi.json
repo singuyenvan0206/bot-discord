@@ -20,13 +20,15 @@
         "armed_msg": " (Có vũ trang!)",
         "teacher_penalty": "Bị kỷ luật! (Cấp độ mới: {{level}})",
         "data_mine": " (Truy cập dữ liệu!)",
-        "market_tip": " (Mẹo thị trường!)",
+        "market_tip_short": " (Mẹo thị trường!)",
         "next_expiry": "(tiếp theo: {{time}})",
         "teacher_penalty_label": "👨‍🏫 **Kỷ luật Giáo viên:** ",
         "duration_hours": "{{hours}}g",
         "duration_minutes": "{{minutes}}p",
         "duration_days": "{{days}}n",
-        "duration_seconds": "{{seconds}} giây"
+        "duration_seconds": "{{seconds}} giây",
+        "flow_state": "\n🎸 **Flow State!** Nhạc sĩ thăng hoa, phần thưởng được nhân đôi!",
+        "market_tip": "\n📈 **Mẹo thị trường!** Trader nhận được tin mật, hoàn lại 50% tiền cược!"
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -241,7 +243,8 @@
         "viral": "\n🚀 **Lên xu hướng!** Buổi stream của bạn đã lọt vào trang chủ! Phần thưởng nhân **5x**!",
         "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!",
         "special_order": "\n👨‍🍳 **Đơn đặc biệt!** Thực đơn VIP được gọi, thu nhập nhân **2x**!",
-        "mission_bonus": "\n🪖 **Thưởng nhiệm vụ!** Hoàn thành nhiệm vụ đặc biệt, nhận thêm **+100** coins!"
+        "mission_bonus": "\n🪖 **Thưởng nhiệm vụ!** Hoàn thành nhiệm vụ đặc biệt, nhận thêm **+100** coins!",
+        "code_crunch": "\n💻 **Code Crunch!** Programmer tối ưu hóa mã nguồn, nhận thêm **+200** coins!"
     },
     "crime": {
         "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{hours}} giờ {{minutes}} phút** nữa để thực hiện phi vụ tiếp theo.",
@@ -1325,7 +1328,8 @@
         "effect_label": "Hiệu ứng",
         "owned_label": "Đang sở hữu",
         "duration_label": "Thời lượng",
-        "synergy_label": "Nghề Phù Hợp"
+        "synergy_label": "Nghề Phù Hợp",
+        "luck_label": "Chỉ số May mắn"
     },
     "effects": {
         "income": "Thu Nhập",
@@ -1370,7 +1374,20 @@
         },
         "teacher": {
             "name": "Giáo viên"
-        }
+        },
+        "perks_title": "🌟 Đặc quyền & Kỹ năng",
+        "perks_police": "• Nhận 100% tiền phạt từ tội phạm bị bắt.\n• Giảm 50% tỉ lệ kẻ xấu trộm tiền của bạn.\n• Tăng 10% thưởng lương.",
+        "perks_criminal": "• +15% tỉ lệ thành công phi vụ & trộm đồ.\n• +50% tiền cướp được từ Cảnh sát.\n• 50% cơ hội tẩu thoát nếu có trang bị chạy trốn.\n• Tăng 15% thưởng lương.",
+        "perks_doctor": "• Giảm 50% tiền phạt khi làm việc phi pháp.\n• Nhận 100% tiền viện phí từ lầu xanh.\n• Tăng 5% thưởng lương.",
+        "perks_programmer": "• 💻 Code Crunch: +200 coins mỗi $work.\n• 🧠 Thưởng kiến thức: +20% thưởng Scramble/Wordchain.\n• Tăng hiệu quả thiết bị công nghệ.\n• Tăng 20% thưởng lương.",
+        "perks_farmer": "• +50% may mắn từ cần câu & mồi.\n• 25% tỉ lệ giữ lại mồi sau khi câu.\n• 10% cơ hội trúng mùa (x2.5 tiền $work).\n• Tăng 10% thưởng lương.",
+        "perks_hacker": "• +5% tỉ lệ thành công tội phạm khi có Laptop.\n• 20% tỉ lệ nhân đôi tiền thưởng tội phạm.\n• 15% tỉ lệ nhân đôi tiền tìm kiếm (Data Mine).\n• Tăng 25% thưởng lương.",
+        "perks_streamer": "• 5-25% cơ hội viral (x5 tiền $work) khi có Gear.\n• +15% tiền thưởng từ lầu xanh.\n• Tăng 12% thưởng lương.",
+        "perks_chef": "• 8% cơ hội có đơn hàng đặc biệt (x2 tiền $work).\n• Tăng 12% thưởng lương.",
+        "perks_musician": "• 🎸 Flow State: 10% cơ hội x2 tiền thắng đỏ đen.\n• +20% tiền thưởng từ lầu xanh.\n• Tăng 10% thưởng lương.",
+        "perks_soldier": "• Nhận +100 coins tiền thưởng nhiệm vụ mỗi $work.\n• Giảm 30% tiền phạt khi thất bại phi vụ.\n• +10% tỉ lệ thành công trộm đồ.\n• Tăng 10% thưởng lương.",
+        "perks_trader": "• 📉 Market Tip: 15% hoàn 50% tiền cược khi thua (đỏ đen).\n• 🎰 Tăng nhẹ tỉ lệ nổ hũ Slots.\n• Nhận +50 coins từ tin tức thị trường khi $search.\n• Tăng 15% thưởng lương.",
+        "perks_teacher": "• 🎓 Thưởng giáo dục: +20% thưởng Hangman/Wordchain.\n• ⚠️ Bị trừ 1 level nếu thất bại phi vụ/trộm đồ.\n• Tăng 8% thưởng lương."
     },
     "giveaway": {
         "active_title": "{{emoji}}  SỰ KIỆN GIVEAWAY  {{emoji}}",

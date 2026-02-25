@@ -119,7 +119,13 @@ client.on('messageCreate', async (message) => {
             lastPlayerId = m.author.id;
 
             const baseReward = config.ECONOMY.WORDCHAIN_REWARD || 5;
-            const { total: totalReward } = calculateReward(baseReward, m.author.id);
+            let { total: totalReward } = calculateReward(baseReward, m.author.id);
+
+            // Programmer & Teacher Interaction: Intelligence Bonus (+20%)
+            const u = db.getUser(m.author.id);
+            if (u.job === 'programmer' || u.job === 'teacher') {
+                totalReward = Math.floor(totalReward * 1.2);
+            }
 
             db.addBalance(m.author.id, totalReward);
             playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);

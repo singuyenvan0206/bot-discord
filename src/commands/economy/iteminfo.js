@@ -55,14 +55,29 @@ module.exports = {
                 { name: `📁 ${t('iteminfo.category_label', lang)}`, value: categoryName, inline: true }
             );
 
-        if (item.multiplier) {
-            const effectType = t(`effects.${item.type}`, lang);
-            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang)}`, value: `+${Math.round(item.multiplier * 100)}% ${effectType}`, inline: true });
+        if (item.multiplier > 0) {
+            let effectLabel = t('iteminfo.effect_label', lang);
+            let effectValue = `+${Math.round(item.multiplier * 100)}% ${t(`effects.${item.type}`, lang)}`;
+
+            // Custom display for fishing tools/baits
+            if (item.type === 'tool' || item.type === 'bait') {
+                effectLabel = t('iteminfo.luck_label', lang);
+                effectValue = `${item.multiplier}x`;
+            }
+
+            embed.addFields({ name: `✨ ${effectLabel}`, value: effectValue, inline: true });
+        } else if (item.type === 'xpboost' || item.type === 'robshield') {
+            // Special items without direct multiplier but with effects
+            embed.addFields({ name: `✨ ${t('iteminfo.effect_label', lang)}`, value: t(`effects.${item.type}`, lang), inline: true });
         }
 
         if (item.duration) {
             let durationStr = '';
-            if (item.duration >= 86400) {
+            if (item.duration >= 2592000) {
+                durationStr = t('common.duration_days', lang, { days: 30 });
+            } else if (item.duration >= 604800) {
+                durationStr = t('common.duration_days', lang, { days: 7 });
+            } else if (item.duration >= 86400) {
                 durationStr = t('common.duration_days', lang, { days: Math.round(item.duration / 86400) });
             } else if (item.duration >= 3600) {
                 durationStr = t('common.duration_hours', lang, { hours: Math.round(item.duration / 3600) });
@@ -73,7 +88,7 @@ module.exports = {
         }
 
         if (item.idealJob) {
-            const jobNameLoc = t(`job.name_${item.idealJob}`, lang);
+            const jobNameLoc = t(`jobs.${item.idealJob}.name`, lang);
             embed.addFields({ name: `💼 ${t('iteminfo.synergy_label', lang)}`, value: jobNameLoc, inline: true });
         }
 
