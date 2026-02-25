@@ -370,7 +370,7 @@
     },
     "fish": {
         "title": "🎣 Fishing Trip",
-        "rod_needed": "❌ You need a **Fishing Rod** to fish! Buy one in the shop (`{{prefix}}buy 404`).",
+        "rod_needed": "❌ You need a **Fishing Rod** to fish! Buy one in the shop (`{{prefix}}buy 407`).",
         "bait_needed": "❌ You need **Bait** to fish! Buy bait in the shop (e.g., `{{prefix}}buy 401`).",
         "description": "Using **{{rod}}** and **{{bait}}**...",
         "caught": "Caught",
