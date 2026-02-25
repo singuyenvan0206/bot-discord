@@ -104,9 +104,16 @@ module.exports = {
             let pool = CATCHES.filter(c => c.minLuck <= luck);
             return pool.map(c => {
                 let modWeight = c.weight;
-                if (luck > 2.0 && c.value > 500) modWeight *= 1.2;
-                if (luck > 3.0 && c.value > 1000) modWeight *= 1.3;
-                if (luck > 2.0 && c.value === 0) modWeight *= 0.8;
+                if (c.value < 100) {
+                    // Junk and small fish decrease as luck increases
+                    // At 50 luck, these reach minimum 5% of their base weight
+                    modWeight *= Math.max(0.05, 1 - (luck / 50));
+                } else {
+                    // Rare items increase weight based on how much luck exceeds their minimum
+                    // Using Power 1.2 to give a nice curve for higher luck levels
+                    const luckDiff = luck - c.minLuck;
+                    modWeight *= Math.pow(Math.max(1, luckDiff + 1), 1.2);
+                }
                 return { ...c, weight: modWeight };
             });
         };
