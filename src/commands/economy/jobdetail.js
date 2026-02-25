@@ -19,16 +19,17 @@ module.exports = {
             return message.reply(t('job.set_error_invalid', lang));
         }
 
-        const description = t(`job.job_details.${jobName}`, lang, { prefix: config.PREFIX });
-        const perks = t(`jobs.perks_${jobName}`, lang);
+        const name = t(`job.name_${jobName}`, lang);
+        const description = t(`job.desc_${jobName}`, lang);
+        const perks = t(`job.info_${jobName}`, lang);
 
         const embed = new EmbedBuilder()
-            .setTitle(`${job.icon} ${t(`jobs.${jobName}.name`, lang)}`)
+            .setTitle(`${job.icon} ${name}`)
             .setDescription(description)
             .addFields(
                 { name: '💎 ' + t('job.salary_label', lang), value: `+${(job.bonus * 100).toFixed(0)}%`, inline: true },
                 { name: '⭐ ' + t('job.requirement_label', lang), value: `Level 20`, inline: true },
-                { name: t('jobs.perks_title', lang), value: perks, inline: false }
+                { name: t('job.perks_title', lang), value: perks, inline: false }
             )
             .setColor(job.color || config.COLORS.INFO)
             .setThumbnail(message.client.user.displayAvatarURL())

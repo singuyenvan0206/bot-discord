@@ -88,7 +88,7 @@ module.exports = {
         }
 
         if (item.idealJob) {
-            const jobNameLoc = t(`jobs.${item.idealJob}.name`, lang);
+            const jobNameLoc = t(`job.name_${item.idealJob}`, lang);
             embed.addFields({ name: `💼 ${t('iteminfo.synergy_label', lang)}`, value: jobNameLoc, inline: true });
         }
 

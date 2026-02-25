@@ -758,34 +758,47 @@
         "multi_label": "🎮 **{{qty}}x {{itemName}}** — +{{percent}}% {{type}} ({{duration}})"
     },
     "job": {
-        "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được bonus +150 coins.",
-        "mission_bonus": "\n🎖️ **Thưởng nhiệm vụ!** Quân nhân nhận được bonus +150 coins.",
-        "chef_tip": "\n🍳 **Tiền tip từ Dealer!** Dealer đánh giá cao món ăn của Đầu bếp và tip **{{amount}}** coins.",
-        "teacher_tutoring_simple": "\n🎓 **Buổi dạy kèm!** Giáo viên nhận được thêm coins và XP.",
-        "hacker_data_breach": "\n💻 **Rò rỉ dữ liệu!** Hacker tìm thấy ví tiền bị bỏ quên chứa **{{amount}}** coins.",
+        "salary_label": "Thưởng Lương",
+        "requirement_label": "Yêu Cầu",
+        "perks_title": "🌟 Đặc Quyền & Kỹ Năng",
+        "current_title": "Nghề Nghiệp Hiện Tại",
+        "detail_usage": "❌ Vui lòng cung cấp ID nghề. Cách dùng: `{{prefix}}job info <id>`",
+        "none": "Không có",
         "name_police": "👮 Cảnh Sát",
+        "desc_police": "Duy trì trật tự và an ninh thành phố. Cảnh sát có thu nhập từ tiền phạt tội phạm.",
         "info_police": "• **Làm Thêm Giờ**: 15% tỉ lệ nhận +150 coins khi làm việc.\n• **Tiền Thưởng**: +50% coins khi bắt giữ tội phạm khét tiếng.\n• **Quyền Lực**: Phạt gấp đôi những kẻ trộm cướp thất bại.",
         "name_criminal": "🥷 Tội Phạm",
+        "desc_criminal": "Sống ngoài vòng pháp luật. Rủi ro cao nhưng phần thưởng cực lớn.",
         "info_criminal": "• **Siêu Đạo Chích**: +15% tỉ lệ thành công khi trộm (rob/crime).\n• **Liều Ăn Nhiều**: +50% tiền thưởng khi đột nhập đồn cảnh sát.\n• **Tẩu Thoát**: Cơ hội nộp phạt thấp hơn khi bị bắt.",
         "name_doctor": "👨‍⚕️ Bác Sĩ",
+        "desc_doctor": "Cứu người và nghiên cứu y học. Nhận phí điều trị từ những người gặp nạn.",
         "info_doctor": "• **Thử Nghiệm**: 8% tỉ lệ nhận +100-300 coins khi điểm danh.\n• **Bệnh Viện**: Thu phí điều trị khi có người thất bại lệnh `slut`.\n• **Sơ Cứu**: Nhận thêm +5% thu nhập thụ động.",
         "name_programmer": "💻 Lập Trình Viên",
+        "desc_programmer": "Xây dựng tương lai bằng mã nguồn. Thu nhập ổn định và hiệu suất cao.",
         "info_programmer": "• **Regex Assist**: Hiển thị thêm gợi ý trong trò chơi `scramble`.\n• **Tối Ưu Hóa**: Nhận thẳng +200 coins mỗi khi kết thúc công việc.\n• **Tập Trung**: Giảm -10% thời gian chờ làm việc.",
         "name_farmer": "👨‍🌾 Nông Dân",
+        "desc_farmer": "Gắn bó với đất đai. Sự chăm chỉ sẽ mang lại những vụ mùa bội thu.",
         "info_farmer": "• **Được Mùa**: 10% tỉ lệ x2.5 phần thưởng khi làm việc.\n• **Ngư Phủ**: Buff tỉ lệ câu được cá hiếm mạnh nhất.\n• **Lộc Trời**: +10% giá trị từ các vật phẩm tự nhiên.",
         "name_hacker": "👨‍💻 Hacker",
+        "desc_hacker": "Dữ liệu là vàng. Khai thác các hệ thống để trục lợi.",
         "info_hacker": "• **Rò Rỉ Dữ Liệu**: 5% tỉ lệ nhận +200-500 coins khi search.\n• **Phối Hợp**: Dò mìn (minesweeper) tự động cắm cờ 1 quả mìn.\n• **Khai Thác**: x2 thu nhập search nếu đang dùng Laptop.",
         "name_streamer": "🎥 Streamer",
+        "desc_streamer": "Xây dựng cộng đồng và trở nên nổi tiếng. Tiềm năng viral cực lớn.",
         "info_streamer": "• **Viral**: 5% tỉ lệ x5 phần thưởng khi làm việc.\n• **Subathon**: 10% tỉ lệ nhận +25% thưởng điểm danh.\n• **Sub Hype**: 10% tỉ lệ x2 tiền thưởng Slots.",
         "name_chef": "👨‍🍳 Đầu Bếp",
+        "desc_chef": "Sáng tạo những món ăn ngon. Sự tỉ mỉ mang lại tiền tip và danh tiếng.",
         "info_chef": "• **Sao Michelin**: 5% tỉ lệ x3 phần thưởng điểm danh.\n• **Món Đặc Biệt**: 10% tỉ lệ x2 thưởng khi làm việc.\n• **Tiền Tip**: Nhận 50-100 coins khi Hòa trong Blackjack.",
         "name_musician": "🎸 Nhạc Sĩ",
+        "desc_musician": "Để âm nhạc dẫn lối. Tìm thấy trạng thái thăng hoa để nhân đôi may mắn.",
         "info_musician": "• **Flow State**: 15% tỉ lệ x2 thưởng Reaction/Gamble.\n• **Biểu Diễn**: +20% coins trong các trò chơi tương tác.\n• **Nhịp Điệu**: Giảm nhẹ thời gian chờ các trò chơi nhỏ.",
         "name_soldier": "🪖 Quân Nhân",
+        "desc_soldier": "Phục vụ và bảo vệ. Kỷ luật quân đội mang lại những khoản thưởng chắc chắn.",
         "info_soldier": "• **Nhiệm Vụ**: Chắc chắn nhận +150 coins thưởng làm việc.\n• **Vũ Trang**: Giảm -30% tiền phạt khi phạm tội thất bại.\n• **Pháo Đài**: +10% tỉ lệ thành công khi Rob người khác.",
         "name_trader": "📈 Thương Nhân",
+        "desc_trader": "Mua thấp, bán cao. Làm chủ thị trường để giảm thiểu thua lỗ.",
         "info_trader": "• **Hoàn Tiền**: 25% tỉ lệ hoàn lại 50% tiền cược khi thua (cf/bj).\n• **Mẹo Nhỏ**: Nhận thêm +50 coins mỗi lần search.\n• **Thao Túng**: Tỉ lệ thắng Slots cao hơn người bình thường.",
         "name_teacher": "📚 Giáo Viên",
+        "desc_teacher": "Đào tạo thế hệ tương lai. Kiến thức là sức mạnh và hệ số nhân.",
         "info_teacher": "• **Dạy Kèm**: +50% coins & +10 XP cho tất cả người chơi Trivia.\n• **Người Thầy**: Nhận x1.5 kinh nghiệm (XP) cho mọi lệnh.\n• **Học Thuật**: Nhận x2 kinh nghiệm khi sử dụng Bảng Trắng."
     },
     "transfer": {
@@ -1295,57 +1308,6 @@
         "gamble": "Cược",
         "xpboost": "XP Bonus",
         "robshield": "Bảo Vệ"
-    },
-    "jobs": {
-        "police": {
-            "name": "Cảnh Sát"
-        },
-        "criminal": {
-            "name": "Tội Phạm"
-        },
-        "doctor": {
-            "name": "Bác Sĩ"
-        },
-        "programmer": {
-            "name": "Lập Trình Viên"
-        },
-        "farmer": {
-            "name": "Nông Dân"
-        },
-        "hacker": {
-            "name": "Hacker"
-        },
-        "streamer": {
-            "name": "Streamer"
-        },
-        "chef": {
-            "name": "Đầu bếp"
-        },
-        "musician": {
-            "name": "Nhạc sĩ"
-        },
-        "soldier": {
-            "name": "Quân nhân"
-        },
-        "trader": {
-            "name": "Thương nhân"
-        },
-        "teacher": {
-            "name": "Giáo viên"
-        },
-        "perks_title": "🌟 Đặc quyền & Kỹ năng",
-        "perks_police": "• Nhận 100% tiền phạt từ tội phạm bị bắt.\n• Giảm 50% tỉ lệ kẻ xấu trộm tiền của bạn.\n• Tăng 10% thưởng lương.",
-        "perks_criminal": "• +15% tỉ lệ thành công phi vụ & trộm đồ.\n• +50% tiền cướp được từ Cảnh sát.\n• 50% cơ hội tẩu thoát nếu có trang bị chạy trốn.\n• Tăng 15% thưởng lương.",
-        "perks_doctor": "• Giảm 50% tiền phạt khi làm việc phi pháp.\n• Nhận 100% tiền viện phí từ lầu xanh.\n• Tăng 5% thưởng lương.",
-        "perks_programmer": "• 💻 Code Crunch: +200 coins mỗi $work.\n• 🧠 Thưởng kiến thức: +20% thưởng Scramble/Wordchain.\n• Tăng hiệu quả thiết bị công nghệ.\n• Tăng 20% thưởng lương.",
-        "perks_farmer": "• +50% may mắn từ cần câu & mồi.\n• 25% tỉ lệ giữ lại mồi sau khi câu.\n• 10% cơ hội trúng mùa (x2.5 tiền $work).\n• Tăng 10% thưởng lương.",
-        "perks_hacker": "• +5% tỉ lệ thành công tội phạm khi có Laptop.\n• 20% tỉ lệ nhân đôi tiền thưởng tội phạm.\n• 15% tỉ lệ nhân đôi tiền tìm kiếm (Data Mine).\n• Tăng 25% thưởng lương.",
-        "perks_streamer": "• 5-25% cơ hội viral (x5 tiền $work) khi có Gear.\n• +15% tiền thưởng từ lầu xanh.\n• Tăng 12% thưởng lương.",
-        "perks_chef": "• 8% cơ hội có đơn hàng đặc biệt (x2 tiền $work).\n• Tăng 12% thưởng lương.",
-        "perks_musician": "• 🎸 Flow State: 10% cơ hội x2 tiền thắng đỏ đen.\n• +20% tiền thưởng từ lầu xanh.\n• Tăng 10% thưởng lương.",
-        "perks_soldier": "• Nhận +100 coins tiền thưởng nhiệm vụ mỗi $work.\n• Giảm 30% tiền phạt khi thất bại phi vụ.\n• +10% tỉ lệ thành công trộm đồ.\n• Tăng 10% thưởng lương.",
-        "perks_trader": "• 📉 Market Tip: 15% hoàn 50% tiền cược khi thua (đỏ đen).\n• 🎰 Tăng nhẹ tỉ lệ nổ hũ Slots.\n• Nhận +50 coins từ tin tức thị trường khi $search.\n• Tăng 15% thưởng lương.",
-        "perks_teacher": "• 🎓 Thưởng giáo dục: +20% thưởng Hangman/Wordchain.\n• ⚠️ Bị trừ 1 level nếu thất bại phi vụ/trộm đồ.\n• Tăng 8% thưởng lương."
     },
     "giveaway": {
         "active_title": "{{emoji}}  SỰ KIỆN GIVEAWAY  {{emoji}}",
