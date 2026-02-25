@@ -94,8 +94,8 @@ function assignRandomJob(userId, lang) {
     return {
         id: randomJobId,
         config: jobConfig,
-        name: t(`jobs.${randomJobId}.name`, lang) || randomJobId,
-        fact: t(`job.job_facts.${randomJobId}`, lang) || "..."
+        name: t(`job.name_${randomJobId}`, lang) || randomJobId,
+        fact: t(`job.fact_${randomJobId}`, lang) || "..."
     };
 }
 

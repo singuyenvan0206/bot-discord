@@ -337,6 +337,7 @@
     "dm_disabled_random": "📬 Vì DM của bạn đang tắt, tôi đã gán cho bạn nghề ngẫu nhiên: **{{job}}**! (Dùng {{prefix}}job me để xem)",
     "detail_usage": "❌ Vui lòng cung cấp tên nghề. Cách dùng: `{{prefix}}jobdetail <tên_nghề>`",
     "job": {
+        "name_field": "Nghề nghiệp",
         "salary_label": "Thưởng Lương",
         "requirement_label": "Yêu Cầu",
         "perks_title": "🌟 Đặc Quyền & Kỹ Năng",
@@ -378,7 +379,21 @@
         "info_trader": "• **Hoàn Tiền**: 35% tỉ lệ hoàn lại 50% tiền cược khi thua (RPS) / 25% (CoinFlip).\n• **Mẹo Nhỏ**: Nhận thêm +150 coins mỗi lần search.\n• **Thao Túng**: Tỉ lệ thắng Slots cao hơn người bình thường.",
         "name_teacher": "📚 Giáo Viên",
         "desc_teacher": "Đào tạo thế hệ tương lai. Kiến thức là sức mạnh và hệ số nhân.",
-        "info_teacher": "• **Gia Sư**: +50% coins & +10 XP cho tất cả người tham gia Trivia.\n• **Cố Vấn**: Nhận x1.5 XP cho mọi câu lệnh.\n• **Học Thuật**: x2 XP khi sử dụng Bảng Trắng."
+        "info_teacher": "• **Gia Sư**: +50% coins & +10 XP cho tất cả người tham gia Trivia.\n• **Cố Vấn**: Nhận x1.5 XP cho mọi câu lệnh.\n• **Học Thuật**: x2 XP khi sử dụng Bảng Trắng.",
+        "chef_tip": "\n👨‍🍳 **Tiền tip từ Đầu bếp!** Dealer thưởng cho bạn {{amount}} coins vì sự tỉ mỉ! 🍳",
+        "job_facts": "Sự thật thú vị:",
+        "fact_police": "Cảnh sát có thể nhận thêm tiền phạt từ những kẻ trộm cướp bị bắt quả tang!",
+        "fact_criminal": "Tội phạm chuyên nghiệp có tỉ lệ trộm cắp thành công cao hơn và ít bị phạt hơn khi có trang bị.",
+        "fact_doctor": "Bác sĩ luôn có thu nhập thụ động từ những người không may phải nhập viện.",
+        "fact_programmer": "Lập trình viên giỏi Regex sẽ nhận được gợi ý cực hữu ích trong trò chơi Scramble!",
+        "fact_farmer": "Nông dân là nghề duy nhất có thể câu được những loại cá cực kỳ quý hiếm.",
+        "fact_hacker": "Hacker có thể tự động dò tìm vị trí của một quả mìn trong trò chơi Dò Mìn.",
+        "fact_streamer": "Streamer có khả năng 'viral', giúp nhân số tiền kiếm được từ công việc lên gấp 5 lần!",
+        "fact_chef": "Đầu bếp được Nhà cái Blackjack nể phục, sẵn sàng tặng tiền tip ngay cả khi kết quả hòa.",
+        "fact_musician": "Nhạc sĩ có trạng thái 'Flow State' giúp nhân đôi may mắn trong các trò chơi cá cược.",
+        "fact_soldier": "Binh lính luôn hoàn thành nhiệm vụ xuất sắc và nhận được tiền thưởng lương cố định.",
+        "fact_trader": "Thương nhân có tin mật từ thị trường, giúp nhận lại 1/2 tiền cược ngay cả khi thua cuộc.",
+        "fact_teacher": "Giáo viên không chỉ dạy học mà còn giúp mọi người nhận được nhiều tiền và XP hơn trong Trivia!"
     },
     "slut": {
         "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{hours}} giờ {{minutes}} phút**.",

@@ -85,18 +85,13 @@ module.exports = {
 
         db.removeBalance(message.author.id, totalCost);
 
-        let effectMsg = '';
         for (const purchase of itemsToBuy) {
             db.addItem(message.author.id, purchase.item.id, purchase.quantity);
-            if (purchase.item.multiplier && itemsToBuy.length === 1) {
-                const effectType = t(`effects.${purchase.item.type}`, lang) || purchase.item.type;
-                effectMsg += t('buy.effect_activated', lang, { percent: Math.round(purchase.item.multiplier * 100), type: effectType });
-            }
         }
 
         if (itemsToBuy.length === 1) {
             const single = itemsToBuy[0];
-            return message.reply(t('buy.success', lang, { quantity: single.quantity, item: single.itemName, price: totalCost.toLocaleString() }) + effectMsg);
+            return message.reply(t('buy.success', lang, { quantity: single.quantity, item: single.itemName, price: totalCost.toLocaleString() }));
         } else {
             return message.reply(t('buy.success_multiple', lang, { items: purchaseDetails.join(', '), price: totalCost.toLocaleString() }));
         }

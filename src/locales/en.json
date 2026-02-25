@@ -286,6 +286,7 @@
     "dm_disabled_random": "📬 Since your DMs are off, I've assigned you a random job: **{{job}}**! (Use {{prefix}}job me to check)",
     "detail_usage": "❌ Please provide a job name. Usage: `{{prefix}}jobdetail <job_name>`",
     "job": {
+        "name_field": "Profession",
         "salary_label": "Salary Bonus",
         "requirement_label": "Requirement",
         "perks_title": "🌟 Perks & Skills",
@@ -327,7 +328,21 @@
         "info_trader": "• **Market Insight**: 35% chance for 50% bet refund on loss (RPS) / 25% (CoinFlip).\n• **Market Tip**: Flat +150 coins on search.\n• **Manipulation**: Better winning odds in Slots.",
         "name_teacher": "📚 Teacher",
         "desc_teacher": "Shape the next generation. Knowledge is power and multiplier.",
-        "info_teacher": "• **Tutoring**: +50% coins & +10 XP for all participants in Trivia.\n• **Mentor**: Passive 1.5x XP gain on all commands.\n• **Academic**: 2x XP gain when using a Whiteboard."
+        "info_teacher": "• **Tutoring**: +50% coins & +10 XP for all participants in Trivia.\n• **Mentor**: Passive 1.5x XP gain on all commands.\n• **Academic**: 2x XP gain when using a Whiteboard.",
+        "chef_tip": "\n👨‍🍳 **Chef's Tip!** The dealer tips you {{amount}} coins for your precision! 🍳",
+        "job_facts": "Fun Fact:",
+        "fact_police": "Police Officers can receive extra fines from caught criminals!",
+        "fact_criminal": "Master thieves have higher success rates and pay lower fines when equipped.",
+        "fact_doctor": "Doctors earn passive income from citizens who unfortunately end up hospitalized.",
+        "fact_programmer": "Programmers skilled in Regex get extra hints in the Scramble game!",
+        "fact_farmer": "Farmers are the only professionals who can catch legendary rare fish.",
+        "fact_hacker": "Hackers can automatically detect the location of one mine in Minesweeper.",
+        "fact_streamer": "Streamers can go viral, multiplying their work earnings by 5x!",
+        "fact_chef": "Chefs are respected by the Dealer, earning tips even on a Blackjack Push.",
+        "fact_musician": "Musicians can reach a Flow State, doubling their luck in gambling games.",
+        "fact_soldier": "Soldiers always complete missions successfully, earning a guaranteed salary bonus.",
+        "fact_trader": "Traders have market insight, receiving a partial refund even on lost bets.",
+        "fact_teacher": "Teachers help everyone gain more coins and XP during Trivia sessions!"
     },
     "slut": {
         "cooldown": "❌ You need to rest and recover! Come back in **{{hours}}h {{minutes}}m**.",
