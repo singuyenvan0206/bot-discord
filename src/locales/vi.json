@@ -401,6 +401,9 @@
         "footer_fail": "Chúc bạn may mắn lần sau! (-1 Mồi câu)",
         "bait_salvaged": "\n♻️ **Tiết kiệm mồi!** Kỹ năng nông dân giúp bạn tái sử dụng mồi câu.",
         "trophy_catch": "\n🏆 **Cá Khổng Lồ!** Kinh nghiệm của bạn giúp bạn bắt được một mẫu vật khổng lồ! (3x giá trị)",
+        "rates_title": "📊 Bảng Tỉ Lệ Câu Cá",
+        "rates_desc": "Tính toán dựa trên: **{{rod}}** + **{{bait}}** (May mắn: {{luck}}x)",
+        "rates_footer": "Dùng {{prefix}}fish để bắt đầu câu!",
         "items": {
             "old_boot": "Chiếc Ủng Cũ",
             "rusty_can": "Vỏ Lon Gỉ",

@@ -93,6 +93,50 @@ module.exports = {
         const rodName = t(`items.${rod.id}.name`, lang);
         const baitName = t(`items.${bait.id}.name`, lang);
 
+        // Calculate Total Luck (Farmer Job Bonus)
+        let totalLuck = rod.luck * (1 + bait.luck);
+        if (user.job === 'farmer') {
+            totalLuck *= 1.5; // Farmers get 50% more luck from gear
+        }
+
+        // helper to get weighted pool
+        const getWeightedPool = (luck) => {
+            let pool = CATCHES.filter(c => c.minLuck <= luck);
+            return pool.map(c => {
+                let modWeight = c.weight;
+                if (luck > 2.0 && c.value > 500) modWeight *= 1.2;
+                if (luck > 3.0 && c.value > 1000) modWeight *= 1.3;
+                if (luck > 2.0 && c.value === 0) modWeight *= 0.8;
+                return { ...c, weight: modWeight };
+            });
+        };
+
+        const weightedPool = getWeightedPool(totalLuck);
+        const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);
+
+        // --- SUBCOMMAND: rates ---
+        if (args[0] === 'rates') {
+            const ratesEmbed = new EmbedBuilder()
+                .setTitle(t('fish.rates_title', lang))
+                .setColor(config.COLORS.INFO)
+                .setDescription(t('fish.rates_desc', lang, { rod: rodName, bait: baitName, luck: totalLuck.toFixed(1) }));
+
+            // Sort by value (rarity)
+            const sortedPool = [...weightedPool].sort((a, b) => b.value - a.value);
+
+            let ratesText = '';
+            for (const item of sortedPool) {
+                const chance = ((item.weight / totalWeight) * 100).toFixed(2);
+                const itemName = t(`fish.items.${item.key}`, lang);
+                ratesText += `${item.emoji} **${itemName}**: \`${chance}%\`\n`;
+            }
+
+            ratesEmbed.addFields({ name: t('common.choices', lang), value: ratesText });
+            ratesEmbed.setFooter({ text: t('fish.rates_footer', lang, { prefix: config.PREFIX }) });
+
+            return message.reply({ embeds: [ratesEmbed] });
+        }
+
         // 3. Consume Bait
         let baitSaved = false;
         if (user.job === 'farmer' && Math.random() < 0.25) {
@@ -103,27 +147,7 @@ module.exports = {
             db.removeItem(message.author.id, bait.id, 1);
         }
 
-        // 4. Calculate Total Luck (Farmer Job Bonus)
-        let totalLuck = rod.luck * (1 + bait.luck);
-        if (user.job === 'farmer') {
-            totalLuck *= 1.5; // Farmers get 50% more luck from gear
-        }
-
         // 5. Determine Catch
-        let pool = CATCHES.filter(c => c.minLuck <= totalLuck);
-
-        let weightedPool = pool.map(c => {
-            let modWeight = c.weight;
-            if (totalLuck > 2.0 && c.value > 500) modWeight *= 1.2;
-            if (totalLuck > 3.0 && c.value > 1000) modWeight *= 1.3;
-            if (totalLuck > 2.0 && c.value === 0) modWeight *= 0.8;
-            return { ...c, weight: modWeight };
-        });
-
-        // Weighted Random
-        let totalWeight = 0;
-        for (const c of weightedPool) totalWeight += c.weight;
-
         let random = Math.random() * totalWeight;
         let caughtItem = null;
 
