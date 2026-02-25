@@ -40,8 +40,8 @@ module.exports = {
         }
 
         // Streamer Interaction: Subathon (10% chance +25% bonus)
-        if (user.job === 'streamer' && Math.random() < 0.1) {
-            const subBonus = Math.floor(total * 0.50);
+        if (user.job === 'streamer' && Math.random() < 0.5) {
+            const subBonus = Math.floor(total * 2);
             total += subBonus;
             eventMsg += t('daily_events.subathon', lang, { amount: subBonus });
         }
