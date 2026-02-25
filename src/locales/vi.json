@@ -315,6 +315,7 @@
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
         "no_money_self": "❌ Bạn cần ít nhất **100 coins** trong ví để làm vốn nếu chẳng may bị bắt!",
         "invalid_user": "❌ Bạn không thể tự trộm chính mình!",
+        "target_owner": "❌ Bạn không thể cướp tiền của đấng quyền năng (Owner)!",
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*",
         "thief_edge": "\n-# *(Gồm 🎁 +{{amount}} thưởng item)*",
         "police_busted": "\n👮 **Bị tóm!** Bạn định trộm của cảnh sát và phải nộp phạt gấp đôi!",

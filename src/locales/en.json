@@ -259,6 +259,7 @@
         "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
         "no_money_self": "❌ You need at least **100 coins** in your wallet to cover potential fines!",
         "invalid_user": "❌ You can't rob yourself!",
+        "target_owner": "❌ You cannot rob the absolute authority (the Owner)!",
         "thief_edge": "\n-# *(Includes 🎁 +{{amount}} item bonus)*",
         "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
         "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder.",
