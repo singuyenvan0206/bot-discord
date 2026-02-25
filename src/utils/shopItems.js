@@ -10,7 +10,7 @@ module.exports = [
     { id: 105, name: 'Abstract Painting', price: 60000, multiplier: 0.40, duration: 2592000, type: 'daily' }, // CMD 5000
     { id: 106, name: 'Cookbook', price: 80000, multiplier: 0.60, duration: 2592000, type: 'daily', idealJob: 'chef' }, // CMD 4444
     { id: 107, name: 'Moai Statue', price: 120000, multiplier: 0.80, duration: 2592000, type: 'daily' }, // CMD 5000
-    { id: 108, name: 'VIP Golden Ticket', price: 250000, multiplier: 1.50, duration: 2592000, type: 'daily' },
+    { id: 108, name: 'VIP Golden Ticket', price: 2500000, multiplier: 1.50, duration: 2592000, type: 'daily' },
     { id: 109, name: 'Mansion', price: 750000, multiplier: 3.00, duration: 2592000, type: 'daily', idealJob: 'streamer' }, // CMD 8333
     { id: 110, name: 'Space Station', price: 2500000, multiplier: 5.00, duration: 2592000, type: 'daily', idealJob: 'hacker' }, // CMD 16666
 

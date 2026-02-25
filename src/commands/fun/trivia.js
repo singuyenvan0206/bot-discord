@@ -107,7 +107,16 @@ module.exports = {
                 if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
 
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+
+                // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
+                const u = db.getUser(i.user.id);
+                if (u.job === 'teacher') {
+                    totalReward = Math.floor(totalReward * 1.5);
+                    winXp += 10;
+                    resultMsg += t('job.teacher_tutoring_simple', lang);
+                }
+
                 addXp(i.user.id, winXp);
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });

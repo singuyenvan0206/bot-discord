@@ -57,6 +57,12 @@ module.exports = {
             hint = `${t('scramble.category', lang)}: **${category}**` + (Math.random() > 0.5 ? ` | ${t('scramble.starts_with', lang)}: **${word[0].toUpperCase()}**` : ` | ${t('scramble.length', lang)}: **${word.length}**`);
         }
 
+        // Programmer Interaction: Regex Assist (Reveals 1st and Last letter if not already)
+        const user = db.getUser(message.author.id);
+        if (user.job === 'programmer' && word.length > 3) {
+            hint += `\n💻 **Regex Assist:** \`${word[0].toUpperCase()}...${word[word.length - 1].toUpperCase()}\``;
+        }
+
         const embed = new EmbedBuilder()
             .setTitle(t('scramble.title', lang))
             .setDescription(`${t('scramble.arrange_this', lang)}: **${scrambled}**\n\n💡 **${t('hangman.hint', lang)}:** ${hint}`)

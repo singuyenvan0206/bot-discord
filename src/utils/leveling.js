@@ -192,6 +192,36 @@ function deductLevel(userId, levels = 1) {
     };
 }
 
+/**
+ * Giảm XP của người dùng.
+ * Thường dùng làm hình phạt cho các hành vi rủi ro thất bại.
+ * 
+ * @param {string} userId - ID người dùng
+ * @param {number} amount - Số XP muốn giảm
+ * @returns {object} - Object chứa thông tin cấp độ cũ và mới
+ */
+function deductXp(userId, amount) {
+    const user = db.getUser(userId);
+    const oldXp = Number(user.xp || 0);
+    const oldLevel = Number(user.level || 0);
+
+    const newXp = Math.max(0, oldXp - amount);
+    const newLevel = calculateLevel(newXp);
+
+    db.updateUser(userId, {
+        xp: newXp,
+        level: newLevel
+    });
+
+    return {
+        oldXp,
+        newXp,
+        oldLevel,
+        newLevel,
+        deducted: oldXp - newXp
+    };
+}
+
 module.exports = {
     calculateLevel,
     addXp,
@@ -200,5 +230,6 @@ module.exports = {
     checkAndSendMilestone,
     sendLevelUpMessage,
     deductLevel,
+    deductXp,
     XP_AMOUNTS
 };

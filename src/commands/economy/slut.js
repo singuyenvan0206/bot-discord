@@ -1,5 +1,5 @@
 const db = require('../../database');
-const { deductLevel } = require('../../utils/leveling');
+const { deductLevel, deductXp } = require('../../utils/leveling');
 const { calculateReward } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -62,10 +62,18 @@ module.exports = {
 
             return message.reply(msg);
         } else {
-            let penalty = config.ECONOMY.SLUT_FAIL_PENALTY;
+            // New Scaled Penalty: 200 + (2% of balance)
+            let penalty = 200 + Math.floor(user.balance * 0.02);
+            const xpLoss = 30;
+
             if (user.job === 'doctor') penalty = Math.floor(penalty / 2); // 50% discount for doctors
 
+            const xpResult = deductXp(message.author.id, xpLoss);
             db.removeBalance(message.author.id, penalty);
+
+            // Cooldown Penalty: Hospital Time (1.5x cooldown)
+            const hospitalCooldown = Math.floor(config.ECONOMY.SLUT_COOLDOWN * 0.5);
+            db.updateUser(message.author.id, { last_slut: now + hospitalCooldown });
 
             // Interaction: Transfer penalty to a random Doctor (exclude bot)
             const randomDoctorId = db.getRandomUserByJob('doctor', [message.client.user.id]);
@@ -73,7 +81,11 @@ module.exports = {
                 db.addBalance(randomDoctorId, penalty);
 
                 const doctorUser = message.guild?.members?.cache.get(randomDoctorId);
-                let failureMsg = t('slut.failure', lang, { amount: penalty.toLocaleString() });
+                let failureMsg = t('slut.failure_xp', lang, {
+                    amount: penalty.toLocaleString(),
+                    xp: xpResult.deducted,
+                    hospital: t('common.hospital_time', lang)
+                });
 
                 if (user.job === 'teacher') {
                     const result = deductLevel(message.author.id);
@@ -87,7 +99,11 @@ module.exports = {
                 return message.reply(failureMsg);
             }
 
-            let failMsg = t('slut.failure', lang, { amount: penalty.toLocaleString() });
+            let failMsg = t('slut.failure_xp', lang, {
+                amount: penalty.toLocaleString(),
+                xp: xpResult.deducted,
+                hospital: t('common.hospital_time', lang)
+            });
             if (user.job === 'teacher') {
                 const result = deductLevel(message.author.id);
                 failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;

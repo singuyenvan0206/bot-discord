@@ -1,6 +1,6 @@
 const db = require('../../database');
-const { deductLevel } = require('../../utils/leveling');
-const { calculateReward, hasActiveItem } = require('../../utils/multiplier');
+const { deductLevel, deductXp } = require('../../utils/leveling');
+const { calculateReward, hasActiveItem, removeActiveBuff } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
@@ -69,16 +69,18 @@ module.exports = {
 
             return message.reply(msg);
         } else {
-            let fine = user.level * config.ECONOMY.PENALTY_PER_LEVEL;
+            // New Scaled Penalty: (level * 500) + (5% of balance)
+            let fine = (user.level * 500) + Math.floor(user.balance * 0.05);
+            const xpLoss = 50;
 
             // Doctor Interaction: Medical knowledge prevents heavy losses (50% reduction)
             if (user.job === 'doctor') {
                 fine = Math.floor(fine * 0.5);
             }
 
-            // Criminal Interaction: Escape chance with Sneakers (204) or Supercar (212)
+            // Criminal Interaction: Escape chance with Sneakers (204) or Supercar (219)
             let escapeMsg = '';
-            if (isCriminal && (hasActiveItem(message.author.id, 204) || hasActiveItem(message.author.id, 212)) && Math.random() < 0.5) {
+            if (isCriminal && (hasActiveItem(message.author.id, 204) || hasActiveItem(message.author.id, 219)) && Math.random() < 0.5) {
                 fine = Math.floor(fine * 0.2); // 80% reduction
                 escapeMsg = t('crime.criminal_escaped', lang, { amount: fine.toLocaleString() });
             }
@@ -89,15 +91,37 @@ module.exports = {
                 escapeMsg = (escapeMsg || '') + t('crime.soldier_armed', lang);
             }
 
+            // XP Penalty
+            const xpResult = deductXp(message.author.id, xpLoss);
             db.removeBalance(message.author.id, fine);
+
+            // Cooldown Penalty: Jail Time (2x cooldown for next time)
+            const jailCooldown = config.ECONOMY.CRIME_COOLDOWN;
+            db.updateUser(message.author.id, { last_crime: now + jailCooldown });
+
+            // Item Breakage: 10% chance to lose high-tech gear
+            let itemBrokenMsg = '';
+            if (Math.random() < 0.1) {
+                if (removeActiveBuff(message.author.id, 212)) {
+                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.212.name', lang) });
+                } else if (removeActiveBuff(message.author.id, 220)) {
+                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.220.name', lang) });
+                }
+            }
 
             // Interaction: Transfer fine to a random Police (exclude bot)
             const randomPoliceId = db.getRandomUserByJob('police', [message.client.user.id]);
             if (randomPoliceId) {
                 db.addBalance(randomPoliceId, fine);
-
                 const policeUser = message.guild?.members?.cache.get(randomPoliceId);
-                let failureMsg = escapeMsg ? `❌ ${escapeMsg}` : t('crime.failure', lang, { amount: fine.toLocaleString() });
+
+                let failureMsg = escapeMsg ? `❌ ${escapeMsg}` : t('crime.failure_xp', lang, {
+                    amount: fine.toLocaleString(),
+                    xp: xpResult.deducted,
+                    jail: t('common.jail_time', lang)
+                });
+
+                if (itemBrokenMsg) failureMsg += itemBrokenMsg;
 
                 if (user.job === 'teacher') {
                     const result = deductLevel(message.author.id);
@@ -111,7 +135,13 @@ module.exports = {
                 return message.reply(failureMsg);
             }
 
-            let failMsg = t('crime.failure', lang, { amount: fine.toLocaleString() });
+            let failMsg = t('crime.failure_xp', lang, {
+                amount: fine.toLocaleString(),
+                xp: xpResult.deducted,
+                jail: t('common.jail_time', lang)
+            });
+            if (itemBrokenMsg) failMsg += itemBrokenMsg;
+
             if (user.job === 'teacher') {
                 const result = deductLevel(message.author.id);
                 failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;

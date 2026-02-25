@@ -148,4 +148,21 @@ function calculateReward(base, userId, type = 'income') {
     return { total, bonus, percent: Math.round(bonusPart * 100), cap: Math.round(maxCap * 100) };
 }
 
-module.exports = { getUserMultiplier, getTotalMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem, calculateReward };
+/**
+ * Xóa một buff đang hoạt động (khi bị hỏng hoặc bị tịch thu).
+ */
+function removeActiveBuff(userId, itemId) {
+    const user = db.getUser(userId);
+    let buffs = [];
+    try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+
+    const filteredBuffs = buffs.filter(b => b.itemId !== itemId);
+
+    if (filteredBuffs.length !== buffs.length) {
+        db.updateUser(userId, { active_buffs: JSON.stringify(filteredBuffs) });
+        return true;
+    }
+    return false;
+}
+
+module.exports = { getUserMultiplier, getTotalMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem, calculateReward, removeActiveBuff };

@@ -52,13 +52,22 @@ module.exports = {
 
             // Grant XP
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-            const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+            let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+
+            // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
+            const u = db.getUser(winnerMsg.author.id);
+            if (u.job === 'teacher') {
+                totalReward = Math.floor(totalReward * 1.5);
+                winXp += 10;
+            }
+
             addXp(winnerMsg.author.id, winXp);
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
             if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+            if (u.job === 'teacher') resultDesc += t('job.teacher_tutoring_simple', lang);
 
             await winnerMsg.reply({
                 embeds: [new EmbedBuilder()

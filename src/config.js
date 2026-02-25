@@ -40,15 +40,15 @@ module.exports = {
         DICTIONARY: 'https://api.dictionaryapi.dev/api/v2/entries/en/'
     },
     ECONOMY: {
-        WORDCHAIN_REWARD: 5,
-        SCRAMBLE_REWARD: 50,
-        HANGMAN_REWARD: 50,
-        GUESS_REWARD_BASE: 100,
-        MEMORY_REWARD_BASE: 100,
-        EMOJIQUIZ_REWARD: 150,
-        TICTACTOE_REWARD: 100,
-        TRIVIA_REWARD: 100,
-        REACTION_REWARD_BASE: 15,
+        WORDCHAIN_REWARD: 15,
+        SCRAMBLE_REWARD: 250,
+        HANGMAN_REWARD: 250,
+        GUESS_REWARD_BASE: 500,
+        MEMORY_REWARD_BASE: 500,
+        EMOJIQUIZ_REWARD: 750,
+        TICTACTOE_REWARD: 500,
+        TRIVIA_REWARD: 500,
+        REACTION_REWARD_BASE: 100,
         WORK_COOLDOWN: 3600, // 1 hour in seconds
         DAILY_COOLDOWN: 86400, // 24 hours in seconds
         DAILY_REWARD: 300,

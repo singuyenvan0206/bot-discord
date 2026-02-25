@@ -42,8 +42,9 @@ module.exports = {
         let flavorText = '';
 
         if (won) {
-            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(bet * 2, user.id, 'gamble');
-            payout = totalReward;
+            const profit = bet; // 2x return means 1x profit
+            const { bonus: bonusAmount, cap } = calculateReward(profit, user.id, 'gamble');
+            payout = (bet * 2) + bonusAmount;
 
             if (payout > 0) db.addBalance(user.id, payout);
             flavorText = t('coinflip.win', lang, { amount: payout.toLocaleString() });
@@ -51,8 +52,8 @@ module.exports = {
                 flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
             }
 
-            // Musician Interaction: Flow State (10% chance to double final win)
-            if (user.job === 'musician' && Math.random() < 0.10) {
+            // Musician Interaction: Flow State (15% chance to double final win)
+            if (user.job === 'musician' && Math.random() < 0.15) {
                 payout *= 2;
                 db.addBalance(user.id, payout - (payout / 2)); // Add the extra half
                 flavorText += t('common.flow_state', lang);
@@ -61,8 +62,8 @@ module.exports = {
             flavorText = t('coinflip.lose', lang, { amount: bet });
             if (bet) addHouseProfit(message, bet);
 
-            // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
-            if (user.job === 'trader' && Math.random() < 0.15) {
+            // Trader Interaction: Market Tip (25% chance to refund 50% on loss)
+            if (user.job === 'trader' && Math.random() < 0.25) {
                 const refund = Math.floor(bet * 0.5);
                 db.addBalance(user.id, refund);
                 flavorText += t('common.market_tip', lang);

@@ -35,12 +35,20 @@ module.exports = {
 
         let { total, bonus: bonusAmount, cap } = calculateReward(baseReward, message.author.id);
 
-        // Job Bonus: Hacker Data Mine (15% chance for 2x if having Laptop)
+        // Job Bonus: Hacker Data Mine (15% chance for 2x if having Laptop/Superyacht)
         let dataMineMsg = '';
-        if (user.job === 'hacker' && hasActiveItem(message.author.id, 201) && Math.random() < 0.15) {
+        if (user.job === 'hacker' && (hasActiveItem(message.author.id, 212) || hasActiveItem(message.author.id, 220)) && Math.random() < 0.15) {
             total *= 2;
             bonusAmount *= 2;
             dataMineMsg = t('search.data_mine', lang);
+        }
+
+        // Hacker Interaction: Data Breach (5% chance +200-500 flat)
+        let dataBreachMsg = '';
+        if (user.job === 'hacker' && Math.random() < 0.05) {
+            const extra = Math.floor(Math.random() * 301) + 200;
+            total += extra;
+            dataBreachMsg = t('search.data_breach', lang, { amount: extra });
         }
 
         // Job Bonus: Trader Market Tip (+50 flat)
@@ -64,6 +72,7 @@ module.exports = {
             msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
         }
         if (dataMineMsg) msg += dataMineMsg;
+        if (dataBreachMsg) msg += dataBreachMsg;
         if (marketTipMsg) msg += marketTipMsg;
 
         return message.reply(msg);

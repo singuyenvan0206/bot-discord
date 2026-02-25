@@ -1,8 +1,8 @@
 const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
-const { deductLevel } = require('../../utils/leveling');
-const { hasActiveItem, isProtectedFromRob, calculateReward } = require('../../utils/multiplier');
+const { deductLevel, deductXp } = require('../../utils/leveling');
+const { hasActiveItem, isProtectedFromRob, calculateReward, removeActiveBuff } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'rob',
@@ -85,19 +85,41 @@ module.exports = {
 
             return message.reply(msg);
         } else {
-            let penalty = user.level * config.ECONOMY.PENALTY_PER_LEVEL;
+            // New Scaled Penalty: (level * 500) + (5% of balance)
+            let penalty = (user.level * 500) + Math.floor(user.balance * 0.05);
+            const xpLoss = 50;
 
             // Interaction: Counter-Rob (Penalty doubled if robbing police)
             if (isVictimPolice) {
                 penalty *= 2;
             }
+
+            const xpResult = deductXp(message.author.id, xpLoss);
             db.removeBalance(message.author.id, penalty);
             db.addBalance(target.id, penalty);
 
-            let failMsg = t('rob.failure', lang, {
+            // Cooldown Penalty: Busted Time (2x cooldown)
+            const bustedCooldown = config.ECONOMY.ROB_COOLDOWN;
+            db.updateUser(message.author.id, { last_rob: now + bustedCooldown });
+
+            // Item Breakage: 15% chance to lose Sneakers (204) or Shield (202)
+            let itemBrokenMsg = '';
+            if (Math.random() < 0.15) {
+                if (removeActiveBuff(message.author.id, 204)) {
+                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.204.name', lang) });
+                } else if (removeActiveBuff(message.author.id, 202)) {
+                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.202.name', lang) });
+                }
+            }
+
+            let failMsg = t('rob.failure_xp', lang, {
                 user: target.username,
-                amount: penalty.toLocaleString()
+                amount: penalty.toLocaleString(),
+                xp: xpResult.deducted,
+                jail: t('common.jail_time', lang)
             });
+
+            if (itemBrokenMsg) failMsg += itemBrokenMsg;
 
             if (user.job === 'teacher') {
                 const result = deductLevel(message.author.id);

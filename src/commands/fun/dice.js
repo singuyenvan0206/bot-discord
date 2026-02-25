@@ -88,9 +88,10 @@ module.exports = {
             let bonusText = '';
 
             if (won) {
-                const { total: totalPrize, bonus: bonusAmount, cap } = calculateReward(bet * winMultiplier, message.author.id, 'gamble');
-                prize = totalPrize;
-                db.addBalance(message.author.id, prize);
+                const profit = prize - bet;
+                const { bonus: bonusAmount, cap } = calculateReward(profit, message.author.id, 'gamble');
+                prize += bonusAmount;
+                db.addBalance(message.author.id, bonusAmount); // Added initial prize before, now add bonus
                 if (bonusAmount > 0) {
                     bonusText = t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                 }

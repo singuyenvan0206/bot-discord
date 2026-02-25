@@ -28,13 +28,9 @@ module.exports = {
             db.removeBalance(user.id, bet);
         }
 
-        const size = 24; // 24 interactive cells (0-23)
-        const mineCount = 5; // Fixed for balance in 24 cells (approx 20% density)
+        const size = 20; // 4 rows * 5 columns = 20 cells
+        const mineCount = 4; // Approx 20% density for balanced gameplay
 
-        // Game State
-        // 'H' = Hidden, 'F' = Flagged, 'M' = Mine (Revealed), '0'-'8' = Number (Revealed)
-        // We'll store the *actual* grid and the *visible* state separately?
-        // Actually, let's just use internal state and re-render.
 
         const gameState = {
             grid: Array(size).fill(0), // 0 = empty, 'M' = Mine
@@ -88,20 +84,8 @@ module.exports = {
                 for (let dc = -1; dc <= 1; dc++) {
                     if (dr === 0 && dc === 0) continue;
                     const nr = r + dr, nc = c + dc;
-                    // Check bounds: carefully, since the last row only has 4 cells (0-3 in that row, total index 20-23)
-                    // Wait, our grid is 0-23.
-                    // Row 0: 0-4
-                    // Row 1: 5-9
-                    // Row 2: 10-14
-                    // Row 3: 15-19
-                    // Row 4: 20-23 (Only 4 cols)
-
-                    if (nr >= 0 && nr <= 4) {
-                        // Max col depends on row
-                        const maxCol = (nr === 4) ? 3 : 4;
-                        if (nc >= 0 && nc <= maxCol) {
-                            neighbors.push(nr * 5 + nc);
-                        }
+                    if (nr >= 0 && nr <= 3 && nc >= 0 && nc <= 4) {
+                        neighbors.push(nr * 5 + nc);
                     }
                 }
             }
@@ -136,11 +120,10 @@ module.exports = {
 
         const renderComponents = (gameOver = false, won = false) => {
             const rows = [];
-            for (let r = 0; r < 5; r++) {
+            // First 4 rows: 5 buttons each = 20 buttons
+            for (let r = 0; r < 4; r++) {
                 const row = new ActionRowBuilder();
-                const maxC = (r === 4) ? 4 : 5;
-
-                for (let c = 0; c < maxC; c++) {
+                for (let c = 0; c < 5; c++) {
                     const idx = r * 5 + c;
                     const btn = new ButtonBuilder().setCustomId(`ms_${idx}`);
 
@@ -157,19 +140,19 @@ module.exports = {
                     }
                     row.addComponents(btn);
                 }
-
-                // Add control button to last row
-                if (r === 4) {
-                    const flagBtn = new ButtonBuilder()
-                        .setCustomId('ms_toggle')
-                        .setLabel(gameState.isFlagging ? t('minesweeper.flag_on', lang) : t('minesweeper.flag_off', lang))
-                        .setStyle(gameState.isFlagging ? ButtonStyle.Danger : ButtonStyle.Primary) // Red if On, Blue if Off
-                        .setEmoji(gameState.isFlagging ? '🚩' : '🖱️')
-                        .setDisabled(gameOver);
-                    row.addComponents(flagBtn);
-                }
                 rows.push(row);
             }
+
+            // 5th row: Control buttons
+            const controlRow = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('ms_toggle')
+                    .setLabel(gameState.isFlagging ? t('minesweeper.flag_on', lang) : t('minesweeper.flag_off', lang))
+                    .setStyle(gameState.isFlagging ? ButtonStyle.Danger : ButtonStyle.Primary)
+                    .setEmoji(gameState.isFlagging ? '🚩' : '🖱️')
+                    .setDisabled(gameOver)
+            );
+            rows.push(controlRow);
             return rows;
         };
 
@@ -263,8 +246,10 @@ module.exports = {
 
                         let prize = 0;
                         if (bet > 0) {
-                            const baseWin = Math.floor(bet * 1.5);
-                            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseWin, user.id, 'gamble');
+                            const baseWin = Math.floor(bet * 2.5);
+                            const profit = baseWin - bet;
+                            const { bonus: bonusAmount, cap } = calculateReward(profit, user.id, 'gamble');
+                            const totalReward = baseWin + bonusAmount;
                             db.addBalance(user.id, totalReward);
 
                             let winDesc = t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${totalReward.toLocaleString()} coins`;

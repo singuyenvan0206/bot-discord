@@ -28,15 +28,16 @@ module.exports = {
 
             let desc = '';
             Object.values(jobs).forEach(j => {
-                const name = t(`job.info_${j.id}`, lang);
-                desc += `${j.icon} **${t(`job.name_${j.id}`, lang)}**\n*${name}*\n\n`;
+                const name = t(`job.name_${j.id}`, lang);
+                const info = t(`job.info_${j.id}`, lang);
+                desc += `${j.icon} **${name}**\n${info}\n\n`;
             });
 
             embed.setDescription(t('job.list_desc', lang) + '\n\n' + desc + `\n${t('job.tip_detail', lang, { prefix: config.PREFIX })}`);
             return message.reply({ embeds: [embed] });
         }
 
-        if (sub === 'set') {
+        if (sub === 'set' || sub === 'select') {
             const jobId = args[1]?.toLowerCase();
             if (!jobId) return message.reply(t('job.set_error_invalid', lang));
 
@@ -44,15 +45,29 @@ module.exports = {
             if (!job) return message.reply(t('job.set_error_invalid', lang));
 
             if (user.job === job.id) return message.reply(t('job.already_has', lang));
+
+            // Requirements (Example: Level 20)
             if (user.level < 20) return message.reply(t('job.set_error_level', lang, { level: 20 }));
 
             db.updateUser(message.author.id, { job: job.id });
-            return message.reply(t('job.set_success', lang, { job: job.id.charAt(0).toUpperCase() + job.id.slice(1) }));
+            const jobName = t(`job.name_${job.id}`, lang);
+            return message.reply(t('job.set_success', lang, { job: jobName }));
         }
 
         if (sub === 'info' || sub === 'me') {
-            const jobName = user.job ? user.job.charAt(0).toUpperCase() + user.job.slice(1) : t('job.none', lang);
-            return message.reply(t('job.current', lang, { job: jobName }));
+            if (!user.job) return message.reply(t('job.none', lang));
+
+            const job = config.ECONOMY.JOBS[user.job];
+            const name = t(`job.name_${user.job}`, lang);
+            const info = t(`job.info_${user.job}`, lang);
+
+            const embed = new EmbedBuilder()
+                .setTitle(`💼 ${t('job.current_title', lang)}`)
+                .setDescription(`${job.icon} **${name}**\n\n${info}`)
+                .setColor(job.color || config.COLORS.INFO)
+                .setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() });
+
+            return message.reply({ embeds: [embed] });
         }
     }
 };

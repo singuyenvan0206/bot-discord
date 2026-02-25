@@ -53,12 +53,22 @@ module.exports = {
                 const diff = m.createdTimestamp - signalTime;
                 collector.stop('win');
 
-                let baseReward = config.ECONOMY.REACTION_REWARD_BASE || 15;
-                if (diff < 300) { baseReward = baseReward * 3 + 5; }
+                let baseReward = config.ECONOMY.REACTION_REWARD_BASE || 100;
+                if (diff < 300) { baseReward = baseReward * 3 + 100; } // Extra bonus for sub-300ms
                 else if (diff < 500) { baseReward = baseReward * 2; }
 
                 const { total: reward, bonus: bonusAmount, cap } = calculateReward(baseReward, m.author.id);
-                db.addBalance(m.author.id, reward);
+                let finalReward = reward;
+
+                // Musician Interaction: Flow State (15% chance to double final win)
+                const u = db.getUser(m.author.id);
+                let flowMsg = '';
+                if (u.job === 'musician' && Math.random() < 0.15) {
+                    finalReward *= 2;
+                    flowMsg = t('common.flow_state', lang);
+                }
+
+                db.addBalance(m.author.id, finalReward);
 
                 // Grant Win XP
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
@@ -71,6 +81,7 @@ module.exports = {
                 if (bonusAmount > 0) {
                     resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                 }
+                if (flowMsg) resultDesc += flowMsg;
 
                 await m.reply({
                     embeds: [new EmbedBuilder()

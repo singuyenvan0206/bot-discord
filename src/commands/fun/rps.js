@@ -124,8 +124,9 @@ module.exports = {
             // Payout Handling
             if (betAmount > 0) {
                 if (outcome === 'win') {
-                    const { total: totalPrize, bonus: bonusAmount, cap } = calculateReward(betAmount * 2, user.id, 'gamble');
-                    let prize = totalPrize;
+                    const profit = betAmount; // Standard 2x return means 1x profit
+                    const { bonus: bonusAmount, cap } = calculateReward(profit, user.id, 'gamble');
+                    let prize = (betAmount * 2) + bonusAmount;
 
                     db.addBalance(user.id, prize);
                     result += t('rps.won_coins', lang, { amount: prize.toLocaleString(), emoji: config.EMOJIS.COIN });

@@ -26,10 +26,24 @@ module.exports = {
         let { total, bonus: bonusAmount, cap } = calculateReward(config.ECONOMY.DAILY_REWARD, message.author.id);
 
         // Chef Interaction: Michelin Star (5% chance — daily ×3)
-        let michelinMsg = '';
+        let eventMsg = '';
         if (user.job === 'chef' && Math.random() < 0.05) {
             total = Math.floor(total * 3);
-            michelinMsg = t('daily_events.michelin_star', lang);
+            eventMsg = t('daily_events.michelin_star', lang);
+        }
+
+        // Doctor Interaction: Medical Trial (8% chance +100-300 coins)
+        if (user.job === 'doctor' && Math.random() < 0.08) {
+            const grant = Math.floor(Math.random() * 201) + 100;
+            total += grant;
+            eventMsg += t('daily_events.medical_trial', lang, { amount: grant });
+        }
+
+        // Streamer Interaction: Subathon (10% chance +25% bonus)
+        if (user.job === 'streamer' && Math.random() < 0.1) {
+            const subBonus = Math.floor(total * 0.25);
+            total += subBonus;
+            eventMsg += t('daily_events.subathon', lang, { amount: subBonus });
         }
 
 
@@ -41,7 +55,7 @@ module.exports = {
         if (bonusAmount > 0) {
             msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
         }
-        if (michelinMsg) msg += michelinMsg;
+        if (eventMsg) msg += eventMsg;
 
         return message.reply(msg);
     }

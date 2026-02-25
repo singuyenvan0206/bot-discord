@@ -74,13 +74,31 @@ module.exports = {
         }
 
         if (payout > 0) {
-            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(payout, user.id, 'gamble');
-            payout = totalReward;
+            const profit = Math.max(0, payout - bet);
+            let totalPayout = payout;
+            let bonusValue = 0;
+            let currentCap = 250;
 
+            if (profit > 0) {
+                totalPayout += bonus;
+                bonusValue = bonus;
+                currentCap = cap;
+            }
+
+            // Streamer Interaction: Sub Hype (10% chance to double any win)
+            let subHypeMsg = '';
+            if (user.job === 'streamer' && profit > 0 && Math.random() < 0.10) {
+                totalPayout *= 2;
+                subHypeMsg = t('slots.sub_hype', lang);
+            }
+
+            payout = totalPayout;
             db.addBalance(user.id, payout);
             result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: payout.toLocaleString() });
-            if (bonusAmount > 0) {
-                result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+
+            if (subHypeMsg) result += subHypeMsg;
+            if (bonusValue > 0) {
+                result += t('common.bonus_capped', lang, { amount: bonusValue.toLocaleString(), cap: currentCap });
             }
         } else if (bet) {
             result += t('slots.lost_coins', lang, { amount: bet });

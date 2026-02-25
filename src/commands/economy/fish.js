@@ -29,27 +29,27 @@ const BAITS = [
 
 // Fish Table
 const CATCHES = [
-    { key: 'old_boot', emoji: '👢', value: 0, weight: 5, minLuck: 0 },
-    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 5, minLuck: 0 },
-    { key: 'seaweed', emoji: '🌿', value: 5, weight: 10, minLuck: 0 },
-    { key: 'sardine', emoji: '🐟', value: 50, weight: 10, minLuck: 0 },
-    { key: 'brook_trout', emoji: '🐟', value: 120, weight: 50, minLuck: 0 },
-    { key: 'bass', emoji: '🐟', value: 1000, weight: 100, minLuck: 2.0 },
-    { key: 'sockeye_salmon', emoji: '🐟', value: 1500, weight: 100, minLuck: 4.0 },
-    { key: 'pufferfish', emoji: '🐡', value: 2500, weight: 135, minLuck: 6.0 },
-    { key: 'clownfish', emoji: '🐠', value: 4000, weight: 135, minLuck: 8.0 },
-    { key: 'stingray', emoji: '🐡', value: 7500, weight: 130, minLuck: 10.0 },
-    { key: 'tuna', emoji: '🐟', value: 12000, weight: 125, minLuck: 12.0 },
-    { key: 'swordfish', emoji: '🗡️', value: 18000, weight: 120, minLuck: 15.0 },
-    { key: 'manta_ray', emoji: '🐋', value: 25000, weight: 115, minLuck: 18.0 },
-    { key: 'shark', emoji: '🦈', value: 30000, weight: 120, minLuck: 20.0 },
-    { key: 'whale', emoji: '🐋', value: 50000, weight: 110, minLuck: 22.0 },
-    { key: 'anglerfish', emoji: '🏮', value: 60000, weight: 105, minLuck: 25.0 },
-    { key: 'treasure_chest', emoji: '💰', value: 100000, weight: 100, minLuck: 28.0 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 150000, weight: 130, minLuck: 32.0 },
-    { key: 'kraken', emoji: '🐙', value: 300000, weight: 120, minLuck: 35.0 },
-    { key: 'megalodon', emoji: '🦈', value: 750000, weight: 110, minLuck: 38.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 1500000, weight: 100, minLuck: 42.0 }
+    { key: 'old_boot', emoji: '👢', value: 0, weight: 50, minLuck: 0 },
+    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 50, minLuck: 0 },
+    { key: 'seaweed', emoji: '🌿', value: 5, weight: 100, minLuck: 0 },
+    { key: 'sardine', emoji: '🐟', value: 50, weight: 100, minLuck: 0 },
+    { key: 'brook_trout', emoji: '🐟', value: 120, weight: 150, minLuck: 0 },
+    { key: 'bass', emoji: '🐟', value: 1000, weight: 150, minLuck: 2.0 },
+    { key: 'sockeye_salmon', emoji: '🐟', value: 1500, weight: 150, minLuck: 4.0 },
+    { key: 'pufferfish', emoji: '🐡', value: 2500, weight: 130, minLuck: 6.0 },
+    { key: 'clownfish', emoji: '🐠', value: 4000, weight: 120, minLuck: 8.0 },
+    { key: 'stingray', emoji: '🐡', value: 7500, weight: 110, minLuck: 10.0 },
+    { key: 'tuna', emoji: '🐟', value: 12000, weight: 100, minLuck: 12.0 },
+    { key: 'swordfish', emoji: '🗡️', value: 15000, weight: 90, minLuck: 15.0 },
+    { key: 'manta_ray', emoji: '🐋', value: 20000, weight: 80, minLuck: 18.0 },
+    { key: 'shark', emoji: '🦈', value: 25000, weight: 70, minLuck: 20.0 },
+    { key: 'whale', emoji: '🐋', value: 35000, weight: 60, minLuck: 22.0 },
+    { key: 'anglerfish', emoji: '🏮', value: 45000, weight: 50, minLuck: 25.0 },
+    { key: 'treasure_chest', emoji: '💰', value: 75000, weight: 40, minLuck: 28.0 },
+    { key: 'mythical_pearl', emoji: '🔮', value: 100000, weight: 30, minLuck: 32.0 },
+    { key: 'kraken', emoji: '🐙', value: 200000, weight: 20, minLuck: 35.0 },
+    { key: 'megalodon', emoji: '🦈', value: 450000, weight: 10, minLuck: 38.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 5, minLuck: 42.0 }
 ];
 
 module.exports = {

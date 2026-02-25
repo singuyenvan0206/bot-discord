@@ -75,11 +75,18 @@ module.exports = {
             codeCrunchMsg = t('work.code_crunch', lang);
         }
 
-        // Soldier Interaction: Mission Bonus (+100 flat)
+        // Soldier Interaction: Mission Bonus (+150 flat)
         let missionMsg = '';
         if (user.job === 'soldier') {
-            total += 100;
+            total += 150;
             missionMsg = t('work.mission_bonus', lang);
+        }
+
+        // Police Interaction: Overtime (15% chance +150 flat)
+        let overtimeMsg = '';
+        if (user.job === 'police' && Math.random() < 0.15) {
+            total += 150;
+            overtimeMsg = t('work.overtime', lang);
         }
 
 
@@ -96,6 +103,7 @@ module.exports = {
         if (bumperMsg) msg += bumperMsg;
         if (specialOrderMsg) msg += specialOrderMsg;
         if (missionMsg) msg += missionMsg;
+        if (overtimeMsg) msg += overtimeMsg;
 
         await message.reply(msg);
     }
