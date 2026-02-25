@@ -60,7 +60,7 @@ module.exports = [
     { id: 403, name: 'Shrimp Bait', price: 500, multiplier: 0.40, type: 'bait' },
     { id: 404, name: 'Cricket Bait', price: 1500, multiplier: 0.75, type: 'bait' },
     { id: 405, name: 'Squid Bait', price: 5000, multiplier: 1.50, type: 'bait' },
-    { id: 406, name: 'Golden Bait', price: 25000, multiplier: 3.00, type: 'bait' },
+    { id: 406, name: 'Golden Bait', price: 10000, multiplier: 3.00, type: 'bait' },
 
     // ==========================================
     // GROUP 450 — tool (fishing rods, no duration)
@@ -71,7 +71,7 @@ module.exports = [
     { id: 410, name: 'Steel Rod', price: 100000, multiplier: 2.5, type: 'tool', idealJob: 'farmer' },
     { id: 411, name: 'Carbon Rod', price: 350000, multiplier: 3.5, type: 'tool', idealJob: 'farmer' },
     { id: 412, name: 'Titanium Rod', price: 1200000, multiplier: 5.0, type: 'tool', idealJob: 'farmer' },
-    { id: 413, name: "Neptune's Rod", price: 5000000, multiplier: 7.5, type: 'tool', idealJob: 'farmer' },
+    { id: 413, name: "Neptune's Rod", price: 1800000, multiplier: 7.5, type: 'tool', idealJob: 'farmer' },
 
     // ==========================================
     // GROUP 500 — other (special utility items)
