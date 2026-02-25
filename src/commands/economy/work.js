@@ -46,7 +46,7 @@ module.exports = {
 
         // Streamer Interaction: Go Viral (5% chance ×5 if using Chair/Mansion)
         let viralMsg = '';
-        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 220) || hasActiveItem(message.author.id, 107)) && Math.random() < 0.05) {
+        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 220) || hasActiveItem(message.author.id, 107)) && Math.random() < 0.25) {
             total *= 5;
             bonusAmount *= 5;
             viralMsg = t('work.viral', lang);
@@ -54,7 +54,7 @@ module.exports = {
 
         // Farmer Interaction: Bumper Crop (10% chance ×2.5)
         let bumperMsg = '';
-        if (user.job === 'farmer' && Math.random() < 0.1) {
+        if (user.job === 'farmer' && Math.random() < 0.25) {
             total = Math.floor(total * 2.5);
             bonusAmount = Math.floor(bonusAmount * 2.5);
             bumperMsg = t('work.bumper_crop', lang);
@@ -62,7 +62,7 @@ module.exports = {
 
         // Chef Interaction: Special Order (8% chance ×2)
         let specialOrderMsg = '';
-        if (user.job === 'chef' && Math.random() < 0.08) {
+        if (user.job === 'chef' && Math.random() < 0.20) {
             total = Math.floor(total * 2);
             bonusAmount = Math.floor(bonusAmount * 2);
             specialOrderMsg = t('work.special_order', lang);
@@ -84,7 +84,7 @@ module.exports = {
 
         // Police Interaction: Overtime (15% chance +150 flat)
         let overtimeMsg = '';
-        if (user.job === 'police' && Math.random() < 0.15) {
+        if (user.job === 'police' && Math.random() < 0.30) {
             total += 150;
             overtimeMsg = t('work.overtime', lang);
         }

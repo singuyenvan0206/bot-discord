@@ -28,7 +28,7 @@ module.exports = {
 
         // Hacker Synergy: +5% success with high-tech gear
         if (isHacker && (hasActiveItem(message.author.id, 212) || hasActiveItem(message.author.id, 220))) {
-            successRate += 0.05;
+            successRate += 0.25;
         }
 
         const isSuccess = Math.random() < successRate;

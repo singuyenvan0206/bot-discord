@@ -134,8 +134,8 @@ module.exports = {
                         result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                     }
 
-                    // Musician Interaction: Flow State (10% chance to double final win)
-                    if (user.job === 'musician' && Math.random() < 0.10) {
+                    // Musician Interaction: Flow State (20% chance to double final win)
+                    if (user.job === 'musician' && Math.random() < 0.20) {
                         db.addBalance(user.id, prize); // Add another prize
                         result += t('common.flow_state', lang);
                     }
@@ -146,8 +146,8 @@ module.exports = {
                     result += t('rps.lost_coins', lang, { amount: betAmount });
                     addHouseProfit(interaction || msgObj, betAmount);
 
-                    // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
-                    if (user.job === 'trader' && Math.random() < 0.15) {
+                    // Trader Interaction: Market Tip (35% chance to refund 50% on loss)
+                    if (user.job === 'trader' && Math.random() < 0.35) {
                         const refund = Math.floor(betAmount * 0.5);
                         db.addBalance(user.id, refund);
                         result += t('common.market_tip', lang);

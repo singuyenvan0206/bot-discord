@@ -67,14 +67,14 @@ module.exports = {
         SLUT_MAX_REWARD: 1000,
         SLUT_FAIL_PENALTY: 200, // Fixed fine
         BEG_COOLDOWN: 300, // 5 minutes
-        BEG_SUCCESS_RATE: 0.4,
-        BEG_MIN_REWARD: 10,
-        BEG_MAX_REWARD: 50,
+        BEG_SUCCESS_RATE: 0.5,
+        BEG_MIN_REWARD: 100,
+        BEG_MAX_REWARD: 500,
         SEARCH_COOLDOWN: 600, // 10 minutes
-        SEARCH_MIN_REWARD: 25,
-        SEARCH_MAX_REWARD: 100,
+        SEARCH_MIN_REWARD: 250,
+        SEARCH_MAX_REWARD: 1000,
         ROB_COOLDOWN: 3600, // 1 hour
-        ROB_SUCCESS_CHANCE: 0.5,
+        ROB_SUCCESS_CHANCE: 0.55,
         MAX_BET: 250000,
         HOUSE_DISTRIBUTION_INTERVAL: 21600, // 6 hours in seconds
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins

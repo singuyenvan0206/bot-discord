@@ -84,11 +84,11 @@ module.exports = {
 
             let { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winner.author.id);
 
-            // Programmer Interaction: Tech Bonus (+20%)
+            // Programmer Interaction: Tech Bonus (+30%)
             const winningUser = db.getUser(winner.author.id);
             if (winningUser.job === 'programmer') {
-                totalReward = Math.floor(totalReward * 1.2);
-                bonusAmount = Math.floor(bonusAmount * 1.2);
+                totalReward = Math.floor(totalReward * 1.3);
+                bonusAmount = Math.floor(bonusAmount * 1.3);
             }
 
             db.addBalance(winner.author.id, totalReward);

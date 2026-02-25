@@ -85,9 +85,9 @@ module.exports = {
                 currentCap = cap;
             }
 
-            // Streamer Interaction: Sub Hype (10% chance to double any win)
+            // Streamer Interaction: Sub Hype (20% chance to double any win)
             let subHypeMsg = '';
-            if (user.job === 'streamer' && profit > 0 && Math.random() < 0.10) {
+            if (user.job === 'streamer' && profit > 0 && Math.random() < 0.20) {
                 totalPayout *= 2;
                 subHypeMsg = t('slots.sub_hype', lang);
             }
