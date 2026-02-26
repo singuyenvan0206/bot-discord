@@ -25,7 +25,7 @@ module.exports = {
         if (!target) return message.reply(t('rob.invalid_user', lang));
         if (target.id === message.author.id) return message.reply(t('rob.invalid_user', lang));
         if (target.bot) return message.reply(t('rob.invalid_user', lang));
-        if (db.isOwner(target.id)) return message.reply(t('rob.target_owner', lang));
+        // if (db.isOwner(target.id)) return message.reply(t('rob.target_owner', lang));
 
         const victim = db.getUser(target.id);
         if (victim.balance <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
