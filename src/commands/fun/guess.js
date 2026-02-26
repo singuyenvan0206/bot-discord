@@ -14,7 +14,7 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id);
         const number = Math.floor(Math.random() * 100) + 1;
-        const maxAttempts = 10;
+        const maxAttempts = 7;
         let attempts = 0;
 
         const embed = new EmbedBuilder()

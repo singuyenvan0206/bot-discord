@@ -1012,7 +1012,9 @@
         "too_early": "❌ Too early! You clicked before the signal.",
         "result": "✅ Result: **{{time}}ms**",
         "win": "\n{{emoji}} Reward: **{{amount}}** coins",
-        "timeout": "⌛ Too slow! You didn't react in time."
+        "timeout": "⌛ Too slow! You didn't react in time.",
+        "label_go": "CLICK NOW!",
+        "label_wait": "Wait..."
     },
     "coinflip": {
         "title": "🪙  Coin Flip",

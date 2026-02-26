@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
@@ -11,92 +11,123 @@ module.exports = {
     description: 'Test your reaction speed',
     cooldown: 10,
     manualCooldown: true,
+    data: new SlashCommandBuilder()
+        .setName('reaction')
+        .setDescription('Test your reaction speed (Button version)'),
     async execute(message, args) {
-        const lang = await getLanguage(message.author.id);
+        const isBot = message.author ? message.author.bot : message.user.bot;
+        if (isBot) return;
+
+        const user = message.author || message.user;
+        const lang = await getLanguage(user.id);
 
         const embed = new EmbedBuilder()
             .setTitle(t('reaction.title', lang))
             .setDescription(t('reaction.wait', lang))
             .setColor(config.COLORS.ERROR);
 
-        const msg = await message.reply({ embeds: [embed] });
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId('reaction_button')
+                    .setLabel(t('reaction.label_wait', lang))
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(true)
+            );
+
+        const msg = message.reply ?
+            await message.reply({ embeds: [embed], components: [row], fetchReply: true }) :
+            await message.editReply({ embeds: [embed], components: [row] });
 
         const delay = Math.floor(Math.random() * 3000) + 2000; // 2-5 seconds
         let signalFired = false;
         let signalTime = 0;
 
-        const collector = message.channel.createMessageCollector({
-            filter: m => !m.author.bot && (
-                m.content.toLowerCase().trim() === 'now' ||
-                m.content.toLowerCase().trim() === 'ngay'
-            ),
-            time: delay + 5000
-        });
-
         const timer = setTimeout(async () => {
             signalFired = true;
             signalTime = Date.now();
+
             embed.setDescription(t('reaction.go', lang)).setColor(config.COLORS.SUCCESS);
+
+            const activeRow = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('reaction_button')
+                        .setLabel(t('reaction.label_go', lang))
+                        .setStyle(ButtonStyle.Success)
+                        .setDisabled(false)
+                );
+
             try {
-                await msg.edit({ embeds: [embed] });
+                await msg.edit({ embeds: [embed], components: [activeRow] });
             } catch (err) {
-                collector.stop('error');
+                // Ignore if message deleted
             }
         }, delay);
 
-        collector.on('collect', async m => {
+        const filter = i => i.customId === 'reaction_button' && i.user.id === user.id;
+        const collector = msg.createMessageComponentCollector({ filter, time: delay + 10000 });
+
+        collector.on('collect', async i => {
             if (!signalFired) {
+                // This shouldn't happen with disabled buttons, but as a fallback
                 clearTimeout(timer);
                 collector.stop('too_early');
-                await m.reply(t('reaction.too_early', lang));
-            } else {
-                const diff = m.createdTimestamp - signalTime;
-                collector.stop('win');
-
-                let baseReward = config.ECONOMY.REACTION_REWARD_BASE || 100;
-                if (diff < 300) { baseReward = baseReward * 3 + 100; } // Extra bonus for sub-300ms
-                else if (diff < 500) { baseReward = baseReward * 2; }
-
-                const { total: reward, bonus: bonusAmount, cap } = calculateReward(baseReward, m.author.id);
-                let finalReward = reward;
-
-                // Musician Interaction: Flow State (15% chance to double final win)
-                const u = db.getUser(m.author.id);
-                let flowMsg = '';
-                if (u.job === 'musician' && Math.random() < 0.15) {
-                    finalReward *= 2;
-                    flowMsg = t('common.flow_state', lang);
-                }
-
-                db.addBalance(m.author.id, finalReward);
-
-                // Grant Win XP
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                addXp(m.author.id, winXp);
-
-                let resultDesc = t('reaction.result', lang, { time: diff });
-                resultDesc += t('reaction.win', lang, { emoji: config.EMOJIS.COIN, amount: reward.toLocaleString() });
-
-                if (bonusAmount > 0) {
-                    resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
-                }
-                if (flowMsg) resultDesc += flowMsg;
-
-                await m.reply({
-                    embeds: [new EmbedBuilder()
-                        .setTitle(t('common.success', lang))
-                        .setDescription(resultDesc)
-                        .setColor(config.COLORS.SUCCESS)]
-                });
+                return;
             }
+
+            const diff = i.createdTimestamp - signalTime;
+            collector.stop('win');
+
+            let baseReward = config.ECONOMY.REACTION_REWARD_BASE || 100;
+            if (diff < 300) { baseReward = baseReward * 3 + 100; }
+            else if (diff < 500) { baseReward = baseReward * 2; }
+
+            const { total: reward, bonus: bonusAmount, cap } = calculateReward(baseReward, i.user.id);
+            let finalReward = reward;
+
+            const u = db.getUser(i.user.id);
+            let flowMsg = '';
+            if (u.job === 'musician' && Math.random() < 0.15) {
+                finalReward *= 2;
+                flowMsg = t('common.flow_state', lang);
+            }
+
+            db.addBalance(i.user.id, finalReward);
+
+            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+            const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+            addXp(i.user.id, winXp);
+
+            let resultDesc = t('reaction.result', lang, { time: diff });
+            resultDesc += t('reaction.win', lang, { emoji: config.EMOJIS.COIN, amount: reward.toLocaleString() });
+
+            if (bonusAmount > 0) {
+                resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+            }
+            if (flowMsg) resultDesc += flowMsg;
+
+            await i.update({
+                embeds: [new EmbedBuilder()
+                    .setTitle(t('common.success', lang))
+                    .setDescription(resultDesc)
+                    .setColor(config.COLORS.SUCCESS)],
+                components: []
+            });
         });
 
-        collector.on('end', (_, reason) => {
-            if (reason === 'time') {
-                message.channel.send(t('reaction.timeout', lang));
+        collector.on('end', async (_, reason) => {
+            if (reason === 'time' && !signalFired) {
+                // Signal never fired (e.g. user early stop)
+            } else if (reason === 'time') {
+                try {
+                    await msg.edit({
+                        embeds: [new EmbedBuilder().setDescription(t('reaction.timeout', lang)).setColor(config.COLORS.ERROR)],
+                        components: []
+                    });
+                } catch (err) { }
             }
-            startCooldown(message.client, 'reaction', message.author.id);
+            startCooldown(message.client, 'reaction', user.id);
         });
     }
 };

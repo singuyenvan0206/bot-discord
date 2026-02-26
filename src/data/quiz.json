@@ -5238,13 +5238,6 @@
         "category": "🍽️ Đồ ăn"
     },
     {
-        "emojis": "🍽️🍜🇨🇳🥟🥢",
-        "answers": [
-            "dimsum"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
         "emojis": "🍽️🍔🍔🍔🍺",
         "answers": [
             "hamburger"
@@ -7654,6 +7647,13 @@
         "emojis": "🍽️🍥🥟🥢",
         "answers": [
             "há cảo"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍽️🥯🧀🥓",
+        "answers": [
+            "bagel"
         ],
         "category": "🍽️ Đồ ăn"
     }

@@ -1068,7 +1068,9 @@
         "too_early": "❌ Sớm quá! Bạn đã bấm trước khi có tín hiệu.",
         "result": "✅ Kết quả: **{{time}}ms**",
         "win": "\n{{emoji}} Thưởng: **{{amount}}** coins",
-        "timeout": "⌛ Quá chậm! Bạn không phản xạ kịp."
+        "timeout": "⌛ Quá chậm! Bạn không phản xạ kịp.",
+        "label_go": "BẤM NGAY!",
+        "label_wait": "Đợi đã..."
     },
     "language": {
         "title": "Cài đặt Ngôn ngữ",
