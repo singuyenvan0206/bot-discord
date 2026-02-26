@@ -31,7 +31,7 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId('reaction_button')
                     .setLabel(t('reaction.label_wait', lang))
-                    .setStyle(ButtonStyle.Secondary)
+                    .setStyle(2) // Secondary
                     .setDisabled(true)
             );
 
@@ -54,7 +54,7 @@ module.exports = {
                     new ButtonBuilder()
                         .setCustomId('reaction_button')
                         .setLabel(t('reaction.label_go', lang))
-                        .setStyle(ButtonStyle.Success)
+                        .setStyle(3) // Success
                         .setDisabled(false)
                 );
 
