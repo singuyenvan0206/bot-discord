@@ -148,6 +148,7 @@ function initSchema() {
     safeAddColumn('users', 'xp', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('users', 'level', 'INTEGER NOT NULL DEFAULT 0');
     safeAddColumn('users', 'last_work', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'last_dist_amount', 'INTEGER DEFAULT 0');
     safeAddColumn('users', 'last_rob', 'INTEGER DEFAULT 0');
     safeAddColumn('users', 'last_crime', 'INTEGER DEFAULT 0');
     safeAddColumn('users', 'last_slut', 'INTEGER DEFAULT 0');
@@ -596,12 +597,15 @@ function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
 
         if (amount > 0) {
             addBalance(user.id, amount);
+            execute('UPDATE users SET last_dist_amount = ? WHERE id = ?', [amount, user.id]);
             results.push({ userId: user.id, amount });
+        } else {
+            execute('UPDATE users SET last_dist_amount = 0 WHERE id = ?', [user.id]);
         }
     });
 
     if (excludeUserId) {
-        execute('UPDATE users SET balance = 0 WHERE id = ?', [excludeUserId]);
+        execute('UPDATE users SET balance = 0, last_dist_amount = 0 WHERE id = ?', [excludeUserId]);
     }
 
     return results;

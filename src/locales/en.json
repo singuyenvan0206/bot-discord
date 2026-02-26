@@ -39,7 +39,11 @@
         "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%))*",
         "distribution_title": "💰 Community Welfare Fund",
         "distribution_random_desc": "The bot has randomly distributed **{{total}}** coins to **{{count}}** lucky users! Everyone received a different amount of fortune. {{emoji}}",
-        "reward_list": "Rewards List"
+        "reward_list": "Rewards List",
+        "private_distribution_msg": "You just received **{{amount}}** {{emoji}} from the Community Welfare Fund! 🎉",
+        "check_reward_button": "🎁 Check Reward",
+        "ephemeral_reward_msg": "You received **{{amount}}** {{emoji}} from the latest distribution! 🎉",
+        "no_reward_msg": "❌ You didn't receive any reward in this round or there hasn't been a distribution recently."
     },
     "connect4": {
         "title": "🔴 Connect 4 🟡",

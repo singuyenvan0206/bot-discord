@@ -39,7 +39,11 @@
         "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%))*",
         "distribution_title": "💰 Quỹ Phúc Lợi Cộng Đồng",
         "distribution_random_desc": "Bot đã chia ngẫu nhiên **{{total}}** coins cho **{{count}}** người dùng may mắn! Mỗi người nhận được một vận may khác nhau. {{emoji}}",
-        "reward_list": "Danh sách nhận thưởng"
+        "reward_list": "Danh sách nhận thưởng",
+        "private_distribution_msg": "Bạn vừa được nhận **{{amount}}** {{emoji}} từ Quỹ Phúc Lợi Cộng Đồng! 🎉",
+        "check_reward_button": "🎁 Xem phần thưởng",
+        "ephemeral_reward_msg": "Bạn đã nhận được **{{amount}}** {{emoji}} từ đợt chia thưởng vừa rồi! 🎉",
+        "no_reward_msg": "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc chưa có đợt chia thưởng nào gần đây."
     },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",

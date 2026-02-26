@@ -169,7 +169,25 @@ module.exports = {
 
         // 3. Other Button Interactions
         else if (interaction.isButton()) {
-            // Placeholder for future button interactions
+            if (interaction.customId === 'check_dist_reward') {
+                const user = db.getUser(interaction.user.id);
+                const amount = user ? (user.last_dist_amount || 0) : 0;
+
+                if (amount <= 0) {
+                    return interaction.reply({
+                        content: t('economy.no_reward_msg', lang) || "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc phần thưởng đã hết hạn.",
+                        ephemeral: true
+                    });
+                }
+
+                return interaction.reply({
+                    content: t('economy.ephemeral_reward_msg', lang, {
+                        amount: amount.toLocaleString(),
+                        emoji: config.EMOJIS.COIN
+                    }) || `Bạn đã nhận được **${amount.toLocaleString()}** ${config.EMOJIS.COIN} từ đợt chia thưởng vừa rồi! 🎉`,
+                    ephemeral: true
+                });
+            }
         }
 
         // 4. Select Menu Interactions

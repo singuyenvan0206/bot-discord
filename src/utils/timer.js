@@ -248,9 +248,6 @@ async function processHouseDistribution(client) {
 
     console.log(`[Timer] Random distribution complete! Total: ${balance.toLocaleString()} coins. Participants: ${results.length}`);
 
-    // Create reward list string
-    let rewardList = results.map(r => `- <@${r.userId}>: **${r.amount.toLocaleString()}** ${config.EMOJIS.COIN}`).join('\n');
-
     // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
         const lang = getLanguage(null, guild.id);
@@ -261,16 +258,36 @@ async function processHouseDistribution(client) {
         if (channel && channel.send) {
             const embed = new EmbedBuilder()
                 .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
-                .setDescription((t('economy.distribution_random_desc', lang, {
+                .setDescription(t('economy.distribution_random_desc', lang, {
                     total: balance.toLocaleString(),
                     count: humanCount,
                     emoji: config.EMOJIS.COIN
-                }) || `Bot đã chia ngẫu nhiên **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng may mắn!`) + `\n\n**${t('economy.reward_list', lang) || 'Danh sách nhận thưởng'}:**\n${rewardList.length > 3000 ? rewardList.slice(0, 3000) + '...' : rewardList}`)
+                }) || `Bot đã chia ngẫu nhiên **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng may mắn!`)
                 .setColor(config.COLORS.SUCCESS)
                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 .setTimestamp();
 
             channel.send({ embeds: [embed] }).catch(() => { });
+        }
+    }
+
+    // Send private DMs
+    for (const res of results) {
+        try {
+            const user = await client.users.fetch(res.userId);
+            const lang = getLanguage(user.id, null); // Prefer user's language
+            const embed = new EmbedBuilder()
+                .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
+                .setDescription(t('economy.private_distribution_msg', lang, {
+                    amount: res.amount.toLocaleString(),
+                    emoji: config.EMOJIS.COIN
+                }) || `Bạn vừa được nhận **${res.amount.toLocaleString()}** ${config.EMOJIS.COIN} từ Quỹ Phúc Lợi Cộng Đồng! 🎉`)
+                .setColor(config.COLORS.SUCCESS)
+                .setTimestamp();
+
+            await user.send({ embeds: [embed] }).catch(() => { });
+        } catch (err) {
+            // Silently skip if DM fails
         }
     }
 }
