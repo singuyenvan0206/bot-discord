@@ -193,7 +193,7 @@ module.exports = {
 
             // Farmer Interaction: Trophy Fish (15% chance for 2x if possessing Fiberglass(409)/Carbon(411)/Titanium(412)/Neptune(413))
             if (user.job === 'farmer' && (inventory['409'] || inventory['411'] || inventory['412'] || inventory['413']) && Math.random() < 0.15) {
-                baseValue *= 2;
+                baseValue *= 3;
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 
