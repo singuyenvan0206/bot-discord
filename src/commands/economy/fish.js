@@ -5,6 +5,8 @@ const { getUserMultiplier, getTotalIncomeMultiplier, hasActiveItem } = require('
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const SHOP_ITEMS = require('../../utils/shopItems');
+const { calculateReward } = require('../../utils/multiplier');
 
 // Rod Definitions (IDs match new category 400s)
 const RODS = [
@@ -229,8 +231,6 @@ module.exports = {
         }
 
         if (caughtItem.value > 0) {
-            const { calculateReward } = require('../../utils/multiplier');
-
             let baseValue = caughtItem.value;
             let trophyMsg = '';
 
