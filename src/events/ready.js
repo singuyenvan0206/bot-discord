@@ -8,7 +8,7 @@ module.exports = {
     async execute(client) {
         console.log('');
         console.log('╔══════════════════════════════════════════════╗');
-        console.log('║     🎉  Giveaway Bot is Online!  🎉         ║');
+        console.log('║      🎉  Simsimi Bot is Online!  🎉         ║');
         console.log('╠══════════════════════════════════════════════╣');
         console.log(`║  Logged in as: ${client.user.tag.padEnd(29)}║`);
         console.log(`║  Servers:      ${String(client.guilds.cache.size).padEnd(29)}║`);
@@ -21,6 +21,6 @@ module.exports = {
         startTimer(client);
 
 
-        client.user.setActivity(`${client.user.username} $help | $giveaway`, { type: ActivityType.Listening });
+        client.user.setActivity(`${client.user.username} $help | $rob | $giveaway`, { type: ActivityType.Listening });
     },
 };

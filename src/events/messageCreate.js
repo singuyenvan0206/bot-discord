@@ -38,11 +38,9 @@ module.exports = {
         if (!shouldSkipChatXp && !xpCooldowns.has(message.author.id)) {
             const { MESSAGE } = XP_AMOUNTS;
             const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
-            const coinAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min; // 5-15 coins
 
             const result = addXp(message.author.id, xpAmount);
             const { leveledUp, reachedLevel20, bonus, level } = result;
-            db.addBalance(message.author.id, coinAmount);
 
             if (leveledUp) {
                 const lang = getLanguage(message.author.id, message.guild.id);

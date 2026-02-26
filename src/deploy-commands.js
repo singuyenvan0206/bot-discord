@@ -146,6 +146,94 @@ const commands = [
         .setDescription('Show all available commands')
         .addStringOption(opt => opt.setName('command').setDescription('Get details for a specific command')),
 
+    new SlashCommandBuilder()
+        .setName('profile')
+        .setDescription('View yours or another user\'s profile')
+        .addUserOption(opt => opt.setName('user').setDescription('User to view (optional)')),
+
+    new SlashCommandBuilder()
+        .setName('rank')
+        .setDescription('View the global/server leaderboards')
+        .addStringOption(opt => opt.setName('type').setDescription('Leaderboard type').addChoices(
+            { name: 'Balance', value: 'balance' },
+            { name: 'XP', value: 'xp' }
+        )),
+
+    new SlashCommandBuilder()
+        .setName('lvl')
+        .setDescription('Check yours or another user\'s level')
+        .addUserOption(opt => opt.setName('user').setDescription('User to check (optional)')),
+
+    new SlashCommandBuilder()
+        .setName('beg')
+        .setDescription('Beg for some coins'),
+
+    new SlashCommandBuilder()
+        .setName('crime')
+        .setDescription('Commit a crime for high rewards (risky)'),
+
+    new SlashCommandBuilder()
+        .setName('search')
+        .setDescription('Search for coins in random locations'),
+
+    new SlashCommandBuilder()
+        .setName('slut')
+        .setDescription('Go out and earn some quick coins (risky)'),
+
+    new SlashCommandBuilder()
+        .setName('rob')
+        .setDescription('Steal coins from another user')
+        .addUserOption(opt => opt.setName('target').setDescription('Target user to rob').setRequired(true)),
+
+    new SlashCommandBuilder()
+        .setName('use')
+        .setDescription('Use an item from your inventory')
+        .addStringOption(opt => opt.setName('item').setDescription('Item name to use').setRequired(true)),
+
+    new SlashCommandBuilder()
+        .setName('sell')
+        .setDescription('Sell an item back to the shop')
+        .addStringOption(opt => opt.setName('item').setDescription('Item ID or name').setRequired(true))
+        .addIntegerOption(opt => opt.setName('quantity').setDescription('Amount to sell').setMinValue(1)),
+
+    new SlashCommandBuilder()
+        .setName('job')
+        .setDescription('Manage your career')
+        .addSubcommand(sub => sub
+            .setName('list')
+            .setDescription('View all available jobs')
+        )
+        .addSubcommand(sub => sub
+            .setName('info')
+            .setDescription('View your current job status')
+        )
+        .addSubcommand(sub => sub
+            .setName('set')
+            .setDescription('Switch to a new career')
+            .addStringOption(opt => opt.setName('id').setDescription('Job ID (e.g. farmer, programmer)').setRequired(true))
+        ),
+
+    new SlashCommandBuilder()
+        .setName('jobdetail')
+        .setDescription('View detailed information about a job')
+        .addStringOption(opt => opt.setName('id').setDescription('Job name/ID').setRequired(true)),
+
+    new SlashCommandBuilder()
+        .setName('iteminfo')
+        .setDescription('View detailed info about an item')
+        .addStringOption(opt => opt.setName('id').setDescription('Item ID or name').setRequired(true)),
+
+    new SlashCommandBuilder()
+        .setName('connect4')
+        .setDescription('Challenge someone to Connect 4')
+        .addUserOption(opt => opt.setName('opponent').setDescription('Opponent to play with').setRequired(true))
+        .addIntegerOption(opt => opt.setName('bet').setDescription('Bet amount').setMinValue(1)),
+
+    new SlashCommandBuilder()
+        .setName('memory')
+        .setDescription('Play the Memory Match game')
+        .addIntegerOption(opt => opt.setName('bet').setDescription('Bet amount').setMinValue(1)),
+
     // ═══ Giveaway ═══
     new SlashCommandBuilder()
         .setName('giveaway')

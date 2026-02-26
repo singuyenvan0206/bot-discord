@@ -24,7 +24,7 @@ module.exports = {
                     `**${t('language.server_setting', resolvedLang)}:** \`${guildSettings?.language === 'vi' ? 'Tiếng Việt (vi)' : 'English (en)'}\`\n\n` +
                     `**${t('language.usage', resolvedLang)}:**\n` +
                     `• \`${config.PREFIX}lang <en/vi>\` - ${t('language.usage_user', resolvedLang)}\n` +
-                    `• \`${config.PREFIX}lang server <en/vi>\` - ${t('language.usage_server', resolvedLang)}\n` +
+                    `• \`${config.PREFIX}lang server/sv <en/vi>\` - ${t('language.usage_server', resolvedLang)}\n` +
                     `• \`${config.PREFIX}lang reset\` - ${t('language.usage_reset', resolvedLang)}`
                 )
                 .setColor(config.COLORS.INFO);
@@ -40,10 +40,10 @@ module.exports = {
         }
 
         let scope = 'user';
-        if (choice === 'server') {
+        if (choice === 'server' || choice === 'sv') {
             scope = 'server';
             choice = args[1]?.toLowerCase();
-        } else if (args[1]?.toLowerCase() === 'server') {
+        } else if (args[1]?.toLowerCase() === 'server' || args[1]?.toLowerCase() === 'sv') {
             scope = 'server';
         }
 
@@ -51,7 +51,7 @@ module.exports = {
             return message.reply({ content: t('language.invalid', resolvedLang) });
         }
 
-        if (scope === 'server') {
+        if (scope === 'server' || scope === 'sv') {
             if (!guildId) return message.reply('❌ This command can only be used in a server.');
             const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild) || db.isOwner(message.author.id);
 

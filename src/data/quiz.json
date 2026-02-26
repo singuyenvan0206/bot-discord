@@ -9,17 +9,19 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "⚡🧙‍♂️👓🏰🦉",
+        "emojis": "🎬🧙‍♂️🏰👓🦉",
         "answers": [
             "harry potter"
         ],
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🦇👨🏙️🌃👊",
+        "emojis": "🦇🌑🏙️🚙🃏",
         "answers": [
             "batman",
-            "người dơi"
+            "người dơi",
+            "the dark knight",
+            "dark knight"
         ],
         "category": "🎬 Phim ảnh"
     },
@@ -59,7 +61,7 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "👻🚫👨‍🚒🔫🤢",
+        "emojis": "👻👨‍🔬🔫🚫 marshmallow",
         "answers": [
             "ghostbusters",
             "biệt đội săn ma"
@@ -140,7 +142,7 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🤡🎈😱⛵☔",
+        "emojis": "🎬😱🤡🎈🎈",
         "answers": [
             "it",
             "gã hề ma quái"
@@ -148,7 +150,7 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🐀👨‍🍳🍲🗼🧀",
+        "emojis": "👨‍🍳🐀🇫🇷🍜🥕",
         "answers": [
             "ratatouille",
             "chú chuột đầu bếp"
@@ -214,7 +216,7 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "👴🎈🏠☁️🐕",
+        "emojis": "📺🎈🏘️🏠🎈",
         "answers": [
             "up",
             "vút bay"
@@ -233,12 +235,13 @@
         "emojis": "🦈🌊😱⛵🩸",
         "answers": [
             "jaws",
-            "hàm cá mập"
+            "hàm cá mập",
+            "shark"
         ],
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "💀🌮🎸🕯️👵",
+        "emojis": "📺🎸💀🎸🇲🇽",
         "answers": [
             "coco"
         ],
@@ -305,7 +308,7 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🐝🎬🤣🍯🌼",
+        "emojis": "🐝🎥🍯👩‍⚖️🌼",
         "answers": [
             "bee movie"
         ],
@@ -343,21 +346,14 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🚗🏁💨🏆🛣️",
+        "emojis": "📺🏎️🔴🏎️🛣️",
         "answers": [
             "cars"
         ],
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "👨‍🦲💎🔫⚗️🚐",
-        "answers": [
-            "breaking bad"
-        ],
-        "category": "📺 Phim bộ"
-    },
-    {
-        "emojis": "🧪👨‍🔬💀🍗👔",
+        "emojis": "🧪💊👨‍🔬🏜️💎",
         "answers": [
             "breaking bad"
         ],
@@ -421,7 +417,9 @@
     {
         "emojis": "🏴‍☠️🧭🗺️👒🍖",
         "answers": [
-            "one piece"
+            "one piece",
+            "luffy",
+            "đảo hải tặc"
         ],
         "category": "📺 Phim bộ"
     },
@@ -544,7 +542,8 @@
         "emojis": "🦋✨🎶🌪️🏰",
         "answers": [
             "butterfly",
-            "wings"
+            "wings",
+            "bướm"
         ],
         "category": "🎵 Bài hát"
     },
@@ -572,7 +571,7 @@
         "category": "🎵 Bài hát"
     },
     {
-        "emojis": "🍕🇮🇹🧀🍅🌿",
+        "emojis": "🍽️🍕🇮🇹🧀🍝",
         "answers": [
             "pizza"
         ],
@@ -589,7 +588,7 @@
         "category": "🍽️ Đồ ăn"
     },
     {
-        "emojis": "🍣🇯🇵🥢🍱🍙",
+        "emojis": "🍽️🍣🇯🇵🥢🍱",
         "answers": [
             "sushi"
         ],
@@ -613,10 +612,11 @@
         "category": "🍽️ Đồ ăn"
     },
     {
-        "emojis": "🥐☕🇫🇷🗼🧈",
+        "emojis": "🍽️🥐🇫🇷🥖🥐",
         "answers": [
             "croissant",
-            "french breakfast"
+            "french breakfast",
+            "bánh sừng bò"
         ],
         "category": "🍽️ Đồ ăn"
     },
@@ -674,29 +674,33 @@
         "emojis": "🖤⬜🐻🎋🇨🇳",
         "answers": [
             "panda",
-            "giant panda"
+            "giant panda",
+            "gấu trúc"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦈🌊😬🦷🩸",
+        "emojis": "🐾🦈🦈🦈🦈🌊",
         "answers": [
             "shark",
-            "great white shark"
+            "great white shark",
+            "cá mập"
         ],
         "category": "🐾 Động vật"
     },
     {
         "emojis": "🐧❄️🇦🇶🥚👣",
         "answers": [
-            "penguin"
+            "penguin",
+            "chim cánh cụt"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦁🌍🔥👑🥩",
+        "emojis": "🐾🦁👑🥩🔥",
         "answers": [
-            "lion"
+            "lion",
+            "sư tử"
         ],
         "category": "🐾 Động vật"
     },
@@ -709,23 +713,18 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐙🌊🧠🦑🐚",
+        "emojis": "🐾🐙🐙🐙🐙🌊",
         "answers": [
-            "octopus"
+            "octopus",
+            "bạch tuộc"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦋🌸🌈🐛✨",
+        "emojis": "🐾🐺🌕🌲❄️",
         "answers": [
-            "butterfly"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐺🌕🌲🐾🦷",
-        "answers": [
-            "wolf"
+            "wolf",
+            "sói"
         ],
         "category": "🐾 Động vật"
     },
@@ -745,10 +744,11 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐋🌊💨🦐💧",
+        "emojis": "🐾🐋🐋🐋🐋🌊",
         "answers": [
             "whale",
-            "blue whale"
+            "blue whale",
+            "cá voi"
         ],
         "category": "🐾 Động vật"
     },
@@ -764,7 +764,8 @@
         "emojis": "🐘🦒🦒🦒🌍",
         "answers": [
             "elephant",
-            "safari"
+            "safari",
+            "voi"
         ],
         "category": "🐾 Động vật"
     },
@@ -772,64 +773,49 @@
         "emojis": "🐒🍌🌳🌿🙊",
         "answers": [
             "monkey",
-            "chimpanzee"
+            "chimpanzee",
+            "khỉ"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐧❄️🧊🌊🐟",
+        "emojis": "🐾🐻🍯🌲🏕️",
         "answers": [
-            "penguin"
+            "bear",
+            "gấu"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦁👑🌅🦒🐗",
-        "answers": [
-            "lion"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🦊💨🐾🌲🍄",
-        "answers": [
-            "fox"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐻🐝🍯🌲🐟",
-        "answers": [
-            "bear"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐰🥕🐾🧺🌳",
+        "emojis": "🐾🐰🥕🕳️🥚",
         "answers": [
             "rabbit",
-            "bunny"
+            "bunny",
+            "thỏ"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐍🌳🐀🍎🐍",
+        "emojis": "🐾🐍🐍🐍🐍",
         "answers": [
-            "snake"
+            "snake",
+            "rắn"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐅🟧⬛🍂",
+        "emojis": "🐾🐯🔶⬛🐾",
         "answers": [
-            "tiger"
+            "tiger",
+            "hổ"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦉🌳🌙🐭🌲",
+        "emojis": "🐾🦉🦉🦉🦉",
         "answers": [
-            "owl"
+            "owl",
+            "cú mèo"
         ],
         "category": "🐾 Động vật"
     },
@@ -841,9 +827,10 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦘🇦🇺🏜️",
+        "emojis": "🐾🦘🐾🐾🐾",
         "answers": [
-            "kangaroo"
+            "kangaroo",
+            "chuột túi"
         ],
         "category": "🐾 Động vật"
     },
@@ -855,16 +842,18 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦒🦒🦒🌳🍃🌍",
+        "emojis": "🐾🦒🦒🦒🦒🌿",
         "answers": [
-            "giraffe"
+            "giraffe",
+            "hươu cao cổ"
         ],
         "category": "🐾 Động vật"
     },
     {
         "emojis": "🦓🌾🦒🐘 África",
         "answers": [
-            "zebra"
+            "zebra",
+            "ngựa vằn"
         ],
         "category": "🐾 Động vật"
     },
@@ -885,52 +874,18 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐼🎋🇨🇳🏔️",
+        "emojis": "🐾🦚🦚🦚🦚",
         "answers": [
-            "panda",
-            "giant panda"
+            "peacock",
+            "con công"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦩🌊💗🌾",
+        "emojis": "🐾🐬🐬🐬🐬🌊",
         "answers": [
-            "flamingo"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🦚✨🌈🌳",
-        "answers": [
-            "peacock"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐬🌊🛥️✨",
-        "answers": [
-            "dolphin"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐋🌊🛥️🌬️",
-        "answers": [
-            "whale"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🦈🌊😱⛵🩸",
-        "answers": [
-            "shark"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐙🌊🐚🦀",
-        "answers": [
-            "octopus"
+            "dolphin",
+            "cá heo"
         ],
         "category": "🐾 Động vật"
     },
@@ -956,9 +911,10 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐢🌊🏖️🐚",
+        "emojis": "🐾🐢🐢🐢🐢🌊",
         "answers": [
-            "turtle"
+            "turtle",
+            "rùa"
         ],
         "category": "🐾 Động vật"
     },
@@ -966,13 +922,6 @@
         "emojis": "🐸🍃🌊🦗",
         "answers": [
             "frog"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🦋✨🌼🌳",
-        "answers": [
-            "butterfly"
         ],
         "category": "🐾 Động vật"
     },
@@ -991,9 +940,10 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🕷️🕸️🏚️🕸️",
+        "emojis": "🐾🕷️🕷️🕷️🕷️",
         "answers": [
-            "spider"
+            "spider",
+            "nhện"
         ],
         "category": "🐾 Động vật"
     },
@@ -1012,13 +962,6 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐺🌕🧥❄️",
-        "answers": [
-            "wolf"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
         "emojis": "🦌🌲🦌🍄",
         "answers": [
             "deer"
@@ -1026,16 +969,18 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🦅🦅🏔️🌬️",
+        "emojis": "🐾🦅🦅🦅🦅",
         "answers": [
-            "eagle"
+            "eagle",
+            "đại bàng"
         ],
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🐪🏜️🐫☀️",
+        "emojis": "🐾🐫🐾🐾🐾",
         "answers": [
-            "camel"
+            "camel",
+            "lạc đà"
         ],
         "category": "🐾 Động vật"
     },
@@ -1047,63 +992,72 @@
         "category": "🐾 Động vật"
     },
     {
-        "emojis": "🗼🥖🧀🍷🎨",
+        "emojis": "🥖🧈🍷🇫🇷🗼",
         "answers": [
-            "france"
+            "france",
+            "pháp"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🍕🏛️🤌🛵🍷",
         "answers": [
-            "italy"
+            "italy",
+            "ý"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🗽🍔🇺🇸🦅⚾",
         "answers": [
             "usa",
             "united states",
-            "america"
+            "america",
+            "mỹ"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🗻🌸🍣🏯🍡",
         "answers": [
-            "japan"
+            "japan",
+            "nhật bản"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
-        "emojis": "🦘🏖️🌏🐨🏄",
+        "emojis": "🐨🏖️🦘🏄‍♂️🏜️",
         "answers": [
-            "australia"
+            "australia",
+            "úc"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🐉🏮🧧🥢🥟",
         "answers": [
-            "china"
+            "china",
+            "trung quốc"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🌮🌵🎸👒🌶️",
         "answers": [
-            "mexico"
+            "mexico",
+            "mê-hi-cô"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
-        "emojis": "☕🏏🕌🍛🎆",
+        "emojis": "🐘🍛🏏🛺🕉️",
         "answers": [
             "india",
-            "turkey"
+            "turkey",
+            "sri lanka",
+            "ấn độ"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🍀🍺🏰🧚‍♀️🎻",
@@ -1115,9 +1069,10 @@
     {
         "emojis": "⚽🎉🏖️💃🦜",
         "answers": [
-            "brazil"
+            "brazil",
+            "bra-xin"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🏔️🧀🍫🕰️🎿",
@@ -1130,9 +1085,10 @@
         "emojis": "🐻❄️🏒🥞🍁",
         "answers": [
             "russia",
-            "canada"
+            "canada",
+            "nga"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🏺⚓🏖️🦉🍇",
@@ -1191,16 +1147,18 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "🥊🔔💪🦷🩸",
+        "emojis": "🥊🥊👊🥊🥊",
         "answers": [
-            "boxing"
+            "boxing",
+            "quyền anh"
         ],
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "⛷️🏔️❄️🎿🚠",
+        "emojis": "🎿❄️🏔️🎿🏔️",
         "answers": [
-            "skiing"
+            "skiing",
+            "trượt tuyết"
         ],
         "category": "⚽ Thể thao"
     },
@@ -1249,7 +1207,9 @@
         "emojis": "🏈🏟️🍺🌭🧢",
         "answers": [
             "american football",
-            "football"
+            "football",
+            "bóng bầu dục",
+            "nfl"
         ],
         "category": "⚽ Thể thao"
     },
@@ -1264,7 +1224,8 @@
     {
         "emojis": "🥎🎾🏸🏓🏸",
         "answers": [
-            "tennis"
+            "tennis",
+            "quần vợt"
         ],
         "category": "⚽ Thể thao"
     },
@@ -1289,14 +1250,6 @@
             "hockey",
             "ice hockey",
             "khúc côn cầu"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "🥊🥊👊🥊🥊",
-        "answers": [
-            "boxing",
-            "quyền anh"
         ],
         "category": "⚽ Thể thao"
     },
@@ -1360,14 +1313,6 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "🎿❄️🏔️🎿🏔️",
-        "answers": [
-            "skiing",
-            "trượt tuyết"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
         "emojis": "🏄‍♂️🏄‍♀️🌊🏄🏄",
         "answers": [
             "surfing",
@@ -1392,19 +1337,19 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "🍄👨🏰🐢🌟",
+        "emojis": "🎮🕹️🧱🏃‍♂️🍄",
         "answers": [
             "mario",
             "super mario"
         ],
-        "category": "🎮 Game"
+        "category": "🎮 Trò chơi"
     },
     {
-        "emojis": "⛏️🟫🌲💎🧟",
+        "emojis": "🧱⛏️🧟‍♂️🌳🏠",
         "answers": [
             "minecraft"
         ],
-        "category": "🎮 Game"
+        "category": "🍎 Sản phẩm"
     },
     {
         "emojis": "🐔🏠🏝️🍊🔔",
@@ -1430,13 +1375,16 @@
         "category": "🎮 Game"
     },
     {
-        "emojis": "🗡️🛡️🧝👸🔺",
+        "emojis": "🗡️🧝‍♂️🏹🐴🕰️",
         "answers": [
             "zelda",
             "the legend of zelda",
-            "legend of zelda"
+            "legend of zelda",
+            "breath of the wild",
+            "tears of the kingdom",
+            "link"
         ],
-        "category": "🎮 Game"
+        "category": "🍎 Sản phẩm"
     },
     {
         "emojis": "🟡⚫👻🍒💊",
@@ -1445,7 +1393,7 @@
             "pacman",
             "pac man"
         ],
-        "category": "🎮 Game"
+        "category": "🎮 Game cổ điển"
     },
     {
         "emojis": "🐹⚡🔴🧢🎒",
@@ -1453,10 +1401,10 @@
             "pokemon",
             "pikachu"
         ],
-        "category": "🎮 Game"
+        "category": "🍎 Sản phẩm"
     },
     {
-        "emojis": "🏰🐲👸🗡️🔥",
+        "emojis": "🎮🧙‍♀️🔮⚔️👑",
         "answers": [
             "dragon quest",
             "dark souls"
@@ -1468,7 +1416,7 @@
         "answers": [
             "tetris"
         ],
-        "category": "🎮 Game"
+        "category": "🎮 Game cổ điển"
     },
     {
         "emojis": "⬇️🔵🏃💍🦔",
@@ -1476,7 +1424,7 @@
             "sonic",
             "sonic the hedgehog"
         ],
-        "category": "🎮 Game"
+        "category": "🎮 Game cổ điển"
     },
     {
         "emojis": "🏗️🌆👷🌪️📉",
@@ -1497,61 +1445,65 @@
         "category": "🎮 Game"
     },
     {
-        "emojis": "🍎📱💻⌚🖥️",
+        "emojis": "🍎📱💻⌚🎧",
         "answers": [
-            "apple"
+            "apple",
+            "táo",
+            "iphone"
         ],
-        "category": "🏢 Brand"
+        "category": "🍎 Thương hiệu"
     },
     {
         "emojis": "☕🧜‍♀️💚🥤🥐",
         "answers": [
             "starbucks"
         ],
-        "category": "🏢 Brand"
+        "category": "🍎 Thương hiệu"
     },
     {
         "emojis": "👟✔️🏃⛹️‍♂️👕",
         "answers": [
             "nike"
         ],
-        "category": "🏢 Brand"
+        "category": "🍎 Thương hiệu"
     },
     {
         "emojis": "🎬🍿🟥🎞️📺",
         "answers": [
             "netflix"
         ],
-        "category": "🏢 Brand"
+        "category": "💻 Công nghệ"
     },
     {
         "emojis": "🔍🌐💻🗺️📧",
         "answers": [
             "google"
         ],
-        "category": "🏢 Brand"
+        "category": "🍎 Thương hiệu"
     },
     {
-        "emojis": "📦😊🚚🛒☁️",
+        "emojis": "🌎🌊🌳🐆🌊",
         "answers": [
-            "amazon"
+            "amazon",
+            "sông amazon"
         ],
-        "category": "🏢 Brand"
+        "category": "🍎 Thương hiệu"
     },
     {
         "emojis": "🐦💙📱💬📢",
         "answers": [
             "twitter",
-            "x"
+            "x",
+            "telegram"
         ],
-        "category": "🏢 Brand"
+        "category": "🏢 Công ty"
     },
     {
         "emojis": "📸💜🖼️🤳❤️",
         "answers": [
             "instagram"
         ],
-        "category": "🏢 Brand"
+        "category": "🏢 Công ty"
     },
     {
         "emojis": "🎮🟦💿📺🕸️",
@@ -1726,9 +1678,10 @@
             "fantasy",
             "fairytale",
             "magic",
-            "unicorn"
+            "unicorn",
+            "phim kỳ ảo"
         ],
-        "category": "💡 Concept"
+        "category": "📚 Văn học"
     },
     {
         "emojis": "🔥👖👖👺🤥",
@@ -1788,26 +1741,11 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🤖❤️🌱🚀👢",
-        "answers": [
-            "wall-e",
-            "walle",
-            "wall e"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
         "emojis": "🦸‍♂️🟢💪🧪🩳",
         "answers": [
             "hulk",
-            "the incredible hulk"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🐝🎥🍯👩‍⚖️🌼",
-        "answers": [
-            "bee movie"
+            "the incredible hulk",
+            "the hulk"
         ],
         "category": "🎬 Phim ảnh"
     },
@@ -1824,7 +1762,8 @@
         "emojis": "🧛‍♂️🌙💉🐺🔮",
         "answers": [
             "dracula",
-            "twilight"
+            "twilight",
+            "vampire"
         ],
         "category": "🎬 Phim ảnh"
     },
@@ -1892,7 +1831,8 @@
     {
         "emojis": "🏜️🪱🌌👂🕌",
         "answers": [
-            "dune"
+            "dune",
+            "xứ cát"
         ],
         "category": "🎬 Phim ảnh"
     },
@@ -1902,13 +1842,6 @@
             "a dogs purpose",
             "hachi",
             "hachiko"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "👨‍🍳🐀🇫🇷🍜🥕",
-        "answers": [
-            "ratatouille"
         ],
         "category": "🎬 Phim ảnh"
     },
@@ -1931,56 +1864,56 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🍊👒🏴‍☠️🍖⚓",
+        "emojis": "🔮👁️🐍🐸📝",
         "answers": [
-            "one piece",
-            "luffy"
+            "naruto",
+            "orochimaru",
+            "sasuke"
         ],
         "category": "🎌 Anime"
     },
     {
-        "emojis": "🦊🍥🥷🌀🍜",
-        "answers": [
-            "naruto"
-        ],
-        "category": "🎌 Anime"
-    },
-    {
-        "emojis": "⚔️👹🌊👺🎋",
+        "emojis": "📺鬼⚔️🎭🩸🌸",
         "answers": [
             "demon slayer",
-            "kimetsu no yaiba"
+            "kimetsu no yaiba",
+            "tokyo ghoul",
+            "thanh gươm diệt quỷ"
         ],
-        "category": "🎌 Anime"
+        "category": "📺 Anime"
     },
     {
         "emojis": "🐉🟠7️⃣☁️🐒",
         "answers": [
             "dragon ball",
             "dragon ball z",
-            "dbz"
+            "dbz",
+            "bảy viên ngọc rồng"
         ],
         "category": "🎌 Anime"
     },
     {
-        "emojis": "💀📓✍️🍎🚔",
+        "emojis": "📺📔🍎💀🕵️‍♂️",
         "answers": [
-            "death note"
+            "death note",
+            "quyển sổ thiên mệnh"
         ],
-        "category": "🎌 Anime"
+        "category": "📺 Anime"
     },
     {
-        "emojis": "👊🦸‍♂️💥🥚🛍️",
+        "emojis": "📺👊🦸‍♂️👨‍🦲💥",
         "answers": [
-            "one punch man"
+            "one punch man",
+            "thánh phồng tôm"
         ],
-        "category": "🎌 Anime"
+        "category": "📺 Anime"
     },
     {
         "emojis": "⚔️🏰👑🗝️🤕",
         "answers": [
             "attack on titan",
-            "aot"
+            "aot",
+            "đại chiến titan"
         ],
         "category": "🎌 Anime"
     },
@@ -2017,20 +1950,13 @@
         "category": "🎌 Anime"
     },
     {
-        "emojis": "🏐🏫🏆🐦🍊",
+        "emojis": "📺🏐🔥🏐🦅",
         "answers": [
             "haikyuu",
-            "haikyu"
+            "haikyu",
+            "vua bóng chuyền"
         ],
-        "category": "🎌 Anime"
-    },
-    {
-        "emojis": "👹🎭🌸☕👽",
-        "answers": [
-            "demon slayer",
-            "tokyo ghoul"
-        ],
-        "category": "🎌 Anime"
+        "category": "📺 Anime"
     },
     {
         "emojis": "🗡️🎮🌐💏🏰",
@@ -2041,32 +1967,18 @@
         "category": "🎌 Anime"
     },
     {
-        "emojis": "🏴‍☠️⛵🗺️🧭💀",
+        "emojis": "🏰🇫🇷🗼🥖🍷",
         "answers": [
-            "one piece"
-        ],
-        "category": "🎌 Anime"
-    },
-    {
-        "emojis": "🔮👁️🐍🐸📝",
-        "answers": [
-            "naruto",
-            "orochimaru",
-            "sasuke"
-        ],
-        "category": "🎌 Anime"
-    },
-    {
-        "emojis": "🗼🇫🇷💡🥐🥖",
-        "answers": [
-            "eiffel tower"
+            "eiffel tower",
+            "tháp eiffel"
         ],
         "category": "🏛️ Địa danh nổi tiếng"
     },
     {
-        "emojis": "🗽🇺🇸🏝️🏙️🎆",
+        "emojis": "🏰🇺🇸🗽🏙️🛥️",
         "answers": [
-            "statue of liberty"
+            "statue of liberty",
+            "tượng nữ thần tự do"
         ],
         "category": "🏛️ Địa danh nổi tiếng"
     },
@@ -2083,7 +1995,8 @@
         "emojis": "🧱🐉🇨🇳🏔️🏰",
         "answers": [
             "great wall of china",
-            "great wall"
+            "great wall",
+            "vạn lý trường thành"
         ],
         "category": "🏛️ Địa danh nổi tiếng"
     },
@@ -2096,7 +2009,7 @@
         "category": "🏛️ Địa danh nổi tiếng"
     },
     {
-        "emojis": "🕌🇮🇳💎👸💭",
+        "emojis": "🏰🇮🇳🕌🏛️🌅",
         "answers": [
             "taj mahal"
         ],
@@ -2308,58 +2221,18 @@
         "category": "😊 Emotion"
     },
     {
-        "emojis": "🦸‍♂️🔴🔵⭐🛡️🫡",
-        "answers": [
-            "captain america"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "🕷️👦🏙️🕸️🛹",
-        "answers": [
-            "spiderman",
-            "spider-man",
-            "spider man"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "🦇🌑🏙️🚙🃏",
-        "answers": [
-            "batman",
-            "the dark knight",
-            "dark knight"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "🔨⚡👑🍺🧔",
-        "answers": [
-            "thor"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "💚👊😡🧪👖",
-        "answers": [
-            "hulk",
-            "the hulk"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
         "emojis": "🏹💜👁️🎯👨‍👩‍👧‍👦",
         "answers": [
             "hawkeye"
         ],
-        "category": "🦸 Superhero"
+        "category": "🦸 Siêu anh hùng"
     },
     {
         "emojis": "🦸‍♀️👑🌟🛡️🗡️",
         "answers": [
             "wonder woman"
         ],
-        "category": "🦸 Superhero"
+        "category": "🦸 Siêu anh hùng"
     },
     {
         "emojis": "⚡🏃‍♂️🔴🌭⚡",
@@ -2367,15 +2240,16 @@
             "the flash",
             "flash"
         ],
-        "category": "🦸 Superhero"
+        "category": "🦸 Siêu anh hùng"
     },
     {
         "emojis": "🕶️💎🤖🏎️🍔",
         "answers": [
             "iron man",
-            "tony stark"
+            "tony stark",
+            "người sắt"
         ],
-        "category": "🦸 Superhero"
+        "category": "🦸 Siêu anh hùng"
     },
     {
         "emojis": "🐈‍⬛👩💎🏍️🥛",
@@ -2402,13 +2276,6 @@
         "category": "🦸 Superhero"
     },
     {
-        "emojis": "🧪💊👨‍🔬🏜️💎",
-        "answers": [
-            "breaking bad"
-        ],
-        "category": "📺 TV Show"
-    },
-    {
         "emojis": "👽🔬🏢🛸🔦",
         "answers": [
             "the x files",
@@ -2420,14 +2287,6 @@
         "emojis": "🏝️✈️💀🔒🐻‍❄️",
         "answers": [
             "lost"
-        ],
-        "category": "📺 TV Show"
-    },
-    {
-        "emojis": "🧊🔥👑⚔️🐉",
-        "answers": [
-            "game of thrones",
-            "got"
         ],
         "category": "📺 TV Show"
     },
@@ -2466,9 +2325,10 @@
         "emojis": "👨‍👩‍👧‍👦🟡🍩🛋️📺",
         "answers": [
             "the simpsons",
-            "simpsons"
+            "simpsons",
+            "gia đình simpson"
         ],
-        "category": "📺 TV Show"
+        "category": "📺 Hoạt hình"
     },
     {
         "emojis": "🧽⭐🍍🏠🍔",
@@ -2491,7 +2351,7 @@
             "powerpuff girls",
             "the powerpuff girls"
         ],
-        "category": "📺 TV Show"
+        "category": "📺 Hoạt hình"
     },
     {
         "emojis": "🎵🌍👫🤝🕊️",
@@ -2563,9 +2423,10 @@
         "emojis": "🏰👸🍄🔥🎹",
         "answers": [
             "super mario",
-            "mario bros"
+            "mario bros",
+            "mario"
         ],
-        "category": "🎮 Game"
+        "category": "🍎 Sản phẩm"
     },
     {
         "emojis": "🐔🔫🪂🏞️🍽️",
@@ -2577,26 +2438,10 @@
         "category": "🎮 Game"
     },
     {
-        "emojis": "⚡🟡🔴⚫🐭",
-        "answers": [
-            "pokemon"
-        ],
-        "category": "🎮 Game"
-    },
-    {
         "emojis": "🧱🏠🎨👷‍♂️🤖",
         "answers": [
             "roblox",
             "lego"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🗡️🧝‍♂️🏹🐴🕰️",
-        "answers": [
-            "zelda",
-            "breath of the wild",
-            "tears of the kingdom"
         ],
         "category": "🎮 Game"
     },
@@ -2639,43 +2484,14 @@
             "gta",
             "grand theft auto"
         ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🥖🧈🍷🇫🇷🗼",
-        "answers": [
-            "france"
-        ],
-        "category": "🌍 Country"
-    },
-    {
-        "emojis": "🐨🏖️🦘🏄‍♂️🏜️",
-        "answers": [
-            "australia"
-        ],
-        "category": "🌍 Country"
-    },
-    {
-        "emojis": "🎎🍵🗻🌸👘",
-        "answers": [
-            "japan"
-        ],
-        "category": "🌍 Country"
+        "category": "🍎 Sản phẩm"
     },
     {
         "emojis": "🍁🏒🦫🥞⛷️",
         "answers": [
             "canada"
         ],
-        "category": "🌍 Country"
-    },
-    {
-        "emojis": "🐘🍛🏏🛺🕉️",
-        "answers": [
-            "india",
-            "sri lanka"
-        ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🏔️🧘‍♂️🙏🚩🪙",
@@ -2690,35 +2506,23 @@
         "answers": [
             "egypt",
             "saudi arabia",
-            "dubai"
+            "dubai",
+            "ai cập"
         ],
-        "category": "🌍 Country"
-    },
-    {
-        "emojis": "🎭🥐🧀🍷🎨",
-        "answers": [
-            "france"
-        ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🍺🌭🏰🥨⚽",
         "answers": [
-            "germany"
+            "germany",
+            "đức"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🐂🏖️🍹🍅💃",
         "answers": [
             "spain"
-        ],
-        "category": "🌍 Country"
-    },
-    {
-        "emojis": "🎋🐼🥟🍜🧧",
-        "answers": [
-            "china"
         ],
         "category": "🌍 Country"
     },
@@ -2741,7 +2545,7 @@
         "answers": [
             "halloween"
         ],
-        "category": "🎊 Holiday"
+        "category": "🎬 Phim kinh dị"
     },
     {
         "emojis": "🐣🐰🥚🍫🧺",
@@ -2806,9 +2610,10 @@
         "answers": [
             "dna",
             "genetics",
-            "biology"
+            "biology",
+            "di truyền học"
         ],
-        "category": "🔬 Science"
+        "category": "🧪 Khoa học"
     },
     {
         "emojis": "⚛️💥🔬☢️💣",
@@ -2820,12 +2625,13 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🌌🔭⭐🪐👽",
+        "emojis": "🧪🚀🌌🌠🪐",
         "answers": [
             "astronomy",
-            "stargazing"
+            "stargazing",
+            "thiên văn học"
         ],
-        "category": "🔬 Science"
+        "category": "🧪 Khoa học"
     },
     {
         "emojis": "🦠😷💉🧬📉",
@@ -2842,9 +2648,10 @@
         "answers": [
             "electricity",
             "magnetism",
-            "energy"
+            "energy",
+            "điện"
         ],
-        "category": "🔬 Science"
+        "category": "🧪 Khoa học"
     },
     {
         "emojis": "🌋🌍💨🔥🏔️",
@@ -2855,49 +2662,36 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🪐🌌🛸👽🌠",
+        "emojis": "🌌🪐🔭🛰️🌠",
         "answers": [
             "space",
             "universe",
-            "galaxy"
+            "galaxy",
+            "không gian",
+            "vũ trụ"
         ],
-        "category": "🔬 Science"
+        "category": "🌌 Thiên văn"
     },
     {
         "emojis": "🎵🟢📱🎧📻",
         "answers": [
             "spotify"
         ],
-        "category": "🏢 Brand"
+        "category": "💻 Công nghệ"
     },
     {
         "emojis": "📺🔴▶️📹👀",
         "answers": [
             "youtube"
         ],
-        "category": "🏢 Brand"
-    },
-    {
-        "emojis": "🎮🟩🕹️🔫🏎️",
-        "answers": [
-            "xbox"
-        ],
-        "category": "🏢 Brand"
-    },
-    {
-        "emojis": "🍟🤡🟡🔴🍔",
-        "answers": [
-            "mcdonalds",
-            "mcdonald's"
-        ],
-        "category": "🏢 Brand"
+        "category": "💻 Công nghệ"
     },
     {
         "emojis": "👻📸💛🤳👯",
         "answers": [
             "snapchat"
         ],
-        "category": "🏢 Brand"
+        "category": "💻 Công nghệ"
     },
     {
         "emojis": "🎵🎬📱💃📉",
@@ -2905,34 +2699,26 @@
             "tiktok",
             "tik tok"
         ],
-        "category": "🏢 Brand"
+        "category": "💻 Công nghệ"
     },
     {
-        "emojis": "💬🟣📱🎮👥",
+        "emojis": "💻🎮🗣️💬🔊",
         "answers": [
             "discord"
         ],
-        "category": "🏢 Brand"
+        "category": "💻 Công nghệ"
     },
     {
-        "emojis": "🚗⚡🔋🚀🌌",
+        "emojis": "🏎️🔵⚡🔋🚘",
         "answers": [
             "tesla"
         ],
-        "category": "🏢 Brand"
+        "category": "🚗 Xe cộ"
     },
     {
         "emojis": "👑🍔🔥🤴🍖",
         "answers": [
             "burger king"
-        ],
-        "category": "🏢 Brand"
-    },
-    {
-        "emojis": "🐦🔵✈️💬📱",
-        "answers": [
-            "twitter",
-            "telegram"
         ],
         "category": "🏢 Brand"
     },
@@ -2945,11 +2731,11 @@
         "category": "🍽️ Food"
     },
     {
-        "emojis": "🌯🥑🫘🌮🌶️",
+        "emojis": "🍽️🌯🇲🇽🌯🌯",
         "answers": [
             "burrito"
         ],
-        "category": "🍽️ Food"
+        "category": "🍽️ Đồ ăn"
     },
     {
         "emojis": "🍩☕🍫🚔🥯",
@@ -2991,79 +2777,13 @@
         "category": "🍽️ Food"
     },
     {
-        "emojis": "🥐🍫☕🥓🍳",
+        "emojis": "🍽️🥓🍳🍖🍞",
         "answers": [
             "breakfast",
-            "brunch"
+            "brunch",
+            "bữa sáng"
         ],
-        "category": "🍽️ Food"
-    },
-    {
-        "emojis": "🧛‍♂️🦇🏰⚰️🩸",
-        "answers": [
-            "dracula",
-            "vampire"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "👻👨‍🔬🔫🚫 marshmallow",
-        "answers": [
-            "ghostbusters"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🦖🌴🚙🦴🦕",
-        "answers": [
-            "jurassic park"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🍫🏭👦🎫🍭",
-        "answers": [
-            "charlie and the chocolate factory",
-            "willy wonka"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🚢🧊💑🌊🚪",
-        "answers": [
-            "titanic"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🧙‍♂️💍🌋👁️🦅",
-        "answers": [
-            "lord of the rings"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🦁👑🐗🐒🌅",
-        "answers": [
-            "the lion king",
-            "lion king"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🤡🎈🛀⛵☔",
-        "answers": [
-            "it"
-        ],
-        "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🤖🕶️💊🐇📞",
-        "answers": [
-            "the matrix",
-            "matrix"
-        ],
-        "category": "🎬 Movie"
+        "category": "🍽️ Đồ ăn"
     },
     {
         "emojis": "🧟‍♂️🧟‍♀️🔫🏚️🧠",
@@ -3074,32 +2794,11 @@
         "category": "📺 TV Show"
     },
     {
-        "emojis": "🧪💎🚐🕶️🍗",
-        "answers": [
-            "breaking bad"
-        ],
-        "category": "📺 TV Show"
-    },
-    {
-        "emojis": "🦑🎮💰🎭🐖",
+        "emojis": "🦑🎮🔴🟢🟡💀",
         "answers": [
             "squid game"
         ],
-        "category": "📺 TV Show"
-    },
-    {
-        "emojis": "🧇👧🧠👃🚲",
-        "answers": [
-            "stranger things"
-        ],
-        "category": "📺 TV Show"
-    },
-    {
-        "emojis": "🏰🐉🐺❄️⚔️",
-        "answers": [
-            "game of thrones"
-        ],
-        "category": "📺 TV Show"
+        "category": "📺 Phim bộ"
     },
     {
         "emojis": "🎸🎩🌹🚬🥃",
@@ -3116,48 +2815,6 @@
             "007"
         ],
         "category": "🎬 Movie"
-    },
-    {
-        "emojis": "🕷️🕸️🤟📷🐜",
-        "answers": [
-            "spiderman"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "🦇🃏🤡🦇🔦",
-        "answers": [
-            "batman"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "⚡🌩️🔨💪🍺",
-        "answers": [
-            "thor"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "🟢💪😡🧪🩳",
-        "answers": [
-            "hulk"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "🇺🇸🛡️⭐🫡🏍️",
-        "answers": [
-            "captain america"
-        ],
-        "category": "🦸 Superhero"
-    },
-    {
-        "emojis": "🤖🔴🌗🕴️💰",
-        "answers": [
-            "iron man"
-        ],
-        "category": "🦸 Superhero"
     },
     {
         "emojis": "🧠💭🌆🏢🌀",
@@ -3186,13 +2843,6 @@
             "black panther"
         ],
         "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🦑🎮🔴🟢🟡💀",
-        "answers": [
-            "squid game"
-        ],
-        "category": "📺 Phim bộ"
     },
     {
         "emojis": "🎩🚬🇬🇧🔫🏙️",
@@ -3258,12 +2908,13 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "🎮⚔️🧙‍♂️🟣🔮",
+        "emojis": "⚔️🧙‍♂️🏟️🔥🛡️",
         "answers": [
             "league of legends",
-            "lol"
+            "lol",
+            "liên minh huyền thoại"
         ],
-        "category": "🎮 Game"
+        "category": "🎮 Trò chơi"
     },
     {
         "emojis": "🎮🛡️⚔️🧟‍♂️🏰",
@@ -3288,18 +2939,18 @@
         "category": "🏢 Brand"
     },
     {
-        "emojis": "👟⚽🔥🟢⚫",
+        "emojis": "🍎👟🦓🏁🔥",
         "answers": [
             "adidas"
         ],
-        "category": "🏢 Brand"
+        "category": "🍎 Thương hiệu"
     },
     {
         "emojis": "📱📺🇰🇷🔵⚡",
         "answers": [
             "samsung"
         ],
-        "category": "🏢 Brand"
+        "category": "🏢 Công ty"
     },
     {
         "emojis": "🪔✨🇮🇳🎆🕯️",
@@ -3449,9 +3100,10 @@
     {
         "emojis": "🇹🇭🌴🍜🐘🏝️",
         "answers": [
-            "thailand"
+            "thailand",
+            "thái lan"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🇿🇦🦁🌍🏉☀️",
@@ -3515,7 +3167,7 @@
         "answers": [
             "bmw"
         ],
-        "category": "🏢 Brand"
+        "category": "🏢 Công ty"
     },
     {
         "emojis": "🎊🎭🎉🇧🇷🥁",
@@ -3687,9 +3339,10 @@
         "category": "🎵 Bài hát"
     },
     {
-        "emojis": "🍲🥥🌶️🇮🇳🍛",
+        "emojis": "🍽️🍛🇮🇳🍛🥘",
         "answers": [
-            "curry"
+            "curry",
+            "cà ri"
         ],
         "category": "🍽️ Đồ ăn"
     },
@@ -3736,18 +3389,12 @@
         "category": "🌍 Country"
     },
     {
-        "emojis": "🇨🇭🏔️🧀🍫⏰",
-        "answers": [
-            "switzerland"
-        ],
-        "category": "🌍 Country"
-    },
-    {
         "emojis": "🇻🇳🍜🏍️🌾🐉",
         "answers": [
-            "vietnam"
+            "vietnam",
+            "việt nam"
         ],
-        "category": "🌍 Country"
+        "category": "🌍 Quốc gia"
     },
     {
         "emojis": "🇨🇴☕🌄🎶⚽",
@@ -3779,7 +3426,7 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "🏎️🔴🐎🇮🇹🏁",
+        "emojis": "🏎️🔴🐎🏎️🇮🇹",
         "answers": [
             "ferrari"
         ],
@@ -3842,11 +3489,12 @@
         "category": "🏢 Brand"
     },
     {
-        "emojis": "🏢📷📸🟥🇯🇵",
+        "emojis": "🏢📸📸📸🇯🇵",
         "answers": [
-            "canon"
+            "canon",
+            "nikon"
         ],
-        "category": "🏢 Brand"
+        "category": "🏢 Công ty"
     },
     {
         "emojis": "🏢🎧🔊🇺🇸🔵",
@@ -4011,23 +3659,9 @@
         "category": "🎮 Game"
     },
     {
-        "emojis": "🎮🚗⚽💥🏟️",
-        "answers": [
-            "rocket league"
-        ],
-        "category": "🎮 Game"
-    },
-    {
         "emojis": "🎮🐉🔥🗡️🏔️",
         "answers": [
             "dragon age"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮🧙‍♂️⚡🧪🏰",
-        "answers": [
-            "hogwarts legacy"
         ],
         "category": "🎮 Game"
     },
@@ -4056,13 +3690,6 @@
         "emojis": "🎮⚡🧒🐉📜",
         "answers": [
             "ni no kuni"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮🛡️🐉🔥🏔️",
-        "answers": [
-            "skyrim"
         ],
         "category": "🎮 Game"
     },
@@ -4113,7 +3740,7 @@
         "answers": [
             "donkey kong"
         ],
-        "category": "🎮 Game"
+        "category": "🎮 Game cổ điển"
     },
     {
         "emojis": "🎮🧱👷♂️🌍🎨",
@@ -4151,14 +3778,15 @@
         "category": "🎮 Game"
     },
     {
-        "emojis": "🎮⚽👟🏆🌍",
+        "emojis": "🎮⚽🏟️👟🥅",
         "answers": [
-            "fifa"
+            "fifa",
+            "fc24"
         ],
         "category": "🎮 Game"
     },
     {
-        "emojis": "🎮🏀🏟️🏆👟",
+        "emojis": "🎮🏀🗑️⛹️‍♂️🔥",
         "answers": [
             "nba 2k"
         ],
@@ -4350,13 +3978,6 @@
         "emojis": "🎮🧟‍♂️🏙️🚧🧠",
         "answers": [
             "dying light"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮🧙‍♀️🔮⚔️👑",
-        "answers": [
-            "dragon quest"
         ],
         "category": "🎮 Game"
     },
@@ -4599,68 +4220,11 @@
         "category": "🎮 Game"
     },
     {
-        "emojis": "🌍🍲🍜☕",
-        "answers": [
-            "vietnam",
-            "việt nam"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🍣👘🗻",
-        "answers": [
-            "japan",
-            "nhật bản"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🗽🍔🦅",
-        "answers": [
-            "usa",
-            "mỹ",
-            "united states"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🗼🥖🍷",
-        "answers": [
-            "france",
-            "pháp"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
         "emojis": "🌍🎵🍜🏯",
         "answers": [
             "korea",
             "hàn quốc",
             "south korea"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍⚽💃🏝️",
-        "answers": [
-            "brazil",
-            "bra-xin"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🧱🐉🥟",
-        "answers": [
-            "china",
-            "trung quốc"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🍕🍝🏛️",
-        "answers": [
-            "italy",
-            "ý"
         ],
         "category": "🌍 Quốc gia"
     },
@@ -4675,48 +4239,11 @@
         "category": "🌍 Quốc gia"
     },
     {
-        "emojis": "🌍❄️🏰🥃",
-        "answers": [
-            "russia",
-            "nga"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🍎📱💻⌚🎧",
-        "answers": [
-            "apple",
-            "táo"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎🏎️🐎🇮🇹🔴",
-        "answers": [
-            "ferrari"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎☕🥤🥯🏪",
-        "answers": [
-            "starbucks"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎🍔🍟🤡🔴",
-        "answers": [
-            "mcdonalds",
-            "mcdonald's"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎🥤🔴⚪🎅",
+        "emojis": "🏢🥤🔴⚪🎅",
         "answers": [
             "coca cola",
-            "coke"
+            "coke",
+            "coca-cola"
         ],
         "category": "🍎 Thương hiệu"
     },
@@ -4724,34 +4251,6 @@
         "emojis": "🍎🍫🥛🐄🟣",
         "answers": [
             "milka"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎👟✔️🏀🔥",
-        "answers": [
-            "nike"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎👟🦓🏁🔥",
-        "answers": [
-            "adidas"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎📦🚚🛒🔵",
-        "answers": [
-            "amazon"
-        ],
-        "category": "🍎 Thương hiệu"
-    },
-    {
-        "emojis": "🍎🔍🌐📧🌈",
-        "answers": [
-            "google"
         ],
         "category": "🍎 Thương hiệu"
     },
@@ -4765,224 +4264,12 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "⚽🏀🗑️⛹️‍♂️🔥",
-        "answers": [
-            "basketball",
-            "bóng rổ"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🎾🎾🏸🧢",
-        "answers": [
-            "tennis",
-            "quần vợt"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🏊‍♂️🌊🏊‍♀️🏅",
-        "answers": [
-            "swimming",
-            "bơi lội"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🥊🥊🥊👊",
-        "answers": [
-            "boxing",
-            "quyền anh"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "🐾🦁👑🥩🔥",
-        "answers": [
-            "lion",
-            "sư tử"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐘🐘👃💦",
-        "answers": [
-            "elephant",
-            "voi"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦒🦒🦒🦒🌿",
-        "answers": [
-            "giraffe",
-            "hươu cao cổ"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐧❄️🧊🐟",
-        "answers": [
-            "penguin",
-            "chim cánh cụt"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐒🍌🌳🐒",
-        "answers": [
-            "monkey",
-            "khỉ"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐺🌕🌲❄️",
-        "answers": [
-            "wolf",
-            "sói"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐻🍯🌲🏕️",
-        "answers": [
-            "bear",
-            "gấu"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐯🔶⬛🐾",
-        "answers": [
-            "tiger",
-            "hổ"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐰🥕🕳️🥚",
-        "answers": [
-            "rabbit",
-            "thỏ"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
         "emojis": "🐾🐱 yarn 🐟🏠",
         "answers": [
             "cat",
             "mèo"
         ],
         "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🌍🍺🚗🥨",
-        "answers": [
-            "germany",
-            "đức"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🦘🐨🏝️",
-        "answers": [
-            "australia",
-            "úc"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🍁🏒❄️",
-        "answers": [
-            "canada"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🕉️🍛🏰",
-        "answers": [
-            "india",
-            "ấn độ"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🥥🐘🏝️",
-        "answers": [
-            "thailand",
-            "thái lan"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🐪🌅🏺",
-        "answers": [
-            "egypt",
-            "ai cập"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "🌍🌮🎻🌵",
-        "answers": [
-            "mexico",
-            "mê-hi-cô"
-        ],
-        "category": "🌍 Quốc gia"
-    },
-    {
-        "emojis": "⚽🏈🏈🏟️🏈",
-        "answers": [
-            "american football",
-            "bóng bầu dục"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽⚾🏏🏟️⚾",
-        "answers": [
-            "baseball",
-            "bóng chày"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🏐🏐🏟️🏐",
-        "answers": [
-            "volleyball",
-            "bóng chuyền"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽⛳⛳⛳🏌️‍♂️",
-        "answers": [
-            "golf"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🏂❄️🏔️⛷️",
-        "answers": [
-            "snowboarding",
-            "trượt tuyết"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "🏎️🔴🐎🏎️🇮🇹",
-        "answers": [
-            "ferrari"
-        ],
-        "category": "🚗 Xe cộ"
-    },
-    {
-        "emojis": "🏎️🔵⚡🔋🚘",
-        "answers": [
-            "tesla"
-        ],
-        "category": "🚗 Xe cộ"
     },
     {
         "emojis": "🏎️🟠🐆🏎️🇬🇧",
@@ -4997,15 +4284,6 @@
             "jaguar"
         ],
         "category": "🚗 Xe cộ"
-    },
-    {
-        "emojis": "🌌🪐🔭🛰️🌠",
-        "answers": [
-            "space",
-            "không gian",
-            "vũ trụ"
-        ],
-        "category": "🌌 Thiên văn"
     },
     {
         "emojis": "🌌🪐🔴🏜️🚀",
@@ -5040,57 +4318,6 @@
         "category": "🌌 Thiên văn"
     },
     {
-        "emojis": "🦸🦇🤵🌃🔨",
-        "answers": [
-            "batman"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸🕸️🕷️🏙️🤟",
-        "answers": [
-            "spiderman",
-            "người nhện"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸🔨⚡🌩️🦁",
-        "answers": [
-            "thor"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸🛡️🔴⚪🔵🇺🇸",
-        "answers": [
-            "captain america"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸🤖🔴🟡🚀💥",
-        "answers": [
-            "iron man",
-            "người sắt"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸👊🟢🔋😱",
-        "answers": [
-            "hulk"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸🏹🎯💜🦅",
-        "answers": [
-            "hawkeye"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
         "emojis": "🦸🐜🔬🏙️🐜",
         "answers": [
             "ant-man",
@@ -5113,28 +4340,6 @@
         "category": "🦸 Siêu anh hùng"
     },
     {
-        "emojis": "🦸🏃‍♂️⚡⚡🔴",
-        "answers": [
-            "the flash",
-            "flash"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸👸💫🕊️🗡️",
-        "answers": [
-            "wonder woman"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
-        "emojis": "🦸💎🦇🤵🦇",
-        "answers": [
-            "black panther"
-        ],
-        "category": "🦸 Siêu anh hùng"
-    },
-    {
         "emojis": "🦸💨🧤🟣💍",
         "answers": [
             "thanos"
@@ -5149,41 +4354,10 @@
         "category": "🦸 Siêu ác nhân"
     },
     {
-        "emojis": "🏰🇫🇷🗼🥖🍷",
-        "answers": [
-            "eiffel tower",
-            "tháp eiffel"
-        ],
-        "category": "🏰 Địa danh"
-    },
-    {
         "emojis": "🏰🇮🇹🍕🏗️🏙️",
         "answers": [
             "leaning tower of pisa",
             "tháp nghiêng pisa"
-        ],
-        "category": "🏰 Địa danh"
-    },
-    {
-        "emojis": "🏰🇺🇸🗽🏙️🛥️",
-        "answers": [
-            "statue of liberty",
-            "tượng nữ thần tự do"
-        ],
-        "category": "🏰 Địa danh"
-    },
-    {
-        "emojis": "🏰🇮🇳🕌🏛️🌅",
-        "answers": [
-            "taj mahal"
-        ],
-        "category": "🏰 Địa danh"
-    },
-    {
-        "emojis": "🏰🇨🇳🧱🛣️🐉",
-        "answers": [
-            "great wall of china",
-            "vạn lý trường thành"
         ],
         "category": "🏰 Địa danh"
     },
@@ -5286,13 +4460,6 @@
         "category": "🧪 Khoa học"
     },
     {
-        "emojis": "🧪🧬🧬🧬🧬",
-        "answers": [
-            "dna"
-        ],
-        "category": "🧪 Khoa học"
-    },
-    {
         "emojis": "🧪🧪💊🌡️🔬",
         "answers": [
             "chemistry",
@@ -5315,14 +4482,6 @@
             "sinh học"
         ],
         "category": "🧪 Khoa học"
-    },
-    {
-        "emojis": "📚📖🏰🐉⚔️",
-        "answers": [
-            "fantasy",
-            "phim kỳ ảo"
-        ],
-        "category": "📚 Văn học"
     },
     {
         "emojis": "📚📖🔍🕵️‍♂️🔫",
@@ -5357,57 +4516,6 @@
         "category": "📚 Văn học"
     },
     {
-        "emojis": "🏢🍔🍟🤡🥤",
-        "answers": [
-            "mcdonalds",
-            "mcdonald's"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢☕🥤🥯🥐",
-        "answers": [
-            "starbucks"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🥤🔴⚪🎅",
-        "answers": [
-            "coca cola",
-            "coke"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢👟✔️🏀🔥",
-        "answers": [
-            "nike"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🍎📱💻⌚",
-        "answers": [
-            "apple"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🔍📧🌈🌐",
-        "answers": [
-            "google"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢💻📦🚚🛒",
-        "answers": [
-            "amazon"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
         "emojis": "🏢🔵👥📱💬",
         "answers": [
             "facebook",
@@ -5416,38 +4524,9 @@
         "category": "🏢 Công ty"
     },
     {
-        "emojis": "🏢🐦💙💭💬",
-        "answers": [
-            "twitter",
-            "x"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢📸🌈📱✨",
-        "answers": [
-            "instagram"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "⚽🏀🗑️⛹️‍♂️🏀",
-        "answers": [
-            "nba"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
         "emojis": "⚽⚾⚾🏟️🧢",
         "answers": [
             "mlb"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🏈🏈🏟️🏈",
-        "answers": [
-            "nfl"
         ],
         "category": "⚽ Thể thao"
     },
@@ -5459,35 +4538,6 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "⚽🏎️🏁🏟️🏎️",
-        "answers": [
-            "f1",
-            "formula 1"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽👊🥋🏟️🤜",
-        "answers": [
-            "ufc"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🏆🌍⚽🔥",
-        "answers": [
-            "world cup"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
-        "emojis": "⚽🎾🌱🇬🇧🎾",
-        "answers": [
-            "wimbledon"
-        ],
-        "category": "⚽ Thể thao"
-    },
-    {
         "emojis": "⚽🚴‍♂️🇫🇷🏔️🚴",
         "answers": [
             "tour de france"
@@ -5495,114 +4545,11 @@
         "category": "⚽ Thể thao"
     },
     {
-        "emojis": "🐾🐢🐢🐢🐢🌊",
-        "answers": [
-            "turtle",
-            "rùa"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐬🐬🐬🐬🌊",
-        "answers": [
-            "dolphin",
-            "cá heo"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐋🐋🐋🐋🌊",
-        "answers": [
-            "whale",
-            "cá voi"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐙🐙🐙🐙🌊",
-        "answers": [
-            "octopus",
-            "bạch tuộc"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦈🦈🦈🦈🌊",
-        "answers": [
-            "shark",
-            "cá mập"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "📺🏴‍☠️👒🍖🌊",
-        "answers": [
-            "one piece",
-            "đảo hải tặc"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺🥷🦊🍜🌀",
-        "answers": [
-            "naruto"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺🐉🎾⚾🥊",
-        "answers": [
-            "dragon ball",
-            "bảy viên ngọc rồng"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺📔🍎💀🕵️‍♂️",
-        "answers": [
-            "death note",
-            "quyển sổ thiên mệnh"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺巨人⚔️🏰🩸",
-        "answers": [
-            "attack on titan",
-            "đại chiến titan"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺🏐🔥🏐🦅",
-        "answers": [
-            "haikyuu",
-            "haikyu",
-            "vua bóng chuyền"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺👊🦸‍♂️👨‍🦲💥",
-        "answers": [
-            "one punch man",
-            "thánh phồng tôm"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺鬼⚔️🎭🩸🌸",
-        "answers": [
-            "demon slayer",
-            "thanh gươm diệt quỷ"
-        ],
-        "category": "📺 Anime"
-    },
-    {
         "emojis": "📺🕵️‍♂️⚽👓🧪",
         "answers": [
             "detective conan",
-            "thám tử lừng danh conan"
+            "thám tử lừng danh conan",
+            "conan"
         ],
         "category": "📺 Anime"
     },
@@ -5628,7 +4575,8 @@
             "ho chi minh city",
             "saigon",
             "sài gòn",
-            "thành phố hồ chí minh"
+            "thành phố hồ chí minh",
+            "hcmc"
         ],
         "category": "🏙️ Thành phố"
     },
@@ -5712,45 +4660,6 @@
         "category": "🏙️ Thành phố"
     },
     {
-        "emojis": "🍎🎮🟦🍄🐢",
-        "answers": [
-            "super mario",
-            "mario"
-        ],
-        "category": "🍎 Sản phẩm"
-    },
-    {
-        "emojis": "🍎🎮🧝‍♂️🗡️🛡️",
-        "answers": [
-            "zelda",
-            "link"
-        ],
-        "category": "🍎 Sản phẩm"
-    },
-    {
-        "emojis": "🍎🎮⚡🐭🟡",
-        "answers": [
-            "pokemon",
-            "pikachu"
-        ],
-        "category": "🍎 Sản phẩm"
-    },
-    {
-        "emojis": "🍎🎮⛏️🌍🧱",
-        "answers": [
-            "minecraft"
-        ],
-        "category": "🍎 Sản phẩm"
-    },
-    {
-        "emojis": "🍎🎮🚗🏙️🔫",
-        "answers": [
-            "gta",
-            "grand theft auto"
-        ],
-        "category": "🍎 Sản phẩm"
-    },
-    {
         "emojis": "🎬🦸🦇🌃🧤",
         "answers": [
             "avengers",
@@ -5774,130 +4683,10 @@
         "category": "🎬 Phim ảnh"
     },
     {
-        "emojis": "🎬🥊🥊🥊🏅",
-        "answers": [
-            "rocky"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🦁👑🌅🐗",
-        "answers": [
-            "the lion king"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🚢🧊💔🌊",
-        "answers": [
-            "titanic"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🦕🏞️🚗🥩",
-        "answers": [
-            "jurassic park"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🧙‍♂️🏰👓🦉",
-        "answers": [
-            "harry potter"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬💍🌋👣🏹",
-        "answers": [
-            "lord of the rings"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🏴‍☠️🚢💀⚔️",
-        "answers": [
-            "pirates of the caribbean"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬👽🚲🌕👇",
-        "answers": [
-            "et",
-            "e.t."
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬👻🚫👨‍🚒🔫",
-        "answers": [
-            "ghostbusters"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🔍🐠🤡🐟",
-        "answers": [
-            "finding nemo"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🐼🥋👊🥢",
-        "answers": [
-            "kung fu panda"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🍎👸🏰🧙‍♀️",
-        "answers": [
-            "snow white"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🧞‍♂️✨🐒🕌",
-        "answers": [
-            "aladdin"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🚀🌌⚔️🤖",
-        "answers": [
-            "star wars"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🤠🧸🚀🥔",
-        "answers": [
-            "toy story"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
         "emojis": "🎬🍫🏭🎫🎩",
         "answers": [
             "willy wonka",
             "charlie and the chocolate factory"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🤡🎈😱⛵",
-        "answers": [
-            "it"
-        ],
-        "category": "🎬 Phim ảnh"
-    },
-    {
-        "emojis": "🎬🐀👨‍🍳🍲🗼",
-        "answers": [
-            "ratatouille"
         ],
         "category": "🎬 Phim ảnh"
     },
@@ -5946,79 +4735,9 @@
         "category": "🍽️ Đồ ăn nhanh"
     },
     {
-        "emojis": "💻🟦👥📱💬",
-        "answers": [
-            "facebook"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻🎥📹🔴🎬",
-        "answers": [
-            "youtube"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻📸🌈📱✨",
-        "answers": [
-            "instagram"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻🐦💙💬💭",
-        "answers": [
-            "twitter"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻🎶🎧🟢📱",
-        "answers": [
-            "spotify"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻🎬🎥🔴📺",
-        "answers": [
-            "netflix"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻👻💛📱📸",
-        "answers": [
-            "snapchat"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻🎵🔥📱💃",
-        "answers": [
-            "tiktok"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
-        "emojis": "💻🎮🗣️💬🔊",
-        "answers": [
-            "discord"
-        ],
-        "category": "💻 Công nghệ"
-    },
-    {
         "emojis": "🌍🏙️🏙️🏙️🏙️",
         "answers": [
             "san francisco"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🌍🎭🎰🏙️🎡",
-        "answers": [
-            "las vegas"
         ],
         "category": "🏙️ Thành phố"
     },
@@ -6097,14 +4816,6 @@
         "category": "🌎 Địa lý"
     },
     {
-        "emojis": "🌎🌊🌳🐆🌊",
-        "answers": [
-            "amazon",
-            "sông amazon"
-        ],
-        "category": "🌎 Địa lý"
-    },
-    {
         "emojis": "🌎🏖️🌊🏞️🌲",
         "answers": [
             "baikal",
@@ -6144,87 +4855,6 @@
         "category": "🌎 Địa lý"
     },
     {
-        "emojis": "🐾🦁🐾🐾🐾",
-        "answers": [
-            "lion"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐯🐾🐾🐾",
-        "answers": [
-            "tiger"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐻🐾🐾🐾",
-        "answers": [
-            "bear"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐘🐾🐾🐾",
-        "answers": [
-            "elephant"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦓🐾🐾🐾",
-        "answers": [
-            "zebra",
-            "ngựa vằn"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐫🐾🐾🐾",
-        "answers": [
-            "camel",
-            "lạc đà"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦒🐾🐾🐾",
-        "answers": [
-            "giraffe"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦘🐾🐾🐾",
-        "answers": [
-            "kangaroo",
-            "chuột túi"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐨🐾🐾🐾",
-        "answers": [
-            "koala"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐼🐾🐾🐾",
-        "answers": [
-            "panda",
-            "gấu trúc"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🍎🎮⚡🐭🟡",
-        "answers": [
-            "pikachu"
-        ],
-        "category": "🍎 Sản phẩm"
-    },
-    {
         "emojis": "🎨👩‍🎨🖼️🎭✨",
         "answers": [
             "mona lisa"
@@ -6262,13 +4892,6 @@
             "sự ra đời của thần vệ nữ"
         ],
         "category": "🎨 Nghệ thuật"
-    },
-    {
-        "emojis": "🏛️🧱🐉🛣️🏰",
-        "answers": [
-            "great wall of china"
-        ],
-        "category": "🏛️ Lịch sử"
     },
     {
         "emojis": "🏛️🔼🏜️🏺🏛️",
@@ -6325,14 +4948,6 @@
             "chiến tranh thế giới thứ 2"
         ],
         "category": "🏛️ Lịch sử"
-    },
-    {
-        "emojis": "🍏🍎🍎🍎🍏",
-        "answers": [
-            "apple",
-            "táo"
-        ],
-        "category": "🍏 Trái cây"
     },
     {
         "emojis": "🍏🍌🍌🍌🍌",
@@ -6600,68 +5215,10 @@
         "category": "🚗 Phương tiện"
     },
     {
-        "emojis": "🏢🍔🤡🔴🍟",
+        "emojis": "🪟💻📑🎮☁️",
         "answers": [
-            "mcdonalds"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🥤🔴⚪🎅",
-        "answers": [
-            "coca-cola",
-            "coca cola",
-            "coke"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢💻🍎📱💻",
-        "answers": [
-            "apple"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🔍🌐📧🌈",
-        "answers": [
-            "google"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢📦🚚🛒🔵",
-        "answers": [
-            "amazon"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🟦👥📱💬",
-        "answers": [
-            "facebook",
-            "meta"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🎮🟦🟨🔴",
-        "answers": [
-            "microsoft"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢📱🔵🟦🔷",
-        "answers": [
-            "samsung"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢🏎️🔵⚪🚗",
-        "answers": [
-            "bmw"
+            "microsoft",
+            "windows"
         ],
         "category": "🏢 Công ty"
     },
@@ -6673,20 +5230,6 @@
         "category": "🏢 Công ty"
     },
     {
-        "emojis": "🍽️🍣🇯🇵🥢🍱",
-        "answers": [
-            "sushi"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
-        "emojis": "🍽️🍕🇮🇹🧀🍝",
-        "answers": [
-            "pizza"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
         "emojis": "🍽️🍝🇮🇹🍝🍅",
         "answers": [
             "spaghetti",
@@ -6695,47 +5238,9 @@
         "category": "🍽️ Đồ ăn"
     },
     {
-        "emojis": "🍽️🌮🇲🇽🌮🥑",
-        "answers": [
-            "taco",
-            "tacos"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
-        "emojis": "🍽️🌯🇲🇽🌯🌯",
-        "answers": [
-            "burrito"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
-        "emojis": "🍽️🍛🇮🇳🍛🥘",
-        "answers": [
-            "curry",
-            "cà ri"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
         "emojis": "🍽️🍜🇨🇳🥟🥢",
         "answers": [
             "dim sum"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
-        "emojis": "🍽️🥘🇪🇸🥘🥘",
-        "answers": [
-            "paella"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
-        "emojis": "🍽️🥐🇫🇷🥖🥐",
-        "answers": [
-            "croissant",
-            "bánh sừng bò"
         ],
         "category": "🍽️ Đồ ăn"
     },
@@ -6770,14 +5275,6 @@
         "category": "🍽️ Đồ ăn"
     },
     {
-        "emojis": "🍽️🥓🍳🍖🍞",
-        "answers": [
-            "breakfast",
-            "bữa sáng"
-        ],
-        "category": "🍽️ Đồ ăn"
-    },
-    {
         "emojis": "🍽️🍲🍜🍚🥢",
         "answers": [
             "pho",
@@ -6789,7 +5286,9 @@
         "emojis": "🍽️🥖🍞🍰🥯",
         "answers": [
             "bakery",
-            "tiệm bánh"
+            "tiệm bánh",
+            "bánh xèo",
+            "banh xeo"
         ],
         "category": "🍽️ Đồ ăn"
     },
@@ -6813,7 +5312,9 @@
         "emojis": "🧪⚛️⚛️⚛️⚛️",
         "answers": [
             "atom",
-            "nguyên tử"
+            "nguyên tử",
+            "quantum",
+            "lượng tử"
         ],
         "category": "🧪 Khoa học"
     },
@@ -6842,14 +5343,6 @@
         "category": "🧪 Khoa học"
     },
     {
-        "emojis": "🧪💡💡💡💡",
-        "answers": [
-            "electricity",
-            "điện"
-        ],
-        "category": "🧪 Khoa học"
-    },
-    {
         "emojis": "🧪🧲🧲🧲🧲",
         "answers": [
             "magnet",
@@ -6866,14 +5359,6 @@
         "category": "🧪 Khoa học"
     },
     {
-        "emojis": "🧪🚀🌌🌠🪐",
-        "answers": [
-            "astronomy",
-            "thiên văn học"
-        ],
-        "category": "🧪 Khoa học"
-    },
-    {
         "emojis": "🧪🌍🌱🌊🔥",
         "answers": [
             "nature",
@@ -6882,16 +5367,9 @@
         "category": "🧪 Khoa học"
     },
     {
-        "emojis": "📺🧛‍♂️🏰😱⚰️",
+        "emojis": "🎮🏰🦇🧛‍♂️🗡️",
         "answers": [
             "castlevania"
-        ],
-        "category": "📺 Phim bộ"
-    },
-    {
-        "emojis": "📺👨‍🔬💊🧪🚐",
-        "answers": [
-            "breaking bad"
         ],
         "category": "📺 Phim bộ"
     },
@@ -6903,225 +5381,10 @@
         "category": "📺 Phim bộ"
     },
     {
-        "emojis": "📺🏰⚔️🐉🐺",
-        "answers": [
-            "game of thrones"
-        ],
-        "category": "📺 Phim bộ"
-    },
-    {
-        "emojis": "📺🏫🎒👩‍🎓💀",
-        "answers": [
-            "elite"
-        ],
-        "category": "📺 Phim bộ"
-    },
-    {
-        "emojis": "📺🛸🔭🧒🔦",
-        "answers": [
-            "stranger things"
-        ],
-        "category": "📺 Phim bộ"
-    },
-    {
-        "emojis": "📺🏴‍☠️🧭🗺️👒",
-        "answers": [
-            "one piece"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺🥷🦊🍜🌀",
-        "answers": [
-            "naruto"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺📔🍎💀🕵️‍♂️",
-        "answers": [
-            "death note"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺🏐🔥🏐🦅",
-        "answers": [
-            "haikyuu"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺👊🦸‍♂️👨‍🦲💥",
-        "answers": [
-            "one punch man"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺鬼⚔️🎭🩸🌸",
-        "answers": [
-            "demon slayer"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺🕵️‍♂️⚽👓🧪",
-        "answers": [
-            "conan",
-            "detective conan"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "📺😺💙🛰️🚪",
-        "answers": [
-            "doraemon"
-        ],
-        "category": "📺 Anime"
-    },
-    {
-        "emojis": "🏙️🇻🇳🏙️🏙️🏙️",
-        "answers": [
-            "hanoi",
-            "hà nội"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇻🇳🌉🏙️🏙️",
-        "answers": [
-            "hcmc",
-            "saigon",
-            "sài gòn"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇺🇸🌃🗽🏢",
-        "answers": [
-            "new york",
-            "nyc"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇫🇷🗼🥖🍷",
-        "answers": [
-            "paris"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇬🇧🕰️💂🌧️",
-        "answers": [
-            "london"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇯🇵🗼🍣🎮",
-        "answers": [
-            "tokyo"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇰🇷🏙️🍜🎵",
-        "answers": [
-            "seoul"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇮🇹🏛️🍕🏟️",
-        "answers": [
-            "rome"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇹🇭🏯🐘🛶",
-        "answers": [
-            "bangkok"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇸🇬🦁⛲🏙️",
-        "answers": [
-            "singapore"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇩🇪🏙️🍺🏛️",
-        "answers": [
-            "berlin"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇷🇺🏰🏟️❄️",
-        "answers": [
-            "moscow"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🏙️🇦🇪🏙️🐪🏙️",
-        "answers": [
-            "dubai"
-        ],
-        "category": "🏙️ Thành phố"
-    },
-    {
-        "emojis": "🎮🕹️🧱🏃‍♂️🍄",
-        "answers": [
-            "mario"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮🛡️🗡️🧝‍♂️💎",
-        "answers": [
-            "zelda"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮⚡🐭🟡🎾",
-        "answers": [
-            "pokemon"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮⛏️🌍🧱⚒️",
-        "answers": [
-            "minecraft"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮🚗🏙️🔫💰",
-        "answers": [
-            "gta"
-        ],
-        "category": "🎮 Game"
-    },
-    {
         "emojis": "🎮🔫🏢🛡️💣",
         "answers": [
             "csgo",
             "counter strike"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮🛡️⚔️🏰🐲",
-        "answers": [
-            "skyrim"
         ],
         "category": "🎮 Game"
     },
@@ -7141,40 +5404,11 @@
         "category": "🎮 Game"
     },
     {
-        "emojis": "🎮🏀🗑️⛹️‍♂️🔥",
-        "answers": [
-            "nba 2k"
-        ],
-        "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎮⚽🏟️👟🥅",
-        "answers": [
-            "fifa",
-            "fc24"
-        ],
-        "category": "🎮 Game"
-    },
-    {
         "emojis": "🎮🏎️🏁🏎️🏟️",
         "answers": [
             "f1 23"
         ],
         "category": "🎮 Game"
-    },
-    {
-        "emojis": "🎬😱🩸🔪🏚️",
-        "answers": [
-            "halloween"
-        ],
-        "category": "🎬 Phim kinh dị"
-    },
-    {
-        "emojis": "🎬😱🤡🎈🎈",
-        "answers": [
-            "it"
-        ],
-        "category": "🎬 Phim kinh dị"
     },
     {
         "emojis": "🎬😱🪚🩸🏢",
@@ -7276,20 +5510,6 @@
         "category": "🏢 Công ty"
     },
     {
-        "emojis": "🏢📸📸📸🇯🇵",
-        "answers": [
-            "canon"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
-        "emojis": "🏢📸📸📸🇯🇵",
-        "answers": [
-            "nikon"
-        ],
-        "category": "🏢 Công ty"
-    },
-    {
         "emojis": "🏢💿🎮🇯🇵🔵",
         "answers": [
             "sony"
@@ -7361,34 +5581,10 @@
         "category": "🍎 Sản phẩm"
     },
     {
-        "emojis": "🐾🦚🦚🦚🦚",
-        "answers": [
-            "peacock",
-            "con công"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
         "emojis": "🐾🦢🦢🦢🦢",
         "answers": [
             "swan",
             "thiên nga"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦉🦉🦉🦉",
-        "answers": [
-            "owl",
-            "cú mèo"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦅🦅🦅🦅",
-        "answers": [
-            "eagle",
-            "đại bàng"
         ],
         "category": "🐾 Động vật"
     },
@@ -7399,46 +5595,6 @@
             "vẹt"
         ],
         "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🦋🦋🦋🦋",
-        "answers": [
-            "butterfly",
-            "bướm"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🕷️🕷️🕷️🕷️",
-        "answers": [
-            "spider",
-            "nhện"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐢🐢🐢🐢",
-        "answers": [
-            "turtle",
-            "rùa"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🐾🐍🐍🐍🐍",
-        "answers": [
-            "snake",
-            "rắn"
-        ],
-        "category": "🐾 Động vật"
-    },
-    {
-        "emojis": "🧪⚛️⚛️⚛️⚛️",
-        "answers": [
-            "quantum",
-            "lượng tử"
-        ],
-        "category": "🧪 Khoa học"
     },
     {
         "emojis": "🧪🚀🚀🚀🚀",
@@ -7453,14 +5609,6 @@
         "answers": [
             "neuroscience",
             "thần kinh học"
-        ],
-        "category": "🧪 Khoa học"
-    },
-    {
-        "emojis": "🧪🧬🧬🧬🧬",
-        "answers": [
-            "genetics",
-            "di truyền học"
         ],
         "category": "🧪 Khoa học"
     },
@@ -7493,14 +5641,6 @@
         "answers": [
             "bánh cuốn",
             "banh cuon"
-        ],
-        "category": "🍽️ Món ăn Việt Nam"
-    },
-    {
-        "emojis": "🍽️🥖🍞🍰🥯",
-        "answers": [
-            "bánh xèo",
-            "banh xeo"
         ],
         "category": "🍽️ Món ăn Việt Nam"
     },
@@ -7554,38 +5694,9 @@
         "category": "🎮 Game cổ điển"
     },
     {
-        "emojis": "🎮🕹️🧱🧱🧱",
-        "answers": [
-            "tetris"
-        ],
-        "category": "🎮 Game cổ điển"
-    },
-    {
-        "emojis": "🎮🦔💨🌀💎",
-        "answers": [
-            "sonic",
-            "sonic the hedgehog"
-        ],
-        "category": "🎮 Game cổ điển"
-    },
-    {
-        "emojis": "🎮🦍🏠👸🔨",
-        "answers": [
-            "donkey kong"
-        ],
-        "category": "🎮 Game cổ điển"
-    },
-    {
         "emojis": "🎮👾🔫🏎️🛰️",
         "answers": [
             "space invaders"
-        ],
-        "category": "🎮 Game cổ điển"
-    },
-    {
-        "emojis": "🎮🟡🟡🟡👻",
-        "answers": [
-            "pac-man"
         ],
         "category": "🎮 Game cổ điển"
     },
@@ -7607,13 +5718,6 @@
         "emojis": "🎮🥋🦂❄️💀",
         "answers": [
             "mortal kombat"
-        ],
-        "category": "🎮 Game cổ điển"
-    },
-    {
-        "emojis": "🎮🏰🦇🧛‍♂️🗡️",
-        "answers": [
-            "castlevania"
         ],
         "category": "🎮 Game cổ điển"
     },
@@ -7657,24 +5761,9 @@
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺👨‍👩‍👧‍👦🏠🍩🍺",
-        "answers": [
-            "the simpsons",
-            "gia đình simpson"
-        ],
-        "category": "📺 Hoạt hình"
-    },
-    {
         "emojis": "📺🧪👨‍🔬👦👧",
         "answers": [
             "dexter's laboratory"
-        ],
-        "category": "📺 Hoạt hình"
-    },
-    {
-        "emojis": "📺👊🦸‍♀️🎀🦋",
-        "answers": [
-            "powerpuff girls"
         ],
         "category": "📺 Hoạt hình"
     },
@@ -7700,67 +5789,1872 @@
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺👸🏔️⛄🏰",
+        "emojis": "💣👨‍🔬🎩📽️☢️",
         "answers": [
-            "frozen"
+            "oppenheimer"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "💖👠🏠👗🎀",
+        "answers": [
+            "barbie"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🍜🐂🌿🍋🥣",
+        "answers": [
+            "phở",
+            "pho",
+            "phở bò"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🗼🇫🇷🥖🎨🥐",
+        "answers": [
+            "tháp eiffel",
+            "eiffel tower",
+            "eiffel"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🧱🐉🇨🇳🏰🛡️",
+        "answers": [
+            "vạn lý trường thành",
+            "great wall",
+            "great wall of china"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🕵️‍♂️🚢🛶⛰️🇻🇳",
+        "answers": [
+            "vịnh hạ long",
+            "ha long bay"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🎤🌤️🕶️🏙️🇻🇳",
+        "answers": [
+            "sơn tùng m-tp",
+            "sơn tùng",
+            "mtp"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤🤝🎒🌲🚣‍♂️",
+        "answers": [
+            "đen vâu",
+            "đen"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "💃🦊🎡🎵🇻🇳",
+        "answers": [
+            "hoàng thùy linh"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🏢🤝💖😂🤳",
+        "answers": [
+            "ninh anh bùi",
+            "ninh dương story"
+        ],
+        "category": "👥 Người nổi tiếng"
+    },
+    {
+        "emojis": "💬🔵📱🇻🇳📞",
+        "answers": [
+            "zalo"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📱💖💸🛍️🇻🇳",
+        "answers": [
+            "momo"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🧡🛍️🚚📱🔥",
+        "answers": [
+            "shopee"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "💙💖🛍️🏙️🚚",
+        "answers": [
+            "lazada"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🎬✂️🤳🎵🔥",
+        "answers": [
+            "capcut"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🧵💬📱🌌🌀",
+        "answers": [
+            "threads"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🍽️🍢🌿🥣🥓",
+        "answers": [
+            "bún đậu mắm tôm",
+            "bún đậu"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "☕🥛🧊🇻🇳🥤",
+        "answers": [
+            "cà phê sữa đá",
+            "cà phê sữa"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🥞🟡🍤🌿🥣",
+        "answers": [
+            "bánh xèo"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🌲🏔️🌥️🌸🍓",
+        "answers": [
+            "đà lạt"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏮🏮📜🛶🏮",
+        "answers": [
+            "hội an"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏝️🌊🌅🐚🛶",
+        "answers": [
+            "phú quốc"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏖️🌊☀️🏙️🚠",
+        "answers": [
+            "nha trang"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏜️🏖️🌊💨⛵",
+        "answers": [
+            "phan thiết"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏖️🗼🛳️🏙️🌊",
+        "answers": [
+            "vũng tàu"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏙️🇦🇪🏗️🔝☁️",
+        "answers": [
+            "burj khalifa"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🕵️‍♂️👩‍🦰👧🐶🤫",
+        "answers": [
+            "spy x family"
+        ],
+        "category": "📺 Phim bộ"
+    },
+    {
+        "emojis": "🪚👹🐕🩸🏙️",
+        "answers": [
+            "chainsaw man"
+        ],
+        "category": "📺 Phim bộ"
+    },
+    {
+        "emojis": "🦸‍♂️🏫🏫👊🛡️",
+        "answers": [
+            "my hero academia",
+            "mha"
+        ],
+        "category": "📺 Phim bộ"
+    },
+    {
+        "emojis": "⚔️🧚‍♀️🏔️💧🔥",
+        "answers": [
+            "genshin impact",
+            "genshin"
+        ],
+        "category": "🎮 Trò chơi"
+    },
+    {
+        "emojis": "🤖💬🧠💻⚡",
+        "answers": [
+            "chatgpt",
+            "openai"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "👥🔵💻👓🌌",
+        "answers": [
+            "mark zuckerberg",
+            "zuckerberg"
+        ],
+        "category": "👥 Người nổi tiếng"
+    },
+    {
+        "emojis": "🖤💖🎙️💃👑",
+        "answers": [
+            "blackpink",
+            "black pink"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "💜🎙️💃🇰🇷🌟",
+        "answers": [
+            "bts"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🦁📖❄️🏰",
+        "answers": [
+            "narnia",
+            "the chronicles of narnia"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🎩🐇🕳️🍵",
+        "answers": [
+            "alice in wonderland",
+            "alice ở xứ sở thần tiên"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🍫🎩🎫🍭",
+        "answers": [
+            "wonka"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🕶️👽🔫🏢",
+        "answers": [
+            "men in black"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🦕🦖🚁🦕",
+        "answers": [
+            "jurassic world"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🐺🌕🏙️⚔️",
+        "answers": [
+            "twilight",
+            "chạng vạng"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🕵️‍♂️🔍🕵️‍♂️🇬🇧",
+        "answers": [
+            "sherlock holmes"
+        ],
+        "category": "🎬 Phim ảnh"
+    },
+    {
+        "emojis": "🎤🎸🤘🔥",
+        "answers": [
+            "acdc",
+            "ac/dc"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎸🇬🇧💊🛸",
+        "answers": [
+            "the beatles"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤🤴🕺🧤",
+        "answers": [
+            "michael jackson"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎹🌙🎼✨",
+        "answers": [
+            "beethoven"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎻🎼🇦🇹🎩",
+        "answers": [
+            "mozart"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️🔥🧢",
+        "answers": [
+            "eminem"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️🚗💨",
+        "answers": [
+            "rihanna"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️🕶️💎",
+        "answers": [
+            "bruno mars"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👸💔🎤",
+        "answers": [
+            "adele"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️👓🎈",
+        "answers": [
+            "ed sheeran"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️💅🐱",
+        "answers": [
+            "katy perry"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️🌈🍭",
+        "answers": [
+            "lady gaga"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️🛸🪐",
+        "answers": [
+            "the weeknd"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️🌊🐟",
+        "answers": [
+            "billie eilish"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️🍑🍑",
+        "answers": [
+            "justin bieber"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️🌕🎀",
+        "answers": [
+            "ariana grande"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️🍉🍬",
+        "answers": [
+            "harry styles"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️🐍🔥",
+        "answers": [
+            "nicki minaj"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️🐍🐍",
+        "answers": [
+            "drake"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👑🤴🇬🇧",
+        "answers": [
+            "queen",
+            "freddie mercury"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤🎸🚀⚡",
+        "answers": [
+            "david bowie"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎸👅👅👅",
+        "answers": [
+            "the rolling stones"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤🎹🤵🇬🇧",
+        "answers": [
+            "elton john"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️👗🎀",
+        "answers": [
+            "dua lipa"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♂️🕺🎵",
+        "answers": [
+            "shawn mendes"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "🎤👱‍♀️🎤✨",
+        "answers": [
+            "miley cyrus"
+        ],
+        "category": "🎵 Âm nhạc"
+    },
+    {
+        "emojis": "⚽🏟️🇬🇧🔴",
+        "answers": [
+            "manchester united",
+            "man utd"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽🏟️🇬🇧🔵",
+        "answers": [
+            "manchester city",
+            "man city"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽🏟️🇬🇧🔴🛡️",
+        "answers": [
+            "liverpool"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽🏟️🇬🇧⚪",
+        "answers": [
+            "chelsea"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽🏟️🇩🇪🛡️",
+        "answers": [
+            "bayern munich"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏀🏀🏟️🇺🇸",
+        "answers": [
+            "lakers",
+            "los angeles lakers"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏀🏀🏟️🐂",
+        "answers": [
+            "chicago bulls"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏀🏀🏟️🌉",
+        "answers": [
+            "golden state warriors"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🎾🎾👟🏆",
+        "answers": [
+            "roger federer"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🎾🎾👟🇪🇸",
+        "answers": [
+            "rafael nadal"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🎾🎾👟🇷🇸",
+        "answers": [
+            "novak djokovic"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏎️🏎️🇬🇧🥇",
+        "answers": [
+            "lewis hamilton"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏎️🏎️🇳🇱🥇",
+        "answers": [
+            "max verstappen"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏌️‍♂️🏌️‍♂️🌳⛳",
+        "answers": [
+            "tiger woods"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🥊🥊🏆🥊",
+        "answers": [
+            "muhammad ali"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🥊🥊🇵🇭🥇",
+        "answers": [
+            "manny pacquiao"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏊‍♂️🏊‍♂️🥇🦈",
+        "answers": [
+            "michael phelps"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏃‍♂️🏃‍♂️🥇⚡",
+        "answers": [
+            "usain bolt"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🤸‍♀️ gymnastics 🇺🇸",
+        "answers": [
+            "simone biles"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🏈🏈🐐🇺🇸",
+        "answers": [
+            "tom brady"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🖱️⌨️🖥️🪟",
+        "answers": [
+            "pc",
+            "computer",
+            "máy tính"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "💻🍎⌨️⌨️",
+        "answers": [
+            "macbook"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "💻⌨️🖥️🍎",
+        "answers": [
+            "imac"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🖱️🖱️🖱️💻",
+        "answers": [
+            "mouse",
+            "chuột máy tính"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "⌨️⌨️⌨️💻",
+        "answers": [
+            "keyboard",
+            "bàn phím"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🔊🔊🔊🎵",
+        "answers": [
+            "speaker",
+            "loa"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🔌🔌🔌⚡",
+        "answers": [
+            "charger",
+            "sạc"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "💾💾💾💾",
+        "answers": [
+            "floppy disk",
+            "đĩa mềm"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🛸🎮🎮🎮",
+        "answers": [
+            "joystick",
+            "tay cầm chơi game"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📡📡📡🌐",
+        "answers": [
+            "router",
+            "wi-fi",
+            "wifi"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🖨️🖨️🖨️📄",
+        "answers": [
+            "printer",
+            "máy in"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📟📟📟📟",
+        "answers": [
+            "pager"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📱🌌⭐📱",
+        "answers": [
+            "galaxy",
+            "samsung galaxy"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🔍🔍🔍🌐",
+        "answers": [
+            "google search"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🗺️🗺️🗺️🌍",
+        "answers": [
+            "google maps"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📧📧📧📧",
+        "answers": [
+            "gmail",
+            "email"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "☁️☁️☁️💻",
+        "answers": [
+            "cloud",
+            "cloud computing"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🤖🤖🤖🚀",
+        "answers": [
+            "ai",
+            "artificial intelligence",
+            "trí tuệ nhân tạo"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🕸️🕸️🕸️🌐",
+        "answers": [
+            "www",
+            "world wide web"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🔐🔐🔐💻",
+        "answers": [
+            "password",
+            "mật khẩu"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "💾🔌💾🔌",
+        "answers": [
+            "usb",
+            "usb drive"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🔵🦷🎧🎵",
+        "answers": [
+            "bluetooth"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📦📦📦📱",
+        "answers": [
+            "app",
+            "application",
+            "ứng dụng"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🦠🦠🦠💻",
+        "answers": [
+            "virus"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🧱🧱🧱💻",
+        "answers": [
+            "firewall"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🕹️🕹️🕹️🎮",
+        "answers": [
+            "arcade"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "⛪🇮🇹🏙️🏟️",
+        "answers": [
+            "panthéon",
+            "colosseum"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏔️🇨🇭🐮🍫",
+        "answers": [
+            "alps",
+            "dãy alps"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏜️⛰️🇺🇸🏜️",
+        "answers": [
+            "grand canyon"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🗼🗼🇯🇵🗼",
+        "answers": [
+            "tokyo tower"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "⛲🇮🇹🏙️🏛️",
+        "answers": [
+            "trevi fountain"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏜️🇪🇬🦂🏺",
+        "answers": [
+            "pyramids",
+            "kim tự tháp"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "⛪🇫🇷🗼🥖",
+        "answers": [
+            "notre dame",
+            "nhà thờ đức bà"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏰🇩🇪🌲❄️",
+        "answers": [
+            "neuschwanstein castle"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏞️🇧🇷🌊🏖️",
+        "answers": [
+            "rio de janeiro"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏛️🇬🇷🏺🏹",
+        "answers": [
+            "athens",
+            "acropolis"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🌳🇻🇳🏞️🚣‍♂️",
+        "answers": [
+            "tràng an",
+            "ninh bình"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏰🇻🇳👑🎑",
+        "answers": [
+            "cố đô huế",
+            "huế"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "⛰️🇻🇳🌫️🌲",
+        "answers": [
+            "sapa",
+            "sa pa"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏙️🇻🇳🌉🏙️",
+        "answers": [
+            "đà nẵng"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏜️🇻🇳🏜️💨",
+        "answers": [
+            "mũi né"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏙️🇻🇳🏙️🗼",
+        "answers": [
+            "landmark 81"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏞️🇻🇳👃🌊",
+        "answers": [
+            "mũi cà mau"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🗼🇻🇳🏛️🏙️",
+        "answers": [
+            "cột cờ hà nội"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏛️🇻🇳🏛️🏛️",
+        "answers": [
+            "dinh độc lập"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "⛪🇻🇳🏛️⛪",
+        "answers": [
+            "nhà thờ đức bà sài gòn"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🍟🍔🍔🍟",
+        "answers": [
+            "burger",
+            "hamburger"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🦐🦐🦐🌊",
+        "answers": [
+            "shrimp",
+            "tôm"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🐟🐟🐟🌊",
+        "answers": [
+            "fish",
+            "cá"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🥚🥚🍳🥓",
+        "answers": [
+            "omelette",
+            "trứng cuộn"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🧇🧇🧇🫐",
+        "answers": [
+            "waffles",
+            "bánh quế"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🥖🥖🥖🥖",
+        "answers": [
+            "baguette"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍞🍞🍞🍞",
+        "answers": [
+            "bread",
+            "bánh mì"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🥯🥯🥯🥯",
+        "answers": [
+            "bagel",
+            "bánh vòng"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍪🍪🍪🍪",
+        "answers": [
+            "cookie",
+            "cookies"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍰🍰🍰🍰",
+        "answers": [
+            "cake",
+            "bánh ngọt"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🧁🧁🧁🧁",
+        "answers": [
+            "cupcake"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🥧🥧🥧🥧",
+        "answers": [
+            "pie",
+            "bánh pie"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍮🍮🍮🍮",
+        "answers": [
+            "pudding"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🐹🐹🐹🏃‍♂️",
+        "answers": [
+            "hamtaro"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🧸🚀🥔🦕",
+        "emojis": "🐶🐶🐶🔍",
         "answers": [
-            "toy story"
+            "scooby doo"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🐠🐡🐙🌊",
+        "emojis": "👱‍♂️🐶🏢🛸",
         "answers": [
-            "finding nemo"
+            "the jetsons"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🏎️🔴🏎️🛣️",
+        "emojis": "🦸‍♂️🦸‍♀️🦸‍♂️🦸‍♀️",
         "answers": [
-            "cars"
+            "the incredibles",
+            "gia đình siêu nhân"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🍳🐀🍲🇫🇷",
+        "emojis": "🐰🥕🥕🥕",
         "answers": [
-            "ratatouille"
+            "bugs bunny"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🎈🏘️🏠🎈",
+        "emojis": "🦆🦆🧤💰",
         "answers": [
-            "up",
-            "vút bay"
+            "scrooge mcduck"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🧠💭😄😢",
+        "emojis": "🐒🍌🍌🍌",
         "answers": [
-            "inside out"
+            "curious george"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🎸💀🎸🇲🇽",
+        "emojis": "🐻🍯🍯🍯",
         "answers": [
-            "coco"
+            "winnie the pooh",
+            "gấu pooh"
         ],
         "category": "📺 Hoạt hình"
     },
     {
-        "emojis": "📺🦁👑🌅🐾",
+        "emojis": "🧛‍♂️🦇👶🐶",
         "answers": [
-            "the lion king"
+            "hotel transylvania",
+            "khách sạn huyền bí"
         ],
         "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "👠🏰👸🧚‍♂️",
+        "answers": [
+            "sleeping beauty",
+            "công chúa ngủ trong rừng"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🌹🏰👹👸",
+        "answers": [
+            "beauty and the beast",
+            "người đẹp và quái vật"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "👦🧚‍♂️🐊🏴‍☠️",
+        "answers": [
+            "peter pan"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🐘👂🎪🎈",
+        "answers": [
+            "dumbo"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🐕🍝🐕🍝",
+        "answers": [
+            "lady and the tramp"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🦌❄️🌲🌲",
+        "answers": [
+            "bambi"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🐱🎻🤴🤴",
+        "answers": [
+            "the aristocats"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🦊🏹🏹🏹",
+        "answers": [
+            "robin hood"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "👦🦁🐻🌴",
+        "answers": [
+            "the jungle book"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🤴🌊⛵🌀",
+        "answers": [
+            "moana"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🤴🏰👸🎨",
+        "answers": [
+            "tangled"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🐶🐶🐶🐶",
+        "answers": [
+            "101 dalmatians",
+            "101 con chó đốm"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🍀🤺⚔️🧙‍♂️",
+        "answers": [
+            "black clover"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🧪🧪🧑‍🔬🧱",
+        "answers": [
+            "dr stone",
+            "dr. stone"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🔥🚒🧑‍🚒👹",
+        "answers": [
+            "fire force"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🕵️‍♂️🧒🔎⚽",
+        "answers": [
+            "blue lock"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🥊🥊🥊🥊",
+        "answers": [
+            "hajime no ippo"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🧙‍♂️⚔️👊💥",
+        "answers": [
+            "jujutsu kaisen"
+        ],
+        "category": "📺 Hoạt hình"
+    },
+    {
+        "emojis": "🌊瀑布🇻🇳🌲",
+        "answers": [
+            "thác bản giốc"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "⛰️🏟️🇻🇳🏰",
+        "answers": [
+            "động phong nha",
+            "phong nha kẻ bàng"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏔️🇻🇳🌫️🚠",
+        "answers": [
+            "fansipan",
+            "phan-xi-păng"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏖️🇻🇳🐚🦀",
+        "answers": [
+            "côn đảo"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏯🇻🇳🎑🎑",
+        "answers": [
+            "chùa một cột"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🌳🇻🇳🏞️🌾",
+        "answers": [
+            "tam cốc",
+            "bích động"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏝️🇻🇳🌅🛶",
+        "answers": [
+            "lý sơn"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🎨🎨🎨📱",
+        "answers": [
+            "canva"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📸📸🖌️📱",
+        "answers": [
+            "lightroom"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📐📐📐🖥️",
+        "answers": [
+            "figma"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📝📝📝☁️",
+        "answers": [
+            "notion"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "💬💬💬🟣",
+        "answers": [
+            "slack"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🎥🎥🎥🔵",
+        "answers": [
+            "zoom"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📞📞📞🟢",
+        "answers": [
+            "whatsapp"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "📺🔴▶️🔴",
+        "answers": [
+            "youtube music"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🎬🎬🎬🍿",
+        "answers": [
+            "disney+"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "🍿🎬🎬🍿",
+        "answers": [
+            "hbo max"
+        ],
+        "category": "💻 Công nghệ"
+    },
+    {
+        "emojis": "⚽⚽🏟️🌲",
+        "answers": [
+            "nottingham forest"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🐝",
+        "answers": [
+            "brentford"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🦅",
+        "answers": [
+            "brighton",
+            "brighton & hove albion"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️💊",
+        "answers": [
+            "bayer leverkusen",
+            "leverkusen"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🌋",
+        "answers": [
+            "napoli"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🐺",
+        "answers": [
+            "roma"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🗽",
+        "answers": [
+            "inter milan"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🦁",
+        "answers": [
+            "lyon"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️⚪🔵",
+        "answers": [
+            "marseille"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🦅🇵🇹",
+        "answers": [
+            "benfica"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "⚽⚽🏟️🐉🇵🇹",
+        "answers": [
+            "porto",
+            "fc porto"
+        ],
+        "category": "⚽ Thể thao"
+    },
+    {
+        "emojis": "🍽️🍥🌿🥣",
+        "answers": [
+            "bánh bột lọc"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍽️⚪🍡🌿",
+        "answers": [
+            "bánh ít trần"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍽️🍜🌪️🥣",
+        "answers": [
+            "bún quậy"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍽️🐟🌳🌿",
+        "answers": [
+            "chả cá lã vọng"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍽️🥩🥞🌿",
+        "answers": [
+            "bánh hỏi",
+            "bánh hỏi heo quay"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍽️🍜🥟🏙️",
+        "answers": [
+            "mì quảng"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🍽️🍛🍚🍛",
+        "answers": [
+            "cơm gà hội an"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🔴🔴🔴🍎",
+        "answers": [
+            "red",
+            "màu đỏ"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "🔵🔵🔵🌊",
+        "answers": [
+            "blue",
+            "màu xanh dương"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "🟡🟡🟡☀️",
+        "answers": [
+            "yellow",
+            "màu vàng"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "🟢🟢🟢🌿",
+        "answers": [
+            "green",
+            "màu xanh lá"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "⚪⚪⚪❄️",
+        "answers": [
+            "white",
+            "màu trắng"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "⚫⚫⚫🌑",
+        "answers": [
+            "black",
+            "màu đen"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "☀️🌌🌠🪐",
+        "answers": [
+            "sun",
+            "mặt trời"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "🌍🌍🌍🌍",
+        "answers": [
+            "earth",
+            "trái đất"
+        ],
+        "category": "🧠 Kiến thức"
+    },
+    {
+        "emojis": "🏜️🏛️🇯🇴🐪",
+        "answers": [
+            "petra"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏘️⛰️🇵🇪☁️",
+        "answers": [
+            "machu picchu"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🪨🪨🇬🇧🌀",
+        "answers": [
+            "stonehenge"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🗼🗼🇮🇹🍕",
+        "answers": [
+            "pisa",
+            "leaning tower of pisa",
+            "tháp nghiêng pisa"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏰🏰🇷🇺🔴",
+        "answers": [
+            "red square",
+            "quảng trường đỏ"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🌉🌉🇺🇸🌉",
+        "answers": [
+            "brooklyn bridge"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🦆🦦🥚🇦🇺",
+        "answers": [
+            "platypus",
+            "thú mỏ vịt"
+        ],
+        "category": "🐾 Động vật"
+    },
+    {
+        "emojis": "🦎🦎🦎🇮🇩",
+        "answers": [
+            "komodo dragon",
+            "rồng komodo"
+        ],
+        "category": "🐾 Động vật"
+    },
+    {
+        "emojis": "💗🐟🌊🇲🇽",
+        "answers": [
+            "axolotl",
+            "khủng long sáu sừng"
+        ],
+        "category": "🐾 Động vật"
+    },
+    {
+        "emojis": "🐹🐹🌴🌊",
+        "answers": [
+            "capybara"
+        ],
+        "category": "🐾 Động vật"
+    },
+    {
+        "emojis": "🐍🐍🌳🍎",
+        "answers": [
+            "python",
+            "con trăn",
+            "con rắn"
+        ],
+        "category": "🐾 Động vật"
+    },
+    {
+        "emojis": "🪞👤✨🖼️",
+        "answers": [
+            "mirror",
+            "cái gương"
+        ],
+        "category": "🛋️ Vật dụng"
+    },
+    {
+        "emojis": "🪜🪜🧱🔨",
+        "answers": [
+            "ladder",
+            "cái thang"
+        ],
+        "category": "🛋️ Vật dụng"
+    },
+    {
+        "emojis": "🕯️🕯️🔥🕯️",
+        "answers": [
+            "candle",
+            "cây nến"
+        ],
+        "category": "🛋️ Vật dụng"
+    },
+    {
+        "emojis": "🧭🧭⛰️🧭",
+        "answers": [
+            "compass",
+            "la bàn"
+        ],
+        "category": "🛋️ Vật dụng"
+    },
+    {
+        "emojis": "🔭🌌🪐🌠",
+        "answers": [
+            "telescope",
+            "kính thiên văn"
+        ],
+        "category": "🛋️ Vật dụng"
+    },
+    {
+        "emojis": "🔦🔦🌑🔦",
+        "answers": [
+            "flashlight",
+            "đèn pin"
+        ],
+        "category": "🛋️ Vật dụng"
+    },
+    {
+        "emojis": "☕🇻🇳🏔️🌲",
+        "answers": [
+            "pleiku",
+            "gia lai"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🏘️🇻🇳🏔️☁️",
+        "answers": [
+            "kon tum",
+            "kontum"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "☕🇻🇳🐘🪵",
+        "answers": [
+            "buôn ma thuột",
+            "đắk lắk"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "⛰️🇻🇳🛣️🏍️",
+        "answers": [
+            "hà giang"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "⛰️🇻🇳瀑布⛰️",
+        "answers": [
+            "cao bằng"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "👑🍈👃👃",
+        "answers": [
+            "durian",
+            "sầu riêng"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🟣⚪🍬🍬",
+        "answers": [
+            "mangosteen",
+            "măng cụt"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🐲🌵💗⚪",
+        "answers": [
+            "dragon fruit",
+            "thanh long"
+        ],
+        "category": "🍽️ Đồ ăn"
+    },
+    {
+        "emojis": "🇱🇦🐘🌲🏞️",
+        "answers": [
+            "lào",
+            "laos"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇰🇭🏯🛶🌅",
+        "answers": [
+            "campuchia",
+            "cambodia",
+            "angkor wat"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇹🇭🐘🏝️🥊",
+        "answers": [
+            "thái lan",
+            "thailand"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇲🇾🏙️🗼🗼",
+        "answers": [
+            "malaysia"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇮🇩🏝️🕌🌋",
+        "answers": [
+            "indonesia"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇵🇭🏝️🏖️🥥",
+        "answers": [
+            "philippines"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇲🇲🕌🌄🛶",
+        "answers": [
+            "myanmar"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇧🇳🕌👳💎",
+        "answers": [
+            "brunei"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🇹🇱🌅🏖️🛶",
+        "answers": [
+            "timor leste",
+            "đông timor"
+        ],
+        "category": "🌏 Địa danh"
+    },
+    {
+        "emojis": "🍽️🍥🥟🥢",
+        "answers": [
+            "há cảo"
+        ],
+        "category": "🍽️ Đồ ăn"
     }
 ]

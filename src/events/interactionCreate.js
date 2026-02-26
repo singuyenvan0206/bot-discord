@@ -33,6 +33,12 @@ module.exports = {
                 } else if (['end', 'reroll', 'pause', 'resume', 'delete'].includes(sub)) {
                     args.push(interaction.options.getString('message_id'));
                 }
+            } else if (commandName === 'job') {
+                const sub = interaction.options.getSubcommand();
+                args.push(sub);
+                if (sub === 'set') {
+                    args.push(interaction.options.getString('id'));
+                }
             } else {
                 const optionMap = {
                     'coinflip': ['choice', 'bet'],
@@ -40,9 +46,15 @@ module.exports = {
                     'transfer': ['user', 'amount'],
                     'buy': ['item'],
                     'blackjack': ['bet'], 'poker': ['bet'], 'dice': ['bet'],
-                    'slots': ['bet'], 'minesweeper': ['bet'],
-                    'balance': ['user'], 'avatar': ['user'], 'userinfo': ['user'],
+                    'slots': ['bet'], 'minesweeper': ['bet'], 'memory': ['bet'],
+                    'balance': ['user'], 'avatar': ['user'], 'userinfo': ['user'], 'profile': ['user'], 'lvl': ['user'],
                     'help': ['command'],
+                    'rob': ['target'],
+                    'use': ['item'],
+                    'sell': ['item', 'quantity'],
+                    'jobdetail': ['id'],
+                    'iteminfo': ['id'],
+                    'connect4': ['opponent', 'bet'],
                 };
 
                 const optionNames = optionMap[commandName] || [];
@@ -74,7 +86,7 @@ module.exports = {
                 content: `$${commandName} ${args.join(' ')}`.trim(),
                 mentions: {
                     users: {
-                        first: () => interaction.options.getUser('user') || null
+                        first: () => interaction.options.getUser('user') || interaction.options.getUser('target') || interaction.options.getUser('opponent') || null
                     }
                 },
                 reply: async (content) => {
