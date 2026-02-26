@@ -36,7 +36,10 @@
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
-        "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%))*"
+        "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%))*",
+        "distribution_title": "💰 Community Welfare Fund",
+        "distribution_random_desc": "The bot has randomly distributed **{{total}}** coins to **{{count}}** lucky users! Everyone received a different amount of fortune. {{emoji}}",
+        "reward_list": "Rewards List"
     },
     "connect4": {
         "title": "🔴 Connect 4 🟡",

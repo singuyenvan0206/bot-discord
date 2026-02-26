@@ -36,7 +36,10 @@
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
-        "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%))*"
+        "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%))*",
+        "distribution_title": "💰 Quỹ Phúc Lợi Cộng Đồng",
+        "distribution_random_desc": "Bot đã chia ngẫu nhiên **{{total}}** coins cho **{{count}}** người dùng may mắn! Mỗi người nhận được một vận may khác nhau. {{emoji}}",
+        "reward_list": "Danh sách nhận thưởng"
     },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",

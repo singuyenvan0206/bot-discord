@@ -574,6 +574,39 @@ function distributeBalanceToAll(amount, excludeUserId = null) {
     }
 }
 
+function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
+    let users = queryAll('SELECT id FROM users' + (excludeUserId ? ' WHERE id != ?' : ''), excludeUserId ? [excludeUserId] : []);
+    if (users.length === 0) return [];
+
+    // Generate random weights
+    let weights = users.map(() => Math.random());
+    let totalWeight = weights.reduce((a, b) => a + b, 0);
+
+    // Distribute totalAmount based on weights
+    let distributed = 0;
+    const results = [];
+    users.forEach((user, i) => {
+        let amount = 0;
+        if (i === users.length - 1) {
+            amount = totalAmount - distributed; // Ensure total is exact
+        } else {
+            amount = Math.floor((weights[i] / totalWeight) * totalAmount);
+            distributed += amount;
+        }
+
+        if (amount > 0) {
+            addBalance(user.id, amount);
+            results.push({ userId: user.id, amount });
+        }
+    });
+
+    if (excludeUserId) {
+        execute('UPDATE users SET balance = 0 WHERE id = ?', [excludeUserId]);
+    }
+
+    return results;
+}
+
 function clearAllData() {
     execute('DELETE FROM users');
     execute('DELETE FROM giveaways');
@@ -623,5 +656,6 @@ module.exports = {
     setGlobalSetting,
     getUserCount,
     distributeBalanceToAll,
+    distributeBalanceRandomly,
     clearAllData
 };

@@ -241,12 +241,15 @@ async function processHouseDistribution(client) {
     const amountPerUser = Math.floor(balance / humanCount);
     if (amountPerUser <= 0) return;
 
-    console.log(`[Timer] Distributing ${balance.toLocaleString()} coins to ${humanCount} users (${amountPerUser.toLocaleString()}/each)`);
+    console.log(`[Timer] Distributing ${balance.toLocaleString()} coins randomly to ${humanCount} users`);
 
-    db.distributeBalanceToAll(amountPerUser, botId);
+    const results = db.distributeBalanceRandomly(balance, botId);
     db.setGlobalSetting('last_house_distribution', now.toString());
 
-    console.log(`[Timer] Distribution complete! Total: ${balance.toLocaleString()} coins. Users: ${humanCount}. Per-user: ${amountPerUser.toLocaleString()}`);
+    console.log(`[Timer] Random distribution complete! Total: ${balance.toLocaleString()} coins. Participants: ${results.length}`);
+
+    // Create reward list string
+    let rewardList = results.map(r => `- <@${r.userId}>: **${r.amount.toLocaleString()}** ${config.EMOJIS.COIN}`).join('\n');
 
     // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
@@ -258,12 +261,11 @@ async function processHouseDistribution(client) {
         if (channel && channel.send) {
             const embed = new EmbedBuilder()
                 .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
-                .setDescription(t('economy.distribution_desc', lang, {
+                .setDescription((t('economy.distribution_random_desc', lang, {
                     total: balance.toLocaleString(),
-                    amount: amountPerUser.toLocaleString(),
                     count: humanCount,
                     emoji: config.EMOJIS.COIN
-                }) || `Bot đã chia đều **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng. Mỗi người nhận được **${amountPerUser.toLocaleString()}** coins!`)
+                }) || `Bot đã chia ngẫu nhiên **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng may mắn!`) + `\n\n**${t('economy.reward_list', lang) || 'Danh sách nhận thưởng'}:**\n${rewardList.length > 3000 ? rewardList.slice(0, 3000) + '...' : rewardList}`)
                 .setColor(config.COLORS.SUCCESS)
                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 .setTimestamp();
