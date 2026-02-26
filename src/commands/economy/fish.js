@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
+const path = require('path');
 const db = require('../../database');
 const { getLevelMultiplier } = require('../../utils/leveling');
 const { getUserMultiplier, getTotalIncomeMultiplier, hasActiveItem } = require('../../utils/multiplier');
@@ -195,18 +196,26 @@ module.exports = {
             embed.setColor(isTrident ? 0x00D2FF : config.COLORS.GAMBLE_PUSH);
             if (isTrident) embed.setTitle(`🔱 ${t('fish.title', lang)} — MYTHICAL`);
 
-            const assetName = isTrident ? 'poseidon_trident_catch_card_1772119570605.png' : 'megalodon_catch_card_1772119516200.png';
+            const assetName = isTrident ? 'poseidon_trident.png' : 'megalodon.png';
+            const assetPath = path.join(process.cwd(), 'src', 'assets', 'fishing', assetName);
             embed.setImage(`attachment://${assetName}`);
 
             // 2. Server-wide Announcement
             const announcementKey = isTrident ? 'fish.mythical_announcement' : 'fish.legendary_announcement';
             const announcement = t(announcementKey, lang, { userId: message.author.id, item: caughtName });
 
+            const announceEmbed = new EmbedBuilder()
+                .setTitle(`🚨 ${t('fish.title', lang)} — ${isTrident ? 'MYTHICAL' : 'LEGENDARY'} 🚨`)
+                .setColor(isTrident ? 0x00D2FF : config.COLORS.GAMBLE_PUSH)
+                .setDescription(announcement)
+                .setImage(`attachment://${assetName}`)
+                .setFooter({ text: t('fish.footer_success', lang, { bait: baitName }) });
+
             // Try to find a system/announcement channel, fallback to current channel
             const announceChannel = message.guild.channels.cache.find(c => c.name.includes('announcement') || c.name.includes('system') || c.name.includes('general')) || message.channel;
 
             if (announceChannel) {
-                announceChannel.send({ content: announcement }).catch(() => { });
+                announceChannel.send({ embeds: [announceEmbed], files: [assetPath] }).catch(() => { });
             }
 
             // 3. Grant Buff
@@ -263,8 +272,8 @@ module.exports = {
             const replyOptions = { embeds: [embed] };
             if (caughtItem.key === 'megalodon' || caughtItem.key === 'poseidon_trident') {
                 const isTrident = caughtItem.key === 'poseidon_trident';
-                const assetPath = `C:\\Users\\Simsimi\\.gemini\\antigravity\brain\\ed16e811-4602-4751-a6fd-a12f280113a9\\${isTrident ? 'poseidon_trident_catch_card_1772119570605.png' : 'megalodon_catch_card_1772119516200.png'}`;
-                replyOptions.files = [assetPath];
+                const assetName = isTrident ? 'poseidon_trident.png' : 'megalodon.png';
+                replyOptions.files = [path.join(process.cwd(), 'src', 'assets', 'fishing', assetName)];
             }
 
             startCooldown(message.client, 'fish', message.author.id);
