@@ -188,25 +188,32 @@ module.exports = {
                 { name: t('fish.luck', lang), value: `✨ ${totalLuck.toFixed(1)}x`, inline: true }
             );
 
-        // Special Effects for Legendary Catches
-        if (caughtItem.key === 'megalodon' || caughtItem.key === 'poseidon_trident') {
+        // Special Effects for Mythical/Legendary Catches
+        const mythicalItems = {
+            'megalodon': { asset: 'megalodon.png', buff: 601, color: config.COLORS.GAMBLE_PUSH, announceKey: 'fish.mythical_announcement' },
+            'poseidon_trident': { asset: 'poseidon_trident.png', buff: 602, color: 0x00D2FF, announceKey: 'fish.mythical_announcement' },
+            'mythical_pearl': { asset: 'mythical_pearl.png', buff: 603, color: 0xFF00FF, announceKey: 'fish.mythical_pearl_announcement' },
+            'kraken': { asset: 'kraken.png', buff: 604, color: 0xFF4500, announceKey: 'fish.kraken_announcement' }
+        };
+
+        const mythical = mythicalItems[caughtItem.key];
+        if (mythical) {
             const isTrident = caughtItem.key === 'poseidon_trident';
 
             // 1. Visual Flair
-            embed.setColor(isTrident ? 0x00D2FF : config.COLORS.GAMBLE_PUSH);
+            embed.setColor(mythical.color);
             if (isTrident) embed.setTitle(`🔱 ${t('fish.title', lang)} — MYTHICAL`);
 
-            const assetName = isTrident ? 'poseidon_trident.png' : 'megalodon.png';
+            const assetName = mythical.asset;
             const assetPath = path.join(process.cwd(), 'src', 'assets', 'fishing', assetName);
             embed.setImage(`attachment://${assetName}`);
 
             // 2. Server-wide Announcement
-            const announcementKey = isTrident ? 'fish.mythical_announcement' : 'fish.legendary_announcement';
-            const announcement = t(announcementKey, lang, { userId: message.author.id, item: caughtName });
+            const announcement = t(mythical.announceKey, lang, { userId: message.author.id, item: caughtName });
 
             const announceEmbed = new EmbedBuilder()
-                .setTitle(`🚨 ${t('fish.title', lang)} — ${isTrident ? 'MYTHICAL' : 'LEGENDARY'} 🚨`)
-                .setColor(isTrident ? 0x00D2FF : config.COLORS.GAMBLE_PUSH)
+                .setTitle(`🚨 ${t('fish.title', lang)} — ${caughtItem.key.toUpperCase().replace('_', ' ')} 🚨`)
+                .setColor(mythical.color)
                 .setDescription(announcement)
                 .setImage(`attachment://${assetName}`)
                 .setFooter({ text: t('fish.footer_success', lang, { bait: baitName }) });
@@ -219,7 +226,7 @@ module.exports = {
             }
 
             // 3. Grant Buff
-            const buffId = isTrident ? 602 : 601;
+            const buffId = mythical?.buff || (isTrident ? 602 : 601);
             const buffItem = SHOP_ITEMS.find(i => i.id === buffId);
             if (buffItem) {
                 let buffs = [];
@@ -270,9 +277,10 @@ module.exports = {
             embed.setFooter({ text: t('fish.footer_success', lang, { bait: baitName }) });
 
             const replyOptions = { embeds: [embed] };
-            if (caughtItem.key === 'megalodon' || caughtItem.key === 'poseidon_trident') {
-                const isTrident = caughtItem.key === 'poseidon_trident';
-                const assetName = isTrident ? 'poseidon_trident.png' : 'megalodon.png';
+            if (caughtItem.key === 'megalodon' || caughtItem.key === 'poseidon_trident' ||
+                caughtItem.key === 'mythical_pearl' || caughtItem.key === 'kraken') {
+                const mythicalItems = { 'megalodon': 'megalodon.png', 'poseidon_trident': 'poseidon_trident.png', 'mythical_pearl': 'mythical_pearl.png', 'kraken': 'kraken.png' };
+                const assetName = mythicalItems[caughtItem.key];
                 replyOptions.files = [path.join(process.cwd(), 'src', 'assets', 'fishing', assetName)];
             }
 

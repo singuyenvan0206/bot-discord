@@ -408,6 +408,8 @@
         "bait_salvaged": "\n♻️ **Bait Salvaged!** Your farming skills helped you reuse the bait.",
         "legendary_announcement": "📢 **LEGENDARY ANNOUNCEMENT!** <@{{userId}}> just caught a rare **{{item}}**! 🌊🎉",
         "mythical_announcement": "🔱 **MYTHICAL ANNOUNCEMENT!** The sea god has smiled upon <@{{userId}}>, a divine **{{item}}** has appeared! 🌊🔱🔥",
+        "mythical_pearl_announcement": "🔮 **MYSTICAL ANNOUNCEMENT!** <@{{userId}}> has found the glowing **{{item}}** from the deepest trenches! 🌊✨🔮",
+        "kraken_announcement": "🐙 **KRAKEN ANNOUNCEMENT!** The sea roars as <@{{userId}}> has subdued the legendary **{{item}}**! 🌊🐙🔥",
         "trophy_catch": "\n🏆 **Trophy Catch!** Your expertise helped you land a massive specimen! (3x value)",
         "rates_title": "📊 Fishing Probability Table",
         "rates_desc": "Calculated based on: **{{rod}}** + **{{bait}}** (Luck: {{luck}}x)",
@@ -684,6 +686,16 @@
             "name": "🔱 Poseidon's Favor",
             "desc": "Might of the sea god (+100% Income | 2 hours)",
             "details": "Divine power from the Trident helps you dominate the ocean and earn massive income."
+        },
+        "603": {
+            "name": "🔮 Pearl's Radiance",
+            "desc": "Guiding light (+40% Income | 1 hour)",
+            "details": "The radiance from the Mythical Pearl sharpens your focus and boosts earnings."
+        },
+        "604": {
+            "name": "🐙 Kraken's Might",
+            "desc": "Ocean's rage (+60% Income | 1.5 hours)",
+            "details": "The raw power of the Kraken Monster helps you crush financial barriers."
         }
     },
     "shop": {

@@ -465,6 +465,8 @@
         "bait_salvaged": "\n♻️ **Tiết kiệm mồi!** Kỹ năng nông dân giúp bạn tái sử dụng mồi câu.",
         "legendary_announcement": "📢 **THÔNG BÁO HUYỀN THOẠI!** <@{{userId}}> vừa câu được một **{{item}}** cực hiếm! 🌊🎉",
         "mythical_announcement": "🔱 **THÔNG BÁO THẦN THOẠI!** Thần biển đã mỉm cười với <@{{userId}}>, một **{{item}}** thần thánh đã xuất hiện! 🌊🔱🔥",
+        "mythical_pearl_announcement": "🔮 **THÔNG BÁO THẦN BÍ!** <@{{userId}}> đã tìm thấy **{{item}}** tỏa sáng rực rỡ từ đáy đại dương sâu thẳm! 🌊✨🔮",
+        "kraken_announcement": "🐙 **THÔNG BÁO TAI ƯƠNG!** Biển khơi dậy sóng, <@{{userId}}> đã khuất phục được quái vật **{{item}}** khét tiếng! 🌊🐙🔥",
         "trophy_catch": "\n🏆 **Cá Khổng Lồ!** Kinh nghiệm của bạn giúp bạn bắt được một mẫu vật khổng lồ! (3x giá trị)",
         "rates_title": "📊 Bảng Tỉ Lệ Câu Cá",
         "rates_desc": "Tính toán dựa trên: **{{rod}}** + **{{bait}}** (May mắn: {{luck}}x)",
@@ -741,6 +743,16 @@
             "name": "🔱 Ân Điển Của Poseidon",
             "desc": "Quyền năng thần biển cả (+100% Thu Nhập | 2 giờ)",
             "details": "Sức mạnh thần thánh từ Đinh ba giúp bạn thống trị đại dương và nhận thu nhập cực lớn."
+        },
+        "603": {
+            "name": "🔮 Hào Quang Ngọc Trai",
+            "desc": "Ánh sáng dẫn lối (+40% Thu Nhập | 1 giờ)",
+            "details": "Hào quang từ Ngọc Trai Thần Thoại giúp bạn tập trung và tăng hiệu quả công việc."
+        },
+        "604": {
+            "name": "🐙 Sức Mạnh Kraken",
+            "desc": "Cơn thịnh nộ đại dương (+60% Thu Nhập | 1.5 giờ)",
+            "details": "Sức mạnh từ Quái Vật Kraken giúp bạn càn quét mọi rào cản tài chính."
         }
     },
     "shop": {

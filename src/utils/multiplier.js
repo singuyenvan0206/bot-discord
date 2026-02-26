@@ -127,6 +127,11 @@ function hasActiveItem(userId, itemId) {
  * Standard: 2.5 (250%), VIP: 5.0 (500%)
  */
 function getDynamicCap(userId) {
+    // Mythical Fish Buffs (Megalodon 601, Poseidon 602, Pearl 603, Kraken 604) grant 700% cap
+    if (hasActiveItem(userId, 601) || hasActiveItem(userId, 602) ||
+        hasActiveItem(userId, 603) || hasActiveItem(userId, 604)) {
+        return 7.0;
+    }
     return hasActiveItem(userId, 108) ? 6.0 : 3.0;
 }
 
