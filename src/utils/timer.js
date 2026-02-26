@@ -1,6 +1,8 @@
+const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const db = require('../database');
 const { createGiveawayEmbed, createEndedEmbed, createWinnerAnnouncementEmbed, createEntryButton, EMOJI } = require('./embeds');
-const { getLanguage } = require('./i18n');
+const { getLanguage, t } = require('./i18n');
+const config = require('../config');
 
 const CHECK_INTERVAL = 15_000; // 15 seconds
 const EMBED_UPDATE_INTERVAL = 60_000; // 1 minute
@@ -267,27 +269,15 @@ async function processHouseDistribution(client) {
                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 .setTimestamp();
 
-            channel.send({ embeds: [embed] }).catch(() => { });
-        }
-    }
+            const checkButton = new ButtonBuilder()
+                .setCustomId('check_dist_reward')
+                .setLabel(t('economy.check_reward_button', lang) || "Xem phần thưởng")
+                .setEmoji('🎁')
+                .setStyle(ButtonStyle.Success);
 
-    // Send private DMs
-    for (const res of results) {
-        try {
-            const user = await client.users.fetch(res.userId);
-            const lang = getLanguage(user.id, null); // Prefer user's language
-            const embed = new EmbedBuilder()
-                .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
-                .setDescription(t('economy.private_distribution_msg', lang, {
-                    amount: res.amount.toLocaleString(),
-                    emoji: config.EMOJIS.COIN
-                }) || `Bạn vừa được nhận **${res.amount.toLocaleString()}** ${config.EMOJIS.COIN} từ Quỹ Phúc Lợi Cộng Đồng! 🎉`)
-                .setColor(config.COLORS.SUCCESS)
-                .setTimestamp();
+            const row = new ActionRowBuilder().addComponents(checkButton);
 
-            await user.send({ embeds: [embed] }).catch(() => { });
-        } catch (err) {
-            // Silently skip if DM fails
+            channel.send({ embeds: [embed], components: [row] }).catch(() => { });
         }
     }
 }
