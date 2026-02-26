@@ -274,11 +274,14 @@
         "teacher_penalty": "What a terrible role model! You have been demoted to Level **{{level}}** for this behavior. 📉",
         "failure_xp": "🚔 {{user}} caught you! You had to pay **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}"
     },
-    "set_success": "✅ Congratulations! You are now a **{{job}}**.",
-    "set_error_level": "❌ You need Level **{{level}}** to take this job!",
-    "set_error_invalid": "❌ Invalid job. Use `$job list` to see the list.",
-    "already_has": "❌ You are already working this job!",
     "job": {
+        "list_title": "💼 Career Center",
+        "list_desc": "Select a career to gain permanent passive buffs and unique abilities. You can only have one career at a time.",
+        "tip_detail": "Use `{{prefix}}job set <id>` to choose a career.",
+        "set_success": "✅ Congratulations! You are now a **{{job}}**.",
+        "set_error_level": "❌ You need Level **{{level}}** to take this job!",
+        "set_error_invalid": "❌ Invalid job. Use `$job list` to see the list.",
+        "already_has": "❌ You are already working this job!",
         "detail_usage": "❌ Please provide a job name. Usage: `{{prefix}}jobdetail <job_name>`",
         "info_usage": "❌ Please provide a job ID. Usage: `{{prefix}}job info <id>`",
         "milestone_title": "🎉 CONGRATULATIONS! YOU REACHED LEVEL 20!",

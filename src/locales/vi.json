@@ -330,6 +330,13 @@
         "failure_xp": "🚔 Bạn bị {{user}} phát hiện! Phải bồi thường **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}"
     },
     "job": {
+        "list_title": "💼 Trung Tâm Sự Nghiệp",
+        "list_desc": "Chọn một nghề nghiệp để nhận các hiệu ứng hỗ trợ thụ động vĩnh viễn và kỹ năng đặc biệt. Bạn chỉ có thể theo đuổi một nghề duy nhất tại một thời điểm.",
+        "tip_detail": "Dùng `{{prefix}}job set <id>` để chọn nghề nghiệp.",
+        "set_success": "✅ Chúc mừng! Bạn hiện đã là một **{{job}}**.",
+        "set_error_level": "❌ Bạn cần Cấp độ **{{level}}** để nhận nghề này!",
+        "set_error_invalid": "❌ Nghề nghiệp không hợp lệ. Dùng `$job list` để xem danh sách.",
+        "already_has": "❌ Bạn đã đang làm nghề này rồi!",
         "name_field": "Nghề nghiệp",
         "salary_label": "Thưởng Lương",
         "requirement_label": "Yêu Cầu",
