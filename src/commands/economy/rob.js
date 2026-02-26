@@ -53,7 +53,7 @@ module.exports = {
 
         if (isSuccess) {
             const targetBalance = victim.balance;
-            let baseSteal = Math.floor(targetBalance * (Math.random() * 0.1 + 0.5)); // 10-15% of victim's balance
+            let baseSteal = Math.floor(targetBalance * (Math.random() * 0.1 + 0.05)); // 10-15% of victim's balance
 
             // Bonus: if robbing a Police officer, criminal earns +50%
             let policeRobMsg = '';
