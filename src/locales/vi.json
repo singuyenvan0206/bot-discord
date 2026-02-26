@@ -32,7 +32,10 @@
         "xp_loss": " (Mất {{amount}} XP!)",
         "jail_time": "\n⚖️ **Thi hành án:** Bạn bị tống giam! Cooldown tiếp theo sẽ lâu gấp đôi.",
         "hospital_time": "\n🏥 **Nhập viện:** Bạn bị thương nặng! Cooldown tiếp theo sẽ lâu hơn.",
-        "item_broken": "\n💥 **Vật phẩm bị hỏng:** {{item}} của bạn đã bị hỏng hoặc bị cảnh sát tịch thu!"
+        "item_broken": "\n💥 **Vật phẩm bị hỏng:** {{item}} của bạn đã bị hỏng hoặc bị cảnh sát tịch thu!",
+        "no_permission": "❌ Bạn không có quyền thực hiện hành động này!",
+        "user_not_found": "Không tìm thấy người dùng.",
+        "choices": "Lựa chọn"
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -96,7 +99,9 @@
         "win_jackpot": "💰 **JACKPOT!** Ba hình **{{symbol}}**!",
         "win_small": "✨ **Thắng nhỏ!** Hai hình khớp nhau!",
         "lose": "❌ Chúc bạn may mắn lần sau!",
-        "sub_hype": "\n🔥 **Sub Hype!** Fan Streamer đã nhân đôi tiền thắng!"
+        "sub_hype": "\n🔥 **Sub Hype!** Fan Streamer đã nhân đôi tiền thắng!",
+        "rolling": "🎰  **Đang quay...**",
+        "bonus_item": " *(Gồm +{{amount}} thưởng (Capped {{cap}}%): {{percent}}%)*"
     },
     "coinflip": {
         "title": "🪙  Tung Đồng Xu",
@@ -259,7 +264,8 @@
         "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!",
         "special_order": "\n👨‍🍳 **Đơn đặc biệt!** Thực đơn VIP được gọi, thu nhập nhân **2x**!",
         "mission_bonus": "\n🪖 **Thưởng nhiệm vụ!** Hoàn thành nhiệm vụ đặc biệt, nhận thêm **+100** coins!",
-        "code_crunch": "\n💻 **Code Crunch!** Programmer tối ưu hóa mã nguồn, nhận thêm **+200** coins!"
+        "code_crunch": "\n💻 **Code Crunch!** Programmer tối ưu hóa mã nguồn, nhận thêm **+200** coins!",
+        "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được tiền bồi dưỡng **+150** coins!"
     },
     "crime": {
         "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{hours}} giờ {{minutes}} phút** nữa để thực hiện phi vụ tiếp theo.",
@@ -322,7 +328,8 @@
         ],
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*",
         "data_mine": "\n💻 **Data Mine!** Hacker tìm thấy dữ liệu giá trị, thu nhập nhân **2x**!",
-        "market_tip": "\n📈 **Mẹo thị trường!** Trader tận dụng thông tin nội bộ, nhận thêm **+50** coins!"
+        "market_tip": "\n📈 **Mẹo thị trường!** Trader tận dụng thông tin nội bộ, nhận thêm **+50** coins!",
+        "data_breach": "\n💻 **Rò rỉ dữ liệu!** Hacker xâm nhập hệ thống thành công, nhận thêm **+{{amount}}** coins!"
     },
     "rob": {
         "cooldown": "❌ Bạn đang bị truy nã! Hãy lẩn trốn trong **{{minutes}} phút** nữa.",
@@ -340,6 +347,10 @@
         "rob_shield_blocked": "\n🔰 **Khiên Bảo Vệ!** Nạn nhân đang được bảo vệ bởi Khiên Bảo Vệ — cuộc cướp thất bại hoàn toàn!",
         "teacher_penalty": "Thật là một tấm gương xấu! Bạn đã bị giáng xuống Cấp độ **{{level}}** do hành vi này. 📉",
         "failure_xp": "🚔 Bạn bị {{user}} phát hiện! Phải bồi thường **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}"
+    },
+    "leveling": {
+        "levelup_title": "🎉 Thăng cấp!",
+        "levelup_desc": "Chúc mừng! Bạn đã đạt cấp độ **{{level}}** và nhận được **{{bonus}}** {{emoji}}!"
     },
     "job": {
         "list_title": "💼 Trung Tâm Sự Nghiệp",
@@ -412,7 +423,8 @@
         "fact_musician": "Nhạc sĩ có trạng thái 'Flow State' giúp nhân đôi may mắn trong các trò chơi cá cược.",
         "fact_soldier": "Binh lính luôn hoàn thành nhiệm vụ xuất sắc và nhận được tiền thưởng lương cố định.",
         "fact_trader": "Thương nhân có tin mật từ thị trường, giúp nhận lại 1/2 tiền cược ngay cả khi thua cuộc.",
-        "fact_teacher": "Giáo viên không chỉ dạy học mà còn giúp mọi người nhận được nhiều tiền và XP hơn trong Trivia!"
+        "fact_teacher": "Giáo viên không chỉ dạy học mà còn giúp mọi người nhận được nhiều tiền và XP hơn trong Trivia!",
+        "teacher_tutoring_simple": "\n👨‍🏫 **Gia sư:** Bạn nhận được thêm +50% tiền và +10 XP!"
     },
     "slut": {
         "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{hours}} giờ {{minutes}} phút**.",
@@ -973,7 +985,8 @@
         "invalid_chars": "Phải là một từ tiếng Anh duy nhất!",
         "no_participants": "Không có ai tham gia chơi.",
         "end_title": "🛑  Nối Chữ — Kết Thúc!",
-        "total_words": "Tổng số từ"
+        "total_words": "Tổng số từ",
+        "timeout": "Hết thời gian!"
     },
     "hangman": {
         "title": "😵  Người Treo Cổ (Hangman)",
@@ -1291,7 +1304,11 @@
             "leaveserver": "🌟 **Mô tả:** Yêu cầu bot rời khỏi một máy chủ cụ thể bằng ID. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$leaveserver <id_server>`",
             "setstatus": "🌟 **Mô tả:** Cập nhật trạng thái hiển thị (Activity) của bot. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$setstatus <type> <nội_dung>`\n(Các loại: playing, watching, listening, streaming, competing)",
             "resetdatabase": "🌟 **Mô tả:** Xóa hoàn toàn toàn bộ dữ liệu của hệ thống bao gồm người dùng, tiền, kho đồ, cấp độ, giveaway. Đây là hành động cực kỳ nguy hiểm và không thể hoàn tác. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$resetdatabase confirm YES`",
-            "update": "🌟 **Mô tả:** Tải mã nguồn mới nhất từ kho lưu trữ Git và tải lại tất cả các lệnh của bot mà không cần khởi động lại. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$update`"
+            "update": "🌟 **Mô tả:** Tải mã nguồn mới nhất từ kho lưu trữ Git và tải lại tất cả các lệnh của bot mà không cần khởi động lại. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$update`",
+            "jobdetail": "🌟 **Mô tả:** Xem thông tin chuyên sâu về các ngành nghề, đặc quyền và kỹ năng đặc biệt.\n\n🕹️ **Cách dùng:**\n`$jobdetail <job_id>`\n\n💡 **Mẹo:** Sử dụng `$job list` để tìm ID của nghề nghiệp bạn muốn tra cứu.",
+            "shop": "🌟 **Mô tả:** Trung tâm mua sắm sầm uất của thành phố! Tại đây bạn có thể mua các vật phẩm hỗ trợ thu nhập, công cụ câu cá và nhiều món đồ giá trị khác.\n\n🕹️ **Cách dùng:**\n`$shop`\n\n💡 **Mẹo:** Các vật phẩm được chia theo danh mục để bạn dễ dàng tìm kiếm.",
+            "giveaway": "🌟 **Mô tả:** Tổ chức các sự kiện tặng quà cho mọi người trong máy chủ. Một cách tuyệt vời để khuấy động cộng đồng!\n\n🕹️ **Cách dùng:**\n`$giveaway <lệnh_con>`\n\n💡 **Mẹo:** Bạn có thể thiết lập thời gian, số lượng người thắng và phần thưởng cụ thể.",
+            "help": "🌟 **Mô tả:** Hệ thống trợ giúp toàn diện của Bot. Cung cấp thông tin về tất cả các lệnh và hướng dẫn sử dụng chi tiết.\n\n🕹️ **Cách dùng:**\n`$help [tên_lệnh]`"
         }
     },
     "iteminfo": {
@@ -1323,6 +1340,7 @@
         "host": "Người tổ chức",
         "required_role": "Vai trò yêu cầu",
         "entries": "**{{count}}** lượt tham gia",
+        "prize": "Phần thưởng",
         "footer_id": "ID: {{id}} • Kết thúc lúc",
         "paused_title": "⏸️  GIVEAWAY ĐÃ TẠM DỪNG  ⏸️",
         "paused_desc": "🟡 **Giveaway này hiện đang tạm dừng.** Không thể tham gia lúc này.",
@@ -1370,5 +1388,8 @@
         "usage_delete": "Cách dùng: `{{prefix}}giveaway delete <message_id>`",
         "deleted": "Đã xóa giveaway.",
         "invalid_subcommand": "Cách dùng: `{{prefix}}giveaway start|end|reroll|list|delete`"
+    },
+    "leaderboard": {
+        "empty": "*Hiện chưa có ai trên bảng xếp hạng này.*"
     }
 }

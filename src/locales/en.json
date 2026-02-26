@@ -32,7 +32,10 @@
         "xp_loss": " (Lost {{amount}} XP!)",
         "jail_time": "\n⚖️ **Serving Time:** You've been sent to jail! Your next cooldown will be twice as long.",
         "hospital_time": "\n🏥 **Hospitalized:** You've been severely injured! Your next cooldown will be longer.",
-        "item_broken": "\n💥 **Item Broken:** Your {{item}} was broken or confiscated!"
+        "item_broken": "\n💥 **Item Broken:** Your {{item}} was broken or confiscated!",
+        "no_permission": "❌ You do not have permission to perform this action!",
+        "user_not_found": "User not found.",
+        "choices": "Choices"
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -205,7 +208,8 @@
         "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **2.5x**!",
         "special_order": "\n👨‍🍳 **Special Order!** A VIP menu was requested, income doubled **×2**!",
         "mission_bonus": "\n🪖 **Mission Bonus!** Completed a special mission, earned an extra **+100** coins!",
-        "code_crunch": "\n💻 **Code Crunch!** Programmer optimized the code, received **+200** extra coins!"
+        "code_crunch": "\n💻 **Code Crunch!** Programmer optimized the code, received **+200** extra coins!",
+        "overtime": "\n👮 **Overtime!** Officer received a **+150** coins bonus!"
     },
     "crime": {
         "cooldown": "❌ You are being watched by the police! Wait **{{hours}}h {{minutes}}m** before your next heist.",
@@ -224,6 +228,10 @@
         "soldier_armed": "\n🪖 **Soldier:** You are armed, fine reduced by 30%!",
         "teacher_penalty": "Due to professional misconduct, you have been demoted to Level **{{level}}**! 📉",
         "failure_xp": "🚔 Heist failed! You were fined **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}"
+    },
+    "leveling": {
+        "levelup_title": "🎉 Level Up!",
+        "levelup_desc": "Congratulations! You've reached Level **{{level}}** and received **{{bonus}}** {{emoji}}!"
     },
     "beg": {
         "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
@@ -268,7 +276,8 @@
         ],
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*",
         "data_mine": "\n💻 **Data Mine!** Hacker found valuable data, income doubled ×**2**!",
-        "market_tip": "\n📈 **Market Tip!** Trader leveraged insider info, extra **+50** coins!"
+        "market_tip": "\n📈 **Market Tip!** Trader leveraged insider info, extra **+50** coins!",
+        "data_breach": "\n💻 **Data Breach!** Hacker successfully breached the system, received **+{{amount}}** extra coins!"
     },
     "rob": {
         "cooldown": "❌ You are wanted by the police! Hide for another **{{minutes}} minutes**.",
@@ -357,7 +366,8 @@
         "fact_musician": "Musicians can reach a Flow State, doubling their luck in gambling games.",
         "fact_soldier": "Soldiers always complete missions successfully, earning a guaranteed salary bonus.",
         "fact_trader": "Traders have market insight, receiving a partial refund even on lost bets.",
-        "fact_teacher": "Teachers help everyone gain more coins and XP during Trivia sessions!"
+        "fact_teacher": "Teachers help everyone gain more coins and XP during Trivia sessions!",
+        "teacher_tutoring_simple": "\n👨‍🏫 **Tutoring:** You received +50% coins and +10 XP bonus!"
     },
     "slut": {
         "cooldown": "❌ You need to rest and recover! Come back in **{{hours}}h {{minutes}}m**.",
@@ -727,7 +737,8 @@
         "global_multipliers": "🚀 Global Multipliers (Capped 250%)",
         "income_bonus": "Income Bonus",
         "gamble_bonus": "Gamble Bonus",
-        "xp_bonus": "XP Bonus"
+        "xp_bonus": "XP Bonus",
+        "buff_activated": "\n✨ **Buff activated:** +{{percent}}% {{type}} for **{{duration}}**!"
     },
     "buy": {
         "prompt": "❌ Please specify the item you want to buy (e.g., `{{prefix}}buy 1` or `{{prefix}}buy cookies`).",
@@ -917,7 +928,8 @@
         "invalid_chars": "Must be a single English word!",
         "no_participants": "No one participated.",
         "end_title": "🛑  Word Chain — Ended!",
-        "total_words": "Total words"
+        "total_words": "Total words",
+        "timeout": "Timeout!"
     },
     "hangman": {
         "title": "😵  Hangman",
@@ -1374,5 +1386,8 @@
         "usage_delete": "Usage: `{{prefix}}giveaway delete <message_id>`",
         "deleted": "Giveaway deleted.",
         "invalid_subcommand": "Usage: `{{prefix}}giveaway start|end|reroll|list|delete`"
+    },
+    "leaderboard": {
+        "empty": "*No one is on this leaderboard yet.*"
     }
 }
