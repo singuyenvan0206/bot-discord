@@ -46,10 +46,10 @@ const CATCHES = [
     { key: 'whale', emoji: '🐋', value: 35000, weight: 60, minLuck: 22.0 },
     { key: 'anglerfish', emoji: '🏮', value: 45000, weight: 50, minLuck: 25.0 },
     { key: 'treasure_chest', emoji: '💰', value: 75000, weight: 40, minLuck: 28.0 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 100000, weight: 30, minLuck: 32.0 },
-    { key: 'kraken', emoji: '🐙', value: 200000, weight: 20, minLuck: 35.0 },
-    { key: 'megalodon', emoji: '🦈', value: 450000, weight: 10, minLuck: 38.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 5, minLuck: 42.0 }
+    { key: 'mythical_pearl', emoji: '🔮', value: 100000, weight: 100, minLuck: 32.0 },
+    { key: 'kraken', emoji: '🐙', value: 200000, weight: 120, minLuck: 35.0 },
+    { key: 'megalodon', emoji: '🦈', value: 450000, weight: 150, minLuck: 38.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 200, minLuck: 42.0 }
 ];
 
 module.exports = {
@@ -185,6 +185,49 @@ module.exports = {
                 { name: t('fish.luck', lang), value: `✨ ${totalLuck.toFixed(1)}x`, inline: true }
             );
 
+        // Special Effects for Legendary Catches
+        if (caughtItem.key === 'megalodon' || caughtItem.key === 'poseidon_trident') {
+            const isTrident = caughtItem.key === 'poseidon_trident';
+
+            // 1. Visual Flair
+            embed.setColor(isTrident ? 0x00D2FF : config.COLORS.GAMBLE_PUSH);
+            if (isTrident) embed.setTitle(`🔱 ${t('fish.title', lang)} — MYTHICAL`);
+
+            const assetName = isTrident ? 'poseidon_trident_catch_card_1772119570605.png' : 'megalodon_catch_card_1772119516200.png';
+            embed.setImage(`attachment://${assetName}`);
+
+            // 2. Server-wide Announcement
+            const announcementKey = isTrident ? 'fish.mythical_announcement' : 'fish.legendary_announcement';
+            const announcement = t(announcementKey, lang, { userId: message.author.id, item: caughtName });
+
+            // Try to find a system/announcement channel, fallback to current channel
+            const announceChannel = message.guild.channels.cache.find(c => c.name.includes('announcement') || c.name.includes('system') || c.name.includes('general')) || message.channel;
+
+            if (announceChannel) {
+                announceChannel.send({ content: announcement }).catch(() => { });
+            }
+
+            // 3. Grant Buff
+            const buffId = isTrident ? 602 : 601;
+            const buffItem = SHOP_ITEMS.find(i => i.id === buffId);
+            if (buffItem) {
+                let buffs = [];
+                try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+
+                const isChef = user.job === 'chef';
+                let duration = buffItem.duration;
+                if (isChef) duration *= 2;
+                const expiresAt = Math.floor(Date.now() / 1000) + duration;
+
+                buffs.push({ itemId: buffItem.id, expiresAt });
+                db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
+
+                const buffName = t(`items.${buffId}.name`, lang);
+                const buffDesc = t(`items.${buffId}.desc`, lang);
+                embed.addFields({ name: `✨ ${buffName}`, value: buffDesc, inline: false });
+            }
+        }
+
         if (caughtItem.value > 0) {
             const { calculateReward } = require('../../utils/multiplier');
 
@@ -217,8 +260,15 @@ module.exports = {
 
             embed.setFooter({ text: t('fish.footer_success', lang, { bait: baitName }) });
 
+            const replyOptions = { embeds: [embed] };
+            if (caughtItem.key === 'megalodon' || caughtItem.key === 'poseidon_trident') {
+                const isTrident = caughtItem.key === 'poseidon_trident';
+                const assetPath = `C:\\Users\\Simsimi\\.gemini\\antigravity\brain\\ed16e811-4602-4751-a6fd-a12f280113a9\\${isTrident ? 'poseidon_trident_catch_card_1772119570605.png' : 'megalodon_catch_card_1772119516200.png'}`;
+                replyOptions.files = [assetPath];
+            }
+
             startCooldown(message.client, 'fish', message.author.id);
-            return message.reply({ embeds: [embed] });
+            return message.reply(replyOptions);
         } else {
             embed.setFooter({ text: t('fish.footer_fail', lang) });
             startCooldown(message.client, 'fish', message.author.id);

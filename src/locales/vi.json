@@ -446,6 +446,8 @@
         "footer_success": "Mồi đã dùng: -1 {{bait}}",
         "footer_fail": "Chúc bạn may mắn lần sau! (-1 Mồi câu)",
         "bait_salvaged": "\n♻️ **Tiết kiệm mồi!** Kỹ năng nông dân giúp bạn tái sử dụng mồi câu.",
+        "legendary_announcement": "📢 **THÔNG BÁO HUYỀN THOẠI!** <@{{userId}}> vừa câu được một **{{item}}** cực hiếm! 🌊🎉",
+        "mythical_announcement": "🔱 **THÔNG BÁO THẦN THOẠI!** Thần biển đã mỉm cười với <@{{userId}}>, một **{{item}}** thần thánh đã xuất hiện! 🌊🔱🔥",
         "trophy_catch": "\n🏆 **Cá Khổng Lồ!** Kinh nghiệm của bạn giúp bạn bắt được một mẫu vật khổng lồ! (3x giá trị)",
         "rates_title": "📊 Bảng Tỉ Lệ Câu Cá",
         "rates_desc": "Tính toán dựa trên: **{{rod}}** + **{{bait}}** (May mắn: {{luck}}x)",
@@ -712,6 +714,16 @@
             "name": "🎟️ Thẻ Chuyển Nghề",
             "desc": "Dùng để thay đổi định hướng nghề nghiệp của bạn.",
             "details": "Một văn bản uy tín cho phép bạn thay đổi định hướng nghề nghiệp của mình thông qua lệnh $job."
+        },
+        "601": {
+            "name": "🦈 Lời Chúc Của Megalodon",
+            "desc": "Sức mạnh cá mập khổng lồ (+50% Thu Nhập | 1 giờ)",
+            "details": "Hào quang từ vua biển cả Megalodon giúp bạn kiếm tiền dễ dàng hơn bao giờ hết."
+        },
+        "602": {
+            "name": "🔱 Ân Điển Của Poseidon",
+            "desc": "Quyền năng thần biển cả (+100% Thu Nhập | 2 giờ)",
+            "details": "Sức mạnh thần thánh từ Đinh ba giúp bạn thống trị đại dương và nhận thu nhập cực lớn."
         }
     },
     "shop": {

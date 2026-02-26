@@ -391,6 +391,8 @@
         "footer_success": "Bait used: -1 {{bait}}",
         "footer_fail": "Better luck next time! (-1 Bait)",
         "bait_salvaged": "\n♻️ **Bait Salvaged!** Your farming skills helped you reuse the bait.",
+        "legendary_announcement": "📢 **LEGENDARY ANNOUNCEMENT!** <@{{userId}}> just caught a rare **{{item}}**! 🌊🎉",
+        "mythical_announcement": "🔱 **MYTHICAL ANNOUNCEMENT!** The sea god has smiled upon <@{{userId}}>, a divine **{{item}}** has appeared! 🌊🔱🔥",
         "trophy_catch": "\n🏆 **Trophy Catch!** Your expertise helped you land a massive specimen! (3x value)",
         "rates_title": "📊 Fishing Probability Table",
         "rates_desc": "Calculated based on: **{{rod}}** + **{{bait}}** (Luck: {{luck}}x)",
@@ -657,6 +659,16 @@
             "name": "🎟️ Career Change Voucher",
             "desc": "Use to switch to a different job path.",
             "details": "A prestigious document that allows you to legally change your career path through the $job command."
+        },
+        "601": {
+            "name": "🦈 Megalodon's Blessing",
+            "desc": "Power of the ancient shark (+50% Income | 1 hour)",
+            "details": "The aura of the king of the sea, Megalodon, makes earning money easier than ever."
+        },
+        "602": {
+            "name": "🔱 Poseidon's Favor",
+            "desc": "Might of the sea god (+100% Income | 2 hours)",
+            "details": "Divine power from the Trident helps you dominate the ocean and earn massive income."
         }
     },
     "shop": {

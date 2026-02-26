@@ -27,16 +27,16 @@ function getUserMultiplier(userId, type) {
         const isMatch = item.type === type || item.type === 'daily';
         if (!isMatch) continue;
 
+        let itemBonus = item.multiplier;
         if (item.idealJob && item.idealJob === user.job) {
-            totalMulti += item.multiplier * 2; // Ideal job = double bonus
-        } else {
-            totalMulti += item.multiplier;
+            itemBonus *= 1.5; // Ideal job = 1.5x efficiency for that item
         }
+        totalMulti += itemBonus;
     }
 
     const maxCap = getDynamicCap(userId);
 
-    // Diminishing returns above 1.0, hard cap at dynamic maxCap
+    // Diminishing returns above 1.0 (100%), hard cap at dynamic maxCap
     if (totalMulti > 1.0) {
         totalMulti = 1.0 + (totalMulti - 1.0) * 0.5;
     }
@@ -93,13 +93,15 @@ function getXpMultiplier(userId) {
     if (user.job === 'teacher') multi += 0.5; // Teacher: +50% XP
 
     // Whiteboard bonus for teacher
-    if (user.job === 'teacher' && hasActiveItem(userId, 208)) multi += 0.5; // +50% more
+    if (user.job === 'teacher' && hasActiveItem(userId, 208)) multi += 1.0; // +100% total teacher bonus with item
 
-    // XP Boost Potion (502)
-    if (hasActiveItem(userId, 502)) multi += 0.5;
+    // XP Boost Potion (502) & Heart Chocolates (Already in shop but logic here)
+    if (hasActiveItem(userId, 502)) multi += 1.0;
+    if (hasActiveItem(userId, 504)) multi += 1.0;
 
-    // Hard cap at 250% bonus (base 1.0 + 2.5 bonus = 3.5 total multiplier)
-    return Math.min(multi, 3.5);
+    // Mega Buffs from Legendary Fish - hidden IDs 601, 602 (Income type, but let's add a small XP nudge if we want)
+    // For now stick to planned 5.0 cap
+    return Math.min(multi, 5.0);
 }
 
 /**
@@ -125,7 +127,7 @@ function hasActiveItem(userId, itemId) {
  * Standard: 2.5 (250%), VIP: 5.0 (500%)
  */
 function getDynamicCap(userId) {
-    return hasActiveItem(userId, 108) ? 5.0 : 2.5;
+    return hasActiveItem(userId, 108) ? 6.0 : 3.0;
 }
 
 /**

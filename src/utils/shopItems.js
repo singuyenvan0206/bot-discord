@@ -79,4 +79,10 @@ module.exports = [
     { id: 501, name: 'Shield of Protection', price: 5000, multiplier: 0, duration: 86400, type: 'robshield' },
     { id: 502, name: 'XP Boost Potion', price: 100000, multiplier: 0, duration: 86400, type: 'xpboost' },
     { id: 503, name: 'Career Change Voucher', price: 2000000, multiplier: 0, type: 'other' },
+
+    // ==========================================
+    // GROUP 600 — event (buffs given by events/catches)
+    // ==========================================
+    { id: 601, name: "Megalodon's Blessing", price: 0, multiplier: 0.50, duration: 3600, type: 'income' },
+    { id: 602, name: "Poseidon's Favor", price: 0, multiplier: 1.00, duration: 7200, type: 'income' },
 ];
