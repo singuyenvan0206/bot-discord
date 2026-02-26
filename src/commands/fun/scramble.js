@@ -45,6 +45,15 @@ module.exports = {
             console.error('Error fetching random word:', error);
         }
 
+        // --- FALLBACK: If API fails, use local words ---
+        if (!word) {
+            const localData = require('../../data/words.json');
+            if (localData && localData.words) {
+                word = localData.words[Math.floor(Math.random() * localData.words.length)];
+                category = t('scramble.cat_random', lang);
+            }
+        }
+
         if (!word) {
             return message.reply(`${config.EMOJIS.ERROR} ${t('hangman.fetch_error', lang)}`);
         }

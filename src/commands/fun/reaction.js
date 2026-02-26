@@ -19,7 +19,7 @@ module.exports = {
         if (isBot) return;
 
         const user = message.author || message.user;
-        const lang = await getLanguage(user.id);
+        const lang = getLanguage(user.id, message.guild?.id);
 
         const embed = new EmbedBuilder()
             .setTitle(t('reaction.title', lang))
@@ -31,12 +31,12 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId('reaction_button')
                     .setLabel(t('reaction.label_wait', lang))
-                    .setStyle(2) // Secondary
+                    .setStyle(ButtonStyle.Secondary)
                     .setDisabled(true)
             );
 
         const msg = message.reply ?
-            await message.reply({ embeds: [embed], components: [row], fetchReply: true }) :
+            await message.reply({ embeds: [embed], components: [row] }) :
             await message.editReply({ embeds: [embed], components: [row] });
 
         const delay = Math.floor(Math.random() * 3000) + 2000; // 2-5 seconds
@@ -54,7 +54,7 @@ module.exports = {
                     new ButtonBuilder()
                         .setCustomId('reaction_button')
                         .setLabel(t('reaction.label_go', lang))
-                        .setStyle(3) // Success
+                        .setStyle(ButtonStyle.Success)
                         .setDisabled(false)
                 );
 
