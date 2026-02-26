@@ -120,6 +120,7 @@ function initSchema() {
             id TEXT PRIMARY KEY,
             language TEXT DEFAULT 'vi',
             prefix TEXT,
+            dist_channel TEXT,
             json_data TEXT DEFAULT '{}'
         )
     `);
@@ -143,6 +144,9 @@ function initSchema() {
         safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
         safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
     }
+
+    // Guild columns
+    safeAddColumn('guilds', 'dist_channel', 'TEXT');
 
     // User columns
     safeAddColumn('users', 'xp', 'INTEGER NOT NULL DEFAULT 0');

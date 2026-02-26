@@ -43,7 +43,12 @@
         "private_distribution_msg": "You just received **{{amount}}** {{emoji}} from the Community Welfare Fund! 🎉",
         "check_reward_button": "🎁 Check Reward",
         "ephemeral_reward_msg": "You received **{{amount}}** {{emoji}} from the latest distribution! 🎉",
-        "no_reward_msg": "❌ You didn't receive any reward in this round or there hasn't been a distribution recently."
+        "no_reward_msg": "❌ You didn't receive any reward in this round or there hasn't been a distribution recently.",
+        "setdistchannel_usage": "Usage: `{{prefix}}setdistchannel [#channel]`",
+        "setdistchannel_success": "✅ Distribution announcement channel has been set to {{channel}}!",
+        "setdistchannel_reset": "✅ Default distribution channel has been reset. The bot will find a suitable channel automatically.",
+        "setdistchannel_invalid": "❌ Please specify a valid text channel!",
+        "setdistchannel_desc": "Set the default channel for automatic money distribution announcements."
     },
     "connect4": {
         "title": "🔴 Connect 4 🟡",

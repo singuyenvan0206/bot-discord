@@ -43,7 +43,12 @@
         "private_distribution_msg": "Bạn vừa được nhận **{{amount}}** {{emoji}} từ Quỹ Phúc Lợi Cộng Đồng! 🎉",
         "check_reward_button": "🎁 Xem phần thưởng",
         "ephemeral_reward_msg": "Bạn đã nhận được **{{amount}}** {{emoji}} từ đợt chia thưởng vừa rồi! 🎉",
-        "no_reward_msg": "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc chưa có đợt chia thưởng nào gần đây."
+        "no_reward_msg": "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc chưa có đợt chia thưởng nào gần đây.",
+        "setdistchannel_usage": "Sử dụng: `{{prefix}}setdistchannel [#kênh]`",
+        "setdistchannel_success": "✅ Đã đặt kênh thông báo chia tiền là {{channel}}!",
+        "setdistchannel_reset": "✅ Đã xóa kênh thông báo mặc định. Bot sẽ tự động tìm kênh phù hợp.",
+        "setdistchannel_invalid": "❌ Vui lòng chỉ định một kênh văn bản hợp lệ!",
+        "setdistchannel_desc": "Cài đặt kênh mặc định để gửi thông báo chia tiền tự động."
     },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",

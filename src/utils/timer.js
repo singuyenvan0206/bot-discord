@@ -253,9 +253,18 @@ async function processHouseDistribution(client) {
     // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
         const lang = getLanguage(null, guild.id);
-        const channel = guild.systemChannel ||
-            guild.channels.cache.find(c => c.name.includes('chat') || c.name.includes('general')) ||
-            guild.channels.cache.filter(c => c.isTextBased()).first();
+        const guildData = db.getGuild(guild.id);
+
+        let channel = null;
+        if (guildData.dist_channel) {
+            channel = guild.channels.cache.get(guildData.dist_channel);
+        }
+
+        if (!channel) {
+            channel = guild.systemChannel ||
+                guild.channels.cache.find(c => c.name.includes('chat') || c.name.includes('general')) ||
+                guild.channels.cache.filter(c => c.isTextBased()).first();
+        }
 
         if (channel && channel.send) {
             const embed = new EmbedBuilder()
