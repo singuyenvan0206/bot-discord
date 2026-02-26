@@ -116,7 +116,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
 
             // Musician Interaction: Flow State (15% chance to double final win)
             const u = db.getUser(i.user.id);
-            if (u.job === 'musician' && Math.random() < 0.15) {
+            if (u.job === 'musician' && payout > bet && Math.random() < 0.15) {
                 payout *= 2;
                 result += t('common.flow_state', lang);
             }

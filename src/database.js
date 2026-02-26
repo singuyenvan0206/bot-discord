@@ -283,6 +283,10 @@ function queryOne(sql, params = []) {
 }
 
 function execute(sql, params = []) {
+    if (sql.includes('balance')) {
+        console.log(`[DB DEBUG] Balance Update: ${sql} | Params: ${JSON.stringify(params)}`);
+        console.trace();
+    }
     db.run(sql, params);
     saveDb();
 }
