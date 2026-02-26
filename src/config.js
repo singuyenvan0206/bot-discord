@@ -48,7 +48,6 @@ module.exports = {
         EMOJIQUIZ_REWARD: 750,
         TICTACTOE_REWARD: 500,
         TRIVIA_REWARD: 500,
-        REACTION_REWARD_BASE: 100,
         WORK_COOLDOWN: 3600, // 1 hour in seconds
         DAILY_COOLDOWN: 86400, // 24 hours in seconds
         DAILY_REWARD: 300,

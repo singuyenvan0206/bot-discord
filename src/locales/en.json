@@ -1005,17 +1005,6 @@
         "win": "🎉 **Correct!** The number was **{{number}}**.\n{{emoji}} Reward: **{{amount}}** coins",
         "lose": "😔 **Game Over!** You ran out of attempts. The number was **{{number}}**."
     },
-    "reaction": {
-        "title": "⚡  Reaction Time",
-        "wait": "Wait for it...",
-        "go": "⚡ **GO!**",
-        "too_early": "❌ Too early! You clicked before the signal.",
-        "result": "✅ Result: **{{time}}ms**",
-        "win": "\n{{emoji}} Reward: **{{amount}}** coins",
-        "timeout": "⌛ Too slow! You didn't react in time.",
-        "label_go": "CLICK NOW!",
-        "label_wait": "Wait..."
-    },
     "coinflip": {
         "title": "🪙  Coin Flip",
         "description": "You chose **{{call}}** and the result was **{{result}}**!",
@@ -1181,7 +1170,6 @@
             "wordchain": "Link English words in a competitive chain.",
             "scramble": "Unscramble the jumbled letters.",
             "guess": "Guess the mystery number from 1 to 100.",
-            "reaction": "Test your reflexes against the clock.",
             "work": "Perform various jobs for coins and XP.",
             "daily": "Claim your free daily coin reward.",
             "beg": "Try begging strangers for spare change.",
@@ -1238,7 +1226,6 @@
             "poker": "🌟 **Description:** Texas Hold'em Poker! Outsmart and outbet your opponents in this classic card game.\n\n🕹️ **How to Play:**\n1. Lobby: Create a game and wait for at least 2 players to join.\n2. Deal: Each player gets 2 private cards (Hole cards).\n3. Betting: 4 rounds are played (Pre-flop, Flop, Turn, River).\n4. Actions: **Fold** (Quit), **Check/Call** (Match bet), **Raise** (Increase bet), **All-in** (Bet everything).\n\n⚖️ **Winning:** The best 5-card hand made using hole cards and 5 community cards wins the entire pot.\n\n💡 **Hand Rankings:** Royal Flush > Straight Flush > 4-of-a-Kind > Full House > Flush > Straight > 3-of-a-Kind > 2 Pair > Pair > High Card.",
             "emojiquiz": "🌟 **Description:** A fun visual puzzle! Guess the common phrase, movie, or object described by a set of emojis.\n\n🕹️ **How to Play:**\n- Analyze the emoji string (e.g., 🍎🥧 -> Apple Pie).\n- You have **30 seconds** to type the exact answer.\n\n✨ **Teacher Perk:** **Tutoring** — Correct answers grant a **+50% coin bonus** and extra XP!\n\n💰 **Rewards:** Fast and correct answers provide a coin reward based on difficulty.",
             "guess": "🌟 **Description:** A simple but addictive numbers game. Can you find the number I'm thinking of?\n\n🕹️ **How to Play:**\n- Bot picks a random number between **1 and 100**.\n- You have **10 attempts** to guess it.\n- After each guess, the bot tells you if the number is **higher** (🔼) or **lower** (🔽).\n\n💰 **Rewards:** The reward starts high and decreases with every failed attempt. Guess fast for maximum profit!",
-            "reaction": "🌟 **Description:** Pure speed! How fast are your reflexes when the pressure is on?\n\n🕹️ **How to Play:**\n- Bot will say \"Wait for it...\". Randomly, the screen will flash **⚡ GO!**.\n- Click the button as fast as you can.\n\n✨ **Musician Perk:** **Flow State** — Musicians have a 15% chance to enter the 'zone', doubling their reward regardless of speed!\n\n⚖️ **Rules:**\n- **Early Clicks:** Clicking before the signal results in an automatic loss / penalty.\n- **Timeout:** You have 5 seconds to react before the round expires.\n\n💰 **Rewards:** Rewards are scaled! The faster your millisecond time, the more coins you earn.",
             "rps": "🌟 **Description:** Rock, Paper, Scissors! A classic game of prediction available in Solo or PvP mode.\n\n🕹️ **How to Play:**\n- Choose your weapon: 🪨 Rock, 📄 Paper, or ✂️ Scissors.\n- **Solo:** Play against the bot for a bet.\n- **PvP:** Challenge another user to a high-stakes duel.\n\n⚖️ **Counters:** Rock beats Scissors, Scissors beats Paper, Paper beats Rock.",
             "tictactoe": "🌟 **Description:** The timeless 3x3 strategy game. Get three in a row to win.\n\n🕹️ **How to Play:**\n1. Challenge another user: `$ttt @user [bet]`.\n2. Take turns placing your mark (❌ or ⭕).\n\n💰 **Outcome:** Winner takes the pot. Refund on draw.",
             "fish": "🌟 **Description:** Relax and cast your line! Catch a variety of fish from common sardines to legendary sea monsters.\n\n🎣 **Gear Needed:**\n- **Rod:** Get a Bamboo, Fiberglass, or Carbon Fiber rod from the `$shop`.\n- **Bait:** Buy worms, crickets, or squid to attract different fish species.\n\n🕹️ **How to Play:**\n- Just type `$fish`. The bot automatically selects your highest-tier equipment.\n- Every catch uses 1 bait and has a small cooldown.\n\n✨ **Luck Factor:** Better equipment grants higher 'Luck', which drastically improves the chances of catching rare, high-value fish.",

@@ -1061,17 +1061,6 @@
         "win": "🎉 **Chính xác!** Con số đó là **{{number}}**.\n{{emoji}} Thưởng: **{{amount}}** coins",
         "lose": "😔 **Kết thúc!** Bạn đã hết lượt. Con số đó là **{{number}}**."
     },
-    "reaction": {
-        "title": "⚡  Phản Xạ",
-        "wait": "Chuẩn bị...",
-        "go": "⚡ **CHOP!**",
-        "too_early": "❌ Sớm quá! Bạn đã bấm trước khi có tín hiệu.",
-        "result": "✅ Kết quả: **{{time}}ms**",
-        "win": "\n{{emoji}} Thưởng: **{{amount}}** coins",
-        "timeout": "⌛ Quá chậm! Bạn không phản xạ kịp.",
-        "label_go": "BẤM NGAY!",
-        "label_wait": "Đợi đã..."
-    },
     "language": {
         "title": "Cài đặt Ngôn ngữ",
         "resolved": "Ngôn ngữ Hiện tại",
@@ -1181,7 +1170,6 @@
             "wordchain": "Trò chơi nối chữ tiếng Anh.",
             "scramble": "Sắp xếp lại các chữ cái bị xáo trộn.",
             "guess": "Đoán con số may mắn từ 1 đến 100.",
-            "reaction": "Kiểm tra tốc độ phản xạ của bạn.",
             "work": "Làm việc chăm chỉ để kiếm tiền và XP.",
             "daily": "Nhận quà tặng miễn phí mỗi ngày.",
             "beg": "Thử vận may bằng cách đi xin tiền.",
@@ -1238,7 +1226,6 @@
             "poker": "🌟 **Mô tả:** Texas Hold'em Poker! Đấu trí và đặt cược với đối thủ trong trò chơi bài đỉnh cao.\n\n🕹️ **Cách chơi:**\n1. Sảnh: Tạo game và đợi ít nhất 2 người tham gia.\n2. Chia bài: Mỗi người nhận 2 lá bài tẩy (riêng).\n3. Đặt cược: Trải qua 4 vòng (Pre-flop, Flop, Turn, River).\n4. Hành động: **Bỏ bài** (Thoát), **Theo/Nhường** (Khớp cược), **Tố** (Tăng cược), **Tất tay** (Cược hết).\n\n⚖️ **Thắng cuộc:** Bộ 5 lá bài mạnh nhất (kết hợp từ bài tẩy và bài chung) sẽ thắng toàn bộ hũ tiền (Pot).\n\n💡 **Thứ tự bài:** Thùng phá sảnh > Tứ quý > Cù lũ > Thùng > Sảnh > Sám cô > Thú (2 đôi) > Đôi > Mậu thầu.",
             "emojiquiz": "🌟 **Mô tả:** Câu đố hình ảnh thú vị! Đoán cụm từ, bộ phim hoặc vật dụng được mô tả bằng emoji.\n\n🕹️ **Cách chơi:**\n- Phân tích chuỗi emoji (vđ: 🍎🥧 -> Apple Pie).\n- Bạn có **30 giây** để nhắn đáp án chính xác.\n- Các câu đố được chia theo hạng mục (Phim, Đồ vật, Địa điểm).\n\n💰 **Phần thưởng:** Trả lời đúng và nhanh sẽ nhận coins dựa trên độ khó của câu đố.",
             "guess": "🌟 **Mô tả:** Trò chơi đoán số đơn giản nhưng gây nghiện. Bạn có thể tìm thấy con số tôi đang nghĩ?\n\n🕹️ **Cách chơi:**\n- Bot chọn một số ngẫu nhiên từ **1 đến 100**.\n- Bạn có **10 lượt thử** để đoán.\n- Sau mỗi lần đoán, bot sẽ gợi ý số đó **Lớn hơn** (🔼) hoặc **Nhỏ hơn** (🔽).\n\n💰 **Phần thưởng:** Tiền thưởng bắt đầu ở mức cao và giảm dần sau mỗi lần đoán sai. Đoán càng nhanh thưởng càng lớn!",
-            "reaction": "🌟 **Mô tả:** Tốc độ thuần túy! Phản xạ của bạn nhanh đến mức nào khi chịu áp lực?\n\n🕹️ **Cách chơi:**\n- Bot sẽ nhắn \"Chuẩn bị...\". Ngẫu nhiên, màn hình sẽ hiện **⚡ CHOP!**.\n- Nhấn nút thật nhanh ngay khi thấy tín hiệu.\n\n⚖️ **Quy tắc:**\n- **Bấm sớm:** Bấm trước khi có tín hiệu sẽ bị xử thua hoặc phạt tiền.\n- **Hết giờ:** Bạn có 5 giây để phản xạ trước khi lượt chơi kết thúc.\n\n💰 **Phần thưởng:** Thưởng theo cấp độ! Thời gian phản xạ (ms) càng ngắn, tiền thưởng càng nhiều.",
             "rps": "🌟 **Mô tả:** Kéo Búa Bao! Trò chơi dự đoán kinh điển có chế độ Đấu với Bot hoặc PvP.\n\n🕹️ **Cách chơi:**\n- Chọn vũ khí của bạn: 🪨 Búa, 📄 Bao, hoặc ✂️ Kéo.\n- **Solo:** Chơi với bot để ăn tiền cược.\n- **PvP:** Thách đấu người dùng khác một trận đấu sinh tử.\n\n⚖️ **Khắc chế:** Búa thắng Kéo, Kéo thắng Bao, Bao thắng Búa.",
             "tictactoe": "🌟 **Mô tả:** Trò chơi cờ ca-rô 3x3 chiến thuật. Xếp 3 dấu liên tiếp để thắng.\n\n🕹️ **Cách chơi:**\n1. Thách đấu người khác: `$ttt @user [tiền cược]`.\n2. Thay phiên nhau đặt dấu (❌ hoặc ⭕).\n\n💰 **Kết quả:** Người thắng ăn toàn bộ tiền cược. Hoàn tiền nếu hòa.",
             "fish": "🌟 **Mô tả:** Thư giãn và thả câu! Đánh bắt từ những chú cá măng bé nhỏ đến những quái vật biển huyền thoại.\n\n🎣 **Trang bị:**\n- **Cần câu:** Mua cần Tre, Sợi thủy tinh hoặc Carbon trong `$shop`.\n- **Mồi:** Mua giun, dế hoặc mực để thu hút các loại cá khác nhau.\n\n🕹️ **Cách chơi:**\n- Chỉ cần dùng lệnh `$fish`. Bot tự chọn trang bị xịn nhất bạn có.\n- Mỗi lần câu tốn 1 mồi và có thời gian chờ ngắn.\n\n✨ **Yếu tố may mắn:** Trang bị càng xịn, chỉ số 'May mắn' càng cao, giúp bạn dễ bắt được cá hiếm (Cá mập, Kraken) với giá cực cao!",

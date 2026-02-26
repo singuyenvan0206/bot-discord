@@ -77,10 +77,6 @@ const commands = [
         .setName('guess')
         .setDescription('Guess the number!'),
 
-    new SlashCommandBuilder()
-        .setName('reaction')
-        .setDescription('Test your reaction speed!'),
-
     // ═══ Economy ═══
     new SlashCommandBuilder()
         .setName('balance')
