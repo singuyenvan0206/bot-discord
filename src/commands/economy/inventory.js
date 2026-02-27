@@ -28,6 +28,7 @@ module.exports = {
                 'income': { name: t('inventory.categories.income', lang), items: [] },
                 'daily': { name: t('inventory.categories.daily', lang), items: [] },
                 'gamble': { name: t('inventory.categories.gamble', lang), items: [] },
+                'social': { name: t('inventory.categories.social', lang), items: [] },
                 'other': { name: t('inventory.categories.other', lang), items: [] }
             };
 
@@ -123,8 +124,7 @@ module.exports = {
 
                     const lines = Object.entries(typeMap).map(([type, data]) => {
                         const effectType = t(`effects.${type}`, lang);
-                        const eff = effectiveTotal(data.total);
-                        const pct = Math.round(eff * 100);
+                        const pct = Math.round(data.total * 100);
                         const remaining = data.earliestExpiry - now;
                         let h = Math.floor(remaining / 3600);
                         let m = Math.round((remaining % 3600) / 60);
@@ -144,8 +144,9 @@ module.exports = {
                     embed.addFields({ name: `⚡ ${t('inventory.active_buffs', lang)}`, value: t('common.none', lang), inline: false });
                 }
 
-                embed.setDescription(t('inventory.empty', lang, { prefix: config.PREFIX }));
-                if (totalItems > 0) embed.setDescription(null);
+                if (totalItems === 0) {
+                    embed.setDescription(t('inventory.empty', lang, { prefix: config.PREFIX }));
+                }
 
             } else {
                 const cat = categories[category];
@@ -169,6 +170,7 @@ module.exports = {
                 new ButtonBuilder().setCustomId('inv_tool').setLabel('🎣').setStyle(category === 'tool' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.tool.items.length === 0),
                 new ButtonBuilder().setCustomId('inv_income').setLabel('💼').setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.income.items.length === 0),
                 new ButtonBuilder().setCustomId('inv_gamble').setLabel('🎲').setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.gamble.items.length === 0),
+                new ButtonBuilder().setCustomId('inv_social').setLabel('💞').setStyle(category === 'social' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.social.items.length === 0),
                 new ButtonBuilder().setCustomId('inv_other').setLabel('📦').setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.other.items.length === 0)
             );
 

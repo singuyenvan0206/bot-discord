@@ -775,7 +775,7 @@
         "total_items": "Total Items: **{{count}}**",
         "inventory_value": "Inventory Value: **{{emoji}} {{amount}}**",
         "sell_tip": "💡 Tip: Use {{prefix}}sell <item> to turn items back into coins!",
-        "global_multipliers": "🚀 Global Multipliers (Capped 250%)",
+        "global_multipliers": "🚀 Global Multipliers",
         "income_bonus": "Income Bonus",
         "gamble_bonus": "Gamble Bonus",
         "xp_bonus": "XP Bonus",
