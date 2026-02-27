@@ -52,7 +52,7 @@ const CATCHES = [
     { key: 'mythical_pearl', emoji: '🔮', value: 100000, weight: 100, minLuck: 32.0 },
     { key: 'kraken', emoji: '🐙', value: 200000, weight: 120, minLuck: 35.0 },
     { key: 'megalodon', emoji: '🦈', value: 450000, weight: 150, minLuck: 38.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 200000, minLuck: 42.0 }
+    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 200, minLuck: 42.0 }
 ];
 
 module.exports = {
