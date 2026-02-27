@@ -42,6 +42,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scop
 - [Giveaway System](#-giveaway-system)
 - [Fun & Games](#-fun--games)
 - [Economy System](#-economy-system)
+- [Social & Marriage System](#-social--marriage-system)
 - [Utility Commands](#-utility-commands)
 - [Setting up the Language (i18n)](#-setting-up-the-language)
 - [Getting Started](#-getting-started)
@@ -56,8 +57,10 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scop
 - 🎁 **Giveaway System** — Create, manage, pause, resume, reroll, and delete giveaways.
 - 🎮 **Mini-Games** — Blackjack, Poker, Minesweeper, Trivia, Emoji Quiz, Hangman, Word Scramble, Wordchain, Memory, and more!
 - 💰 **Full Economy System** — `$daily`, `$work`, `$fish`, profiles, and global leaderboards.
+- 💞 **Social & Marriage** — `$marry`, `$divorce`, `$gift`, and exclusive Ring/Bouquet buffs!
 - 🛒 **Item Shop & Interactivity** — Extensive lore, item descriptions (`$iteminfo`), buy, sell, and multiplier enhancements.
-- 🔧 **Utility Tools** — Check latencies, user/server infographics, and avatar rippers.
+- 🔧 **Utility Tools** — Check latencies, user/server infographics, avatar rippers, and `$support` QR generation.
+- 🛡️ **Double-Layered Security** — Centralized admin & owner permission gatekeeping.
 
 ---
 
@@ -137,7 +140,7 @@ Earn, spend, and compete. All data flawlessly persists across restarts.
 | `$crime` | — | High-risk, high-reward! Commit a crime for massive gains or heavy fines. |
 | `$slut` | — | Similar to crime, but with different success rates and payouts. |
 | `$rob` | — | Risk your reputation to steal coins from another user! |
-| `$fish` | `$fishing` | The fishing minigame! Requires Rod & Bait to catch common and legendary sea creatures. |
+| `$fish` | `$fishing` | The fishing minigame! Requires Rod & Bait to catch 31+ species including Legendary Limit-Breaking creatures. |
 | `$shop` | `$sh`, `$store` | Browse the item shop by category (Tools, Baits, Income, Daily, Gamble). |
 | `$buy` | `$b` | Buy an item (e.g. `$buy 13` or `$buy laptop`) |
 | `$sell` | `$s` | Sell items back to the shop for a 70% refund. |
@@ -153,6 +156,19 @@ Simsimi supports shorthand for betting and economy inputs to save you time.
 - `m` — Millions (e.g., `$bj 2m` = 2,000,000)
 - `b` — Billions (e.g., `$bj 1b` = 1,000,000,000)
 - `all` — Your entire wallet balance (e.g., `$cf all`)
+
+---
+
+## 💞 Social & Marriage System
+
+Build relationships, share your wealth, and earn exclusive couple buffs!
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `$marry <user>` | `$propose` | Propose to another user! Requires a Wedding Ring `701` or Diamond Ring `702` from the shop. Grants global permanent income bonuses (+25% or +50%). |
+| `$divorce` | — | End your marriage and lose your couple bonuses. |
+| `$marriage` | `$couple` | Check the current status and duration of your marriage. |
+| `$gift <user> <item_id>` | `$give` | Send an inventory item to a friend. Giving a Wedding Bouquet grants them a temporary massive bonus! |
 
 ---
 
@@ -179,7 +195,21 @@ The bot is fully localized!
 | `$avatar [user]` | `$av` | Display a user's avatar. Also supports rendering their Server Profile Avatar and Banner! |
 | `$serverinfo` | — | View deep server stats (Boost tiers, Offline ratios, Text/Voice channel split) |
 | `$userinfo [user]` | `$user`, `$ui` | View account age, Discord badges, highest roles, and Discord permissions. |
+| `$support` | `$qr`, `$donate` | Show the developer's beautifully generated QR code to buy them a coffee! |
 | `$help [command]`| — | Displays a highly interactive dropdown menu of all categories. Pass a command name to generate a highly detailed Strategy & Rules Guide! |
+
+---
+
+## 🛠️ Owner & Admin Commands
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `$setdistchannel` | — | Set the channel for auto-giveaway distributions. (Admin Only) |
+| `$resetuser <user>` | — | Completely wipe a user's economy data. (Owner Only) |
+| `$resetdatabase` | — | Master wipe of all database tables. (Owner Only) |
+| `$shutdown` | — | Gracefully stops the bot and prevents it from executing commands until actively booted. (Owner Only) |
+| `$startup` | `$boot` | Wakes the bot up from a shutdown logic state. (Owner Only) |
+| `$update` | — | Forces a manual database save and cache dump. (Owner Only) |
 
 ---
 
