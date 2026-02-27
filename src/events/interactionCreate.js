@@ -111,6 +111,14 @@ module.exports = {
                 react: async () => { },
                 delete: async () => { },
             };
+            // Permission handling
+            if (command.ownerOnly && !config.OWNER_IDS.includes(interaction.user.id)) {
+                return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
+            }
+
+            if (command.adminOnly && !interaction.member.permissions.has('Administrator')) {
+                return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
+            }
 
             // Cooldowns
             if (!client.cooldowns.has(command.name)) {

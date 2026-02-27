@@ -74,6 +74,14 @@ module.exports = {
 
         const lang = getLanguage(message.author.id, message.guild?.id);
 
+        if (command.ownerOnly && !config.OWNER_IDS.includes(message.author.id)) {
+            return message.reply(t('common.no_permission', lang));
+        }
+
+        if (command.adminOnly && !message.member.permissions.has('Administrator')) {
+            return message.reply(t('common.no_permission', lang));
+        }
+
         // Cooldown handling
         if (!client.cooldowns.has(command.name)) {
             client.cooldowns.set(command.name, new Collection());
