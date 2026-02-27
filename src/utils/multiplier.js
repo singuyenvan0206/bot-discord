@@ -134,10 +134,12 @@ function calculateReward(base, userId, type = 'income') {
     const total = base + bonus;
     // For logging, let's keep the dynamic cap context
     const maxCap = getDynamicCap(userId);
+    const capValue = Math.round(maxCap * 100);
     return {
         total,
         bonus,
         percent: Math.round(bonusPart * 100),
+        cap: capValue,
         capReached: (bonusPart - itemDataLegendaryPart(userId, type)) >= maxCap
     };
 }
@@ -163,13 +165,19 @@ function addBuff(userId, itemId, durationSeconds) {
     const user = db.getUser(userId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
-    const expiresAt = Math.floor(Date.now() / 1000) + durationSeconds;
+
+    const now = Math.floor(Date.now() / 1000);
     const existingIndex = buffs.findIndex(b => b.itemId === itemId);
+
     if (existingIndex !== -1) {
-        buffs[existingIndex].expiresAt = expiresAt;
+        // Stacking: Add new duration to the existing remaining time
+        const currentExpiry = buffs[existingIndex].expiresAt;
+        const remaining = Math.max(0, currentExpiry - now);
+        buffs[existingIndex].expiresAt = now + remaining + durationSeconds;
     } else {
-        buffs.push({ itemId, expiresAt });
+        buffs.push({ itemId, expiresAt: now + durationSeconds });
     }
+
     db.updateUser(userId, { active_buffs: JSON.stringify(buffs) });
 }
 

@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const path = require('path');
 const db = require('../../database');
 const { getLevelMultiplier } = require('../../utils/leveling');
@@ -49,20 +49,20 @@ const CATCHES = [
     { key: 'stingray', emoji: '🐡', value: 7500, weight: 160, minLuck: 10.0 },
     { key: 'sunfish', emoji: '☀️', value: 9000, weight: 150, minLuck: 11.0 },
     { key: 'tuna', emoji: '🐟', value: 12000, weight: 150, minLuck: 12.0 },
-    { key: 'swordfish', emoji: '🗡️', value: 15000, weight: 90, minLuck: 15.0 },
-    { key: 'sturgeon', emoji: '🐟', value: 18000, weight: 85, minLuck: 16.0 },
-    { key: 'manta_ray', emoji: '🐋', value: 20000, weight: 80, minLuck: 18.0 },
-    { key: 'shark', emoji: '🦈', value: 25000, weight: 70, minLuck: 20.0 },
-    { key: 'alligator_gar', emoji: '🐊', value: 30000, weight: 65, minLuck: 21.0 },
-    { key: 'whale', emoji: '🐋', value: 35000, weight: 60, minLuck: 22.0 },
-    { key: 'anglerfish', emoji: '🏮', value: 45000, weight: 50, minLuck: 25.0 },
-    { key: 'treasure_chest', emoji: '💰', value: 75000, weight: 40, minLuck: 28.0 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 100000, weight: 100, minLuck: 32.0 },
-    { key: 'kraken', emoji: '🐙', value: 200000, weight: 120, minLuck: 35.0 },
-    { key: 'megalodon', emoji: '🦈', value: 450000, weight: 150, minLuck: 38.0 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 600000, weight: 190, minLuck: 40.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 200, minLuck: 42.0 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 1200000, weight: 300, minLuck: 45.0 }
+    { key: 'swordfish', emoji: '🗡️', value: 10000, weight: 90, minLuck: 15.0 },
+    { key: 'sturgeon', emoji: '🐟', value: 12000, weight: 85, minLuck: 16.0 },
+    { key: 'manta_ray', emoji: '🐋', value: 10000, weight: 80, minLuck: 18.0 },
+    { key: 'shark', emoji: '🦈', value: 12000, weight: 70, minLuck: 20.0 },
+    { key: 'alligator_gar', emoji: '🐊', value: 15000, weight: 65, minLuck: 21.0 },
+    { key: 'whale', emoji: '🐋', value: 18000, weight: 60, minLuck: 22.0 },
+    { key: 'anglerfish', emoji: '🏮', value: 22000, weight: 50, minLuck: 25.0 },
+    { key: 'treasure_chest', emoji: '💰', value: 35000, weight: 40, minLuck: 28.0 },
+    { key: 'mythical_pearl', emoji: '🔮', value: 80000, weight: 100, minLuck: 32.0 },
+    { key: 'kraken', emoji: '🐙', value: 160000, weight: 120, minLuck: 35.0 },
+    { key: 'megalodon', emoji: '🦈', value: 350000, weight: 150, minLuck: 38.0 },
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 500000, weight: 190, minLuck: 40.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 650000, weight: 200, minLuck: 42.0 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 1000000, weight: 300, minLuck: 45.0 }
 ];
 
 module.exports = {
@@ -133,6 +133,82 @@ module.exports = {
 
         const weightedPool = getWeightedPool(totalLuck);
         const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);
+
+        // --- SUBCOMMAND: info ---
+        if (args[0] === 'info') {
+            const ITEMS_PER_PAGE = 8;
+            let currentPage = 0;
+            if (args[1] && !isNaN(args[1])) {
+                currentPage = Math.max(0, parseInt(args[1]) - 1);
+            }
+
+            const totalPages = Math.ceil(CATCHES.length / ITEMS_PER_PAGE);
+            if (currentPage >= totalPages) currentPage = totalPages - 1;
+
+            const generateInfoEmbed = (page) => {
+                const start = page * ITEMS_PER_PAGE;
+                const end = start + ITEMS_PER_PAGE;
+                const currentItems = CATCHES.slice(start, end);
+
+                const embed = new EmbedBuilder()
+                    .setTitle(t('fish.info_title', lang))
+                    .setColor(config.COLORS.INFO)
+                    .setThumbnail(message.client.user.displayAvatarURL());
+
+                let listText = '';
+                for (const item of currentItems) {
+                    const itemName = t(`fish.items.${item.key}`, lang);
+                    listText += `${item.emoji} **${itemName}**\n`;
+                    listText += `└ ${t('fish.info_value', lang, { value: item.value.toLocaleString() })} • ${t('fish.info_luck', lang, { luck: item.minLuck })}\n\n`;
+                }
+
+                embed.setDescription(listText);
+                embed.setFooter({ text: t('fish.info_footer', lang, { page: page + 1, total: totalPages, prefix: config.PREFIX }) });
+                return embed;
+            };
+
+            const generateButtons = (page) => {
+                return new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('fish_info_prev')
+                        .setLabel('◀️')
+                        .setStyle(ButtonStyle.Primary)
+                        .setDisabled(page === 0),
+                    new ButtonBuilder()
+                        .setCustomId('fish_info_next')
+                        .setLabel('▶️')
+                        .setStyle(ButtonStyle.Primary)
+                        .setDisabled(page >= totalPages - 1)
+                );
+            };
+
+            const infoMsg = await message.reply({
+                embeds: [generateInfoEmbed(currentPage)],
+                components: [generateButtons(currentPage)]
+            });
+
+            const collector = infoMsg.createMessageComponentCollector({
+                filter: (i) => i.user.id === message.author.id,
+                time: 60000,
+                componentType: ComponentType.Button
+            });
+
+            collector.on('collect', async (i) => {
+                if (i.customId === 'fish_info_prev') currentPage--;
+                if (i.customId === 'fish_info_next') currentPage++;
+
+                await i.update({
+                    embeds: [generateInfoEmbed(currentPage)],
+                    components: [generateButtons(currentPage)]
+                });
+            });
+
+            collector.on('end', () => {
+                infoMsg.edit({ components: [] }).catch(() => { });
+            });
+
+            return;
+        }
 
         // --- SUBCOMMAND: rates ---
         if (args[0] === 'rates') {
@@ -268,7 +344,7 @@ module.exports = {
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 
-            const { total: totalValue, bonus: bonusAmount, cap } = calculateReward(baseValue, message.author.id);
+            const { total: totalValue, bonus: bonusAmount, percent } = calculateReward(baseValue, message.author.id);
 
             db.addBalance(message.author.id, totalValue);
 
@@ -282,7 +358,7 @@ module.exports = {
             if (bonusAmount > 0) {
                 embed.addFields({
                     name: t('fish.item_bonus', lang, { amount: bonusAmount.toLocaleString(), emoji: config.EMOJIS.COIN }),
-                    value: t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap })
+                    value: t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent })
                 });
             }
 

@@ -10,9 +10,9 @@ module.exports = [
     { id: 105, name: 'Abstract Painting', price: 60000, multiplier: 0.40, duration: 2592000, type: 'daily' }, // CMD 5000
     { id: 106, name: 'Cookbook', price: 80000, multiplier: 0.60, duration: 2592000, type: 'daily', idealJob: 'chef' }, // CMD 4444
     { id: 107, name: 'Moai Statue', price: 120000, multiplier: 0.80, duration: 2592000, type: 'daily' }, // CMD 5000
-    { id: 108, name: 'VIP Golden Ticket', price: 2500000, multiplier: 1.50, duration: 2592000, type: 'daily' },
-    { id: 109, name: 'Mansion', price: 750000, multiplier: 3.00, duration: 2592000, type: 'daily', idealJob: 'streamer' }, // CMD 8333
-    { id: 110, name: 'Space Station', price: 2500000, multiplier: 5.00, duration: 2592000, type: 'daily', idealJob: 'hacker' }, // CMD 16666
+    { id: 108, name: 'VIP Golden Ticket', price: 12000000, multiplier: 1.50, duration: 2592000, type: 'daily' },
+    { id: 109, name: 'Mansion', price: 8500000, multiplier: 3.00, duration: 2592000, type: 'daily', idealJob: 'streamer' }, // CMD 8333
+    { id: 110, name: 'Space Station', price: 15000000, multiplier: 5.00, duration: 2592000, type: 'daily', idealJob: 'hacker' }, // CMD 16666
 
     // ==========================================
     // GROUP 200 — income (buff $work, $fish, $search)
@@ -32,11 +32,11 @@ module.exports = [
     { id: 213, name: 'Standing Desk', price: 120000, multiplier: 0.75, duration: 2592000, type: 'income', idealJob: 'programmer' },
     { id: 214, name: 'Trading Terminal', price: 180000, multiplier: 1.00, duration: 2592000, type: 'income', idealJob: 'trader' },
     { id: 215, name: 'Ergonomic Chair', price: 200000, multiplier: 1.20, duration: 2592000, type: 'income', idealJob: 'streamer' },
-    { id: 216, name: 'Business Suit', price: 250000, multiplier: 1.50, duration: 2592000, type: 'income', idealJob: 'doctor' },
-    { id: 217, name: 'Combat Armor', price: 300000, multiplier: 1.80, duration: 2592000, type: 'income', idealJob: 'soldier' },
-    { id: 218, name: 'Grand Piano', price: 500000, multiplier: 2.20, duration: 2592000, type: 'income', idealJob: 'musician' },
-    { id: 219, name: 'Supercar', price: 1000000, multiplier: 3.50, duration: 2592000, type: 'income', idealJob: 'criminal' },
-    { id: 220, name: 'Superyacht', price: 3500000, multiplier: 6.00, duration: 2592000, type: 'income', idealJob: 'hacker' },
+    { id: 216, name: 'Business Suit', price: 1800000, multiplier: 1.50, duration: 2592000, type: 'income', idealJob: 'doctor' },
+    { id: 217, name: 'Combat Armor', price: 2800000, multiplier: 1.80, duration: 2592000, type: 'income', idealJob: 'soldier' },
+    { id: 218, name: 'Grand Piano', price: 4500000, multiplier: 2.20, duration: 2592000, type: 'income', idealJob: 'musician' },
+    { id: 219, name: 'Supercar', price: 12000000, multiplier: 3.50, duration: 2592000, type: 'income', idealJob: 'criminal' },
+    { id: 220, name: 'Superyacht', price: 30000000, multiplier: 6.00, duration: 2592000, type: 'income', idealJob: 'hacker' },
 
     // ==========================================
     // GROUP 300 — gamble (buff $coinflip, $slots, $dice, $blackjack, $poker)
@@ -59,8 +59,8 @@ module.exports = [
     { id: 402, name: 'Worm Bait', price: 150, multiplier: 0.15, type: 'bait' },
     { id: 403, name: 'Shrimp Bait', price: 800, multiplier: 0.40, type: 'bait' },
     { id: 404, name: 'Cricket Bait', price: 2500, multiplier: 0.75, type: 'bait' },
-    { id: 405, name: 'Squid Bait', price: 5000, multiplier: 1.50, type: 'bait' },
-    { id: 406, name: 'Golden Bait', price: 10000, multiplier: 3.00, type: 'bait' },
+    { id: 405, name: 'Squid Bait', price: 20000, multiplier: 1.50, type: 'bait' },
+    { id: 406, name: 'Golden Bait', price: 50000, multiplier: 3.00, type: 'bait' },
 
     // ==========================================
     // GROUP 450 — tool (fishing rods, no duration)
@@ -68,10 +68,10 @@ module.exports = [
     { id: 407, name: 'Plastic Rod', price: 25000, multiplier: 0.5, type: 'tool', idealJob: 'farmer' },
     { id: 408, name: 'Bamboo Rod', price: 50000, multiplier: 1.0, type: 'tool', idealJob: 'farmer' },
     { id: 409, name: 'Fiberglass Rod', price: 100000, multiplier: 1.8, type: 'tool', idealJob: 'farmer' },
-    { id: 410, name: 'Steel Rod', price: 150000, multiplier: 2.5, type: 'tool', idealJob: 'farmer' },
-    { id: 411, name: 'Carbon Rod', price: 200000, multiplier: 3.5, type: 'tool', idealJob: 'farmer' },
-    { id: 412, name: 'Titanium Rod', price: 500000, multiplier: 5.0, type: 'tool', idealJob: 'farmer' },
-    { id: 413, name: "Neptune's Rod", price: 800000, multiplier: 7.5, type: 'tool', idealJob: 'farmer' },
+    { id: 410, name: 'Steel Rod', price: 120000, multiplier: 2.5, type: 'tool', idealJob: 'farmer' },
+    { id: 411, name: 'Carbon Rod', price: 1800000, multiplier: 3.5, type: 'tool', idealJob: 'farmer' },
+    { id: 412, name: 'Titanium Rod', price: 3600000, multiplier: 5.0, type: 'tool', idealJob: 'farmer' },
+    { id: 413, name: "Neptune's Rod", price: 5000000, multiplier: 7.5, type: 'tool', idealJob: 'farmer' },
 
     // ==========================================
     // GROUP 500 — other (special utility items)

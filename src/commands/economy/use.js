@@ -31,9 +31,11 @@ module.exports = {
 
         // ─── USE ALL ──────────────────────────────────
         if (itemQuery === 'all') {
+            const user = db.getUser(message.author.id);
             let buffs = [];
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
+            const now = Math.floor(Date.now() / 1000);
             const activated = [];
             let totalCount = 0;
             const isChef = user.job === 'chef';
@@ -41,24 +43,31 @@ module.exports = {
             for (const [id, count] of Object.entries(inv)) {
                 if (!count || count <= 0) continue;
                 const item = SHOP_ITEMS.find(i => String(i.id) === id);
-                if (!item || !item.duration) continue; // Skip non-buff items
-                if (id === '503') continue; // Skip Career Change Voucher
+                if (!item || !item.duration) continue;
+                if (id === '503') continue;
 
-                // Activate all stacks of this item (compact display)
                 const qty = Number(count);
-                for (let n = 0; n < qty; n++) {
-                    let duration = item.duration;
-                    if (isChef) duration *= 2;
-                    const expiresAt = Math.floor(Date.now() / 1000) + duration;
-                    buffs.push({ itemId: item.id, expiresAt });
-                    db.removeItem(message.author.id, String(item.id), 1);
+                const itemIdNum = Number(id);
+                let addedDuration = item.duration * qty;
+                if (isChef) addedDuration *= 2;
+
+                const existingIndex = buffs.findIndex(b => b.itemId === itemIdNum);
+                if (existingIndex !== -1) {
+                    const remaining = Math.max(0, buffs[existingIndex].expiresAt - now);
+                    buffs[existingIndex].expiresAt = now + remaining + addedDuration;
+                } else {
+                    buffs.push({ itemId: itemIdNum, expiresAt: now + addedDuration });
                 }
 
+                db.removeItem(message.author.id, id, qty);
+
+                const totalDurationSec = addedDuration;
                 const durationStr = (() => {
-                    let d = item.duration;
-                    if (isChef) d *= 2;
-                    const h = Math.floor(d / 3600);
-                    return h > 0 ? t('common.duration_hours', lang, { hours: h }) : t('common.duration_minutes', lang, { minutes: Math.floor(d / 60) });
+                    const h = Math.floor(totalDurationSec / 3600);
+                    const m = Math.floor((totalDurationSec % 3600) / 60);
+                    if (h > 0 && m > 0) return `${h}h ${m}m`;
+                    if (h > 0) return t('common.duration_hours', lang, { hours: h });
+                    return t('common.duration_minutes', lang, { minutes: m });
                 })();
 
                 const itemName = t(`items.${id}.name`, lang);
@@ -81,7 +90,6 @@ module.exports = {
             }
 
             const lines = [`${t('use.all_success', lang, { count: totalCount })}`, ...activated];
-            // Safe truncate if somehow too long
             let reply = lines.join('\n');
             if (reply.length > 1900) reply = reply.slice(0, 1900) + '…';
 
