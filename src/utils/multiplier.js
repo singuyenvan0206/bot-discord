@@ -68,10 +68,22 @@ function getTotalMultiplier(userId, type = 'income') {
     }
 
     const totalBonusMulti = itemMulti + levelMulti + jobMulti;
+
+    // 4. Marriage Bonus (Wedding Ring = +25%, Diamond Ring = +50% Income)
+    let marriageMulti = 0;
+    if (type === 'income') {
+        const marriage = db.getMarriage(userId);
+        if (marriage) {
+            if (marriage.ring_id === 702) marriageMulti = 0.50;
+            else if (marriage.ring_id === 701) marriageMulti = 0.25;
+        }
+    }
+
+    const finalBonusMulti = totalBonusMulti + marriageMulti;
     const maxCap = getDynamicCap(userId);
 
     // Hard cap at dynamic maxCap
-    return Math.min(totalBonusMulti, maxCap);
+    return Math.min(finalBonusMulti, maxCap);
 }
 
 /**
@@ -172,4 +184,25 @@ function removeActiveBuff(userId, itemId) {
     return false;
 }
 
-module.exports = { getUserMultiplier, getTotalMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem, calculateReward, removeActiveBuff };
+/**
+ * Thêm một buff mới cho người dùng.
+ */
+function addBuff(userId, itemId, durationSeconds) {
+    const user = db.getUser(userId);
+    let buffs = [];
+    try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+
+    const expiresAt = Math.floor(Date.now() / 1000) + durationSeconds;
+
+    // Nếu đã có buff này rồi thì gia hạn/ghi đè
+    const existingIndex = buffs.findIndex(b => b.itemId === itemId);
+    if (existingIndex !== -1) {
+        buffs[existingIndex].expiresAt = expiresAt;
+    } else {
+        buffs.push({ itemId, expiresAt });
+    }
+
+    db.updateUser(userId, { active_buffs: JSON.stringify(buffs) });
+}
+
+module.exports = { addBuff, getUserMultiplier, getTotalMultiplier, getTotalIncomeMultiplier, getXpMultiplier, isProtectedFromRob, hasActiveItem, calculateReward, removeActiveBuff };

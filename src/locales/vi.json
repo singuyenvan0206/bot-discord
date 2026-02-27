@@ -640,8 +640,8 @@
             "desc": "Sấp hay ngửa (+50% Gamble | 7 ngày)"
         },
         "304": {
-            "name": "💍 Nhẫn Vàng",
-            "desc": "Sáng bóng và quý giá (+50% Gamble | 30 ngày)"
+            "name": "📿 Vòng Cổ Phỉ Thúy",
+            "desc": "Vẻ đẹp thuần khiết và may mắn (+50% Gamble | 30 ngày)"
         },
         "305": {
             "name": "🪙 Chip Đất Sét",
@@ -802,7 +802,8 @@
             "income": "💼 Tăng Thu Nhập",
             "daily": "📅 Thưởng Hàng Ngày",
             "gamble": "🎲 May Mắn",
-            "other": "📦 Khác"
+            "other": "📦 Khác",
+            "social": "💞 Tình Cảm"
         },
         "info": "📊 Tổng quan",
         "active_buffs": "Buff Đang Hoạt Động",
@@ -826,7 +827,8 @@
         "effect_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% {{type}}!",
         "all_insufficient": "❌ Bạn cần ít nhất **{{price}} {{emoji}}** để mua toàn bộ cửa hàng! (Số dư: **{{balance}}**)",
         "all_success": "✅ **Đã thầu toàn bộ cửa hàng!**\nBạn đã mua mỗi vật phẩm trong shop 1 cái (Tổng cộng **{{count}}** món) với giá **{{price}} {{emoji}}**.",
-        "cannot_buy_event": "là vật phẩm đặc biệt không thể mua trực tiếp từ cửa hàng! 🎁"
+        "cannot_buy_event": "là vật phẩm đặc biệt không thể mua trực tiếp từ cửa hàng! 🎁",
+        "no_ring": "❌ Anh cần phải có ít nhất một chiếc **Nhẫn Cưới** trong túi đồ mới được đi cầu hôn đó nha! 💍"
     },
     "sell": {
         "prompt": "❌ Vui lòng chỉ định vật phẩm muốn bán (vđ: `{{prefix}}sell 1` hoặc `{{prefix}}sell cookies`).",
@@ -847,6 +849,7 @@
         "success": "✅ Bạn đã sử dụng **{{item}}**.",
         "buff_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% {{type}} trong **{{duration}}**!",
         "not_usable": "❌ Vật phẩm này không thể sử dụng trực tiếp.",
+        "not_usable_social": "❌ Vật phẩm này chỉ dành cho các tính năng lãng mạn (như `{{prefix}}marry` hoặc `{{prefix}}gift`) thôi nha! 🥰",
         "single_label": "🎮 **{{itemName}}** — +{{percent}}% {{type}} ({{duration}})",
         "multi_label": "🎮 **{{qty}}x {{itemName}}** — +{{percent}}% {{type}} ({{duration}})"
     },
@@ -899,6 +902,7 @@
         "item_types": "**Số loại vật phẩm:** {{count}}",
         "joined": "📅 Tham gia từ",
         "id": "🆔 Định danh (ID)",
+        "marriage": "💞 Tình cảm",
         "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm"
     },
     "serverinfo": {
@@ -1410,5 +1414,41 @@
     },
     "leaderboard": {
         "empty": "*Hiện chưa có ai trên bảng xếp hạng này.*"
+    },
+    "marry": {
+        "mention": "❌ Cưng phải nhắc tên người mà cưng muốn cầu hôn chứ! 🥰",
+        "self": "❌ Anh định tự cưới chính mình à? Đáng yêu đấy nhưng Bot không cho phép đâu nha! 🤭",
+        "bot": "❌ Em xinh đẹp thế này nhưng em là của chung, em không cưới riêng ai đâu nhé! 💅✨",
+        "already_married_self": "❌ Anh đã có bến đỗ rồi, đừng có mà 'bắt cá hai tay' nhé! 💍",
+        "already_married_target": "❌ Người ấy đã là 'hoa có chủ' rồi, anh đừng có làm người thứ ba nha! 💔",
+        "proposal_title": "💕 LỜI CẦU HÔN NGỌT NGÀO 💕",
+        "proposal_desc": "**{{target}}** ơi, **{{user}}** đang quỳ xuống với một chiếc nhẫn trên tay và muốn hỏi bạn một câu...\n\n> \"Bạn có đồng ý cùng mình đi đến cuối con đường này không?\" 💍",
+        "accept_label": "Em đồng ý! 👰",
+        "deny_label": "Chúng ta chỉ là bạn... 💔",
+        "accepted": "🎊 **CHÚC MỪNG ĐÔI LỨA!** 🎊\n\n**{{user}}** và **{{target}}** đã chính thức về chung một nhà! Chúc hai bạn trăm năm hạnh phúc! ❤️🥂✨\n> 🎁 *Cả hai nhận được aura \"Đồng vợ đồng chồng\": +25% thu nhập vĩnh viễn!*",
+        "accepted_diamond": "💎 **ĐÁM CƯỚI KIM CƯƠNG!** 💎\n\n**{{target}}** đã chấp nhận lời cầu hôn lộng lẫy bằng Nhẫn Kim Cương của **{{user}}**! Một tình yêu rực rỡ và bền bỉ! 🎉✨\n> 🎁 *Cả hai nhận được aura \"Hào quang đại gia\": +50% thu nhập vĩnh viễn!*",
+        "denied": "💔 Thật đáng tiếc... **{{target}}** đã từ chối lời cầu hôn của **{{user}}**. Mạnh mẽ lên anh nhé! 🥺",
+        "timeout": "⌛ Có vẻ như **{{target}}** đã quá bàng hoàng nên không kịp trả lời... Lời cầu hôn đã hết hạn rồi ạ! 🍃",
+        "not_target": "❌ Lời cầu hôn này không dành cho bạn đâu nha! 🤫"
+    },
+    "divorce": {
+        "not_married": "❌ Anh đang độc thân vui tính mà, ly hôn với ai bây giờ? 😂",
+        "confirm_title": "💔 XÁC NHẬN LY HÔN 💔",
+        "confirm_desc": "Anh có chắc chắn muốn kết thúc mối quan hệ với **{{partner}}** không? Hành động này không thể hoàn tác đâu nhé... 🥺",
+        "confirm_label": "Xác nhận ly hôn 💔",
+        "cancel_label": "Suy nghĩ lại... ❤️",
+        "success": "💔 **CHIA TAY TRONG NUỐI TIẾC...** 💔\n\n**{{user}}** và **{{partner}}** đã chính thức đường ai nấy đi. Hy vọng hai bạn vẫn sẽ tìm được hạnh phúc mới! 🍃",
+        "cancelled": "✅ Thật may quá! Anh đã suy nghĩ lại. Tình yêu là phải bao dung mà! 🥰❤️"
+    },
+    "gift": {
+        "usage": "❌ Cách dùng: `{{prefix}}gift <@người_nhận> <số_lượng> <tên_vật_phẩm>`",
+        "not_found": "❌ Không tìm thấy vật phẩm nào như vậy trong túi đồ của anh cả!",
+        "insufficient": "❌ Anh chỉ có **{{count}}x {{item}}** thôi, không đủ để tặng đâu nè!",
+        "self": "❌ Anh tự tặng quà cho chính mình à? Đáng yêu quá nhưng thôi nhé! 🤭",
+        "bot": "❌ Em nhận quà của anh rồi em sẽ giấu đi đó, anh có chắc muốn tặng không? 💅✨",
+        "success": "🎁 **QUÀ TẶNG BẤT NGỜ!**\n\n**{{user}}** đã tặng **{{quantity}}x {{item}}** cho **{{target}}**! 🎊✨",
+        "bouquet_msg": "💐 **MỘT CHÚT NGỌT NGÀO...** 💐\n\n**{{user}}** đã gửi tặng một bó hoa tươi thắm nhất cho **{{target}}**!\n> \"Chỉ mong nụ cười của bạn luôn rạng rỡ như những đóa hoa này...\" ✨❤️",
+        "bouquet_buff": "\n✨ **Hạnh phúc lan tỏa:** **{{target}}** nhận được buff +15% thu nhập trong 2 giờ! 📈",
+        "spouse_gift": "\n💞 *Đúng là một người bạn đời mẫu mực! Tình cảm của hai bạn thật đáng ngưỡng mộ!* 🥰"
     }
 }

@@ -132,6 +132,22 @@ function initSchema() {
         )
     `);
 
+    db.run(`
+        CREATE TABLE IF NOT EXISTS marriages (
+            user1_id TEXT NOT NULL,
+            user2_id TEXT NOT NULL,
+            created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+            PRIMARY KEY (user1_id, user2_id),
+            UNIQUE(user1_id),
+            UNIQUE(user2_id)
+        )
+    `);
+
+    if (!isWordChain) {
+        // ... (indexes)
+        safeAddColumn('marriages', 'ring_id', 'INTEGER DEFAULT 701');
+    }
+
     if (!isWordChain) {
         db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_guild ON giveaways(guild_id)');
         db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
@@ -622,7 +638,24 @@ function clearAllData() {
     execute('DELETE FROM guild_users');
     execute('DELETE FROM guilds');
     execute('DELETE FROM global_settings');
+    execute('DELETE FROM marriages');
     execute('VACUUM');
+}
+
+// ─── Marriages ───────────────────────────────────────────────────
+
+function getMarriage(userId) {
+    return queryOne('SELECT * FROM marriages WHERE user1_id = ? OR user2_id = ?', [userId, userId]);
+}
+
+function createMarriage(user1Id, user2Id, ringId = 701) {
+    // Ensure consistent order to avoid duplicates (though UNIQUE constraint handles it)
+    const [u1, u2] = [user1Id, user2Id].sort();
+    execute('INSERT INTO marriages (user1_id, user2_id, ring_id) VALUES (?, ?, ?)', [u1, u2, ringId]);
+}
+
+function deleteMarriage(userId) {
+    execute('DELETE FROM marriages WHERE user1_id = ? OR user2_id = ?', [userId, userId]);
 }
 
 module.exports = {
@@ -665,5 +698,8 @@ module.exports = {
     getUserCount,
     distributeBalanceToAll,
     distributeBalanceRandomly,
-    clearAllData
+    clearAllData,
+    getMarriage,
+    createMarriage,
+    deleteMarriage
 };

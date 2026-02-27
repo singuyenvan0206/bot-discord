@@ -40,6 +40,15 @@ module.exports = {
         const emptyBlocks = 10 - filledBlocks;
         const progressBar = '▮'.repeat(filledBlocks) + '▯'.repeat(emptyBlocks);
 
+        // Marriage Status
+        const marriage = db.getMarriage(user.id);
+        let marriageStatus = t('common.none', lang);
+        if (marriage) {
+            const partnerId = marriage.user1_id === user.id ? marriage.user2_id : marriage.user1_id;
+            const partnerUser = await message.client.users.fetch(partnerId).catch(() => null);
+            marriageStatus = partnerUser ? `💍 ${partnerUser.tag}` : `💍 ID: ${partnerId}`;
+        }
+
         const embed = new EmbedBuilder()
             .setAuthor({ name: t('profile.title', lang, { user: user.tag }), iconURL: user.displayAvatarURL({ dynamic: true }) })
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 512 }))
@@ -49,6 +58,7 @@ module.exports = {
                 { name: t('job.name_field', lang), value: dbUser.job ? t(`job.name_${dbUser.job}`, lang) : t('job.none', lang), inline: true },
                 { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
                 { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
+                { name: t('profile.marriage', lang), value: marriageStatus, inline: true },
                 { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length }), inline: true },
                 { name: t('profile.joined', lang), value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>`, inline: true },
                 { name: t('profile.id', lang), value: `\`${user.id}\``, inline: true }

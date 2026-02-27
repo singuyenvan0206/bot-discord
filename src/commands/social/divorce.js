@@ -1,0 +1,73 @@
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const db = require('../../database');
+const { t, getLanguage } = require('../../utils/i18n');
+const config = require('../../config');
+
+module.exports = {
+    name: 'divorce',
+    description: 'Divorce your partner',
+    async execute(message, args) {
+        const lang = getLanguage(message.author.id, message.guild?.id);
+        const marriage = db.getMarriage(message.author.id);
+
+        if (!marriage) {
+            return message.reply(t('divorce.not_married', lang));
+        }
+
+        const partnerId = marriage.user1_id === message.author.id ? marriage.user2_id : marriage.user1_id;
+        const partner = await message.client.users.fetch(partnerId).catch(() => ({ toString: () => 'Nửa kia' }));
+
+        const embed = new EmbedBuilder()
+            .setTitle(t('divorce.confirm_title', lang))
+            .setDescription(t('divorce.confirm_desc', lang, { partner: partner.toString() }))
+            .setColor(config.COLORS.ERROR || '#FF0000');
+
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId('confirm_divorce')
+                    .setLabel(t('divorce.confirm_label', lang))
+                    .setStyle(ButtonStyle.Danger),
+                new ButtonBuilder()
+                    .setCustomId('cancel_divorce')
+                    .setLabel(t('divorce.cancel_label', lang))
+                    .setStyle(ButtonStyle.Secondary)
+            );
+
+        const msg = await message.reply({
+            embeds: [embed],
+            components: [row]
+        });
+
+        const collector = msg.createMessageComponentCollector({
+            componentType: ComponentType.Button,
+            time: 30000
+        });
+
+        collector.on('collect', async i => {
+            if (i.user.id !== message.author.id) return;
+
+            if (i.customId === 'confirm_divorce') {
+                db.deleteMarriage(message.author.id);
+                await i.update({
+                    content: t('divorce.success', lang, { user: message.author.toString(), partner: partner.toString() }),
+                    embeds: [],
+                    components: []
+                });
+            } else {
+                await i.update({
+                    content: t('divorce.cancelled', lang),
+                    embeds: [],
+                    components: []
+                });
+            }
+            collector.stop();
+        });
+
+        collector.on('end', (collected, reason) => {
+            if (reason === 'time' && collected.size === 0) {
+                msg.edit({ components: [] }).catch(() => { });
+            }
+        });
+    }
+};

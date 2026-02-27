@@ -583,8 +583,8 @@
             "desc": "Heads or tails (+50% Gamble | 7 days)"
         },
         "304": {
-            "name": "💍 Gold Ring",
-            "desc": "Shiny and precious (+50% Gamble | 30 days)"
+            "name": "� Emerald Necklace",
+            "desc": "The beauty of purity and luck (+50% Gamble | 30 days)"
         },
         "305": {
             "name": "🪙 Clay Chips",
@@ -745,7 +745,8 @@
             "income": "💼 Income Boosts",
             "daily": "📅 Daily Boosts",
             "gamble": "🎲 Luck Boosts",
-            "other": "📦 Others"
+            "other": "📦 Others",
+            "social": "💞 Social"
         },
         "info": "📊 Summary",
         "active_buffs": "⚡ Active Buffs",
@@ -769,7 +770,8 @@
         "effect_activated": "\n✨ **Effect activated:** +{{percent}}% {{type}}!",
         "all_insufficient": "❌ You need at least **{{price}} {{emoji}}** to buy out the entire shop! (Balance: **{{balance}}**)",
         "all_success": "✅ **Bought out the entire shop!**\nYou purchased 1 of every item in the shop (Total **{{count}}** items) for **{{price}} {{emoji}}**.",
-        "cannot_buy_event": "is a special item and cannot be purchased directly from the shop! 🎁"
+        "cannot_buy_event": "is a special item and cannot be purchased directly from the shop! 🎁",
+        "no_ring": "❌ You need at least a **Wedding Ring** in your inventory to propose! 💍"
     },
     "sell": {
         "prompt": "❌ Please specify the item you want to sell (e.g., `{{prefix}}sell 1` or `{{prefix}}sell cookies`).",
@@ -790,6 +792,7 @@
         "success": "✅ You used **{{item}}**.",
         "buff_activated": "\n✨ **Buff activated:** +{{percent}}% {{type}} for **{{duration}}**!",
         "not_usable": "❌ This item cannot be used directly.",
+        "not_usable_social": "❌ This item is reserved for romantic features (like `{{prefix}}marry` or `{{prefix}}gift`)! 🥰",
         "single_label": "🎮 **{{itemName}}** — +{{percent}}% {{type}} ({{duration}})",
         "multi_label": "🎮 **{{qty}}x {{itemName}}** — +{{percent}}% {{type}} ({{duration}})"
     },
@@ -1408,5 +1411,41 @@
     },
     "leaderboard": {
         "empty": "*No one is on this leaderboard yet.*"
+    },
+    "marry": {
+        "mention": "❌ You must mention the person you want to propose to! 🥰",
+        "self": "❌ Thinking of marrying yourself? Cute, but the Bot won't allow that! 🤭",
+        "bot": "❌ I'm gorgeous, I know, but I belong to everyone! I don't do marriage! 💅✨",
+        "already_married_self": "❌ You're already married! Don't be a cheater! 💍",
+        "already_married_target": "❌ That person is already taken! Don't be the third wheel! 💔",
+        "proposal_title": "💕 A SWEET PROPOSAL 💕",
+        "proposal_desc": "**{{target}}**, **{{user}}** is on one knee with a ring in hand and wants to ask you a question...\n\n> \"Will you go to the end of the road with me?\" 💍",
+        "accept_label": "I do! 👰",
+        "deny_label": "Let's just be friends... 💔",
+        "accepted": "🎊 **CONGRATULATIONS!** 🎊\n\n**{{user}}** and **{{target}}** are now officially married! Wishing you a lifetime of happiness together! ❤️🥂✨\n> 🎁 *Both receive \"Perfect Match\": +25% permanent income bonus!*",
+        "accepted_diamond": "💎 **DIAMOND WEDDING!** 💎\n\n**{{target}}** accepted **{{user}}**'s magnificent Diamond Ring proposal! A love as bright and enduring as a diamond! 🎉✨\n> 🎁 *Both receive \"Rich Aura\": +50% permanent income bonus!*",
+        "denied": "💔 So sad... **{{target}}** rejected **{{user}}**'s proposal. Stay strong! 🥺",
+        "timeout": "⌛ It seems **{{target}}** was too shocked to answer... The proposal has expired! 🍃",
+        "not_target": "❌ This proposal is not for you! 🤫"
+    },
+    "divorce": {
+        "not_married": "❌ You're single and free! Who are you trying to divorce? 😂",
+        "confirm_title": "💔 CONFIRM DIVORCE 💔",
+        "confirm_desc": "Are you sure you want to end your relationship with **{{partner}}**? This cannot be undone... 🥺",
+        "confirm_label": "Confirm Divorce 💔",
+        "cancel_label": "Think again... ❤️",
+        "success": "💔 **A SAD BREAKUP...** 💔\n\n**{{user}}** and **{{partner}}** have officially gone their separate ways. Hope you both find happiness again! 🍃",
+        "cancelled": "✅ Phew! You thought it over. Love is all about forgiveness! 🥰❤️"
+    },
+    "gift": {
+        "usage": "❌ Usage: `{{prefix}}gift <@user> <amount> <item_name>`",
+        "not_found": "❌ I couldn't find that item in your inventory!",
+        "insufficient": "❌ You only have **{{count}}x {{item}}**, not enough to gift!",
+        "self": "❌ Gifting to yourself? Cute, but no! 🤭",
+        "bot": "❌ I'll take your gift and hide it, are you sure? 💅✨",
+        "success": "🎁 **SURPRISE GIFT!**\n\n**{{user}}** gave **{{quantity}}x {{item}}** to **{{target}}**! 🎊✨",
+        "bouquet_msg": "💐 **A LITTLE SWEETNESS...** 💐\n\n**{{user}}** sent a beautiful bouquet of flowers to **{{target}}**!\n> \"May your smile always be as bright as these flowers...\" ✨❤️",
+        "bouquet_buff": "\n✨ **Spreading Happiness:** **{{target}}** receives a +15% income buff for 2 hours! 📈",
+        "spouse_gift": "\n💞 *Such an ideal partner! Your love is truly admirable!* 🥰"
     }
 }

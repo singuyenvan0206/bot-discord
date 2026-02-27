@@ -44,7 +44,7 @@ module.exports = [
     { id: 301, name: 'Golden Dice', price: 8000, multiplier: 0.25, duration: 604800, type: 'gamble' },
     { id: 302, name: 'Marked Deck', price: 15000, multiplier: 0.40, duration: 604800, type: 'gamble', idealJob: 'criminal' },
     { id: 303, name: 'Lucky Coin', price: 20000, multiplier: 0.50, duration: 604800, type: 'gamble', idealJob: 'trader' },
-    { id: 304, name: 'Gold Ring', price: 100000, multiplier: 0.50, duration: 2592000, type: 'gamble' }, // CMD 6666
+    { id: 304, name: 'Emerald Necklace', price: 100000, multiplier: 0.50, duration: 2592000, type: 'gamble' }, // CMD 6666
     { id: 305, name: 'Clay Chips', price: 150000, multiplier: 0.70, duration: 2592000, type: 'gamble' },
     { id: 306, name: 'Stock Chart', price: 200000, multiplier: 1.00, duration: 2592000, type: 'gamble', idealJob: 'trader' },
     { id: 307, name: '4-Leaf Clover', price: 350000, multiplier: 1.50, duration: 2592000, type: 'gamble' },
@@ -87,4 +87,11 @@ module.exports = [
     { id: 602, name: "Poseidon's Favor", price: 0, multiplier: 1.00, duration: 7200, type: 'income', unbuyable: true },
     { id: 603, name: "Pearl's Radiance", price: 0, multiplier: 0.40, duration: 3600, type: 'income', unbuyable: true },
     { id: 604, name: "Kraken's Might", price: 0, multiplier: 0.60, duration: 5400, type: 'income', unbuyable: true },
+
+    // ==========================================
+    // GROUP 700 — social (marriage items)
+    // ==========================================
+    { id: 701, name: 'Wedding Ring', price: 50000, multiplier: 0.25, type: 'social', unusable: true },
+    { id: 702, name: 'Diamond Ring', price: 500000, multiplier: 0.50, type: 'social', unusable: true },
+    { id: 703, name: 'Wedding Bouquet', price: 10000, multiplier: 0.25, type: 'social', unusable: true },
 ];

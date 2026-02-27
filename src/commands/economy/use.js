@@ -129,6 +129,10 @@ module.exports = {
             return message.reply(`${t('use.success', lang, { item: itemName })}${t('use.buff_activated', lang, { percent: displayPercent, type: effectType, duration: durationStr })}`);
         }
 
+        if (item && (item.unusable || item.type === 'social')) {
+            return message.reply(t('use.not_usable_social', lang, { prefix: config.PREFIX }));
+        }
+
         return message.reply(t('use.not_usable', lang));
     }
 };
