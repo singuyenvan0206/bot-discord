@@ -117,16 +117,19 @@ module.exports = {
             let pool = CATCHES.filter(c => c.minLuck <= luck);
             return pool.map(c => {
                 let modWeight = c.weight;
-                if (c.value < 1000) {
-                    // Junk and small fish decrease aggressively as luck increases
-                    // At 40 luck, these are virtually eliminated (0.1% weight)
-                    modWeight *= Math.max(0.001, 1 - (luck / 40));
+
+                if (c.value < 5000) {
+                    // Suppress common fish at high luck
+                    modWeight *= Math.max(0.01, 1 - (luck / 50));
+                } else if (c.value < 20000) {
+                    // Mid-tier: very small boost
+                    const luckDiff = Math.max(0, luck - c.minLuck);
+                    modWeight *= 1 + (luckDiff * 0.005);
                 } else {
-                    // Rare items increase weight exponentially based on available luck
-                    const luckDiff = luck - c.minLuck;
-                    // Formula: weight * (1.15 ^ luckDiff)
-                    // Gives rare items a significant boost at high luck levels
-                    modWeight *= Math.pow(1.15, Math.max(0, luckDiff));
+                    // Rare items (>= 20000): cap drop rates to prevent hyperinflation
+                    modWeight *= 0.020; // Drastically reduce base drop chance
+                    const luckDiff = Math.max(0, luck - c.minLuck);
+                    modWeight *= 1 + (luckDiff * 0.05); // Give a 5% relative boost per point of luck above requirement
                 }
                 return { ...c, weight: modWeight };
             });
