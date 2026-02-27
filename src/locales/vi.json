@@ -1,9 +1,10 @@
 {
     "common": {
-        "error": "❌ Đã có lỗi xảy ra.",
+        "error": "Có lỗi xảy ra khi thực hiện lệnh này! ❌",
         "insufficient_funds": "❌ Bạn không đủ tiền! Số dư: **{{balance}}**",
         "invalid_amount": "❌ Số tiền không hợp lệ.",
-        "cooldown": "❌ Vui lòng đợi **{{time}}** nữa để sử dụng lại lệnh này!",
+        "cooldown": "Vui lòng đợi **{{time}}** để tiếp tục sử dụng lệnh này! ⏱️",
+        "bot_shut_down": "⚠️ **Hệ thống đang tạm nghỉ!** Bot hiện đang được tắt để bảo trì hoặc theo lệnh của Owner. Vui lòng quay lại sau nhé! 🔌💤",
         "success": "✅ Thành công!",
         "max_bet_error": "❌ Mức cược tối đa là **{{limit}}** coins!",
         "mention_opponent": "❌ Vui lòng nhắc tên (mention) đối thủ để chơi cùng!",

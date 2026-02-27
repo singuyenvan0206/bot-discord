@@ -1,9 +1,10 @@
 {
     "common": {
-        "error": "❌ An error occurred.",
+        "error": "An error occurred while executing this command! ❌",
         "insufficient_funds": "❌ You don't have enough money! Balance: **{{balance}}**",
         "invalid_amount": "❌ Invalid amount.",
-        "cooldown": "❌ Please wait **{{time}}** before using this command again!",
+        "cooldown": "Please wait **{{time}}** before using this command again! ⏱️",
+        "bot_shut_down": "⚠️ **System is offline!** The bot is currently shut down for maintenance or by Owner command. Please come back later! 🔌💤",
         "success": "✅ Success!",
         "max_bet_error": "❌ The maximum bet is **{{limit}}** coins!",
         "mention_opponent": "❌ Please mention an opponent to play with!",

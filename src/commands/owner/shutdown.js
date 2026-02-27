@@ -21,6 +21,9 @@ module.exports = {
 
         await message.reply({ embeds: [embed] });
 
+        // Persistently mark as stopped so restarts won't re-enable commands
+        db.setGlobalSetting('bot_is_stopped', 'true');
+
         console.log(`[SHUTDOWN] Initiated by owner (${message.author.tag}) at ${new Date().toISOString()}`);
 
         // Let the message send before exiting

@@ -59,6 +59,13 @@ module.exports = {
         const commandName = (args.shift() || '').toLowerCase();
         if (!commandName) return;
 
+        // Check if bot is "shut down" (persisted in DB)
+        const isStopped = db.getGlobalSetting('bot_is_stopped') === 'true';
+        if (isStopped && commandName !== 'startup' && commandName !== 'boot') {
+            const lang = getLanguage(message.author.id, message.guild?.id);
+            return message.reply(t('common.bot_shut_down', lang)).catch(() => { });
+        }
+
         // const { client } = message;
         const command = client.commands.get(commandName) ||
             client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
