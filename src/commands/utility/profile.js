@@ -46,7 +46,10 @@ module.exports = {
         if (marriage) {
             const partnerId = marriage.user1_id === user.id ? marriage.user2_id : marriage.user1_id;
             const partnerUser = await message.client.users.fetch(partnerId).catch(() => null);
-            marriageStatus = partnerUser ? `💍 ${partnerUser.tag}` : `💍 ID: ${partnerId}`;
+            const partnerName = partnerUser ? partnerUser.tag : `ID: ${partnerId}`;
+
+            const bonus = marriage.ring_id === 702 ? 50 : 25;
+            marriageStatus = `💍 **${partnerName}**\n↳ ${t('profile.marriage_bonus', lang, { percent: bonus })}`;
         }
 
         const embed = new EmbedBuilder()

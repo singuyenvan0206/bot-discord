@@ -936,6 +936,7 @@
         "item_types": "**Item Types:** {{count}}",
         "joined": "📅 Joined on",
         "id": "🆔 User ID",
+        "marriage_bonus": "🎁 Buff: +{{percent}}% income",
         "footer": "Type {{prefix}}inventory to see item details"
     },
     "wordchain": {
@@ -1206,6 +1207,10 @@
                 "label": "Giveaway Events",
                 "description": "Organize and manage Giveaways"
             },
+            "social": {
+                "label": "Social & Marriage",
+                "description": "Marry, divorce, and send romantic gifts"
+            },
             "owner": {
                 "label": "Owner Only",
                 "description": "Bot management and administration"
@@ -1246,6 +1251,9 @@
             "iteminfo": "View detailed stats and job synergy of an item.",
             "transfer": "Send coins securely to another user.",
             "use": "Activate usable items from your inventory.",
+            "marry": "Propose to someone you love with a ring.",
+            "divorce": "Divorce your partner and end the relationship.",
+            "gift": "Give items to others (buffs when gifting flowers).",
             "rank": "View the EXP and level leaderboard.",
             "lvl": "Quickly check your level and experience.",
             "profile": "View your own or others' stats and progress.",
@@ -1287,6 +1295,9 @@
             "rps": "🌟 **Description:** Rock, Paper, Scissors! A classic game of prediction available in Solo or PvP mode.\n\n🕹️ **How to Play:**\n- Choose your weapon: 🪨 Rock, 📄 Paper, or ✂️ Scissors.\n- **Solo:** Play against the bot for a bet.\n- **PvP:** Challenge another user to a high-stakes duel.\n\n⚖️ **Counters:** Rock beats Scissors, Scissors beats Paper, Paper beats Rock.",
             "tictactoe": "🌟 **Description:** The timeless 3x3 strategy game. Get three in a row to win.\n\n🕹️ **How to Play:**\n1. Challenge another user: `$ttt @user [bet]`.\n2. Take turns placing your mark (❌ or ⭕).\n\n💰 **Outcome:** Winner takes the pot. Refund on draw.",
             "fish": "🌟 **Description:** Relax and cast your line! Catch a variety of fish from common sardines to legendary sea monsters.\n\n🎣 **Gear Needed:**\n- **Rod:** Get a Bamboo, Fiberglass, or Carbon Fiber rod from the `$shop`.\n- **Bait:** Buy worms, crickets, or squid to attract different fish species.\n\n🕹️ **How to Play:**\n- Just type `$fish`. The bot automatically selects your highest-tier equipment.\n- Every catch uses 1 bait and has a small cooldown.\n\n✨ **Luck Factor:** Better equipment grants higher 'Luck', which drastically improves the chances of catching rare, high-value fish.",
+            "marry": "🌟 **Description:** Get married to someone you love to build a home and wealth together.\n\n🕹️ **How to Play:**\n1. Propose using the `$marry @user` command.\n2. You must have a **Wedding Ring** or **Diamond Ring** in your inventory.\n3. If they accept, you'll be officially married.\n\n💰 **Rewards (Permanent Buffs):**\n- **Standard Wedding Ring:** +25% income permanent bonus for both.\n- **Diamond Ring:** +50% income permanent bonus for both.\n\n⚠️ **Note:** These buffs will be lost immediately upon divorce.",
+            "divorce": "🌟 **Description:** End your current marriage relationship.\n\n🕹️ **Usage:** `$divorce`\n\n⚠️ **Consequences:**\n- The relationship status is cleared from your profile.\n- Both partners will **immediately lose all income buffs** from this marriage.\n- This action cannot be undone!",
+            "gift": "🌟 **Description:** Send items from your inventory to other players.\n\n🕹️ **Usage:** `$gift @user <amount> <item_name>`\n\n✨ **Romantic Combo:**\n- Gifting a **Wedding Bouquet** to your spouse triggers a **+25% income buff** for them for 2 hours.\n- A small gesture that brings great rewards! 💖",
             "work": "🌟 **Description:** Build your career and earn a steady income.\n\n🕹️ **Mechanics:**\n- Work every hour to gain **XP** and **Coins**.\n- High-tier jobs (Doctor, CEO...) require a higher Level to unlock.\n\n💼 **Job Bonuses:**\n- **Police**: 15% chance for **Overtime pay** (+150 flat bonus).\n- **Soldier**: Guaranteed **Mission Leader** bonus (+150 coins).\n- **Programmer**: Professional focus grants a flat **+200 bonus** income.\n\n💰 **Daily Streak:** Working consistently increases your streak, providing daily bonus coins.",
             "crime": "🌟 **Description:** Execute illegal heists for fast cash.\n\n⚠️ **Risks:**\n- Success rate is only 40%.\n- If you fail, you'll be fined **10% of your total balance**.\n\n💰 **Rewards:** Massive payouts and much more XP than `$work`.",
             "beg": "🌟 **Description:** Try your luck by begging strangers for money.\n\n💰 **Rewards:** Very small payouts, but low risk.",
@@ -1431,7 +1442,7 @@
     "divorce": {
         "not_married": "❌ You're single and free! Who are you trying to divorce? 😂",
         "confirm_title": "💔 CONFIRM DIVORCE 💔",
-        "confirm_desc": "Are you sure you want to end your relationship with **{{partner}}**? This cannot be undone... 🥺",
+        "confirm_desc": "Are you sure you want to end your relationship with **{{partner}}**? This cannot be undone and you will lose your **+{{percent}}%** income buff... 🥺",
         "confirm_label": "Confirm Divorce 💔",
         "cancel_label": "Think again... ❤️",
         "success": "💔 **A SAD BREAKUP...** 💔\n\n**{{user}}** and **{{partner}}** have officially gone their separate ways. Hope you both find happiness again! 🍃",
@@ -1445,7 +1456,16 @@
         "bot": "❌ I'll take your gift and hide it, are you sure? 💅✨",
         "success": "🎁 **SURPRISE GIFT!**\n\n**{{user}}** gave **{{quantity}}x {{item}}** to **{{target}}**! 🎊✨",
         "bouquet_msg": "💐 **A LITTLE SWEETNESS...** 💐\n\n**{{user}}** sent a beautiful bouquet of flowers to **{{target}}**!\n> \"May your smile always be as bright as these flowers...\" ✨❤️",
-        "bouquet_buff": "\n✨ **Spreading Happiness:** **{{target}}** receives a +15% income buff for 2 hours! 📈",
+        "bouquet_buff": "\n✨ **Spreading Happiness:** **{{target}}** receives a +25% income buff for 2 hours! 📈",
         "spouse_gift": "\n💞 *Such an ideal partner! Your love is truly admirable!* 🥰"
+    },
+    "marriage": {
+        "title": "📜 MARRIAGE CERTIFICATE 📜",
+        "partner": "👤 Spouse:",
+        "anniversary": "🗓️ Anniversary:",
+        "ring": "💍 Ring Type:",
+        "bonus": "📈 Income Bonus:",
+        "no_marriage": "❌ You are currently single! No certificates to show. 😂",
+        "footer": "Wishing you both a lifetime of happiness! ❤️✨"
     }
 }

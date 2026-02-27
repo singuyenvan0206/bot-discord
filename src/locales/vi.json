@@ -903,6 +903,7 @@
         "joined": "📅 Tham gia từ",
         "id": "🆔 Định danh (ID)",
         "marriage": "💞 Tình cảm",
+        "marriage_bonus": "🎁 Buff: +{{percent}}% thu nhập",
         "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm"
     },
     "serverinfo": {
@@ -1208,6 +1209,10 @@
                 "label": "Sự kiện Quà tặng",
                 "description": "Tổ chức và quản lý Giveaway"
             },
+            "social": {
+                "label": "Hôn nhân & Tình cảm",
+                "description": "Kết hôn, ly hôn và tặng quà lãng mạn"
+            },
             "owner": {
                 "label": "Đặc quyền Owner",
                 "description": "Quản lý và điều hành hệ thống Bot"
@@ -1248,6 +1253,9 @@
             "iteminfo": "Xem thông tin chi tiết vật phẩm.",
             "transfer": "Chuyển tiền cho người chơi khác.",
             "use": "Sử dụng vật phẩm trong kho đồ.",
+            "marry": "Cầu hôn người bạn thương bằng nhẫn.",
+            "divorce": "Ly hôn và chấm dứt mối quan hệ.",
+            "gift": "Tặng quà cho người khác (có buff khi tặng hoa).",
             "rank": "Bảng xếp hạng cấp độ và kinh nghiệm.",
             "lvl": "Xem nhanh cấp độ và kinh nghiệm hiện tại.",
             "profile": "Xem hồ sơ và chỉ số cá nhân.",
@@ -1289,6 +1297,9 @@
             "rps": "🌟 **Mô tả:** Kéo Búa Bao! Trò chơi dự đoán kinh điển có chế độ Đấu với Bot hoặc PvP.\n\n🕹️ **Cách chơi:**\n- Chọn vũ khí của bạn: 🪨 Búa, 📄 Bao, hoặc ✂️ Kéo.\n- **Solo:** Chơi với bot để ăn tiền cược.\n- **PvP:** Thách đấu người dùng khác một trận đấu sinh tử.\n\n⚖️ **Khắc chế:** Búa thắng Kéo, Kéo thắng Bao, Bao thắng Búa.",
             "tictactoe": "🌟 **Mô tả:** Trò chơi cờ ca-rô 3x3 chiến thuật. Xếp 3 dấu liên tiếp để thắng.\n\n🕹️ **Cách chơi:**\n1. Thách đấu người khác: `$ttt @user [tiền cược]`.\n2. Thay phiên nhau đặt dấu (❌ hoặc ⭕).\n\n💰 **Kết quả:** Người thắng ăn toàn bộ tiền cược. Hoàn tiền nếu hòa.",
             "fish": "🌟 **Mô tả:** Thư giãn và thả câu! Đánh bắt từ những chú cá măng bé nhỏ đến những quái vật biển huyền thoại.\n\n🎣 **Trang bị:**\n- **Cần câu:** Mua cần Tre, Sợi thủy tinh hoặc Carbon trong `$shop`.\n- **Mồi:** Mua giun, dế hoặc mực để thu hút các loại cá khác nhau.\n\n🕹️ **Cách chơi:**\n- Chỉ cần dùng lệnh `$fish`. Bot tự chọn trang bị xịn nhất bạn có.\n- Mỗi lần câu tốn 1 mồi và có thời gian chờ ngắn.\n\n✨ **Yếu tố may mắn:** Trang bị càng xịn, chỉ số 'May mắn' càng cao, giúp bạn dễ bắt được cá hiếm (Cá mập, Kraken) với giá cực cao!",
+            "marry": "🌟 **Mô tả:** Kết hôn với người bạn thương để cùng nhau xây dựng tổ ấm.\n\n🕹️ **Cách chơi:**\n1. Cầu hôn bằng lệnh `$marry @user`.\n2. Bạn cần có **Nhẫn Cưới** hoặc **Nhẫn Kim Cương** trong kho đồ.\n3. Nếu đối thủ đồng ý, hai bạn sẽ chính thức kết hôn.\n\n💰 **Phần thưởng (Buff vĩnh viễn):**\n- **Nhẫn Cưới Thường:** +25% thu nhập cho cả hai.\n- **Nhẫn Kim Cương:** +50% thu nhập cho cả hai.\n\n⚠️ **Lưu ý:** Buff này sẽ biến mất nếu hai bạn ly hôn.",
+            "divorce": "🌟 **Mô tả:** Chấm dứt mối quan hệ hôn nhân hiện tại.\n\n🕹️ **Cách dùng:** `$divorce`\n\n⚠️ **Hệ quả:**\n- Mối quan hệ sẽ bị xóa khỏi hồ sơ.\n- Cả hai sẽ **mất toàn bộ buff thu nhập** từ cuộc hôn nhân này ngay lập tức.\n- Hành động này không thể hoàn tác, hãy suy nghĩ kỹ nhé!",
+            "gift": "🌟 **Mô tả:** Gửi tặng vật phẩm từ kho đồ của bạn cho người chơi khác.\n\n🕹️ **Cách dùng:** `$gift @user <số_lượng> <tên_vật_phẩm>`\n\n✨ **Combo lãng mạn:**\n- Tặng **Bó Hoa Cưới** cho vợ/chồng sẽ kích hoạt buff **+25% thu nhập** cho họ trong 2 giờ.\n- Một hành động nhỏ nhưng mang lại niềm vui lớn (và cả tiền bạc nữa)! 💖",
             "work": "🌟 **Mô tả:** Xây dựng sự nghiệp và tạo thu nhập!\n\n🕹️ **Cơ chế:**\n- Làm việc mỗi giờ để nhận **XP** và **Coins**.\n- Cấp độ càng cao, bạn càng nhận được nhiều tiền thưởng mỗi lần kết thúc công việc.\n- Các công việc cao cấp (Bác sĩ, CEO...) yêu cầu Cấp độ cao hơn để có thể thực thi.\n\n💰 **Chuỗi ngày làm việc:** Làm việc đều đặn mỗi ngày để tăng streak, nhận thưởng bonus hàng ngày.",
             "crime": "🌟 **Mô tả:** Thực hiện các phi vụ bất hợp pháp để kiếm tiền nhanh.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công chỉ 40%.\n- Nếu thất bại, bạn sẽ bị phạt **10% tổng số tiền** đang có.\n\n💰 **Phần thưởng:** Tiền thưởng cực lớn và nhiều XP hơn lệnh `$work`.",
             "beg": "🌟 **Mô tả:** Thử vận may bằng cách đi xin tiền người qua đường.\n\n💰 **Phần thưởng:** Tiền thưởng cực nhỏ, nhưng ít rủi ro.",
@@ -1434,7 +1445,7 @@
     "divorce": {
         "not_married": "❌ Anh đang độc thân vui tính mà, ly hôn với ai bây giờ? 😂",
         "confirm_title": "💔 XÁC NHẬN LY HÔN 💔",
-        "confirm_desc": "Anh có chắc chắn muốn kết thúc mối quan hệ với **{{partner}}** không? Hành động này không thể hoàn tác đâu nhé... 🥺",
+        "confirm_desc": "Anh có chắc chắn muốn kết thúc mối quan hệ với **{{partner}}** không? Hành động này không thể hoàn tác và anh sẽ mất buff **+{{percent}}%** thu nhập đó nhé... 🥺",
         "confirm_label": "Xác nhận ly hôn 💔",
         "cancel_label": "Suy nghĩ lại... ❤️",
         "success": "💔 **CHIA TAY TRONG NUỐI TIẾC...** 💔\n\n**{{user}}** và **{{partner}}** đã chính thức đường ai nấy đi. Hy vọng hai bạn vẫn sẽ tìm được hạnh phúc mới! 🍃",
@@ -1448,7 +1459,16 @@
         "bot": "❌ Em nhận quà của anh rồi em sẽ giấu đi đó, anh có chắc muốn tặng không? 💅✨",
         "success": "🎁 **QUÀ TẶNG BẤT NGỜ!**\n\n**{{user}}** đã tặng **{{quantity}}x {{item}}** cho **{{target}}**! 🎊✨",
         "bouquet_msg": "💐 **MỘT CHÚT NGỌT NGÀO...** 💐\n\n**{{user}}** đã gửi tặng một bó hoa tươi thắm nhất cho **{{target}}**!\n> \"Chỉ mong nụ cười của bạn luôn rạng rỡ như những đóa hoa này...\" ✨❤️",
-        "bouquet_buff": "\n✨ **Hạnh phúc lan tỏa:** **{{target}}** nhận được buff +15% thu nhập trong 2 giờ! 📈",
+        "bouquet_buff": "\n✨ **Hạnh phúc lan tỏa:** **{{target}}** nhận được buff +25% thu nhập trong 2 giờ! 📈",
         "spouse_gift": "\n💞 *Đúng là một người bạn đời mẫu mực! Tình cảm của hai bạn thật đáng ngưỡng mộ!* 🥰"
+    },
+    "marriage": {
+        "title": "📜 GIẤY CHỨNG NHẬN KẾT HÔN 📜",
+        "partner": "👤 Bạn đời:",
+        "anniversary": "🗓️ Ngày kỷ niệm:",
+        "ring": "💍 Loại nhẫn:",
+        "bonus": "📈 Buff thu nhập:",
+        "no_marriage": "❌ Cưng vẫn đang 'độc thân vui tính' mà, có giấy tờ gì đâu! 😂",
+        "footer": "Chúc hai bạn trăm năm hạnh phúc! ❤️✨"
     }
 }

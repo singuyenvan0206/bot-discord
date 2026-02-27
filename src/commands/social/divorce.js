@@ -17,9 +17,10 @@ module.exports = {
         const partnerId = marriage.user1_id === message.author.id ? marriage.user2_id : marriage.user1_id;
         const partner = await message.client.users.fetch(partnerId).catch(() => ({ toString: () => 'Nửa kia' }));
 
+        const bonus = marriage.ring_id === 702 ? 50 : 25;
         const embed = new EmbedBuilder()
             .setTitle(t('divorce.confirm_title', lang))
-            .setDescription(t('divorce.confirm_desc', lang, { partner: partner.toString() }))
+            .setDescription(t('divorce.confirm_desc', lang, { partner: partner.toString(), percent: bonus }))
             .setColor(config.COLORS.ERROR || '#FF0000');
 
         const row = new ActionRowBuilder()

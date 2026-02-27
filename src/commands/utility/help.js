@@ -20,6 +20,7 @@ module.exports = {
         const categories = {
             fun: { label: t('help.categories.fun.label', lang), description: t('help.categories.fun.description', lang), emoji: '🎮', commands: [] },
             economy: { label: t('help.categories.economy.label', lang), description: t('help.categories.economy.description', lang), emoji: '💰', commands: [] },
+            social: { label: t('help.categories.social.label', lang), description: t('help.categories.social.description', lang), emoji: '💍', commands: [] },
             utility: { label: t('help.categories.utility.label', lang), description: t('help.categories.utility.description', lang), emoji: '🔧', commands: [] },
             giveaway: { label: t('help.categories.giveaway.label', lang), description: t('help.categories.giveaway.description', lang), emoji: '🎉', commands: [] }
         };
