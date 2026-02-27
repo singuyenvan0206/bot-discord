@@ -510,10 +510,10 @@ module.exports = {
             let totalCap = 250; // Default fallback for footer if multiple winners
 
             winners.forEach(w => {
-                const { total: totalPrize, bonus: bonusAmount, cap } = calculateReward(prizePerWinner, w.id, 'gamble');
+                const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = calculateReward(prizePerWinner, w.id, 'gamble');
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
-                totalCap = cap; // Use the last winner's cap (usually same for all)
+                totalCap = winPercent; // Using the percent value
 
                 // Grant Win XP
                 if (!w.isBot) {
@@ -534,7 +534,7 @@ module.exports = {
             const winnerNames = winners.map(w => w.name).join(', ');
             let footerText = t('poker.pot', lang, { amount: (pot + totalBonusGiven).toLocaleString(), emoji: config.EMOJIS.COIN });
             if (totalBonusGiven > 0) {
-                footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString(), cap: totalCap });
+                footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString(), percent: totalCap });
             }
 
             const embed = new EmbedBuilder()

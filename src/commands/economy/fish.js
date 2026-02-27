@@ -32,13 +32,13 @@ const BAITS = [
 
 // Fish Table
 const CATCHES = [
-    { key: 'old_boot', emoji: '👢', value: 0, weight: 50, minLuck: 0 },
-    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 50, minLuck: 0 },
-    { key: 'seaweed', emoji: '🌿', value: 5, weight: 100, minLuck: 0 },
-    { key: 'tilapia', emoji: '🐟', value: 30, weight: 130, minLuck: 0 },
+    { key: 'old_boot', emoji: '👢', value: 0, weight: 30, minLuck: 0 },
+    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 30, minLuck: 0 },
+    { key: 'seaweed', emoji: '🌿', value: 5, weight: 80, minLuck: 0 },
+    { key: 'tilapia', emoji: '🐟', value: 30, weight: 100, minLuck: 0 },
     { key: 'sardine', emoji: '🐟', value: 50, weight: 100, minLuck: 0 },
-    { key: 'carp', emoji: '🐟', value: 80, weight: 120, minLuck: 0 },
-    { key: 'brook_trout', emoji: '🐟', value: 120, weight: 150, minLuck: 0 },
+    { key: 'carp', emoji: '🐟', value: 80, weight: 100, minLuck: 0 },
+    { key: 'brook_trout', emoji: '🐟', value: 120, weight: 100, minLuck: 0 },
     { key: 'archerfish', emoji: '🐟', value: 300, weight: 110, minLuck: 1.0 },
     { key: 'betta', emoji: '🐠', value: 450, weight: 100, minLuck: 3.0 },
     { key: 'bass', emoji: '🐟', value: 1000, weight: 150, minLuck: 2.0 },
@@ -49,20 +49,20 @@ const CATCHES = [
     { key: 'stingray', emoji: '🐡', value: 7500, weight: 160, minLuck: 10.0 },
     { key: 'sunfish', emoji: '☀️', value: 9000, weight: 150, minLuck: 11.0 },
     { key: 'tuna', emoji: '🐟', value: 12000, weight: 150, minLuck: 12.0 },
-    { key: 'swordfish', emoji: '🗡️', value: 10000, weight: 90, minLuck: 15.0 },
-    { key: 'sturgeon', emoji: '🐟', value: 12000, weight: 85, minLuck: 16.0 },
-    { key: 'manta_ray', emoji: '🐋', value: 10000, weight: 80, minLuck: 18.0 },
-    { key: 'shark', emoji: '🦈', value: 12000, weight: 70, minLuck: 20.0 },
-    { key: 'alligator_gar', emoji: '🐊', value: 15000, weight: 65, minLuck: 21.0 },
-    { key: 'whale', emoji: '🐋', value: 18000, weight: 60, minLuck: 22.0 },
-    { key: 'anglerfish', emoji: '🏮', value: 22000, weight: 50, minLuck: 25.0 },
-    { key: 'treasure_chest', emoji: '💰', value: 35000, weight: 40, minLuck: 28.0 },
+    { key: 'swordfish', emoji: '🗡️', value: 10000, weight: 130, minLuck: 15.0 },
+    { key: 'sturgeon', emoji: '🐟', value: 12000, weight: 130, minLuck: 16.0 },
+    { key: 'manta_ray', emoji: '🐋', value: 10000, weight: 120, minLuck: 18.0 },
+    { key: 'shark', emoji: '🦈', value: 12000, weight: 110, minLuck: 20.0 },
+    { key: 'alligator_gar', emoji: '🐊', value: 15000, weight: 100, minLuck: 21.0 },
+    { key: 'whale', emoji: '🐋', value: 18000, weight: 90, minLuck: 22.0 },
+    { key: 'anglerfish', emoji: '🏮', value: 22000, weight: 80, minLuck: 25.0 },
+    { key: 'treasure_chest', emoji: '💰', value: 35000, weight: 60, minLuck: 28.0 },
     { key: 'mythical_pearl', emoji: '🔮', value: 80000, weight: 100, minLuck: 32.0 },
-    { key: 'kraken', emoji: '🐙', value: 160000, weight: 120, minLuck: 35.0 },
-    { key: 'megalodon', emoji: '🦈', value: 350000, weight: 150, minLuck: 38.0 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 500000, weight: 190, minLuck: 40.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 650000, weight: 200, minLuck: 42.0 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 1000000, weight: 300, minLuck: 45.0 }
+    { key: 'kraken', emoji: '🐙', value: 160000, weight: 80, minLuck: 35.0 },
+    { key: 'megalodon', emoji: '🦈', value: 350000, weight: 120, minLuck: 38.0 },
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 500000, weight: 150, minLuck: 40.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 650000, weight: 180, minLuck: 42.0 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 1000000, weight: 150, minLuck: 45.0 }
 ];
 
 module.exports = {
@@ -117,15 +117,16 @@ module.exports = {
             let pool = CATCHES.filter(c => c.minLuck <= luck);
             return pool.map(c => {
                 let modWeight = c.weight;
-                if (c.value < 100) {
-                    // Junk and small fish decrease as luck increases
-                    // At 50 luck, these reach minimum 5% of their base weight
-                    modWeight *= Math.max(0.05, 1 - (luck / 50));
+                if (c.value < 1000) {
+                    // Junk and small fish decrease aggressively as luck increases
+                    // At 40 luck, these are virtually eliminated (0.1% weight)
+                    modWeight *= Math.max(0.001, 1 - (luck / 40));
                 } else {
-                    // Rare items increase weight based on how much luck exceeds their minimum
-                    // Using Power 1.2 to give a nice curve for higher luck levels
+                    // Rare items increase weight exponentially based on available luck
                     const luckDiff = luck - c.minLuck;
-                    modWeight *= Math.pow(Math.max(1, luckDiff + 1), 1.2);
+                    // Formula: weight * (1.15 ^ luckDiff)
+                    // Gives rare items a significant boost at high luck levels
+                    modWeight *= Math.pow(1.15, Math.max(0, luckDiff));
                 }
                 return { ...c, weight: modWeight };
             });

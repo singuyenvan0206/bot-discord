@@ -106,8 +106,7 @@ function getXpMultiplier(userId) {
     let multi = 1.0;
     if (user.job === 'teacher') multi += 0.5;
     if (user.job === 'teacher' && hasActiveItem(userId, 208)) multi += 1.0;
-    if (hasActiveItem(userId, 502)) multi += 1.0;
-    if (hasActiveItem(userId, 504)) multi += 1.0;
+    if (hasActiveItem(userId, 502)) multi += 1.0; // XP Boost Potion
     return Math.min(multi, 5.0);
 }
 

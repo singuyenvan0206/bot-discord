@@ -23,24 +23,24 @@ module.exports = {
             return message.reply(t('daily.cooldown', lang, { hours, minutes }));
         }
 
-        let { total, bonus: bonusAmount, cap } = calculateReward(config.ECONOMY.DAILY_REWARD, message.author.id);
+        let { total, bonus: bonusAmount, percent } = calculateReward(config.ECONOMY.DAILY_REWARD, message.author.id);
 
-        // Chef Interaction: Michelin Star (5% chance — daily ×3)
+        // Chef Interaction: Michelin Star (10% chance — daily ×3)
         let eventMsg = '';
-        if (user.job === 'chef' && Math.random() < 0.5) {
+        if (user.job === 'chef' && Math.random() < 0.10) {
             total = Math.floor(total * 3);
             eventMsg = t('daily_events.michelin_star', lang);
         }
 
-        // Doctor Interaction: Medical Trial (8% chance +100-300 coins)
-        if (user.job === 'doctor' && Math.random() < 0.30) {
+        // Doctor Interaction: Medical Trial (15% chance +100-300 coins)
+        if (user.job === 'doctor' && Math.random() < 0.15) {
             const grant = Math.floor(Math.random() * 201) + 100;
             total += grant;
             eventMsg += t('daily_events.medical_trial', lang, { amount: grant });
         }
 
-        // Streamer Interaction: Subathon (10% chance +25% bonus)
-        if (user.job === 'streamer' && Math.random() < 0.5) {
+        // Streamer Interaction: Subathon (20% chance +2x bonus)
+        if (user.job === 'streamer' && Math.random() < 0.20) {
             const subBonus = Math.floor(total * 2);
             total += subBonus;
             eventMsg += t('daily_events.subathon', lang, { amount: subBonus });
@@ -53,7 +53,7 @@ module.exports = {
 
         let msg = t('daily.success', lang, { amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
         }
         if (eventMsg) msg += eventMsg;
 

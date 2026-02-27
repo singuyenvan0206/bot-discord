@@ -68,15 +68,16 @@ module.exports = {
                     inline: true
                 });
 
-                // Global Multipliers (Capped 250%)
-                const { getTotalMultiplier, getXpMultiplier } = require('../../utils/multiplier');
+                // Global Multipliers (Capped 300% or 600%)
+                const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
                 const incomeBonus = Math.round(getTotalMultiplier(target.id, 'income') * 100);
                 const gambleBonus = Math.round(getTotalMultiplier(target.id, 'gamble') * 100);
                 const xpBonus = Math.round((getXpMultiplier(target.id) - 1.0) * 100);
+                const maxCapPercent = Math.round(getDynamicCap(target.id) * 100);
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),
-                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / 250%\n**${t('inventory.gamble_bonus', lang)}:** +${gambleBonus}% / 250%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 250%`,
+                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / ${maxCapPercent}%\n**${t('inventory.gamble_bonus', lang)}:** +${gambleBonus}% / ${maxCapPercent}%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 400%`,
                     inline: true
                 });
 
@@ -96,8 +97,8 @@ module.exports = {
                         const type = item.type;
                         let multiplier = item.multiplier;
                         // Special cases
-                        if (item.id === 501) multiplier = 0.5; // XP Boost Potion: +50% XP
-                        if (item.id === 502) multiplier = 1.0; // Shield of Protection: 100%
+                        if (item.id === 502) multiplier = 1.0; // XP Boost Potion: +100% XP
+                        if (item.id === 501) multiplier = 1.0; // Shield of Protection: 100% Protection
 
                         if (!typeMap[type]) {
                             typeMap[type] = { total: 0, earliestExpiry: b.expiresAt, count: 0 };

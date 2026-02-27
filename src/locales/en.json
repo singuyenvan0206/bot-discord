@@ -958,6 +958,9 @@
         "item_types": "**Item Types:** {{count}}",
         "joined": "📅 Joined on",
         "id": "🆔 User ID",
+        "multipliers": "⚡ Multipliers",
+        "marriage": "💞 Relationship",
+        "cap": "Max Cap",
         "marriage_bonus": "🎁 Buff: +{{percent}}% income",
         "footer": "Type {{prefix}}inventory to see item details"
     },

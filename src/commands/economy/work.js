@@ -35,27 +35,27 @@ module.exports = {
         }
 
         const baseReward = Math.floor(Math.random() * 401) + 100; // 100-500
-        let { total, bonus: bonusAmount, cap } = calculateReward(baseReward, message.author.id);
+        let { total, bonus: bonusAmount, percent } = calculateReward(baseReward, message.author.id);
 
-        // Streamer Interaction: Go Viral (5% chance ×5 if using Chair/Mansion)
+        // Streamer Interaction: Go Viral (5% chance)
         let viralMsg = '';
-        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 220) || hasActiveItem(message.author.id, 107)) && Math.random() < 0.25) {
+        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 220) || hasActiveItem(message.author.id, 107)) && Math.random() < 0.05) {
             total *= 5;
             bonusAmount *= 5;
             viralMsg = t('work.viral', lang);
         }
 
-        // Farmer Interaction: Bumper Crop (10% chance ×2.5)
+        // Farmer Interaction: Bumper Crop (10% chance)
         let bumperMsg = '';
-        if (user.job === 'farmer' && Math.random() < 0.25) {
+        if (user.job === 'farmer' && Math.random() < 0.10) {
             total = Math.floor(total * 2.5);
             bonusAmount = Math.floor(bonusAmount * 2.5);
             bumperMsg = t('work.bumper_crop', lang);
         }
 
-        // Chef Interaction: Special Order (8% chance ×2)
+        // Chef Interaction: Special Order (8% chance)
         let specialOrderMsg = '';
-        if (user.job === 'chef' && Math.random() < 0.20) {
+        if (user.job === 'chef' && Math.random() < 0.08) {
             total = Math.floor(total * 2);
             bonusAmount = Math.floor(bonusAmount * 2);
             specialOrderMsg = t('work.special_order', lang);
@@ -89,7 +89,7 @@ module.exports = {
 
         let msg = t('work.success', lang, { job: jobName, amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
         }
 
         if (viralMsg) msg += viralMsg;

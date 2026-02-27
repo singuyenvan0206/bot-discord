@@ -44,7 +44,7 @@ module.exports = {
                 streamMsg = t('slut.streamer_bonus', lang, { amount: Math.floor(baseReward * 0.15).toLocaleString() });
             }
 
-            const { total, bonus: bonusAmount, cap } = calculateReward(baseReward, message.author.id);
+            const { total, bonus: bonusAmount, percent } = calculateReward(baseReward, message.author.id);
 
             db.addBalance(message.author.id, total);
 
@@ -55,7 +55,7 @@ module.exports = {
             });
 
             if (bonusAmount > 0) {
-                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
             }
             if (performMsg) msg += performMsg;
             if (streamMsg) msg += streamMsg;

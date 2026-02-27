@@ -23,6 +23,13 @@ module.exports = {
         // Calculate Net Worth using utility
         const netWorth = calculateNetWorth(dbUser);
 
+        // Get actual multipliers (%)
+        const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
+        const incomeBonus = Math.round(getTotalMultiplier(user.id, 'income') * 100);
+        const gambleBonus = Math.round(getTotalMultiplier(user.id, 'gamble') * 100);
+        const xpBonus = Math.round((getXpMultiplier(user.id) - 1.0) * 100);
+        const maxCapPercent = Math.round(getDynamicCap(user.id) * 100);
+
         // Find Rank (Position in global balance top 100)
         const topBalance = db.getTopUsers(100, 'balance');
         const rankIndex = topBalance.findIndex(u => u.id === user.id);
@@ -61,6 +68,7 @@ module.exports = {
                 { name: t('job.name_field', lang), value: dbUser.job ? t(`job.name_${dbUser.job}`, lang) : t('job.none', lang), inline: true },
                 { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
                 { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
+                { name: t('profile.multipliers', lang), value: `💼 **${t('effects.income', lang)}:** +${incomeBonus}%\n🎲 **${t('effects.gamble', lang)}:** +${gambleBonus}%\n✨ **${t('effects.xpboost', lang)}:** +${xpBonus}%\n🛡️ **${t('profile.cap', lang)}:** ${maxCapPercent}%`, inline: true },
                 { name: t('profile.marriage', lang), value: marriageStatus, inline: true },
                 { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length }), inline: true },
                 { name: t('profile.joined', lang), value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>`, inline: true },

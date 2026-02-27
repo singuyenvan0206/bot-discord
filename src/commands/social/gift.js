@@ -76,7 +76,7 @@ module.exports = {
             if (isSpouse) {
                 msg += t('gift.spouse_gift', lang);
 
-                // Apply 15% Income Buff for 2 hours (7200s)
+                // Apply 25% Income Buff for 2 hours (7200s) - ID 703 has 25% in SHOP_ITEMS
                 const { addBuff } = require('../../utils/multiplier');
                 addBuff(target.id, 703, 7200);
 

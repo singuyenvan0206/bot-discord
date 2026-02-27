@@ -96,8 +96,8 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     if (payout > 0 && bet) {
         if (payout > bet) { // If it's a win (2x or 2.5x)
             const profit = payout - bet;
-            const { bonus: bonusAmount, cap } = calculateReward(profit, i.user.id, 'gamble');
-            payout += bonusAmount;
+            const { total: totalRes, bonus: bonusAmount, percent } = calculateReward(profit, i.user.id, 'gamble');
+            payout = totalRes + bet; // Reward logic
 
             // Generate amount suffix for win
             const winAmountStr = t('blackjack.win_amount', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
@@ -112,13 +112,14 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
                 result = t('blackjack.win_simple', lang, { amount: winAmountStr });
             }
 
-            if (bonusAmount > 0) result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
-
+            if (bonusAmount > 0) {
+                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+            }
             // Musician Interaction: Flow State (15% chance to double final win)
             const u = db.getUser(i.user.id);
             if (u.job === 'musician' && payout > bet && Math.random() < 0.15) {
                 payout *= 2;
-                result += t('common.flow_state', lang);
+                flavorText += t('common.flow_state', lang);
             }
         } else {
             // It's a tie (payout == bet)

@@ -89,11 +89,11 @@ module.exports = {
 
             if (won) {
                 const profit = prize - bet;
-                const { bonus: bonusAmount, cap } = calculateReward(profit, message.author.id, 'gamble');
-                prize += bonusAmount;
-                db.addBalance(message.author.id, bonusAmount); // Added initial prize before, now add bonus
+                const { total, bonus: bonusAmount, percent } = calculateReward(profit, message.author.id, 'gamble');
+                prize = total + bet;
+                db.addBalance(message.author.id, bonusAmount); // Correctly apply bonus
                 if (bonusAmount > 0) {
-                    bonusText = t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                    bonusText = t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
                 }
 
                 // Musician Interaction: Flow State (10% chance to double final win)

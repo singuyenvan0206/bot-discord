@@ -43,13 +43,13 @@ module.exports = {
 
         if (won) {
             const profit = bet; // 2x return means 1x profit
-            const { bonus: bonusAmount, cap } = calculateReward(profit, user.id, 'gamble');
-            payout = (bet * 2) + bonusAmount;
+            const { total, bonus: bonusAmount, percent } = calculateReward(profit, user.id, 'gamble');
+            payout = total + bet;
 
             if (payout > 0) db.addBalance(user.id, payout);
             flavorText = t('coinflip.win', lang, { amount: payout.toLocaleString() });
             if (bonusAmount > 0) {
-                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
             }
 
             // Musician Interaction: Flow State (15% chance to double final win)

@@ -59,8 +59,8 @@ module.exports = [
     { id: 402, name: 'Worm Bait', price: 150, multiplier: 0.15, type: 'bait' },
     { id: 403, name: 'Shrimp Bait', price: 800, multiplier: 0.40, type: 'bait' },
     { id: 404, name: 'Cricket Bait', price: 2500, multiplier: 0.75, type: 'bait' },
-    { id: 405, name: 'Squid Bait', price: 20000, multiplier: 1.50, type: 'bait' },
-    { id: 406, name: 'Golden Bait', price: 50000, multiplier: 3.00, type: 'bait' },
+    { id: 405, name: 'Squid Bait', price: 10000, multiplier: 1.50, type: 'bait' },
+    { id: 406, name: 'Golden Bait', price: 15000, multiplier: 3.00, type: 'bait' },
 
     // ==========================================
     // GROUP 450 — tool (fishing rods, no duration)

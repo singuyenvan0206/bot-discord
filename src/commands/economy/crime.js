@@ -41,7 +41,7 @@ module.exports = {
                 hackedMsg = t('crime.hacker_hacked', lang);
             }
 
-            const { total, bonus: bonusAmount, cap } = calculateReward(baseReward, message.author.id);
+            const { total, bonus: bonusAmount, percent } = calculateReward(baseReward, message.author.id);
 
 
 
@@ -54,7 +54,7 @@ module.exports = {
             });
 
             if (bonusAmount > 0) {
-                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
             }
 
             if (hackedMsg) msg += hackedMsg;

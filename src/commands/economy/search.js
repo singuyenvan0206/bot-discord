@@ -33,7 +33,7 @@ module.exports = {
         const maxReward = config.ECONOMY.SEARCH_MAX_REWARD;
         const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-        let { total, bonus: bonusAmount, cap } = calculateReward(baseReward, message.author.id);
+        let { total, bonus: bonusAmount, percent } = calculateReward(baseReward, message.author.id);
 
         // Job Bonus: Hacker Data Mine (35% chance for 2x if having Laptop/Superyacht)
         let dataMineMsg = '';
@@ -69,7 +69,7 @@ module.exports = {
         });
 
         if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
         }
         if (dataMineMsg) msg += dataMineMsg;
         if (dataBreachMsg) msg += dataBreachMsg;

@@ -923,7 +923,9 @@
         "item_types": "**Số loại vật phẩm:** {{count}}",
         "joined": "📅 Tham gia từ",
         "id": "🆔 Định danh (ID)",
+        "multipliers": "⚡ Hệ số nhân",
         "marriage": "💞 Tình cảm",
+        "cap": "Hệ số tối đa",
         "marriage_bonus": "🎁 Buff: +{{percent}}% thu nhập",
         "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm"
     },

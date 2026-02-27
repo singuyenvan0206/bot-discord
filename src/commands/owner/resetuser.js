@@ -5,7 +5,7 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'resetuser',
-    aliases: ['wipeuser','ru'],
+    aliases: ['wipeuser', 'ru'],
     description: '[OWNER] Reset toàn bộ dữ liệu người dùng (Reset all data for a user)',
     ownerOnly: true,
     async execute(message, args) {
@@ -35,8 +35,13 @@ module.exports = {
                 last_beg: 0,
                 last_search: 0,
                 job: null,
-                inventory: '{}'
+                inventory: '{}',
+                active_buffs: '[]',
+                language: null
             });
+
+            // Also delete marriage if exists
+            db.deleteMarriage(target.id);
 
             const embed = new EmbedBuilder()
                 .setTitle('🗑️ Reset User')
