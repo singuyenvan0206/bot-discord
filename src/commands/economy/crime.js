@@ -103,8 +103,11 @@ module.exports = {
                 }
             }
 
-            // Interaction: Transfer fine to a random Police (exclude bot)
-            const randomPoliceId = db.getRandomUserByJob('police', [message.client.user.id]);
+            // Interaction: Transfer fine to a random Police (exclude bot and the perpetrator)
+            const excludeIds = [message.client.user.id];
+            if (user.job === 'police') excludeIds.push(message.author.id);
+
+            const randomPoliceId = db.getRandomUserByJob('police', excludeIds);
             if (randomPoliceId) {
                 db.addBalance(randomPoliceId, fine);
                 const policeUser = message.guild?.members?.cache.get(randomPoliceId);

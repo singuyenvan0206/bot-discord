@@ -481,24 +481,34 @@
             "old_boot": "Chiếc Ủng Cũ",
             "rusty_can": "Vỏ Lon Gỉ",
             "seaweed": "Rong Biển",
+            "tilapia": "Cá Rô Phi",
             "sardine": "Cá Mòi",
+            "carp": "Cá Chép",
             "brook_trout": "Cá Hồi Suối",
+            "archerfish": "Cá Phun Nước",
+            "betta": "Cá Xiêm",
             "bass": "Cá Vược",
             "sockeye_salmon": "Cá Hồi Đỏ",
             "tuna": "Cá Ngừ",
             "pufferfish": "Cá Nóc",
             "clownfish": "Cá Hề",
+            "arowana": "Cá Rồng",
+            "stingray": "Cá Đuối",
+            "sunfish": "Cá Mặt Trăng",
             "swordfish": "Cá Kiếm",
             "shark": "Cá Mập",
-            "stingray": "Cá Đuối",
+            "sturgeon": "Cá Tầm",
             "manta_ray": "Cá Đuối Manta",
             "whale": "Cá Voi",
+            "alligator_gar": "Cá Sấu Hỏa Tiễn",
             "anglerfish": "Cá Lồng Đèn",
             "treasure_chest": "Rương Kho Báu",
             "mythical_pearl": "Ngọc Trai Huyền Thoại",
             "kraken": "Quái Vật Kraken",
             "megalodon": "Siêu Cá Mập Megalodon",
-            "poseidon_trident": "Đinh Ba Poseidon"
+            "thousand_year_turtle": "Rùa Nghìn Năm",
+            "poseidon_trident": "Đinh Ba Poseidon",
+            "ocean_dragon": "Hải Long"
         }
     },
     "items": {
@@ -756,9 +766,16 @@
             "details": "Hào quang từ Ngọc Trai Thần Thoại giúp bạn tập trung và tăng hiệu quả công việc."
         },
         "604": {
-            "name": "🐙 Sức Mạnh Kraken",
-            "desc": "Cơn thịnh nộ đại dương (+60% Thu Nhập | 1.5 giờ)",
-            "details": "Sức mạnh từ Quái Vật Kraken giúp bạn càn quét mọi rào cản tài chính."
+            "name": "Sức Mạnh Kraken",
+            "description": "Nhận được sự uy lực của Kraken, tăng +60% thu nhập trong 1.5 giờ."
+        },
+        "605": {
+            "name": "Trường Thọ Rùa Thần",
+            "description": "Phúc lành từ Rùa Nghìn Năm, tăng +70% thu nhập trong 3 giờ."
+        },
+        "606": {
+            "name": "Uy Phong Hải Long",
+            "description": "Thần lực từ Hải Long, tăng +150% thu nhập trong 2 giờ."
         }
     },
     "shop": {

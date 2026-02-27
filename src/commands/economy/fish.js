@@ -35,24 +35,34 @@ const CATCHES = [
     { key: 'old_boot', emoji: '👢', value: 0, weight: 50, minLuck: 0 },
     { key: 'rusty_can', emoji: '🥫', value: 0, weight: 50, minLuck: 0 },
     { key: 'seaweed', emoji: '🌿', value: 5, weight: 100, minLuck: 0 },
+    { key: 'tilapia', emoji: '🐟', value: 30, weight: 130, minLuck: 0 },
     { key: 'sardine', emoji: '🐟', value: 50, weight: 100, minLuck: 0 },
+    { key: 'carp', emoji: '🐟', value: 80, weight: 120, minLuck: 0 },
     { key: 'brook_trout', emoji: '🐟', value: 120, weight: 150, minLuck: 0 },
+    { key: 'archerfish', emoji: '🐟', value: 300, weight: 110, minLuck: 1.0 },
+    { key: 'betta', emoji: '🐠', value: 450, weight: 100, minLuck: 3.0 },
     { key: 'bass', emoji: '🐟', value: 1000, weight: 150, minLuck: 2.0 },
     { key: 'sockeye_salmon', emoji: '🐟', value: 1500, weight: 150, minLuck: 4.0 },
-    { key: 'pufferfish', emoji: '🐡', value: 2500, weight: 130, minLuck: 6.0 },
-    { key: 'clownfish', emoji: '🐠', value: 4000, weight: 120, minLuck: 8.0 },
-    { key: 'stingray', emoji: '🐡', value: 7500, weight: 110, minLuck: 10.0 },
-    { key: 'tuna', emoji: '🐟', value: 12000, weight: 100, minLuck: 12.0 },
+    { key: 'pufferfish', emoji: '🐡', value: 2500, weight: 180, minLuck: 6.0 },
+    { key: 'clownfish', emoji: '🐠', value: 4000, weight: 170, minLuck: 8.0 },
+    { key: 'arowana', emoji: '🐉', value: 5500, weight: 155, minLuck: 9.0 },
+    { key: 'stingray', emoji: '🐡', value: 7500, weight: 160, minLuck: 10.0 },
+    { key: 'sunfish', emoji: '☀️', value: 9000, weight: 150, minLuck: 11.0 },
+    { key: 'tuna', emoji: '🐟', value: 12000, weight: 150, minLuck: 12.0 },
     { key: 'swordfish', emoji: '🗡️', value: 15000, weight: 90, minLuck: 15.0 },
+    { key: 'sturgeon', emoji: '🐟', value: 18000, weight: 85, minLuck: 16.0 },
     { key: 'manta_ray', emoji: '🐋', value: 20000, weight: 80, minLuck: 18.0 },
     { key: 'shark', emoji: '🦈', value: 25000, weight: 70, minLuck: 20.0 },
+    { key: 'alligator_gar', emoji: '🐊', value: 30000, weight: 65, minLuck: 21.0 },
     { key: 'whale', emoji: '🐋', value: 35000, weight: 60, minLuck: 22.0 },
     { key: 'anglerfish', emoji: '🏮', value: 45000, weight: 50, minLuck: 25.0 },
     { key: 'treasure_chest', emoji: '💰', value: 75000, weight: 40, minLuck: 28.0 },
     { key: 'mythical_pearl', emoji: '🔮', value: 100000, weight: 100, minLuck: 32.0 },
     { key: 'kraken', emoji: '🐙', value: 200000, weight: 120, minLuck: 35.0 },
     { key: 'megalodon', emoji: '🦈', value: 450000, weight: 150, minLuck: 38.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 200, minLuck: 42.0 }
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 600000, weight: 190, minLuck: 40.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 800000, weight: 200, minLuck: 42.0 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 1200000, weight: 300, minLuck: 45.0 }
 ];
 
 module.exports = {
@@ -193,7 +203,9 @@ module.exports = {
             'megalodon': { asset: 'megalodon.png', buff: 601, color: config.COLORS.GAMBLE_PUSH, announceKey: 'fish.mythical_announcement' },
             'poseidon_trident': { asset: 'poseidon_trident.png', buff: 602, color: 0x00D2FF, announceKey: 'fish.mythical_announcement' },
             'mythical_pearl': { asset: 'mythical_pearl.png', buff: 603, color: 0xFF00FF, announceKey: 'fish.mythical_pearl_announcement' },
-            'kraken': { asset: 'kraken.png', buff: 604, color: 0xFF4500, announceKey: 'fish.kraken_announcement' }
+            'kraken': { asset: 'kraken.png', buff: 604, color: 0xFF4500, announceKey: 'fish.kraken_announcement' },
+            'thousand_year_turtle': { asset: 'thousand_year_turtle.png', buff: 605, color: 0x228B22, announceKey: 'fish.mythical_announcement' },
+            'ocean_dragon': { asset: 'ocean_dragon.png', buff: 606, color: 0x1E90FF, announceKey: 'fish.mythical_announcement' }
         };
 
         const mythical = mythicalItems[caughtItem.key];

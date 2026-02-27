@@ -424,24 +424,34 @@
             "old_boot": "Old Boot",
             "rusty_can": "Rusty Can",
             "seaweed": "Seaweed",
+            "tilapia": "Tilapia",
             "sardine": "Sardine",
+            "carp": "Carp",
             "brook_trout": "Brook Trout",
+            "archerfish": "Archerfish",
+            "betta": "Betta",
             "bass": "Bass",
             "sockeye_salmon": "Sockeye Salmon",
             "tuna": "Tuna",
             "pufferfish": "Pufferfish",
             "clownfish": "Clownfish",
+            "arowana": "Arowana",
             "swordfish": "Swordfish",
+            "sunfish": "Sunfish",
             "shark": "Shark",
+            "sturgeon": "Sturgeon",
             "stingray": "Stingray",
             "manta_ray": "Manta Ray",
             "whale": "Whale",
+            "alligator_gar": "Alligator Gar",
             "anglerfish": "Anglerfish",
             "treasure_chest": "Treasure Chest",
             "mythical_pearl": "Mythical Pearl",
             "kraken": "Kraken Monster",
             "megalodon": "Megalodon",
-            "poseidon_trident": "Poseidon Trident"
+            "thousand_year_turtle": "Thousand-Year Turtle",
+            "poseidon_trident": "Poseidon Trident",
+            "ocean_dragon": "Ocean Dragon"
         }
     },
     "items": {
@@ -702,6 +712,14 @@
             "name": "🐙 Kraken's Might",
             "desc": "Ocean's rage (+60% Income | 1.5 hours)",
             "details": "The raw power of the Kraken Monster helps you crush financial barriers."
+        },
+        "605": {
+            "name": "Turtle's Longevity",
+            "desc": "Blessing from the Thousand-Year Turtle, increasing income by +70% for 3 hours."
+        },
+        "606": {
+            "name": "Dragon's Majesty",
+            "desc": "Divine power from the Ocean Dragon, increasing income by +150% for 2 hours."
         }
     },
     "shop": {
