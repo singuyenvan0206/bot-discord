@@ -1,7 +1,7 @@
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const { isManager } = require('../../utils/permissions');
+
 const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
@@ -11,9 +11,7 @@ module.exports = {
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 
-        if (!isManager(message.member)) {
-            return message.reply(t('common.no_permission', lang));
-        }
+
 
         const msg = await message.reply('🔄 **Updating source code...**');
 

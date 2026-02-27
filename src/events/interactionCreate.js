@@ -112,7 +112,7 @@ module.exports = {
                 delete: async () => { },
             };
             // Permission handling
-            if (command.ownerOnly && !config.OWNER_IDS.includes(interaction.user.id)) {
+            if (command.ownerOnly && !db.isOwner(interaction.user.id)) {
                 return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
             }
 

@@ -74,7 +74,7 @@ module.exports = {
 
         const lang = getLanguage(message.author.id, message.guild?.id);
 
-        if (command.ownerOnly && !config.OWNER_IDS.includes(message.author.id)) {
+        if (command.ownerOnly && !db.isOwner(message.author.id)) {
             return message.reply(t('common.no_permission', lang));
         }
 
