@@ -88,12 +88,17 @@ module.exports = {
             let bonusText = '';
 
             if (won) {
+                // Calculate reward including bonuses (Profit = prize - bet)
                 const profit = prize - bet;
-                const { total, bonus: bonusAmount, percent } = calculateReward(profit, message.author.id, 'gamble');
-                prize = total + bet;
-                db.addBalance(message.author.id, bonusAmount); // Correctly apply bonus
-                if (bonusAmount > 0) {
-                    bonusText = t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                const { calculateReward } = require('../../utils/multiplier');
+                const { total, bonus, percent } = calculateReward(profit, message.author.id, 'gamble');
+
+                const payout = total + bet;
+                db.addBalance(message.author.id, payout);
+
+                bonusText = t('dice.win_msg', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
+                if (bonus > 0) {
+                    bonusText += `\n✨ **Bonus:** +${percent}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
                 }
 
                 // Musician Interaction: Flow State (10% chance to double final win)

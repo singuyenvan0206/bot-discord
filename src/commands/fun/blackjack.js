@@ -45,7 +45,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     const dealerIsNatural = dealerHand.length === 2 && dealerVal === 21;
     const dealerIsNguLinh = dealerHand.length === 5 && dealerVal <= 21;
 
-    let result, color, payout = 0, title = t('blackjack.title', lang);
+    let result, color, payout = 0, flavorText = '', title = t('blackjack.title', lang);
 
     if (playerIsNatural && dealerIsNatural) {
         color = config.COLORS.GAMBLE_PUSH;
@@ -113,13 +113,13 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             }
 
             if (bonusAmount > 0) {
-                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                flavorText += `\n✨ **Bonus:** +${percent}% (${bonusAmount.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
             // Musician Interaction: Flow State (15% chance to double final win)
             const u = db.getUser(i.user.id);
             if (u.job === 'musician' && payout > bet && Math.random() < 0.15) {
                 payout *= 2;
-                flavorText += t('common.flow_state', lang);
+                flavorText += `\n` + t('common.flow_state', lang);
             }
         } else {
             // It's a tie (payout == bet)
@@ -171,7 +171,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     }
 
     const finalEmbed = buildEmbed(true);
-    finalEmbed.setTitle(title).setDescription(finalEmbed.data.description + `\n\n${result}`).setColor(color);
+    finalEmbed.setTitle(title).setDescription(finalEmbed.data.description + `\n\n${result}${flavorText}`).setColor(color);
     await i.update({ embeds: [finalEmbed], components: [] });
     startCooldown(i.client, 'blackjack', i.user.id);
 }

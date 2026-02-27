@@ -38,18 +38,18 @@ module.exports = {
         const displayCall = t(`coinflip.${call}`, lang);
         const displayResult = t(`coinflip.${result}`, lang);
 
-        let payout = 0;
         let flavorText = '';
 
         if (won) {
-            const profit = bet; // 2x return means 1x profit
-            const { total, bonus: bonusAmount, percent } = calculateReward(profit, user.id, 'gamble');
-            payout = total + bet;
+            // Calculate reward including bonuses
+            const { total, bonus, percent } = calculateReward(bet, message.author.id, 'gamble');
 
-            if (payout > 0) db.addBalance(user.id, payout);
-            flavorText = t('coinflip.win', lang, { amount: payout.toLocaleString() });
-            if (bonusAmount > 0) {
-                flavorText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+            let payout = total + bet;
+            db.addBalance(message.author.id, payout);
+
+            flavorText = t('coinflip.win_msg', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
+            if (bonus > 0) {
+                flavorText += `\n✨ **Bonus:** +${percent}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
 
             // Musician Interaction: Flow State (15% chance to double final win)

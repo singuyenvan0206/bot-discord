@@ -510,6 +510,7 @@ module.exports = {
             let totalCap = 250; // Default fallback for footer if multiple winners
 
             winners.forEach(w => {
+                const { calculateReward } = require('../../utils/multiplier');
                 const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = calculateReward(prizePerWinner, w.id, 'gamble');
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;

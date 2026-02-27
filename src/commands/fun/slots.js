@@ -74,19 +74,27 @@ module.exports = {
         }
 
         if (payout > 0) {
-            let { total: payoutResult, bonus: bonusAmount, percent } = calculateReward(profit, user.id, 'gamble');
-            totalPayout = payoutResult + bet; // Add original bet back
+            let bonusAmount = 0;
+            let percent = 0;
+
+            if (payout > bet) {
+                const profit = payout - bet;
+                const rewardResult = calculateReward(profit, user.id, 'gamble');
+                totalPayout = rewardResult.total + bet;
+                bonusAmount = rewardResult.bonus;
+                percent = rewardResult.percent;
+            } else {
+                totalPayout = payout;
+            }
 
             // Streamer Interaction: Sub Hype (20% chance to double any win)
-            let subHypeMsg = '';
-            if (user.job === 'streamer' && profit > 0 && Math.random() < 0.20) {
+            if (user.job === 'streamer' && totalPayout > 0 && Math.random() < 0.20) {
                 totalPayout *= 2;
                 subHypeMsg = t('slots.sub_hype', lang);
             }
 
-            payout = totalPayout;
-            db.addBalance(user.id, payout);
-            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: payout.toLocaleString() });
+            db.addBalance(user.id, totalPayout);
+            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString() });
 
             if (subHypeMsg) result += subHypeMsg;
             if (bonusAmount > 0) {
@@ -95,7 +103,7 @@ module.exports = {
         } else if (bet) {
             result += t('slots.lost_coins', lang, { amount: bet });
             // Transfer lost bet to bot profit
-            addHouseProfit(message, payout > 0 ? bet - payout : bet);
+            addHouseProfit(message, bet); // If payout is 0, the full bet is lost
         }
 
         const slotDisplay = [
