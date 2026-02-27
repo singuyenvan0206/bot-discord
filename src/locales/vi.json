@@ -467,6 +467,11 @@
         "mythical_announcement": "🔱 **THÔNG BÁO THẦN THOẠI!** Thần biển đã mỉm cười với <@{{userId}}>, một **{{item}}** thần thánh đã xuất hiện! 🌊🔱🔥",
         "mythical_pearl_announcement": "🔮 **THÔNG BÁO THẦN BÍ!** <@{{userId}}> đã tìm thấy **{{item}}** tỏa sáng rực rỡ từ đáy đại dương sâu thẳm! 🌊✨🔮",
         "kraken_announcement": "🐙 **THÔNG BÁO TAI ƯƠNG!** Biển khơi dậy sóng, <@{{userId}}> đã khuất phục được quái vật **{{item}}** khét tiếng! 🌊🐙🔥",
+        "support": {
+            "title": "❤️ Ủng Hộ Nhà Phát Triển",
+            "description": "Cảm ơn bạn đã yêu mến và sử dụng Bot! Mọi sự ủng hộ của bạn là động lực rất lớn giúp mình duy trì và phát triển Bot ngày càng tốt hơn. ✨\n\nBạn có thể quét mã QR bên dưới để mời mình một ly cà phê nhé! ☕",
+            "footer": "Cảm ơn bạn rất nhiều! Chúc bạn chơi game vui vẻ! ❤️"
+        },
         "trophy_catch": "\n🏆 **Cá Khổng Lồ!** Kinh nghiệm của bạn giúp bạn bắt được một mẫu vật khổng lồ! (3x giá trị)",
         "rates_title": "📊 Bảng Tỉ Lệ Câu Cá",
         "rates_desc": "Tính toán dựa trên: **{{rod}}** + **{{bait}}** (May mắn: {{luck}}x)",

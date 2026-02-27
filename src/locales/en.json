@@ -410,6 +410,11 @@
         "mythical_announcement": "🔱 **MYTHICAL ANNOUNCEMENT!** The sea god has smiled upon <@{{userId}}>, a divine **{{item}}** has appeared! 🌊🔱🔥",
         "mythical_pearl_announcement": "🔮 **MYSTICAL ANNOUNCEMENT!** <@{{userId}}> has found the glowing **{{item}}** from the deepest trenches! 🌊✨🔮",
         "kraken_announcement": "🐙 **KRAKEN ANNOUNCEMENT!** The sea roars as <@{{userId}}> has subdued the legendary **{{item}}**! 🌊🐙🔥",
+        "support": {
+            "title": "❤️ Support the Developer",
+            "description": "Thank you for using and loving the Bot! Your support is a huge motivation for me to maintain and improve the Bot every day. ✨\n\nYou can scan the QR code below to buy me a coffee! ☕",
+            "footer": "Thank you so much! Have fun playing! ❤️"
+        },
         "trophy_catch": "\n🏆 **Trophy Catch!** Your expertise helped you land a massive specimen! (3x value)",
         "rates_title": "📊 Fishing Probability Table",
         "rates_desc": "Calculated based on: **{{rod}}** + **{{bait}}** (Luck: {{luck}}x)",

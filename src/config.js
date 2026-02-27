@@ -50,7 +50,7 @@ module.exports = {
         TRIVIA_REWARD: 500,
         WORK_COOLDOWN: 3600, // 1 hour in seconds
         DAILY_COOLDOWN: 86400, // 24 hours in seconds
-        DAILY_REWARD: 300,
+        DAILY_REWARD: 750,
         FISH_COOLDOWN: 15,
         SELL_RECOVERY: 0.7, // 70% return
         MIN_WORK_EARNINGS: 50,
