@@ -768,7 +768,8 @@
         "success_multiple": "✅ You bought **{{items}}** for a total of **{{price}}** coins! 🛍️",
         "effect_activated": "\n✨ **Effect activated:** +{{percent}}% {{type}}!",
         "all_insufficient": "❌ You need at least **{{price}} {{emoji}}** to buy out the entire shop! (Balance: **{{balance}}**)",
-        "all_success": "✅ **Bought out the entire shop!**\nYou purchased 1 of every item in the shop (Total **{{count}}** items) for **{{price}} {{emoji}}**."
+        "all_success": "✅ **Bought out the entire shop!**\nYou purchased 1 of every item in the shop (Total **{{count}}** items) for **{{price}} {{emoji}}**.",
+        "cannot_buy_event": "is a special item and cannot be purchased directly from the shop! 🎁"
     },
     "sell": {
         "prompt": "❌ Please specify the item you want to sell (e.g., `{{prefix}}sell 1` or `{{prefix}}sell cookies`).",

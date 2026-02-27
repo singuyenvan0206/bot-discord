@@ -825,7 +825,8 @@
         "success_multiple": "✅ Bạn đã mua **{{items}}** với tổng giá **{{price}}** coins! 🛍️",
         "effect_activated": "\n✨ **Hiệu ứng kích hoạt:** +{{percent}}% {{type}}!",
         "all_insufficient": "❌ Bạn cần ít nhất **{{price}} {{emoji}}** để mua toàn bộ cửa hàng! (Số dư: **{{balance}}**)",
-        "all_success": "✅ **Đã thầu toàn bộ cửa hàng!**\nBạn đã mua mỗi vật phẩm trong shop 1 cái (Tổng cộng **{{count}}** món) với giá **{{price}} {{emoji}}**."
+        "all_success": "✅ **Đã thầu toàn bộ cửa hàng!**\nBạn đã mua mỗi vật phẩm trong shop 1 cái (Tổng cộng **{{count}}** món) với giá **{{price}} {{emoji}}**.",
+        "cannot_buy_event": "là vật phẩm đặc biệt không thể mua trực tiếp từ cửa hàng! 🎁"
     },
     "sell": {
         "prompt": "❌ Vui lòng chỉ định vật phẩm muốn bán (vđ: `{{prefix}}sell 1` hoặc `{{prefix}}sell cookies`).",

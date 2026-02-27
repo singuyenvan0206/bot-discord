@@ -15,12 +15,14 @@ module.exports = {
 
         const getCategoryItems = (cat) => {
             let items;
+            const buyableItems = SHOP_ITEMS.filter(i => !i.unbuyable);
+
             if (cat === 'tools') {
-                items = SHOP_ITEMS.filter(i => i.type === 'tool' || i.type === 'bait');
+                items = buyableItems.filter(i => i.type === 'tool' || i.type === 'bait');
             } else if (cat === 'other') {
-                items = SHOP_ITEMS.filter(i => i.type === 'other' || i.type === 'xpboost' || i.type === 'robshield');
+                items = buyableItems.filter(i => i.type === 'other' || i.type === 'xpboost' || i.type === 'robshield');
             } else {
-                items = SHOP_ITEMS.filter(i => i.type === cat);
+                items = buyableItems.filter(i => i.type === cat);
             }
             return items.sort((a, b) => a.price - b.price);
         };

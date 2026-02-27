@@ -15,8 +15,9 @@ module.exports = {
         const user = db.getUser(message.author.id);
 
         if (fullArg === 'all') {
+            const buyableItems = SHOP_ITEMS.filter(i => !i.unbuyable);
             // Find total price of 1 of every item
-            const totalCost = SHOP_ITEMS.reduce((sum, item) => sum + item.price, 0);
+            const totalCost = buyableItems.reduce((sum, item) => sum + item.price, 0);
             if (user.balance < totalCost) {
                 return message.reply(t('buy.all_insufficient', lang, { price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN, balance: user.balance.toLocaleString() }));
             }
@@ -24,11 +25,11 @@ module.exports = {
             db.removeBalance(user.id, totalCost);
 
             // Add 1 of every item to inventory
-            for (const item of SHOP_ITEMS) {
+            for (const item of buyableItems) {
                 db.addItem(user.id, item.id, 1);
             }
 
-            return message.reply(t('buy.all_success', lang, { count: SHOP_ITEMS.length, price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN }));
+            return message.reply(t('buy.all_success', lang, { count: buyableItems.length, price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN }));
         }
 
         const requests = fullArg.split(',').map(s => s.trim()).filter(s => s.length > 0);
@@ -62,6 +63,10 @@ module.exports = {
             );
 
             if (!item) return message.reply(`❌ ${t('buy.not_found', lang)} (Tìm kiếm: \`${itemQuery}\`)`);
+
+            if (item.unbuyable) {
+                return message.reply(`❌ ${t(`items.${item.id}.name`, lang)} ${t('buy.cannot_buy_event', lang) || 'không thể mua bằng tiền từ cửa hàng!'}`);
+            }
 
             // Calculate max affordable, considering items already pending in this multi-buy
             const availableBalance = Math.max(0, user.balance - totalCost);

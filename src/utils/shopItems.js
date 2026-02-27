@@ -83,8 +83,8 @@ module.exports = [
     // ==========================================
     // GROUP 600 — event (buffs given by events/catches)
     // ==========================================
-    { id: 601, name: "Megalodon's Blessing", price: 0, multiplier: 0.50, duration: 3600, type: 'income' },
-    { id: 602, name: "Poseidon's Favor", price: 0, multiplier: 1.00, duration: 7200, type: 'income' },
-    { id: 603, name: "Pearl's Radiance", price: 0, multiplier: 0.40, duration: 3600, type: 'income' },
-    { id: 604, name: "Kraken's Might", price: 0, multiplier: 0.60, duration: 5400, type: 'income' },
+    { id: 601, name: "Megalodon's Blessing", price: 0, multiplier: 0.50, duration: 3600, type: 'income', unbuyable: true },
+    { id: 602, name: "Poseidon's Favor", price: 0, multiplier: 1.00, duration: 7200, type: 'income', unbuyable: true },
+    { id: 603, name: "Pearl's Radiance", price: 0, multiplier: 0.40, duration: 3600, type: 'income', unbuyable: true },
+    { id: 604, name: "Kraken's Might", price: 0, multiplier: 0.60, duration: 5400, type: 'income', unbuyable: true },
 ];
