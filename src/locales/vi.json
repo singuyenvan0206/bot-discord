@@ -1433,7 +1433,7 @@
         "already_married_self": "❌ Anh đã có bến đỗ rồi, đừng có mà 'bắt cá hai tay' nhé! 💍",
         "already_married_target": "❌ Người ấy đã là 'hoa có chủ' rồi, anh đừng có làm người thứ ba nha! 💔",
         "proposal_title": "💕 LỜI CẦU HÔN NGỌT NGÀO 💕",
-        "proposal_desc": "**{{target}}** ơi, **{{user}}** đang quỳ xuống với một chiếc nhẫn trên tay và muốn hỏi bạn một câu...\n\n> \"Bạn có đồng ý cùng mình đi đến cuối con đường này không?\" 💍",
+        "proposal_desc": "**{{target}}** ơi, **{{user}}** đang quỳ xuống với một chiếc **{{ring}}** trên tay và muốn hỏi bạn một câu...\n\n> \"Bạn có đồng ý cùng mình đi đến cuối con đường này không?\" 💍",
         "accept_label": "Em đồng ý! 👰",
         "deny_label": "Chúng ta chỉ là bạn... 💔",
         "accepted": "🎊 **CHÚC MỪNG ĐÔI LỨA!** 🎊\n\n**{{user}}** và **{{target}}** đã chính thức về chung một nhà! Chúc hai bạn trăm năm hạnh phúc! ❤️🥂✨\n> 🎁 *Cả hai nhận được aura \"Đồng vợ đồng chồng\": +25% thu nhập vĩnh viễn!*",

@@ -47,10 +47,16 @@ module.exports = {
 
         // Use Diamond Ring if available, otherwise use Wedding Ring
         const ringId = diamondRingCount > 0 ? 702 : 701;
+        const ring = SHOP_ITEMS.find(i => i.id === ringId);
+        const ringName = ring ? ring.name : 'Unknown Ring';
 
         const embed = new EmbedBuilder()
             .setTitle(t('marry.proposal_title', lang))
-            .setDescription(t('marry.proposal_desc', lang, { user: message.author.toString(), target: target.toString() }))
+            .setDescription(t('marry.proposal_desc', lang, {
+                user: message.author.toString(),
+                target: target.toString(),
+                ring: ringName
+            }))
             .setColor(ringId === 702 ? '#E0FBFF' : (config.COLORS.LOVE || '#FF69B4'))
             .setThumbnail(target.displayAvatarURL());
 
@@ -91,8 +97,17 @@ module.exports = {
                     return i.update({ content: t('marry.already_married_self', lang), embeds: [], components: [] });
                 }
 
+                // Final inventory check - ensure the proposer still has the ring
+                const finalInvCheck = db.getUser(message.author.id);
+                const currentInv = JSON.parse(finalInvCheck.inventory || '{}');
+                if (!currentInv[String(ringId)] || currentInv[String(ringId)] <= 0) {
+                    return i.update({ content: t('buy.no_ring', lang), embeds: [], components: [] });
+                }
+
                 // Remove the used ring
-                db.removeItem(message.author.id, String(ringId), 1);
+                if (!db.removeItem(message.author.id, String(ringId), 1)) {
+                    return i.update({ content: t('buy.no_ring', lang), embeds: [], components: [] });
+                }
 
                 db.createMarriage(message.author.id, target.id, ringId);
 

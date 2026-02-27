@@ -1430,7 +1430,7 @@
         "already_married_self": "❌ You're already married! Don't be a cheater! 💍",
         "already_married_target": "❌ That person is already taken! Don't be the third wheel! 💔",
         "proposal_title": "💕 A SWEET PROPOSAL 💕",
-        "proposal_desc": "**{{target}}**, **{{user}}** is on one knee with a ring in hand and wants to ask you a question...\n\n> \"Will you go to the end of the road with me?\" 💍",
+        "proposal_desc": "**{{target}}**, **{{user}}** is on one knee with a **{{ring}}** in hand and wants to ask you a question...\n\n> \"Will you go to the end of the road with me?\" 💍",
         "accept_label": "I do! 👰",
         "deny_label": "Let's just be friends... 💔",
         "accepted": "🎊 **CONGRATULATIONS!** 🎊\n\n**{{user}}** and **{{target}}** are now officially married! Wishing you a lifetime of happiness together! ❤️🥂✨\n> 🎁 *Both receive \"Perfect Match\": +25% permanent income bonus!*",
