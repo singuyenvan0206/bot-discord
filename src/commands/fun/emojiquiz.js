@@ -45,7 +45,7 @@ module.exports = {
 
             const winnerMsg = collected.first();
             const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD || 50;
-            const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winnerMsg.author.id);
+            const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winnerMsg.author.id);
 
 
             db.addBalance(winnerMsg.author.id, totalReward);
@@ -66,7 +66,7 @@ module.exports = {
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
-            if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+            if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
             if (u.job === 'teacher') resultDesc += t('job.teacher_tutoring_simple', lang);
 
             await winnerMsg.reply({

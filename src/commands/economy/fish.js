@@ -120,14 +120,14 @@ module.exports = {
 
                 if (c.value < 5000) {
                     // Suppress common fish at high luck
-                    modWeight *= Math.max(0.01, 1 - (luck / 50));
+                    modWeight *= Math.max(0.01, 1 - (luck / 60));
                 } else if (c.value < 20000) {
-                    // Mid-tier: very small boost
+                    // Mid-tier: boost
                     const luckDiff = Math.max(0, luck - c.minLuck);
-                    modWeight *= 1 + (luckDiff * 0.005);
+                    modWeight *= 1 + (luckDiff * 0.01);
                 } else {
                     // Rare items (>= 20000): cap drop rates to prevent hyperinflation
-                    modWeight *= 0.020; // Drastically reduce base drop chance
+                    modWeight *= 0.028; // Drastically reduce base drop chance
                     const luckDiff = Math.max(0, luck - c.minLuck);
                     modWeight *= 1 + (luckDiff * 0.05); // Give a 5% relative boost per point of luck above requirement
                 }

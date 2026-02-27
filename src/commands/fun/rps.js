@@ -125,13 +125,13 @@ module.exports = {
             if (betAmount > 0) {
                 if (outcome === 'win') {
                     const profit = betAmount; // Standard 2x return means 1x profit
-                    const { bonus: bonusAmount, cap } = calculateReward(profit, user.id, 'gamble');
+                    const { bonus: bonusAmount, percent } = calculateReward(profit, user.id, 'gamble');
                     let prize = (betAmount * 2) + bonusAmount;
 
                     db.addBalance(user.id, prize);
                     result += t('rps.won_coins', lang, { amount: prize.toLocaleString(), emoji: config.EMOJIS.COIN });
                     if (bonusAmount > 0) {
-                        result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                        result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
                     }
 
                     // Musician Interaction: Flow State (20% chance to double final win)

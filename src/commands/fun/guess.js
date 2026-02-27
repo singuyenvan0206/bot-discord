@@ -37,7 +37,7 @@ module.exports = {
 
             if (guess === number) {
                 const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
-                const { total: reward, bonus: bonusAmount, cap } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.author.id);
+                const { total: reward, bonus: bonusAmount, percent } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.author.id);
                 db.addBalance(m.author.id, reward);
 
                 // Grant XP
@@ -46,7 +46,7 @@ module.exports = {
                 addXp(m.author.id, winXp);
 
                 let winMsg = t('guess.win', lang, { number, attempts, amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN });
-                if (bonusAmount > 0) winMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                if (bonusAmount > 0) winMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
 
                 await m.reply(winMsg);
                 collector.stop('win');

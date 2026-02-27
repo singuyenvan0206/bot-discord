@@ -99,12 +99,12 @@ module.exports = {
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
 
-                const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, i.user.id);
+                const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, i.user.id);
 
                 db.addBalance(i.user.id, totalReward);
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
-                if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
 
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;

@@ -91,7 +91,7 @@ module.exports = {
             const winner = collected.first();
             const baseReward = config.ECONOMY.SCRAMBLE_REWARD;
 
-            let { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winner.author.id);
+            let { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winner.author.id);
 
             // Programmer Interaction: Tech Bonus (+30%)
             const winningUser = db.getUser(winner.author.id);
@@ -110,7 +110,7 @@ module.exports = {
                 amount: totalReward.toLocaleString()
             });
 
-            if (bonusAmount > 0) msgText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+            if (bonusAmount > 0) msgText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
 
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
