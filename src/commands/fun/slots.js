@@ -76,6 +76,8 @@ module.exports = {
         if (payout > 0) {
             let bonusAmount = 0;
             let percent = 0;
+            let totalPayout = 0;
+            let subHypeMsg = '';
 
             if (payout > bet) {
                 const profit = payout - bet;

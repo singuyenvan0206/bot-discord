@@ -40,6 +40,11 @@ module.exports = {
                 const description = t(`items.${i.id}.desc`, lang);
 
                 let desc = `*${description}*`;
+                if (i.multiplier && i.multiplier > 0) {
+                    const percent = Math.round(i.multiplier * 100);
+                    const effectName = t(`effects.${i.type}`, lang) || 'hiệu ứng';
+                    desc += t('shop.bonus_label', lang, { percent, effect: effectName });
+                }
                 let durationExtra = '';
                 if (i.duration) {
                     let timeStr = '';
@@ -70,12 +75,17 @@ module.exports = {
             const items = getCategoryItems(category);
             const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE) || 1;
 
-            const categoryRow = new ActionRowBuilder()
+            const categoryRow1 = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder().setCustomId('cat_income').setLabel(t('shop.labels.income', lang)).setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary),
                     new ButtonBuilder().setCustomId('cat_daily').setLabel(t('shop.labels.daily', lang)).setStyle(category === 'daily' ? ButtonStyle.Success : ButtonStyle.Secondary),
                     new ButtonBuilder().setCustomId('cat_gamble').setLabel(t('shop.labels.gamble', lang)).setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary),
                     new ButtonBuilder().setCustomId('cat_tools').setLabel(t('shop.labels.tools', lang)).setStyle(category === 'tools' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_social').setLabel(t('shop.labels.social', lang)).setStyle(category === 'social' ? ButtonStyle.Success : ButtonStyle.Secondary)
+                );
+
+            const categoryRow2 = new ActionRowBuilder()
+                .addComponents(
                     new ButtonBuilder().setCustomId('cat_other').setLabel(t('shop.labels.other', lang)).setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary)
                 );
 
@@ -85,7 +95,7 @@ module.exports = {
                     new ButtonBuilder().setCustomId('next').setLabel('▶️').setStyle(ButtonStyle.Primary).setDisabled(page >= totalPages - 1)
                 );
 
-            const components = [categoryRow];
+            const components = [categoryRow1, categoryRow2];
             if (totalPages > 1) components.push(navRow);
 
             return components;

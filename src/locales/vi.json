@@ -770,28 +770,47 @@
             "details": "Hào quang từ Ngọc Trai Thần Thoại giúp bạn tập trung và tăng hiệu quả công việc."
         },
         "604": {
-            "name": "Sức Mạnh Kraken",
-            "description": "Nhận được sự uy lực của Kraken, tăng +60% thu nhập trong 1.5 giờ."
+            "name": "🐙 Sức Mạnh Kraken",
+            "desc": "Cơn thịnh nộ đại dương (+60% Thu Nhập | 1.5 giờ)",
+            "details": "Nhận được sự uy lực của Kraken, tăng +60% thu nhập trong 1.5 giờ."
         },
         "605": {
-            "name": "Trường Thọ Rùa Thần",
-            "description": "Phúc lành từ Rùa Nghìn Năm, tăng +70% thu nhập trong 3 giờ."
+            "name": "🐢 Trường Thọ Rùa Thần",
+            "desc": "Phúc lành Rùa Thần (+70% Thu Nhập | 3 giờ)",
+            "details": "Phúc lành từ Rùa Nghìn Năm, tăng +70% thu nhập trong 3 giờ."
         },
         "606": {
-            "name": "Uy Phong Hải Long",
-            "description": "Thần lực từ Hải Long, tăng +150% thu nhập trong 2 giờ."
+            "name": "🐉 Uy Phong Hải Long",
+            "desc": "Thần lực Hải Long (+150% Thu Nhập | 2 giờ)",
+            "details": "Thần lực từ Hải Long, tăng +150% thu nhập trong 2 giờ."
+        },
+        "701": {
+            "name": "💍 Nhẫn Cưới",
+            "desc": "Kỷ vật minh chứng tình yêu vĩnh hằng.",
+            "details": "Dùng lệnh `$marry` để cầu hôn người khác."
+        },
+        "702": {
+            "name": "💎 Nhẫn Kim Cương",
+            "desc": "Kỷ vật tình yêu xa xỉ bậc nhất.",
+            "details": "Thay thế Nhẫn Cưới, cung cấp nhiều phần thưởng hơn."
+        },
+        "703": {
+            "name": "💐 Hoa Cưới",
+            "desc": "Bó hoa tươi thắm rực rỡ.",
+            "details": "Dùng lệnh `$gift` tặng cho bạn đời để nhận thưởng phụ."
         }
     },
     "shop": {
         "title": "🛒 Cửa Hàng — {{category}}",
         "empty": "*Hiện chưa có vật phẩm nào trong danh mục này.*",
-        "bonus_label": "\n✨ **Thưởng:** +{{percent}}% hiệu ứng",
+        "bonus_label": "\n✨ **Thưởng:** +{{percent}}% {{effect}}",
         "footer": "Trang {{page}}/{{total}} • Dùng {{prefix}}buy <id> [số_lượng]",
         "categories": {
             "income": "💼 Tăng Thu Nhập",
             "daily": "🎁 Thưởng Phần Trăm",
             "gamble": "🎲 Tăng Thắng Cược",
             "tools": "🛠️ Công Cụ",
+            "social": "💍 Đồ Dùng Xã Hội",
             "other": "💎 Khác"
         },
         "labels": {
@@ -799,6 +818,7 @@
             "daily": "🎁 Hàng Ngày",
             "gamble": "🎲 Cờ Bạc",
             "tools": "🛠️ Công Cụ",
+            "social": "💍 Xã Hội",
             "other": "💎 Khác"
         }
     },
@@ -824,7 +844,9 @@
             "daily": "📅 Thưởng Hàng Ngày",
             "gamble": "🎲 May Mắn",
             "other": "📦 Khác",
-            "social": "💞 Tình Cảm"
+            "social": "💞 Tình Cảm",
+            "robshield": "🛡️ Khiên Bảo Vệ",
+            "xpboost": "✨ Tăng XP"
         },
         "info": "📊 Tổng quan",
         "active_buffs": "Buff Đang Hoạt Động",
@@ -1384,11 +1406,15 @@
         "luck_label": "Chỉ số May mắn"
     },
     "effects": {
-        "income": "Thu Nhập",
-        "daily": "Hàng Ngày",
-        "gamble": "Cược",
-        "xpboost": "XP Bonus",
-        "robshield": "Bảo Vệ"
+        "income": "Tăng tiền (`$work, $slut, $crime, $fish, $search`)",
+        "daily": "Tăng thưởng (`$daily`)",
+        "gamble": "Tăng lời (`$cf, $dice, $slots, $bj, $poker`)",
+        "xpboost": "Thu thập Kinh Nghiệm",
+        "robshield": "Chống trộm (`$rob`)",
+        "social": "Tăng thưởng Tình Cảm",
+        "tool": "Tăng tỷ lệ câu cá hiếm",
+        "bait": "Tỷ lệ bắt cá bằng kỹ năng",
+        "other": "Hiệu ứng Đặc biệt"
     },
     "giveaway": {
         "active_title": "{{emoji}}  SỰ KIỆN GIVEAWAY  {{emoji}}",

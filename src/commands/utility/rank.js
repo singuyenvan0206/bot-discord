@@ -35,16 +35,14 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
     const topUsers = db.getTopUsers(100, sortBy, filter);
     const guildMembers = [];
 
-    for (const u of topUsers) {
-        if (guildMembers.length >= 10) break;
+    // Batch fetching logic - fast but simple
+    const candidates = topUsers.slice(0, 10); // Get top 20 to safely find 10 guild members
 
+    await Promise.all(candidates.map(async (u) => {
+        if (guildMembers.length >= 10) return; // Prevent unnecessary fetches if we have 10
         try {
             let member = guild.members.cache.get(u.id);
-            if (!member) {
-                member = await guild.members.fetch(u.id).catch(() => null);
-            }
-
-            if (member) {
+            if (member && guildMembers.length < 10) {
                 guildMembers.push({
                     username: member.user.username,
                     level: u.level,
@@ -53,8 +51,19 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
                     userId: u.id
                 });
             }
-        } catch (e) { }
-    }
+        } catch (e) {
+            // Ignore errors
+        }
+    }));
+
+    // Sort again because Promise.all might resolve out of order
+    guildMembers.sort((a, b) => {
+        if (sortBy === 'xp') return b.level - a.level;
+        return b.balance - a.balance;
+    });
+
+    // Trim explicitly to 10 just in case
+    guildMembers.splice(10);
 
     const medals = ['🥇', '🥈', '🥉'];
     const lines = guildMembers.map((u, i) => {

@@ -70,8 +70,8 @@ module.exports = [
     { id: 409, name: 'Fiberglass Rod', price: 100000, multiplier: 1.8, type: 'tool', idealJob: 'farmer' },
     { id: 410, name: 'Steel Rod', price: 120000, multiplier: 2.5, type: 'tool', idealJob: 'farmer' },
     { id: 411, name: 'Carbon Rod', price: 1800000, multiplier: 3.5, type: 'tool', idealJob: 'farmer' },
-    { id: 412, name: 'Titanium Rod', price: 3600000, multiplier: 5.0, type: 'tool', idealJob: 'farmer' },
-    { id: 413, name: "Neptune's Rod", price: 5000000, multiplier: 7.5, type: 'tool', idealJob: 'farmer' },
+    { id: 412, name: 'Titanium Rod', price: 2400000, multiplier: 5.0, type: 'tool', idealJob: 'farmer' },
+    { id: 413, name: "Neptune's Rod", price: 3000000, multiplier: 7.5, type: 'tool', idealJob: 'farmer' },
 
     // ==========================================
     // GROUP 500 — other (special utility items)

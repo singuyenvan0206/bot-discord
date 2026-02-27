@@ -718,24 +718,42 @@
             "details": "The raw power of the Kraken Monster helps you crush financial barriers."
         },
         "605": {
-            "name": "Turtle's Longevity",
-            "desc": "Blessing from the Thousand-Year Turtle, increasing income by +70% for 3 hours."
+            "name": "🐢 Turtle's Longevity",
+            "desc": "Turtle's Blessing (+70% Income | 3 hours)",
+            "details": "Blessing from the Thousand-Year Turtle, increasing income by +70% for 3 hours."
         },
         "606": {
-            "name": "Dragon's Majesty",
-            "desc": "Divine power from the Ocean Dragon, increasing income by +150% for 2 hours."
+            "name": "🐉 Dragon's Majesty",
+            "desc": "Dragon's power (+150% Income | 2 hours)",
+            "details": "Divine power from the Ocean Dragon, increasing income by +150% for 2 hours."
+        },
+        "701": {
+            "name": "💍 Wedding Ring",
+            "desc": "A token of eternal love.",
+            "details": "Use `$marry` to propose to someone."
+        },
+        "702": {
+            "name": "💎 Diamond Ring",
+            "desc": "The most luxurious symbol of love.",
+            "details": "Replaces the Wedding Ring, providing better marriage perks."
+        },
+        "703": {
+            "name": "💐 Wedding Bouquet",
+            "desc": "A beautiful and vibrant bouquet.",
+            "details": "You can `$gift` this to your partner for a temporary buff."
         }
     },
     "shop": {
         "title": "🛒 Shop — {{category}}",
         "empty": "*No items available in this category.*",
-        "bonus_label": "\n✨ **Bonus:** +{{percent}}% effect",
+        "bonus_label": "\n✨ **Bonus:** +{{percent}}% {{effect}}",
         "footer": "Page {{page}}/{{total}} • Use {{prefix}}buy <id> [quantity]",
         "categories": {
             "income": "💼 Increase Income",
             "daily": "🎁 Daily Bonus",
             "gamble": "🎲 Gamble Win",
             "tools": "🛠️ Tools",
+            "social": "💍 Social Items",
             "other": "💎 Other"
         },
         "labels": {
@@ -743,6 +761,7 @@
             "daily": "📅 Daily",
             "gamble": "🎲 Gamble",
             "tools": "🎣 Tools",
+            "social": "💍 Social",
             "other": "💎 Other"
         }
     },
@@ -768,7 +787,9 @@
             "daily": "📅 Daily Boosts",
             "gamble": "🎲 Luck Boosts",
             "other": "📦 Others",
-            "social": "💞 Social"
+            "social": "💞 Social",
+            "robshield": "🛡️ Protection Shield",
+            "xpboost": "✨ XP Boost"
         },
         "info": "📊 Summary",
         "active_buffs": "⚡ Active Buffs",
@@ -1384,11 +1405,15 @@
         "luck_label": "Luck Stat"
     },
     "effects": {
-        "income": "Income",
-        "daily": "Daily",
-        "gamble": "Gamble",
-        "xpboost": "XP Bonus",
-        "robshield": "Protection"
+        "income": "Boost (`$work, $slut, $crime, $fish, $search`)",
+        "daily": "Boost (`$daily`)",
+        "gamble": "Profit (`$cf, $dice, $slots, $bj, $poker`)",
+        "xpboost": "Bonus XP Gain",
+        "robshield": "Safe from `$rob`",
+        "social": "Social Bonus",
+        "tool": "Rare fish fishing luck",
+        "bait": "Fishing skill luck",
+        "other": "Special Buff"
     },
     "giveaway": {
         "active_title": "{{emoji}}  GIVEAWAY EVENT  {{emoji}}",

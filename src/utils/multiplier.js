@@ -189,5 +189,6 @@ module.exports = {
     isProtectedFromRob,
     hasActiveItem,
     calculateReward,
-    removeActiveBuff
+    removeActiveBuff,
+    getDynamicCap
 };

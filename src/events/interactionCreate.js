@@ -193,20 +193,32 @@ module.exports = {
         // 4. Select Menu Interactions
         else if (interaction.isStringSelectMenu()) {
             if (interaction.customId.startsWith('rank_job_select_')) {
-                const sortBy = interaction.customId.split('_').pop();
-                const jobId = interaction.values[0] === 'all' ? null : interaction.values[0];
-                const rankCmd = client.commands.get('rank');
-                const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
-                return interaction.update(data);
+                try {
+                    await interaction.deferUpdate();
+                    const sortBy = interaction.customId.split('_').pop();
+                    const jobId = interaction.values[0] === 'all' ? null : interaction.values[0];
+                    const rankCmd = client.commands.get('rank');
+                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
+                    await interaction.editReply(data);
+                } catch (e) {
+                    console.error('[SelectMenu] EditReply Error:', e.message);
+                }
+                return;
             }
 
             if (interaction.customId.startsWith('rank_sort_select_')) {
-                const jobIdPart = interaction.customId.split('_').pop();
-                const jobId = jobIdPart === 'all' ? null : jobIdPart;
-                const sortBy = interaction.values[0];
-                const rankCmd = client.commands.get('rank');
-                const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
-                return interaction.update(data);
+                try {
+                    await interaction.deferUpdate();
+                    const jobIdPart = interaction.customId.split('_').pop();
+                    const jobId = jobIdPart === 'all' ? null : jobIdPart;
+                    const sortBy = interaction.values[0];
+                    const rankCmd = client.commands.get('rank');
+                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
+                    await interaction.editReply(data);
+                } catch (e) {
+                    console.error('[SelectMenu] EditReply Error:', e.message);
+                }
+                return;
             }
         }
     },

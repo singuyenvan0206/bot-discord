@@ -170,11 +170,14 @@ module.exports = {
                 new ButtonBuilder().setCustomId('inv_tool').setLabel('🎣').setStyle(category === 'tool' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.tool.items.length === 0),
                 new ButtonBuilder().setCustomId('inv_income').setLabel('💼').setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.income.items.length === 0),
                 new ButtonBuilder().setCustomId('inv_gamble').setLabel('🎲').setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.gamble.items.length === 0),
-                new ButtonBuilder().setCustomId('inv_social').setLabel('💞').setStyle(category === 'social' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.social.items.length === 0),
+                new ButtonBuilder().setCustomId('inv_social').setLabel('💞').setStyle(category === 'social' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.social.items.length === 0)
+            );
+
+            const row2 = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('inv_other').setLabel('📦').setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.other.items.length === 0)
             );
 
-            const components = [row1];
+            const components = [row1, row2];
 
             if (category !== 'summary') {
                 const items = categories[category].items;
@@ -217,7 +220,7 @@ module.exports = {
             await i.update({
                 embeds: [generateEmbed(currentCategory, currentPage)],
                 components: generateComponents(currentCategory, currentPage)
-            });
+            }).catch(e => { /* Ignore Interaction Failed errors (e.g., timeout) */ });
         });
 
         collector.on('end', () => {
