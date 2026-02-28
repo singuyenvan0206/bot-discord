@@ -7,6 +7,7 @@
         "bot_shut_down": "⚠️ **System is offline!** The bot is currently shut down for maintenance or by Owner command. Please come back later! 🔌💤",
         "success": "✅ Success!",
         "max_bet_error": "❌ The maximum bet is **{{limit}}** coins!",
+        "min_bet_error": "❌ The minimum bet is **{{limit}}** coins!",
         "mention_opponent": "❌ Please mention an opponent to play with!",
         "no_challenge_bot": "❌ You cannot challenge a bot!",
         "no_challenge_self": "❌ You cannot challenge yourself!",
@@ -143,14 +144,18 @@
         "sub_hype": "\n🔥 **Sub Hype!** Streamer's fans doubled the winnings!",
         "bonus_item": " *(Includes +{{amount}} bonus (Capped {{cap}}%): {{percent}}%)*"
     },
+    "gamble": {
+        "max_bet": "❌ The maximum bet is **{{max}}** coins!",
+        "min_bet": "❌ The minimum bet is **{{min}}** coins!"
+    },
     "daily": {
-        "cooldown": "❌ You can claim your daily reward in **{{hours}}h {{minutes}}m**.",
+        "cooldown": "❌ You can claim your daily reward in **{{time}}**.",
         "success": "✅ You received your daily reward of **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped {{cap}}%): {{percent}}%)*"
     },
     "work": {
-        "cooldown": "❌ You need to rest! Come back to work in **{{minutes}} minutes**.",
+        "cooldown": "❌ You need to rest! Come back to work in **{{time}}**.",
         "success": "💼 You worked as a **{{job}}** and earned **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped {{cap}}%): {{percent}}%)*",
@@ -213,7 +218,7 @@
         "overtime": "\n👮 **Overtime!** Officer received a **+150** coins bonus!"
     },
     "crime": {
-        "cooldown": "❌ You are being watched by the police! Wait **{{hours}}h {{minutes}}m** before your next heist.",
+        "cooldown": "❌ You are being watched by the police! Wait **{{time}}** before your next heist.",
         "success": "💰 You successfully **{{action}}** and walked away with **{{amount}}** coins! {{emoji}}",
         "failure": "🚔 Heist failed! You were caught by the police and fined **{{amount}}** coins.",
         "actions": [
@@ -235,7 +240,7 @@
         "levelup_desc": "Congratulations! You've reached Level **{{level}}** and received **{{bonus}}** {{emoji}}!"
     },
     "beg": {
-        "cooldown": "❌ You've begged too much! Come back in **{{minutes}} minutes**.",
+        "cooldown": "❌ You've begged too much! Come back in **{{time}}**.",
         "success": "💰 **{{person}}** gave you **{{amount}}** coins! {{emoji}}",
         "failure": "😢 You begged all day but nobody gave you anything.",
         "persons": [
@@ -261,7 +266,7 @@
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*"
     },
     "search": {
-        "cooldown": "❌ You've searched everywhere! Rest for **{{minutes}} minutes** before searching again.",
+        "cooldown": "❌ You've searched everywhere! Rest for **{{time}}** before searching again.",
         "success": "🔍 You searched the **{{location}}** and found **{{amount}}** coins! {{emoji}}",
         "locations": [
             "trash can",
@@ -281,7 +286,7 @@
         "data_breach": "\n💻 **Data Breach!** Hacker successfully breached the system, received **+{{amount}}** extra coins!"
     },
     "rob": {
-        "cooldown": "❌ You are wanted by the police! Hide for another **{{minutes}} minutes**.",
+        "cooldown": "❌ You are wanted by the police! Hide for another **{{time}}**.",
         "success": "🥷 You sneaked in and stole **{{amount}}** coins from {{user}}! {{emoji}}",
         "failure": "🚔 {{user}} caught you red-handed! You had to pay them **{{amount}}** coins as compensation.",
         "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
@@ -371,7 +376,7 @@
         "teacher_tutoring_simple": "\n👨‍🏫 **Tutoring:** You received +50% coins and +10 XP bonus!"
     },
     "slut": {
-        "cooldown": "❌ You need to rest and recover! Come back in **{{hours}}h {{minutes}}m**.",
+        "cooldown": "❌ You need to rest and recover! Come back in **{{time}}**.",
         "success": "💋 You successfully went out and received **{{amount}}** coins from a kind customer! {{emoji}}",
         "failure": "👠 Unlucky! You met a 'dine and dash' customer or got harassed, spending **{{amount}}** coins on medical bills.",
         "musician_bonus": "\n🎸 **Outstanding Performance!** The musician set the stage on fire! +{{amount}} coins!",
@@ -745,6 +750,7 @@
     },
     "shop": {
         "title": "🛒 Shop — {{category}}",
+        "owned": "Owned",
         "empty": "*No items available in this category.*",
         "bonus_label": "\n✨ **Bonus:** +{{percent}}% {{effect}}",
         "footer": "Page {{page}}/{{total}} • Use {{prefix}}buy <id> [quantity]",
@@ -793,14 +799,31 @@
         },
         "info": "📊 Summary",
         "active_buffs": "⚡ Active Buffs",
+        "xp_bonus": "XP Bonus",
         "total_items": "Total Items: **{{count}}**",
         "inventory_value": "Inventory Value: **{{emoji}} {{amount}}**",
         "sell_tip": "💡 Tip: Use {{prefix}}sell <item> to turn items back into coins!",
         "global_multipliers": "🚀 Global Multipliers",
         "income_bonus": "Income Bonus",
-        "gamble_bonus": "Gamble Bonus",
-        "xp_bonus": "XP Bonus",
-        "buff_activated": "\n✨ **Buff activated:** +{{percent}}% {{type}} for **{{duration}}**!"
+        "gamble_bonus": "Luck Bonus",
+        "daily_bonus": "Daily Bonus"
+    },
+    "lottery": {
+        "title": "🎫 Lucky Lottery",
+        "status_desc": "💰 Current Jackpot: **{{jackpot}}** {{emoji}}\n🎟️ Total tickets sold: **{{total}}**\n👤 Your tickets: **{{user}}**\n\nPrice per ticket: **{{price}}** coins.",
+        "time_remaining": "⏱️ Time Remaining",
+        "usage_tip": "Use {{prefix}}lottery buy [amount] to buy tickets.",
+        "buy_success": "✅ You bought **{{amount}}** tickets for **{{cost}}** {{emoji}}!",
+        "draw_title": "🎉 Today's Lottery Result!",
+        "draw_desc": "Congratulations **{{user}}** for winning the Jackpot of **{{amount}}** {{emoji}}! 💰"
+    },
+    "roleshop": {
+        "title": "🎭 Role Shop",
+        "desc": "Use coins to assert your status and gain permanent active buffs!",
+        "already_owned": "❌ You already own this role!",
+        "role_not_found": "❌ Role does not exist or bot lacks permissions!",
+        "buy_success": "✅ Congratulations! You have successfully purchased the **{{role}}** role for **{{price}}** coins!",
+        "error": "❌ Error granting role. Please contact an Admin!"
     },
     "buy": {
         "prompt": "❌ Please specify the item you want to buy (e.g., `{{prefix}}buy 1` or `{{prefix}}buy cookies`).",
@@ -1116,7 +1139,7 @@
         "heads": "Heads",
         "tails": "Tails",
         "invalid_side": "❌ Please choose `heads` or `tails`!\nUsage: `{{prefix}}coinflip <heads|tails> [bet]`",
-        "win": "🎉 **You won {{amount}} coins!**",
+        "win_msg": "🎉 **You won {{amount}} {{emoji}}!**",
         "lose": "💸 **You lost {{amount}} coins.**"
     },
     "dice": {
@@ -1137,7 +1160,7 @@
         "insufficient_bet": "❌ You don't have enough coins for this bet!",
         "result_title": "🎲  Dice Roll Result",
         "prediction": "Prediction",
-        "payout": "🎉 **You won {{amount}} coins!** (x{{multiplier}} payout)",
+        "win_msg": "🎉 **You won {{amount}} {{emoji}}!** (x{{multiplier}} payout)",
         "lose_msg": "💸 **You lost {{amount}} coins!**",
         "timeout": "❌ You took too long to choose. Game cancelled.",
         "prediction_labels": {
@@ -1260,6 +1283,10 @@
             "owner": {
                 "label": "Owner Only",
                 "description": "Bot management and administration"
+            },
+            "admin": {
+                "label": "Server Admin",
+                "description": "Manage custom roles for this server"
             }
         },
         "descriptions": {
@@ -1288,6 +1315,8 @@
             "slut": "Earn extra income through 'side' services.",
             "fish": "Go fishing for valuable sea creatures.",
             "job": "Advanced career system for Level 20+.",
+            "buyrole": "Purchase roles using coins from the server shop.",
+            "lottery": "Participate in the lottery for a chance to win the Jackpot.",
             "jobdetail": "View in-depth details about specific jobs.",
             "balance": "Check your current wallet balance.",
             "shop": "Purchase items to boost your progress.",
@@ -1296,6 +1325,7 @@
             "sell": "Sell back items for a portion of their value.",
             "iteminfo": "View detailed stats and job synergy of an item.",
             "transfer": "Send coins securely to another user.",
+            "setdistchannel": "Set the channel for system notifications.",
             "use": "Activate usable items from your inventory.",
             "marry": "Propose to someone you love with a ring.",
             "divorce": "Divorce your partner and end the relationship.",
@@ -1307,19 +1337,20 @@
             "avatar": "View user avatars in high resolution.",
             "help": "Show the command guide and menu.",
             "language": "Configure your display language.",
+            "setrole": "Manage roles in the server's Role Shop.",
             "giveaway": "Manage and host giveaway events.",
             "serverinfo": "Display technical info about the server.",
             "userinfo": "View deep-dive info about a user.",
             "serverlist": "Administrative list of all guilds. (Owner)",
             "leaveserver": "Force bot to leave a guild by ID. (Owner)",
             "setstatus": "Change the bot's rich presence status. (Owner)",
-            "additem": "Grant items directly to a player. (Owner)",
-            "addmoney": "Add coins to a player's account. (Owner)",
-            "removeitem": "Revoke items from a player. (Owner)",
-            "removemoney": "Remove coins from a player. (Owner)",
-            "resetuser": "Wipe all data for a specific user. (Owner)",
-            "setexp": "Modify a player's experience points. (Owner)",
-            "setlevel": "Instantly change a player's level. (Owner)",
+            "additem": "Grant items directly to a player.",
+            "addmoney": "Add coins to a player's account.",
+            "removeitem": "Revoke items from a player.",
+            "removemoney": "Remove coins from a player.",
+            "resetuser": "Wipe all data for a specific user.",
+            "setexp": "Modify a player's experience points.",
+            "setlevel": "Instantly change a player's level.",
             "setowner": "Transfer bot ownership status. (Owner)",
             "shutdown": "Safely terminate the bot process. (Owner)",
             "resetdatabase": "Wipe all system data. (Owner)",
@@ -1351,12 +1382,12 @@
             "rob": "🌟 **Description:** Break in and steal coins from another user.\n\n⚠️ **Risks:**\n- If you fail, you'll pay a 20% fine of your balance to the victim.\n\n💰 **Rewards:** Steal a portion of someone else's wealth.",
             "slut": "🌟 **Description:** Go out and earn extra income through 'side' services.\n\n⚠️ **Risks:**\n- Success rate is 60%.\n- If you fail, you'll pay a fixed medical fee.\n\n💰 **Rewards:** Moderate payouts, balancing risk and profit.",
             "profile": "🌟 **Description:** Your digital passport! View a deep dive into any user's progress and wealth.\n\n📊 **Detailed Stats:**\n- **Personal Balance:** Your spendable cash.\n- **Net Worth:** Total value of your cash + all items in your inventory.\n- **Rankings:** Your position on the global wealth leaderboard.\n- **Experience:** Your current level and XP progression.",
-            "addmoney": "🌟 **Description:** Add any amount of coins to a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$addmoney @user <amount>`",
-            "removemoney": "🌟 **Description:** Remove any amount of coins from a player's account. (Owner Only)\n\n🕹️ **Usage:**\n`$removemoney @user <amount>`",
-            "additem": "🌟 **Description:** Grant items directly to a player's inventory. (Owner Only)\n\n🕹️ **Usage:**\n`$additem @user <item_id> [quantity]`",
-            "removeitem": "🌟 **Description:** Revoke items from a player's inventory. (Owner Only)\n\n🕹️ **Usage:**\n`$removeitem @user <item_id> [quantity]`",
-            "setlevel": "🌟 **Description:** Instantly change a player's current level. (Owner Only)\n\n🕹️ **Usage:**\n`$setlevel @user <level>`",
-            "resetuser": "🌟 **Description:** Completely wipe all data (money, inventory, stats) of a player. This action cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetuser @user`",
+            "addmoney": "Add coins to a player's account. (Owner)",
+            "removemoney": "Remove coins from a player. (Owner)",
+            "additem": "Grant items directly to a player. (Owner)",
+            "removeitem": "Revoke items from a player. (Owner)",
+            "setlevel": "Instantly change a player's level. (Owner)",
+            "resetuser": "Wipe all data for a specific user. (Owner)",
             "setowner": "🌟 **Description:** Transfer Bot Ownership to another user. This is an extremely destructive action and requires changing `.env`. (Owner Only)\n\n🕹️ **Usage:**\n`$setowner @user confirm`",
             "serverlist": "🌟 **Description:** View an administrative list of all servers the bot is currently in, along with member counts. (Owner Only)\n\n🕹️ **Usage:**\n`$serverlist`",
             "leaveserver": "🌟 **Description:** Force the bot to leave a specific server by its ID. (Owner Only)\n\n🕹️ **Usage:**\n`$leaveserver <server_id>`",
@@ -1364,27 +1395,31 @@
             "shutdown": "🌟 **Description:** Safely terminate the bot process. Cannot be restarted via Discord; requires terminal access. (Owner Only)\n\n🕹️ **Usage:**\n`$shutdown`",
             "balance": "🌟 **Description:** Check your own or another user's coin balance.\n\n🕹️ **Usage:**\n- `$balance`: View your own wallet.\n- `$balance @user`: View the specified user's wallet.",
             "daily": "🌟 **Description:** Claim your free daily coin reward every 24 hours.\n\n✨ **Special Events:**\n- **Chef**: **Michelin Star** (Chance to triple the daily reward!).\n- **Doctor**: **Medical Trial** (Chance for +100-300 bonus coins).\n- **Streamer**: **Subathon** (Chance for +25% total bonus).\n\n💡 **Tip:** Maintain a daily streak to increase your rewards!",
+            "buyrole": "🌟 **Description:** Purchase special titles/roles to decorate your profile and get buffs.\n\n🕹️ **Usage:**\n- `$buyrole <role_id>`\n\n💡 **Tip:** View available roles using `$roleshop`.",
+            "lottery": "🌟 **Description:** Try your luck with the system lottery. The Jackpot can grow massive!\n\n🕹️ **Usage:**\n- `$lottery`: View the current prize pool.\n- `$lottery buy [amount]`: Purchase lottery tickets.",
+            "setdistchannel": "🌟 **Description:** Set the channel where the bot sends important announcements like level-ups and lottery results.\n\n🕹️ **Usage:**\n`$setdistchannel <#channel>`",
             "job": "🌟 **Description:** Advanced career system that unlocks at Level 20.\n\n⚙️ **Sub-commands:**\n- `$job list`: View all available jobs and their perks.\n- `$job info`: View detailed info about your current job.\n\n💼 **Note:** Use a 'Career Change Voucher' to switch paths.",
             "inventory": "🌟 **Description:** View all items you own and any currently active buffs.\n\n🕹️ **Usage:**\n- `$inventory`\n- `$inventory @user`: View someone else's inventory.",
             "buy": "🌟 **Description:** Purchase items from the global shop.\n\n🕹️ **Usage:**\n- `$buy <ID/Name> [quantity]`\n\n💡 **Tip:** Find item IDs using `$shop`.",
             "sell": "🌟 **Description:** Sell items from your inventory back for coins.\n\n🕹️ **Usage:**\n- `$sell <ID/Name> [quantity]`\n\n⚖️ **Refund:** Receive 70% of the original purchase price.",
             "iteminfo": "🌟 **Description:** View detailed stats, effects, and job synergy for a specific item.\n\n🕹️ **Usage:**\n- `$iteminfo <ID/Name>`",
-            "use": "🌟 **Description:** Consume a usable item from your inventory to activate its effect.\n\n🕹️ **Usage:**\n- `$use <item_id>`",
-            "transfer": "🌟 **Description:** Securely send coins to another user.\n\n🕹️ **Usage:**\n- `$transfer @user <amount>`",
-            "ping": "🌟 **Description:** Check the bot's response latency and system statistics.\n\n🕹️ **Usage:**\n- `$ping`",
-            "avatar": "🌟 **Description:** View your own or another user's avatar in full size.\n\n🕹️ **Usage:**\n- `$avatar [@user]`",
-            "language": "🌟 **Description:** Change the bot's display language (vi/en).\n\n🕹️ **Usage:**\n- `$language <vi|en>`: Update your personal setting.\n- `$language server <vi|en>`: Update the server-wide default (Admin only).",
-            "serverinfo": "🌟 **Description:** View a comprehensive overview of this Discord server.\n\n🕹️ **Usage:**\n- `$serverinfo`",
-            "userinfo": "🌟 **Description:** View detailed information about a user (Join date, roles, etc.).\n\n🕹️ **Usage:**\n- `$userinfo [@user]`",
-            "coinflip": "🌟 **Description:** Test your luck with a coin flip to double your bet!\n\n🕹️ **Usage:**\n- `$coinflip <amount> <heads|tails>`\n- `$cf <amount> <h|t>`",
-            "dice": "🌟 **Description:** Roll the dice and bet on the outcome (1-6)!\n\n🕹️ **Usage:**\n- `$dice <amount> <1-6>`\n- `$roll <amount> <1-6>`",
-            "rank": "🌟 **Description:** The global leaderboard for ranking players!\n\n⚙️ **Modes:**\n- Experience (XP): Default ranking.\n- Wealth (Balance): Toggle via menu.\n- Career: Filter by specific job categories.",
-            "lvl": "🌟 **Description:** Quickly view your current level and experience points (XP) progress.\n\n🕹️ **Usage:**\n- `$lvl [@user]`",
-            "setexp": "🌟 **Description:** Adjust a player's experience points directly. (Admin Only)\n\n🕹️ **Usage:**\n`$setexp @user <amount>`",
-            "jobdetail": "🌟 **Description:** View in-depth details about specific jobs.\n\n🕹️ **Usage:**\n`$jobdetail <job_id>`\n\n💡 **Tip:** Find job IDs using `$job list`.",
-            "shop": "🌟 **Description:** Browse and purchase items from the shop.\n\n🕹️ **Usage:**\n`$shop`",
-            "giveaway": "🌟 **Description:** Host and manage giveaway events in your server.\n\n🕹️ **Usage:**\n`$giveaway <subcommand>`",
-            "help": "🌟 **Description:** View the full list of commands or get detailed help for a specific one.\n\n🕹️ **Usage:**\n`$help [command]`",
+            "use": "🌟 **Description:** Sử dụng (Use item)\n\n🕹️ **Usage:**\n- `$use <item_id>`",
+            "transfer": "🌟 **Description:** Chuyển tiền (Transfer money)\n\n🕹️ **Usage:**\n- `$transfer @user <amount>`",
+            "ping": "🌟 **Description:** Độ trễ (Bot latency)\n\n🕹️ **Usage:**\n- `$ping`",
+            "avatar": "🌟 **Description:** Ảnh đại diện (User avatar)\n\n🕹️ **Usage:**\n- `$avatar [@user]`",
+            "language": "🌟 **Description:** Ngôn ngữ (Set language)\n\n🕹️ **Usage:**\n- `$language <vi|en>`",
+            "serverinfo": "🌟 **Description:** Thông tin server (Server info)\n\n🕹️ **Usage:**\n- `$serverinfo`",
+            "userinfo": "🌟 **Description:** Thông tin người dùng (User info)\n\n🕹️ **Usage:**\n- `$userinfo [@user]`",
+            "coinflip": "🌟 **Description:** Tung đồng xu (Coinflip)\n\n🕹️ **Usage:** `$cf <amount> <heads|tails>`",
+            "dice": "🌟 **Description:** Đổ xúc xắc (Dice)\n\n🕹️ **Usage:** `$dice <amount> <1-6>`",
+            "rank": "🌟 **Description:** Xếp hạng (Leaderboard)\n\n🕹️ **Usage:** `$rank [@user]`",
+            "lvl": "🌟 **Description:** Cấp độ (View level)\n\n🕹️ **Usage:** `$lvl [@user]`",
+            "setexp": "🌟 **Description:** Set experience (Set XP) (Owner)\n\n🕹️ **Usage:** `$setexp @user <amount>`",
+            "jobdetail": "🌟 **Description:** Chi tiết nghề (View job details)\n\n🕹️ **Usage:** `$jd <job_id>`",
+            "shop": "🌟 **Description:** Cửa hàng (View shop)\n\n🕹️ **Usage:** `$shop`",
+            "giveaway": "🌟 **Description:** Giveaway events\n\n🕹️ **Usage:** `$giveaway start`",
+            "help": "🌟 **Description:** Help menu\n\n🕹️ **Usage:** `$help [command]`",
+            "setrole": "🌟 **Description:** Set role\n\n🕹️ **Usage:** `$setrole add <@role> <price> <buff%>`",
             "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`",
             "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`"
         }
@@ -1416,6 +1451,7 @@
         "other": "Special Buff"
     },
     "giveaway": {
+        "prize": "Prize",
         "active_title": "{{emoji}}  GIVEAWAY EVENT  {{emoji}}",
         "ends": "Ends",
         "winners": "Number of winners",

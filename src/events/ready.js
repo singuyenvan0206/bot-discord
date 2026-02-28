@@ -15,8 +15,6 @@ module.exports = {
         console.log('╚══════════════════════════════════════════════╝');
         console.log('');
 
-        await db.getDb();
-        console.log('💾 Database initialized');
 
         startTimer(client);
 

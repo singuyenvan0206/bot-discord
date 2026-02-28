@@ -5,16 +5,17 @@ const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount, addHouseProfit } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 
 module.exports = {
     name: 'dice',
     aliases: ['roll', 'di', 'd'],
-    description: 'Đổ 2 xúc xắc và đặt cược vào kết quả!',
+    description: 'Đổ xúc xắc đặt cược (Roll dice to gamble)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
 
         // Parse bet amount: $dice <bet> or $dice (default 50)
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
@@ -59,7 +60,7 @@ module.exports = {
             const choice = i.customId.split('_')[1]; // high, low, odd, even, 7
 
             // Re-check balance at time of click
-            const freshUser = db.getUser(message.author.id);
+            const freshUser = db.getUser(message.author.id, i.guild.id);
             if (freshUser.balance < bet) {
                 return i.update({
                     embeds: [new EmbedBuilder().setTitle(t('dice.menu_title', lang)).setDescription(t('dice.insufficient_bet', lang)).setColor(config.COLORS.GAMBLE_LOSS)],
@@ -67,7 +68,10 @@ module.exports = {
                 });
             }
 
-            db.removeBalance(message.author.id, bet);
+            db.removeBalance(i.guild.id, message.author.id, bet);
+
+            // Grant Action XP
+            addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
 
             // Roll 2d6
             const d1 = Math.floor(Math.random() * 6) + 1;
@@ -91,21 +95,29 @@ module.exports = {
                 // Calculate reward including bonuses (Profit = prize - bet)
                 const profit = prize - bet;
                 const { calculateReward } = require('../../utils/multiplier');
-                const { total, bonus, percent } = calculateReward(profit, message.author.id, 'gamble');
+                const { total, bonus, percent } = calculateReward(profit, message.member, 'gamble');
 
                 const payout = total + bet;
-                db.addBalance(message.author.id, payout);
+                db.addBalance(i.guild.id, message.author.id, payout);
 
-                bonusText = t('dice.win_msg', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
+                // Grant Win XP
+                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                addXp(message.member, winXp, i.guild.id);
+
+                bonusText = t('dice.win_msg', lang, {
+                    amount: payout.toLocaleString(),
+                    emoji: config.EMOJIS.COIN,
+                    multiplier: winMultiplier
+                });
                 if (bonus > 0) {
                     bonusText += `\n✨ **Bonus:** +${percent}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
                 }
 
                 // Musician Interaction: Flow State (10% chance to double final win)
-                const u = db.getUser(message.author.id);
+                const u = db.getUser(message.author.id, i.guild.id);
                 if (u.job === 'musician' && Math.random() < 0.10) {
                     prize *= 2;
-                    db.addBalance(message.author.id, prize / 2); // Add the extra half
+                    db.addBalance(i.guild.id, message.author.id, prize / 2); // Add the extra half
                     bonusText += t('common.flow_state', lang);
                 }
             }
@@ -126,15 +138,15 @@ module.exports = {
                     `**${t('rps.betting', lang, { amount: bet })}\n\n` +
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
                     (won
-                        ? t('dice.payout', lang, { amount: prize.toLocaleString(), multiplier: winMultiplier }) + bonusText
+                        ? bonusText
                         : (() => {
                             addHouseProfit(i, bet);
                             let lossMsg = t('dice.lose_msg', lang, { amount: bet });
                             // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
-                            const u = db.getUser(message.author.id);
+                            const u = db.getUser(message.author.id, i.guild.id);
                             if (u.job === 'trader' && Math.random() < 0.15) {
                                 const refund = Math.floor(bet * 0.5);
-                                db.addBalance(message.author.id, refund);
+                                db.addBalance(i.guild.id, message.author.id, refund);
                                 lossMsg += t('common.market_tip', lang);
                             }
                             return lossMsg;

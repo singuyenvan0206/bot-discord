@@ -5,8 +5,8 @@ const config = require('../../config');
 
 module.exports = {
     name: 'level',
-    aliases: ['lvl'],
-    description: 'Hiển thị cấp độ và kinh nghiệm hiện tại (Displays current level and XP)',
+    aliases: ['level', 'xp', 'l', 'lvl'],
+    description: 'Cấp độ (View level)',
     skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -14,7 +14,7 @@ module.exports = {
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;
 
-        const dbUser = db.getUser(user.id);
+        const dbUser = db.getUser(user.id, message.guild.id);
 
         // Calculate XP Progress
         const currentLevelXp = (dbUser.level / 0.1) ** 2;

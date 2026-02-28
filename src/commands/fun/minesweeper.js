@@ -8,12 +8,12 @@ const { calculateReward } = require('../../utils/multiplier');
 module.exports = {
     name: 'minesweeper',
     aliases: ['mine', 'ms'],
-    description: 'Chơi Dò Mìn (Minesweeper)! (24 ô)',
+    description: 'Dò mìn (Play Minesweeper game)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 0;
 
@@ -25,7 +25,7 @@ module.exports = {
                 return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
             }
             if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
-            db.removeBalance(user.id, bet);
+            db.removeBalance(message.guild.id, user.id, bet);
         }
 
         const size = 20; // 4 rows * 5 columns = 20 cells
@@ -207,7 +207,7 @@ module.exports = {
 
                 // Grant Action XP
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
                 if (result === 'BOOM') {
                     collector.stop('boom');
@@ -222,7 +222,7 @@ module.exports = {
                     if (invData['502'] && invData['502'] > 0) {
                         loseAmount = Math.floor(bet * 0.5);
                         shieldUsed = true;
-                        db.addBalance(user.id, loseAmount); // Refund 50% (since 100% was already removed)
+                        db.addBalance(message.guild.id, user.id, loseAmount); // Refund 50% (since 100% was already removed)
                     }
                     const loseEmbed = new EmbedBuilder()
                         .setTitle(t('minesweeper.lose_title', lang))
@@ -242,15 +242,15 @@ module.exports = {
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(message.author.id, winXp);
+                        addXp(message.member, winXp, message.guild.id);
 
                         let prize = 0;
                         if (bet > 0) {
                             const baseWin = Math.floor(bet * 2.5);
                             const profit = baseWin - bet;
-                            const { bonus: bonusAmount, percent } = calculateReward(profit, user.id, 'gamble');
+                            const { bonus: bonusAmount, percent } = calculateReward(profit, message.member, 'gamble');
                             const totalReward = baseWin + bonusAmount;
-                            db.addBalance(user.id, totalReward);
+                            db.addBalance(message.guild.id, user.id, totalReward);
 
                             let winDesc = t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${totalReward.toLocaleString()} coins`;
                             if (bonusAmount > 0) {

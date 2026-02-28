@@ -4,19 +4,20 @@ const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 // Helper: activate a single buff item for a user
-function activateBuff(userId, item, buffs, isChef) {
+function activateBuff(guildId, userId, item, buffs, isChef) {
     let duration = item.duration;
     if (isChef) duration *= 2;
     const expiresAt = Math.floor(Date.now() / 1000) + duration;
     buffs.push({ itemId: item.id, expiresAt });
-    db.removeItem(userId, String(item.id), 1);
+    db.removeItem(guildId, userId, String(item.id), 1);
     const hours = Math.floor(duration / 3600);
     return hours > 0 ? `${hours}h` : `${Math.floor(duration / 60)}m`;
 }
 
 module.exports = {
     name: 'use',
-    description: 'Sử dụng một vật phẩm từ túi đồ',
+    aliases: ['u'],
+    description: 'Sử dụng (Use item)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const itemQuery = args[0]?.toLowerCase();
@@ -25,13 +26,13 @@ module.exports = {
             return message.reply(t('use.prompt', lang, { prefix: config.PREFIX }));
         }
 
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         let inv = {};
         try { inv = JSON.parse(user.inventory || '{}'); } catch { inv = {}; }
 
         // ─── USE ALL ──────────────────────────────────
         if (itemQuery === 'all') {
-            const user = db.getUser(message.author.id);
+            const user = db.getUser(message.author.id, message.guild.id);
             let buffs = [];
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
@@ -59,7 +60,7 @@ module.exports = {
                     buffs.push({ itemId: itemIdNum, expiresAt: now + addedDuration });
                 }
 
-                db.removeItem(message.author.id, id, qty);
+                db.removeItem(message.guild.id, message.author.id, id, qty);
 
                 const totalDurationSec = addedDuration;
                 const durationStr = (() => {
@@ -83,7 +84,7 @@ module.exports = {
                 totalCount += qty;
             }
 
-            db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
+            db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 
             if (totalCount === 0) {
                 return message.reply(t('use.all_nothing', lang));
@@ -114,8 +115,8 @@ module.exports = {
             if (!user.job) {
                 return message.reply(t('use.no_job_to_reset', lang));
             }
-            db.removeItem(message.author.id, itemId, 1);
-            db.updateUser(message.author.id, { job: null });
+            db.removeItem(message.guild.id, message.author.id, itemId, 1);
+            db.updateUser(message.guild.id, message.author.id, { job: null });
             return message.reply(t('use.career_reset', lang, { prefix: config.PREFIX }));
         }
 
@@ -125,9 +126,9 @@ module.exports = {
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
             const isChef = user.job === 'chef';
-            const durationStr = activateBuff(message.author.id, item, buffs, isChef);
+            const durationStr = activateBuff(message.guild.id, message.author.id, item, buffs, isChef);
 
-            db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
+            db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 
             const effectType = t(`effects.${item.type}`, lang) || item.type;
             let displayPercent = Math.round(item.multiplier * 100);

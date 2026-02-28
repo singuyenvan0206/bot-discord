@@ -3,22 +3,23 @@ const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
 const { deductLevel, deductXp } = require('../../utils/leveling');
 const { hasActiveItem, isProtectedFromRob, calculateReward, removeActiveBuff } = require('../../utils/multiplier');
+const { formatDuration } = require('../../utils/time');
 
 module.exports = {
     name: 'rob',
-    aliases: ['steal'],
-    description: 'Rob coins from another user',
+    aliases: ['r', 'rb', 'steal'],
+    description: 'Cướp tiền (Rob someone)',
     cooldown: config.ECONOMY.ROB_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = config.ECONOMY.ROB_COOLDOWN;
+        const cooldown = db.getGuildSetting(message.guild.id, 'rob_cooldown', config.ECONOMY.ROB_COOLDOWN);
+        const lastRob = Number(user.last_rob || 0);
 
-        if (now - user.last_rob < cooldown) {
-            const remaining = (user.last_rob + cooldown) - now;
-            const minutes = Math.ceil(remaining / 60);
-            return message.reply(t('rob.cooldown', lang, { minutes }));
+        if (now - lastRob < cooldown) {
+            const timeLeft = cooldown - (now - lastRob);
+            return message.reply(t('rob.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
         const target = message.mentions.users.first();
@@ -27,18 +28,18 @@ module.exports = {
         if (target.bot) return message.reply(t('rob.invalid_user', lang));
         if (db.isOwner(target.id)) return message.reply(t('rob.target_owner', lang));
 
-        const victim = db.getUser(target.id);
-        if (victim.balance <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
-        if (user.balance < 100) return message.reply(t('rob.no_money_self', lang));
+        const victim = db.getUser(target.id, message.guild.id);
+        if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
+        if ((user.balance || 0) < 100) return message.reply(t('rob.no_money_self', lang));
 
-        db.updateUser(message.author.id, { last_rob: now });
+        db.updateUser(message.guild.id, message.author.id, { last_rob: now });
 
         const isCriminal = user.job === 'criminal';
         const isSoldier = user.job === 'soldier';
         const isVictimPolice = victim.job === 'police';
 
-        const hasVictimShield = hasActiveItem(target.id, 202); // Shield (ID 202)
-        const hasVictimRobShield = isProtectedFromRob(target.id); // Shield of Protection (502)
+        const hasVictimShield = hasActiveItem(message.guild.id, target.id, 202); // Shield (ID 202)
+        const hasVictimRobShield = isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (502)
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
         if (isCriminal) baseSuccessChance += 0.10;
@@ -52,7 +53,7 @@ module.exports = {
         const isSuccess = Math.random() < baseSuccessChance;
 
         if (isSuccess) {
-            const targetBalance = victim.balance;
+            const targetBalance = (victim.balance || 0);
             let baseSteal = Math.floor(targetBalance * (Math.random() * 0.05 + 0.05)); // 5-10% of victim's balance
 
             // Bonus: if robbing a Police officer, criminal earns +50%
@@ -62,31 +63,29 @@ module.exports = {
                 policeRobMsg = t('rob.police_bounty', lang);
             }
 
-            const { total: stolen, bonus: bonusAmount, percent } = calculateReward(baseSteal, message.author.id);
-
             // Ensure we don't steal more than they have total
-            const finalStolen = Math.min(stolen, victim.balance);
+            const victimLoss = Math.min(baseSteal, (victim.balance || 0));
 
-            db.addBalance(message.author.id, finalStolen);
-            db.removeBalance(target.id, finalStolen);
+            const { total: robberGain, bonus, percent } = calculateReward(victimLoss, message.member, 'income');
 
-
+            db.addBalance(message.guild.id, message.author.id, robberGain);
+            db.removeBalance(message.guild.id, target.id, victimLoss);
 
             let msg = t('rob.success', lang, {
                 user: target.username,
-                amount: finalStolen.toLocaleString(),
+                amount: victimLoss.toLocaleString(),
                 emoji: config.EMOJIS.COIN
             });
 
-            if (bonusAmount > 0) {
-                msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+            if (bonus > 0) {
+                msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
             }
             if (policeRobMsg) msg += policeRobMsg;
 
             return message.reply(msg);
         } else {
             // New Scaled Penalty: (level * 500) + (5% of balance)
-            let penalty = (user.level * 500) + Math.floor(user.balance * 0.05);
+            let penalty = (user.level * 500) + Math.floor((user.balance || 0) * 0.05);
             const xpLoss = 50;
 
             // Interaction: Counter-Rob (Penalty doubled if robbing police)
@@ -94,20 +93,20 @@ module.exports = {
                 penalty *= 2;
             }
 
-            const xpResult = deductXp(message.author.id, xpLoss);
-            db.removeBalance(message.author.id, penalty);
-            db.addBalance(target.id, penalty);
+            const xpResult = deductXp(message.author.id, message.guild.id, xpLoss);
+            db.removeBalance(message.guild.id, message.author.id, penalty);
+            db.addBalance(message.guild.id, target.id, penalty);
 
             // Cooldown Penalty: Busted Time (2x cooldown)
             const bustedCooldown = config.ECONOMY.ROB_COOLDOWN;
-            db.updateUser(message.author.id, { last_rob: now + bustedCooldown });
+            db.updateUser(message.guild.id, message.author.id, { last_rob: now + bustedCooldown });
 
             // Item Breakage: 15% chance to lose Sneakers (204) or Shield (202)
             let itemBrokenMsg = '';
             if (Math.random() < 0.15) {
-                if (removeActiveBuff(message.author.id, 204)) {
+                if (removeActiveBuff(message.guild.id, message.author.id, 204)) {
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.204.name', lang) });
-                } else if (removeActiveBuff(message.author.id, 202)) {
+                } else if (removeActiveBuff(message.guild.id, message.author.id, 202)) {
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.202.name', lang) });
                 }
             }
@@ -122,7 +121,7 @@ module.exports = {
             if (itemBrokenMsg) failMsg += itemBrokenMsg;
 
             if (user.job === 'teacher') {
-                const result = deductLevel(message.author.id);
+                const result = deductLevel(message.author.id, message.guild.id);
                 failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('rob.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 

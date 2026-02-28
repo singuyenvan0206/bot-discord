@@ -9,7 +9,7 @@ const { addHouseProfit } = require('../../utils/economy');
 module.exports = {
     name: 'tictactoe',
     aliases: ['ttt'],
-    description: 'Chơi trò chơi Cờ Ca-rô (Tic-Tac-Toe)!',
+    description: 'Cờ ca-rô (Play Tic-Tac-Toe game)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
@@ -18,6 +18,8 @@ module.exports = {
         const isBot = !opponent || opponent.id === message.author.id || opponent.bot;
         const playerX = message.author;
         const playerO = isBot ? message.client.user : opponent;
+        const playerXMember = message.member;
+        const playerOMember = isBot ? null : (message.guild.members.cache.get(opponent.id) || await message.guild.members.fetch(opponent.id).catch(() => null));
         const uid = Date.now().toString(36);
 
         const board = Array(9).fill(null); // null, 'X', 'O'
@@ -146,7 +148,7 @@ module.exports = {
             // Grant Action XP for the move
             if (i.user.id !== message.client.user.id) {
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(i.user.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
             }
 
             let winner = checkWinner();
@@ -171,13 +173,14 @@ module.exports = {
                     const baseReward = config.ECONOMY.TICTACTOE_REWARD;
 
                     if (winnerId !== message.client.user.id) {
-                        const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winnerId);
-                        db.addBalance(winnerId, totalReward);
+                        const winnerMember = winner === 'X' ? playerXMember : playerOMember;
+                        const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winnerMember);
+                        db.addBalance(message.guild.id, winnerId, totalReward);
 
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(winnerId, winXp);
+                        addXp(winnerMember, winXp, message.guild.id);
 
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
@@ -186,13 +189,12 @@ module.exports = {
                             resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                         }
                     } else {
-                        const baseReward = config.ECONOMY.TICTACTOE_REWARD;
                         addHouseProfit(i, baseReward);
 
                         // Grant Win XP to Bot
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(message.client.user.id, winXp);
+                        addXp(message.client.user.id, winXp, message.guild.id);
 
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: baseReward.toLocaleString() });

@@ -2,11 +2,12 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const db = require('../../database');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const SHOP_ITEMS = require('../../utils/shopItems');
 
 module.exports = {
     name: 'marry',
-    aliases: ['propose'],
-    description: 'Propose to another user',
+    aliases: ['m'],
+    description: 'Kết hôn (Propose to someone)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const target = message.mentions.users.first();
@@ -23,18 +24,18 @@ module.exports = {
             return message.reply(t('marry.bot', lang));
         }
 
-        // Check if either user is already married
-        const userMarriage = db.getMarriage(message.author.id);
+        // Check if either user is already married (guild-specific)
+        const userMarriage = db.getMarriage(message.guild.id, message.author.id);
         if (userMarriage) {
             return message.reply(t('marry.already_married_self', lang));
         }
 
-        const targetMarriage = db.getMarriage(target.id);
+        const targetMarriage = db.getMarriage(message.guild.id, target.id);
         if (targetMarriage) {
             return message.reply(t('marry.already_married_target', lang));
         }
 
-        const dbUser = db.getUser(message.author.id);
+        const dbUser = db.getUser(message.author.id, message.guild.id);
 
         // Check for rings (701 = Wedding, 702 = Diamond)
         const inv = JSON.parse(dbUser.inventory || '{}');
@@ -90,26 +91,26 @@ module.exports = {
 
             if (i.customId === 'accept_marry') {
                 // Final check before saving
-                const finalCheckUser = db.getMarriage(message.author.id);
-                const finalCheckTarget = db.getMarriage(target.id);
+                const finalCheckUser = db.getMarriage(message.guild.id, message.author.id);
+                const finalCheckTarget = db.getMarriage(message.guild.id, target.id);
 
                 if (finalCheckUser || finalCheckTarget) {
                     return i.update({ content: t('marry.already_married_self', lang), embeds: [], components: [] });
                 }
 
                 // Final inventory check - ensure the proposer still has the ring
-                const finalInvCheck = db.getUser(message.author.id);
+                const finalInvCheck = db.getUser(message.author.id, message.guild.id);
                 const currentInv = JSON.parse(finalInvCheck.inventory || '{}');
                 if (!currentInv[String(ringId)] || currentInv[String(ringId)] <= 0) {
                     return i.update({ content: t('buy.no_ring', lang), embeds: [], components: [] });
                 }
 
                 // Remove the used ring
-                if (!db.removeItem(message.author.id, String(ringId), 1)) {
+                if (!db.removeItem(message.guild.id, message.author.id, String(ringId), 1)) {
                     return i.update({ content: t('buy.no_ring', lang), embeds: [], components: [] });
                 }
 
-                db.createMarriage(message.author.id, target.id, ringId);
+                db.createMarriage(message.guild.id, message.author.id, target.id, ringId);
 
                 const acceptMsg = ringId === 702
                     ? t('marry.accepted_diamond', lang, { user: message.author.toString(), target: target.toString() })

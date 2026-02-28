@@ -4,8 +4,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'ping',
-    aliases: ['pong'],
-    description: 'Kiểm tra độ trễ của bot (Displays the bot latency)',
+    aliases: ['ping'],
+    description: 'Độ trễ (Bot latency)',
     skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

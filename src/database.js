@@ -6,7 +6,7 @@ const DB_NAME = process.env.DB_NAME || 'databases.db';
 const DB_PATH = path.join(__dirname, '..', DB_NAME);
 
 let db = null;
-const MIGRATION_LEVEL = 1; // Current system migration level
+const MIGRATION_LEVEL = 2; // Current system migration level
 
 async function getDb() {
     if (db) return db;
@@ -34,20 +34,47 @@ async function getDb() {
     return db;
 }
 
-function saveDb() {
+let pendingSave = null;
+
+function _performSave() {
     if (!db) return;
+    const tmpPath = `${DB_PATH}.${Date.now()}.${Math.random().toString(36).substring(2, 8)}.tmp`;
     try {
         const data = db.export();
         const buffer = Buffer.from(data);
-        const tmpPath = `${DB_PATH}.tmp`;
 
-        // Atomic save: write to tmp then rename
+        // Atomic save: write to unique tmp then rename
         fs.writeFileSync(tmpPath, buffer);
-        fs.renameSync(tmpPath, DB_PATH);
+
+        try {
+            fs.renameSync(tmpPath, DB_PATH);
+        } catch (renameErr) {
+            // Windows EPERM/EBUSY fallback: If OneDrive/Antivirus locks rename, write directly
+            console.warn(`⚠️ Atomic rename failed (${renameErr.code}), falling back to direct write.`);
+            fs.writeFileSync(DB_PATH, buffer);
+            try { fs.unlinkSync(tmpPath); } catch (cleanupErr) { }
+        }
     } catch (err) {
         console.error('❌ Failed to save database:', err);
+    } finally {
+        pendingSave = null;
     }
 }
+
+function saveDb() {
+    if (!db) return;
+    if (pendingSave) clearTimeout(pendingSave);
+    pendingSave = setTimeout(() => {
+        _performSave();
+    }, 1000);
+}
+
+process.on('exit', () => {
+    if (pendingSave) {
+        clearTimeout(pendingSave);
+        _performSave();
+    }
+});
 
 function initSchema() {
     const isWordChain = DB_NAME.includes('wordchain.db');
@@ -99,21 +126,22 @@ function initSchema() {
             last_search INTEGER DEFAULT 0,
             job TEXT DEFAULT NULL,
             inventory TEXT DEFAULT '{}',
-            active_buffs TEXT DEFAULT '[]'
+            active_buffs TEXT DEFAULT '[]',
+            purchased_roles TEXT DEFAULT '[]',
+            warnings INTEGER DEFAULT 0,
+            server_data TEXT DEFAULT '{}'
         )
     `);
 
-    if (!isWordChain) {
-        db.run(`
-            CREATE TABLE IF NOT EXISTS guild_users (
-                guild_id TEXT NOT NULL,
-                user_id TEXT NOT NULL,
-                warnings INTEGER DEFAULT 0,
-                json_data TEXT DEFAULT '{}',
-                PRIMARY KEY (guild_id, user_id)
-            )
-        `);
-    }
+    // Mapping table for server memberships (fixes guildId flapping)
+    db.run(`
+        CREATE TABLE IF NOT EXISTS user_guilds (
+            userId TEXT NOT NULL,
+            guildId TEXT NOT NULL,
+            PRIMARY KEY (userId, guildId),
+            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+        )
+    `);
 
     db.run(`
         CREATE TABLE IF NOT EXISTS guilds (
@@ -133,15 +161,48 @@ function initSchema() {
     `);
 
     db.run(`
-        CREATE TABLE IF NOT EXISTS marriages (
-            user1_id TEXT NOT NULL,
-            user2_id TEXT NOT NULL,
-            created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
-            PRIMARY KEY (user1_id, user2_id),
-            UNIQUE(user1_id),
-            UNIQUE(user2_id)
+        CREATE TABLE IF NOT EXISTS guild_roles (
+            guild_id TEXT NOT NULL,
+            role_id TEXT NOT NULL,
+            name TEXT NOT NULL,
+            price INTEGER NOT NULL,
+            income_buff REAL DEFAULT 0,
+            xp_buff REAL DEFAULT 0,
+            color TEXT,
+            PRIMARY KEY (guild_id, role_id)
         )
     `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS guild_settings (
+            guild_id TEXT NOT NULL,
+            key TEXT NOT NULL,
+            value TEXT,
+            PRIMARY KEY (guild_id, key)
+        )
+    `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS marriages (
+            guild_id TEXT NOT NULL,
+            user1_id TEXT NOT NULL,
+            user2_id TEXT NOT NULL,
+            ring_id INTEGER DEFAULT 701,
+            created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+            PRIMARY KEY (guild_id, user1_id, user2_id),
+            UNIQUE(guild_id, user1_id),
+            UNIQUE(guild_id, user2_id)
+        )
+    `);
+
+    db.run(`
+            CREATE TABLE IF NOT EXISTS lottery_tickets (
+                guild_id TEXT,
+                user_id TEXT NOT NULL,
+                count INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY (guild_id, user_id)
+            )
+        `);
 
     if (!isWordChain) {
         // ... (indexes)
@@ -153,12 +214,14 @@ function initSchema() {
         db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
         db.run('CREATE INDEX IF NOT EXISTS idx_giveaways_active ON giveaways(ended, ends_at)');
         db.run('CREATE INDEX IF NOT EXISTS idx_participants_giveaway ON participants(giveaway_id)');
-        db.run('CREATE INDEX IF NOT EXISTS idx_guild_users_guild ON guild_users(guild_id)');
 
         // Migrate existing tables — add new columns if missing
         safeAddColumn('giveaways', 'paused', 'INTEGER NOT NULL DEFAULT 0');
         safeAddColumn('giveaways', 'scheduled_start', 'INTEGER');
         safeAddColumn('participants', 'bonus_entries', 'INTEGER NOT NULL DEFAULT 0');
+        safeAddColumn('lottery_tickets', 'guild_id', 'TEXT');
+        safeAddColumn('marriages', 'guild_id', 'TEXT');
+        safeAddColumn('marriages', 'ring_id', 'INTEGER DEFAULT 701');
     }
 
     // Guild columns
@@ -179,6 +242,9 @@ function initSchema() {
     safeAddColumn('users', 'inventory', "TEXT DEFAULT '{}'");
     safeAddColumn('users', 'language', 'TEXT DEFAULT NULL');
     safeAddColumn('users', 'active_buffs', "TEXT DEFAULT '[]'");
+    safeAddColumn('users', 'purchased_roles', "TEXT DEFAULT '[]'");
+    safeAddColumn('users', 'warnings', 'INTEGER DEFAULT 0');
+    safeAddColumn('users', 'server_data', "TEXT DEFAULT '{}'");
 
     saveDb();
 
@@ -192,6 +258,19 @@ function initSchema() {
             if (currentLevel < 1) {
                 migrateInventoryIds();
                 migrateUserLanguages();
+            }
+
+            if (currentLevel < 2) {
+                // Drop and recreate lottery_tickets to fix primary key constraints
+                db.run('DROP TABLE IF EXISTS lottery_tickets');
+                db.run(`
+                    CREATE TABLE IF NOT EXISTS lottery_tickets (
+                        guild_id TEXT,
+                        user_id TEXT NOT NULL,
+                        count INTEGER NOT NULL DEFAULT 0,
+                        PRIMARY KEY (guild_id, user_id)
+                    )
+                `);
             }
 
             setGlobalSetting('migration_level', MIGRATION_LEVEL.toString());
@@ -289,7 +368,9 @@ function safeAddColumn(table, column, definition) {
 
 function queryAll(sql, params = []) {
     const stmt = db.prepare(sql);
-    stmt.bind(params);
+    // Sanitize params: convert undefined to null to avoid sql.js errors
+    const sanitizedParams = params.map(p => p === undefined ? null : p);
+    stmt.bind(sanitizedParams);
     const results = [];
     while (stmt.step()) {
         results.push(stmt.getAsObject());
@@ -304,7 +385,9 @@ function queryOne(sql, params = []) {
 }
 
 function execute(sql, params = []) {
-    db.run(sql, params);
+    // Sanitize params: convert undefined to null to avoid sql.js errors
+    const sanitizedParams = params.map(p => p === undefined ? null : p);
+    db.run(sql, sanitizedParams);
     saveDb();
 }
 
@@ -430,13 +513,23 @@ function getBonusEntries(giveawayId, userId) {
 
 // ─── Global Scope: User / Economy ──────────────────────────────────────────────
 
-function getUser(userId) {
+function getUser(userId, guildId = null) {
     let user = queryOne('SELECT * FROM users WHERE id = ?', [userId]);
     if (!user) {
         execute('INSERT INTO users (id) VALUES (?)', [userId]);
-        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_slut: 0, last_beg: 0, last_search: 0, last_dist_amount: 0, job: null, inventory: '{}', active_buffs: '[]', language: null };
+        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_slut: 0, last_beg: 0, last_search: 0, last_dist_amount: 0, job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null };
     }
+
+    // Track membership without flipping (Stable many-to-many)
+    if (guildId) {
+        execute('INSERT OR IGNORE INTO user_guilds (userId, guildId) VALUES (?, ?)', [userId, guildId]);
+    }
+
     return user;
+}
+
+function getGlobalUser(userId) {
+    return getUser(userId);
 }
 
 /**
@@ -447,7 +540,19 @@ function migrateUserLanguages() {
     console.log('✅ Cleared all user language preferences (fallback to server enabled).');
 }
 
-function updateUser(userId, updates) {
+function updateUser(guildIdOrUserId, userIdOrUpdates, updatesOnly) {
+    let userId, updates;
+    if (typeof userIdOrUpdates === 'object') {
+        userId = guildIdOrUserId;
+        updates = userIdOrUpdates;
+    } else {
+        userId = userIdOrUpdates;
+        updates = updatesOnly;
+    }
+    return updateGlobalUser(userId, updates);
+}
+
+function updateGlobalUser(userId, updates) {
     const fields = [];
     const values = [];
     Object.entries(updates).forEach(([key, value]) => {
@@ -459,32 +564,116 @@ function updateUser(userId, updates) {
     execute(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
 }
 
-function addBalance(userId, amount) {
-    getUser(userId); // Ensure user exists
+function addBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
+    let userId, amount;
+    if (typeof userIdOrAmount === 'number') {
+        userId = guildIdOrUserId;
+        amount = userIdOrAmount;
+    } else {
+        userId = userIdOrAmount;
+        amount = amountOnly;
+    }
+    return addGlobalBalance(userId, amount);
+}
+
+function addGlobalBalance(userId, amount) {
+    getGlobalUser(userId);
     execute('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, userId]);
 }
 
-function removeBalance(userId, amount) {
-    getUser(userId); // Ensure user exists
+function removeBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
+    let userId, amount;
+    if (typeof userIdOrAmount === 'number') {
+        userId = guildIdOrUserId;
+        amount = userIdOrAmount;
+    } else {
+        userId = userIdOrAmount;
+        amount = amountOnly;
+    }
+    return removeGlobalBalance(userId, amount);
+}
+
+function removeGlobalBalance(userId, amount) {
+    getGlobalUser(userId);
     execute('UPDATE users SET balance = MAX(0, balance - ?) WHERE id = ?', [amount, userId]);
 }
 
-function getTopUsers(limit = 100, type = 'balance', filter = null) {
-    if (filter && filter.column && filter.value !== undefined) {
-        return queryAll(`SELECT * FROM users WHERE ${filter.column} = ? ORDER BY ${type} DESC LIMIT ?`, [filter.value, limit]);
+function getTopUsers(guildId, limit = 100, type = 'balance', filter = null) {
+    // 🔒 Whitelist column
+    const allowedColumns = ['balance', 'xp', 'level'];
+    if (!allowedColumns.includes(type)) {
+        type = 'balance';
     }
-    return queryAll(`SELECT * FROM users ORDER BY ${type} DESC LIMIT ?`, [limit]);
+
+    let results = [];
+    const queryBase = `
+        SELECT users.* 
+        FROM users 
+        JOIN user_guilds ON users.id = user_guilds.userId 
+        WHERE user_guilds.guildId = ?
+    `;
+
+    if (filter && filter.column && filter.value !== undefined) {
+        results = queryAll(
+            `${queryBase} AND users.${filter.column} = ? ORDER BY users.${type} DESC LIMIT ?`,
+            [guildId, filter.value, limit]
+        );
+    } else {
+        results = queryAll(
+            `${queryBase} ORDER BY users.${type} DESC LIMIT ?`,
+            [guildId, limit]
+        );
+    }
+
+    return results;
 }
 
-function addItem(userId, itemId, count = 1) {
-    const user = getUser(userId);
+function addItem(guildIdOrUserId, userIdOrItemId, itemIdOrCount, countOnly = 1) {
+    let userId, itemId, count;
+    if (typeof userIdOrItemId === 'number' || (typeof userIdOrItemId === 'string' && typeof itemIdOrCount === 'number' && countOnly === 1)) {
+        if (arguments.length <= 3 && typeof userIdOrItemId === 'number') {
+            userId = guildIdOrUserId;
+            itemId = userIdOrItemId;
+            count = itemIdOrCount || 1;
+            return addGlobalItem(userId, itemId, count);
+        }
+    }
+
+    if (arguments.length >= 4 || (arguments.length >= 3 && typeof itemIdOrCount === 'number')) {
+        userId = userIdOrItemId;
+        itemId = itemIdOrCount;
+        count = countOnly;
+    } else {
+        userId = guildIdOrUserId;
+        itemId = userIdOrItemId;
+        count = itemIdOrCount || 1;
+    }
+    return addGlobalItem(userId, itemId, count);
+}
+
+function addGlobalItem(userId, itemId, count = 1) {
+    const user = getGlobalUser(userId);
     const inv = JSON.parse(user.inventory || '{}');
     inv[itemId] = (inv[itemId] || 0) + count;
     execute('UPDATE users SET inventory = ? WHERE id = ?', [JSON.stringify(inv), userId]);
 }
 
-function removeItem(userId, itemId, count = 1) {
-    const user = getUser(userId);
+function removeItem(guildIdOrUserId, userIdOrItemId, itemIdOrCount, countOnly = 1) {
+    let userId, itemId, count;
+    if (arguments.length >= 4 || (arguments.length >= 3 && typeof itemIdOrCount === 'number')) {
+        userId = userIdOrItemId;
+        itemId = itemIdOrCount;
+        count = countOnly;
+    } else {
+        userId = guildIdOrUserId;
+        itemId = userIdOrItemId;
+        count = itemIdOrCount || 1;
+    }
+    return removeGlobalItem(userId, itemId, count);
+}
+
+function removeGlobalItem(userId, itemId, count = 1) {
+    const user = getGlobalUser(userId);
     const inv = JSON.parse(user.inventory || '{}');
     if (!inv[itemId]) return false;
 
@@ -498,25 +687,11 @@ function removeItem(userId, itemId, count = 1) {
 // ─── Server Scope: Guild Data ──────────────────────────────────────────────
 
 function getGuildUser(guildId, userId) {
-    let user = queryOne('SELECT * FROM guild_users WHERE guild_id = ? AND user_id = ?', [guildId, userId]);
-    if (!user) {
-        execute('INSERT INTO guild_users (guild_id, user_id) VALUES (?, ?)', [guildId, userId]);
-        user = { guild_id: guildId, user_id: userId, warnings: 0, json_data: '{}' };
-    }
-    return user;
+    return getGlobalUser(userId);
 }
 
 function updateGuildUser(guildId, userId, updates) {
-    const fields = [];
-    const values = [];
-    Object.entries(updates).forEach(([key, value]) => {
-        fields.push(`${key} = ?`);
-        values.push(value);
-    });
-    if (fields.length === 0) return;
-    values.push(guildId);
-    values.push(userId);
-    execute(`UPDATE guild_users SET ${fields.join(', ')} WHERE guild_id = ? AND user_id = ?`, values);
+    return updateGlobalUser(userId, updates);
 }
 
 // ─── Owner Permissions ──────────────────────────────────────────────
@@ -551,13 +726,11 @@ function updateGuild(guildId, updates) {
 function getRandomUserByJob(jobId, excludeIds = []) {
     let query = 'SELECT id FROM users WHERE job = ?';
     const params = [jobId];
-
     if (excludeIds.length > 0) {
         const placeholders = excludeIds.map(() => '?').join(', ');
         query += ` AND id NOT IN (${placeholders})`;
         params.push(...excludeIds);
     }
-
     const users = queryAll(query, params);
     if (!users || users.length === 0) return null;
     return users[Math.floor(Math.random() * users.length)].id;
@@ -593,19 +766,18 @@ function distributeBalanceToAll(amount, excludeUserId = null) {
 
 function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
     let users = queryAll('SELECT id FROM users' + (excludeUserId ? ' WHERE id != ?' : ''), excludeUserId ? [excludeUserId] : []);
+
     if (users.length === 0) return [];
 
-    // Generate random weights
     let weights = users.map(() => Math.random());
     let totalWeight = weights.reduce((a, b) => a + b, 0);
 
-    // Distribute totalAmount based on weights
     let distributed = 0;
     const results = [];
     users.forEach((user, i) => {
         let amount = 0;
         if (i === users.length - 1) {
-            amount = totalAmount - distributed; // Ensure total is exact
+            amount = totalAmount - distributed;
         } else {
             amount = Math.floor((weights[i] / totalWeight) * totalAmount);
             distributed += amount;
@@ -613,10 +785,7 @@ function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
 
         if (amount > 0) {
             addBalance(user.id, amount);
-            execute('UPDATE users SET last_dist_amount = ? WHERE id = ?', [amount, user.id]);
             results.push({ userId: user.id, amount });
-        } else {
-            execute('UPDATE users SET last_dist_amount = 0 WHERE id = ?', [user.id]);
         }
     });
 
@@ -631,27 +800,142 @@ function clearAllData() {
     execute('DELETE FROM users');
     execute('DELETE FROM giveaways');
     execute('DELETE FROM participants');
-    execute('DELETE FROM guild_users');
     execute('DELETE FROM guilds');
     execute('DELETE FROM global_settings');
     execute('DELETE FROM marriages');
     execute('VACUUM');
 }
 
+function resetUser(userId) {
+    execute('DELETE FROM users WHERE id = ?', [userId]);
+    execute('DELETE FROM participants WHERE user_id = ?', [userId]);
+    execute('DELETE FROM participants WHERE user_id = ?', [userId]);
+    execute('DELETE FROM lottery_tickets WHERE user_id = ?', [userId]);
+    execute('DELETE FROM marriages WHERE user1_id = ? OR user2_id = ?', [userId, userId]);
+}
+
 // ─── Marriages ───────────────────────────────────────────────────
 
-function getMarriage(userId) {
-    return queryOne('SELECT * FROM marriages WHERE user1_id = ? OR user2_id = ?', [userId, userId]);
+function getMarriage(guildId, userId) {
+    if (!guildId) return queryOne('SELECT * FROM marriages WHERE user1_id = ? OR user2_id = ?', [userId, userId]);
+    return queryOne('SELECT * FROM marriages WHERE guild_id = ? AND (user1_id = ? OR user2_id = ?)', [guildId, userId, userId]);
 }
 
-function createMarriage(user1Id, user2Id, ringId = 701) {
-    // Ensure consistent order to avoid duplicates (though UNIQUE constraint handles it)
+function createMarriage(guildId, user1Id, user2Id, ringId = 701) {
+    // Ensure consistent order to avoid duplicates
     const [u1, u2] = [user1Id, user2Id].sort();
-    execute('INSERT INTO marriages (user1_id, user2_id, ring_id) VALUES (?, ?, ?)', [u1, u2, ringId]);
+    if (!guildId) {
+        execute('INSERT INTO marriages (user1_id, user2_id, ring_id) VALUES (?, ?, ?)', [u1, u2, ringId]);
+        return;
+    }
+    execute('INSERT INTO marriages (guild_id, user1_id, user2_id, ring_id) VALUES (?, ?, ?, ?)', [guildId, u1, u2, ringId]);
 }
 
-function deleteMarriage(userId) {
-    execute('DELETE FROM marriages WHERE user1_id = ? OR user2_id = ?', [userId, userId]);
+function deleteMarriage(guildId, userId) {
+    if (!guildId) {
+        execute('DELETE FROM marriages WHERE user1_id = ? OR user2_id = ?', [userId, userId]);
+        return;
+    }
+    execute('DELETE FROM marriages WHERE guild_id = ? AND (user1_id = ? OR user2_id = ?)', [guildId, userId, userId]);
+}
+
+function addLotteryTicket(guildId, userId, count = 1) {
+    if (!guildId) {
+        execute('INSERT INTO lottery_tickets (user_id, count) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET count = count + excluded.count', [userId, count]);
+        return;
+    }
+    // Need to update lottery_tickets schema to support guild_id
+    execute('INSERT INTO lottery_tickets (guild_id, user_id, count) VALUES (?, ?, ?) ON CONFLICT(guild_id, user_id) DO UPDATE SET count = count + excluded.count', [guildId, userId, count]);
+}
+
+function getLotteryTickets(guildId) {
+    if (!guildId) return queryAll('SELECT * FROM lottery_tickets WHERE guild_id IS NULL');
+    return queryAll('SELECT * FROM lottery_tickets WHERE guild_id = ?', [guildId]);
+}
+
+function clearLotteryTickets(guildId) {
+    if (!guildId) execute('DELETE FROM lottery_tickets WHERE guild_id IS NULL');
+    else execute('DELETE FROM lottery_tickets WHERE guild_id = ?', [guildId]);
+}
+
+function getLotteryJackpot(guildId) {
+    if (!guildId) {
+        const val = getGlobalSetting('lottery_jackpot');
+        if (!val) {
+            const config = require('./config');
+            setGlobalSetting('lottery_jackpot', config.ECONOMY.LOTTERY.INITIAL_JACKPOT.toString());
+            return config.ECONOMY.LOTTERY.INITIAL_JACKPOT;
+        }
+        return parseInt(val);
+    }
+    const val = getGuildSetting(guildId, 'lottery_jackpot');
+    if (!val) {
+        const config = require('./config');
+        setGuildSetting(guildId, 'lottery_jackpot', config.ECONOMY.LOTTERY.INITIAL_JACKPOT);
+        return config.ECONOMY.LOTTERY.INITIAL_JACKPOT;
+    }
+    return parseInt(val);
+}
+
+function addLotteryJackpot(guildId, amount) {
+    const current = getLotteryJackpot(guildId);
+    if (!guildId) setGlobalSetting('lottery_jackpot', (current + amount).toString());
+    else setGuildSetting(guildId, 'lottery_jackpot', (current + amount));
+}
+
+function setLotteryJackpot(guildId, amount) {
+    if (!guildId) setGlobalSetting('lottery_jackpot', amount.toString());
+    else setGuildSetting(guildId, 'lottery_jackpot', amount);
+}
+
+// ─── Guild Roles (Role Shop) ──────────────────────────────────────
+
+function addGuildRole(guildId, roleId, name, price, incomeBuff, xpBuff, color) {
+    execute(`
+        INSERT INTO guild_roles (guild_id, role_id, name, price, income_buff, xp_buff, color)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(guild_id, role_id) DO UPDATE SET
+            name = excluded.name,
+            price = excluded.price,
+            income_buff = excluded.income_buff,
+            xp_buff = excluded.xp_buff,
+            color = excluded.color
+    `, [guildId, roleId, name, price, incomeBuff, xpBuff, color]);
+}
+
+function removeGuildRole(guildId, roleId) {
+    execute('DELETE FROM guild_roles WHERE guild_id = ? AND role_id = ?', [guildId, roleId]);
+}
+
+function getGuildRoles(guildId) {
+    return queryAll('SELECT * FROM guild_roles WHERE guild_id = ? ORDER BY price ASC', [guildId]);
+}
+
+function getGuildRole(guildId, roleId) {
+    return queryOne('SELECT * FROM guild_roles WHERE guild_id = ? AND role_id = ?', [guildId, roleId]);
+}
+
+// ─── Guild Settings (Dynamic Config) ─────────────────────────────
+
+function getGuildSetting(guildId, key, defaultValue = null) {
+    const row = queryOne('SELECT value FROM guild_settings WHERE guild_id = ? AND key = ?', [guildId, key]);
+    if (row) {
+        // Try to parse number if it looks like one, otherwise return string
+        const val = row.value;
+        if (val === 'true') return true;
+        if (val === 'false') return false;
+        if (!isNaN(val) && val.trim() !== '') return Number(val);
+        return val;
+    }
+    return defaultValue;
+}
+
+function setGuildSetting(guildId, key, value) {
+    execute(`
+        INSERT INTO guild_settings (guild_id, key, value)
+        VALUES (?, ?, ?)
+        ON CONFLICT(guild_id, key) DO UPDATE SET value = excluded.value
+    `, [guildId, key, String(value)]);
 }
 
 module.exports = {
@@ -695,7 +979,20 @@ module.exports = {
     distributeBalanceToAll,
     distributeBalanceRandomly,
     clearAllData,
+    resetUser,
     getMarriage,
     createMarriage,
-    deleteMarriage
+    deleteMarriage,
+    addLotteryTicket,
+    getLotteryTickets,
+    clearLotteryTickets,
+    getLotteryJackpot,
+    addLotteryJackpot,
+    setLotteryJackpot,
+    addGuildRole,
+    removeGuildRole,
+    getGuildRoles,
+    getGuildRole,
+    getGuildSetting,
+    setGuildSetting
 };

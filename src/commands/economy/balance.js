@@ -5,16 +5,16 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'balance',
-    aliases: ['bal', 'bl'],
-    description: 'Kiểm tra số dư của bạn hoặc của người khác',
+    aliases: ['bal', 'bl', 'cash'],
+    description: 'Kiểm tra tiền (Check balance)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 
         const target = message.mentions.users.first() || message.author;
-        const targetData = db.getUser(target.id);
+        const targetData = db.getUser(target.id, message.guild.id);
         const embed = new EmbedBuilder()
             .setTitle(t('balance.title', lang, { user: target.username }))
-            .setDescription(t('balance.description', lang, { balance: targetData.balance.toLocaleString() }))
+            .setDescription(t('balance.description', lang, { balance: (targetData.balance || 0).toLocaleString() }))
             .setColor(config.COLORS.WARNING);
         return message.reply({ embeds: [embed] });
     }

@@ -9,7 +9,7 @@ const config = require('../../config');
 module.exports = {
     name: 'hangman',
     aliases: ['hang', 'hm'],
-    description: 'Chơi Trò Chơi Người Treo Cổ (Hangman)!',
+    description: 'Người treo cổ (Play Hangman game)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
@@ -55,12 +55,12 @@ module.exports = {
             return word.split('').map(l => guessed.has(l) ? l : '\\_').join(' ');
         }
 
-        function calcReward(userId) {
+        function calcReward(userMember) {
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
-            let { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, userId);
+            let { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, userMember);
 
             // Teacher Interaction: Knowledge Bonus (+20%)
-            const u = db.getUser(userId);
+            const u = db.getUser(userMember.id, userMember.guild.id);
             if (u.job === 'teacher') {
                 totalReward = Math.floor(totalReward * 1.2);
                 bonusAmount = Math.floor(bonusAmount * 1.2);
@@ -92,9 +92,9 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const { totalReward, bonusAmount, percent } = calcReward(message.author.id);
+                    const { totalReward, bonusAmount, percent } = calcReward(message.member);
 
-                    db.addBalance(message.author.id, totalReward);
+                    db.addBalance(message.guild.id, message.author.id, totalReward);
 
                     let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins!**`;
                     if (bonusAmount > 0) resultStr += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
@@ -123,13 +123,13 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
-                    const { totalReward, bonusAmount, percent } = calcReward(message.author.id);
-                    db.addBalance(message.author.id, totalReward);
+                    const { totalReward, bonusAmount, percent } = calcReward(message.member);
+                    db.addBalance(message.guild.id, message.author.id, totalReward);
 
                     // Grant Win XP
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                    addXp(message.author.id, winXp);
+                    addXp(message.member, winXp, message.guild.id);
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins!`;
                     if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
@@ -140,7 +140,7 @@ module.exports = {
             } else {
                 // Grant Action XP for guessing correctly/wrongly but game continues
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
                 embed.setDescription(`${t('hangman.hint', lang)}: ${hint}\n\n${t('hangman.word', lang)}: ${currentDisplay}\n${t('hangman.lives', lang)}: ${'❤️'.repeat(lives)}\n\n${t('hangman.guessed', lang)}: ${Array.from(guessed).join(', ') || t('userinfo.none', lang)}`);
             }

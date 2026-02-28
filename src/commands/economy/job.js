@@ -5,8 +5,8 @@ const config = require('../../config');
 
 module.exports = {
     name: 'job',
-    aliases: ['career', 'occup'],
-    description: 'Quản lý nghề nghiệp của bạn.',
+    aliases: ['j', 'career'],
+    description: 'Nghề nghiệp (Manage career)',
     cooldown: 5,
     subcommands: {
         'list': 'Xem danh sách các nghề nghiệp có sẵn và đặc quyền.',
@@ -16,10 +16,10 @@ module.exports = {
     examples: ['list', 'info', 'select 1'],
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const sub = args[0]?.toLowerCase();
 
-        if (sub === 'list' || !sub) {
+        if (sub === 'list' || sub === 'ls' || sub === 'l' || !sub) {
             const jobs = config.ECONOMY.JOBS;
             const embed = new EmbedBuilder()
                 .setTitle(t('job.list_title', lang))
@@ -37,7 +37,7 @@ module.exports = {
             return message.reply({ embeds: [embed] });
         }
 
-        if (sub === 'set' || sub === 'select') {
+        if (sub === 'set' || sub === 'select' || sub === 's') {
             const jobId = args[1]?.toLowerCase();
             if (!jobId) return message.reply(t('job.set_error_invalid', lang));
 
@@ -49,12 +49,12 @@ module.exports = {
             // Requirements (Example: Level 20)
             if (user.level < 20) return message.reply(t('job.set_error_level', lang, { level: 20 }));
 
-            db.updateUser(message.author.id, { job: job.id });
+            db.updateUser(message.guild.id, message.author.id, { job: job.id });
             const jobName = t(`job.name_${job.id}`, lang);
             return message.reply(t('job.set_success', lang, { job: jobName }));
         }
 
-        if (sub === 'info' || sub === 'me') {
+        if (sub === 'info' || sub === 'me' || sub === 'i') {
             if (!user.job) return message.reply(t('job.none', lang));
 
             const job = config.ECONOMY.JOBS[user.job];

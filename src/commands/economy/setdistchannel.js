@@ -5,13 +5,16 @@ const { PermissionsBitField } = require('discord.js');
 
 module.exports = {
     name: 'setdistchannel',
-    description: 'Cài đặt kênh mặc định để gửi thông báo chia tiền tự động.',
-    aliases: ['setdist'],
+    aliases: ['sdc', 'setdist'],
+    description: 'Kênh chia tiền (Set distribution channel)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 
-        // Permission Check: Manage Guild or Administrator
-        if (!message.member.permissions.has(PermissionsBitField.Flags.ManageGuild) && !db.isOwner(message.author.id)) {
+        // Permission Check: Manage Guild, Guild Owner, or Bot Owner
+        const isGuildOwner = message.guild.ownerId === message.author.id;
+        const isBotOwner = db.isOwner(message.author.id);
+
+        if (!message.member.permissions.has(PermissionsBitField.Flags.ManageGuild) && !isGuildOwner && !isBotOwner) {
             return message.reply(t('common.no_permission', lang));
         }
 

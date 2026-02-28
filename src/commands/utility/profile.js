@@ -7,8 +7,8 @@ const { calculateLevel } = require('../../utils/leveling');
 
 module.exports = {
     name: 'profile',
-    aliases: ['p', 'pr', 'prof'],
-    description: 'Hiển thị hồ sơ người dùng đầy đủ (Displays full user profile)',
+    aliases: ['pf', 'pr','p'],
+    description: 'Hồ sơ (User profile)',
     skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -16,30 +16,33 @@ module.exports = {
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;
 
-        const dbUser = db.getUser(user.id);
+        const dbUser = db.getUser(user.id, message.guild.id);
         const inv = JSON.parse(dbUser.inventory || '{}');
         const itemCount = Object.values(inv).reduce((a, b) => a + b, 0);
 
         // Calculate Net Worth using utility
         const netWorth = calculateNetWorth(dbUser);
 
+        // Get the member object for the target user in the current guild
+        const targetMember = await message.guild.members.fetch(user.id).catch(() => null);
+
         // Get actual multipliers (%)
         const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
-        const incomeBonus = Math.round(getTotalMultiplier(user.id, 'income') * 100);
-        const gambleBonus = Math.round(getTotalMultiplier(user.id, 'gamble') * 100);
-        const xpBonus = Math.round((getXpMultiplier(user.id) - 1.0) * 100);
-        const maxCapPercent = Math.round(getDynamicCap(user.id) * 100);
+        const incomeBonus = Math.round(getTotalMultiplier(targetMember || user.id, message.guild.id, 'income') * 100);
+        const gambleBonus = Math.round(getTotalMultiplier(targetMember || user.id, message.guild.id, 'gamble') * 100);
+        const xpBonus = Math.round((getXpMultiplier(targetMember || user.id, message.guild.id) - 1.0) * 100);
+        const maxCapPercent = Math.round(getDynamicCap(targetMember || user.id, message.guild.id) * 100);
 
-        // Find Rank (Position in global balance top 100)
-        const topBalance = db.getTopUsers(100, 'balance');
+        // Find Rank (Position in guild-specific balance top)
+        const topBalance = db.getTopUsers(message.guild.id, 100, 'balance');
         const rankIndex = topBalance.findIndex(u => u.id === user.id);
         const rank = rankIndex === -1 ? t('profile.unranked', lang) : `#${rankIndex + 1}`;
 
         // Calculate XP Progress
-        const currentLevelXp = (dbUser.level / 0.1) ** 2;
-        const nextLevelXp = ((dbUser.level + 1) / 0.1) ** 2;
+        const currentLevelXp = Math.floor(Math.pow((dbUser.level || 0) / 0.1, 2));
+        const nextLevelXp = Math.floor(Math.pow(((dbUser.level || 0) + 1) / 0.1, 2));
         const xpNeeded = nextLevelXp - currentLevelXp;
-        const xpProgress = dbUser.xp - currentLevelXp;
+        const xpProgress = (dbUser.xp || 0) - currentLevelXp;
         const progressPercent = Math.min(100, Math.max(0, (xpProgress / xpNeeded) * 100));
 
         // Create Progress Bar (10 blocks)
@@ -48,7 +51,7 @@ module.exports = {
         const progressBar = '▮'.repeat(filledBlocks) + '▯'.repeat(emptyBlocks);
 
         // Marriage Status
-        const marriage = db.getMarriage(user.id);
+        const marriage = db.getMarriage(message.guild.id, user.id);
         let marriageStatus = t('common.none', lang);
         if (marriage) {
             const partnerId = marriage.user1_id === user.id ? marriage.user2_id : marriage.user1_id;

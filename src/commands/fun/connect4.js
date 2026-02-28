@@ -10,7 +10,7 @@ const { parseAmount } = require('../../utils/economy');
 module.exports = {
     name: 'connect4',
     aliases: ['c4'],
-    description: 'Chơi trò chơi Bốn Hàng (Connect 4)!',
+    description: 'Chơi Bốn Hàng (Play Connect 4 against another player)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
@@ -22,8 +22,8 @@ module.exports = {
 
         let bet = args[1] ? parseAmount(args[1], authorUser.balance, config.ECONOMY.MAX_BET) : 0;
 
-        const authorUser = db.getUser(message.author.id);
-        const opponentUser = db.getUser(opponent.id);
+        const authorUser = db.getUser(message.author.id, message.guild.id);
+        const opponentUser = db.getUser(opponent.id, message.guild.id);
 
         if (bet > 0) {
             if (authorUser.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: authorUser.balance }));
@@ -58,8 +58,8 @@ module.exports = {
 
             // Game Start
             if (bet > 0) {
-                db.removeBalance(message.author.id, bet);
-                db.removeBalance(opponent.id, bet);
+                db.removeBalance(message.guild.id, message.author.id, bet);
+                db.removeBalance(message.guild.id, opponent.id, bet);
             }
             await confirmation.deferUpdate(); // Acknowledge acceptance
 
@@ -74,6 +74,8 @@ module.exports = {
             let turn = P1;
             let p1Id = message.author.id;
             let p2Id = opponent.id;
+            let p1Member = message.member;
+            let p2Member = confirmation.member;
             let gameOver = false;
 
             const checkWin = () => {
@@ -168,7 +170,7 @@ module.exports = {
 
                 // Grant Action XP for the move
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(i.user.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
 
                 const winner = checkWin();
 
@@ -180,22 +182,21 @@ module.exports = {
                     if (winner === 'draw') {
                         resultText = t('connect4.draw', lang);
                         if (bet > 0) {
-                            db.addBalance(p1Id, bet);
-                            db.addBalance(p2Id, bet);
+                            db.addBalance(i.guild.id, p1Id, bet);
+                            db.addBalance(i.guild.id, p2Id, bet);
                             resultText += t('connect4.refund', lang);
                         }
                     } else {
-                        const winId = winner === P1 ? p1Id : p2Id;
-                        const winName = winner === P1 ? message.author.username : opponent.username;
+                        const winMember = winner === P1 ? p1Member : p2Member;
 
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(winId, winXp);
+                        addXp(winMember, winXp, i.guild.id);
 
                         const baseReward = bet > 0 ? bet * 2 : (config.ECONOMY.TICTACTOE_REWARD || 100);
-                        const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winId);
-                        db.addBalance(winId, totalReward);
+                        const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winMember);
+                        db.addBalance(i.guild.id, winId, totalReward);
 
                         resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                             t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
@@ -221,8 +222,8 @@ module.exports = {
                 if (reason === 'time' && !gameOver) {
                     confirmMsg.edit({ content: t('connect4.timeout', lang), components: [] });
                     if (bet > 0) {
-                        db.addBalance(p1Id, bet);
-                        db.addBalance(p2Id, bet);
+                        db.addBalance(message.guild.id, p1Id, bet);
+                        db.addBalance(message.guild.id, p2Id, bet);
                     }
                     startCooldown(message.client, 'connect4', p1Id);
                     startCooldown(message.client, 'connect4', p2Id);

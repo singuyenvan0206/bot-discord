@@ -4,16 +4,17 @@ const { startCooldown } = require('../../utils/cooldown');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
 const { calculateReward } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 
 module.exports = {
     name: 'slots',
-    aliases: ['slot', 'sl'],
-    description: 'Quay slot machine!',
+    aliases: ['slot', 'slt'],
+    description: 'Quay hũ (Play Slot Machine)',
     cooldown: 5,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
 
@@ -21,9 +22,14 @@ module.exports = {
 
         if (bet) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
-            db.removeBalance(user.id, bet);
+            const maxBet = db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+            if (bet > maxBet) return message.reply(t('gamble.max_bet', lang, { max: maxBet.toLocaleString() }));
+            if (bet < 10) return message.reply(t('gamble.min_bet', lang, { min: '10' }));
+            db.removeBalance(message.guild.id, user.id, bet);
         }
+
+        // Grant Action XP
+        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
         let weights = [50, 35, 30, 20, 15, 10, 5];
@@ -81,10 +87,10 @@ module.exports = {
 
             if (payout > bet) {
                 const profit = payout - bet;
-                const rewardResult = calculateReward(profit, user.id, 'gamble');
-                totalPayout = rewardResult.total + bet;
-                bonusAmount = rewardResult.bonus;
-                percent = rewardResult.percent;
+                const { total, bonus, percent: calculatedPercent } = calculateReward(profit, message.member, 'gamble');
+                totalPayout = total + bet;
+                bonusAmount = bonus;
+                percent = calculatedPercent;
             } else {
                 totalPayout = payout;
             }
@@ -95,7 +101,11 @@ module.exports = {
                 subHypeMsg = t('slots.sub_hype', lang);
             }
 
-            db.addBalance(user.id, totalPayout);
+            // Grant Win XP
+            const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+            addXp(message.member, winXp, message.guild.id);
+
+            db.addBalance(message.guild.id, user.id, totalPayout);
             result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString() });
 
             if (subHypeMsg) result += subHypeMsg;

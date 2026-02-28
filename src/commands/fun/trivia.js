@@ -27,7 +27,7 @@ function decodeHtml(html) {
 module.exports = {
     name: 'trivia',
     aliases: ['triv', 'tv'],
-    description: 'Kiểm tra kiến thức của bạn với trò chơi Đố Vui (Trivia)!',
+    description: 'Đố vui (Play Trivia game)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
@@ -94,14 +94,18 @@ module.exports = {
             if (answered.has(i.user.id)) return;
             answered.add(i.user.id);
 
+            // Grant Action XP
+            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+            addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+
             const selectedIndex = parseInt(i.customId.split('_')[1]);
 
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
 
-                const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, i.user.id);
+                const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, i.member);
 
-                db.addBalance(i.user.id, totalReward);
+                db.addBalance(message.guild.id, i.user.id, totalReward);
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
                 if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
@@ -110,14 +114,14 @@ module.exports = {
                 let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
 
                 // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
-                const u = db.getUser(i.user.id);
+                const u = db.getUser(i.user.id, message.guild.id);
                 if (u.job === 'teacher') {
                     totalReward = Math.floor(totalReward * 1.5);
                     winXp += 10;
                     resultMsg += t('job.teacher_tutoring_simple', lang);
                 }
 
-                addXp(i.user.id, winXp);
+                addXp(i.member, winXp, message.guild.id);
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {

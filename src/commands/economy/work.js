@@ -3,17 +3,27 @@ const { getUserMultiplier, getTotalIncomeMultiplier, hasActiveItem, calculateRew
 const { getLevelMultiplier } = require('../../utils/leveling');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { formatDuration } = require('../../utils/time'); // Assuming formatDuration is available
 
 module.exports = {
     name: 'work',
-    aliases: ['w', 'wk'],
-    description: 'Làm việc để kiếm tiền',
+    aliases: ['wk', 'w'],
+    description: 'Làm việc (Work to earn money)',
     cooldown: config.ECONOMY.WORK_COOLDOWN,
     async execute(message, args) {
+        const { client } = message; // Added this line as per the edit, assuming it's needed later
         const lang = getLanguage(message.author.id, message.guild?.id);
 
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
+
+        const cooldown = db.getGuildSetting(message.guild.id, 'work_cooldown', config.ECONOMY.WORK_COOLDOWN);
+        const lastWork = Number(user.last_work || 0);
+
+        if (now - lastWork < cooldown) {
+            const timeLeft = cooldown - (now - lastWork);
+            return message.reply(t('work.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
+        }
 
         const categories = t('work.job_categories', lang);
         let availableJobs = [...categories.tier0];
@@ -34,14 +44,16 @@ module.exports = {
             jobName = jobs[Math.floor(Math.random() * jobs.length)];
         }
 
-        const baseReward = Math.floor(Math.random() * 401) + 100; // 100-500
-        let { total, bonus: bonusAmount, percent } = calculateReward(baseReward, message.author.id);
+        const minReward = db.getGuildSetting(message.guild.id, 'work_min', config.ECONOMY.MIN_WORK_EARNINGS);
+        const maxReward = db.getGuildSetting(message.guild.id, 'work_max', config.ECONOMY.MAX_WORK_EARNINGS);
+        const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
+        let { total, bonus, percent } = calculateReward(baseReward, message.member, 'income');
 
         // Streamer Interaction: Go Viral (5% chance)
         let viralMsg = '';
-        if (user.job === 'streamer' && (hasActiveItem(message.author.id, 220) || hasActiveItem(message.author.id, 107)) && Math.random() < 0.05) {
+        if (user.job === 'streamer' && (hasActiveItem(message.guild.id, message.author.id, 220) || hasActiveItem(message.guild.id, message.author.id, 107)) && Math.random() < 0.05) {
             total *= 5;
-            bonusAmount *= 5;
+            bonus *= 5;
             viralMsg = t('work.viral', lang);
         }
 
@@ -49,7 +61,7 @@ module.exports = {
         let bumperMsg = '';
         if (user.job === 'farmer' && Math.random() < 0.10) {
             total = Math.floor(total * 2.5);
-            bonusAmount = Math.floor(bonusAmount * 2.5);
+            bonus = Math.floor(bonus * 2.5);
             bumperMsg = t('work.bumper_crop', lang);
         }
 
@@ -57,7 +69,7 @@ module.exports = {
         let specialOrderMsg = '';
         if (user.job === 'chef' && Math.random() < 0.08) {
             total = Math.floor(total * 2);
-            bonusAmount = Math.floor(bonusAmount * 2);
+            bonus = Math.floor(bonus * 2);
             specialOrderMsg = t('work.special_order', lang);
         }
 
@@ -82,14 +94,12 @@ module.exports = {
             overtimeMsg = t('work.overtime', lang);
         }
 
-
-
-        db.addBalance(message.author.id, total);
-        db.updateUser(message.author.id, { last_work: now });
+        db.addBalance(message.guild.id, message.author.id, total);
+        db.updateUser(message.guild.id, message.author.id, { last_work: now });
 
         let msg = t('work.success', lang, { job: jobName, amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
-        if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+        if (bonus > 0) {
+            msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
         }
 
         if (viralMsg) msg += viralMsg;

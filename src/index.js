@@ -77,6 +77,12 @@ for (const file of eventFiles) {
     console.log(`🔔 Loaded event: ${event.name}`);
 }
 
-// ─── Login ───────────────────────────────────────────────────────
+const db = require('./database');
 
-client.login(TOKEN);
+async function startBot() {
+    await db.getDb();
+    console.log('💾 Database initialized (Pre-login)');
+    client.login(TOKEN);
+}
+
+startBot();

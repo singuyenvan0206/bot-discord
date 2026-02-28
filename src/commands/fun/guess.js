@@ -7,12 +7,12 @@ const { calculateReward } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'guess',
-    aliases: ['gn'],
-    description: 'Guess the number (1-100)',
+    aliases: ['gn', 'gs'],
+    description: 'Đoán số (Guess the number 1-100)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = await getLanguage(message.author.id);
+        const lang = getLanguage(message.author.id, message.guild?.id);
         const number = Math.floor(Math.random() * 100) + 1;
         const maxAttempts = 7;
         let attempts = 0;
@@ -25,7 +25,7 @@ module.exports = {
         await message.reply({ embeds: [embed] });
 
         const collector = message.channel.createMessageCollector({
-            filter: m => !m.author.bot && !isNaN(parseInt(m.content)),
+            filter: m => m.author.id === message.author.id && !isNaN(parseInt(m.content)),
             time: 60_000,
             max: maxAttempts
         });
@@ -37,13 +37,17 @@ module.exports = {
 
             if (guess === number) {
                 const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
-                const { total: reward, bonus: bonusAmount, percent } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.author.id);
-                db.addBalance(m.author.id, reward);
+                const { total: reward, bonus: bonusAmount, percent } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.member);
+                db.addBalance(message.guild.id, m.author.id, reward);
 
                 // Grant XP
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                addXp(m.author.id, winXp);
+                const result = addXp(m.member, winXp, message.guild.id);
+                if (result.leveledUp) {
+                    const { checkAndSendMilestone } = require('../../utils/leveling');
+                    checkAndSendMilestone(m, result.reachedLevel20, lang).catch(() => { });
+                }
 
                 let winMsg = t('guess.win', lang, { number, attempts, amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN });
                 if (bonusAmount > 0) winMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });

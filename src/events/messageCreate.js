@@ -2,7 +2,7 @@ const { Events, Collection } = require('discord.js');
 const config = require('../config');
 const db = require('../database');
 const { getLanguage, t } = require('../utils/i18n');
-const { addXp, checkAndSendMilestone, XP_AMOUNTS } = require('../utils/leveling');
+const { addXp, XP_AMOUNTS } = require('../utils/leveling');
 const { formatDuration } = require('../utils/time');
 
 const xpCooldowns = new Set();
@@ -39,14 +39,7 @@ module.exports = {
             const { MESSAGE } = XP_AMOUNTS;
             const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
 
-            const result = addXp(message.author.id, xpAmount);
-            const { leveledUp, reachedLevel20, bonus, level } = result;
-
-            if (leveledUp) {
-                const lang = getLanguage(message.author.id, message.guild.id);
-                // await sendLevelUpMessage(message, level, bonus, lang); // Disabled per request
-                await checkAndSendMilestone(message, reachedLevel20, lang);
-            }
+            addXp(message.member, xpAmount);
 
             xpCooldowns.add(message.author.id);
             setTimeout(() => xpCooldowns.delete(message.author.id), 30000); // 30 seconds cooldown
@@ -78,7 +71,11 @@ module.exports = {
             return message.reply(t('common.no_permission', lang));
         }
 
-        if (command.adminOnly && !message.member.permissions.has('Administrator')) {
+        const isServerOwner = message.author.id === message.guild.ownerId;
+        const isBotOwner = db.isOwner(message.author.id);
+        const isAdmin = message.member.permissions.has('Administrator');
+
+        if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
             return message.reply(t('common.no_permission', lang));
         }
 
@@ -110,11 +107,7 @@ module.exports = {
             // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
             if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                const result = addXp(message.author.id, xpAmount);
-                if (result.leveledUp) {
-                    const lang = getLanguage(message.author.id, message.guild?.id);
-                    await checkAndSendMilestone(message, result.reachedLevel20, lang);
-                }
+                addXp(message.member, xpAmount);
             }
         } catch (error) {
             console.error(`[Command] Error executing !${commandName}:`, error);
@@ -123,11 +116,7 @@ module.exports = {
             // Grant Command Failure XP (Skip for admin/owner/utility commands)
             if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                const result = addXp(message.author.id, xpAmount);
-                if (result.leveledUp) {
-                    const lang = getLanguage(message.author.id, message.guild?.id);
-                    await checkAndSendMilestone(message, result.reachedLevel20, lang);
-                }
+                addXp(message.member, xpAmount);
             }
         }
     },

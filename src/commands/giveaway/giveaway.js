@@ -7,7 +7,7 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'giveaway',
-    aliases: ['g', 'gw'],
+    aliases: ['ga', 'gw'],
     description: 'Quản lý sự kiện giveaway.',
     cooldown: 5,
     subcommands: {
@@ -29,7 +29,7 @@ module.exports = {
 
         /* ================= START ================= */
 
-        if (['start', 's', 'st'].includes(subcommand)) {
+        if (['start', 's', 'st', 'str'].includes(subcommand)) {
             const durationInput = args[1];
             const winnersInput = args[2];
             const prize = args.slice(3).join(' ');

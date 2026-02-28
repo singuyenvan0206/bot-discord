@@ -15,13 +15,6 @@ let lastEmbedUpdate = 0;
  * Supports bonus entries — users with bonus entries get extra "tickets".
  */
 function pickWinners(participantsOrIds, count) {
-    // If we receive simple string IDs, use old behavior
-    if (typeof participantsOrIds[0] === 'string') {
-        const shuffled = [...participantsOrIds].sort(() => Math.random() - 0.5);
-        return shuffled.slice(0, Math.min(count, shuffled.length));
-    }
-
-    // If we receive participant objects with bonus_entries
     const pool = [];
     for (const p of participantsOrIds) {
         const userId = p.user_id || p;
@@ -195,6 +188,9 @@ async function tick(client) {
 
         // 4. House Profit Distribution
         await processHouseDistribution(client);
+
+        // 5. Lottery Draw
+        await processLotteryDraw(client);
     } catch (error) {
         console.error('[Timer] Error in timer tick:', error);
     }
@@ -220,38 +216,36 @@ function startTimer(client) {
 async function processHouseDistribution(client) {
     const config = require('../config');
     const { EmbedBuilder } = require('discord.js');
-    const { t } = require('./i18n');
+    const { t, getLanguage } = require('./i18n');
 
     const now = Math.floor(Date.now() / 1000);
-    const lastDist = parseInt(db.getGlobalSetting('last_house_distribution', '0'));
     const interval = config.ECONOMY.HOUSE_DISTRIBUTION_INTERVAL;
-
-    if (now - lastDist < interval) return;
-
-    // Time to distribute!
     const botId = client.user.id;
-    const botUser = db.getUser(botId);
-    const balance = botUser.balance;
 
-    if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) return;
-
-    const userCount = db.getUserCount();
-    if (userCount <= 1) return;
-
-    // Exclude bot from distribution; split only among human users.
-    const humanCount = Math.max(1, userCount - 1);
-    const amountPerUser = Math.floor(balance / humanCount);
-    if (amountPerUser <= 0) return;
-
-    console.log(`[Timer] Distributing ${balance.toLocaleString()} coins randomly to ${humanCount} users`);
-
-    const results = db.distributeBalanceRandomly(balance, botId);
-    db.setGlobalSetting('last_house_distribution', now.toString());
-
-    console.log(`[Timer] Random distribution complete! Total: ${balance.toLocaleString()} coins. Participants: ${results.length}`);
-
-    // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
+        const lastDist = parseInt(db.getGuildSetting(guild.id, 'last_house_distribution', '0'));
+        if (now - lastDist < interval) continue;
+
+        // Time to distribute!
+        const botUser = db.getUser(botId, guild.id);
+        const balance = botUser.balance || 0;
+
+        if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) continue;
+
+        // Use getTopUsers just to reliably get guild users count
+        const guildUsers = db.getTopUsers(guild.id, 999999, 'balance');
+        const userCount = guildUsers.length;
+        if (userCount <= 1) continue;
+
+        // Exclude bot from distribution; split only among human users.
+        const humanCount = Math.max(1, userCount - 1);
+        const amountPerUser = Math.floor(balance / humanCount);
+        if (amountPerUser <= 0) continue;
+
+        db.distributeBalanceRandomly(balance, botId);
+        db.setGuildSetting(guild.id, 'last_house_distribution', now.toString());
+
+        // Announce to the guild
         const lang = getLanguage(null, guild.id);
         const guildData = db.getGuild(guild.id);
 
@@ -261,9 +255,18 @@ async function processHouseDistribution(client) {
         }
 
         if (!channel) {
-            channel = guild.systemChannel ||
-                guild.channels.cache.find(c => c.name.includes('chat') || c.name.includes('general')) ||
-                guild.channels.cache.filter(c => c.isTextBased()).first();
+            const botMember = guild.members.me;
+            const textChannels = guild.channels.cache.filter(c =>
+                c.isTextBased() &&
+                c.permissionsFor(botMember)?.has('ViewChannel') &&
+                c.permissionsFor(botMember)?.has('SendMessages')
+            );
+
+            if (guild.systemChannel && guild.systemChannel.permissionsFor(botMember)?.has('SendMessages')) {
+                channel = guild.systemChannel;
+            } else {
+                channel = textChannels.find(c => c.name.includes('chat') || c.name.includes('general')) || textChannels.first();
+            }
         }
 
         if (channel && channel.send) {
@@ -287,6 +290,78 @@ async function processHouseDistribution(client) {
             const row = new ActionRowBuilder().addComponents(checkButton);
 
             channel.send({ embeds: [embed], components: [row] }).catch(() => { });
+        }
+    }
+}
+
+/**
+ * Periodically check and draw the lottery.
+ */
+async function processLotteryDraw(client) {
+    const config = require('../config');
+    const now = Math.floor(Date.now() / 1000);
+    const interval = config.ECONOMY.LOTTERY.DRAW_INTERVAL;
+
+    for (const guild of client.guilds.cache.values()) {
+        const lastDraw = parseInt(db.getGuildSetting(guild.id, 'last_lottery_draw', '0'));
+
+        if (now - lastDraw < interval) continue;
+
+        const tickets = db.getLotteryTickets(guild.id);
+        if (tickets.length === 0) {
+            // No tickets sold, just update last draw time
+            db.setGuildSetting(guild.id, 'last_lottery_draw', now.toString());
+            continue;
+        }
+
+        // Build the ticket pool
+        const pool = [];
+        for (const ticket of tickets) {
+            for (let i = 0; i < ticket.count; i++) {
+                pool.push(ticket.user_id);
+            }
+        }
+
+        // Pick a winner
+        const winnerId = pool[Math.floor(Math.random() * pool.length)];
+        const jackpot = db.getLotteryJackpot(guild.id);
+
+        // Award jackpot
+        db.addBalance(guild.id, winnerId, jackpot);
+        db.setGuildSetting(guild.id, 'last_lottery_draw', now.toString());
+        db.setLotteryJackpot(guild.id, config.ECONOMY.LOTTERY.INITIAL_JACKPOT);
+        db.clearLotteryTickets(guild.id);
+
+        // Announce the winner
+        const lang = getLanguage(null, guild.id);
+        const guildData = db.getGuild(guild.id);
+
+        let channel = null;
+        if (guildData.dist_channel) {
+            channel = guild.channels.cache.get(guildData.dist_channel);
+        }
+
+        if (!channel) {
+            channel = guild.systemChannel ||
+                guild.channels.cache.find(c => c.name.includes('lottery') || c.name.includes('economy') || c.name.includes('general')) ||
+                guild.channels.cache.filter(c => c.isTextBased()).first();
+        }
+
+        if (channel && channel.send) {
+            const winner = await client.users.fetch(winnerId).catch(() => ({ username: 'Unknown' }));
+            const embed = new EmbedBuilder()
+                .setTitle(t('lottery.draw_title', lang) || "🎉 Kết Quả Xổ Số Hôm Nay!")
+                .setDescription(t('lottery.draw_desc', lang, {
+                    user: winner.username,
+                    amount: jackpot.toLocaleString(),
+                    emoji: config.EMOJIS.COIN
+                }) || `Chúc mừng **${winner.username}** đã trúng giải Jackpot trị giá **${jackpot.toLocaleString()}** coins! 💰`)
+                .setColor(config.COLORS.SUCCESS)
+                .setThumbnail(winner.displayAvatarURL ? winner.displayAvatarURL() : null)
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                .setTimestamp();
+
+            channel.send({ content: `🎉 Chúc mừng <@${winnerId}>!`, embeds: [embed] }).catch(() => { });
         }
     }
 }

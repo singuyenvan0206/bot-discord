@@ -27,14 +27,18 @@ function calculateLevel(xp) {
  * @param {number} amount - Số XP muốn cộng
  * @returns {object} - Object chứa thông tin cấp độ hiện tại và việc có thăng cấp hay không { level, leveledUp }
  */
-function addXp(userId, amount) {
+function addXp(memberOrId, amount, guildId = null) {
+    const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
+    const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
     const config = require('../config');
-    const user = db.getUser(userId);
+    const user = db.getUser(userId, gId);
 
     // Apply global and user-specific XP multipliers
     const { getXpMultiplier } = require('./multiplier');
-    const multiplier = (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * getXpMultiplier(userId);
-    const finalAmount = Math.floor(amount * multiplier);
+    const xpBoost = getXpMultiplier(memberOrId);
+    const guildXpMulti = gId ? db.getGuildSetting(gId, 'xp_multiplier', 1.0) : 1.0;
+
+    const finalAmount = Math.floor(amount * xpBoost * (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * guildXpMulti);
 
     const xp = Number(user.xp || 0);
     const level = Number(user.level || 0);
@@ -42,28 +46,76 @@ function addXp(userId, amount) {
     const newLevel = calculateLevel(newXp);
 
     const leveledUp = newLevel > level;
-    // Milestone: Reaching level 20 (or higher if they somehow missed it/have no job)
-    const reachedLevel20 = newLevel >= 20 && !user.job;
 
     let bonus = 0;
     if (leveledUp) {
         bonus = newLevel * 100;
-        db.addBalance(userId, bonus);
+        db.addBalance(gId, userId, bonus);
     }
 
-    db.updateUser(userId, {
+    db.updateUser(gId, userId, {
         xp: newXp,
         level: newLevel
     });
 
+    const assignedJob = assignJobIfEligible(memberOrId, gId, newLevel);
+
     return {
         level: newLevel,
         leveledUp: leveledUp,
-        reachedLevel20: reachedLevel20,
+        reachedLevel20: !!assignedJob,
+        assignedJob: assignedJob,
         bonus: bonus
     };
 }
 
+/**
+ * Checks if a user is eligible for a job milestone and assigns one if so.
+ * 
+ * @param {object|string} memberOrId - Member object or user ID
+ * @param {string} guildId - Guild ID
+ * @param {number} level - Current level
+ * @returns {boolean} - Whether a milestone was reached/job assigned
+ */
+function assignJobIfEligible(memberOrId, guildId, level) {
+    const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
+    const user = db.getUser(userId, guildId);
+
+    // Reaching level 20 (or higher if they somehow missed it/have no job)
+    const reachedLevel20 = level >= 20 && !user.job;
+
+    if (reachedLevel20) {
+        const { getLanguage, t } = require('./i18n');
+        const lang = getLanguage(userId, guildId);
+        const job = assignRandomJob(userId, guildId, lang);
+
+        // Try to send DM if we have a member/user object
+        if (typeof memberOrId === 'object' && typeof memberOrId.send === 'function') {
+            const config = require('../config');
+            const { EmbedBuilder } = require('discord.js');
+            const embed = new EmbedBuilder()
+                .setTitle(t('job.milestone_title', lang))
+                .setDescription(t('job.milestone_desc', lang))
+                .addFields({
+                    name: t('job.name_field', lang) || "Nghề nghiệp",
+                    value: t('job.milestone_assigned', lang, {
+                        job: job.name,
+                        icon: job.config.icon,
+                        fact: job.fact,
+                        prefix: config.PREFIX
+                    })
+                })
+                .setColor(job.config.color || '#f1c40f')
+                .setTimestamp();
+
+            memberOrId.send({ embeds: [embed] }).catch(() => {
+                console.log(`[Job Milestone] Failed to send DM to ${userId}`);
+            });
+        }
+        return job;
+    }
+    return null;
+}
 /**
  * Trả về hệ số nhân (multiplier) dựa trên cấp độ hiện tại.
  * Mỗi cấp độ thưởng thêm 2% (0.02).
@@ -81,7 +133,7 @@ function getLevelMultiplier(level) {
 /**
  * Assigns a random job to a user.
  */
-function assignRandomJob(userId, lang) {
+function assignRandomJob(userId, guildId, lang) {
     const config = require('../config');
     const { t } = require('./i18n');
 
@@ -89,7 +141,7 @@ function assignRandomJob(userId, lang) {
     const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
     const jobConfig = config.ECONOMY.JOBS[randomJobId];
 
-    db.updateUser(userId, { job: randomJobId });
+    db.updateUser(guildId, userId, { job: randomJobId });
 
     return {
         id: randomJobId,
@@ -99,48 +151,7 @@ function assignRandomJob(userId, lang) {
     };
 }
 
-/**
- * Kiểm tra và gửi thông báo đạt mốc Cấp độ 20.
- */
-async function checkAndSendMilestone(message, reachedLevel20, lang) {
-    if (!reachedLevel20) return;
-
-    const { EmbedBuilder } = require('discord.js');
-    const config = require('../config');
-    const { t } = require('./i18n');
-
-    // Assign job
-    const job = assignRandomJob(message.author.id, lang);
-
-    // Prepare announcement
-    const embed = new EmbedBuilder()
-        .setTitle(t('job.milestone_title', lang))
-        .setDescription(t('job.milestone_desc', lang))
-        .addFields({
-            name: t('job.name_field', lang) || "Nghề nghiệp",
-            value: t('job.milestone_assigned', lang, {
-                job: job.name,
-                icon: job.config.icon,
-                fact: job.fact,
-                prefix: config.PREFIX
-            })
-        })
-        .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 256 }))
-        .setColor(job.config.color || '#f1c40f')
-        .setTimestamp();
-
-    // Send announcement as DM (only visible to the user)
-    try {
-        await message.author.send({ embeds: [embed] });
-    } catch {
-        // Fallback: user has DMs disabled
-        await message.channel.send({
-            content: `<@${message.author.id}>`,
-            embeds: [embed]
-        }).catch(() => { });
-    }
-}
-
+// checkAndSendMilestone has been merged centrally directly into addXp.
 /**
  * Gửi thông báo thăng cấp cơ bản.
  */
@@ -173,8 +184,8 @@ async function sendLevelUpMessage(message, level, bonus, lang) {
  * @param {number} levels - Số cấp độ muốn giảm (mặc định là 1)
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
-function deductLevel(userId, levels = 1) {
-    const user = db.getUser(userId);
+function deductLevel(userId, guildId, levels = 1) {
+    const user = db.getUser(userId, guildId);
     const oldLevel = Number(user.level || 0);
     const newLevel = Math.max(0, oldLevel - levels);
 
@@ -182,7 +193,7 @@ function deductLevel(userId, levels = 1) {
     // XP = (Level / 0.1)^2
     const newXp = Math.floor(Math.pow(newLevel / 0.1, 2));
 
-    db.updateUser(userId, {
+    db.updateUser(guildId, userId, {
         xp: newXp,
         level: newLevel
     });
@@ -201,15 +212,15 @@ function deductLevel(userId, levels = 1) {
  * @param {number} amount - Số XP muốn giảm
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
-function deductXp(userId, amount) {
-    const user = db.getUser(userId);
+function deductXp(userId, guildId, amount) {
+    const user = db.getUser(userId, guildId);
     const oldXp = Number(user.xp || 0);
     const oldLevel = Number(user.level || 0);
 
     const newXp = Math.max(0, oldXp - amount);
     const newLevel = calculateLevel(newXp);
 
-    db.updateUser(userId, {
+    db.updateUser(guildId, userId, {
         xp: newXp,
         level: newLevel
     });
@@ -226,9 +237,9 @@ function deductXp(userId, amount) {
 module.exports = {
     calculateLevel,
     addXp,
+    assignJobIfEligible,
     getLevelMultiplier,
     assignRandomJob,
-    checkAndSendMilestone,
     sendLevelUpMessage,
     deductLevel,
     deductXp,

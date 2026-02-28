@@ -1,40 +1,38 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
-const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'setlevel',
-    aliases: ['slvl', 'setl'],
-    description: '[OWNER] Chỉnh sửa cấp độ người dùng (Set user level)',
+    aliases: ['slvl'],
+    description: 'Đặt cấp độ cho người dùng (Set level for user)',
     ownerOnly: true,
+    usage: '<@user> <amount>',
     async execute(message, args) {
-        if (!db.isOwner(message.author.id)) return;
+        const lang = getLanguage(message.author.id, message.guild.id);
+        const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const target = message.mentions.users.first() || message.client.users.cache.get(args[0]);
+        if (!target) return message.reply(t('common.error', lang));
+
         const level = parseInt(args[1]);
+        if (isNaN(level) || level < 0) return message.reply(t('common.invalid_amount', lang));
 
-        if (!target) return message.reply(`❌ ${t('common.user_not_found', lang) || 'Không tìm thấy người dùng.'}`);
-        if (isNaN(level) || level < 0) return message.reply(lang === 'vi' ? '❌ Cấp độ không hợp lệ.' : '❌ Invalid level.');
+        // XP = (Level / 0.1)^2
+        const minXp = Math.floor(Math.pow(level / 0.1, 2));
 
-        try {
-            // Need to set the XP so it matches the new level, based on the formula: XP = (Level / 0.1)^2
-            const newXp = Math.floor(Math.pow(level / 0.1, 2));
+        db.updateUser(target.id, { level: level, xp: minXp });
 
-            db.updateUser(target.id, {
-                level: level,
-                xp: newXp
-            });
+        // Trigger job assignment if eligible
+        const { assignJobIfEligible } = require('../../utils/leveling');
+        const member = message.guild.members.cache.get(target.id) || await message.guild.members.fetch(target.id).catch(() => target);
+        const assignedJob = assignJobIfEligible(member, message.guild.id, level);
 
-            const embed = new EmbedBuilder()
-                .setTitle('🆙 Set Level')
-                .setDescription(lang === 'vi' ? `Đã đặt cấp độ của <@${target.id}> thành **${level}** (XP: ${newXp}).` : `Set <@${target.id}>'s level to **${level}** (XP: ${newXp}).`)
-                .setColor(config.COLORS.SUCCESS);
-
-            message.reply({ embeds: [embed] });
-        } catch (e) {
-            message.reply(lang === 'vi' ? `❌ Lỗi khi đổi cấp độ: ${e.message}` : `❌ Error setting level: ${e.message}`);
+        let response = `✅ Đã đặt cấp độ của **${target.username}** thành **${level}** (XP: **${minXp.toLocaleString()}**).`;
+        if (assignedJob) {
+            response += `\n💼 **Job Assigned:** **${assignedJob.name}** đã được gán cho người dùng này!`;
         }
+
+        return message.reply(response);
     }
 };

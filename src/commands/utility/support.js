@@ -5,8 +5,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'support',
-    aliases: ['donate', 'ungho'],
-    description: 'Ủng hộ nhà phát triển (Support the developer)',
+    aliases: ['ungho'],
+    description: 'Ủng hộ (Support developer)',
     cooldown: 5,
     skipXp: true,
     async execute(message, args) {

@@ -94,7 +94,17 @@ module.exports = {
         },
         LEVELING: {
             XP_MULTIPLIER: 1.5 // Triple the XP gain for faster progression
-        }
+        },
+        LOTTERY: {
+            TICKET_PRICE: 1000,
+            DRAW_INTERVAL: 86400, // 24 hours
+            INITIAL_JACKPOT: 100000
+        },
+        ROLE_SHOP: [
+            { id: '1344933994791538698', name: 'Rich', price: 1000000, color: '#f1c40f', income_buff: 0.10 },
+            { id: '1287682407734050818', name: 'Elite', price: 5000000, color: '#3498db', income_buff: 0.25, xp_buff: 0.15 },
+            { id: '1294158169911726161', name: 'Legendary', price: 10000000, color: '#9b59b6', income_buff: 0.50, xp_buff: 0.30 }
+        ]
     },
     BLACKLISTED_CHANNELS: ['842400189830529035']
 };

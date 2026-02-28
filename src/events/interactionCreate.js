@@ -116,7 +116,11 @@ module.exports = {
                 return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
             }
 
-            if (command.adminOnly && !interaction.member.permissions.has('Administrator')) {
+            const isServerOwner = interaction.user.id === interaction.guild.ownerId;
+            const isBotOwner = db.isOwner(interaction.user.id);
+            const isAdmin = interaction.member.permissions.has('Administrator');
+
+            if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
                 return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
             }
 
@@ -150,12 +154,9 @@ module.exports = {
 
                 // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                    const { addXp, XP_AMOUNTS, checkAndSendMilestone } = require('../utils/leveling');
+                    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                    const result = addXp(interaction.user.id, xpAmount);
-                    if (result.leveledUp) {
-                        await checkAndSendMilestone(messageAdapter, result.reachedLevel20, lang);
-                    }
+                    addXp(interaction.member, xpAmount);
                 }
             } catch (error) {
                 console.error(`[Slash] Error executing /${commandName}:`, error);
@@ -165,18 +166,17 @@ module.exports = {
 
                 // Grant Command Failure XP (Skip for admin/owner/utility commands)
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                    const { addXp, XP_AMOUNTS, checkAndSendMilestone } = require('../utils/leveling');
+                    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                    const result = addXp(interaction.user.id, xpAmount);
-                    if (result.leveledUp) {
-                        await checkAndSendMilestone(messageAdapter, result.reachedLevel20, lang);
-                    }
+                    addXp(interaction.member, xpAmount);
                 }
             }
         }
 
-        // 3. Other Button Interactions
+        // 3. Button Interactions
         else if (interaction.isButton()) {
+            // Immediate common handling (unless handled in specific blocks below)
+
             if (interaction.customId === 'check_dist_reward') {
                 const user = db.getUser(interaction.user.id);
                 const amount = user ? (user.last_dist_amount || 0) : 0;
@@ -196,37 +196,46 @@ module.exports = {
                     ephemeral: true
                 });
             }
+
+            // Leaderboard Sort Buttons
+            if (interaction.customId.startsWith('rank_btn_sort_')) {
+                const intId = interaction.id;
+                try {
+                    await interaction.deferUpdate();
+                    const parts = interaction.customId.split('_');
+                    const sortBy = parts[3];
+                    const jobIdPart = parts[4];
+                    const jobId = jobIdPart === 'all' ? null : jobIdPart;
+
+                    const rankCmd = client.commands.get('rank');
+                    if (!rankCmd) return;
+
+                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang, intId);
+                    await interaction.editReply(data);
+                } catch (e) {
+                    console.error(`[Leaderboard Error]:`, e);
+                }
+            }
         }
 
         // 4. Select Menu Interactions
         else if (interaction.isStringSelectMenu()) {
-            if (interaction.customId.startsWith('rank_job_select_')) {
+            if (interaction.customId.startsWith('rank_menu_job_')) {
+                const intId = interaction.id;
                 try {
                     await interaction.deferUpdate();
-                    const sortBy = interaction.customId.split('_').pop();
+                    const parts = interaction.customId.split('_');
+                    const sortBy = parts[3];
                     const jobId = interaction.values[0] === 'all' ? null : interaction.values[0];
-                    const rankCmd = client.commands.get('rank');
-                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
-                    await interaction.editReply(data);
-                } catch (e) {
-                    console.error('[SelectMenu] EditReply Error:', e.message);
-                }
-                return;
-            }
 
-            if (interaction.customId.startsWith('rank_sort_select_')) {
-                try {
-                    await interaction.deferUpdate();
-                    const jobIdPart = interaction.customId.split('_').pop();
-                    const jobId = jobIdPart === 'all' ? null : jobIdPart;
-                    const sortBy = interaction.values[0];
                     const rankCmd = client.commands.get('rank');
-                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang);
+                    if (!rankCmd) return;
+
+                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang, intId);
                     await interaction.editReply(data);
                 } catch (e) {
-                    console.error('[SelectMenu] EditReply Error:', e.message);
+                    console.error(`[Leaderboard Error]:`, e);
                 }
-                return;
             }
         }
     },
@@ -237,12 +246,15 @@ async function handleButtonEntry(interaction) {
     const lang = getLanguage(interaction.user.id, guildId);
     const giveaway = db.getGiveaway(interaction.message.id);
 
-    if (!giveaway) return interaction.reply({ content: t('giveaway.not_exists', lang), ephemeral: true });
-    if (giveaway.ended) return interaction.reply({ content: t('giveaway.already_ended_error', lang), ephemeral: true });
-    if (giveaway.paused) return interaction.reply({ content: t('giveaway.paused_title', lang), ephemeral: true });
+    // Acknowledge immediately to prevent PC sticky state
+    await interaction.deferUpdate().catch(() => { });
+
+    if (!giveaway) return interaction.followUp({ content: t('giveaway.not_exists', lang), ephemeral: true });
+    if (giveaway.ended) return interaction.followUp({ content: t('giveaway.already_ended_error', lang), ephemeral: true });
+    if (giveaway.paused) return interaction.followUp({ content: t('giveaway.paused_title', lang), ephemeral: true });
 
     if (giveaway.required_role_id && !interaction.member.roles.cache.has(giveaway.required_role_id)) {
-        return interaction.reply({ content: t('giveaway.role_required_msg', lang, { roleId: giveaway.required_role_id }), ephemeral: true });
+        return interaction.followUp({ content: t('giveaway.role_required_msg', lang, { roleId: giveaway.required_role_id }), ephemeral: true });
     }
 
     const participants = db.getParticipantUserIds(giveaway.id);
@@ -251,28 +263,26 @@ async function handleButtonEntry(interaction) {
         const newCount = db.getParticipantCount(giveaway.id);
         const embed = createGiveawayEmbed(giveaway, newCount, lang);
         try {
-            await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
+            await interaction.editReply({ embeds: [embed], components: [createEntryButton(false, lang)] });
             return interaction.followUp({ content: t('giveaway.left_giveaway', lang), ephemeral: true });
         } catch (err) {
-            return interaction.reply({ content: t('giveaway.left_giveaway', lang), ephemeral: true }).catch(() => { });
+            console.error('[Giveaway Error]:', err);
         }
+        return;
     }
 
     db.addParticipant(giveaway.id, interaction.user.id);
 
     // Grant Entry XP
-    const { addXp, XP_AMOUNTS, checkAndSendMilestone } = require('../utils/leveling');
-    const result = addXp(interaction.user.id, XP_AMOUNTS.MESSAGE.min); // Minimal XP for joining giveaway
-    if (result.leveledUp) {
-        await checkAndSendMilestone(interaction, result.reachedLevel20, lang);
-    }
+    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
+    addXp(interaction.member, XP_AMOUNTS.MESSAGE.min);
 
     const newCount = db.getParticipantCount(giveaway.id);
     const embed = createGiveawayEmbed(giveaway, newCount, lang);
     try {
-        await interaction.update({ embeds: [embed], components: [createEntryButton(false, lang)] });
+        await interaction.editReply({ embeds: [embed], components: [createEntryButton(false, lang)] });
         return interaction.followUp({ content: t('giveaway.joined_giveaway', lang), ephemeral: true });
     } catch (err) {
-        return interaction.reply({ content: t('giveaway.joined_giveaway', lang), ephemeral: true }).catch(() => { });
+        console.error('[Giveaway Error]:', err);
     }
 }

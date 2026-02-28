@@ -1,35 +1,26 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
+const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount } = require('../../utils/economy');
-const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'removemoney',
-    aliases: ['rm', 'takemoney'],
-    description: '[OWNER] Trừ tiền người dùng (Remove money from user)',
+    aliases: ['rmm'],
+    description: 'Trừ tiền của người dùng (Remove money from user)',
     ownerOnly: true,
+    usage: '<@user> <amount>',
     async execute(message, args) {
-        if (!db.isOwner(message.author.id)) return;
+        const lang = getLanguage(message.author.id, message.guild.id);
+        const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const target = message.mentions.users.first() || message.client.users.cache.get(args[0]);
-        if (!target) return message.reply(`❌ ${t('common.user_not_found', lang) || 'Không tìm thấy người dùng.'}`);
+        if (!target) return message.reply(t('common.error', lang));
 
-        const amountStr = args[1] || (message.mentions.users.first() ? args[1] : args[0]);
-        const user = db.getUser(target.id);
-        const amount = parseAmount(amountStr, user.balance);
+        const amount = parseAmount(args[1]);
+        if (isNaN(amount) || amount <= 0) return message.reply(t('common.invalid_amount', lang));
 
-        if (isNaN(amount) || amount <= 0) return message.reply(lang === 'vi' ? `❌ Số tiền không hợp lệ.` : `❌ Invalid amount.`);
+        db.removeBalance(message.guild.id, target.id, amount);
 
-        db.removeBalance(target.id, amount);
-        const updatedUser = db.getUser(target.id);
-
-        const embed = new EmbedBuilder()
-            .setTitle('💸 Remove Money')
-            .setDescription(lang === 'vi' ? `Đã trừ **${amount.toLocaleString()}** ${config.EMOJIS.COIN} của <@${target.id}>.\nSố dư hiện tại: **${updatedUser.balance.toLocaleString()}**` : `Removed **${amount.toLocaleString()}** ${config.EMOJIS.COIN} from <@${target.id}>.\nCurrent balance: **${updatedUser.balance.toLocaleString()}**`)
-            .setColor(config.COLORS.ERROR);
-
-        message.reply({ embeds: [embed] });
+        return message.reply(`✅ Đã trừ **${amount.toLocaleString()}** ${config.EMOJIS.COIN} của **${target.username}**.`);
     }
 };

@@ -5,8 +5,8 @@ const config = require('../../config');
 
 module.exports = {
     name: 'userinfo',
-    aliases: ['ui', 'whois'],
-    description: 'Xem thông tin chi tiết về người dùng (Displays user information)',
+    aliases: ['ui'],
+    description: 'Thông tin người dùng (User info)',
     skipXp: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
@@ -76,7 +76,7 @@ module.exports = {
         const permStr = keyPerms.length > 0 ? keyPerms.join(', ') : t('userinfo.std_member', lang);
 
         // Economy data
-        const dbUser = db.getUser(user.id);
+        const dbUser = db.getUser(user.id, message.guild.id);
         const inventory = JSON.parse(dbUser.inventory || '{}');
         const itemCount = Object.values(inventory).reduce((a, b) => a + b, 0);
 

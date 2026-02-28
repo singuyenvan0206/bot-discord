@@ -5,16 +5,17 @@ const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount, addHouseProfit } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 
 module.exports = {
     name: 'rps',
     aliases: ['rock', 'paper', 'scissors'],
-    description: 'Trò chơi Kéo Búa Bao',
+    description: 'Kéo búa bao (Play Rock Paper Scissors game)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
 
         const choices = ['rock', 'paper', 'scissors'];
         const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };
@@ -50,9 +51,14 @@ module.exports = {
         if (bet > 0) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
             if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
-            db.removeBalance(user.id, bet);
+            db.removeBalance(message.guild.id, user.id, bet);
         } else if (bet < 0) {
             return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
+        }
+
+        // Grant Action XP for command mode
+        if (userChoice && choices.includes(userChoice)) {
+            addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
         }
 
         if (!userChoice || !choices.includes(userChoice)) {
@@ -80,6 +86,10 @@ module.exports = {
 
             collector.on('collect', async i => {
                 const choice = i.customId.split('_')[1];
+
+                // Grant Action XP for interactive mode
+                addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+
                 await playRPS(i, choice, null, reply, bet);
                 startCooldown(message.client, 'rps', message.author.id);
             });
@@ -87,7 +97,7 @@ module.exports = {
             collector.on('end', (_, reason) => {
                 if (reason === 'time') {
                     // Refund if timed out
-                    if (bet > 0) db.addBalance(user.id, bet);
+                    if (bet > 0) db.addBalance(message.guild.id, user.id, bet);
                     reply.edit({ content: t('rps.timeout_refund', lang), embeds: [], components: [] }).catch(() => { });
                 }
             });
@@ -125,22 +135,26 @@ module.exports = {
             if (betAmount > 0) {
                 if (outcome === 'win') {
                     const profit = betAmount; // Standard 2x return means 1x profit
-                    const { bonus: bonusAmount, percent } = calculateReward(profit, user.id, 'gamble');
+                    const { bonus: bonusAmount, percent } = calculateReward(profit, message.member, 'gamble');
                     let prize = (betAmount * 2) + bonusAmount;
 
-                    db.addBalance(user.id, prize);
+                    db.addBalance(message.guild.id, user.id, prize);
                     result += t('rps.won_coins', lang, { amount: prize.toLocaleString(), emoji: config.EMOJIS.COIN });
+
+                    // Grant Win XP
+                    const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                    addXp(message.member, winXp, message.guild.id);
                     if (bonusAmount > 0) {
                         result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
                     }
 
                     // Musician Interaction: Flow State (20% chance to double final win)
                     if (user.job === 'musician' && Math.random() < 0.20) {
-                        db.addBalance(user.id, prize); // Add another prize
+                        db.addBalance(message.guild.id, user.id, prize); // Add another prize
                         result += t('common.flow_state', lang);
                     }
                 } else if (outcome === 'tie') {
-                    db.addBalance(user.id, betAmount); // Refund
+                    db.addBalance(message.guild.id, user.id, betAmount); // Refund
                     result += t('rps.refund', lang);
                 } else {
                     result += t('rps.lost_coins', lang, { amount: betAmount });
@@ -149,7 +163,7 @@ module.exports = {
                     // Trader Interaction: Market Tip (35% chance to refund 50% on loss)
                     if (user.job === 'trader' && Math.random() < 0.35) {
                         const refund = Math.floor(betAmount * 0.5);
-                        db.addBalance(user.id, refund);
+                        db.addBalance(message.guild.id, user.id, refund);
                         result += t('common.market_tip', lang);
                     }
                 }

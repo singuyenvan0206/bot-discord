@@ -9,12 +9,12 @@ const { calculateReward } = require('../../utils/multiplier');
 module.exports = {
     name: 'poker',
     aliases: ['pk'],
-    description: 'Play Texas Hold\'em Poker!',
+    description: 'Xì tố (Play Texas Hold\'em Poker)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
         const minBuyIn = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
         const hostId = message.author.id;
@@ -86,7 +86,7 @@ module.exports = {
                 // Wait for submit
                 try {
                     const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `buyin_modal_${i.user.id}` });
-                    const user = db.getUser(i.user.id);
+                    const user = db.getUser(i.user.id, i.guild.id);
                     const amountStr = submit.fields.getTextInputValue('amount');
                     const amount = parseAmount(amountStr, user.balance);
 
@@ -109,8 +109,8 @@ module.exports = {
                         return submit.reply({ content: t('common.insufficient_funds', lang, { balance: user.balance }), flags: 64 });
                     }
 
-                    db.removeBalance(i.user.id, amount);
-                    addPlayer(i.user, false, amount);
+                    db.removeBalance(i.guild.id, i.user.id, amount);
+                    addPlayer(i.user, i.member, false, amount);
                     joiningPlayers.delete(i.user.id);
                     updateLobby();
                     await submit.deferUpdate();
@@ -125,7 +125,7 @@ module.exports = {
                 if (gameStarted) return i.reply({ content: t('poker.already_started', lang), flags: 64 });
 
                 await i.deferUpdate().catch(() => { });
-                addPlayer(null, true, minBuyIn); // Bots buy in for min
+                addPlayer(null, null, true, minBuyIn); // Bots buy in for min
                 updateLobby();
 
             } else if (i.customId === `leave_poker_${hostId}`) {
@@ -134,7 +134,7 @@ module.exports = {
 
                 await i.deferUpdate().catch(() => { });
                 const p = playerMap.get(i.user.id);
-                if (!p.isBot) db.addBalance(p.id, p.chips); // Refund chips
+                if (!p.isBot) db.addBalance(i.guild.id, p.id, p.chips); // Refund chips
 
                 removePlayer(i.user.id);
                 updateLobby();
@@ -153,18 +153,19 @@ module.exports = {
 
         lobbyCollector.on('end', (_, reason) => {
             if (reason !== 'started') {
-                players.forEach(p => { if (!p.isBot) db.addBalance(p.id, p.chips); });
+                players.forEach(p => { if (!p.isBot) db.addBalance(message.guild.id, p.id, p.chips); });
                 reply.edit({ content: t('poker.lobby_timeout', lang), components: [] }).catch(() => { });
             }
         });
 
-        function addPlayer(user, isBot, amount) {
+        function addPlayer(user, member, isBot, amount) {
             const tempId = isBot ? `bot_${Date.now()}_${Math.floor(Math.random() * 1000)}` : user.id;
             const newPlayer = {
                 id: tempId,
                 name: isBot ? `${config.EMOJIS.BOT || '🤖'} Bot ${players.length + 1}` : user.username,
                 isBot,
                 user: user,
+                member: member,
                 hand: [],
                 chips: amount,
                 currentBet: 0,
@@ -410,7 +411,7 @@ module.exports = {
             // Grant Action XP
             if (!player.isBot) {
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(player.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                addXp(player.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
             }
 
             turnIndex = (turnIndex + 1) % players.length;
@@ -511,7 +512,7 @@ module.exports = {
 
             winners.forEach(w => {
                 const { calculateReward } = require('../../utils/multiplier');
-                const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = calculateReward(prizePerWinner, w.id, 'gamble');
+                const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = calculateReward(prizePerWinner, w.member, 'gamble');
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
                 totalCap = winPercent; // Using the percent value
@@ -520,7 +521,7 @@ module.exports = {
                 if (!w.isBot) {
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                    addXp(w.id, winXp);
+                    addXp(w.member, winXp, message.guild.id);
                 }
             });
 
@@ -528,7 +529,7 @@ module.exports = {
                 if (p.isBot && p.chips > 0) {
                     addHouseProfit(message, p.chips);
                 } else if (!p.isBot && p.chips > 0) {
-                    db.addBalance(p.id, p.chips);
+                    db.addBalance(message.guild.id, p.id, p.chips);
                 }
             });
 

@@ -96,7 +96,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     if (payout > 0 && bet) {
         if (payout > bet) { // If it's a win (2x or 2.5x)
             const profit = payout - bet;
-            const { total: totalRes, bonus: bonusAmount, percent } = calculateReward(profit, i.user.id, 'gamble');
+            const { total: totalRes, bonus: bonusAmount, percent } = calculateReward(profit, i.member, 'gamble');
             payout = totalRes + bet; // Reward logic
 
             // Generate amount suffix for win
@@ -116,7 +116,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
                 flavorText += `\n✨ **Bonus:** +${percent}% (${bonusAmount.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
             // Musician Interaction: Flow State (15% chance to double final win)
-            const u = db.getUser(i.user.id);
+            const u = db.getUser(i.user.id, i.guild.id);
             if (u.job === 'musician' && payout > bet && Math.random() < 0.15) {
                 payout *= 2;
                 flavorText += `\n` + t('common.flow_state', lang);
@@ -126,7 +126,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             result = t('blackjack.tie', lang, { refund: t('blackjack.refund', lang) });
 
             // Chef Interaction: Complimentary Drink (Tie Tip: 50-100 coins)
-            const u = db.getUser(i.user.id);
+            const u = db.getUser(i.user.id, i.guild.id);
             if (u.job === 'chef') {
                 const tip = Math.floor(Math.random() * 51) + 50;
                 payout += tip;
@@ -151,7 +151,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         }
 
         // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
-        const u = db.getUser(i.user.id);
+        const u = db.getUser(i.user.id, i.guild.id);
         if (u.job === 'trader' && Math.random() < 0.15) {
             const refund = Math.floor(bet * 0.5);
             payout = refund;
@@ -160,13 +160,13 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     }
 
     if (payout > 0) {
-        db.addBalance(i.user.id, payout);
+        db.addBalance(i.guild.id, i.user.id, payout);
 
         // Grant Win XP if payout is more than original bet (actual win)
         if (bet && payout > bet) {
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-            addXp(i.user.id, winXp);
+            addXp(i.member, winXp, i.guild.id);
         }
     }
 
@@ -179,12 +179,12 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
 module.exports = {
     name: 'blackjack',
     aliases: ['bj'],
-    description: 'Chơi Xì Dách (Blackjack) đối kháng với nhà cái!',
+    description: 'Chơi Xì Dách (Play Blackjack against the dealer)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
 
         if (args[0] && (isNaN(bet) || bet <= 0)) {
@@ -194,8 +194,15 @@ module.exports = {
         if (bet && user.balance < bet) {
             return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
         }
-        if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
-        if (bet) db.removeBalance(user.id, bet);
+        const maxBet = db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+        const minBet = db.getGuildSetting(message.guild.id, 'min_bet', config.ECONOMY.MIN_BET);
+        if (bet > maxBet) return message.reply(t('gamble.max_bet', lang, { max: maxBet.toLocaleString() }));
+        if (bet < minBet) return message.reply(t('gamble.min_bet', lang, { min: minBet.toLocaleString() }));
+        if (bet) db.removeBalance(message.guild.id, user.id, bet);
+
+        // Grant Action XP at start
+        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const playerHand = [drawCard(), drawCard()];
         const dealerHand = [drawCard(), drawCard()];
@@ -224,7 +231,9 @@ module.exports = {
         if (playerNatural || dealerNatural) {
             return finishBlackjack({
                 user: message.author,
+                member: message.member,
                 client: message.client,
+                guild: message.guild,
                 update: (data) => message.reply(data)
             }, playerHand, dealerHand, uid, buildEmbed, bet, lang);
         }
@@ -263,13 +272,13 @@ module.exports = {
                 } else {
                     // Grant Action XP for hitting
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                    addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                    addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
                     await i.update({ embeds: [buildEmbed()], components: [row] });
                 }
             } else if (i.customId.startsWith('bj_stand')) {
                 // Grant Action XP for standing
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
                 collector.stop('stand');
                 await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
             }

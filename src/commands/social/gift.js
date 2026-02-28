@@ -6,8 +6,8 @@ const { parseAmount } = require('../../utils/economy');
 
 module.exports = {
     name: 'gift',
-    aliases: ['give', 'present'],
-    description: 'Tặng vật phẩm từ túi đồ cho người khác (Gift items to another user)',
+    aliases: ['g'],
+    description: 'Tặng quà (Send a gift)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 
@@ -22,7 +22,7 @@ module.exports = {
         const remainingArgs = args.filter(arg => !arg.includes(target.id));
         if (remainingArgs.length < 1) return message.reply(t('gift.usage', lang, { prefix: config.PREFIX }));
 
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const inv = JSON.parse(user.inventory || '{}');
 
         // Logic similar to sell.js for parsing quantity and item
@@ -64,12 +64,12 @@ module.exports = {
         }
 
         // Perform the transfer
-        db.removeItem(message.author.id, String(item.id), quantity);
-        db.addItem(target.id, String(item.id), quantity);
+        db.removeItem(message.guild.id, message.author.id, String(item.id), quantity);
+        db.addItem(message.guild.id, target.id, String(item.id), quantity);
 
         // Special handling for Wedding Bouquet (ID 703)
         if (item.id === 703) {
-            const marriage = db.getMarriage(message.author.id);
+            const marriage = db.getMarriage(message.guild.id, message.author.id);
             const isSpouse = marriage && (marriage.user1_id === target.id || marriage.user2_id === target.id);
 
             let msg = t('gift.bouquet_msg', lang, { user: message.author.toString(), target: target.toString() });
@@ -78,7 +78,7 @@ module.exports = {
 
                 // Apply 25% Income Buff for 2 hours (7200s) - ID 703 has 25% in SHOP_ITEMS
                 const { addBuff } = require('../../utils/multiplier');
-                addBuff(target.id, 703, 7200);
+                addBuff(message.guild.id, target.id, 703, 7200);
 
                 msg += t('gift.bouquet_buff', lang, { target: target.toString() });
             }

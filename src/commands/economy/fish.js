@@ -67,13 +67,13 @@ const CATCHES = [
 
 module.exports = {
     name: 'fish',
-    aliases: ['f', 'fishing', 'cast'],
-    description: 'Đi câu cá! Đòi hỏi phải có cần câu và mồi.',
+    aliases: ['f'],
+    description: 'Câu cá (Go fishing)',
     cooldown: config.ECONOMY.FISH_COOLDOWN,
     manualCooldown: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const inventory = JSON.parse(user.inventory || '{}');
 
         // 1. Check for Rod (Use Best)
@@ -139,7 +139,7 @@ module.exports = {
         const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);
 
         // --- SUBCOMMAND: info ---
-        if (args[0] === 'info') {
+        if (args[0] === 'info' || args[0] === 'i') {
             const ITEMS_PER_PAGE = 8;
             let currentPage = 0;
             if (args[1] && !isNaN(args[1])) {
@@ -215,7 +215,7 @@ module.exports = {
         }
 
         // --- SUBCOMMAND: rates ---
-        if (args[0] === 'rates') {
+        if (args[0] === 'rates' || args[0] === 'r') {
             const ratesEmbed = new EmbedBuilder()
                 .setTitle(t('fish.rates_title', lang))
                 .setColor(config.COLORS.INFO)
@@ -244,7 +244,7 @@ module.exports = {
         }
 
         if (!baitSaved) {
-            db.removeItem(message.author.id, bait.id, 1);
+            db.removeItem(message.guild.id, message.author.id, bait.id, 1);
         }
 
         // 5. Determine Catch
@@ -330,7 +330,7 @@ module.exports = {
                 const expiresAt = Math.floor(Date.now() / 1000) + duration;
 
                 buffs.push({ itemId: buffItem.id, expiresAt });
-                db.updateUser(message.author.id, { active_buffs: JSON.stringify(buffs) });
+                db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 
                 const buffName = t(`items.${buffId}.name`, lang);
                 const buffDesc = t(`items.${buffId}.desc`, lang);
@@ -348,9 +348,9 @@ module.exports = {
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 
-            const { total: totalValue, bonus: bonusAmount, percent } = calculateReward(baseValue, message.author.id);
+            const { total: totalValue, bonus: bonusAmount, percent } = calculateReward(baseValue, message.member, 'income');
 
-            db.addBalance(message.author.id, totalValue);
+            db.addBalance(message.guild.id, message.author.id, totalValue);
 
             if (trophyMsg) {
                 embed.addFields({ name: '🏆 Achievement', value: trophyMsg, inline: false });

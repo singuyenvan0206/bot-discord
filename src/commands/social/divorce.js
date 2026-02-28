@@ -5,10 +5,11 @@ const config = require('../../config');
 
 module.exports = {
     name: 'divorce',
-    description: 'Divorce your partner',
+    aliases: ['dv'],
+    description: 'Ly hôn (Divorce)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const marriage = db.getMarriage(message.author.id);
+        const marriage = db.getMarriage(message.guild.id, message.author.id);
 
         if (!marriage) {
             return message.reply(t('divorce.not_married', lang));
@@ -49,7 +50,7 @@ module.exports = {
             if (i.user.id !== message.author.id) return;
 
             if (i.customId === 'confirm_divorce') {
-                db.deleteMarriage(message.author.id);
+                db.deleteMarriage(message.guild.id, message.author.id);
                 await i.update({
                     content: t('divorce.success', lang, { user: message.author.toString(), partner: partner.toString() }),
                     embeds: [],

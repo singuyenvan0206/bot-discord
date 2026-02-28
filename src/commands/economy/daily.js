@@ -6,24 +6,25 @@ const config = require('../../config');
 
 module.exports = {
     name: 'daily',
-    aliases: ['dy', 'day'],
-    description: 'Nhận phần thưởng điểm danh hàng ngày',
+    aliases: ['dy', 'd'],
+    description: 'Điểm danh (Daily reward)',
     cooldown: config.ECONOMY.DAILY_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
+        const cooldown = db.getGuildSetting(message.guild.id, 'daily_cooldown', config.ECONOMY.DAILY_COOLDOWN);
+        const lastDaily = Number(user.last_daily || 0);
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = config.ECONOMY.DAILY_COOLDOWN;
 
-        if (now - user.last_daily < cooldown) {
-            const remaining = (user.last_daily + cooldown) - now;
-            const hours = Math.floor(remaining / 3600);
-            const minutes = Math.floor((remaining % 3600) / 60);
-            return message.reply(t('daily.cooldown', lang, { hours, minutes }));
+        if (now - lastDaily < cooldown) {
+            const timeLeft = cooldown - (now - lastDaily);
+            const { formatDuration } = require('../../utils/time');
+            return message.reply(t('daily.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
-        let { total, bonus: bonusAmount, percent } = calculateReward(config.ECONOMY.DAILY_REWARD, message.author.id);
+        const baseReward = db.getGuildSetting(message.guild.id, 'daily_reward', config.ECONOMY.DAILY_REWARD);
+        let { total, bonus, percent } = calculateReward(baseReward, message.member, 'daily');
 
         // Chef Interaction: Michelin Star (10% chance — daily ×3)
         let eventMsg = '';
@@ -46,14 +47,12 @@ module.exports = {
             eventMsg += t('daily_events.subathon', lang, { amount: subBonus });
         }
 
-
-
-        db.updateUser(message.author.id, { last_daily: now });
-        db.addBalance(message.author.id, total);
+        db.updateUser(message.guild.id, message.author.id, { last_daily: now });
+        db.addBalance(message.guild.id, message.author.id, total);
 
         let msg = t('daily.success', lang, { amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
-        if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+        if (bonus > 0) {
+            msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
         }
         if (eventMsg) msg += eventMsg;
 

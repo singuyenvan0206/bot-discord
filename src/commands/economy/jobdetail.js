@@ -4,8 +4,8 @@ const config = require('../../config');
 
 module.exports = {
     name: 'jobdetail',
-    aliases: ['jd', 'careerinfo', 'jobinfo'],
-    description: 'Xem chi tiết về các nghề nghiệp',
+    aliases: ['jd', 'jobinfo'],
+    description: 'Chi tiết nghề (View job details)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const jobName = args[0]?.toLowerCase();

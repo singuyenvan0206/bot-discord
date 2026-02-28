@@ -9,7 +9,7 @@ const { getRandomQuestion } = require('../../utils/quizGenerator');
 module.exports = {
     name: 'emojiquiz',
     aliases: ['quiz', 'eq'],
-    description: 'Guess the phrase from emojis!',
+    description: 'Đuổi hình bắt chữ qua emoji (Guess the phrase from emojis)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
@@ -32,9 +32,13 @@ module.exports = {
 
         await message.reply({ embeds: [embed] });
 
+        // Grant Action XP
+        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+
         try {
             const collected = await message.channel.awaitMessages({
-                filter: m => !m.author.bot && q.answers.some(a =>
+                filter: m => m.author.id === message.author.id && !m.author.bot && q.answers.some(a =>
                     m.content.toLowerCase().trim() === a.toLowerCase() ||
                     m.content.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '') === a.toLowerCase().replace(/[^a-z0-9\s]/g, '')
                 ),
@@ -45,23 +49,23 @@ module.exports = {
 
             const winnerMsg = collected.first();
             const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD || 50;
-            const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winnerMsg.author.id);
+            const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winnerMsg.member);
 
 
-            db.addBalance(winnerMsg.author.id, totalReward);
+            db.addBalance(message.guild.id, winnerMsg.author.id, totalReward);
 
             // Grant XP
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
 
             // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
-            const u = db.getUser(winnerMsg.author.id);
+            const u = db.getUser(winnerMsg.author.id, message.guild.id);
             if (u.job === 'teacher') {
                 totalReward = Math.floor(totalReward * 1.5);
                 winXp += 10;
             }
 
-            addXp(winnerMsg.author.id, winXp);
+            addXp(winnerMsg.member, winXp, message.guild.id);
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });

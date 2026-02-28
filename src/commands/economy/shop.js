@@ -5,8 +5,8 @@ const config = require('../../config');
 
 module.exports = {
     name: 'shop',
-    aliases: ['store', 'sh'],
-    description: 'View items for sale',
+    aliases: ['s', 'sh', 'store'],
+    description: 'Cửa hàng (View shop)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const ITEMS_PER_PAGE = 5;

@@ -1,124 +1,128 @@
-const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+const {
+    EmbedBuilder,
+    ActionRowBuilder,
+    StringSelectMenuBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} = require('discord.js');
+
 const db = require('../../database');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 module.exports = {
     name: 'rank',
-    aliases: ['lb', 'leaderboard', 'top'],
-    description: 'Hiển thị bảng xếp hạng (Displays the leaderboard)',
+    aliases: ['lb', 'leaderboard', 'top', 'r'],
+    description: 'Bảng xếp hạng (Leaderboard)',
     skipXp: true,
+
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
+        const sortBy = args[0] === 'money' || args[0] === 'balance' ? 'balance' : 'xp';
 
-        let targetJobId = null;
-        if (args[0]) {
-            const inputJob = args[0].toLowerCase();
-            const jobs = config.ECONOMY.JOBS;
-            const foundJob = Object.values(jobs).find(j => j.id === inputJob || t(`job.name_${j.id}`, lang).toLowerCase() === inputJob);
-            if (foundJob) targetJobId = foundJob.id;
+        let jobId = null;
+        if (args[0] && config.ECONOMY.JOBS[args[0].toLowerCase()]) {
+            jobId = args[0].toLowerCase();
         }
 
-        const data = await getLeaderboardData(message.guild, 'xp', targetJobId, message.author.id, lang);
+        const data = await getLeaderboardData(message.guild, sortBy, jobId, message.author.id, lang);
         return message.reply(data);
     },
-    // Export for interaction handling
+
     getLeaderboardData
 };
 
-async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId = null, lang = 'vi') {
+async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId = null, lang = 'vi', traceId = 'CMD') {
+    if (!guild) return { content: '❌ Command only works in a server.' };
+
+    const startTime = Date.now();
     const jobs = config.ECONOMY.JOBS;
-    const targetJob = jobId ? jobs[jobId] : null;
-
-    // Fetch top 100 users by the chosen criteria
     const filter = jobId ? { column: 'job', value: jobId } : null;
-    const topUsers = db.getTopUsers(100, sortBy, filter);
-    const guildMembers = [];
 
-    // Batch fetching logic - fast but simple
-    const candidates = topUsers.slice(0, 10); // Get top 20 to safely find 10 guild members
+    const topUsers = db.getTopUsers(guild.id, 100, sortBy, filter);
 
-    await Promise.all(candidates.map(async (u) => {
-        if (guildMembers.length >= 10) return; // Prevent unnecessary fetches if we have 10
-        try {
-            let member = guild.members.cache.get(u.id);
-            if (member && guildMembers.length < 10) {
-                guildMembers.push({
-                    username: member.user.username,
-                    level: u.level,
-                    balance: u.balance,
-                    job: u.job,
-                    userId: u.id
-                });
-            }
-        } catch (e) {
-            // Ignore errors
-        }
-    }));
+    const generateUI = (currentSortBy, currentJobId, currentLang, embedData) => {
+        const row1 = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId(`rank_btn_sort_xp_${currentJobId || 'all'}`)
+                .setLabel(t('rank.sort_xp', currentLang) || 'XP')
+                .setStyle(currentSortBy === 'xp' ? ButtonStyle.Primary : ButtonStyle.Secondary)
+                .setEmoji('✨'),
+            new ButtonBuilder()
+                .setCustomId(`rank_btn_sort_balance_${currentJobId || 'all'}`)
+                .setLabel(t('rank.sort_balance', currentLang) || 'Số dư')
+                .setStyle(currentSortBy === 'balance' ? ButtonStyle.Primary : ButtonStyle.Secondary)
+                .setEmoji('💰')
+        );
 
-    // Sort again because Promise.all might resolve out of order
-    guildMembers.sort((a, b) => {
-        if (sortBy === 'xp') return b.level - a.level;
-        return b.balance - a.balance;
-    });
+        const jobMenu = new StringSelectMenuBuilder()
+            .setCustomId(`rank_menu_job_${currentSortBy}`)
+            .setPlaceholder(t('rank.select_job', currentLang) || 'Lọc theo nghề...')
+            .addOptions([
+                { label: t('rank.all_jobs', currentLang) || 'Tất cả', value: 'all', emoji: '🏆', default: !currentJobId },
+                ...Object.values(jobs).map(j => ({
+                    label: t(`job.name_${j.id}`, currentLang) || j.id,
+                    value: j.id,
+                    emoji: j.icon,
+                    default: currentJobId === j.id
+                }))
+            ]);
 
-    // Trim explicitly to 10 just in case
-    guildMembers.splice(10);
+        const row2 = new ActionRowBuilder().addComponents(jobMenu);
 
-    const medals = ['🥇', '🥈', '🥉'];
-    const lines = guildMembers.map((u, i) => {
-        const rankLabel = medals[i] || `**${i + 1}.**`;
-        const isAuthor = authorId && u.userId === authorId ? ` **(${t('rank.you', lang)})**` : '';
-        const jobDisplay = u.job && !jobId ? ` | ${t(`job.name_${u.job}`, lang) || u.job}` : '';
-        const valueDisplay = sortBy === 'xp'
-            ? `${t('profile.level_label', lang)} **${u.level}**`
-            : `${config.EMOJIS.COIN} **${u.balance.toLocaleString()}**`;
+        return {
+            embeds: [embedData],
+            components: [row1, row2]
+        };
+    };
 
-        return `${rankLabel} ${u.username} — ${valueDisplay}${jobDisplay}${isAuthor}`;
-    });
+    const emptyEmbed = new EmbedBuilder()
+        .setDescription(t('leaderboard.empty', lang) || 'Không có dữ liệu.')
+        .setColor(config.COLORS.INFO);
 
-    let title;
-    if (jobId) {
-        const jobName = t(`job.name_${jobId}`, lang);
-        title = t('rank.leaderboard_job_title', lang, { server: guild.name, job: jobName });
-    } else if (sortBy === 'balance') {
-        title = t('rank.leaderboard_balance_title', lang, { server: guild.name });
-    } else {
-        title = t('rank.leaderboard_title', lang, { server: guild.name });
+    if (!topUsers || topUsers.length === 0) {
+        return generateUI(sortBy, jobId, lang, emptyEmbed);
     }
+
+    const userIds = topUsers.map(u => u.id);
+    const members = await guild.members.fetch({ user: userIds, withPresences: false }).catch(() => new Map());
+
+    const lines = [];
+    const medals = ['🥇', '🥈', '🥉'];
+    let position = 0;
+
+    for (const u of topUsers) {
+        const member = members.get(u.id);
+        if (!member) continue;
+
+        position++;
+        const rankLabel = medals[position - 1] || `**${position}.**`;
+        const isAuthor = u.id === (authorId || '') ? ` **(${t('rank.you', lang) || 'Bạn'})**` : '';
+        const jobDisplay = u.job && !jobId ? ` | ${t(`job.name_${u.job}`, lang) || u.job}` : '';
+        const valueDisplay = sortBy === 'balance'
+            ? `${config.EMOJIS.COIN} **${(u.balance || 0).toLocaleString()}**`
+            : `${t('profile.level_label', lang) || 'Level'} **${u.level || 0}**`;
+
+        lines.push(`${rankLabel} ${member.user.username} — ${valueDisplay}${jobDisplay}${isAuthor}`);
+        if (position >= 10) break;
+    }
+
+    if (lines.length === 0) {
+        return generateUI(sortBy, jobId, lang, emptyEmbed);
+    }
+
+    const serverName = guild.name || 'Server';
+    let title = sortBy === 'balance' ? t('rank.leaderboard_balance_title', lang, { server: serverName }) : t('rank.leaderboard_title', lang, { server: serverName });
+    if (jobId) title = t('rank.leaderboard_job_title', lang, { server: serverName, job: t(`job.name_${jobId}`, lang) || jobId });
 
     const embed = new EmbedBuilder()
         .setTitle(title)
-        .setDescription(lines.join('\n') || t('leaderboard.empty', lang))
-        .setColor(targetJob ? targetJob.color : config.COLORS.INFO)
+        .setDescription(lines.join('\n'))
+        .setColor(jobId && jobs[jobId] ? jobs[jobId].color : config.COLORS.INFO)
         .setThumbnail(guild.iconURL({ dynamic: true }))
         .setFooter({ text: t('rank.footer', lang) })
         .setTimestamp();
 
-    // Components
-    const jobMenu = new StringSelectMenuBuilder()
-        .setCustomId(`rank_job_select_${sortBy}`)
-        .setPlaceholder(t('rank.select_job', lang))
-        .addOptions([
-            { label: t('rank.all_jobs', lang), value: 'all', emoji: '🏆', default: !jobId },
-            ...Object.values(jobs).map(j => ({
-                label: t(`job.name_${j.id}`, lang),
-                value: j.id,
-                emoji: j.icon,
-                default: jobId === j.id
-            }))
-        ]);
-
-    const sortMenu = new StringSelectMenuBuilder()
-        .setCustomId(`rank_sort_select_${jobId || 'all'}`)
-        .setPlaceholder(t('rank.select_sort', lang))
-        .addOptions([
-            { label: t('rank.sort_xp', lang), value: 'xp', emoji: '✨', default: sortBy === 'xp' },
-            { label: t('rank.sort_balance', lang), value: 'balance', emoji: '💰', default: sortBy === 'balance' }
-        ]);
-
-    const row1 = new ActionRowBuilder().addComponents(jobMenu);
-    const row2 = new ActionRowBuilder().addComponents(sortMenu);
-
-    return { embeds: [embed], components: [row1, row2] };
+    console.log(`[TRACE][${traceId}] Leaderboard Data Ready (${Date.now() - startTime}ms)`);
+    return generateUI(sortBy, jobId, lang, embed);
 }

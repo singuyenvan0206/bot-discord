@@ -1,27 +1,29 @@
 const db = require('../../database');
 const { getLevelMultiplier } = require('../../utils/leveling');
-const { getTotalIncomeMultiplier, calculateReward, hasActiveItem } = require('../../utils/multiplier');
+const { calculateReward, hasActiveItem } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { formatDuration } = require('../../utils/time');
 
 module.exports = {
     name: 'search',
-    aliases: ['s', 'find', 'sc'],
-    description: 'Tìm kiếm tiền rơi ở các địa điểm ngẫu nhiên',
+    aliases: ['sc', 'find'],
+    description: 'Tìm kiếm (Search for coins)',
     cooldown: config.ECONOMY.SEARCH_COOLDOWN,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = config.ECONOMY.SEARCH_COOLDOWN;
 
-        if (now - user.last_search < cooldown) {
-            const remaining = (user.last_search + cooldown) - now;
-            const minutes = Math.ceil(remaining / 60);
-            return message.reply(t('search.cooldown', lang, { minutes }));
+        const cooldown = db.getGuildSetting(message.guild.id, 'search_cooldown', config.ECONOMY.SEARCH_COOLDOWN);
+        const lastSearch = Number(user.last_search || 0);
+
+        if (now - lastSearch < cooldown) {
+            const timeLeft = cooldown - (now - lastSearch);
+            return message.reply(t('search.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
-        db.updateUser(message.author.id, { last_search: now });
+        db.updateUser(message.guild.id, message.author.id, { last_search: now });
 
         const locations = t('search.locations', lang);
         if (!Array.isArray(locations) || locations.length === 0) {
@@ -29,17 +31,17 @@ module.exports = {
         }
         const location = locations[Math.floor(Math.random() * locations.length)];
 
-        const minReward = config.ECONOMY.SEARCH_MIN_REWARD;
-        const maxReward = config.ECONOMY.SEARCH_MAX_REWARD;
-        const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
+        const minReward = db.getGuildSetting(message.guild.id, 'search_min', config.ECONOMY.SEARCH_MIN_REWARD);
+        const maxReward = db.getGuildSetting(message.guild.id, 'search_max', config.ECONOMY.SEARCH_MAX_REWARD);
+        const reward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-        let { total, bonus: bonusAmount, percent } = calculateReward(baseReward, message.author.id);
+        let { total, bonus, percent } = calculateReward(reward, message.member, 'income');
 
         // Job Bonus: Hacker Data Mine (35% chance for 2x if having Laptop/Superyacht)
         let dataMineMsg = '';
-        if (user.job === 'hacker' && (hasActiveItem(message.author.id, 212) || hasActiveItem(message.author.id, 220)) && Math.random() < 0.35) {
+        if (user.job === 'hacker' && (hasActiveItem(message.guild.id, message.author.id, 212) || hasActiveItem(message.guild.id, message.author.id, 220)) && Math.random() < 0.35) {
             total *= 2;
-            bonusAmount *= 2;
+            bonus *= 2;
             dataMineMsg = t('search.data_mine', lang);
         }
 
@@ -58,9 +60,7 @@ module.exports = {
             marketTipMsg = t('search.market_tip', lang);
         }
 
-        db.addBalance(message.author.id, total);
-
-
+        db.addBalance(message.guild.id, message.author.id, total);
 
         let msg = t('search.success', lang, {
             location: location,
@@ -68,8 +68,8 @@ module.exports = {
             emoji: config.EMOJIS.COIN
         });
 
-        if (bonusAmount > 0) {
-            msg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+        if (bonus > 0) {
+            msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
         }
         if (dataMineMsg) msg += dataMineMsg;
         if (dataBreachMsg) msg += dataBreachMsg;

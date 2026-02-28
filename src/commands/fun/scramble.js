@@ -9,7 +9,7 @@ const config = require('../../config');
 module.exports = {
     name: 'scramble',
     aliases: ['scram', 'scr'],
-    description: 'Sắp xếp lại từ đã bị xáo trộn',
+    description: 'Sắp xếp từ (Unscramble the word)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
@@ -67,7 +67,7 @@ module.exports = {
         }
 
         // Programmer Interaction: Regex Assist (Reveals 1st and Last letter if not already)
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         if (user.job === 'programmer' && word.length > 3) {
             hint += `\n💻 **Regex Assist:** \`${word[0].toUpperCase()}...${word[word.length - 1].toUpperCase()}\``;
         }
@@ -80,9 +80,13 @@ module.exports = {
 
         await message.reply({ embeds: [embed] });
 
+        // Grant Action XP
+        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+
         try {
             const collected = await message.channel.awaitMessages({
-                filter: m => m.content.toLowerCase() === word.toLowerCase() && !m.author.bot,
+                filter: m => m.author.id === message.author.id && m.content.toLowerCase() === word.toLowerCase() && !m.author.bot,
                 max: 1,
                 time: 30_000,
                 errors: ['time']
@@ -91,16 +95,16 @@ module.exports = {
             const winner = collected.first();
             const baseReward = config.ECONOMY.SCRAMBLE_REWARD;
 
-            let { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winner.author.id);
+            let { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winner.member);
 
             // Programmer Interaction: Tech Bonus (+30%)
-            const winningUser = db.getUser(winner.author.id);
+            const winningUser = db.getUser(winner.author.id, message.guild.id);
             if (winningUser.job === 'programmer') {
                 totalReward = Math.floor(totalReward * 1.3);
                 bonusAmount = Math.floor(bonusAmount * 1.3);
             }
 
-            db.addBalance(winner.author.id, totalReward);
+            db.addBalance(message.guild.id, winner.author.id, totalReward);
 
             const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
             let msgText = t('scramble.success_msg', lang, {
@@ -114,7 +118,7 @@ module.exports = {
 
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-            addXp(winner.author.id, winXp);
+            addXp(winner.member, winXp, message.guild.id);
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);

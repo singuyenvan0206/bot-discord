@@ -10,8 +10,8 @@ const MEM_EMOJIS = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍓', '🍑', '�
 
 module.exports = {
     name: 'memory',
-    aliases: ['mem', 'match'],
-    description: 'Trò chơi Trí Nhớ (Memory Match)! Tìm các cặp hình giống nhau.',
+    aliases: ['mem', 'match', 'mm'],
+    description: 'Trò chơi trí nhớ (Play Memory Match game)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
@@ -90,7 +90,7 @@ module.exports = {
 
                 // Grant Action XP
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(message.author.id, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min);
+                addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
                 const firstCell = grid[firstPick];
 
@@ -115,14 +115,14 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
-                        const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(reward, message.author.id);
+                        const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(reward, message.member);
 
-                        db.addBalance(message.author.id, totalReward);
+                        db.addBalance(message.guild.id, message.author.id, totalReward);
 
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(message.author.id, winXp);
+                        addXp(message.member, winXp, message.guild.id);
 
                         let winDesc = t('memory.win_msg', lang, { time: timeTaken, attempts: attempts, emoji: config.EMOJIS.COIN, reward: totalReward });
                         if (bonusAmount > 0) winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });

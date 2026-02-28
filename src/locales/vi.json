@@ -7,6 +7,7 @@
         "bot_shut_down": "⚠️ **Hệ thống đang tạm nghỉ!** Bot hiện đang được tắt để bảo trì hoặc theo lệnh của Owner. Vui lòng quay lại sau nhé! 🔌💤",
         "success": "✅ Thành công!",
         "max_bet_error": "❌ Mức cược tối đa là **{{limit}}** coins!",
+        "min_bet_error": "❌ Mức cược tối thiểu là **{{limit}}** coins!",
         "mention_opponent": "❌ Vui lòng nhắc tên (mention) đối thủ để chơi cùng!",
         "no_challenge_bot": "❌ Bạn không thể thách đấu với bot!",
         "no_challenge_self": "❌ Bạn không thể thách đấu với chính mình!",
@@ -110,7 +111,7 @@
         "heads": "Ngửa",
         "tails": "Sấp",
         "invalid_side": "❌ Vui lòng chọn `heads` hoặc `tails`!\nCách dùng: `{{prefix}}coinflip <heads|tails> [tiền_cược]`",
-        "win": "🎉 **Bạn đã thắng {{amount}} coins!**",
+        "win_msg": "🎉 **Bạn đã thắng {{amount}} {{emoji}}!**",
         "lose": "💸 **Bạn đã mất {{amount}} coins.**"
     },
     "dice": {
@@ -131,7 +132,7 @@
         "insufficient_bet": "❌ Bạn không còn đủ tiền cược!",
         "result_title": "🎲  Kết Quả Đổ Xúc Xắc",
         "prediction": "Dự đoán",
-        "payout": "🎉 **Bạn đã thắng {{amount}} coins!** (x{{multiplier}} tiền cược)",
+        "win_msg": "🎉 **Bạn đã thắng {{amount}} {{emoji}}!** (x{{multiplier}} tiền cược)",
         "lose_msg": "💸 **Bạn đã thua {{amount}} coins!**",
         "timeout": "❌ Bạn đã quá thời gian chọn! Lượt chơi bị hủy.",
         "prediction_labels": {
@@ -199,14 +200,18 @@
         "ending_title": "❌⭕  Cờ Ca-rô — Kết thúc ván đấu",
         "timeout_title": "❌⭕  Cờ Ca-rô — {{emoji}} Hết thời gian"
     },
+    "gamble": {
+        "max_bet": "❌ Mức cược tối đa là **{{max}}** coins!",
+        "min_bet": "❌ Mức cược tối thiểu là **{{min}}** coins!"
+    },
     "daily": {
-        "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{hours}} giờ {{minutes}} phút** nữa.",
+        "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{time}}**.",
         "success": "✅ Bạn đã nhận phần thưởng hàng ngày là **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped {{cap}}%): {{percent}}%)*"
     },
     "work": {
-        "cooldown": "❌ Bạn cần nghỉ ngơi! Hãy quay lại làm việc sau **{{minutes}} phút**.",
+        "cooldown": "❌ Bạn cần nghỉ ngơi! Hãy quay lại làm việc sau **{{time}}**.",
         "success": "💼 Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped {{cap}}%): {{percent}}%)*",
@@ -269,7 +274,7 @@
         "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được tiền bồi dưỡng **+150** coins!"
     },
     "crime": {
-        "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{hours}} giờ {{minutes}} phút** nữa để thực hiện phi vụ tiếp theo.",
+        "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{time}}**.",
         "success": "💰 Bạn đã **{{action}}** thành công và cuỗm được **{{amount}}** coins! {{emoji}}",
         "failure": "🚔 Phi vụ thất bại! Bạn bị cảnh sát bắt và phải nộp phạt **{{amount}}** coins. ",
         "actions": [
@@ -287,7 +292,7 @@
         "failure_xp": "🚔 Phi vụ thất bại! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}"
     },
     "beg": {
-        "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{minutes}} phút**.",
+        "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{time}}**.",
         "success": "💰 **{{person}}** đã tặng bạn **{{amount}}** coins! {{emoji}}",
         "failure": "😢 Bạn đứng xin cả buổi nhưng chẳng ai thèm cho xu nào.",
         "persons": [
@@ -313,7 +318,7 @@
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*"
     },
     "search": {
-        "cooldown": "❌ Bạn đã tìm khắp nơi rồi! Hãy nghỉ ngơi **{{minutes}} phút** trước khi tìm tiếp.",
+        "cooldown": "❌ Bạn đã tìm khắp nơi rồi! Hãy nghỉ ngơi **{{time}}** trước khi tìm tiếp.",
         "success": "🔍 Bạn lục lọi trong **{{location}}** và tìm thấy **{{amount}}** coins! {{emoji}}",
         "locations": [
             "thùng rác",
@@ -333,7 +338,7 @@
         "data_breach": "\n💻 **Rò rỉ dữ liệu!** Hacker xâm nhập hệ thống thành công, nhận thêm **+{{amount}}** coins!"
     },
     "rob": {
-        "cooldown": "❌ Bạn đang bị truy nã! Hãy lẩn trốn trong **{{minutes}} phút** nữa.",
+        "cooldown": "❌ Bạn đang bị cảnh sát truy nã! Hãy lẩn trốn trong **{{time}}**.",
         "success": "🥷 Bạn đã lẻn vào và trộm được **{{amount}}** coins từ {{user}}! {{emoji}}",
         "failure": "🚔 Bạn bị {{user}} phát hiện và bắt quả tang! Bạn phải bồi thường **{{amount}}** coins cho họ.",
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
@@ -428,7 +433,7 @@
         "teacher_tutoring_simple": "\n👨‍🏫 **Gia sư:** Bạn nhận được thêm +50% tiền và +10 XP!"
     },
     "slut": {
-        "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{hours}} giờ {{minutes}} phút**.",
+        "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{time}}**.",
         "success": "💋 Bạn đã đi khách thành công và nhận được **{{amount}}** coins từ khách hàng tốt bụng! {{emoji}}",
         "failure": "👠 Xui quá! Bạn gặp phải khách 'bùng' tiền hoặc bị bảo kê đánh, tốn **{{amount}}** coins tiền thuốc men.",
         "musician_bonus": "\n🎸 **Màn trình diễn xuất sắc!** Nhạc sĩ đốt cháy sân khấu! +{{amount}} coins!",
@@ -802,6 +807,7 @@
     },
     "shop": {
         "title": "🛒 Cửa Hàng — {{category}}",
+        "owned": "Đã sở hữu",
         "empty": "*Hiện chưa có vật phẩm nào trong danh mục này.*",
         "bonus_label": "\n✨ **Thưởng:** +{{percent}}% {{effect}}",
         "footer": "Trang {{page}}/{{total}} • Dùng {{prefix}}buy <id> [số_lượng]",
@@ -858,6 +864,23 @@
         "gamble_bonus": "Thưởng Cờ Bạc",
         "xp_bonus": "Thưởng XP",
         "buff_activated": "\n✨ **Buff đã kích hoạt:** +{{percent}}% {{type}} trong **{{duration}}**!"
+    },
+    "lottery": {
+        "title": "🎫 Xổ Số May Mắn",
+        "status_desc": "💰 Jackpot hiện tại: **{{jackpot}}** {{emoji}}\n🎟️ Tổng số vé đã bán: **{{total}}**\n👤 Vé của bạn: **{{user}}**\n\nGiá mỗi vé: **{{price}}** coins.",
+        "time_remaining": "⏱️ Thời gian còn lại",
+        "usage_tip": "Sử dụng {{prefix}}lottery buy [số lượng] để mua vé.",
+        "buy_success": "✅ Bạn đã mua **{{amount}}** vé số với giá **{{cost}}** {{emoji}}!",
+        "draw_title": "🎉 Kết Quả Xổ Số Hôm Nay!",
+        "draw_desc": "Chúc mừng **{{user}}** đã trúng giải Jackpot trị giá **{{amount}}** {{emoji}}! 💰"
+    },
+    "roleshop": {
+        "title": "🎭 Cửa Hàng Phẩm Hàm",
+        "desc": "Dùng coins để khẳng định đẳng cấp và sở hữu các hiệu ứng hỗ trợ (buff) vĩnh viễn!",
+        "already_owned": "❌ Bạn đã sở hữu phẩm hàm này rồi!",
+        "role_not_found": "❌ Role không tồn tại hoặc bot không có quyền cấp!",
+        "buy_success": "✅ Chúc mừng! Bạn đã sở hữu thành công phẩm hàm **{{role}}** với giá **{{price}}** coins!",
+        "error": "❌ Có lỗi khi cấp role. Vui lòng liên hệ Admin!"
     },
     "buy": {
         "prompt": "❌ Vui lòng chỉ định vật phẩm muốn mua (vđ: `{{prefix}}buy 1` hoặc `{{prefix}}buy cookies`).",
@@ -1261,6 +1284,10 @@
             "owner": {
                 "label": "Đặc quyền Owner",
                 "description": "Quản lý và điều hành hệ thống Bot"
+            },
+            "admin": {
+                "label": "Quản trị Server",
+                "description": "Quản lý vai trò (Role Shop) cho riêng server này"
             }
         },
         "descriptions": {
@@ -1289,6 +1316,8 @@
             "slut": "Làm thêm công việc 'nhạy cảm' để kiếm tiền.",
             "fish": "Thả câu bắt cá đổi lấy coins.",
             "job": "Hệ thống nghề nghiệp và đặc quyền Level 20.",
+            "buyrole": "Mua phẩm hàm (role) bằng coins từ Shop của server.",
+            "lottery": "Tham gia xổ số may mắn nhận Jackpot.",
             "jobdetail": "Xem thông tin chi tiết về từng nghề nghiệp.",
             "balance": "Kiểm tra số tài khoản của bạn.",
             "shop": "Cửa hàng vật phẩm hỗ trợ.",
@@ -1297,6 +1326,7 @@
             "sell": "Bán vật phẩm lấy lại tiền.",
             "iteminfo": "Xem thông tin chi tiết vật phẩm.",
             "transfer": "Chuyển tiền cho người chơi khác.",
+            "setdistchannel": "Thiết lập kênh thông báo hoạt động cho server.",
             "use": "Sử dụng vật phẩm trong kho đồ.",
             "marry": "Cầu hôn người bạn thương bằng nhẫn.",
             "divorce": "Ly hôn và chấm dứt mối quan hệ.",
@@ -1308,6 +1338,7 @@
             "avatar": "Xem ảnh đại diện kích thước lớn.",
             "help": "Xem danh sách lệnh và hướng dẫn.",
             "language": "Cài đặt ngôn ngữ hiển thị.",
+            "setrole": "Quản lý các vai trò trong Role Shop của server.",
             "giveaway": "Quản lý và tổ chức sự kiện quà tặng.",
             "serverinfo": "Xem thông tin máy chủ Discord.",
             "userinfo": "Xem thông tin chi tiết người dùng.",
@@ -1352,42 +1383,46 @@
             "rob": "🌟 **Mô tả:** Đột nhập và trộm tiền của người dùng khác.\n\n⚠️ **Rủi ro:**\n- Nếu thất bại, bạn sẽ phải nộp phạt và bồi thường 20% số dư của mình cho nạn nhân.\n\n💰 **Phần thưởng:** Cướp được một phần tài sản của người khác.",
             "slut": "🌟 **Mô tả:** Đi khách để kiếm thêm thu nhập.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công 60%.\n- Nếu thất bại, bạn sẽ mất một khoản tiền thuốc men cố định.\n\n💰 **Phần thưởng:** Tiền thưởng ở mức trung bình, cân bằng giữa rủi ro và lợi nhuận.",
             "profile": "🌟 **Mô tả:** Hộ chiếu số của bạn! Xem chi tiết tiến trình và sự giàu có của bất kỳ ai.\n\n📊 **Thông số chi tiết:**\n- **Số dư ví:** Tiền mặt bạn đang có.\n- **Tổng tài sản (Net Worth):** Tổng giá trị tiền mặt + toàn bộ vật phẩm trong kho đồ.\n- **Thứ hạng:** Vị trí của bạn trên bảng xếp hạng giàu có toàn cầu.\n- **Kinh nghiệm:** Cấp độ hiện tại và tiến trình điểm để lên cấp.",
-            "addmoney": "🌟 **Mô tả:** Thêm số tiền tùy ý vào tài khoản của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$addmoney @user <số_tiền>`",
-            "removemoney": "🌟 **Mô tả:** Trừ số tiền tùy ý khỏi tài khoản của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$removemoney @user <số_tiền>`",
-            "additem": "🌟 **Mô tả:** Thêm vật phẩm vào kho đồ của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$additem @user <ID_vật_phẩm> [số_lượng]`",
-            "removeitem": "🌟 **Mô tả:** Thu hồi vật phẩm khỏi kho đồ của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$removeitem @user <ID_vật_phẩm> [số_lượng]`",
-            "setlevel": "🌟 **Mô tả:** Đặt trực tiếp cấp độ hiện tại của người chơi. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setlevel @user <cấp_độ>`",
-            "resetuser": "🌟 **Mô tả:** Xóa hoàn toàn toàn bộ dữ liệu (tiền, kho đồ, cấp độ) của người chơi. Hành động này không thể hoàn tác. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$resetuser @user`",
+            "addmoney": "🌟 **Mô tả:** Thêm số tiền tùy ý vào tài khoản của người chơi. (Admin)\n\n🕹️ **Cách dùng:**\n`$addmoney @user <số_tiền>`",
+            "removemoney": "🌟 **Mô tả:** Trừ số tiền tùy ý khỏi tài khoản của người chơi. (Admin)\n\n🕹️ **Cách dùng:**\n`$removemoney @user <số_tiền>`",
+            "additem": "🌟 **Mô tả:** Thêm vật phẩm vào kho đồ của người chơi. (Admin)\n\n🕹️ **Cách dùng:**\n`$additem @user <ID_vật_phẩm> [số_lượng]`",
+            "removeitem": "🌟 **Mô tả:** Thu hồi vật phẩm khỏi kho đồ của người chơi. (Admin)\n\n🕹️ **Cách dùng:**\n`$removeitem @user <ID_vật_phẩm> [số_lượng]`",
+            "setlevel": "🌟 **Description:** Đặt trực tiếp cấp độ hiện tại của người chơi. (Owner)\n\n🕹️ **Usage:**\n`$setlevel @user <cấp_độ>`",
+            "resetuser": "🌟 **Description:** Xóa hoàn toàn toàn bộ dữ liệu (tiền, kho đồ, cấp độ) của người chơi. Hành động này không thể hoàn tác. (Owner)\n\n🕹️ **Usage:**\n`$resetuser @user`",
             "setowner": "🌟 **Mô tả:** Chuyển giao quyền sở hữu Bot cho người dùng khác. Hành động này rất nguy hiểm và yêu cầu đổi `.env`. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$setowner @user confirm`",
             "shutdown": "🌟 **Mô tả:** Tắt tiến trình hoạt động của Bot một cách an toàn. Cần khởi động lại thủ công bằng terminal. (Chỉ dành cho Owner)\n\n🕹️ **Cách dùng:**\n`$shutdown`",
             "balance": "🌟 **Mô tả:** Kiểm tra số dư tài khoản của bạn hoặc người khác.\n\n🕹️ **Cách dùng:**\n- `$balance`: Xem ví cá nhân.\n- `$balance @user`: Xem ví của người khác.",
             "daily": "🌟 **Mô tả:** Nhận quà tặng coins miễn phí mỗi 24 giờ.\n\n🕹️ **Cách dùng:**\n- `$daily`\n\n💡 **Mẹo:** Duy trì điểm danh hàng ngày để tăng chuỗi streak và nhận nhiều quà hơn!",
+            "buyrole": "🌟 **Mô tả:** Mua các danh hiệu/phẩm hàm (role) đặc biệt để làm đẹp hồ sơ và nhận buff.\n\n🕹️ **Cách dùng:**\n- `$buyrole <ID_role>`\n\n💡 **Mẹo:** Xem danh sách role tại `$roleshop`.",
+            "lottery": "🌟 **Mô tả:** Thử vận may với xổ số hệ thống. Jackpot tích lũy cực lớn!\n\n🕹️ **Cách dùng:**\n- `$lottery`: Xem giải thưởng hiện tại.\n- `$lottery buy [số_vẻ]`: Để mua vé số.",
+            "setdistchannel": "🌟 **Mô tả:** Cài đặt kênh để bot gửi các thông báo quan trọng như lên cấp, kết quả xổ số...\n\n🕹️ **Cách dùng:**\n`$setdistchannel <#channel>`",
             "job": "🌟 **Mô tả:** Hệ thống sự nghiệp chuyên sâu mở khóa tại Cấp độ 20.\n\n🕹️ **Lệnh con:**\n- `$job list`: Xem danh sách nghề và đặc quyền.\n- `$job info`: Xem chi tiết nghề hiện tại.\n\n💼 **Lưu ý:** Dùng 'Thẻ Chuyển Nghề' để đổi con đường sự nghiệp.",
             "inventory": "🌟 **Mô tả:** Xem toàn bộ vật phẩm bạn đang sở hữu và các buff đang hoạt động.\n\n🕹️ **Cách dùng:**\n- `$inventory`\n- `$inventory @user`: Xem kho đồ người khác.",
             "buy": "🌟 **Mô tả:** Mua các vật phẩm từ cửa hàng.\n\n🕹️ **Cách dùng:**\n- `$buy <ID/Tên> [số lượng]`\n\n💡 **Mẹo:** Xem ID vật phẩm tại `$shop`.",
             "sell": "🌟 **Mô tả:** Bán vật phẩm trong kho để lấy lại coins.\n\n🕹️ **Cách dùng:**\n- `$sell <ID/Tên> [số lượng]`\n\n⚖️ **Hoàn tiền:** Nhận lại 70% giá trị ban đầu.",
             "iteminfo": "🌟 **Mô tả:** Xem thông tin chi tiết, tác dụng và nghề nghiệp phù hợp của vật phẩm.\n\n🕹️ **Cách dùng:**\n- `$iteminfo <ID/Tên>`",
             "use": "🌟 **Mô tả:** Sử dụng vật phẩm để kích hoạt hiệu ứng buff.\n\n🕹️ **Cách dùng:**\n- `$use <ID_vật_phẩm>`",
-            "transfer": "🌟 **Mô tả:** Chuyển coins an toàn cho người dùng khác.\n\n🕹️ **Cách dùng:**\n- `$transfer @user <số_tiền>`",
-            "ping": "🌟 **Mô tả:** Kiểm tra độ trễ phản hồi của Bot và thông tin hệ thống.\n\n🕹️ **Cách dùng:**\n- `$ping`",
-            "avatar": "🌟 **Mô tả:** Xem ảnh đại diện của bạn hoặc người dùng khác ở kích thước lớn.\n\n🕹️ **Cách dùng:**\n- `$avatar [@user]`",
-            "language": "🌟 **Mô tả:** Thay đổi ngôn ngữ hiển thị của Bot (vi/en).\n\n🕹️ **Cách dùng:**\n- `$language <vi|en>`: Đổi ngôn ngữ cá nhân.\n- `$language server <vi|en>`: Đổi ngôn ngữ toàn máy chủ (Admin).",
-            "serverinfo": "🌟 **Mô tả:** Xem thông tin tổng quan về máy chủ Discord này.\n\n🕹️ **Cách dùng:**\n- `$serverinfo`",
-            "userinfo": "🌟 **Mô tả:** Xem thông tin chi tiết về một người dùng (Ngày tham gia, vai trò...).\n\n🕹️ **Cách dùng:**\n- `$userinfo [@user]`",
-            "coinflip": "🌟 **Mô tả:** Tung đồng xu may rủi để nhân đôi số tiền cược của bạn!\n\n✨ **Đặc quyền nghề nghiệp:**\n- **Nhạc sĩ**: 15% tỉ lệ **Flow State** (X2 phần thưởng).\n- **Trader**: 25% tỉ lệ **Mẹo thị trường** (Hoàn lại 50% tiền cược khi thua).\n\n🕹️ **Cách dùng:** `$cf <số_tiền> <heads|tails>`",
-            "dice": "🌟 **Mô tả:** Đổ xúc xắc và đặt cược vào kết quả!\n\n🕹️ **Cách dùng:**\n- `$dice <số_tiền> <1-6>`\n- `$roll <số_tiền> <1-6>`",
-            "rank": "🌟 **Mô tả:** Bảng vàng vinh danh những người chơi xuất sắc nhất!\n\n⚙️ **Chế độ:**\n- Cấp độ (XP): Mặc định.\n- Tiền tệ (Balance): Chuyển đổi qua menu.\n- Nghề nghiệp: Lọc bảng xếp hạng theo từng nghề cụ thể.",
-            "lvl": "🌟 **Mô tả:** Xem nhanh cấp độ và điểm kinh nghiệm (XP) hiện tại của bạn.\n\n🕹️ **Cách dùng:**\n- `$lvl [@user]`",
-            "setexp": "🌟 **Mô tả:** Điều chỉnh điểm kinh nghiệm của người chơi. (Admin Only)\n\n🕹️ **Cách dùng:**\n`$setexp @user <số_xp>`",
+            "transfer": "🌟 **Mô tả:** Chuyển tiền (Transfer money)\n\n🕹️ **Cách dùng:**\n- `$transfer @user <số_tiền>`",
+            "ping": "🌟 **Mô tả:** Độ trễ (Bot latency)\n\n🕹️ **Cách dùng:**\n- `$ping`",
+            "avatar": "🌟 **Mô tả:** Ảnh đại diện (User avatar)\n\n🕹️ **Cách dùng:**\n- `$avatar [@user]`",
+            "language": "🌟 **Mô tả:** Ngôn ngữ (Set language)\n\n🕹️ **Cách dùng:**\n- `$language <vi|en>`",
+            "serverinfo": "🌟 **Mô tả:** Thông tin server (Server info)\n\n🕹️ **Cách dùng:**\n- `$serverinfo`",
+            "userinfo": "🌟 **Mô tả:** Thông tin người dùng (User info)\n\n🕹️ **Cách dùng:**\n- `$userinfo [@user]`",
+            "coinflip": "🌟 **Mô tả:** Tung đồng xu (Coinflip)\n\n🕹️ **Cách dùng:** `$cf <số_tiền> <heads|tails>`",
+            "dice": "🌟 **Mô tả:** Đổ xúc xắc (Dice)\n\n🕹️ **Cách dùng:** `$dice <số_tiền> <1-6>`",
+            "rank": "🌟 **Mô tả:** Xếp hạng (Leaderboard)\n\n🕹️ **Cách dùng:** `$rank [@user]`",
+            "lvl": "🌟 **Mô tả:** Cấp độ (View level)\n\n🕹️ **Cách dùng:** `$lvl [@user]`",
+            "setexp": "🌟 **Description:** Đặt kinh nghiệm (Set XP) (Owner)\n\n🕹️ **Usage:** `$setexp @user <số_xp>`",
             "serverlist": "🌟 **Mô tả:** Xem danh sách toàn bộ máy chủ Discord mà bot đang phục vụ. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$serverlist`",
             "leaveserver": "🌟 **Mô tả:** Yêu cầu bot rời khỏi một máy chủ cụ thể bằng ID. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$leaveserver <id_server>`",
             "setstatus": "🌟 **Mô tả:** Cập nhật trạng thái hiển thị (Activity) của bot. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$setstatus <type> <nội_dung>`\n(Các loại: playing, watching, listening, streaming, competing)",
             "resetdatabase": "🌟 **Mô tả:** Xóa hoàn toàn toàn bộ dữ liệu của hệ thống bao gồm người dùng, tiền, kho đồ, cấp độ, giveaway. Đây là hành động cực kỳ nguy hiểm và không thể hoàn tác. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$resetdatabase confirm YES`",
             "update": "🌟 **Mô tả:** Tải mã nguồn mới nhất từ kho lưu trữ Git và tải lại tất cả các lệnh của bot mà không cần khởi động lại. (Owner Only)\n\n🕹️ **Cách dùng:**\n`$update`",
-            "jobdetail": "🌟 **Mô tả:** Xem thông tin chuyên sâu về các ngành nghề, đặc quyền và kỹ năng đặc biệt.\n\n🕹️ **Cách dùng:**\n`$jobdetail <job_id>`\n\n💡 **Mẹo:** Sử dụng `$job list` để tìm ID của nghề nghiệp bạn muốn tra cứu.",
-            "shop": "🌟 **Mô tả:** Trung tâm mua sắm sầm uất của thành phố! Tại đây bạn có thể mua các vật phẩm hỗ trợ thu nhập, công cụ câu cá và nhiều món đồ giá trị khác.\n\n🕹️ **Cách dùng:**\n`$shop`\n\n💡 **Mẹo:** Các vật phẩm được chia theo danh mục để bạn dễ dàng tìm kiếm.",
-            "giveaway": "🌟 **Mô tả:** Tổ chức các sự kiện tặng quà cho mọi người trong máy chủ. Một cách tuyệt vời để khuấy động cộng đồng!\n\n🕹️ **Cách dùng:**\n`$giveaway <lệnh_con>`\n\n💡 **Mẹo:** Bạn có thể thiết lập thời gian, số lượng người thắng và phần thưởng cụ thể.",
-            "help": "🌟 **Mô tả:** Hệ thống trợ giúp toàn diện của Bot. Cung cấp thông tin về tất cả các lệnh và hướng dẫn sử dụng chi tiết.\n\n🕹️ **Cách dùng:**\n`$help [tên_lệnh]`"
+            "jobdetail": "🌟 **Mô tả:** Chi tiết nghề (View job details)\n\n🕹️ **Cách dùng:** `$jd <job_id>`",
+            "shop": "🌟 **Mô tả:** Cửa hàng (View shop)\n\n🕹️ **Cách dùng:** `$shop`",
+            "giveaway": "🌟 **Description:** Quà tặng (Giveaway events)\n\n🕹️ **Usage:** `$giveaway start`",
+            "help": "🌟 **Description:** Trợ giúp (Help menu)\n\n🕹️ **Usage:** `$help [tên_lệnh]`",
+            "setrole": "🌟 **Description:** Cài đặt role (Set role)\n\n🕹️ **Usage:** `$setrole add <@role> <giá> <buff%>`"
         }
     },
     "iteminfo": {

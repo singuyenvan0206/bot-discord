@@ -6,27 +6,27 @@ const config = require('../../config');
 module.exports = {
     name: 'buy',
     aliases: ['b'],
-    description: 'Mua một vật phẩm từ cửa hàng',
+    description: 'Mua đồ (Buy items)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const fullArg = args.join(' ').toLowerCase();
         if (!fullArg) return message.reply(t('buy.prompt', lang, { prefix: config.PREFIX }));
 
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
 
         if (fullArg === 'all') {
             const buyableItems = SHOP_ITEMS.filter(i => !i.unbuyable);
             // Find total price of 1 of every item
             const totalCost = buyableItems.reduce((sum, item) => sum + item.price, 0);
-            if (user.balance < totalCost) {
-                return message.reply(t('buy.all_insufficient', lang, { price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN, balance: user.balance.toLocaleString() }));
+            if ((user.balance || 0) < totalCost) {
+                return message.reply(t('buy.all_insufficient', lang, { price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN, balance: (user.balance || 0).toLocaleString() }));
             }
 
-            db.removeBalance(user.id, totalCost);
+            db.removeBalance(message.guild.id, message.author.id, totalCost);
 
             // Add 1 of every item to inventory
             for (const item of buyableItems) {
-                db.addItem(user.id, item.id, 1);
+                db.addItem(message.guild.id, message.author.id, item.id, 1);
             }
 
             return message.reply(t('buy.all_success', lang, { count: buyableItems.length, price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN }));
@@ -45,7 +45,7 @@ module.exports = {
 
             // The last word could be a quantity. Let's explicitly check it.
             const lastWord = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : null;
-            const isKw = ['max', 'a'].includes(lastWord);
+            const isKw = ['max', 'a', 'all'].includes(lastWord);
             const isNumOrAbbr = lastWord ? /^([\d.]+)([kmb])?$/i.test(lastWord) : false;
 
             let quantityStr = '1';
@@ -69,8 +69,12 @@ module.exports = {
             }
 
             // Calculate max affordable, considering items already pending in this multi-buy
-            const availableBalance = Math.max(0, user.balance - totalCost);
-            let quantity = parseAmount(quantityStr, Math.floor(availableBalance / item.price));
+            const availableBalance = Math.max(0, (user.balance || 0) - totalCost);
+            let maxAffordable = Math.floor(availableBalance / item.price);
+            if (['all', 'max', 'a'].includes(quantityStr.toLowerCase())) {
+                maxAffordable = Math.min(maxAffordable, 100);
+            }
+            let quantity = parseAmount(quantityStr, maxAffordable);
 
             if (isNaN(quantity) || quantity <= 0) {
                 return message.reply(t('buy.insufficient_item', lang));
@@ -84,14 +88,14 @@ module.exports = {
             purchaseDetails.push(`**${quantity}x** ${itemName}`);
         }
 
-        if (user.balance < totalCost) {
+        if ((user.balance || 0) < totalCost) {
             return message.reply(t('buy.insufficient_funds', lang, { price: totalCost.toLocaleString(), quantity: 'tổng cộng', item: 'các vật phẩm này' }));
         }
 
-        db.removeBalance(message.author.id, totalCost);
+        db.removeBalance(message.guild.id, message.author.id, totalCost);
 
         for (const purchase of itemsToBuy) {
-            db.addItem(message.author.id, purchase.item.id, purchase.quantity);
+            db.addItem(message.guild.id, message.author.id, purchase.item.id, purchase.quantity);
         }
 
         if (itemsToBuy.length === 1) {

@@ -8,13 +8,14 @@ const path = require('path');
 
 module.exports = {
     name: 'help',
-    aliases: ['h', 'commands'],
-    description: 'Xem hướng dẫn và menu lệnh (Shows the command guide and menu)',
+    aliases: ['h'],
+    description: 'Trợ giúp (Help menu)',
     skipXp: true,
     async execute(message, args) {
         const prefix = config.PREFIX;
         const lang = getLanguage(message.author.id, message.guild?.id);
         const isOwner = db.isOwner(message.author.id);
+        const isAdmin = isOwner || (message.member && message.member.permissions.has('Administrator')) || (message.guild && message.guild.ownerId === message.author.id);
 
         // 1. Dynamic Command Discovery
         const categories = {
@@ -24,6 +25,10 @@ module.exports = {
             utility: { label: t('help.categories.utility.label', lang), description: t('help.categories.utility.description', lang), emoji: '🔧', commands: [] },
             giveaway: { label: t('help.categories.giveaway.label', lang), description: t('help.categories.giveaway.description', lang), emoji: '🎉', commands: [] }
         };
+
+        if (isAdmin) {
+            categories.admin = { label: t('help.categories.admin.label', lang), description: t('help.categories.admin.description', lang), emoji: '⚙️', commands: [] };
+        }
 
         if (isOwner) {
             categories.owner = { label: t('help.categories.owner.label', lang), description: t('help.categories.owner.description', lang), emoji: '👑', commands: [] };

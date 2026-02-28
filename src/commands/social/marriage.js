@@ -6,11 +6,11 @@ const shopItems = require('../../utils/shopItems');
 
 module.exports = {
     name: 'marriage',
-    aliases: ['marriageinfo', 'marriagecertificate', 'marriagestatus'],
-    description: 'View your marriage certificate and status',
+    aliases: ['mr', 'mrg'],
+    description: 'Hôn nhân (Marriage info)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const marriage = db.getMarriage(message.author.id);
+        const marriage = db.getMarriage(message.guild.id, message.author.id);
 
         if (!marriage) {
             return message.reply(t('marriage.no_marriage', lang));
@@ -26,7 +26,7 @@ module.exports = {
         });
 
         const ring = shopItems.find(i => i.id === marriage.ring_id);
-        const ringName = ring ? ring.name : t('none', lang);
+        const ringName = ring ? ring.name : t('common.none', lang);
         const bonus = ring ? (ring.multiplier * 100).toFixed(0) : '0';
 
         const embed = new EmbedBuilder()

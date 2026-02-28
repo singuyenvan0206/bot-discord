@@ -5,15 +5,15 @@ const config = require('../../config');
 
 module.exports = {
     name: 'sell',
-    aliases: ['s'],
-    description: `Bán vật phẩm lại cho cửa hàng với giá bằng ${Math.round(config.ECONOMY.SELL_RECOVERY * 100)}% giá gốc`,
+    aliases: ['sl'],
+    description: 'Bán đồ (Sell items)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const fullArg = args.join(' ').toLowerCase();
 
         if (!fullArg) return message.reply(t('sell.prompt', lang, { prefix: config.PREFIX }));
 
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
         const inv = JSON.parse(user.inventory || '{}');
 
         // Feature: Sell everything in inventory
@@ -39,8 +39,8 @@ module.exports = {
             }
 
             // Wipe inventory
-            db.updateUser(user.id, { inventory: '{}' });
-            db.addBalance(user.id, totalEarned);
+            db.updateUser(message.guild.id, message.author.id, { inventory: '{}' });
+            db.addBalance(message.guild.id, message.author.id, totalEarned);
 
             return message.reply(t('sell.all_success', lang, { count: totalItemsCount, price: totalEarned.toLocaleString(), emoji: config.EMOJIS.COIN }));
         }
@@ -92,10 +92,10 @@ module.exports = {
         const sellPrice = Math.floor(item.price * recoveryRate) * quantity;
 
         // Perform transaction
-        const success = db.removeItem(message.author.id, String(item.id), quantity);
+        const success = db.removeItem(message.guild.id, message.author.id, String(item.id), quantity);
         if (!success) return message.reply(t('sell.fail', lang));
 
-        db.addBalance(message.author.id, sellPrice);
+        db.addBalance(message.guild.id, message.author.id, sellPrice);
 
         return message.reply(t('sell.success', lang, {
             quantity,

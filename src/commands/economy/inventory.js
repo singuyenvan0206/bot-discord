@@ -6,14 +6,14 @@ const config = require('../../config');
 
 module.exports = {
     name: 'inventory',
-    aliases: ['inv', 'i', 'bag', 'tui'],
-    description: 'Xem túi đồ của bạn hoặc người khác.',
+    aliases: ['inv', 'i', 'bag'],
+    description: 'Túi đồ (View inventory)',
     usage: '[@user]',
     examples: ['', '@Simsimi'],
     async execute(message, args) {
         const target = message.mentions.users.first() || message.author;
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const userData = db.getUser(target.id);
+        const userData = db.getUser(target.id, message.guild.id);
         const inv = JSON.parse(userData.inventory || '{}');
 
         const ITEMS_PER_PAGE = 10;
@@ -70,11 +70,12 @@ module.exports = {
                 });
 
                 // Global Multipliers (Capped 300% or 600%)
+                const targetMember = message.guild.members.cache.get(target.id);
                 const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
-                const incomeBonus = Math.round(getTotalMultiplier(target.id, 'income') * 100);
-                const gambleBonus = Math.round(getTotalMultiplier(target.id, 'gamble') * 100);
-                const xpBonus = Math.round((getXpMultiplier(target.id) - 1.0) * 100);
-                const maxCapPercent = Math.round(getDynamicCap(target.id) * 100);
+                const incomeBonus = Math.round(getTotalMultiplier(targetMember || target.id, message.guild.id, 'income') * 100);
+                const gambleBonus = Math.round(getTotalMultiplier(targetMember || target.id, message.guild.id, 'gamble') * 100);
+                const xpBonus = Math.round((getXpMultiplier(targetMember || target.id, message.guild.id) - 1.0) * 100);
+                const maxCapPercent = Math.round(getDynamicCap(targetMember || target.id, message.guild.id) * 100);
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),

@@ -5,15 +5,16 @@ const { t, getLanguage } = require('../../utils/i18n');
 const { startCooldown } = require('../../utils/cooldown');
 const { parseAmount, addHouseProfit } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 
 module.exports = {
     name: 'coinflip',
     aliases: ['flip', 'cf'],
-    description: 'Tung đồng xu',
+    description: 'Tung đồng xu đặt cược (Flip a coin to gamble)',
     cooldown: 10,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id);
+        const user = db.getUser(message.author.id, message.guild.id);
 
         let call = args[0] ? args[0].toLowerCase() : null;
         let bet = args[1] ? parseAmount(args[1], user.balance, config.ECONOMY.MAX_BET) : 0;
@@ -28,9 +29,14 @@ module.exports = {
 
         if (bet > 0) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
-            db.removeBalance(user.id, bet);
+            const maxBet = db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+            if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
+            if (bet < 10) return message.reply(t('common.min_bet_error', lang, { limit: '10' }));
+            db.removeBalance(message.guild.id, user.id, bet);
         }
+
+        // Grant Action XP
+        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const result = Math.random() < 0.5 ? 'heads' : 'tails';
         const won = call === result;
@@ -42,10 +48,14 @@ module.exports = {
 
         if (won) {
             // Calculate reward including bonuses
-            const { total, bonus, percent } = calculateReward(bet, message.author.id, 'gamble');
+            const { total, bonus, percent } = calculateReward(bet, message.member, 'gamble');
 
             let payout = total + bet;
-            db.addBalance(message.author.id, payout);
+            db.addBalance(message.guild.id, message.author.id, payout);
+
+            // Grant Win XP
+            const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+            addXp(message.member, winXp, message.guild.id);
 
             flavorText = t('coinflip.win_msg', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (bonus > 0) {
@@ -55,7 +65,7 @@ module.exports = {
             // Musician Interaction: Flow State (15% chance to double final win)
             if (user.job === 'musician' && Math.random() < 0.15) {
                 payout *= 2;
-                db.addBalance(user.id, payout - (payout / 2)); // Add the extra half
+                db.addBalance(message.guild.id, user.id, payout - (payout / 2)); // Add the extra half
                 flavorText += t('common.flow_state', lang);
             }
         } else {
@@ -65,7 +75,7 @@ module.exports = {
             // Trader Interaction: Market Tip (25% chance to refund 50% on loss)
             if (user.job === 'trader' && Math.random() < 0.25) {
                 const refund = Math.floor(bet * 0.5);
-                db.addBalance(user.id, refund);
+                db.addBalance(message.guild.id, user.id, refund);
                 flavorText += t('common.market_tip', lang);
             }
         }

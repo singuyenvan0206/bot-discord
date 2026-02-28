@@ -6,7 +6,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'update',
-    description: '[OWNER] Cập nhật mã nguồn và khởi động lại (Update source code and restart)',
+    aliases: ['upd'],
+    description: 'Cập nhật bot từ GitHub (Update bot from GitHub)',
     ownerOnly: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);

@@ -6,8 +6,8 @@ const config = require('../../config');
 
 module.exports = {
     name: 'iteminfo',
-    aliases: ['item', 'info', 'ii'],
-    description: 'Xem thông tin chi tiết của một vật phẩm',
+    aliases: ['item', 'ii'],
+    description: 'Thông tin vật phẩm (View item details)',
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const query = args.join(' ').toLowerCase();
@@ -40,7 +40,7 @@ module.exports = {
         const sellPrice = Math.floor(item.price * config.ECONOMY.SELL_RECOVERY);
 
         // Check inventory
-        const userData = db.getUser(message.author.id);
+        const userData = db.getUser(message.author.id, message.guild.id);
         const inv = JSON.parse(userData.inventory || '{}');
         const count = inv[item.id] || 0;
 
