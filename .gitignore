@@ -6,3 +6,4 @@ node_modules/
 *.pem
 main.pem
 runcommand.md
+token.txt
