@@ -449,7 +449,7 @@
         "tier_penthouse": "Căn Hộ Áp Mái (Penthouse) 🏢",
         "tier_space_station": "Trạm Vũ Trụ 🛰️",
         "info_buffs": "**Buff hiện tại:**\n• XP: +{{xp}}%\n• Thu nhập: +{{income}}%\n• Lượt cược tối đa: +{{max_bet}}\n• Giới hạn bonus (Cap): +{{cap}}%",
-        "decorate_usage": "❌ Cách dùng: `$house decorate <id>`\nVí dụ: `$house decorate gaming_setup`",
+        "decorate_usage": "❌ Cách dùng: `$house decorate <id>`\nDùng `$house decorate list` để xem danh sách.",
         "decorate_error_owned": "❌ Bạn đã sở hữu món trang trí này rồi!",
         "upgrade_title": "🛋️ Trang Trí Nội Thất",
         "upgrade_success": "✅ Bạn đã mua **{{name}}**! Buff: {{buff}}",

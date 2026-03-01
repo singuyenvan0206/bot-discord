@@ -56,9 +56,27 @@ module.exports = {
 
         if (sub === 'decorate' || sub === 'upgrade') {
             const inputId = args[1] ? args[1].toLowerCase() : null;
-            if (!inputId) {
-                const list = Object.entries(housingConfig.INTERIORS).map(([id, data]) => `\`${data.numeric_id}\` (${data.name[lang]}: ${data.price.toLocaleString()} coins)`).join('\n');
-                return message.reply(`${t('housing.decorate_usage', lang) || "Usage: $house decorate <id>"}\nAvailable:\n${list}`);
+            if (!inputId || inputId === 'list') {
+                const embed = new EmbedBuilder()
+                    .setTitle(t('housing.upgrade_title', lang))
+                    .setColor(config.COLORS.INFO)
+                    .setDescription(t('housing.decorate_usage', lang));
+
+                Object.values(housingConfig.INTERIORS).forEach(data => {
+                    let buffDesc = '';
+                    if (data.buff === 'xp') buffDesc = `+${(data.value * 100).toFixed(0)}% XP`;
+                    else if (data.buff === 'income') buffDesc = `+${(data.value * 100).toFixed(0)}% Income`;
+                    else if (data.buff === 'max_bet') buffDesc = `+${data.value.toLocaleString()} Max Bet`;
+                    else if (data.buff === 'cap') buffDesc = `+${(data.value * 100).toFixed(0)}% Bonus Cap`;
+
+                    embed.addFields({
+                        name: `${data.name[lang]} (ID: \`${data.numeric_id}\`)`,
+                        value: `💰 **${data.price.toLocaleString()}** coins\n✨ Buff: ${buffDesc}`,
+                        inline: true
+                    });
+                });
+
+                return message.channel.send({ embeds: [embed] });
             }
 
             if (!user.house_id) return message.reply(t('housing.info_none', lang));

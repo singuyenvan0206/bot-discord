@@ -392,7 +392,7 @@
         "tier_penthouse": "Penthouse 🏢",
         "tier_space_station": "Space Station 🛰️",
         "info_buffs": "**Active Buffs:**\n• XP: +{{xp}}%\n• Income: +{{income}}%\n• Max Bet: +{{max_bet}}\n• Bonus Cap: +{{cap}}%",
-        "decorate_usage": "❌ Usage: `$house decorate <id>`\nExample: `$house decorate gaming_setup`",
+        "decorate_usage": "❌ Usage: `$house decorate <id>`\nUse `$house decorate list` to view available decorations.",
         "decorate_error_owned": "❌ You already own this decoration!",
         "upgrade_title": "🛋️ Interior Decoration",
         "upgrade_success": "✅ You purchased **{{name}}**! Buff: {{buff}}",
