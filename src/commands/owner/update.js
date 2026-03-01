@@ -58,12 +58,15 @@ module.exports = {
                         const db = require('../../database');
                         await db.getDb();
 
-                        for (const folder of commandFolders) {
-                            const folderPath = path.join(commandsPath, folder);
-                            if (fs.lstatSync(folderPath).isDirectory()) {
-                                const commandFiles = fs.readdirSync(folderPath).filter(f => f.endsWith('.js'));
-                                for (const file of commandFiles) {
-                                    const filePath = path.join(folderPath, file);
+                        const loadCommandsRecursive = (dir) => {
+                            const files = fs.readdirSync(dir);
+                            for (const file of files) {
+                                const filePath = path.join(dir, file);
+                                const stat = fs.lstatSync(filePath);
+                                if (stat.isDirectory()) {
+                                    loadCommandsRecursive(filePath);
+                                } else if (file.endsWith('.js')) {
+                                    delete require.cache[require.resolve(filePath)];
                                     const command = require(filePath);
                                     if ('name' in command && 'execute' in command) {
                                         message.client.commands.set(command.name, command);
@@ -73,7 +76,9 @@ module.exports = {
                                     }
                                 }
                             }
-                        }
+                        };
+
+                        loadCommandsRecursive(commandsPath);
                         await msg.edit(`✅ **Update Successful!**\nHot-reloaded as PM2 was unavailable.\n\`\`\`${output.substring(0, 400)}\`\`\``);
                     } catch (reloadError) {
                         console.error('Reload error:', reloadError);

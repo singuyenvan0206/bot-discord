@@ -19,8 +19,11 @@ module.exports = {
 
         // 1. Dynamic Command Discovery
         const categories = {
-            fun: { label: t('help.categories.fun.label', lang), description: t('help.categories.fun.description', lang), emoji: '🎮', commands: [] },
-            economy: { label: t('help.categories.economy.label', lang), description: t('help.categories.economy.description', lang), emoji: '💰', commands: [] },
+            earning: { label: t('help.categories.earning.label', lang), description: t('help.categories.earning.description', lang), emoji: '💼', commands: [] },
+            finance: { label: t('help.categories.finance.label', lang), description: t('help.categories.finance.description', lang), emoji: '🏦', commands: [] },
+            assets: { label: t('help.categories.assets.label', lang), description: t('help.categories.assets.description', lang), emoji: '🏙️', commands: [] },
+            gambling: { label: t('help.categories.gambling.label', lang), description: t('help.categories.gambling.description', lang), emoji: '🎰', commands: [] },
+            minigames: { label: t('help.categories.minigames.label', lang), description: t('help.categories.minigames.description', lang), emoji: '🎮', commands: [] },
             social: { label: t('help.categories.social.label', lang), description: t('help.categories.social.description', lang), emoji: '💍', commands: [] },
             utility: { label: t('help.categories.utility.label', lang), description: t('help.categories.utility.description', lang), emoji: '🔧', commands: [] },
             giveaway: { label: t('help.categories.giveaway.label', lang), description: t('help.categories.giveaway.description', lang), emoji: '🎉', commands: [] }
@@ -35,40 +38,43 @@ module.exports = {
         }
 
         // Map commands to categories based on their folder
-        const commandsPath = path.join(__dirname, '..');
-        const commandFolders = fs.readdirSync(commandsPath);
+        const loadCommandsRecursive = (dir, topLevelFolder) => {
+            const files = fs.readdirSync(dir);
+            for (const file of files) {
+                const filePath = path.join(dir, file);
+                const stat = fs.lstatSync(filePath);
 
-        for (const folder of commandFolders) {
-            const folderPath = path.join(commandsPath, folder);
-            if (!fs.lstatSync(folderPath).isDirectory()) continue;
-            if (folder === 'owner' && !isOwner) continue;
-            if (!categories[folder]) continue;
+                if (stat.isDirectory()) {
+                    loadCommandsRecursive(filePath, topLevelFolder || file);
+                } else if (file.endsWith('.js')) {
+                    const categoryFolder = topLevelFolder || path.basename(dir);
+                    if (!categories[categoryFolder]) continue;
+                    if (categoryFolder === 'owner' && !isOwner) continue;
 
-            const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
-            for (const file of commandFiles) {
-                const command = require(`../${folder}/${file}`);
-                const transKey = `help.descriptions.${command.name}`;
-                let description = t(transKey, lang);
+                    const command = require(filePath);
+                    const transKey = `help.descriptions.${command.name}`;
+                    let description = t(transKey, lang);
 
-                // If translation doesn't exist (returns the key), fall back to internal description
-                if (description === transKey) {
-                    description = command.description || t('help.no_description', lang);
+                    if (description === transKey) {
+                        description = command.description || t('help.no_description', lang);
+                    }
+
+                    let cmdStr = `\`${prefix}${command.name}\` - ${description}`;
+                    if (command.aliases && command.aliases.length > 0) {
+                        cmdStr = `\`${prefix}${command.name}\` (\`${command.aliases.map(a => `${prefix}${a}`).join('`, `')}\`) - ${description}`;
+                    }
+
+                    if (command.subcommands) {
+                        const subList = Object.keys(command.subcommands).map(s => `  ┗ \`${prefix}${command.name} ${s.split(' ')[0]}\``).join('\n');
+                        cmdStr += `\n${subList}`;
+                    }
+
+                    categories[categoryFolder].commands.push(cmdStr);
                 }
-
-                let cmdStr = `\`${prefix}${command.name}\` - ${description}`;
-                if (command.aliases && command.aliases.length > 0) {
-                    cmdStr = `\`${prefix}${command.name}\` (\`${command.aliases.map(a => `${prefix}${a}`).join('`, `')}\`) - ${description}`;
-                }
-
-                // If command has subcommands, list them briefly
-                if (command.subcommands) {
-                    const subList = Object.keys(command.subcommands).map(s => `  ┗ \`${prefix}${command.name} ${s.split(' ')[0]}\``).join('\n');
-                    cmdStr += `\n${subList}`;
-                }
-
-                categories[folder].commands.push(cmdStr);
             }
-        }
+        };
+
+        loadCommandsRecursive(commandsPath);
 
         // 2. Specific Command Help
         if (args.length > 0) {

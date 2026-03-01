@@ -1323,13 +1323,25 @@
         "footer_category": "Dùng menu bên dưới để chuyển đổi giữa các danh mục",
         "command_not_found": "Không tìm thấy lệnh **{{name}}**!",
         "categories": {
-            "fun": {
-                "label": "Trò chơi & Giải trí",
-                "description": "Các trò chơi nhỏ và hoạt động vui nhộn"
+            "earning": {
+                "label": "Kiếm Tiền",
+                "description": "Các công việc và hoạt động tạo thu nhập"
             },
-            "economy": {
-                "label": "Kinh tế",
-                "description": "Tiền bạc, công việc và giao dịch"
+            "finance": {
+                "label": "Tài Chính & Cửa Hàng",
+                "description": "Quản lý số dư, túi đồ và mua sắm"
+            },
+            "assets": {
+                "label": "Tài Sản Cao Cấp",
+                "description": "Nhà cửa, doanh nghiệp và thùng đồ may mắn"
+            },
+            "gambling": {
+                "label": "Trò Chơi Cá Cược",
+                "description": "Thử vận may với các trò cá cược ăn tiền"
+            },
+            "minigames": {
+                "label": "Trò Chơi Giải Trí",
+                "description": "Các trò chơi trí tuệ và giải trí nhẹ nhàng"
             },
             "utility": {
                 "label": "Tiện ích",

@@ -1323,13 +1323,25 @@
         "footer_category": "Use the menu below to switch between categories",
         "command_not_found": "Could not find command **{{name}}**!",
         "categories": {
-            "fun": {
-                "label": "Games & Entertainment",
-                "description": "Mini-games and fun activities"
+            "earning": {
+                "label": "Earning",
+                "description": "Jobs and activities to earn coins"
             },
-            "economy": {
-                "label": "Economy",
-                "description": "Money, work, and trades"
+            "finance": {
+                "label": "Finance & Shop",
+                "description": "Manage balance, inventory, and purchases"
+            },
+            "assets": {
+                "label": "Luxury Assets",
+                "description": "Housing, businesses, and crates"
+            },
+            "gambling": {
+                "label": "Gambling",
+                "description": "High-stakes games of luck"
+            },
+            "minigames": {
+                "label": "Minigames",
+                "description": "Skill-based and interactive games"
             },
             "utility": {
                 "label": "Utility",

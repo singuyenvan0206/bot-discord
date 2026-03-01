@@ -45,12 +45,15 @@ client.cooldowns = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(commandsPath);
 
-for (const folder of commandFolders) {
-    const folderPath = path.join(commandsPath, folder);
-    if (fs.lstatSync(folderPath).isDirectory()) {
-        const commandFiles = fs.readdirSync(folderPath).filter(f => f.endsWith('.js'));
-        for (const file of commandFiles) {
-            const command = require(path.join(folderPath, file));
+const loadCommands = (dir) => {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+        const filePath = path.join(dir, file);
+        const stat = fs.lstatSync(filePath);
+        if (stat.isDirectory()) {
+            loadCommands(filePath);
+        } else if (file.endsWith('.js')) {
+            const command = require(filePath);
             if ('name' in command && 'execute' in command) {
                 client.commands.set(command.name, command);
                 if (command.aliases && Array.isArray(command.aliases)) {
@@ -60,7 +63,9 @@ for (const folder of commandFolders) {
             }
         }
     }
-}
+};
+
+loadCommands(commandsPath);
 
 // ─── Load Events ──────────────────────────────────────────────────
 
