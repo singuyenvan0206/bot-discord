@@ -7,7 +7,7 @@ module.exports = {
             price: 100000,
             xp_buff: 0.02,
             income_buff: 0.01,
-            max_bet_bonus: 25000,
+            max_bet_bonus: 5000,
             cap_bonus: 0.05,
             icon: '🏠'
         },
@@ -18,7 +18,7 @@ module.exports = {
             price: 500000,
             xp_buff: 0.05,
             income_buff: 0.02,
-            max_bet_bonus: 100000,
+            max_bet_bonus: 10000,
             cap_bonus: 0.1,
             icon: '🏙️'
         },
@@ -29,7 +29,7 @@ module.exports = {
             price: 2500000,
             xp_buff: 0.10,
             income_buff: 0.05,
-            max_bet_bonus: 500000,
+            max_bet_bonus: 25000,
             cap_bonus: 0.2,
             icon: '🏡'
         },
@@ -40,7 +40,7 @@ module.exports = {
             price: 10000000,
             xp_buff: 0.20,
             income_buff: 0.10,
-            max_bet_bonus: 1000000,
+            max_bet_bonus: 75000,
             cap_bonus: 0.4,
             icon: '🏰'
         },
@@ -51,7 +51,7 @@ module.exports = {
             price: 50000000,
             xp_buff: 0.35,
             income_buff: 0.15,
-            max_bet_bonus: 5000000,
+            max_bet_bonus: 200000,
             cap_bonus: 0.7,
             icon: '🏝️'
         },
@@ -62,7 +62,7 @@ module.exports = {
             price: 250000000,
             xp_buff: 0.50,
             income_buff: 0.20,
-            max_bet_bonus: 15000000,
+            max_bet_bonus: 500000,
             cap_bonus: 1.0,
             icon: '🏢'
         },
@@ -73,7 +73,7 @@ module.exports = {
             price: 1500000000,
             xp_buff: 1.0,
             income_buff: 0.5,
-            max_bet_bonus: 50000000,
+            max_bet_bonus: 1000000,
             cap_bonus: 2.0,
             icon: '🛰️'
         }

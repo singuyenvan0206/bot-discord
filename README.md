@@ -41,7 +41,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scop
 - [Features Overview](#-features-overview)
 - [Giveaway System](#-giveaway-system)
 - [Fun & Games](#-fun--games)
-- [Economy System](#-economy-system)
+- [Economy & Finance System](#-economy--finance-system)
 - [Social & Marriage System](#-social--marriage-system)
 - [Utility Commands](#-utility-commands)
 - [Setting up the Language (i18n)](#-setting-up-the-language)
@@ -123,9 +123,9 @@ All games feature interactive button-based UIs and rich embeds. Many support **c
 
 ---
 
-## 💰 Economy System
+## 💰 Economy & Finance System
 
-Earn, spend, and compete. All data flawlessly persists across restarts.
+Earn, spend, invest, and compete. All data flawlessly persists across restarts.
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
@@ -140,15 +140,18 @@ Earn, spend, and compete. All data flawlessly persists across restarts.
 | `$crime` | — | High-risk, high-reward! Commit a crime for massive gains or heavy fines. |
 | `$slut` | — | Similar to crime, but with different success rates and payouts. |
 | `$rob` | — | Risk your reputation to steal coins from another user! |
-| `$fish` | `$fishing` | The fishing minigame! Requires Rod & Bait to catch 31+ species including Legendary Limit-Breaking creatures. |
+| `$fish` | `$fishing` | The fishing minigame! Requires Rod & Bait to catch 31+ species. |
 | `$shop` | `$sh`, `$store` | Browse the item shop by category (Tools, Baits, Income, Daily, Gamble). |
-| `$buy` | `$b` | Buy an item (e.g. `$buy 13` or `$buy laptop`) |
+| `$buy` | `$b` | Buy an item by Name or numeric ID (e.g., `$buy 13` or `$buy laptop`). |
 | `$sell` | `$s` | Sell items back to the shop for a 70% refund. |
 | `$use` | — | Use a consumable item from your inventory to trigger its effects. |
-| `$iteminfo` | `$item`, `$info`| Read detailed lore, multiplier stats, and pricing for any specific item! |
 | `$inventory` | `$inv` | View your sorted inventory, total items, and absolute property value (`Net Worth`). |
+| `$iteminfo` | `$item`, `$info`| Read detailed lore, multiplier stats, and pricing for any specific item! |
 | `$transfer` | `$pay`, `$tf` | Send coins seamlessly to another user. |
 | `$leaderboard` | `$lb`, `$top` | Global server ranking based strictly on accurate **Net Worth** (Wallet + Inventory). |
+| `$crate` | `$ruong`, `$gacha`| Open lucky crates in bulk (`$crate open <id> all`) for random rewards! |
+| `$house` | `$home`, `$nha` | Buy and decorate real estate for permanent income and cap multiplier buffs. |
+| `$business` | `$biz` | Buy and manage businesses to generate massive passive hourly income. |
 
 ### 💸 Money Shorthand
 Simsimi supports shorthand for betting and economy inputs to save you time.
@@ -277,9 +280,18 @@ bot-discord/
 │   ├── wc.js                 # Standalone Word Chain Bot entry point
 │   ├── database.js            # SQLite database manager (Shared)
 │   ├── config.js              # Global configuration, prices, cooldowns
-│   ├── locales/               # i18n Translation dictionaries
-│   ├── commands/              # 50+ Implementations
-│   └── utils/                 # Core logic engines (i18n, Economy, Poker)
+│   ├── locales/               # i18n Translation dictionaries (en.json, vi.json)
+│   ├── commands/              # 50+ Implementations divided into categories:
+│   │   ├── admin/             # Server moderation
+│   │   ├── assets/            # Housing, Business, Crates
+│   │   ├── earning/           # Work, Daily, Fish, Crime
+│   │   ├── finance/           # Shop, Inventory, Transfer, Balance
+│   │   ├── gambling/          # Blackjack, Slots, CoinFlip
+│   │   ├── minigames/         # Trivia, Hangman, Minesweeper
+│   │   ├── owner/             # Bot owner utilities
+│   │   ├── social/            # Marriage, Profile, Rank
+│   │   └── utility/           # Ping, Help, Userinfo
+│   └── utils/                 # Core logic engines (i18n, Economy, Leveling)
 ├── databases.db               # Main SQLite database (auto-generated)
 ├── wordchain.db               # Isolated Word Chain database (auto-generated)
 ├── package.json
