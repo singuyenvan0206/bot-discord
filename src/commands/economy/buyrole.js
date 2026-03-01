@@ -15,11 +15,11 @@ module.exports = {
         const roles = guildRoles;
 
         if (!roles || roles.length === 0) {
-            return message.reply('❌ Shop hiện không có Role nào được bán.');
+            return message.reply(t('roleshop.no_roles', lang));
         }
         const embed = new EmbedBuilder()
-            .setTitle(t('roleshop.title', lang) || "🎭 Cửa Hàng Phẩm Hàm")
-            .setDescription(t('roleshop.desc', lang) || "Dùng coins để khẳng định đẳng cấp của bạn với các role độc quyền!")
+            .setTitle(t('roleshop.title', lang))
+            .setDescription(t('roleshop.desc', lang))
             .setColor(config.COLORS.INFO);
 
         const row = new ActionRowBuilder();
@@ -71,11 +71,11 @@ module.exports = {
             }
 
             const member = await message.guild.members.fetch(message.author.id).catch(() => null);
-            if (!member) return i.reply({ content: "❌ Không tìm thấy thông viên trong server!", flags: [MessageFlags.Ephemeral] });
+            if (!member) return i.reply({ content: t('common.user_not_found', lang), flags: [MessageFlags.Ephemeral] });
 
             if (member.roles.cache.has(roleId)) {
                 return i.reply({
-                    content: t('roleshop.already_owned', lang) || "❌ Bạn đã sở hữu phẩm hàm này rồi!",
+                    content: t('roleshop.already_owned', lang),
                     flags: [MessageFlags.Ephemeral]
                 });
             }
@@ -83,7 +83,7 @@ module.exports = {
             const role = message.guild.roles.cache.get(roleId);
             if (!role) {
                 return i.reply({
-                    content: t('roleshop.role_not_found', lang) || "❌ Role không tồn tại!",
+                    content: t('roleshop.role_not_found', lang),
                     flags: [MessageFlags.Ephemeral]
                 });
             }
@@ -91,14 +91,14 @@ module.exports = {
             const botMember = await message.guild.members.fetch(message.client.user.id);
             if (!botMember.permissions.has('ManageRoles')) {
                 return i.reply({
-                    content: "❌ Bot thiếu quyền **Quản lý Vai trò (Manage Roles)** để thực hiện hành động này. Vui lòng báo Admin kiểm tra lại quyền của Bot!",
+                    content: t('roleshop.error', lang),
                     flags: [MessageFlags.Ephemeral]
                 });
             }
 
             if (role.position >= botMember.roles.highest.position) {
                 return i.reply({
-                    content: "❌ Bot không thể cấp Role này vì Role này nằm cao hơn hoặc bằng Role của Bot trong bảng phân quyền! Vui lòng báo Admin di chuyển Role của Bot lên trên Role này.",
+                    content: t('roleshop.error', lang),
                     flags: [MessageFlags.Ephemeral]
                 });
             }
@@ -115,16 +115,13 @@ module.exports = {
                 }
 
                 await i.update({
-                    content: t('roleshop.buy_success', lang, { role: role.name, price: selectedRole.price.toLocaleString() }) || `✅ Chúc mừng! Bạn đã sở hữu thành công phẩm hàm **${role.name}**!`,
+                    content: t('roleshop.buy_success', lang, { role: role.name, price: selectedRole.price.toLocaleString() }),
                     embeds: [],
                     components: []
                 });
             } catch (err) {
                 console.error(err);
-                let errMsg = t('roleshop.error', lang) || "❌ Có lỗi khi cấp role. Vui lòng liên hệ Admin!";
-                if (err.code === 50013) {
-                    errMsg = "❌ Bot không có đủ quyền để cấp role này (Missing Permissions). Vui lòng kiểm tra lại quyền **Manage Roles** và vị trí Role của Bot!";
-                }
+                let errMsg = t('roleshop.error', lang);
                 await i.reply({ content: errMsg, flags: [MessageFlags.Ephemeral] });
             }
         });

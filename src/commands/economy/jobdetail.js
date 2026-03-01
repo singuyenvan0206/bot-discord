@@ -26,16 +26,31 @@ module.exports = {
         const name = t(`job.name_${actualJobId}`, lang);
         const description = t(`job.desc_${actualJobId}`, lang);
         const perks = t(`job.info_${actualJobId}`, lang).split('\n').filter(p => p.trim()).map(p => `• ${p.trim()}`).join('\n');
+
+        // Accurate Statistics
         const salaryBonus = job.bonus ? `+${Math.round((job.bonus - 1) * 100)}%` : 'None';
         const luckBonus = job.luck ? `x${job.luck}` : 'None';
+
+        // Calculate Salary Range based on work.js logic
+        const minBase = config.ECONOMY.MIN_WORK_EARNINGS;
+        const maxBase = config.ECONOMY.MAX_WORK_EARNINGS;
+        const jobBonusMult = job.bonus || 1;
+
+        // Estimation (Min-Max range without external multipliers)
+        const estMin = Math.floor(minBase * jobBonusMult);
+        const estMax = Math.floor(maxBase * jobBonusMult);
+        const salaryRange = `\`${estMin.toLocaleString()} - ${estMax.toLocaleString()}\``;
 
         const embed = new EmbedBuilder()
             .setTitle(`${job.icon} ${name}`)
             .setDescription(`*${description}*`)
             .addFields(
+                { name: '🆔 ' + t('job.id_label', lang), value: `\`${actualJobId}\` (ID: ${job.numericId})`, inline: true },
+                { name: '⭐ ' + t('job.requirement_label', lang), value: `\`Level 20\``, inline: true },
+                { name: '⏱️ ' + t('job.cooldown_label', lang), value: `\`1 Hour\``, inline: true },
                 { name: '💼 ' + t('job.salary_label', lang), value: `\`${salaryBonus} Bonus\``, inline: true },
                 { name: '🍀 ' + t('job.luck_label', lang), value: `\`${luckBonus} Luck\``, inline: true },
-                { name: '⭐ ' + t('job.requirement_label', lang), value: `\`Level 20\``, inline: true },
+                { name: '💰 ' + t('job.est_salary_label', lang), value: salaryRange, inline: true },
                 { name: '✨ ' + t('job.perks_title', lang), value: perks || t('common.none', lang), inline: false }
             )
             .setColor(job.color || config.COLORS.INFO)

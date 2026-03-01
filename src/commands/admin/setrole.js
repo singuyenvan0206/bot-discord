@@ -20,7 +20,7 @@ module.exports = {
         const isAdmin = message.member.permissions.has(PermissionFlagsBits.ManageGuild) || message.author.id === message.guild.ownerId;
 
         if (!isOwner && !isAdmin) {
-            return message.reply(`❌ Bạn không có quyền sử dụng lệnh này (Cần quyền Manage Guild).`);
+            return message.reply(t('common.no_permission', lang));
         }
 
         if (sub === 'add' || sub === 'a') {
@@ -35,7 +35,13 @@ module.exports = {
 
             await db.addGuildRole(message.guild.id, role.id, role.name, price, incomeBuff, xpBuff, role.hexColor);
 
-            return message.reply(`✅ Đã thêm/cập nhật role **${role.name}** vào Shop server này.\nGiá: **${price.toLocaleString()}** ${config.EMOJIS.COIN}\nBuff: Income +${(incomeBuff * 100).toFixed(0)}%, XP +${(xpBuff * 100).toFixed(0)}%`);
+            return message.reply(t('setrole.add_success', lang, {
+                role: role.name,
+                price: price.toLocaleString(),
+                emoji: config.EMOJIS.COIN,
+                income: (incomeBuff * 100).toFixed(0),
+                xp: (xpBuff * 100).toFixed(0)
+            }));
         }
 
         else if (sub === 'remove' || sub === 'rm' || sub === 'r') {
@@ -43,30 +49,34 @@ module.exports = {
             if (!role) return message.reply(t('common.error', lang));
 
             await db.removeGuildRole(message.guild.id, role.id);
-            return message.reply(`✅ Đã xóa role khỏi Shop server này.`);
+            return message.reply(t('setrole.remove_success', lang));
         }
         else if (sub === 'updateid' || sub === 'ui') {
             const oldId = args[1];
             const newRole = message.mentions.roles.first() || (args[2] ? await message.guild.roles.fetch(args[2]).catch(() => null) : null);
 
-            if (!oldId || !newRole) return message.reply(`❌ Sử dụng: \`$setrole updateid <old_id> <@new_role>\``);
+            if (!oldId || !newRole) return message.reply(t('setrole.usage_ui', lang, { prefix: '$' }));
 
             const existingOld = await db.getGuildRole(message.guild.id, oldId);
-            if (!existingOld) return message.reply(`❌ Không tìm thấy role với ID \`${oldId}\` trong shop.`);
+            if (!existingOld) return message.reply(t('setrole.not_found', lang, { id: oldId }));
 
             const existingNew = await db.getGuildRole(message.guild.id, newRole.id);
-            if (existingNew) return message.reply(`❌ Role mới **${newRole.name}** đã có trong shop rồi.`);
+            if (existingNew) return message.reply(t('setrole.already_exists', lang, { role: newRole.name }));
 
             await db.updateGuildRoleId(message.guild.id, oldId, newRole.id);
-            return message.reply(`✅ Đã cập nhật ID role trong shop: \`${oldId}\` ➔ **${newRole.name}** (\`${newRole.id}\`)`);
+            return message.reply(t('setrole.update_success', lang, {
+                oldId,
+                newName: newRole.name,
+                newId: newRole.id
+            }));
         }
 
         else if (sub === 'list' || sub === 'ls' || sub === 'l' || !sub) {
             const roles = await db.getGuildRoles(message.guild.id);
-            if (roles.length === 0) return message.reply('❌ Server này chưa có Role nào trong Shop. Dùng `$setrole add` để thêm.');
+            if (roles.length === 0) return message.reply(t('setrole.no_roles', lang, { prefix: '$' }));
 
             const embed = new EmbedBuilder()
-                .setTitle(`🛒 Role Shop Configuration - ${message.guild.name}`)
+                .setTitle(t('setrole.title', lang, { guild: message.guild.name }))
                 .setColor(config.COLORS.INFO)
                 .setDescription(roles.map(r => `• **${r.name}** (\`${r.role_id}\`)\n  - Price: ${r.price.toLocaleString()} ${config.EMOJIS.COIN}\n  - Buff: Income +${(r.income_buff * 100).toFixed(0)}%, XP +${(r.xp_buff * 100).toFixed(0)}%`).join('\n\n'));
 
