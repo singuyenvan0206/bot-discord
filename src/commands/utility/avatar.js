@@ -17,7 +17,15 @@ module.exports = {
         const member = await message.guild.members.fetch(user.id).catch(() => null);
 
         const globalExt = user.avatar?.startsWith('a_') ? 'gif' : 'png';
-        const globalAvatar = user.displayAvatarURL({ extension: globalExt, size: 4096 });
+        let globalAvatar = user.displayAvatarURL({ extension: globalExt, size: 4096 });
+
+        const isBot = user.id === message.client.user.id;
+        const customBotPng = 'https://cdn.discordapp.com/attachments/1364430739512496228/1477518057118109756/simsimi_avatar_1024x1024.png?ex=69a50d6b&is=69a3bbeb&hm=4708ffa10df26fdcf3d0e8d12480bbd0d42a8a03cc7992d2b584d11184efc641&';
+
+        if (isBot) {
+            globalAvatar = customBotPng;
+        }
+
         const serverExt = member?.avatar?.startsWith('a_') ? 'gif' : 'png';
         const serverAvatar = member?.avatar ? member.displayAvatarURL({ extension: serverExt, size: 4096 }) : null;
         const hasServerAvatar = !!serverAvatar;
@@ -29,7 +37,11 @@ module.exports = {
         if (isAnimated) formats.push('gif');
         else formats.push('webp');
 
-        const links = formats.map(f => `[${f.toUpperCase()}](${user.displayAvatarURL({ extension: f, forceStatic: false, size: 4096 })})`).join(' • ');
+        const links = formats.map(f => {
+            let url = user.displayAvatarURL({ extension: f, forceStatic: false, size: 4096 });
+            if (isBot && f === 'png') url = customBotPng;
+            return `[${f.toUpperCase()}](${url})`;
+        }).join(' • ');
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${user.tag}`, iconURL: globalAvatar })
