@@ -32,7 +32,7 @@ module.exports = {
                 { name: t('job.perks_title', lang), value: perks, inline: false }
             )
             .setColor(job.color || config.COLORS.INFO)
-            .setThumbnail(message.client.user.displayAvatarURL())
+            .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }))
             .setFooter({ text: t('common.requested_by', lang, { user: message.author.tag }) });
 
         return message.reply({ embeds: [embed] });

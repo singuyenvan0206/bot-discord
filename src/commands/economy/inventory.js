@@ -49,7 +49,7 @@ module.exports = {
             const categories = getCategories();
             const title = t('inventory.title', lang, { user: target.username });
             const embed = new EmbedBuilder()
-                .setAuthor({ name: title, iconURL: target.displayAvatarURL({ dynamic: true }) })
+                .setAuthor({ name: title, iconURL: target.displayAvatarURL({ dynamic: true, size: 256 }) })
                 .setColor(config.COLORS.INFO)
                 .setThumbnail(target.displayAvatarURL({ dynamic: true, size: 256 }))
                 .setTimestamp();

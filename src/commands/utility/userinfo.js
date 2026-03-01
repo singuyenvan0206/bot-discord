@@ -87,9 +87,9 @@ module.exports = {
         const color = member?.displayColor || config.COLORS.NEUTRAL;
 
         const embed = new EmbedBuilder()
-            .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true, size: 256 }) })
             .setTitle(user.bot ? t('userinfo.title_bot', lang) : t('userinfo.title_user', lang))
-            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 512 }))
+            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
             .addFields(
                 { name: t('userinfo.username', lang), value: `${user.tag}`, inline: true },
                 { name: t('userinfo.nickname', lang), value: nickname, inline: true },

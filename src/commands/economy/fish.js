@@ -157,7 +157,7 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setTitle(t('fish.info_title', lang))
                     .setColor(config.COLORS.INFO)
-                    .setThumbnail(message.client.user.displayAvatarURL());
+                    .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 512 }));
 
                 let listText = '';
                 for (const item of currentItems) {

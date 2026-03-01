@@ -141,7 +141,7 @@ module.exports = {
                 { name: `🔗 ${t('help.quick_links', lang)}`, value: `[${t('help.support_server', lang)}](https://discord.gg/) • [${t('help.invite_bot', lang)}](https://discord.com/oauth2/authorize?client_id=${message.client.user.id}&permissions=8&scope=bot%20applications.commands)`, inline: false }
             )
             .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }))
-            .setFooter({ text: t('help.footer_home', lang, { prefix }), iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+            .setFooter({ text: t('help.footer_home', lang, { prefix }), iconURL: message.author.displayAvatarURL({ dynamic: true, size: 256 }) })
             .setTimestamp();
 
         const selectMenu = new StringSelectMenuBuilder()
@@ -181,11 +181,11 @@ module.exports = {
 
             const category = categories[i.values[0]];
             const categoryEmbed = new EmbedBuilder()
-                .setAuthor({ name: `${category.label}`, iconURL: message.client.user.displayAvatarURL() })
+                .setAuthor({ name: `${category.label}`, iconURL: message.client.user.displayAvatarURL({ dynamic: true, size: 256 }) })
                 .setTitle(`${category.emoji}  ${category.label}`)
                 .setDescription(`*${category.description}*\n\n${category.commands.join('\n').replace(/\$/g, prefix)}`)
                 .setColor(config.COLORS.INFO)
-                .setThumbnail(message.client.user.displayAvatarURL())
+                .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }))
                 .setFooter({ text: t('help.footer_category', lang) })
                 .setTimestamp();
 

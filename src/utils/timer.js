@@ -278,7 +278,7 @@ async function processHouseDistribution(client) {
                     emoji: config.EMOJIS.COIN
                 }) || `Bot đã chia ngẫu nhiên **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng may mắn!`)
                 .setColor(config.COLORS.SUCCESS)
-                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 256 }) })
                 .setTimestamp();
 
             const checkButton = new ButtonBuilder()
@@ -357,8 +357,8 @@ async function processLotteryDraw(client) {
                     emoji: config.EMOJIS.COIN
                 }) || `Chúc mừng **${winner.username}** đã trúng giải Jackpot trị giá **${jackpot.toLocaleString()}** coins! 💰`)
                 .setColor(config.COLORS.SUCCESS)
-                .setThumbnail(winner.displayAvatarURL ? winner.displayAvatarURL() : null)
-                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                .setThumbnail(winner.displayAvatarURL ? winner.displayAvatarURL({ dynamic: true, size: 256 }) : null)
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 256 }) })
                 .setTimestamp();
 
             channel.send({ content: `🎉 Chúc mừng <@${winnerId}>!`, embeds: [embed] }).catch(() => { });

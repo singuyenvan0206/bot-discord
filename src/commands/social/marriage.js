@@ -43,7 +43,7 @@ module.exports = {
             .setTimestamp();
 
         if (partner) {
-            embed.setImage(partner.displayAvatarURL({ size: 1024 }));
+            embed.setImage(partner.displayAvatarURL({ dynamic: true, size: 1024 }));
         }
 
         await message.reply({ embeds: [embed] });

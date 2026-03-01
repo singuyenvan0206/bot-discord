@@ -24,7 +24,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle(t('job.list_title', lang))
                 .setColor(config.COLORS.INFO)
-                .setThumbnail(message.client.user.displayAvatarURL());
+                .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }));
 
             let desc = '';
             Object.values(jobs).forEach(j => {
@@ -65,7 +65,7 @@ module.exports = {
                 .setTitle(`💼 ${t('job.current_title', lang)}`)
                 .setDescription(`${job.icon} **${name}**\n\n${info}`)
                 .setColor(job.color || config.COLORS.INFO)
-                .setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() });
+                .setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true, size: 256 }) });
 
             return message.reply({ embeds: [embed] });
         }

@@ -63,8 +63,8 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setAuthor({ name: t('profile.title', lang, { user: user.tag }), iconURL: user.displayAvatarURL({ dynamic: true }) })
-            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 512 }))
+            .setAuthor({ name: t('profile.title', lang, { user: user.tag }), iconURL: user.displayAvatarURL({ dynamic: true, size: 256 }) })
+            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
             .setColor(config.COLORS.INFO)
             .addFields(
                 { name: t('profile.experience', lang), value: t('profile.level', lang, { level: dbUser.level }) + `\n\`${progressBar}\` ${Math.floor(progressPercent)}%\n(${Math.floor(dbUser.xp)}/${Math.floor(nextLevelXp)} XP)`, inline: false },

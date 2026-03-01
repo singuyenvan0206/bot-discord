@@ -67,7 +67,7 @@ module.exports = {
                 .setTitle(t('shop.title', lang, { category: categoryName }))
                 .setDescription(itemsList)
                 .setColor(config.COLORS.INFO)
-                .setThumbnail(message.client.user.displayAvatarURL())
+                .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
                 .setFooter({ text: t('shop.footer', lang, { page: page + 1, total: totalPages, prefix: config.PREFIX }) });
         };
 

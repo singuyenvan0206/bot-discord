@@ -97,7 +97,7 @@ function addHouseProfit(context, amount) {
                         prefix: config.PREFIX
                     })
                 })
-                .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 256 }))
+                .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
                 .setColor(job.config.color || '#f1c40f')
                 .setTimestamp();
 

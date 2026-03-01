@@ -59,7 +59,7 @@ module.exports = {
                 ring: ringName
             }))
             .setColor(ringId === 702 ? '#E0FBFF' : (config.COLORS.LOVE || '#FF69B4'))
-            .setThumbnail(target.displayAvatarURL());
+            .setThumbnail(target.displayAvatarURL({ dynamic: true, size: 1024 }));
 
         const row = new ActionRowBuilder()
             .addComponents(
