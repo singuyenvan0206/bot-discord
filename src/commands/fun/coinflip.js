@@ -36,7 +36,7 @@ module.exports = {
         }
 
         // Grant Action XP
-        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const result = Math.random() < 0.5 ? 'heads' : 'tails';
         const won = call === result;
@@ -55,7 +55,7 @@ module.exports = {
 
             // Grant Win XP
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-            addXp(message.member, winXp, message.guild.id);
+            await addXp(message.member, winXp, message.guild.id);
 
             flavorText = t('coinflip.win_msg', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (bonus > 0) {
@@ -70,7 +70,7 @@ module.exports = {
             }
         } else {
             flavorText = t('coinflip.lose', lang, { amount: bet });
-            if (bet) addHouseProfit(message, bet);
+            if (bet) await addHouseProfit(message, bet);
 
             // Trader Interaction: Market Tip (25% chance to refund 50% on loss)
             if (user.job === 'trader' && Math.random() < 0.25) {

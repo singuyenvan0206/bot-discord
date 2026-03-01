@@ -113,7 +113,7 @@ client.on('messageCreate', async (message) => {
             if (word.startsWith(prefix) && word !== `${prefix}stop`) return;
 
             if (word === `${prefix}stop`) {
-                if (isManager(m.member)) {
+                if (await isManager(m.member)) {
                     collector.stop('stopped');
                     return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author.username })}**`);
                 }
@@ -160,7 +160,7 @@ client.on('messageCreate', async (message) => {
             // Grant XP for valid word
             const { addXp, XP_AMOUNTS } = require('../utils/leveling');
             const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.MESSAGE.max - XP_AMOUNTS.MESSAGE.min + 1)) + XP_AMOUNTS.MESSAGE.min;
-            addXp(m.member, xpAmount);
+            await addXp(m.member, xpAmount);
 
             await m.react(config.EMOJIS.SUCCESS).catch(() => { });
         });

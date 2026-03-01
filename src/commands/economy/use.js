@@ -4,7 +4,7 @@ const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 // Helper: activate a single buff item for a user
-function activateBuff(guildId, userId, item, buffs, isChef) {
+async function activateBuff(guildId, userId, item, buffs, isChef) {
     let duration = item.duration;
     if (isChef) duration *= 2;
     const expiresAt = Math.floor(Date.now() / 1000) + duration;
@@ -126,7 +126,7 @@ module.exports = {
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
             const isChef = user.job === 'chef';
-            const durationStr = activateBuff(message.guild.id, message.author.id, item, buffs, isChef);
+            const durationStr = await activateBuff(message.guild.id, message.author.id, item, buffs, isChef);
 
             await db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 

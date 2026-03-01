@@ -8,7 +8,7 @@ const db = require('../database');
  * @param {GuildMember} member The Discord member to check
  * @returns {boolean}
  */
-function isManager(member) {
+async function isManager(member) {
     if (!member) return false;
 
     // 1. Check if Bot Owner

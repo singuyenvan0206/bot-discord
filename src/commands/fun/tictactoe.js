@@ -148,7 +148,7 @@ module.exports = {
             // Grant Action XP for the move
             if (i.user.id !== message.client.user.id) {
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
+                await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
             }
 
             let winner = checkWinner();
@@ -180,7 +180,7 @@ module.exports = {
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(winnerMember, winXp, message.guild.id);
+                        await addXp(winnerMember, winXp, message.guild.id);
 
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
@@ -189,12 +189,12 @@ module.exports = {
                             resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
                         }
                     } else {
-                        addHouseProfit(i, baseReward);
+                        await addHouseProfit(i, baseReward);
 
                         // Grant Win XP to Bot
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(message.client.user.id, winXp, message.guild.id);
+                        await addXp(message.client.user.id, winXp, message.guild.id);
 
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: baseReward.toLocaleString() });

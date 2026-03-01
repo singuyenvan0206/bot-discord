@@ -6,7 +6,7 @@ const { calculateReward } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
-module.exports = {  
+module.exports = {
     name: 'hangman',
     aliases: ['hang', 'hm'],
     description: 'Người treo cổ (Play Hangman game)',
@@ -55,7 +55,7 @@ module.exports = {
             return word.split('').map(l => guessed.has(l) ? l : '\\_').join(' ');
         }
 
-        function calcReward(userMember) {
+        async function calcReward(userMember) {
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
             let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, userMember);
 
@@ -92,7 +92,7 @@ module.exports = {
             if (input.length > 1) {
                 if (input === word) {
                     gameOver = true;
-                    const { totalReward, bonusAmount, percent } = calcReward(message.member);
+                    const { totalReward, bonusAmount, percent } = await calcReward(message.member);
 
                     await db.addBalance(message.guild.id, message.author.id, totalReward);
 
@@ -123,13 +123,13 @@ module.exports = {
                 gameOver = true;
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
-                    const { totalReward, bonusAmount, percent } = calcReward(message.member);
+                    const { totalReward, bonusAmount, percent } = await calcReward(message.member);
                     await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                     // Grant Win XP
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                    addXp(message.member, winXp, message.guild.id);
+                    await addXp(message.member, winXp, message.guild.id);
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins!`;
                     if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
@@ -140,7 +140,7 @@ module.exports = {
             } else {
                 // Grant Action XP for guessing correctly/wrongly but game continues
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
                 embed.setDescription(`${t('hangman.hint', lang)}: ${hint}\n\n${t('hangman.word', lang)}: ${currentDisplay}\n${t('hangman.lives', lang)}: ${'❤️'.repeat(lives)}\n\n${t('hangman.guessed', lang)}: ${Array.from(guessed).join(', ') || t('userinfo.none', lang)}`);
             }

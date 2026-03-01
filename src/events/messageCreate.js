@@ -39,7 +39,7 @@ module.exports = {
             const { MESSAGE } = XP_AMOUNTS;
             const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
 
-            addXp(message.member, xpAmount);
+            await addXp(message.member, xpAmount);
 
             xpCooldowns.add(message.author.id);
             setTimeout(() => xpCooldowns.delete(message.author.id), 30000); // 30 seconds cooldown
@@ -80,13 +80,17 @@ module.exports = {
         }
 
         // Cooldown handling
-        const now = Date.now();
-        const cooldownAmountMs = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
-        const cooldownKey = `cooldown:${command.name}:${message.author.id}`;
+        if (!client.cooldowns.has(command.name)) {
+            client.cooldowns.set(command.name, new Collection());
+        }
 
-        const lastUsedStr = await db.redisClient.get(cooldownKey);
-        if (lastUsedStr) {
-            const expirationTime = parseInt(lastUsedStr) + cooldownAmountMs;
+        const now = Date.now();
+        const timestamps = client.cooldowns.get(command.name);
+        const cooldownAmount = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+
+        if (timestamps.has(message.author.id)) {
+            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
                 return message.reply(t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }));
@@ -94,7 +98,8 @@ module.exports = {
         }
 
         if (!command.manualCooldown) {
-            await db.redisClient.setEx(cooldownKey, Math.ceil(cooldownAmountMs / 1000), now.toString());
+            timestamps.set(message.author.id, now);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
         }
 
         try {
@@ -102,7 +107,7 @@ module.exports = {
             // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
             if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                addXp(message.member, xpAmount);
+                await addXp(message.member, xpAmount);
             }
         } catch (error) {
             console.error(`[Command] Error executing !${commandName}:`, error);
@@ -111,7 +116,7 @@ module.exports = {
             // Grant Command Failure XP (Skip for admin/owner/utility commands)
             if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                 const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                addXp(message.member, xpAmount);
+                await addXp(message.member, xpAmount);
             }
         }
     },

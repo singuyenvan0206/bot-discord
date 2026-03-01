@@ -56,7 +56,7 @@ function t(key, lang = 'vi', replace = {}) {
 /**
  * Resolve language for a given context (user/guild)
  */
-function getLanguage(userId, guildId = null) {
+async function getLanguage(userId, guildId = null) {
     // 1. Check User setting (skip if no userId to avoid creating null user)
     if (userId) {
         const user = await db.getUser(userId);

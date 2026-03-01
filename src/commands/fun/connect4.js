@@ -170,7 +170,7 @@ module.exports = {
 
                 // Grant Action XP for the move
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
+                await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
 
                 const winner = checkWin();
 
@@ -192,7 +192,7 @@ module.exports = {
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(winMember, winXp, i.guild.id);
+                        await addXp(winMember, winXp, i.guild.id);
 
                         const baseReward = bet > 0 ? bet * 2 : (config.ECONOMY.TICTACTOE_REWARD || 100);
                         const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winMember);
@@ -218,7 +218,7 @@ module.exports = {
                 }
             });
 
-            collector.on('end', (_, reason) => {
+            collector.on('end', async (_, reason) => {
                 if (reason === 'time' && !gameOver) {
                     confirmMsg.edit({ content: t('connect4.timeout', lang), components: [] });
                     if (bet > 0) {

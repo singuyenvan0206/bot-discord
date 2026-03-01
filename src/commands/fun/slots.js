@@ -29,7 +29,7 @@ module.exports = {
         }
 
         // Grant Action XP
-        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
         let weights = [50, 35, 30, 20, 15, 10, 5];
@@ -103,7 +103,7 @@ module.exports = {
 
             // Grant Win XP
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-            addXp(message.member, winXp, message.guild.id);
+            await addXp(message.member, winXp, message.guild.id);
 
             await db.addBalance(message.guild.id, user.id, totalPayout);
             result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString() });
@@ -115,7 +115,7 @@ module.exports = {
         } else if (bet) {
             result += t('slots.lost_coins', lang, { amount: bet });
             // Transfer lost bet to bot profit
-            addHouseProfit(message, bet); // If payout is 0, the full bet is lost
+            await addHouseProfit(message, bet); // If payout is 0, the full bet is lost
         }
 
         const slotDisplay = [

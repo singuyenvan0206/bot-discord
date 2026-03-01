@@ -1,0 +1,42 @@
+[
+  {
+    "file": "src\\commands\\economy\\use.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\commands\\economy\\use.js:12\r\n    await db.removeItem(guildId, userId, String(item.id), 1);\r\n    ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\commands\\fun\\connect4.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\commands\\fun\\connect4.js:225\r\n                        await db.addBalance(message.guild.id, p1Id, bet);\r\n                        ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\commands\\fun\\dice.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\commands\\fun\\dice.js:146\r\n                            const u = await db.getUser(message.author.id, i.guild.id);\r\n                                      ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\commands\\fun\\hangman.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\commands\\fun\\hangman.js:60\r\n            let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, userMember);\r\n                                                                      ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\commands\\fun\\poker.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\commands\\fun\\poker.js:156\r\n                players.forEach(p => { if (!p.isBot) await db.addBalance(message.guild.id, p.id, p.chips); });\r\n                                                     ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\commands\\fun\\rps.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\commands\\fun\\rps.js:100\r\n                    if (bet > 0) await db.addBalance(message.guild.id, user.id, bet);\r\n                                 ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\utils\\economy.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\utils\\economy.js:75\r\n    await db.addBalance(botId, amount);\r\n    ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\utils\\i18n.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\utils\\i18n.js:62\r\n        const user = await db.getUser(userId);\r\n                     ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\utils\\leveling.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\utils\\leveling.js:34\r\n    const user = await db.getUser(userId, gId);\r\n                 ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  },
+  {
+    "file": "src\\utils\\permissions.js",
+    "err": "C:\\Users\\Simsimi\\OneDrive\\Máy tính\\bot-discord\\src\\utils\\permissions.js:15\r\n    if (await db.isOwner(member.id)) return true;\r\n              ^^\r\n\r\nSyntaxError: Unexpected identifier 'db'\r\n    at wrapSafe (node:internal/modules/cjs/loader:1692:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.12.0\r\n"
+  }
+]

@@ -34,7 +34,7 @@ module.exports = {
 
         // Grant Action XP
         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         try {
             const collected = await message.channel.awaitMessages({
@@ -65,7 +65,7 @@ module.exports = {
                 winXp += 10;
             }
 
-            addXp(winnerMsg.member, winXp, message.guild.id);
+            await addXp(winnerMsg.member, winXp, message.guild.id);
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });

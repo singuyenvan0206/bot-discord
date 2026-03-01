@@ -1,20 +1,26 @@
 const db = require('../database');
+const { Collection } = require('discord.js');
 
 /**
- * Manually starts a cooldown for a user on a specific command via Redis.
+ * Manually starts a cooldown for a user on a specific command.
  * @param {import('discord.js').Client} client 
  * @param {string} commandName 
  * @param {string} userId 
  */
-async function startCooldown(client, commandName, userId) {
+function startCooldown(client, commandName, userId) {
     const command = client.commands.get(commandName);
     if (!command) return;
 
-    const now = Date.now();
-    const cooldownAmountMs = (command.cooldown || 3) * 1000;
-    const cooldownKey = `cooldown:${commandName}:${userId}`;
+    if (!client.cooldowns.has(commandName)) {
+        client.cooldowns.set(commandName, new Collection());
+    }
 
-    await db.redisClient.setEx(cooldownKey, Math.ceil(cooldownAmountMs / 1000), now.toString());
+    const now = Date.now();
+    const timestamps = client.cooldowns.get(commandName);
+    const cooldownAmount = (command.cooldown || 3) * 1000;
+
+    timestamps.set(userId, now);
+    setTimeout(() => timestamps.delete(userId), cooldownAmount);
 }
 
 module.exports = { startCooldown };

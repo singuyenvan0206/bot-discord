@@ -163,14 +163,17 @@ module.exports = {
                 return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
             }
 
-            // Cooldowns (Redis)
-            const now = Date.now();
-            const cooldownAmountMs = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
-            const cooldownKey = `cooldown:${command.name}:${interaction.user.id}`;
+            // Cooldowns
+            if (!client.cooldowns.has(command.name)) {
+                client.cooldowns.set(command.name, new Collection());
+            }
 
-            const lastUsedStr = await db.redisClient.get(cooldownKey);
-            if (lastUsedStr) {
-                const expirationTime = parseInt(lastUsedStr) + cooldownAmountMs;
+            const now = Date.now();
+            const timestamps = client.cooldowns.get(command.name);
+            const cooldownAmount = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+
+            if (timestamps.has(interaction.user.id)) {
+                const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
                 if (now < expirationTime) {
                     const timeLeft = (expirationTime - now) / 1000;
                     return interaction.reply({
@@ -181,7 +184,8 @@ module.exports = {
             }
 
             if (!command.manualCooldown) {
-                await db.redisClient.setEx(cooldownKey, Math.ceil(cooldownAmountMs / 1000), now.toString());
+                timestamps.set(interaction.user.id, now);
+                setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
             }
 
             try {
@@ -191,7 +195,7 @@ module.exports = {
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                     const { addXp, XP_AMOUNTS } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                    addXp(interaction.member, xpAmount);
+                    await addXp(interaction.member, xpAmount);
                 }
             } catch (error) {
                 console.error(`[Slash] Error executing /${commandName}:`, error);
@@ -203,7 +207,7 @@ module.exports = {
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
                     const { addXp, XP_AMOUNTS } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                    addXp(interaction.member, xpAmount);
+                    await addXp(interaction.member, xpAmount);
                 }
             }
         }
@@ -310,7 +314,7 @@ async function handleButtonEntry(interaction) {
 
     // Grant Entry XP
     const { addXp, XP_AMOUNTS } = require('../utils/leveling');
-    addXp(interaction.member, XP_AMOUNTS.MESSAGE.min);
+    await addXp(interaction.member, XP_AMOUNTS.MESSAGE.min);
 
     const newCount = await db.getParticipantCount(giveaway.id);
     const embed = createGiveawayEmbed(giveaway, newCount, lang);

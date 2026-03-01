@@ -27,7 +27,7 @@ function calculateLevel(xp) {
  * @param {number} amount - Số XP muốn cộng
  * @returns {object} - Object chứa thông tin cấp độ hiện tại và việc có thăng cấp hay không { level, leveledUp }
  */
-function addXp(memberOrId, amount, guildId = null) {
+async function addXp(memberOrId, amount, guildId = null) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
     const config = require('../config');
@@ -77,7 +77,7 @@ function addXp(memberOrId, amount, guildId = null) {
  * @param {number} level - Current level
  * @returns {boolean} - Whether a milestone was reached/job assigned
  */
-function assignJobIfEligible(memberOrId, guildId, level) {
+async function assignJobIfEligible(memberOrId, guildId, level) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const user = await db.getUser(userId, guildId);
 
@@ -133,7 +133,7 @@ function getLevelMultiplier(level) {
 /**
  * Assigns a random job to a user.
  */
-function assignRandomJob(userId, guildId, lang) {
+async function assignRandomJob(userId, guildId, lang) {
     const config = require('../config');
     const { t } = require('./i18n');
 
@@ -184,7 +184,7 @@ async function sendLevelUpMessage(message, level, bonus, lang) {
  * @param {number} levels - Số cấp độ muốn giảm (mặc định là 1)
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
-function deductLevel(userId, guildId, levels = 1) {
+async function deductLevel(userId, guildId, levels = 1) {
     const user = await db.getUser(userId, guildId);
     const oldLevel = Number(user.level || 0);
     const newLevel = Math.max(0, oldLevel - levels);
@@ -212,7 +212,7 @@ function deductLevel(userId, guildId, levels = 1) {
  * @param {number} amount - Số XP muốn giảm
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
-function deductXp(userId, guildId, amount) {
+async function deductXp(userId, guildId, amount) {
     const user = await db.getUser(userId, guildId);
     const oldXp = Number(user.xp || 0);
     const oldLevel = Number(user.level || 0);

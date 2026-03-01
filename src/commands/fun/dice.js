@@ -71,7 +71,7 @@ module.exports = {
             await db.removeBalance(i.guild.id, message.author.id, bet);
 
             // Grant Action XP
-            addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
+            await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
 
             // Roll 2d6
             const d1 = Math.floor(Math.random() * 6) + 1;
@@ -102,7 +102,7 @@ module.exports = {
 
                 // Grant Win XP
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                addXp(message.member, winXp, i.guild.id);
+                await addXp(message.member, winXp, i.guild.id);
 
                 bonusText = t('dice.win_msg', lang, {
                     amount: payout.toLocaleString(),
@@ -139,8 +139,8 @@ module.exports = {
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
                     (won
                         ? bonusText
-                        : (() => {
-                            addHouseProfit(i, bet);
+                        : (async () => {
+                            await addHouseProfit(i, bet);
                             let lossMsg = t('dice.lose_msg', lang, { amount: bet });
                             // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
                             const u = await db.getUser(message.author.id, i.guild.id);

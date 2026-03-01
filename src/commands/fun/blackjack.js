@@ -57,7 +57,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         title = t('blackjack.natural_title', lang);
     } else if (dealerIsNatural) {
         color = config.COLORS.GAMBLE_LOSS;
-        if (bet) addHouseProfit(i, bet);
+        if (bet) await addHouseProfit(i, bet);
         title = t('blackjack.natural_title', lang);
     } else if (playerIsNguLinh && dealerIsNguLinh) {
         if (playerVal < dealerVal) {
@@ -65,7 +65,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             payout = bet ? Math.ceil(bet * 2.5) : 0;
         } else if (playerVal > dealerVal) {
             color = config.COLORS.GAMBLE_LOSS;
-            if (bet) addHouseProfit(i, bet);
+            if (bet) await addHouseProfit(i, bet);
         } else {
             color = config.COLORS.GAMBLE_PUSH;
             payout = bet ? bet : 0;
@@ -77,7 +77,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         title = t('blackjack.ngu_linh_title', lang);
     } else if (dealerIsNguLinh) {
         color = config.COLORS.GAMBLE_LOSS;
-        if (bet) addHouseProfit(i, bet);
+        if (bet) await addHouseProfit(i, bet);
         title = t('blackjack.ngu_linh_title', lang);
     } else if (dealerVal > 21) {
         color = config.COLORS.GAMBLE_WIN;
@@ -87,7 +87,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         payout = bet ? bet * 2 : 0;
     } else if (playerVal < dealerVal) {
         color = config.COLORS.GAMBLE_LOSS;
-        if (bet) addHouseProfit(i, bet);
+        if (bet) await addHouseProfit(i, bet);
     } else {
         color = config.COLORS.GAMBLE_PUSH;
         payout = bet ? bet : 0;
@@ -166,7 +166,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         if (bet && payout > bet) {
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-            addXp(i.member, winXp, i.guild.id);
+            await addXp(i.member, winXp, i.guild.id);
         }
     }
 
@@ -202,7 +202,7 @@ module.exports = {
 
         // Grant Action XP at start
         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const playerHand = [drawCard(), drawCard()];
         const dealerHand = [drawCard(), drawCard()];
@@ -258,7 +258,7 @@ module.exports = {
                     const bustEmbed = buildEmbed(true).setTitle(t('blackjack.bust_title', lang)).setColor(config.COLORS.GAMBLE_LOSS);
                     let bustDesc = bustEmbed.data.description + `\n\n${t('blackjack.bust_msg', lang)}`;
                     if (bet) {
-                        addHouseProfit(i, bet);
+                        await addHouseProfit(i, bet);
                         bustDesc += `\n${t('blackjack.won_coins', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN })}`;
                     }
                     bustEmbed.setDescription(bustDesc);
@@ -272,13 +272,13 @@ module.exports = {
                 } else {
                     // Grant Action XP for hitting
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                    addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
+                    await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
                     await i.update({ embeds: [buildEmbed()], components: [row] });
                 }
             } else if (i.customId.startsWith('bj_stand')) {
                 // Grant Action XP for standing
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
+                await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
                 collector.stop('stand');
                 await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
             }

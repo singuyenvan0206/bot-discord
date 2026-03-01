@@ -10,7 +10,7 @@ module.exports = {
     async execute(message, args) {
         if (!db.isOwner(message.author.id)) return;
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         // Require double confirmation for such a destructive action
         if (args[0] !== 'confirm' || args[1] !== 'YES') {

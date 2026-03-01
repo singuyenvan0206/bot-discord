@@ -207,7 +207,7 @@ module.exports = {
 
                 // Grant Action XP
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
                 if (result === 'BOOM') {
                     collector.stop('boom');
@@ -231,7 +231,7 @@ module.exports = {
                                 ? t('minesweeper.shield_used', lang, { amount: loseAmount })
                                 : t('minesweeper.bet_lost', lang, { amount: loseAmount })))
                         .setColor(0xE74C3C);
-                    if (bet) addHouseProfit(message, loseAmount);
+                    if (bet) await addHouseProfit(message, loseAmount);
                     await i.update({ embeds: [loseEmbed], components: renderComponents(true, false) });
                 } else {
                     // Check Win
@@ -242,7 +242,7 @@ module.exports = {
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        addXp(message.member, winXp, message.guild.id);
+                        await addXp(message.member, winXp, message.guild.id);
 
                         let prize = 0;
                         if (bet > 0) {

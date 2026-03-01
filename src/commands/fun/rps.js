@@ -58,7 +58,7 @@ module.exports = {
 
         // Grant Action XP for command mode
         if (userChoice && choices.includes(userChoice)) {
-            addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+            await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
         }
 
         if (!userChoice || !choices.includes(userChoice)) {
@@ -88,13 +88,13 @@ module.exports = {
                 const choice = i.customId.split('_')[1];
 
                 // Grant Action XP for interactive mode
-                addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
                 await playRPS(i, choice, null, reply, bet);
                 startCooldown(message.client, 'rps', message.author.id);
             });
 
-            collector.on('end', (_, reason) => {
+            collector.on('end', async (_, reason) => {
                 if (reason === 'time') {
                     // Refund if timed out
                     if (bet > 0) await db.addBalance(message.guild.id, user.id, bet);
@@ -143,7 +143,7 @@ module.exports = {
 
                     // Grant Win XP
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                    addXp(message.member, winXp, message.guild.id);
+                    await addXp(message.member, winXp, message.guild.id);
                     if (bonusAmount > 0) {
                         result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
                     }
@@ -158,7 +158,7 @@ module.exports = {
                     result += t('rps.refund', lang);
                 } else {
                     result += t('rps.lost_coins', lang, { amount: betAmount });
-                    addHouseProfit(interaction || msgObj, betAmount);
+                    await addHouseProfit(interaction || msgObj, betAmount);
 
                     // Trader Interaction: Market Tip (35% chance to refund 50% on loss)
                     if (user.job === 'trader' && Math.random() < 0.35) {

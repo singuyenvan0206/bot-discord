@@ -82,7 +82,7 @@ module.exports = {
 
         // Grant Action XP
         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-        addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         try {
             const collected = await message.channel.awaitMessages({
@@ -118,7 +118,7 @@ module.exports = {
 
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-            addXp(winner.member, winXp, message.guild.id);
+            await addXp(winner.member, winXp, message.guild.id);
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);

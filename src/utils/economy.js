@@ -58,7 +58,7 @@ function calculateNetWorth(userData) {
  * @param {object} context Discord Message or Interaction or Client.
  * @param {number} amount Profit amount.
  */
-function addHouseProfit(context, amount) {
+async function addHouseProfit(context, amount) {
     if (!amount || amount <= 0) return;
 
     const client = context.client || context;
@@ -76,7 +76,7 @@ function addHouseProfit(context, amount) {
 
     // Grant XP to bot: 1 XP per 10 profit (min 5, max 50)
     const xpAmount = Math.max(5, Math.min(50, Math.floor(amount / 10)));
-    const { reachedLevel20 } = addXp(botId, xpAmount);
+    const { reachedLevel20 } = await addXp(botId, xpAmount);
 
     if (reachedLevel20) {
         const guildId = context.guild?.id || context.guildId || null;

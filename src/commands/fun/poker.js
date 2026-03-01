@@ -151,9 +151,11 @@ module.exports = {
             }
         });
 
-        lobbyCollector.on('end', (_, reason) => {
+        lobbyCollector.on('end', async (_, reason) => {
             if (reason !== 'started') {
-                players.forEach(p => { if (!p.isBot) await db.addBalance(message.guild.id, p.id, p.chips); });
+                for (const p of players) {
+                    if (!p.isBot) await db.addBalance(message.guild.id, p.id, p.chips);
+                }
                 reply.edit({ content: t('poker.lobby_timeout', lang), components: [] }).catch(() => { });
             }
         });
@@ -411,7 +413,7 @@ module.exports = {
             // Grant Action XP
             if (!player.isBot) {
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                addXp(player.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                await addXp(player.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
             }
 
             turnIndex = (turnIndex + 1) % players.length;
@@ -510,8 +512,7 @@ module.exports = {
 
             let totalCap = 250; // Default fallback for footer if multiple winners
 
-            winners.forEach(w => {
-                const { calculateReward } = require('../../utils/multiplier');
+            for (const w of winners) {
                 const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = await calculateReward(prizePerWinner, w.member, 'gamble');
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
@@ -521,17 +522,17 @@ module.exports = {
                 if (!w.isBot) {
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                    addXp(w.member, winXp, message.guild.id);
+                    await addXp(w.member, winXp, message.guild.id);
                 }
-            });
+            }
 
-            players.forEach(p => {
+            for (const p of players) {
                 if (p.isBot && p.chips > 0) {
-                    addHouseProfit(message, p.chips);
+                    await addHouseProfit(message, p.chips);
                 } else if (!p.isBot && p.chips > 0) {
                     await db.addBalance(message.guild.id, p.id, p.chips);
                 }
-            });
+            }
 
             const winnerNames = winners.map(w => w.name).join(', ');
             let footerText = t('poker.pot', lang, { amount: (pot + totalBonusGiven).toLocaleString(), emoji: config.EMOJIS.COIN });

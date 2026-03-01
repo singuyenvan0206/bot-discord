@@ -21,7 +21,7 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
 
-        if (!isManager(message.member)) {
+        if (!(await isManager(message.member))) {
             return message.reply(`❌ ${t('giveaway.no_permission', lang)}`);
         }
 

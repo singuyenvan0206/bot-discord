@@ -43,7 +43,7 @@ module.exports = {
                 // Grant XP
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                const result = addXp(m.member, winXp, message.guild.id);
+                const result = await addXp(m.member, winXp, message.guild.id);
                 if (result.leveledUp) {
                     const { checkAndSendMilestone } = require('../../utils/leveling');
                     checkAndSendMilestone(m, result.reachedLevel20, lang).catch(() => { });

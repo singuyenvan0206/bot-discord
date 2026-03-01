@@ -2,7 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
-const {     calculateReward } = require('../../utils/multiplier');
+const { calculateReward } = require('../../utils/multiplier');
 const config = require('../../config');
 
 
@@ -96,7 +96,7 @@ module.exports = {
 
             // Grant Action XP
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-            addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+            await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
             const selectedIndex = parseInt(i.customId.split('_')[1]);
 
@@ -121,7 +121,7 @@ module.exports = {
                     resultMsg += t('job.teacher_tutoring_simple', lang);
                 }
 
-                addXp(i.member, winXp, message.guild.id);
+                await addXp(i.member, winXp, message.guild.id);
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {

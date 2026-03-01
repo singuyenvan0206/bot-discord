@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const { createClient } = require('redis');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
@@ -13,19 +12,10 @@ pool.on('error', (err, client) => {
     console.error('❌ Unexpected error on idle Postgres client', err);
 });
 
-// Redis Client
-const redisClient = createClient({
-    url: process.env.REDIS_URL
-});
-
-redisClient.on('error', (err) => console.log('Redis Client Error', err));
-redisClient.on('connect', () => console.log('✅ Connected to Redis'));
-
 let dbInitialized = false;
 
 async function getDb() {
     if (!dbInitialized) {
-        if (!redisClient.isOpen) await redisClient.connect();
         await initSchema();
         dbInitialized = true;
     }
@@ -313,7 +303,6 @@ async function getBonusEntries(giveawayId, userId) {
 // ─── Global Scope: User / Economy ──────────────────────────────────────────────
 
 async function getUser(userId, guildId = null) {
-    // Try redis cache first (example extension for later)
     let user = await queryOne('SELECT * FROM users WHERE id = ?', [userId]);
     if (!user) {
         await execute('INSERT INTO users (id) VALUES (?) ON CONFLICT DO NOTHING', [userId]);
@@ -755,6 +744,5 @@ module.exports = {
     getGuildRoles,
     getGuildRole,
     getGuildSetting,
-    setGuildSetting,
-    redisClient // export redis client for cooldown usage
+    setGuildSetting
 };
