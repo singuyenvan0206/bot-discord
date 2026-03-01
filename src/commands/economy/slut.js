@@ -71,7 +71,7 @@ module.exports = {
 
             if (user.job === 'doctor') penalty = Math.floor(penalty / 2); // 50% discount for doctors
 
-            const xpResult = deductXp(message.author.id, message.guild.id, xpLoss);
+            const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, penalty);
 
             // Cooldown Penalty: Hospital Time (1.5x cooldown)
@@ -91,7 +91,7 @@ module.exports = {
                 });
 
                 if (user.job === 'teacher') {
-                    const result = deductLevel(message.author.id, message.guild.id);
+                    const result = await deductLevel(message.author.id, message.guild.id);
                     failureMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;
                 }
 
@@ -108,7 +108,7 @@ module.exports = {
                 hospital: t('common.hospital_time', lang)
             });
             if (user.job === 'teacher') {
-                const result = deductLevel(message.author.id, message.guild.id);
+                const result = await deductLevel(message.author.id, message.guild.id);
                 failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 

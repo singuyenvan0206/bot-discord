@@ -45,7 +45,7 @@ module.exports = {
             return cats;
         };
 
-        const generateEmbed = (category, page) => {
+        const generateEmbed = async (category, page) => {
             const categories = getCategories();
             const title = t('inventory.title', lang, { user: target.username });
             const embed = new EmbedBuilder()
@@ -70,12 +70,12 @@ module.exports = {
                 });
 
                 // Global Multipliers (Capped 300% or 600%)
-                const targetMember = message.guild.members.cache.get(target.id);
+                const targetMember = message.guild.members.cache.get(target.id) || target;
                 const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
-                const incomeBonus = Math.round(getTotalMultiplier(targetMember || target.id, message.guild.id, 'income') * 100);
-                const gambleBonus = Math.round(getTotalMultiplier(targetMember || target.id, message.guild.id, 'gamble') * 100);
-                const xpBonus = Math.round((getXpMultiplier(targetMember || target.id, message.guild.id) - 1.0) * 100);
-                const maxCapPercent = Math.round(getDynamicCap(targetMember || target.id, message.guild.id) * 100);
+                const incomeBonus = Math.round(await getTotalMultiplier(targetMember, 'income') * 100);
+                const gambleBonus = Math.round(await getTotalMultiplier(targetMember, 'gamble') * 100);
+                const xpBonus = Math.round((await getXpMultiplier(targetMember) - 1.0) * 100);
+                const maxCapPercent = Math.round(await getDynamicCap(targetMember) * 100);
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),
@@ -147,6 +147,9 @@ module.exports = {
 
                 if (totalItems === 0) {
                     embed.setDescription(t('inventory.empty', lang, { prefix: config.PREFIX }));
+                } else {
+                    // Set a default description if empty not called, to avoid BASE_TYPE_REQUIRED error
+                    embed.setDescription('\u200b');
                 }
 
             } else {
@@ -196,7 +199,7 @@ module.exports = {
         };
 
         const initialReply = await message.reply({
-            embeds: [generateEmbed(currentCategory, currentPage)],
+            embeds: [await generateEmbed(currentCategory, currentPage)],
             components: generateComponents(currentCategory, currentPage)
         });
 
@@ -219,7 +222,7 @@ module.exports = {
             }
 
             await i.update({
-                embeds: [generateEmbed(currentCategory, currentPage)],
+                embeds: [await generateEmbed(currentCategory, currentPage)],
                 components: generateComponents(currentCategory, currentPage)
             }).catch(e => { /* Ignore Interaction Failed errors (e.g., timeout) */ });
         });

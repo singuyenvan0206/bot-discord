@@ -24,7 +24,7 @@ module.exports = {
         // Trigger job assignment if eligible
         const { assignJobIfEligible } = require('../../utils/leveling');
         const member = message.guild.members.cache.get(target.id) || await message.guild.members.fetch(target.id).catch(() => target);
-        const assignedJob = assignJobIfEligible(member, message.guild.id, level);
+        const assignedJob = await assignJobIfEligible(member, message.guild.id, level);
 
         let response = `✅ Đã đặt cấp độ của **${target.username}** thành **${level}** (XP: **${minXp.toLocaleString()}**).`;
         if (assignedJob) {

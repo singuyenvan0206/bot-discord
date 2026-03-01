@@ -7,7 +7,7 @@ const { calculateLevel } = require('../../utils/leveling');
 
 module.exports = {
     name: 'profile',
-    aliases: ['pf', 'pr','p'],
+    aliases: ['pf', 'pr', 'p'],
     description: 'Hồ sơ (User profile)',
     skipXp: true,
     async execute(message, args) {
@@ -28,10 +28,10 @@ module.exports = {
 
         // Get actual multipliers (%)
         const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
-        const incomeBonus = Math.round(getTotalMultiplier(targetMember || user.id, message.guild.id, 'income') * 100);
-        const gambleBonus = Math.round(getTotalMultiplier(targetMember || user.id, message.guild.id, 'gamble') * 100);
-        const xpBonus = Math.round((getXpMultiplier(targetMember || user.id, message.guild.id) - 1.0) * 100);
-        const maxCapPercent = Math.round(getDynamicCap(targetMember || user.id, message.guild.id) * 100);
+        const incomeBonus = Math.round(await getTotalMultiplier(targetMember || user.id, message.guild.id, 'income') * 100);
+        const gambleBonus = Math.round(await getTotalMultiplier(targetMember || user.id, message.guild.id, 'gamble') * 100);
+        const xpBonus = Math.round((await getXpMultiplier(targetMember || user.id, message.guild.id) - 1.0) * 100);
+        const maxCapPercent = Math.round(await getDynamicCap(targetMember || user.id, message.guild.id) * 100);
 
         // Find Rank (Position in guild-specific balance top)
         const topBalance = await db.getTopUsers(message.guild.id, 100, 'balance');

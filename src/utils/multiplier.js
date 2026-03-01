@@ -7,11 +7,11 @@ const LEGENDARY_BUFF_IDS = [601, 602, 603, 604, 605, 606];
  * Internal helper to get split multiplier data from active buffs.
  * Returns { normal: number, legendary: number }
  */
-function getMultiplierData(memberOrId, guildId, type) {
+async function getMultiplierData(memberOrId, guildId, type) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
 
-    const user =   db.getUser(userId, gId);
+    const user = await db.getUser(userId, gId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
@@ -20,10 +20,10 @@ function getMultiplierData(memberOrId, guildId, type) {
 
     // Background cleanup
     if (activeBuffs.length !== buffs.length) {
-          db.updateUser(gId, userId, { active_buffs: JSON.stringify(activeBuffs) });
+        await db.updateUser(gId, userId, { active_buffs: JSON.stringify(activeBuffs) });
     }
 
-    return   calculateMultiplierFromBuffs(activeBuffs, user.job, type, userId, gId);
+    return calculateMultiplierFromBuffs(activeBuffs, user.job, type, userId, gId);
 }
 
 function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
@@ -60,10 +60,10 @@ function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
 /**
  * Get total multiplier for specific type (capped normal + uncapped legendary)
  */
-function getUserMultiplier(memberOrId, type) {
+async function getUserMultiplier(memberOrId, type) {
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const data = getMultiplierData(memberOrId, guildId, type);
-    const maxCap = getDynamicCap(memberOrId, guildId);
+    const data = await getMultiplierData(memberOrId, guildId, type);
+    const maxCap = await getDynamicCap(memberOrId, guildId);
     return Math.min(data.normal, maxCap) + data.legendary;
 }
 
@@ -72,14 +72,14 @@ function getUserMultiplier(memberOrId, type) {
  * Normal items, Level, Job, and Marriage are subject to maxCap.
  * Legendary fish buffs are ADDED AFTER the cap.
  */
-function getTotalMultiplier(memberOrId, type = 'income') {
+async function getTotalMultiplier(memberOrId, type = 'income') {
     const { getLevelMultiplier } = require('./leveling');
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const user =  db.getUser(userId, guildId); // Use db.getUser directly
+    const user = await db.getUser(userId, guildId);
 
-    const itemData = getMultiplierData(memberOrId, guildId, type);
-    const levelMulti =  getLevelMultiplier(user.level);
+    const itemData = await getMultiplierData(memberOrId, guildId, type);
+    const levelMulti = getLevelMultiplier(user.level);
 
     let jobMulti = 0;
     if (user.job) {
@@ -89,20 +89,20 @@ function getTotalMultiplier(memberOrId, type = 'income') {
     }
 
     let marriageMulti = 0;
-    const marriage =   db.getMarriage(guildId, userId);
+    const marriage = await db.getMarriage(guildId, userId);
     if (marriage) {
         if (marriage.ring_id === 702) marriageMulti = 0.50;
         else if (marriage.ring_id === 701) marriageMulti = 0.25;
     }
 
     let roleIncomeMulti = 0;
-    let roleXpMulti = 0; // Initialize roleXpMulti as it's used in the new block
+    let roleXpMulti = 0;
     const config = require('../config');
 
     // 1. Role Buffs (Dynamic from Database or Static Config)
     if (memberOrId && typeof memberOrId === 'object' && memberOrId.roles) {
-        const guildId = memberOrId.guild.id;
-        const guildRoles =   db.getGuildRoles(guildId);
+        const gId = memberOrId.guild.id;
+        const guildRoles = await db.getGuildRoles(gId);
 
         // If guild has custom roles, use them. Otherwise fallback to config.
         const shopRoles = guildRoles.length > 0 ? guildRoles : config.ECONOMY.ROLE_SHOP;
@@ -117,9 +117,6 @@ function getTotalMultiplier(memberOrId, type = 'income') {
     } else {
         // Fallback for background tasks (using purchased_roles in DB)
         const purchasedRoles = JSON.parse(user.purchased_roles || '[]');
-        // Since we don't have guildId here easily, we can only fallback to global config 
-        // or skip if we want strict server-localization. 
-        // For now, let's keep it minimal for background tasks.
         for (const roleId of purchasedRoles) {
             const role = config.ECONOMY.ROLE_SHOP.find(r => r.id === roleId);
             if (role) {
@@ -129,7 +126,7 @@ function getTotalMultiplier(memberOrId, type = 'income') {
         }
     }
 
-    const maxCap = getDynamicCap(memberOrId);
+    const maxCap = await getDynamicCap(memberOrId);
 
     // Sum all CAPPABLE multipliers (Items, Level, Job)
     const cappableTotal = itemData.normal + levelMulti + jobMulti;
@@ -139,18 +136,18 @@ function getTotalMultiplier(memberOrId, type = 'income') {
     return cappedResult + itemData.legendary + roleIncomeMulti + marriageMulti;
 }
 
-function getTotalIncomeMultiplier(memberOrId) {
-    return getTotalMultiplier(memberOrId, 'income');
+async function getTotalIncomeMultiplier(memberOrId) {
+    return await getTotalMultiplier(memberOrId, 'income');
 }
 
-function getXpMultiplier(memberOrId) {
+async function getXpMultiplier(memberOrId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const user =   db.getUser(userId, guildId);
+    const user = await db.getUser(userId, guildId);
     let multi = 1.0;
     if (user.job === 'teacher') multi += 0.5;
-    if (user.job === 'teacher' &&   hasActiveItem(guildId, userId, 208)) multi += 1.0;
-    if (  hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion
+    if (user.job === 'teacher' && await hasActiveItem(guildId, userId, 208)) multi += 1.0;
+    if (await hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion
 
     // Role XP Boost
     const config = require('../config');
@@ -173,61 +170,57 @@ function getXpMultiplier(memberOrId) {
     return Math.min(multi, 10.0); // Increased cap because of role stacks
 }
 
-function isProtectedFromRob(guildId, userId) {
-    return   hasActiveItem(guildId, userId, 501);
+async function isProtectedFromRob(guildId, userId) {
+    return await hasActiveItem(guildId, userId, 501);
 }
 
-function hasActiveItem(guildId, userId, itemId) {
-    const user =   db.getUser(userId, guildId);
+async function hasActiveItem(guildId, userId, itemId) {
+    const user = await db.getUser(userId, guildId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
     const now = Math.floor(Date.now() / 1000);
     return buffs.some(b => b.itemId === itemId && b.expiresAt > now);
 }
 
-function getDynamicCap(memberOrId, guildId) {
+async function getDynamicCap(memberOrId, guildId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
     // Standard: 3.0 (300% bonus), VIP: 6.0 (600% bonus)
-    return   hasActiveItem(gId, userId, 108) ? 6.0 : 3.0;
+    return await hasActiveItem(gId, userId, 108) ? 6.0 : 3.0;
 }
 
-function calculateReward(base, memberOrId, type = 'income') {
+async function calculateReward(base, memberOrId, type = 'income') {
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const bonusPart = getTotalMultiplier(memberOrId, type);
+    const bonusPart = await getTotalMultiplier(memberOrId, type);
     const bonus = Math.floor(base * bonusPart);
     const total = base + bonus;
     // For logging, let's keep the dynamic cap context
-    const maxCap = getDynamicCap(memberOrId, guildId);
+    const maxCap = await getDynamicCap(memberOrId, guildId);
     const capValue = Math.round(maxCap * 100);
+    const itemData = await getMultiplierData(memberOrId, guildId, type);
     return {
         total,
         bonus,
         percent: Math.round(bonusPart * 100),
         cap: capValue,
-        capReached: (bonusPart - itemDataLegendaryPart(memberOrId, guildId, type)) >= maxCap
+        capReached: (bonusPart - itemData.legendary) >= maxCap
     };
 }
 
-// Internal helper for logging/reward display if needed
-function itemDataLegendaryPart(memberOrId, guildId, type) {
-    return getMultiplierData(memberOrId, guildId, type).legendary;
-}
-
-function removeActiveBuff(guildId, userId, itemId) {
-    const user =   db.getUser(userId, guildId);
+async function removeActiveBuff(guildId, userId, itemId) {
+    const user = await db.getUser(userId, guildId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
     const filteredBuffs = buffs.filter(b => b.itemId !== itemId);
     if (filteredBuffs.length !== buffs.length) {
-          db.updateUser(guildId, userId, { active_buffs: JSON.stringify(filteredBuffs) });
+        await db.updateUser(guildId, userId, { active_buffs: JSON.stringify(filteredBuffs) });
         return true;
     }
     return false;
 }
 
-function addBuff(guildId, userId, itemId, durationSeconds) {
-    const user =   db.getUser(userId, guildId);
+async function addBuff(guildId, userId, itemId, durationSeconds) {
+    const user = await db.getUser(userId, guildId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
@@ -243,7 +236,7 @@ function addBuff(guildId, userId, itemId, durationSeconds) {
         buffs.push({ itemId, expiresAt: now + durationSeconds });
     }
 
-      db.updateUser(guildId, userId, { active_buffs: JSON.stringify(buffs) });
+    await db.updateUser(guildId, userId, { active_buffs: JSON.stringify(buffs) });
 }
 
 module.exports = {
@@ -258,3 +251,4 @@ module.exports = {
     removeActiveBuff,
     getDynamicCap
 };
+

@@ -3,6 +3,12 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
+if (!process.env.DATABASE_URL) {
+    console.error('❌ Missing DATABASE_URL in environment. Please add it to your .env file.');
+    console.error('Example: DATABASE_URL=postgres://username:password@localhost:5432/bot_database');
+    process.exit(1);
+}
+
 // Postgres Pool
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -341,8 +347,15 @@ async function updateGlobalUser(userId, updates) {
     const values = [];
     let i = 1;
     Object.entries(updates).forEach(([key, value]) => {
+        // Prevent NaN from crashing the database
+        let sanitizedValue = value;
+        if (typeof value === 'number' && isNaN(value)) {
+            console.error(`⚠️ Detected NaN update for user ${userId} on field ${key}. Setting to 0.`);
+            sanitizedValue = 0;
+        }
+
         fields.push(`${key} = $${i++}`);
-        values.push(value);
+        values.push(sanitizedValue);
     });
     if (fields.length === 0) return;
     values.push(userId);
@@ -351,13 +364,15 @@ async function updateGlobalUser(userId, updates) {
 
 async function addBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
     let userId, amount;
-    if (typeof userIdOrAmount === 'number') {
-        userId = guildIdOrUserId;
-        amount = userIdOrAmount;
-    } else {
+    if (amountOnly !== undefined) {
         userId = userIdOrAmount;
         amount = amountOnly;
+    } else {
+        userId = guildIdOrUserId;
+        amount = userIdOrAmount;
     }
+    amount = parseInt(amount, 10);
+    if (isNaN(amount)) amount = 0;
     return await addGlobalBalance(userId, amount);
 }
 
@@ -367,13 +382,15 @@ async function addGlobalBalance(userId, amount) {
 
 async function removeBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
     let userId, amount;
-    if (typeof userIdOrAmount === 'number') {
-        userId = guildIdOrUserId;
-        amount = userIdOrAmount;
-    } else {
+    if (amountOnly !== undefined) {
         userId = userIdOrAmount;
         amount = amountOnly;
+    } else {
+        userId = guildIdOrUserId;
+        amount = userIdOrAmount;
     }
+    amount = parseInt(amount, 10);
+    if (isNaN(amount)) amount = 0;
     return await removeGlobalBalance(userId, amount);
 }
 
@@ -711,6 +728,7 @@ module.exports = {
     addBonusEntry,
     getBonusEntries,
     getUser,
+    getGlobalUser,
     updateUser,
     addBalance,
     removeBalance,

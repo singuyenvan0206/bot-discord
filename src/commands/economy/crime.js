@@ -92,7 +92,7 @@ module.exports = {
             }
 
             // XP Penalty
-            const xpResult = deductXp(message.author.id, message.guild.id, xpLoss);
+            const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, fine);
 
             // Cooldown Penalty: Jail Time (2x cooldown for next time)
@@ -102,10 +102,10 @@ module.exports = {
             // Item Breakage: 10% chance to lose high-tech gear
             let itemBrokenMsg = '';
             if (Math.random() < 0.1) {
-                if (removeActiveBuff(message.guild.id, message.author.id, 212)) {
+                if (await removeActiveBuff(message.guild.id, message.author.id, 212)) {
                     await db.removeItem(message.guild.id, message.author.id, 212, 1);
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.212.name', lang) });
-                } else if (removeActiveBuff(message.guild.id, message.author.id, 220)) {
+                } else if (await removeActiveBuff(message.guild.id, message.author.id, 220)) {
                     await db.removeItem(message.guild.id, message.author.id, 220, 1);
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.220.name', lang) });
                 }
@@ -129,7 +129,7 @@ module.exports = {
                 if (itemBrokenMsg) failureMsg += itemBrokenMsg;
 
                 if (user.job === 'teacher') {
-                    const result = deductLevel(message.author.id, message.guild.id);
+                    const result = await deductLevel(message.author.id, message.guild.id);
                     failureMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
                 }
 
@@ -148,7 +148,7 @@ module.exports = {
             if (itemBrokenMsg) failMsg += itemBrokenMsg;
 
             if (user.job === 'teacher') {
-                const result = deductLevel(message.author.id, message.guild.id);
+                const result = await deductLevel(message.author.id, message.guild.id);
                 failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 

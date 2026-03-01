@@ -3,7 +3,7 @@ const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'setexp',
-    aliases: ['sexp','se'],
+    aliases: ['sexp', 'se'],
     description: 'Đặt điểm kinh nghiệm cho người dùng (Set XP for user)',
     ownerOnly: true,
     usage: '<@user> <amount>',
@@ -23,7 +23,7 @@ module.exports = {
 
         // Trigger job assignment if eligible
         const member = message.guild.members.cache.get(target.id) || await message.guild.members.fetch(target.id).catch(() => target);
-        const assignedJob = assignJobIfEligible(member, message.guild.id, newLevel);
+        const assignedJob = await assignJobIfEligible(member, message.guild.id, newLevel);
 
         let response = `✅ Đã đặt XP của **${target.username}** thành **${amount.toLocaleString()}** (Cấp độ: **${newLevel}**).`;
         if (assignedJob) {

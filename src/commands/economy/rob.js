@@ -59,7 +59,7 @@ module.exports = {
         const isVictimPolice = victim.job === 'police';
 
         const hasVictimShield = await hasActiveItem(message.guild.id, target.id, 202); // Shield (ID 202)
-        const hasVictimRobShield = isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (502)
+        const hasVictimRobShield = await isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (502)
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
         if (isCriminal) baseSuccessChance += 0.10;
@@ -113,7 +113,7 @@ module.exports = {
                 penalty *= 2;
             }
 
-            const xpResult = deductXp(message.author.id, message.guild.id, xpLoss);
+            const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, penalty);
             await db.addBalance(message.guild.id, target.id, penalty);
 
@@ -124,9 +124,9 @@ module.exports = {
             // Item Breakage: 15% chance to lose Sneakers (204) or Shield (202)
             let itemBrokenMsg = '';
             if (Math.random() < 0.15) {
-                if (removeActiveBuff(message.guild.id, message.author.id, 204)) {
+                if (await removeActiveBuff(message.guild.id, message.author.id, 204)) {
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.204.name', lang) });
-                } else if (removeActiveBuff(message.guild.id, message.author.id, 202)) {
+                } else if (await removeActiveBuff(message.guild.id, message.author.id, 202)) {
                     itemBrokenMsg = t('common.item_broken', lang, { item: t('items.202.name', lang) });
                 }
             }
@@ -141,7 +141,7 @@ module.exports = {
             if (itemBrokenMsg) failMsg += itemBrokenMsg;
 
             if (user.job === 'teacher') {
-                const result = deductLevel(message.author.id, message.guild.id);
+                const result = await deductLevel(message.author.id, message.guild.id);
                 failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('rob.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 

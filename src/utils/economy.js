@@ -81,7 +81,7 @@ async function addHouseProfit(context, amount) {
     if (reachedLevel20) {
         const guildId = context.guild?.id || context.guildId || null;
         const lang = await getLanguage(botId, guildId);
-        const job = assignRandomJob(botId, lang);
+        const job = await assignRandomJob(botId, guildId, lang);
         const channel = context.channel || (context.interaction && context.interaction.channel) || context.client?.channels?.cache?.get(context.channelId);
 
         if (channel && channel.send) {
