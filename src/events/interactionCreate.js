@@ -39,12 +39,23 @@ module.exports = {
                 if (sub === 'set') {
                     args.push(interaction.options.getString('id'));
                 }
+            } else if (commandName === 'setrole') {
+                const sub = interaction.options.getSubcommand();
+                args.push(sub);
+                if (sub === 'add' || sub === 'remove') {
+                    args.push(`<@&${interaction.options.getRole('role').id}>`);
+                    if (sub === 'add') {
+                        args.push(String(interaction.options.getInteger('price')));
+                        args.push(String(interaction.options.getInteger('income') || 0));
+                        args.push(String(interaction.options.getInteger('xp') || 0));
+                    }
+                }
             } else {
                 const optionMap = {
                     'coinflip': ['choice', 'bet'],
                     '8ball': ['question'],
                     'transfer': ['user', 'amount'],
-                    'buy': ['item'],
+                    'buy': ['item', 'quantity'],
                     'blackjack': ['bet'], 'poker': ['bet'], 'dice': ['bet'],
                     'slots': ['bet'], 'minesweeper': ['bet'], 'memory': ['bet'],
                     'balance': ['user'], 'avatar': ['user'], 'userinfo': ['user'], 'profile': ['user'], 'lvl': ['user'],
@@ -55,6 +66,28 @@ module.exports = {
                     'jobdetail': ['id'],
                     'iteminfo': ['id'],
                     'connect4': ['opponent', 'bet'],
+                    'rps': ['choice', 'bet'],
+                    'tictactoe': ['opponent'],
+                    'inventory': ['user'],
+                    'rank': ['type'],
+                    'language': ['choice', 'scope'],
+                    'setdistchannel': ['channel'],
+                    'lottery': ['action', 'amount'],
+                    'additem': ['user', 'item', 'amount'],
+                    'addmoney': ['user', 'amount'],
+                    'leaveserver': ['id'],
+                    'removemoney': ['user', 'amount'],
+                    'resetdatabase': ['confirm'],
+                    'resetuser': ['user', 'confirm'],
+                    'serverlist': ['page'],
+                    'setexp': ['user', 'amount'],
+                    'setlevel': ['user', 'level'],
+                    'setowner': ['user'],
+                    'setstatus': ['type', 'text'],
+                    'gift': ['user', 'item', 'amount'],
+                    'marriage': ['user'],
+                    'marry': ['user'],
+                    'level': ['user']
                 };
 
                 const optionNames = optionMap[commandName] || [];
@@ -70,6 +103,12 @@ module.exports = {
                     } else if (raw.type === 3) { // STRING
                         const strOpt = interaction.options.getString(name);
                         if (strOpt) args.push(strOpt);
+                    } else if (raw.type === 7) { // CHANNEL
+                        const channelOpt = interaction.options.getChannel(name);
+                        if (channelOpt) args.push(`<#${channelOpt.id}>`);
+                    } else if (raw.type === 8) { // ROLE
+                        const roleOpt = interaction.options.getRole(name);
+                        if (roleOpt) args.push(`<@&${roleOpt.id}>`);
                     }
                 }
             }

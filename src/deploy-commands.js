@@ -47,11 +47,14 @@ const commands = [
 
     new SlashCommandBuilder()
         .setName('rps')
-        .setDescription('Rock Paper Scissors'),
+        .setDescription('Rock Paper Scissors')
+        .addStringOption(opt => opt.setName('choice').setDescription('Rock, Paper, or Scissors').addChoices({ name: 'Rock', value: 'rock' }, { name: 'Paper', value: 'paper' }, { name: 'Scissors', value: 'scissors' }))
+        .addIntegerOption(opt => opt.setName('bet').setDescription('Amount to bet (default: 50)').setMinValue(1)),
 
     new SlashCommandBuilder()
         .setName('tictactoe')
-        .setDescription('Play Tic-Tac-Toe against another player'),
+        .setDescription('Play Tic-Tac-Toe against another player')
+        .addUserOption(opt => opt.setName('opponent').setDescription('User to play against (optional)')),
 
     new SlashCommandBuilder()
         .setName('trivia')
@@ -108,15 +111,15 @@ const commands = [
     new SlashCommandBuilder()
         .setName('buy')
         .setDescription('Buy an item from the shop')
-        .addStringOption(opt => opt.setName('item').setDescription('Item ID to buy (e.g. laptop)').setRequired(true)),
+        .addStringOption(opt => opt.setName('item').setDescription('Item ID or name').setRequired(true))
+        .addStringOption(opt => opt.setName('quantity').setDescription('Quantity to buy (e.g. 1, 5, max, all)')),
 
     new SlashCommandBuilder()
         .setName('inventory')
-        .setDescription('View your inventory'),
+        .setDescription('View your inventory')
+        .addUserOption(opt => opt.setName('user').setDescription('User to view (optional)')),
 
-    new SlashCommandBuilder()
-        .setName('leaderboard')
-        .setDescription('View the richest users'),
+
 
     // ═══ Utility ═══
     new SlashCommandBuilder()
@@ -155,10 +158,7 @@ const commands = [
             { name: 'XP', value: 'xp' }
         )),
 
-    new SlashCommandBuilder()
-        .setName('lvl')
-        .setDescription('Check yours or another user\'s level')
-        .addUserOption(opt => opt.setName('user').setDescription('User to check (optional)')),
+
 
     new SlashCommandBuilder()
         .setName('beg')
@@ -282,14 +282,31 @@ const commands = [
     new SlashCommandBuilder()
         .setName('setrole')
         .setDescription('Cài đặt role vào Shop cho server này')
-        .addRoleOption(opt => opt.setName('role').setDescription('Role').setRequired(true))
-        .addIntegerOption(opt => opt.setName('price').setDescription('Price').setRequired(true)),
+        .addSubcommand(sub => sub
+            .setName('add')
+            .setDescription('Thêm role vào shop')
+            .addRoleOption(opt => opt.setName('role').setDescription('Role').setRequired(true))
+            .addIntegerOption(opt => opt.setName('price').setDescription('Price').setRequired(true))
+            .addIntegerOption(opt => opt.setName('income').setDescription('Income buff % (optional)'))
+            .addIntegerOption(opt => opt.setName('xp').setDescription('XP buff % (optional)'))
+        )
+        .addSubcommand(sub => sub
+            .setName('remove')
+            .setDescription('Xóa role khỏi shop')
+            .addRoleOption(opt => opt.setName('role').setDescription('Role').setRequired(true))
+        )
+        .addSubcommand(sub => sub
+            .setName('list')
+            .setDescription('Xem danh sách role trong shop')
+        ),
     new SlashCommandBuilder()
         .setName('buyrole')
         .setDescription('Mua phẩm hàm (Buy roles)'),
     new SlashCommandBuilder()
         .setName('lottery')
-        .setDescription('Xổ số (Participate in lottery)'),
+        .setDescription('Xổ số (Participate in lottery)')
+        .addStringOption(opt => opt.setName('action').setDescription('Action (e.g. buy)').addChoices({ name: 'Buy Tickets', value: 'buy' }))
+        .addIntegerOption(opt => opt.setName('amount').setDescription('Amount of tickets to buy').setMinValue(1)),
     new SlashCommandBuilder()
         .setName('additem')
         .setDescription('Thêm vật phẩm cho người dùng (Add item to user)')
