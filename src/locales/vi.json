@@ -854,6 +854,36 @@
             "name": "💐 Hoa Cưới",
             "desc": "Bó hoa tươi thắm rực rỡ.",
             "details": "Dùng lệnh `$gift` tặng cho bạn đời để nhận thưởng phụ."
+        },
+        "801": {
+            "name": "🎁 Rương Thường",
+            "desc": "Chứa những vật phẩm cơ bản.",
+            "details": "Mở để nhận ngẫu nhiên tiền hoặc vật phẩm thông dụng."
+        },
+        "802": {
+            "name": "💎 Rương Hiếm",
+            "desc": "Chứa những vật phẩm giá trị cao.",
+            "details": "Tỉ lệ nhận được nhiều tiền và vật phẩm hiếm hơn rương thường."
+        },
+        "803": {
+            "name": "🌟 Rương Huyền Thoại",
+            "desc": "Chứa đựng những báu vật huyền thoại.",
+            "details": "Cơ hội nhận được số tiền khổng lồ và các vật phẩm cực kỳ quý hiếm."
+        },
+        "804": {
+            "name": "💀 Rương Cấm",
+            "desc": "Chứa những bí mật bị lãng quên.",
+            "details": "Chỉ dành cho những người dám mạo hiểm với phần thưởng vô cùng giá trị."
+        },
+        "805": {
+            "name": "👑 Rương Thần Thoại",
+            "desc": "Báu vật của các vị thần.",
+            "details": "Chứa đựng sức mạnh thần thánh và những phần thưởng không tưởng."
+        },
+        "806": {
+            "name": "✨ Rương Linh Hồn",
+            "desc": "Chứa đựng tinh hoa của vũ trụ.",
+            "details": "Loại rương quý giá nhất, mang lại những vận may thay đổi cả số phận."
         }
     },
     "shop": {

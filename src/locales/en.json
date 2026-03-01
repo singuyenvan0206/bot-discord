@@ -797,6 +797,36 @@
             "name": "💐 Wedding Bouquet",
             "desc": "A beautiful and vibrant bouquet.",
             "details": "You can `$gift` this to your partner for a temporary buff."
+        },
+        "801": {
+            "name": "🎁 Common Crate",
+            "desc": "Contains basic items and rewards.",
+            "details": "Open to receive a random amount of coins or common items."
+        },
+        "802": {
+            "name": "💎 Rare Crate",
+            "desc": "Contains high-value items and rewards.",
+            "details": "Higher chance of receiving more coins and rarer items than a common crate."
+        },
+        "803": {
+            "name": "🌟 Legendary Crate",
+            "desc": "Contains legendary treasures and massive rewards.",
+            "details": "A chance to receive a fortune in coins and extremely rare items."
+        },
+        "804": {
+            "name": "💀 Forbidden Crate",
+            "desc": "Contains forgotten secrets and dark rewards.",
+            "details": "Only for those who dare to risk it all for immense power and wealth."
+        },
+        "805": {
+            "name": "👑 Mythical Crate",
+            "desc": "Treasures of the gods.",
+            "details": "Divine power and unimaginable rewards await inside."
+        },
+        "806": {
+            "name": "✨ Ethereal Crate",
+            "desc": "Contains the essence of the universe.",
+            "details": "The most precious crate, bringing luck that can change your destiny."
         }
     },
     "shop": {
