@@ -136,13 +136,22 @@ module.exports = {
                 content: `$${commandName} ${args.join(' ')}`.trim(),
                 mentions: {
                     users: {
-                        first: () => interaction.options.getUser('user') || interaction.options.getUser('target') || interaction.options.getUser('opponent') || null
+                        first: () => interaction.options.getUser('user') || interaction.options.getUser('target') || interaction.options.getUser('opponent') || interaction.options.getUser('member') || null
+                    },
+                    roles: {
+                        first: () => interaction.options.getRole('role') || null
+                    },
+                    channels: {
+                        first: () => interaction.options.getChannel('channel') || null
+                    },
+                    members: {
+                        first: () => interaction.options.getMember('user') || interaction.options.getMember('target') || interaction.options.getMember('opponent') || interaction.options.getMember('member') || null
                     }
                 },
                 reply: async (content) => {
                     try {
-                        if (typeof content === 'string') content = { content, fetchReply: true };
-                        else content = { ...content, fetchReply: true };
+                        if (typeof content === 'string') content = { content, withResponse: true };
+                        else content = { ...content, withResponse: true };
 
                         if (!hasReplied) {
                             hasReplied = true;
@@ -151,7 +160,7 @@ module.exports = {
                             return await interaction.followUp(content);
                         }
                     } catch (err) {
-                        if (typeof content === 'object') delete content.fetchReply;
+                        if (typeof content === 'object') delete content.withResponse;
                         return await interaction.channel.send(content).catch(() => { });
                     }
                 },
@@ -163,7 +172,7 @@ module.exports = {
             };
             // Permission handling
             if (command.ownerOnly && !await db.isOwner(interaction.user.id)) {
-                return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
+                return interaction.reply({ content: t('common.no_permission', lang), flags: [64] });
             }
 
             const isServerOwner = interaction.user.id === interaction.guild.ownerId;
@@ -171,7 +180,7 @@ module.exports = {
             const isAdmin = interaction.member.permissions.has('Administrator');
 
             if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
-                return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
+                return interaction.reply({ content: t('common.no_permission', lang), flags: [64] });
             }
 
             // Cooldowns
@@ -189,7 +198,7 @@ module.exports = {
                     const timeLeft = (expirationTime - now) / 1000;
                     return interaction.reply({
                         content: t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }),
-                        ephemeral: true
+                        flags: [64] // MessageFlags.Ephemeral
                     });
                 }
             }
@@ -211,8 +220,8 @@ module.exports = {
             } catch (error) {
                 console.error(`[Slash] Error executing /${commandName}:`, error);
                 const errMsg = t('common.error', lang);
-                if (!hasReplied) interaction.reply({ content: errMsg, ephemeral: true }).catch(() => { });
-                else interaction.followUp({ content: errMsg, ephemeral: true }).catch(() => { });
+                if (!hasReplied) interaction.reply({ content: errMsg, flags: [64] }).catch(() => { });
+                else interaction.followUp({ content: errMsg, flags: [64] }).catch(() => { });
 
                 // Grant Command Failure XP (Skip for admin/owner/utility commands)
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
@@ -234,7 +243,7 @@ module.exports = {
                 if (amount <= 0) {
                     return interaction.reply({
                         content: t('economy.no_reward_msg', lang) || "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc phần thưởng đã hết hạn.",
-                        ephemeral: true
+                        flags: [64] // MessageFlags.Ephemeral
                     });
                 }
 
@@ -243,7 +252,7 @@ module.exports = {
                         amount: amount.toLocaleString(),
                         emoji: config.EMOJIS.COIN
                     }) || `Bạn đã nhận được **${amount.toLocaleString()}** ${config.EMOJIS.COIN} từ đợt chia thưởng vừa rồi! 🎉`,
-                    ephemeral: true
+                    flags: [64] // MessageFlags.Ephemeral
                 });
             }
 
@@ -299,12 +308,12 @@ async function handleButtonEntry(interaction) {
     // Acknowledge immediately to prevent PC sticky state
     await interaction.deferUpdate().catch(() => { });
 
-    if (!giveaway) return interaction.followUp({ content: t('giveaway.not_exists', lang), ephemeral: true });
-    if (giveaway.ended) return interaction.followUp({ content: t('giveaway.already_ended_error', lang), ephemeral: true });
-    if (giveaway.paused) return interaction.followUp({ content: t('giveaway.paused_title', lang), ephemeral: true });
+    if (!giveaway) return interaction.followUp({ content: t('giveaway.not_exists', lang), flags: [64] });
+    if (giveaway.ended) return interaction.followUp({ content: t('giveaway.already_ended_error', lang), flags: [64] });
+    if (giveaway.paused) return interaction.followUp({ content: t('giveaway.paused_title', lang), flags: [64] });
 
     if (giveaway.required_role_id && !interaction.member.roles.cache.has(giveaway.required_role_id)) {
-        return interaction.followUp({ content: t('giveaway.role_required_msg', lang, { roleId: giveaway.required_role_id }), ephemeral: true });
+        return interaction.followUp({ content: t('giveaway.role_required_msg', lang, { roleId: giveaway.required_role_id }), flags: [64] });
     }
 
     const participants = await db.getParticipantUserIds(giveaway.id);
@@ -314,7 +323,7 @@ async function handleButtonEntry(interaction) {
         const embed = createGiveawayEmbed(giveaway, newCount, lang);
         try {
             await interaction.editReply({ embeds: [embed], components: [createEntryButton(false, lang)] });
-            return interaction.followUp({ content: t('giveaway.left_giveaway', lang), ephemeral: true });
+            return interaction.followUp({ content: t('giveaway.left_giveaway', lang), flags: [64] });
         } catch (err) {
             console.error('[Giveaway Error]:', err);
         }
@@ -331,7 +340,7 @@ async function handleButtonEntry(interaction) {
     const embed = createGiveawayEmbed(giveaway, newCount, lang);
     try {
         await interaction.editReply({ embeds: [embed], components: [createEntryButton(false, lang)] });
-        return interaction.followUp({ content: t('giveaway.joined_giveaway', lang), ephemeral: true });
+        return interaction.followUp({ content: t('giveaway.joined_giveaway', lang), flags: [64] });
     } catch (err) {
         console.error('[Giveaway Error]:', err);
     }
