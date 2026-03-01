@@ -49,11 +49,12 @@ async function addXp(memberOrId, amount, guildId = null) {
     const newLevel = calculateLevel(currentXp);
 
     const leveledUp = newLevel > oldLevel;
+    let bonus = 0;
 
     if (leveledUp) {
         // Atomic update of the level field only if it changed
         await db.setGlobalLevel(userId, newLevel);
-        const bonus = newLevel * 100;
+        bonus = newLevel * 100;
         await db.addBalance(gId, userId, bonus);
     }
 
