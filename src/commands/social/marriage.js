@@ -9,8 +9,8 @@ module.exports = {
     aliases: ['mr', 'mrg'],
     description: 'Hôn nhân (Marriage info)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const marriage = db.getMarriage(message.guild.id, message.author.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const marriage = await db.getMarriage(message.guild.id, message.author.id);
 
         if (!marriage) {
             return message.reply(t('marriage.no_marriage', lang));

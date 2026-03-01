@@ -13,8 +13,8 @@ module.exports = {
     cooldown: 5,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
 
@@ -22,10 +22,10 @@ module.exports = {
 
         if (bet) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
-            const maxBet = db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+            const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
             if (bet > maxBet) return message.reply(t('gamble.max_bet', lang, { max: maxBet.toLocaleString() }));
             if (bet < 10) return message.reply(t('gamble.min_bet', lang, { min: '10' }));
-            db.removeBalance(message.guild.id, user.id, bet);
+            await db.removeBalance(message.guild.id, user.id, bet);
         }
 
         // Grant Action XP
@@ -87,7 +87,7 @@ module.exports = {
 
             if (payout > bet) {
                 const profit = payout - bet;
-                const { total, bonus, percent: calculatedPercent } = calculateReward(profit, message.member, 'gamble');
+                const { total, bonus, percent: calculatedPercent } = await calculateReward(profit, message.member, 'gamble');
                 totalPayout = total + bet;
                 bonusAmount = bonus;
                 percent = calculatedPercent;
@@ -105,7 +105,7 @@ module.exports = {
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
             addXp(message.member, winXp, message.guild.id);
 
-            db.addBalance(message.guild.id, user.id, totalPayout);
+            await db.addBalance(message.guild.id, user.id, totalPayout);
             result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString() });
 
             if (subHypeMsg) result += subHypeMsg;

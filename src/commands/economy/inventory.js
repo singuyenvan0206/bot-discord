@@ -12,8 +12,8 @@ module.exports = {
     examples: ['', '@Simsimi'],
     async execute(message, args) {
         const target = message.mentions.users.first() || message.author;
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const userData = db.getUser(target.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const userData = await db.getUser(target.id, message.guild.id);
         const inv = JSON.parse(userData.inventory || '{}');
 
         const ITEMS_PER_PAGE = 10;

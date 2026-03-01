@@ -13,7 +13,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         let word, category, hint;
 
         try {
@@ -67,7 +67,7 @@ module.exports = {
         }
 
         // Programmer Interaction: Regex Assist (Reveals 1st and Last letter if not already)
-        const user = db.getUser(message.author.id, message.guild.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         if (user.job === 'programmer' && word.length > 3) {
             hint += `\n💻 **Regex Assist:** \`${word[0].toUpperCase()}...${word[word.length - 1].toUpperCase()}\``;
         }
@@ -95,16 +95,16 @@ module.exports = {
             const winner = collected.first();
             const baseReward = config.ECONOMY.SCRAMBLE_REWARD;
 
-            let { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winner.member);
+            let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winner.member);
 
             // Programmer Interaction: Tech Bonus (+30%)
-            const winningUser = db.getUser(winner.author.id, message.guild.id);
+            const winningUser = await db.getUser(winner.author.id, message.guild.id);
             if (winningUser.job === 'programmer') {
                 totalReward = Math.floor(totalReward * 1.3);
                 bonusAmount = Math.floor(bonusAmount * 1.3);
             }
 
-            db.addBalance(message.guild.id, winner.author.id, totalReward);
+            await db.addBalance(message.guild.id, winner.author.id, totalReward);
 
             const receivedText = lang === 'vi' ? 'và nhận được' : 'and received';
             let msgText = t('scramble.success_msg', lang, {

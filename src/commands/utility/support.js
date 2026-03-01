@@ -10,7 +10,7 @@ module.exports = {
     cooldown: 5,
     skipXp: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         const assetPath = path.join(process.cwd(), 'src', 'assets', 'support', 'support_qr.png');
         const attachment = new AttachmentBuilder(assetPath, { name: 'support_qr.png' });

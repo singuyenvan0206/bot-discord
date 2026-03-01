@@ -9,7 +9,7 @@ module.exports = {
     ownerOnly: true,
     usage: '<@user> <item_id> [amount]',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild.id);
         const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
         if (!target) return message.reply(t('common.error', lang));
@@ -20,7 +20,7 @@ module.exports = {
         const item = shopItems.find(i => i.id === itemId);
         if (!item) return message.reply('❌ ID vật phẩm không hợp lệ.');
 
-        db.addItem(target.id, itemId, amount);
+        await db.addItem(target.id, itemId, amount);
 
         return message.reply(`✅ Đã thêm **${amount}** x **${item.name}** cho **${target.username}**.`);
     }

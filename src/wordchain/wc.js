@@ -77,7 +77,7 @@ const isValidWord = async (word) => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot || !message.guild) return;
 
-    const lang = getLanguage(message.author.id, message.guild.id);
+    const lang = await getLanguage(message.author.id, message.guild.id);
     const prefix = config.PREFIX;
     const content = message.content.toLowerCase().trim();
 
@@ -152,9 +152,9 @@ client.on('messageCreate', async (message) => {
             lastPlayerId = m.author.id;
 
             const baseReward = config.ECONOMY.WORDCHAIN_REWARD || 5;
-            let { total: totalReward } = calculateReward(baseReward, m.member, 'income');
+            let { total: totalReward } = await calculateReward(baseReward, m.member, 'income');
 
-            db.addBalance(m.author.id, totalReward);
+            await db.addBalance(m.author.id, totalReward);
             playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
 
             // Grant XP for valid word

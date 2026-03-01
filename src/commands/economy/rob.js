@@ -11,10 +11,10 @@ module.exports = {
     description: 'Cướp tiền (Rob someone)',
     cooldown: config.ECONOMY.ROB_COOLDOWN,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = db.getGuildSetting(message.guild.id, 'rob_cooldown', config.ECONOMY.ROB_COOLDOWN);
+        const cooldown = await db.getGuildSetting(message.guild.id, 'rob_cooldown', config.ECONOMY.ROB_COOLDOWN);
         const lastRob = Number(user.last_rob || 0);
 
         const isAlreadyOnCooldown = (now - lastRob < cooldown);
@@ -43,22 +43,22 @@ module.exports = {
             clearCooldown();
             return message.reply(t('rob.invalid_user', lang));
         }
-        if (db.isOwner(target.id)) {
+        if (await db.isOwner(target.id)) {
             clearCooldown();
             return message.reply(t('rob.target_owner', lang));
         }
 
-        const victim = db.getUser(target.id, message.guild.id);
+        const victim = await db.getUser(target.id, message.guild.id);
         if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
         if ((user.balance || 0) < 100) return message.reply(t('rob.no_money_self', lang));
 
-        db.updateUser(message.guild.id, message.author.id, { last_rob: now });
+        await db.updateUser(message.guild.id, message.author.id, { last_rob: now });
 
         const isCriminal = user.job === 'criminal';
         const isSoldier = user.job === 'soldier';
         const isVictimPolice = victim.job === 'police';
 
-        const hasVictimShield = hasActiveItem(message.guild.id, target.id, 202); // Shield (ID 202)
+        const hasVictimShield = await hasActiveItem(message.guild.id, target.id, 202); // Shield (ID 202)
         const hasVictimRobShield = isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (502)
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
@@ -86,10 +86,10 @@ module.exports = {
             // Ensure we don't steal more than they have total
             const victimLoss = Math.min(baseSteal, (victim.balance || 0));
 
-            const { total: robberGain, bonus, percent } = calculateReward(victimLoss, message.member, 'income');
+            const { total: robberGain, bonus, percent } = await calculateReward(victimLoss, message.member, 'income');
 
-            db.addBalance(message.guild.id, message.author.id, robberGain);
-            db.removeBalance(message.guild.id, target.id, victimLoss);
+            await db.addBalance(message.guild.id, message.author.id, robberGain);
+            await db.removeBalance(message.guild.id, target.id, victimLoss);
 
             let msg = t('rob.success', lang, {
                 user: target.username,
@@ -114,12 +114,12 @@ module.exports = {
             }
 
             const xpResult = deductXp(message.author.id, message.guild.id, xpLoss);
-            db.removeBalance(message.guild.id, message.author.id, penalty);
-            db.addBalance(message.guild.id, target.id, penalty);
+            await db.removeBalance(message.guild.id, message.author.id, penalty);
+            await db.addBalance(message.guild.id, target.id, penalty);
 
             // Cooldown Penalty: Busted Time (2x cooldown)
             const bustedCooldown = config.ECONOMY.ROB_COOLDOWN;
-            db.updateUser(message.guild.id, message.author.id, { last_rob: now + bustedCooldown });
+            await db.updateUser(message.guild.id, message.author.id, { last_rob: now + bustedCooldown });
 
             // Item Breakage: 15% chance to lose Sneakers (204) or Shield (202)
             let itemBrokenMsg = '';

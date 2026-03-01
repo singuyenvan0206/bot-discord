@@ -13,7 +13,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const q = getRandomQuestion();
         if (!q) return message.reply(t('emojiquiz.pool_empty', lang));
         const displayAnswer = q.answers[0].replace(/\b\w/g, c => c.toUpperCase()); // Title Case
@@ -49,17 +49,17 @@ module.exports = {
 
             const winnerMsg = collected.first();
             const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD || 50;
-            const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winnerMsg.member);
+            const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winnerMsg.member);
 
 
-            db.addBalance(message.guild.id, winnerMsg.author.id, totalReward);
+            await db.addBalance(message.guild.id, winnerMsg.author.id, totalReward);
 
             // Grant XP
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
 
             // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
-            const u = db.getUser(winnerMsg.author.id, message.guild.id);
+            const u = await db.getUser(winnerMsg.author.id, message.guild.id);
             if (u.job === 'teacher') {
                 totalReward = Math.floor(totalReward * 1.5);
                 winXp += 10;

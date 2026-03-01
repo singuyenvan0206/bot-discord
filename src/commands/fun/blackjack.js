@@ -96,7 +96,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     if (payout > 0 && bet) {
         if (payout > bet) { // If it's a win (2x or 2.5x)
             const profit = payout - bet;
-            const { total: totalRes, bonus: bonusAmount, percent } = calculateReward(profit, i.member, 'gamble');
+            const { total: totalRes, bonus: bonusAmount, percent } = await calculateReward(profit, i.member, 'gamble');
             payout = totalRes + bet; // Reward logic
 
             // Generate amount suffix for win
@@ -116,7 +116,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
                 flavorText += `\n✨ **Bonus:** +${percent}% (${bonusAmount.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
             // Musician Interaction: Flow State (15% chance to double final win)
-            const u = db.getUser(i.user.id, i.guild.id);
+            const u = await db.getUser(i.user.id, i.guild.id);
             if (u.job === 'musician' && payout > bet && Math.random() < 0.15) {
                 payout *= 2;
                 flavorText += `\n` + t('common.flow_state', lang);
@@ -126,7 +126,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             result = t('blackjack.tie', lang, { refund: t('blackjack.refund', lang) });
 
             // Chef Interaction: Complimentary Drink (Tie Tip: 50-100 coins)
-            const u = db.getUser(i.user.id, i.guild.id);
+            const u = await db.getUser(i.user.id, i.guild.id);
             if (u.job === 'chef') {
                 const tip = Math.floor(Math.random() * 51) + 50;
                 payout += tip;
@@ -151,7 +151,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         }
 
         // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
-        const u = db.getUser(i.user.id, i.guild.id);
+        const u = await db.getUser(i.user.id, i.guild.id);
         if (u.job === 'trader' && Math.random() < 0.15) {
             const refund = Math.floor(bet * 0.5);
             payout = refund;
@@ -160,7 +160,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     }
 
     if (payout > 0) {
-        db.addBalance(i.guild.id, i.user.id, payout);
+        await db.addBalance(i.guild.id, i.user.id, payout);
 
         // Grant Win XP if payout is more than original bet (actual win)
         if (bet && payout > bet) {
@@ -183,8 +183,8 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
 
         if (args[0] && (isNaN(bet) || bet <= 0)) {
@@ -194,11 +194,11 @@ module.exports = {
         if (bet && user.balance < bet) {
             return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
         }
-        const maxBet = db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
-        const minBet = db.getGuildSetting(message.guild.id, 'min_bet', config.ECONOMY.MIN_BET);
+        const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+        const minBet = await db.getGuildSetting(message.guild.id, 'min_bet', config.ECONOMY.MIN_BET);
         if (bet > maxBet) return message.reply(t('gamble.max_bet', lang, { max: maxBet.toLocaleString() }));
         if (bet < minBet) return message.reply(t('gamble.min_bet', lang, { min: minBet.toLocaleString() }));
-        if (bet) db.removeBalance(message.guild.id, user.id, bet);
+        if (bet) await db.removeBalance(message.guild.id, user.id, bet);
 
         // Grant Action XP at start
         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');

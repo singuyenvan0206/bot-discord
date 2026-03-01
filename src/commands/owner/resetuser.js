@@ -8,7 +8,7 @@ module.exports = {
     ownerOnly: true,
     usage: '<@user> [confirm]',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
         if (!target) return message.reply(  lang === 'vi' ? '❌ Vui lòng nhập ID của người dùng cần reset.' : '❌ Please provide the ID of the user to reset.');
@@ -21,7 +21,7 @@ module.exports = {
         }
 
         try {
-            db.resetUser(target.id);
+            await db.resetUser(target.id);
 
             // Clear in-memory cooldowns if applicable
             if (message.client.cooldowns) {

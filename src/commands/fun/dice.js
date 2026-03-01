@@ -14,8 +14,8 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
 
         // Parse bet amount: $dice <bet> or $dice (default 50)
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
@@ -60,7 +60,7 @@ module.exports = {
             const choice = i.customId.split('_')[1]; // high, low, odd, even, 7
 
             // Re-check balance at time of click
-            const freshUser = db.getUser(message.author.id, i.guild.id);
+            const freshUser = await db.getUser(message.author.id, i.guild.id);
             if (freshUser.balance < bet) {
                 return i.update({
                     embeds: [new EmbedBuilder().setTitle(t('dice.menu_title', lang)).setDescription(t('dice.insufficient_bet', lang)).setColor(config.COLORS.GAMBLE_LOSS)],
@@ -68,7 +68,7 @@ module.exports = {
                 });
             }
 
-            db.removeBalance(i.guild.id, message.author.id, bet);
+            await db.removeBalance(i.guild.id, message.author.id, bet);
 
             // Grant Action XP
             addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
@@ -95,10 +95,10 @@ module.exports = {
                 // Calculate reward including bonuses (Profit = prize - bet)
                 const profit = prize - bet;
                 const { calculateReward } = require('../../utils/multiplier');
-                const { total, bonus, percent } = calculateReward(profit, message.member, 'gamble');
+                const { total, bonus, percent } = await calculateReward(profit, message.member, 'gamble');
 
                 const payout = total + bet;
-                db.addBalance(i.guild.id, message.author.id, payout);
+                await db.addBalance(i.guild.id, message.author.id, payout);
 
                 // Grant Win XP
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
@@ -114,10 +114,10 @@ module.exports = {
                 }
 
                 // Musician Interaction: Flow State (10% chance to double final win)
-                const u = db.getUser(message.author.id, i.guild.id);
+                const u = await db.getUser(message.author.id, i.guild.id);
                 if (u.job === 'musician' && Math.random() < 0.10) {
                     prize *= 2;
-                    db.addBalance(i.guild.id, message.author.id, prize / 2); // Add the extra half
+                    await db.addBalance(i.guild.id, message.author.id, prize / 2); // Add the extra half
                     bonusText += t('common.flow_state', lang);
                 }
             }
@@ -143,10 +143,10 @@ module.exports = {
                             addHouseProfit(i, bet);
                             let lossMsg = t('dice.lose_msg', lang, { amount: bet });
                             // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
-                            const u = db.getUser(message.author.id, i.guild.id);
+                            const u = await db.getUser(message.author.id, i.guild.id);
                             if (u.job === 'trader' && Math.random() < 0.15) {
                                 const refund = Math.floor(bet * 0.5);
-                                db.addBalance(i.guild.id, message.author.id, refund);
+                                await db.addBalance(i.guild.id, message.author.id, refund);
                                 lossMsg += t('common.market_tip', lang);
                             }
                             return lossMsg;

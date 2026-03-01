@@ -13,7 +13,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         let word, hint;
 
         try {
@@ -57,10 +57,10 @@ module.exports = {
 
         function calcReward(userMember) {
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
-            let { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, userMember);
+            let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, userMember);
 
             // Teacher Interaction: Knowledge Bonus (+20%)
-            const u = db.getUser(userMember.id, userMember.guild.id);
+            const u = await db.getUser(userMember.id, userMember.guild.id);
             if (u.job === 'teacher') {
                 totalReward = Math.floor(totalReward * 1.2);
                 bonusAmount = Math.floor(bonusAmount * 1.2);
@@ -94,7 +94,7 @@ module.exports = {
                     gameOver = true;
                     const { totalReward, bonusAmount, percent } = calcReward(message.member);
 
-                    db.addBalance(message.guild.id, message.author.id, totalReward);
+                    await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                     let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins!**`;
                     if (bonusAmount > 0) resultStr += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
@@ -124,7 +124,7 @@ module.exports = {
                 let resultText = won ? `${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}**` : `💀 **${t('hangman.lose_msg', lang)}**`;
                 if (won) {
                     const { totalReward, bonusAmount, percent } = calcReward(message.member);
-                    db.addBalance(message.guild.id, message.author.id, totalReward);
+                    await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                     // Grant Win XP
                     const { addXp, XP_AMOUNTS } = require('../../utils/leveling');

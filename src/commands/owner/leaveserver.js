@@ -8,9 +8,9 @@ module.exports = {
     description: 'Rời khỏi server (Leave a server)',
     ownerOnly: true,
     async execute(message, args) {
-        if (!db.isOwner(message.author.id)) return;
+        if (!await db.isOwner(message.author.id)) return;
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         const guildId = args[0];
         if (!guildId) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập ID của máy chủ cần rời.' : '❌ Please provide the ID of the server to leave.');

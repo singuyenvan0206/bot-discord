@@ -9,12 +9,12 @@ module.exports = {
     description: 'Cấp độ (View level)',
     skipXp: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;
 
-        const dbUser = db.getUser(user.id, message.guild.id);
+        const dbUser = await db.getUser(user.id, message.guild.id);
 
         // Calculate XP Progress
         const currentLevelXp = (dbUser.level / 0.1) ** 2;

@@ -31,7 +31,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         let q;
         try {
             // Try fetching from OpenTDB API
@@ -103,9 +103,9 @@ module.exports = {
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
 
-                const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, i.member);
+                const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, i.member);
 
-                db.addBalance(message.guild.id, i.user.id, totalReward);
+                await db.addBalance(message.guild.id, i.user.id, totalReward);
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
                 if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
@@ -114,7 +114,7 @@ module.exports = {
                 let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
 
                 // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
-                const u = db.getUser(i.user.id, message.guild.id);
+                const u = await db.getUser(i.user.id, message.guild.id);
                 if (u.job === 'teacher') {
                     totalReward = Math.floor(totalReward * 1.5);
                     winXp += 10;

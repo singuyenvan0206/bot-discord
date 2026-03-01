@@ -12,7 +12,7 @@ module.exports = {
     permissions: [PermissionFlagsBits.ManageGuild],
     usage: 'add <@role> <price> <income_buff%> <xp_buff%> | remove <@role> | list',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild.id);
         const sub = args[0]?.toLowerCase();
 
         // Security check: must be bot owner OR server admin
@@ -33,7 +33,7 @@ module.exports = {
 
             if (isNaN(price) || price < 0) return message.reply(t('common.invalid_amount', lang));
 
-            db.addGuildRole(message.guild.id, role.id, role.name, price, incomeBuff, xpBuff, role.hexColor);
+            await db.addGuildRole(message.guild.id, role.id, role.name, price, incomeBuff, xpBuff, role.hexColor);
 
             return message.reply(`✅ Đã thêm/cập nhật role **${role.name}** vào Shop server này.\nGiá: **${price.toLocaleString()}** ${config.EMOJIS.COIN}\nBuff: Income +${(incomeBuff * 100).toFixed(0)}%, XP +${(xpBuff * 100).toFixed(0)}%`);
         }
@@ -42,12 +42,12 @@ module.exports = {
             const role = message.mentions.roles.first() || (args[1] ? { id: args[1] } : null);
             if (!role) return message.reply(t('common.error', lang));
 
-            db.removeGuildRole(message.guild.id, role.id);
+            await db.removeGuildRole(message.guild.id, role.id);
             return message.reply(`✅ Đã xóa role khỏi Shop server này.`);
         }
 
         else if (sub === 'list' || sub === 'ls' || sub === 'l' || !sub) {
-            const roles = db.getGuildRoles(message.guild.id);
+            const roles = await db.getGuildRoles(message.guild.id);
             if (roles.length === 0) return message.reply('❌ Server này chưa có Role nào trong Shop. Dùng `$setrole add` để thêm.');
 
             const embed = new EmbedBuilder()

@@ -10,7 +10,7 @@ module.exports = {
     description: 'Cập nhật bot từ GitHub (Update bot from GitHub)',
     ownerOnly: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
 
 
@@ -27,7 +27,7 @@ module.exports = {
 
             try {
                 const db = require('../../database');
-                db.saveDb();
+                await db.saveDb();
                 console.log(`[Update] Database saved. Bot ID: ${message.client.user.id} (${message.client.user.tag})`);
             } catch (saveErr) {
                 console.error('[Update] Failed to save DB before restart:', saveErr);

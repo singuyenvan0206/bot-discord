@@ -9,7 +9,7 @@ function activateBuff(guildId, userId, item, buffs, isChef) {
     if (isChef) duration *= 2;
     const expiresAt = Math.floor(Date.now() / 1000) + duration;
     buffs.push({ itemId: item.id, expiresAt });
-    db.removeItem(guildId, userId, String(item.id), 1);
+    await db.removeItem(guildId, userId, String(item.id), 1);
     const hours = Math.floor(duration / 3600);
     return hours > 0 ? `${hours}h` : `${Math.floor(duration / 60)}m`;
 }
@@ -19,20 +19,20 @@ module.exports = {
     aliases: ['u'],
     description: 'Sử dụng (Use item)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const itemQuery = args[0]?.toLowerCase();
 
         if (!itemQuery) {
             return message.reply(t('use.prompt', lang, { prefix: config.PREFIX }));
         }
 
-        const user = db.getUser(message.author.id, message.guild.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         let inv = {};
         try { inv = JSON.parse(user.inventory || '{}'); } catch { inv = {}; }
 
         // ─── USE ALL ──────────────────────────────────
         if (itemQuery === 'all') {
-            const user = db.getUser(message.author.id, message.guild.id);
+            const user = await db.getUser(message.author.id, message.guild.id);
             let buffs = [];
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
@@ -60,7 +60,7 @@ module.exports = {
                     buffs.push({ itemId: itemIdNum, expiresAt: now + addedDuration });
                 }
 
-                db.removeItem(message.guild.id, message.author.id, id, qty);
+                await db.removeItem(message.guild.id, message.author.id, id, qty);
 
                 const totalDurationSec = addedDuration;
                 const durationStr = (() => {
@@ -84,7 +84,7 @@ module.exports = {
                 totalCount += qty;
             }
 
-            db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
+            await db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 
             if (totalCount === 0) {
                 return message.reply(t('use.all_nothing', lang));
@@ -115,8 +115,8 @@ module.exports = {
             if (!user.job) {
                 return message.reply(t('use.no_job_to_reset', lang));
             }
-            db.removeItem(message.guild.id, message.author.id, itemId, 1);
-            db.updateUser(message.guild.id, message.author.id, { job: null });
+            await db.removeItem(message.guild.id, message.author.id, itemId, 1);
+            await db.updateUser(message.guild.id, message.author.id, { job: null });
             return message.reply(t('use.career_reset', lang, { prefix: config.PREFIX }));
         }
 
@@ -128,7 +128,7 @@ module.exports = {
             const isChef = user.job === 'chef';
             const durationStr = activateBuff(message.guild.id, message.author.id, item, buffs, isChef);
 
-            db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
+            await db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 
             const effectType = t(`effects.${item.type}`, lang) || item.type;
             let displayPercent = Math.round(item.multiplier * 100);

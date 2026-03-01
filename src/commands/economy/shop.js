@@ -8,7 +8,7 @@ module.exports = {
     aliases: ['s', 'sh', 'store'],
     description: 'Cửa hàng (View shop)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const ITEMS_PER_PAGE = 5;
         let currentCategory = 'income';
         let currentPage = 0;

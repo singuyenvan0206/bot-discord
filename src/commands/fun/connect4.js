@@ -14,7 +14,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const opponent = message.mentions.users.first();
         if (!opponent) return message.reply(t('common.mention_opponent', lang));
         if (opponent.bot) return message.reply(t('common.no_challenge_bot', lang));
@@ -22,8 +22,8 @@ module.exports = {
 
         let bet = args[1] ? parseAmount(args[1], authorUser.balance, config.ECONOMY.MAX_BET) : 0;
 
-        const authorUser = db.getUser(message.author.id, message.guild.id);
-        const opponentUser = db.getUser(opponent.id, message.guild.id);
+        const authorUser = await db.getUser(message.author.id, message.guild.id);
+        const opponentUser = await db.getUser(opponent.id, message.guild.id);
 
         if (bet > 0) {
             if (authorUser.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: authorUser.balance }));
@@ -58,8 +58,8 @@ module.exports = {
 
             // Game Start
             if (bet > 0) {
-                db.removeBalance(message.guild.id, message.author.id, bet);
-                db.removeBalance(message.guild.id, opponent.id, bet);
+                await db.removeBalance(message.guild.id, message.author.id, bet);
+                await db.removeBalance(message.guild.id, opponent.id, bet);
             }
             await confirmation.deferUpdate(); // Acknowledge acceptance
 
@@ -182,8 +182,8 @@ module.exports = {
                     if (winner === 'draw') {
                         resultText = t('connect4.draw', lang);
                         if (bet > 0) {
-                            db.addBalance(i.guild.id, p1Id, bet);
-                            db.addBalance(i.guild.id, p2Id, bet);
+                            await db.addBalance(i.guild.id, p1Id, bet);
+                            await db.addBalance(i.guild.id, p2Id, bet);
                             resultText += t('connect4.refund', lang);
                         }
                     } else {
@@ -195,8 +195,8 @@ module.exports = {
                         addXp(winMember, winXp, i.guild.id);
 
                         const baseReward = bet > 0 ? bet * 2 : (config.ECONOMY.TICTACTOE_REWARD || 100);
-                        const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(baseReward, winMember);
-                        db.addBalance(i.guild.id, winId, totalReward);
+                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winMember);
+                        await db.addBalance(i.guild.id, winId, totalReward);
 
                         resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                             t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
@@ -222,8 +222,8 @@ module.exports = {
                 if (reason === 'time' && !gameOver) {
                     confirmMsg.edit({ content: t('connect4.timeout', lang), components: [] });
                     if (bet > 0) {
-                        db.addBalance(message.guild.id, p1Id, bet);
-                        db.addBalance(message.guild.id, p2Id, bet);
+                        await db.addBalance(message.guild.id, p1Id, bet);
+                        await db.addBalance(message.guild.id, p2Id, bet);
                     }
                     startCooldown(message.client, 'connect4', p1Id);
                     startCooldown(message.client, 'connect4', p2Id);

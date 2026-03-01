@@ -9,7 +9,7 @@ module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction) {
         const { client } = interaction;
-        const lang = getLanguage(interaction.user.id, interaction.guildId);
+        const lang = await getLanguage(interaction.user.id, interaction.guildId);
 
         // 1. Button Interactions (Giveaways)
         if (interaction.isButton() && interaction.customId === BUTTON_ID) {
@@ -151,29 +151,26 @@ module.exports = {
                 delete: async () => { },
             };
             // Permission handling
-            if (command.ownerOnly && !db.isOwner(interaction.user.id)) {
+            if (command.ownerOnly && !await db.isOwner(interaction.user.id)) {
                 return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
             }
 
             const isServerOwner = interaction.user.id === interaction.guild.ownerId;
-            const isBotOwner = db.isOwner(interaction.user.id);
+            const isBotOwner = await db.isOwner(interaction.user.id);
             const isAdmin = interaction.member.permissions.has('Administrator');
 
             if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
                 return interaction.reply({ content: t('common.no_permission', lang), ephemeral: true });
             }
 
-            // Cooldowns
-            if (!client.cooldowns.has(command.name)) {
-                client.cooldowns.set(command.name, new Collection());
-            }
-
+            // Cooldowns (Redis)
             const now = Date.now();
-            const timestamps = client.cooldowns.get(command.name);
-            const cooldownAmount = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+            const cooldownAmountMs = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+            const cooldownKey = `cooldown:${command.name}:${interaction.user.id}`;
 
-            if (timestamps.has(interaction.user.id)) {
-                const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
+            const lastUsedStr = await db.redisClient.get(cooldownKey);
+            if (lastUsedStr) {
+                const expirationTime = parseInt(lastUsedStr) + cooldownAmountMs;
                 if (now < expirationTime) {
                     const timeLeft = (expirationTime - now) / 1000;
                     return interaction.reply({
@@ -184,8 +181,7 @@ module.exports = {
             }
 
             if (!command.manualCooldown) {
-                timestamps.set(interaction.user.id, now);
-                setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+                await db.redisClient.setEx(cooldownKey, Math.ceil(cooldownAmountMs / 1000), now.toString());
             }
 
             try {
@@ -217,7 +213,7 @@ module.exports = {
             // Immediate common handling (unless handled in specific blocks below)
 
             if (interaction.customId === 'check_dist_reward') {
-                const user = db.getUser(interaction.user.id);
+                const user = await db.getUser(interaction.user.id);
                 const amount = user ? (user.last_dist_amount || 0) : 0;
 
                 if (amount <= 0) {
@@ -282,8 +278,8 @@ module.exports = {
 
 async function handleButtonEntry(interaction) {
     const guildId = interaction.guildId;
-    const lang = getLanguage(interaction.user.id, guildId);
-    const giveaway = db.getGiveaway(interaction.message.id);
+    const lang = await getLanguage(interaction.user.id, guildId);
+    const giveaway = await db.getGiveaway(interaction.message.id);
 
     // Acknowledge immediately to prevent PC sticky state
     await interaction.deferUpdate().catch(() => { });
@@ -296,10 +292,10 @@ async function handleButtonEntry(interaction) {
         return interaction.followUp({ content: t('giveaway.role_required_msg', lang, { roleId: giveaway.required_role_id }), ephemeral: true });
     }
 
-    const participants = db.getParticipantUserIds(giveaway.id);
+    const participants = await db.getParticipantUserIds(giveaway.id);
     if (participants.includes(interaction.user.id)) {
-        db.removeParticipant(giveaway.id, interaction.user.id);
-        const newCount = db.getParticipantCount(giveaway.id);
+        await db.removeParticipant(giveaway.id, interaction.user.id);
+        const newCount = await db.getParticipantCount(giveaway.id);
         const embed = createGiveawayEmbed(giveaway, newCount, lang);
         try {
             await interaction.editReply({ embeds: [embed], components: [createEntryButton(false, lang)] });
@@ -310,13 +306,13 @@ async function handleButtonEntry(interaction) {
         return;
     }
 
-    db.addParticipant(giveaway.id, interaction.user.id);
+    await db.addParticipant(giveaway.id, interaction.user.id);
 
     // Grant Entry XP
     const { addXp, XP_AMOUNTS } = require('../utils/leveling');
     addXp(interaction.member, XP_AMOUNTS.MESSAGE.min);
 
-    const newCount = db.getParticipantCount(giveaway.id);
+    const newCount = await db.getParticipantCount(giveaway.id);
     const embed = createGiveawayEmbed(giveaway, newCount, lang);
     try {
         await interaction.editReply({ embeds: [embed], components: [createEntryButton(false, lang)] });

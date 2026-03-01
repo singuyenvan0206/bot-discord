@@ -7,9 +7,9 @@ module.exports = {
     description: 'Danh sách server bot đang tham gia (List all servers)',
     ownerOnly: true,
     async execute(message, args) {
-        if (!db.isOwner(message.author.id)) return;
+        if (!await db.isOwner(message.author.id)) return;
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         const guilds = message.client.guilds.cache.map(guild => {
             return `**${guild.name}**\n\`ID: ${guild.id}\` | 👥 ${guild.memberCount} ${lang === 'vi' ? 'thành viên' : 'members'}`;

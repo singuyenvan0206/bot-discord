@@ -13,8 +13,8 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
         const minBuyIn = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
         const hostId = message.author.id;
@@ -86,7 +86,7 @@ module.exports = {
                 // Wait for submit
                 try {
                     const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `buyin_modal_${i.user.id}` });
-                    const user = db.getUser(i.user.id, i.guild.id);
+                    const user = await db.getUser(i.user.id, i.guild.id);
                     const amountStr = submit.fields.getTextInputValue('amount');
                     const amount = parseAmount(amountStr, user.balance);
 
@@ -109,7 +109,7 @@ module.exports = {
                         return submit.reply({ content: t('common.insufficient_funds', lang, { balance: user.balance }), flags: 64 });
                     }
 
-                    db.removeBalance(i.guild.id, i.user.id, amount);
+                    await db.removeBalance(i.guild.id, i.user.id, amount);
                     addPlayer(i.user, i.member, false, amount);
                     joiningPlayers.delete(i.user.id);
                     updateLobby();
@@ -134,7 +134,7 @@ module.exports = {
 
                 await i.deferUpdate().catch(() => { });
                 const p = playerMap.get(i.user.id);
-                if (!p.isBot) db.addBalance(i.guild.id, p.id, p.chips); // Refund chips
+                if (!p.isBot) await db.addBalance(i.guild.id, p.id, p.chips); // Refund chips
 
                 removePlayer(i.user.id);
                 updateLobby();
@@ -153,7 +153,7 @@ module.exports = {
 
         lobbyCollector.on('end', (_, reason) => {
             if (reason !== 'started') {
-                players.forEach(p => { if (!p.isBot) db.addBalance(message.guild.id, p.id, p.chips); });
+                players.forEach(p => { if (!p.isBot) await db.addBalance(message.guild.id, p.id, p.chips); });
                 reply.edit({ content: t('poker.lobby_timeout', lang), components: [] }).catch(() => { });
             }
         });
@@ -512,7 +512,7 @@ module.exports = {
 
             winners.forEach(w => {
                 const { calculateReward } = require('../../utils/multiplier');
-                const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = calculateReward(prizePerWinner, w.member, 'gamble');
+                const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = await calculateReward(prizePerWinner, w.member, 'gamble');
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
                 totalCap = winPercent; // Using the percent value
@@ -529,7 +529,7 @@ module.exports = {
                 if (p.isBot && p.chips > 0) {
                     addHouseProfit(message, p.chips);
                 } else if (!p.isBot && p.chips > 0) {
-                    db.addBalance(message.guild.id, p.id, p.chips);
+                    await db.addBalance(message.guild.id, p.id, p.chips);
                 }
             });
 

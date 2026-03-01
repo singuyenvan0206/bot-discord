@@ -51,15 +51,15 @@ async function finishGiveaway(client, giveaway) {
         const message = await channel.messages.fetch(giveaway.message_id).catch(() => null);
         if (!message) return;
 
-        const participants = db.getParticipants(giveaway.id);
+        const participants = await db.getParticipants(giveaway.id);
         const participantIds = participants.map(p => p.user_id);
         const winners = pickWinners(participants, giveaway.winner_count);
         const participantCount = participantIds.length;
 
-        const lang = getLanguage(null, giveaway.guild_id);
+        const lang = await getLanguage(null, giveaway.guild_id);
 
         // Mark as ended in DB
-        db.endGiveaway(giveaway.message_id);
+        await db.endGiveaway(giveaway.message_id);
 
         // Update the giveaway embed (remove buttons)
         const endedEmbed = createEndedEmbed(giveaway, winners, participantCount, lang);
@@ -102,7 +102,7 @@ async function finishGiveaway(client, giveaway) {
  */
 async function activateScheduledGiveaways(client) {
     const now = Math.floor(Date.now() / 1000);
-    const activeGiveaways = db.getActiveGiveaways();
+    const activeGiveaways = await db.getActiveGiveaways();
 
     for (const giveaway of activeGiveaways) {
         // Skip giveaways that already have a proper embed (message_id is set and not a scheduled placeholder)
@@ -118,7 +118,7 @@ async function activateScheduledGiveaways(client) {
             const message = await channel.messages.fetch(giveaway.message_id).catch(() => null);
             if (!message) continue;
 
-            const lang = getLanguage(null, giveaway.guild_id);
+            const lang = await getLanguage(null, giveaway.guild_id);
             // Check if this is still showing a "Coming Soon" embed — update it to active
             const embed = createGiveawayEmbed(giveaway, 0, lang);
             const buttonRow = createEntryButton(false, lang);
@@ -126,7 +126,7 @@ async function activateScheduledGiveaways(client) {
             await message.react(EMOJI).catch(() => { });
 
             // Clear the scheduled_start so it's not processed again
-            db.updateGiveaway(giveaway.message_id, { scheduledStart: null });
+            await db.updateGiveaway(giveaway.message_id, { scheduledStart: null });
 
             console.log(`[Timer] Activated scheduled giveaway: ${giveaway.prize}`);
         } catch (err) {
@@ -143,7 +143,7 @@ async function updateActiveEmbeds(client) {
     if (now - lastEmbedUpdate < EMBED_UPDATE_INTERVAL) return;
     lastEmbedUpdate = now;
 
-    const activeGiveaways = db.getActiveGiveaways();
+    const activeGiveaways = await db.getActiveGiveaways();
 
     for (const giveaway of activeGiveaways) {
         if (giveaway.paused) continue; // Skip paused giveaways
@@ -158,8 +158,8 @@ async function updateActiveEmbeds(client) {
             const message = await channel.messages.fetch(giveaway.message_id).catch(() => null);
             if (!message) continue;
 
-            const lang = getLanguage(null, giveaway.guild_id);
-            const participantCount = db.getParticipantCount(giveaway.id);
+            const lang = await getLanguage(null, giveaway.guild_id);
+            const participantCount = await db.getParticipantCount(giveaway.id);
             const embed = createGiveawayEmbed(giveaway, participantCount, lang);
             const buttonRow = createEntryButton(false, lang);
             await message.edit({ embeds: [embed], components: [buttonRow] }).catch(() => { });
@@ -178,7 +178,7 @@ async function tick(client) {
         await activateScheduledGiveaways(client);
 
         // 2. Check for expired giveaways
-        const expired = db.getExpiredGiveaways();
+        const expired = await db.getExpiredGiveaways();
         for (const giveaway of expired) {
             await finishGiveaway(client, giveaway);
         }
@@ -222,17 +222,17 @@ async function processHouseDistribution(client) {
     const interval = config.ECONOMY.HOUSE_DISTRIBUTION_INTERVAL;
     const botId = client.user.id;
 
-    const lastDistStr = db.getGlobalSetting('last_house_distribution', '0');
+    const lastDistStr = await db.getGlobalSetting('last_house_distribution', '0');
     const lastDist = parseInt(lastDistStr);
 
     if (now - lastDist < interval) return;
 
-    const botUser = db.getGlobalUser(botId);
+    const botUser = await db.getGlobalUser(botId);
     const balance = botUser.balance || 0;
 
     if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) return;
 
-    const userCount = db.getUserCount();
+    const userCount = await db.getUserCount();
     if (userCount <= 1) return;
 
     // Exclude bot from distribution; split only among human users.
@@ -241,13 +241,13 @@ async function processHouseDistribution(client) {
     if (amountPerUser <= 0) return;
 
     // Distribute balance globally
-    db.distributeBalanceRandomly(balance, botId);
-    db.setGlobalSetting('last_house_distribution', now.toString());
+    await db.distributeBalanceRandomly(balance, botId);
+    await db.setGlobalSetting('last_house_distribution', now.toString());
 
     // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
-        const lang = getLanguage(null, guild.id);
-        const guildData = db.getGuild(guild.id);
+        const lang = await getLanguage(null, guild.id);
+        const guildData = await db.getGuild(guild.id);
 
         let channel = null;
         if (guildData.dist_channel) {
@@ -303,14 +303,14 @@ async function processLotteryDraw(client) {
     const interval = config.ECONOMY.LOTTERY.DRAW_INTERVAL;
 
     for (const guild of client.guilds.cache.values()) {
-        const lastDraw = parseInt(db.getGuildSetting(guild.id, 'last_lottery_draw', '0'));
+        const lastDraw = parseInt(await db.getGuildSetting(guild.id, 'last_lottery_draw', '0'));
 
         if (now - lastDraw < interval) continue;
 
-        const tickets = db.getLotteryTickets(guild.id);
+        const tickets = await db.getLotteryTickets(guild.id);
         if (tickets.length === 0) {
             // No tickets sold, just update last draw time
-            db.setGuildSetting(guild.id, 'last_lottery_draw', now.toString());
+            await db.setGuildSetting(guild.id, 'last_lottery_draw', now.toString());
             continue;
         }
 
@@ -324,17 +324,17 @@ async function processLotteryDraw(client) {
 
         // Pick a winner
         const winnerId = pool[Math.floor(Math.random() * pool.length)];
-        const jackpot = db.getLotteryJackpot(guild.id);
+        const jackpot = await db.getLotteryJackpot(guild.id);
 
         // Award jackpot
-        db.addBalance(guild.id, winnerId, jackpot);
-        db.setGuildSetting(guild.id, 'last_lottery_draw', now.toString());
-        db.setLotteryJackpot(guild.id, config.ECONOMY.LOTTERY.INITIAL_JACKPOT);
-        db.clearLotteryTickets(guild.id);
+        await db.addBalance(guild.id, winnerId, jackpot);
+        await db.setGuildSetting(guild.id, 'last_lottery_draw', now.toString());
+        await db.setLotteryJackpot(guild.id, config.ECONOMY.LOTTERY.INITIAL_JACKPOT);
+        await db.clearLotteryTickets(guild.id);
 
         // Announce the winner
-        const lang = getLanguage(null, guild.id);
-        const guildData = db.getGuild(guild.id);
+        const lang = await getLanguage(null, guild.id);
+        const guildData = await db.getGuild(guild.id);
 
         let channel = null;
         if (guildData.dist_channel) {

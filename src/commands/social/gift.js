@@ -9,7 +9,7 @@ module.exports = {
     aliases: ['g'],
     description: 'Tặng quà (Send a gift)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         // gift @user amount item
         const target = message.mentions.users.first();
@@ -22,7 +22,7 @@ module.exports = {
         const remainingArgs = args.filter(arg => !arg.includes(target.id));
         if (remainingArgs.length < 1) return message.reply(t('gift.usage', lang, { prefix: config.PREFIX }));
 
-        const user = db.getUser(message.author.id, message.guild.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const inv = JSON.parse(user.inventory || '{}');
 
         // Logic similar to sell.js for parsing quantity and item
@@ -64,12 +64,12 @@ module.exports = {
         }
 
         // Perform the transfer
-        db.removeItem(message.guild.id, message.author.id, String(item.id), quantity);
-        db.addItem(message.guild.id, target.id, String(item.id), quantity);
+        await db.removeItem(message.guild.id, message.author.id, String(item.id), quantity);
+        await db.addItem(message.guild.id, target.id, String(item.id), quantity);
 
         // Special handling for Wedding Bouquet (ID 703)
         if (item.id === 703) {
-            const marriage = db.getMarriage(message.guild.id, message.author.id);
+            const marriage = await db.getMarriage(message.guild.id, message.author.id);
             const isSpouse = marriage && (marriage.user1_id === target.id || marriage.user2_id === target.id);
 
             let msg = t('gift.bouquet_msg', lang, { user: message.author.toString(), target: target.toString() });

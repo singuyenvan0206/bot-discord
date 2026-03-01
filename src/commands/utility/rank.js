@@ -17,7 +17,7 @@ module.exports = {
     skipXp: true,
 
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const sortBy = args[0] === 'money' || args[0] === 'balance' ? 'balance' : 'xp';
 
         let jobId = null;
@@ -39,7 +39,7 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
     const jobs = config.ECONOMY.JOBS;
     const filter = jobId ? { column: 'job', value: jobId } : null;
 
-    const topUsers = db.getTopUsers(guild.id, 100, sortBy, filter);
+    const topUsers = await db.getTopUsers(guild.id, 100, sortBy, filter);
 
     const generateUI = (currentSortBy, currentJobId, currentLang, embedData) => {
         const row1 = new ActionRowBuilder().addComponents(

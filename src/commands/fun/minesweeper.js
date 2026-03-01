@@ -12,8 +12,8 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 0;
 
@@ -25,7 +25,7 @@ module.exports = {
                 return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
             }
             if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
-            db.removeBalance(message.guild.id, user.id, bet);
+            await db.removeBalance(message.guild.id, user.id, bet);
         }
 
         const size = 20; // 4 rows * 5 columns = 20 cells
@@ -222,7 +222,7 @@ module.exports = {
                     if (invData['502'] && invData['502'] > 0) {
                         loseAmount = Math.floor(bet * 0.5);
                         shieldUsed = true;
-                        db.addBalance(message.guild.id, user.id, loseAmount); // Refund 50% (since 100% was already removed)
+                        await db.addBalance(message.guild.id, user.id, loseAmount); // Refund 50% (since 100% was already removed)
                     }
                     const loseEmbed = new EmbedBuilder()
                         .setTitle(t('minesweeper.lose_title', lang))
@@ -248,9 +248,9 @@ module.exports = {
                         if (bet > 0) {
                             const baseWin = Math.floor(bet * 2.5);
                             const profit = baseWin - bet;
-                            const { bonus: bonusAmount, percent } = calculateReward(profit, message.member, 'gamble');
+                            const { bonus: bonusAmount, percent } = await calculateReward(profit, message.member, 'gamble');
                             const totalReward = baseWin + bonusAmount;
-                            db.addBalance(message.guild.id, user.id, totalReward);
+                            await db.addBalance(message.guild.id, user.id, totalReward);
 
                             let winDesc = t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${totalReward.toLocaleString()} coins`;
                             if (bonusAmount > 0) {

@@ -15,8 +15,8 @@ module.exports = {
     },
     examples: ['list', 'info', 'select 1'],
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const sub = args[0]?.toLowerCase();
 
         if (sub === 'list' || sub === 'ls' || sub === 'l' || !sub) {
@@ -49,7 +49,7 @@ module.exports = {
             // Requirements (Example: Level 20)
             if (user.level < 20) return message.reply(t('job.set_error_level', lang, { level: 20 }));
 
-            db.updateUser(message.guild.id, message.author.id, { job: job.id });
+            await db.updateUser(message.guild.id, message.author.id, { job: job.id });
             const jobName = t(`job.name_${job.id}`, lang);
             return message.reply(t('job.set_success', lang, { job: jobName }));
         }

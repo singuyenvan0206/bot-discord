@@ -10,11 +10,11 @@ module.exports = {
     description: 'Xin tiền (Beg for money)',
     cooldown: config.ECONOMY.BEG_COOLDOWN,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
 
-        const cooldown = db.getGuildSetting(message.guild.id, 'beg_cooldown', config.ECONOMY.BEG_COOLDOWN);
+        const cooldown = await db.getGuildSetting(message.guild.id, 'beg_cooldown', config.ECONOMY.BEG_COOLDOWN);
         const lastBeg = Number(user.last_beg || 0);
 
         if (now - lastBeg < cooldown) {
@@ -23,17 +23,17 @@ module.exports = {
             return message.reply(t('beg.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
-        db.updateUser(message.guild.id, message.author.id, { last_beg: now });
+        await db.updateUser(message.guild.id, message.author.id, { last_beg: now });
 
-        const successRate = db.getGuildSetting(message.guild.id, 'beg_rate', config.ECONOMY.BEG_SUCCESS_RATE);
+        const successRate = await db.getGuildSetting(message.guild.id, 'beg_rate', config.ECONOMY.BEG_SUCCESS_RATE);
         if (Math.random() < successRate) {
-            const minReward = db.getGuildSetting(message.guild.id, 'beg_min', config.ECONOMY.BEG_MIN_REWARD);
-            const maxReward = db.getGuildSetting(message.guild.id, 'beg_max', config.ECONOMY.BEG_MAX_REWARD);
+            const minReward = await db.getGuildSetting(message.guild.id, 'beg_min', config.ECONOMY.BEG_MIN_REWARD);
+            const maxReward = await db.getGuildSetting(message.guild.id, 'beg_max', config.ECONOMY.BEG_MAX_REWARD);
             const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            const { total, bonus, percent } = calculateReward(baseReward, message.member, 'daily');
+            const { total, bonus, percent } = await calculateReward(baseReward, message.member, 'daily');
 
-            db.addBalance(message.guild.id, message.author.id, total);
+            await db.addBalance(message.guild.id, message.author.id, total);
 
             const persons = t('beg.persons', lang);
             const person = persons[Math.floor(Math.random() * persons.length)];

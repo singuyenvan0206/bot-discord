@@ -8,7 +8,7 @@ module.exports = {
     description: 'Thông tin server (Server info)',
     skipXp: true,
     async execute(message) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const guild = message.guild;
         const owner = await guild.fetchOwner().catch(() => null);
 

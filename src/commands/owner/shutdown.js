@@ -7,12 +7,12 @@ module.exports = {
     description: 'Tắt bot (Shutdown the bot)',
     ownerOnly: true,
     async execute(message, args) {
-        if (!db.isOwner(message.author.id)) return;
+        if (!await db.isOwner(message.author.id)) return;
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         // Persistently mark as stopped
-        db.setGlobalSetting('bot_is_stopped', 'true');
+        await db.setGlobalSetting('bot_is_stopped', 'true');
 
         console.log(`[SHUTDOWN] Initiated by owner (${message.author.tag}) at ${new Date().toISOString()}`);
 

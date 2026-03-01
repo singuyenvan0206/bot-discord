@@ -10,10 +10,10 @@ module.exports = {
     description: 'Điểm danh (Daily reward)',
     cooldown: config.ECONOMY.DAILY_COOLDOWN,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
-        const user = db.getUser(message.author.id, message.guild.id);
-        const cooldown = db.getGuildSetting(message.guild.id, 'daily_cooldown', config.ECONOMY.DAILY_COOLDOWN);
+        const user = await db.getUser(message.author.id, message.guild.id);
+        const cooldown = await db.getGuildSetting(message.guild.id, 'daily_cooldown', config.ECONOMY.DAILY_COOLDOWN);
         const lastDaily = Number(user.last_daily || 0);
         const now = Math.floor(Date.now() / 1000);
 
@@ -23,8 +23,8 @@ module.exports = {
             return message.reply(t('daily.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
-        const baseReward = db.getGuildSetting(message.guild.id, 'daily_reward', config.ECONOMY.DAILY_REWARD);
-        let { total, bonus, percent } = calculateReward(baseReward, message.member, 'daily');
+        const baseReward = await db.getGuildSetting(message.guild.id, 'daily_reward', config.ECONOMY.DAILY_REWARD);
+        let { total, bonus, percent } = await calculateReward(baseReward, message.member, 'daily');
 
         // Chef Interaction: Michelin Star (10% chance — daily ×3)
         let eventMsg = '';
@@ -47,8 +47,8 @@ module.exports = {
             eventMsg += t('daily_events.subathon', lang, { amount: subBonus });
         }
 
-        db.updateUser(message.guild.id, message.author.id, { last_daily: now });
-        db.addBalance(message.guild.id, message.author.id, total);
+        await db.updateUser(message.guild.id, message.author.id, { last_daily: now });
+        await db.addBalance(message.guild.id, message.author.id, total);
 
         let msg = t('daily.success', lang, { amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
         if (bonus > 0) {

@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ảnh đại diện (User avatar)',
     skipXp: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;

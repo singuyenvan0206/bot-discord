@@ -31,12 +31,12 @@ function addXp(memberOrId, amount, guildId = null) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
     const config = require('../config');
-    const user = db.getUser(userId, gId);
+    const user = await db.getUser(userId, gId);
 
     // Apply global and user-specific XP multipliers
     const { getXpMultiplier } = require('./multiplier');
     const xpBoost = getXpMultiplier(memberOrId);
-    const guildXpMulti = gId ? db.getGuildSetting(gId, 'xp_multiplier', 1.0) : 1.0;
+    const guildXpMulti = gId ? await db.getGuildSetting(gId, 'xp_multiplier', 1.0) : 1.0;
 
     const finalAmount = Math.floor(amount * xpBoost * (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * guildXpMulti);
 
@@ -50,10 +50,10 @@ function addXp(memberOrId, amount, guildId = null) {
     let bonus = 0;
     if (leveledUp) {
         bonus = newLevel * 100;
-        db.addBalance(gId, userId, bonus);
+        await db.addBalance(gId, userId, bonus);
     }
 
-    db.updateUser(gId, userId, {
+    await db.updateUser(gId, userId, {
         xp: newXp,
         level: newLevel
     });
@@ -79,14 +79,14 @@ function addXp(memberOrId, amount, guildId = null) {
  */
 function assignJobIfEligible(memberOrId, guildId, level) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
-    const user = db.getUser(userId, guildId);
+    const user = await db.getUser(userId, guildId);
 
     // Reaching level 20 (or higher if they somehow missed it/have no job)
     const reachedLevel20 = level >= 20 && !user.job;
 
     if (reachedLevel20) {
         const { getLanguage, t } = require('./i18n');
-        const lang = getLanguage(userId, guildId);
+        const lang = await getLanguage(userId, guildId);
         const job = assignRandomJob(userId, guildId, lang);
 
         // Try to send DM if we have a member/user object
@@ -141,7 +141,7 @@ function assignRandomJob(userId, guildId, lang) {
     const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
     const jobConfig = config.ECONOMY.JOBS[randomJobId];
 
-    db.updateUser(guildId, userId, { job: randomJobId });
+    await db.updateUser(guildId, userId, { job: randomJobId });
 
     return {
         id: randomJobId,
@@ -185,7 +185,7 @@ async function sendLevelUpMessage(message, level, bonus, lang) {
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
 function deductLevel(userId, guildId, levels = 1) {
-    const user = db.getUser(userId, guildId);
+    const user = await db.getUser(userId, guildId);
     const oldLevel = Number(user.level || 0);
     const newLevel = Math.max(0, oldLevel - levels);
 
@@ -193,7 +193,7 @@ function deductLevel(userId, guildId, levels = 1) {
     // XP = (Level / 0.1)^2
     const newXp = Math.floor(Math.pow(newLevel / 0.1, 2));
 
-    db.updateUser(guildId, userId, {
+    await db.updateUser(guildId, userId, {
         xp: newXp,
         level: newLevel
     });
@@ -213,14 +213,14 @@ function deductLevel(userId, guildId, levels = 1) {
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
 function deductXp(userId, guildId, amount) {
-    const user = db.getUser(userId, guildId);
+    const user = await db.getUser(userId, guildId);
     const oldXp = Number(user.xp || 0);
     const oldLevel = Number(user.level || 0);
 
     const newXp = Math.max(0, oldXp - amount);
     const newLevel = calculateLevel(newXp);
 
-    db.updateUser(guildId, userId, {
+    await db.updateUser(guildId, userId, {
         xp: newXp,
         level: newLevel
     });

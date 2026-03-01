@@ -8,11 +8,11 @@ module.exports = {
     aliases: ['b'],
     description: 'Mua đồ (Buy items)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const fullArg = args.join(' ').toLowerCase();
         if (!fullArg) return message.reply(t('buy.prompt', lang, { prefix: config.PREFIX }));
 
-        const user = db.getUser(message.author.id, message.guild.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
 
         if (fullArg === 'all') {
             const buyableItems = SHOP_ITEMS.filter(i => !i.unbuyable);
@@ -22,11 +22,11 @@ module.exports = {
                 return message.reply(t('buy.all_insufficient', lang, { price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN, balance: (user.balance || 0).toLocaleString() }));
             }
 
-            db.removeBalance(message.guild.id, message.author.id, totalCost);
+            await db.removeBalance(message.guild.id, message.author.id, totalCost);
 
             // Add 1 of every item to inventory
             for (const item of buyableItems) {
-                db.addItem(message.guild.id, message.author.id, item.id, 1);
+                await db.addItem(message.guild.id, message.author.id, item.id, 1);
             }
 
             return message.reply(t('buy.all_success', lang, { count: buyableItems.length, price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN }));
@@ -92,10 +92,10 @@ module.exports = {
             return message.reply(t('buy.insufficient_funds', lang, { price: totalCost.toLocaleString(), quantity: 'tổng cộng', item: 'các vật phẩm này' }));
         }
 
-        db.removeBalance(message.guild.id, message.author.id, totalCost);
+        await db.removeBalance(message.guild.id, message.author.id, totalCost);
 
         for (const purchase of itemsToBuy) {
-            db.addItem(message.guild.id, message.author.id, purchase.item.id, purchase.quantity);
+            await db.addItem(message.guild.id, message.author.id, purchase.item.id, purchase.quantity);
         }
 
         if (itemsToBuy.length === 1) {

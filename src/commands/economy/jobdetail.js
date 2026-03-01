@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['jd', 'jobinfo'],
     description: 'Chi tiết nghề (View job details)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const jobName = args[0]?.toLowerCase();
 
         if (!jobName) {

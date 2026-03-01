@@ -72,8 +72,8 @@ module.exports = {
     cooldown: config.ECONOMY.FISH_COOLDOWN,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
         const inventory = JSON.parse(user.inventory || '{}');
 
         // 1. Check for Rod (Use Best)
@@ -244,7 +244,7 @@ module.exports = {
         }
 
         if (!baitSaved) {
-            db.removeItem(message.guild.id, message.author.id, bait.id, 1);
+            await db.removeItem(message.guild.id, message.author.id, bait.id, 1);
         }
 
         // 5. Determine Catch
@@ -330,7 +330,7 @@ module.exports = {
                 const expiresAt = Math.floor(Date.now() / 1000) + duration;
 
                 buffs.push({ itemId: buffItem.id, expiresAt });
-                db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
+                await db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 
                 const buffName = t(`items.${buffId}.name`, lang);
                 const buffDesc = t(`items.${buffId}.desc`, lang);
@@ -348,9 +348,9 @@ module.exports = {
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 
-            const { total: totalValue, bonus: bonusAmount, percent } = calculateReward(baseValue, message.member, 'income');
+            const { total: totalValue, bonus: bonusAmount, percent } = await calculateReward(baseValue, message.member, 'income');
 
-            db.addBalance(message.guild.id, message.author.id, totalValue);
+            await db.addBalance(message.guild.id, message.author.id, totalValue);
 
             if (trophyMsg) {
                 embed.addFields({ name: '🏆 Achievement', value: trophyMsg, inline: false });

@@ -8,7 +8,7 @@ module.exports = {
     ownerOnly: true,
     usage: '<@user> <amount>',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild.id);
         const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
         if (!target) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập ID của người dùng.' : '❌ Please provide the ID of the user.');
@@ -19,7 +19,7 @@ module.exports = {
         // XP = (Level / 0.1)^2
         const minXp = Math.floor(Math.pow(level / 0.1, 2));
 
-        db.updateUser(target.id, { level: level, xp: minXp });
+        await db.updateUser(target.id, { level: level, xp: minXp });
 
         // Trigger job assignment if eligible
         const { assignJobIfEligible } = require('../../utils/leveling');

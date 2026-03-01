@@ -8,10 +8,10 @@ module.exports = {
     aliases: ['bal', 'bl', 'cash'],
     description: 'Kiểm tra tiền (Check balance)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         const target = message.mentions.users.first() || message.author;
-        const targetData = db.getUser(target.id, message.guild.id);
+        const targetData = await db.getUser(target.id, message.guild.id);
         const embed = new EmbedBuilder()
             .setTitle(t('balance.title', lang, { user: target.username }))
             .setDescription(t('balance.description', lang, { balance: (targetData.balance || 0).toLocaleString() }))

@@ -14,8 +14,8 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
 
         const choices = ['rock', 'paper', 'scissors'];
         const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };
@@ -51,7 +51,7 @@ module.exports = {
         if (bet > 0) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
             if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
-            db.removeBalance(message.guild.id, user.id, bet);
+            await db.removeBalance(message.guild.id, user.id, bet);
         } else if (bet < 0) {
             return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
         }
@@ -97,7 +97,7 @@ module.exports = {
             collector.on('end', (_, reason) => {
                 if (reason === 'time') {
                     // Refund if timed out
-                    if (bet > 0) db.addBalance(message.guild.id, user.id, bet);
+                    if (bet > 0) await db.addBalance(message.guild.id, user.id, bet);
                     reply.edit({ content: t('rps.timeout_refund', lang), embeds: [], components: [] }).catch(() => { });
                 }
             });
@@ -135,10 +135,10 @@ module.exports = {
             if (betAmount > 0) {
                 if (outcome === 'win') {
                     const profit = betAmount; // Standard 2x return means 1x profit
-                    const { bonus: bonusAmount, percent } = calculateReward(profit, message.member, 'gamble');
+                    const { bonus: bonusAmount, percent } = await calculateReward(profit, message.member, 'gamble');
                     let prize = (betAmount * 2) + bonusAmount;
 
-                    db.addBalance(message.guild.id, user.id, prize);
+                    await db.addBalance(message.guild.id, user.id, prize);
                     result += t('rps.won_coins', lang, { amount: prize.toLocaleString(), emoji: config.EMOJIS.COIN });
 
                     // Grant Win XP
@@ -150,11 +150,11 @@ module.exports = {
 
                     // Musician Interaction: Flow State (20% chance to double final win)
                     if (user.job === 'musician' && Math.random() < 0.20) {
-                        db.addBalance(message.guild.id, user.id, prize); // Add another prize
+                        await db.addBalance(message.guild.id, user.id, prize); // Add another prize
                         result += t('common.flow_state', lang);
                     }
                 } else if (outcome === 'tie') {
-                    db.addBalance(message.guild.id, user.id, betAmount); // Refund
+                    await db.addBalance(message.guild.id, user.id, betAmount); // Refund
                     result += t('rps.refund', lang);
                 } else {
                     result += t('rps.lost_coins', lang, { amount: betAmount });
@@ -163,7 +163,7 @@ module.exports = {
                     // Trader Interaction: Market Tip (35% chance to refund 50% on loss)
                     if (user.job === 'trader' && Math.random() < 0.35) {
                         const refund = Math.floor(betAmount * 0.5);
-                        db.addBalance(message.guild.id, user.id, refund);
+                        await db.addBalance(message.guild.id, user.id, refund);
                         result += t('common.market_tip', lang);
                     }
                 }

@@ -11,12 +11,12 @@ module.exports = {
     description: 'Hồ sơ (User profile)',
     skipXp: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;
 
-        const dbUser = db.getUser(user.id, message.guild.id);
+        const dbUser = await db.getUser(user.id, message.guild.id);
         const inv = JSON.parse(dbUser.inventory || '{}');
         const itemCount = Object.values(inv).reduce((a, b) => a + b, 0);
 
@@ -34,7 +34,7 @@ module.exports = {
         const maxCapPercent = Math.round(getDynamicCap(targetMember || user.id, message.guild.id) * 100);
 
         // Find Rank (Position in guild-specific balance top)
-        const topBalance = db.getTopUsers(message.guild.id, 100, 'balance');
+        const topBalance = await db.getTopUsers(message.guild.id, 100, 'balance');
         const rankIndex = topBalance.findIndex(u => u.id === user.id);
         const rank = rankIndex === -1 ? t('profile.unranked', lang) : `#${rankIndex + 1}`;
 
@@ -51,7 +51,7 @@ module.exports = {
         const progressBar = '▮'.repeat(filledBlocks) + '▯'.repeat(emptyBlocks);
 
         // Marriage Status
-        const marriage = db.getMarriage(message.guild.id, user.id);
+        const marriage = await db.getMarriage(message.guild.id, user.id);
         let marriageStatus = t('common.none', lang);
         if (marriage) {
             const partnerId = marriage.user1_id === user.id ? marriage.user2_id : marriage.user1_id;

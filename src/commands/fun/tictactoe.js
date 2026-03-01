@@ -13,7 +13,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const opponent = message.mentions.users.first();
         const isBot = !opponent || opponent.id === message.author.id || opponent.bot;
         const playerX = message.author;
@@ -174,8 +174,8 @@ module.exports = {
 
                     if (winnerId !== message.client.user.id) {
                         const winnerMember = winner === 'X' ? playerXMember : playerOMember;
-                        const { total: totalReward, bonus: bonusAmount, cap } = calculateReward(baseReward, winnerMember);
-                        db.addBalance(message.guild.id, winnerId, totalReward);
+                        const { total: totalReward, bonus: bonusAmount, cap } = await calculateReward(baseReward, winnerMember);
+                        await db.addBalance(message.guild.id, winnerId, totalReward);
 
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');

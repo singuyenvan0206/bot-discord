@@ -9,9 +9,9 @@ module.exports = {
     description: '[OWNER] Chuyển quyền Owner (Transfer bot ownership)',
     ownerOnly: true,
     async execute(message, args) {
-        if (!db.isOwner(message.author.id)) return;
+        if (!await db.isOwner(message.author.id)) return;
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         const target = message.mentions.users.first() || message.client.users.cache.get(args[0]);
         if (!target) return message.reply(lang === 'vi' ? `❌ Vui lòng tag hoặc nhập ID của người bạn muốn chuyển nhượng quyền Owner.` : `❌ Please mention or enter the ID of the user you want to transfer Owner rights to.`);

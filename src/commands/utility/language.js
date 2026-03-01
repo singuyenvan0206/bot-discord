@@ -11,9 +11,9 @@ module.exports = {
     cooldown: 5,
     async execute(message, args) {
         const guildId = message.guild?.id;
-        const userSettings = db.getUser(message.author.id);
-        const guildSettings = guildId ? db.getGuild(guildId) : null;
-        const resolvedLang = getLanguage(message.author.id, guildId);
+        const userSettings = await db.getUser(message.author.id);
+        const guildSettings = guildId ? await db.getGuild(guildId) : null;
+        const resolvedLang = await getLanguage(message.author.id, guildId);
 
         if (!args[0]) {
             const embed = new EmbedBuilder()
@@ -34,8 +34,8 @@ module.exports = {
         let choice = args[0].toLowerCase();
 
         if (choice === 'reset' || choice === 'default') {
-            db.updateUser(message.author.id, { language: null });
-            const newLang = getLanguage(message.author.id, guildId);
+            await db.updateUser(message.author.id, { language: null });
+            const newLang = await getLanguage(message.author.id, guildId);
             return message.reply(`✅ ${t('language.reset_success', newLang)}`);
         }
 
@@ -53,16 +53,16 @@ module.exports = {
 
         if (scope === 'server' || scope === 'sv') {
             if (!guildId) return message.reply('❌ This command can only be used in a server.');
-            const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild) || db.isOwner(message.author.id);
+            const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild) || await db.isOwner(message.author.id);
 
             if (!isAdmin) return message.reply(t('common.error', resolvedLang));
 
-            db.updateGuild(guildId, { language: choice });
+            await db.updateGuild(guildId, { language: choice });
             const langName = choice === 'vi' ? 'Tiếng Việt' : 'English';
             return message.reply(`✅ ${t('language.set_success', choice, { lang: langName })}`);
         }
 
-        db.updateUser(message.author.id, { language: choice });
+        await db.updateUser(message.author.id, { language: choice });
         const langName = choice === 'vi' ? 'Tiếng Việt' : 'English';
         return message.reply(`✅ ${t('language.set_success', choice, { lang: langName })}`);
     }

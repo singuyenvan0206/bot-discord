@@ -7,12 +7,12 @@ module.exports = {
     description: '[OWNER] Khởi động lại hệ thống lệnh (Re-enable command system)',
     ownerOnly: true,
     async execute(message, args) {
-        if (!db.isOwner(message.author.id)) return;
+        if (!await db.isOwner(message.author.id)) return;
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         // Reset the stopped flag
-        db.setGlobalSetting('bot_is_stopped', 'false');
+        await db.setGlobalSetting('bot_is_stopped', 'false');
 
         return message.reply(lang === 'vi' ? `**Hệ thống đã sẵn sàng!**\nBot đã quay trở lại phục vụ . 🚀` : `**System is online!**\nBot is back at your service. 🚀`);
 

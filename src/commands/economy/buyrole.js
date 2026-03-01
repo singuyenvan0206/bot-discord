@@ -8,8 +8,8 @@ module.exports = {
     aliases: ['br', 'roleshop'],
     description: 'Mua phẩm hàm (Buy roles)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const guildRoles = db.getGuildRoles(message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const guildRoles = await db.getGuildRoles(message.guild.id);
 
         // Use guild roles if they exist, otherwise fallback to default config
         const roles = guildRoles.length > 0 ? guildRoles : config.ECONOMY.ROLE_SHOP;
@@ -62,7 +62,7 @@ module.exports = {
 
             if (!selectedRole) return;
 
-            const user = db.getUser(i.user.id, message.guild.id);
+            const user = await db.getUser(i.user.id, message.guild.id);
             if (user.balance < selectedRole.price) {
                 return i.reply({
                     content: t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }),
@@ -105,13 +105,13 @@ module.exports = {
 
             try {
                 await member.roles.add(role);
-                db.removeBalance(message.guild.id, message.author.id, selectedRole.price);
+                await db.removeBalance(message.guild.id, message.author.id, selectedRole.price);
 
                 // Save to DB for per-guild buffs
                 const currentRoles = JSON.parse(user.purchased_roles || '[]');
                 if (!currentRoles.includes(roleId)) {
                     currentRoles.push(roleId);
-                    db.updateUser(message.guild.id, message.author.id, { purchased_roles: JSON.stringify(currentRoles) });
+                    await db.updateUser(message.guild.id, message.author.id, { purchased_roles: JSON.stringify(currentRoles) });
                 }
 
                 await i.update({

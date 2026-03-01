@@ -8,7 +8,7 @@ module.exports = {
     description: 'Độ trễ (Bot latency)',
     skipXp: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const sent = await message.reply(t('ping.checking', lang));
 
         const roundtrip = sent.createdTimestamp - message.createdTimestamp;

@@ -9,7 +9,7 @@ module.exports = {
     description: 'Thông tin người dùng (User info)',
     skipXp: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = message.mentions.users.first()
             || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null)
             || message.author;
@@ -76,7 +76,7 @@ module.exports = {
         const permStr = keyPerms.length > 0 ? keyPerms.join(', ') : t('userinfo.std_member', lang);
 
         // Economy data
-        const dbUser = db.getUser(user.id, message.guild.id);
+        const dbUser = await db.getUser(user.id, message.guild.id);
         const inventory = JSON.parse(dbUser.inventory || '{}');
         const itemCount = Object.values(inventory).reduce((a, b) => a + b, 0);
 

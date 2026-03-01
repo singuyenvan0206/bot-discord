@@ -15,7 +15,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         // Setup Grid
         let deck = [...MEM_EMOJIS, ...MEM_EMOJIS];
         deck = deck.sort(() => Math.random() - 0.5); // Shuffle
@@ -115,9 +115,9 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
-                        const { total: totalReward, bonus: bonusAmount, percent } = calculateReward(reward, message.member);
+                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(reward, message.member);
 
-                        db.addBalance(message.guild.id, message.author.id, totalReward);
+                        await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                         // Grant Win XP
                         const { addXp, XP_AMOUNTS } = require('../../utils/leveling');

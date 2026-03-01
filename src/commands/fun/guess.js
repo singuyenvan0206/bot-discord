@@ -12,7 +12,7 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const number = Math.floor(Math.random() * 100) + 1;
         const maxAttempts = 7;
         let attempts = 0;
@@ -37,8 +37,8 @@ module.exports = {
 
             if (guess === number) {
                 const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
-                const { total: reward, bonus: bonusAmount, percent } = calculateReward(Math.max(10, baseReward - (attempts * 5)), m.member);
-                db.addBalance(message.guild.id, m.author.id, reward);
+                const { total: reward, bonus: bonusAmount, percent } = await calculateReward(Math.max(10, baseReward - (attempts * 5)), m.member);
+                await db.addBalance(message.guild.id, m.author.id, reward);
 
                 // Grant XP
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');

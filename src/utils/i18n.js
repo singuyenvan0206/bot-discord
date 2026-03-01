@@ -59,13 +59,13 @@ function t(key, lang = 'vi', replace = {}) {
 function getLanguage(userId, guildId = null) {
     // 1. Check User setting (skip if no userId to avoid creating null user)
     if (userId) {
-        const user = db.getUser(userId);
+        const user = await db.getUser(userId);
         if (user && user.language && user.language !== 'null') return user.language;
     }
 
     // 2. Check Guild setting
     if (guildId) {
-        const guild = db.getGuild(guildId);
+        const guild = await db.getGuild(guildId);
         if (guild && guild.language && guild.language !== 'null') return guild.language;
     }
 

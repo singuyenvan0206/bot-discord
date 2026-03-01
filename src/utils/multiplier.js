@@ -11,7 +11,7 @@ function getMultiplierData(memberOrId, guildId, type) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
 
-    const user = db.getUser(userId, gId);
+    const user =   db.getUser(userId, gId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
@@ -20,10 +20,10 @@ function getMultiplierData(memberOrId, guildId, type) {
 
     // Background cleanup
     if (activeBuffs.length !== buffs.length) {
-        db.updateUser(gId, userId, { active_buffs: JSON.stringify(activeBuffs) });
+          db.updateUser(gId, userId, { active_buffs: JSON.stringify(activeBuffs) });
     }
 
-    return calculateMultiplierFromBuffs(activeBuffs, user.job, type, userId, gId);
+    return   calculateMultiplierFromBuffs(activeBuffs, user.job, type, userId, gId);
 }
 
 function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
@@ -76,10 +76,10 @@ function getTotalMultiplier(memberOrId, type = 'income') {
     const { getLevelMultiplier } = require('./leveling');
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const user = db.getUser(userId, guildId); // Use db.getUser directly
+    const user =  db.getUser(userId, guildId); // Use db.getUser directly
 
     const itemData = getMultiplierData(memberOrId, guildId, type);
-    const levelMulti = getLevelMultiplier(user.level);
+    const levelMulti =  getLevelMultiplier(user.level);
 
     let jobMulti = 0;
     if (user.job) {
@@ -89,7 +89,7 @@ function getTotalMultiplier(memberOrId, type = 'income') {
     }
 
     let marriageMulti = 0;
-    const marriage = db.getMarriage(guildId, userId);
+    const marriage =   db.getMarriage(guildId, userId);
     if (marriage) {
         if (marriage.ring_id === 702) marriageMulti = 0.50;
         else if (marriage.ring_id === 701) marriageMulti = 0.25;
@@ -102,7 +102,7 @@ function getTotalMultiplier(memberOrId, type = 'income') {
     // 1. Role Buffs (Dynamic from Database or Static Config)
     if (memberOrId && typeof memberOrId === 'object' && memberOrId.roles) {
         const guildId = memberOrId.guild.id;
-        const guildRoles = db.getGuildRoles(guildId);
+        const guildRoles =   db.getGuildRoles(guildId);
 
         // If guild has custom roles, use them. Otherwise fallback to config.
         const shopRoles = guildRoles.length > 0 ? guildRoles : config.ECONOMY.ROLE_SHOP;
@@ -146,11 +146,11 @@ function getTotalIncomeMultiplier(memberOrId) {
 function getXpMultiplier(memberOrId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const user = db.getUser(userId, guildId);
+    const user =   db.getUser(userId, guildId);
     let multi = 1.0;
     if (user.job === 'teacher') multi += 0.5;
-    if (user.job === 'teacher' && hasActiveItem(guildId, userId, 208)) multi += 1.0;
-    if (hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion
+    if (user.job === 'teacher' &&   hasActiveItem(guildId, userId, 208)) multi += 1.0;
+    if (  hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion
 
     // Role XP Boost
     const config = require('../config');
@@ -174,11 +174,11 @@ function getXpMultiplier(memberOrId) {
 }
 
 function isProtectedFromRob(guildId, userId) {
-    return hasActiveItem(guildId, userId, 501);
+    return   hasActiveItem(guildId, userId, 501);
 }
 
 function hasActiveItem(guildId, userId, itemId) {
-    const user = db.getUser(userId, guildId);
+    const user =   db.getUser(userId, guildId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
     const now = Math.floor(Date.now() / 1000);
@@ -189,7 +189,7 @@ function getDynamicCap(memberOrId, guildId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
     // Standard: 3.0 (300% bonus), VIP: 6.0 (600% bonus)
-    return hasActiveItem(gId, userId, 108) ? 6.0 : 3.0;
+    return   hasActiveItem(gId, userId, 108) ? 6.0 : 3.0;
 }
 
 function calculateReward(base, memberOrId, type = 'income') {
@@ -215,19 +215,19 @@ function itemDataLegendaryPart(memberOrId, guildId, type) {
 }
 
 function removeActiveBuff(guildId, userId, itemId) {
-    const user = db.getUser(userId, guildId);
+    const user =   db.getUser(userId, guildId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
     const filteredBuffs = buffs.filter(b => b.itemId !== itemId);
     if (filteredBuffs.length !== buffs.length) {
-        db.updateUser(guildId, userId, { active_buffs: JSON.stringify(filteredBuffs) });
+          db.updateUser(guildId, userId, { active_buffs: JSON.stringify(filteredBuffs) });
         return true;
     }
     return false;
 }
 
 function addBuff(guildId, userId, itemId, durationSeconds) {
-    const user = db.getUser(userId, guildId);
+    const user =   db.getUser(userId, guildId);
     let buffs = [];
     try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
@@ -243,7 +243,7 @@ function addBuff(guildId, userId, itemId, durationSeconds) {
         buffs.push({ itemId, expiresAt: now + durationSeconds });
     }
 
-    db.updateUser(guildId, userId, { active_buffs: JSON.stringify(buffs) });
+      db.updateUser(guildId, userId, { active_buffs: JSON.stringify(buffs) });
 }
 
 module.exports = {

@@ -72,7 +72,7 @@ function addHouseProfit(context, amount) {
     const config = require('../config');
 
     // Add balance to bot
-    db.addBalance(botId, amount);
+    await db.addBalance(botId, amount);
 
     // Grant XP to bot: 1 XP per 10 profit (min 5, max 50)
     const xpAmount = Math.max(5, Math.min(50, Math.floor(amount / 10)));
@@ -80,7 +80,7 @@ function addHouseProfit(context, amount) {
 
     if (reachedLevel20) {
         const guildId = context.guild?.id || context.guildId || null;
-        const lang = getLanguage(botId, guildId);
+        const lang = await getLanguage(botId, guildId);
         const job = assignRandomJob(botId, lang);
         const channel = context.channel || (context.interaction && context.interaction.channel) || context.client?.channels?.cache?.get(context.channelId);
 

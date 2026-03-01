@@ -6,8 +6,8 @@ module.exports = {
     aliases: ['dv'],
     description: 'Ly hôn (Divorce)',
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const marriage = db.getMarriage(message.guild.id, message.author.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const marriage = await db.getMarriage(message.guild.id, message.author.id);
 
         if (!marriage) {
             return message.reply(t('divorce.not_married', lang));
@@ -45,7 +45,7 @@ module.exports = {
             if (i.user.id !== message.author.id) return;
 
             if (i.customId === 'confirm_divorce') {
-                db.deleteMarriage(message.guild.id, message.author.id);
+                await db.deleteMarriage(message.guild.id, message.author.id);
                 await i.update({
                     content: t('divorce.success', lang, { user: message.author.toString(), partner: partner.toString() }),
                     components: []

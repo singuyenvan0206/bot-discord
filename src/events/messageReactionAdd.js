@@ -13,7 +13,7 @@ module.exports = {
 
         if (reaction.emoji.name !== EMOJI) return;
 
-        const giveaway = db.getGiveaway(reaction.message.id);
+        const giveaway = await db.getGiveaway(reaction.message.id);
         if (!giveaway || giveaway.ended) return;
 
         if (giveaway.paused) {
@@ -32,15 +32,15 @@ module.exports = {
             } catch { return; }
         }
 
-        db.addParticipant(giveaway.id, user.id);
+        await db.addParticipant(giveaway.id, user.id);
         await updateGiveawayEmbed(reaction.message, giveaway);
     },
 };
 
 async function updateGiveawayEmbed(message, giveaway) {
     try {
-        const lang = getLanguage(null, giveaway.guild_id);
-        const count = db.getParticipantCount(giveaway.id);
+        const lang = await getLanguage(null, giveaway.guild_id);
+        const count = await db.getParticipantCount(giveaway.id);
         const embed = createGiveawayEmbed(giveaway, count, lang);
         await message.edit({ embeds: [embed], components: [createEntryButton(false, lang)] });
     } catch (err) {

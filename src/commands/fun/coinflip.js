@@ -13,8 +13,8 @@ module.exports = {
     description: 'Tung đồng xu đặt cược (Flip a coin to gamble)',
     cooldown: 10,
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const user = db.getUser(message.author.id, message.guild.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
 
         let call = args[0] ? args[0].toLowerCase() : null;
         let bet = args[1] ? parseAmount(args[1], user.balance, config.ECONOMY.MAX_BET) : 0;
@@ -29,10 +29,10 @@ module.exports = {
 
         if (bet > 0) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
-            const maxBet = db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+            const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
             if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
             if (bet < 10) return message.reply(t('common.min_bet_error', lang, { limit: '10' }));
-            db.removeBalance(message.guild.id, user.id, bet);
+            await db.removeBalance(message.guild.id, user.id, bet);
         }
 
         // Grant Action XP
@@ -48,10 +48,10 @@ module.exports = {
 
         if (won) {
             // Calculate reward including bonuses
-            const { total, bonus, percent } = calculateReward(bet, message.member, 'gamble');
+            const { total, bonus, percent } = await calculateReward(bet, message.member, 'gamble');
 
             let payout = total + bet;
-            db.addBalance(message.guild.id, message.author.id, payout);
+            await db.addBalance(message.guild.id, message.author.id, payout);
 
             // Grant Win XP
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
@@ -65,7 +65,7 @@ module.exports = {
             // Musician Interaction: Flow State (15% chance to double final win)
             if (user.job === 'musician' && Math.random() < 0.15) {
                 payout *= 2;
-                db.addBalance(message.guild.id, user.id, payout - (payout / 2)); // Add the extra half
+                await db.addBalance(message.guild.id, user.id, payout - (payout / 2)); // Add the extra half
                 flavorText += t('common.flow_state', lang);
             }
         } else {
@@ -75,7 +75,7 @@ module.exports = {
             // Trader Interaction: Market Tip (25% chance to refund 50% on loss)
             if (user.job === 'trader' && Math.random() < 0.25) {
                 const refund = Math.floor(bet * 0.5);
-                db.addBalance(message.guild.id, user.id, refund);
+                await db.addBalance(message.guild.id, user.id, refund);
                 flavorText += t('common.market_tip', lang);
             }
         }

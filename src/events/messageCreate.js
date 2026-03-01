@@ -23,7 +23,7 @@ module.exports = {
             const tempCommand = client.commands.get(tempCommandName) ||
                 client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
 
-            const isOwner = db.isOwner(message.author.id);
+            const isOwner = await db.isOwner(message.author.id);
             const isAdminCmd = tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly || tempCommand.skipXp);
 
             // Skip Chat XP if it's an owner trying to run a command (even with typos) or if it's an admin/owner/skipped command
@@ -53,9 +53,9 @@ module.exports = {
         if (!commandName) return;
 
         // Check if bot is "shut down" (persisted in DB)
-        const isStopped = db.getGlobalSetting('bot_is_stopped') === 'true';
+        const isStopped = await db.getGlobalSetting('bot_is_stopped') === 'true';
         if (isStopped && commandName !== 'startup' && commandName !== 'boot') {
-            const lang = getLanguage(message.author.id, message.guild?.id);
+            const lang = await getLanguage(message.author.id, message.guild?.id);
             return message.reply(t('common.bot_shut_down', lang)).catch(() => { });
         }
 
@@ -65,14 +65,14 @@ module.exports = {
 
         if (!command) return;
 
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
-        if (command.ownerOnly && !db.isOwner(message.author.id)) {
+        if (command.ownerOnly && !await db.isOwner(message.author.id)) {
             return message.reply(t('common.no_permission', lang));
         }
 
         const isServerOwner = message.author.id === message.guild.ownerId;
-        const isBotOwner = db.isOwner(message.author.id);
+        const isBotOwner = await db.isOwner(message.author.id);
         const isAdmin = message.member.permissions.has('Administrator');
 
         if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
@@ -80,17 +80,13 @@ module.exports = {
         }
 
         // Cooldown handling
-        if (!client.cooldowns.has(command.name)) {
-            client.cooldowns.set(command.name, new Collection());
-        }
-
         const now = Date.now();
-        const timestamps = client.cooldowns.get(command.name);
-        const cooldownAmount = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+        const cooldownAmountMs = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+        const cooldownKey = `cooldown:${command.name}:${message.author.id}`;
 
-        if (timestamps.has(message.author.id)) {
-            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
+        const lastUsedStr = await db.redisClient.get(cooldownKey);
+        if (lastUsedStr) {
+            const expirationTime = parseInt(lastUsedStr) + cooldownAmountMs;
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
                 return message.reply(t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }));
@@ -98,8 +94,7 @@ module.exports = {
         }
 
         if (!command.manualCooldown) {
-            timestamps.set(message.author.id, now);
-            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            await db.redisClient.setEx(cooldownKey, Math.ceil(cooldownAmountMs / 1000), now.toString());
         }
 
         try {

@@ -13,8 +13,8 @@ module.exports = {
     skipXp: true,
     async execute(message, args) {
         const prefix = config.PREFIX;
-        const lang = getLanguage(message.author.id, message.guild?.id);
-        const isOwner = db.isOwner(message.author.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const isOwner = await db.isOwner(message.author.id);
         const isAdmin = isOwner || (message.member && message.member.permissions.has('Administrator')) || (message.guild && message.guild.ownerId === message.author.id);
 
         // 1. Dynamic Command Discovery

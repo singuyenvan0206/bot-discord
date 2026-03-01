@@ -19,7 +19,7 @@ module.exports = {
     },
 
     async execute(message, args) {
-        const lang = getLanguage(message.author.id, message.guild?.id);
+        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         if (!isManager(message.member)) {
             return message.reply(`❌ ${t('giveaway.no_permission', lang)}`);
@@ -75,7 +75,7 @@ module.exports = {
                     components: [createEntryButton(false, lang)]
                 });
 
-                db.createGiveaway({
+                await db.createGiveaway({
                     messageId: sentMsg.id,
                     channelId: channel.id,
                     guildId: message.guild.id,
@@ -102,12 +102,12 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.usage_end', lang, { prefix: config.PREFIX })}`);
             }
 
-            const giveaway = db.getGiveaway(messageId);
+            const giveaway = await db.getGiveaway(messageId);
             if (!giveaway || giveaway.ended) {
                 return message.reply(`❌ ${t('giveaway.not_found_or_ended', lang)}`);
             }
 
-            db.updateGiveaway(giveaway.message_id, {
+            await db.updateGiveaway(giveaway.message_id, {
                 endsAt: Math.floor(Date.now() / 1000) - 1
             });
 
@@ -122,7 +122,7 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.usage_reroll', lang, { prefix: config.PREFIX })}`);
             }
 
-            const giveaway = db.getGiveaway(messageId);
+            const giveaway = await db.getGiveaway(messageId);
             if (!giveaway) {
                 return message.reply(`❌ ${t('giveaway.not_found', lang)}`);
             }
@@ -131,7 +131,7 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.not_ended', lang)}`);
             }
 
-            const winnersList = require('../../utils/timer').pickWinners(db.getParticipants(giveaway.id), giveaway.winner_count);
+            const winnersList = require('../../utils/timer').pickWinners(await db.getParticipants(giveaway.id), giveaway.winner_count);
 
             if (!winnersList.length) {
                 return message.reply(`❌ ${t('giveaway.no_participants', lang)}`);
@@ -150,7 +150,7 @@ module.exports = {
         /* ================= LIST ================= */
 
         if (['list', 'l', 'li'].includes(subcommand)) {
-            const giveaways = db.getActiveGiveaways()
+            const giveaways = await db.getActiveGiveaways()
                 .filter(g => g.guild_id === message.guild.id);
 
             if (!giveaways.length) {
@@ -172,12 +172,12 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.usage_delete', lang, { prefix: config.PREFIX })}`);
             }
 
-            const giveaway = db.getGiveaway(messageId);
+            const giveaway = await db.getGiveaway(messageId);
             if (!giveaway) {
                 return message.reply(`❌ ${t('giveaway.not_found', lang)}`);
             }
 
-            db.deleteGiveaway(giveaway.message_id);
+            await db.deleteGiveaway(giveaway.message_id);
 
             const channel = message.guild.channels.cache.get(giveaway.channel_id);
             if (channel) {

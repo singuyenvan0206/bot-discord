@@ -12,7 +12,7 @@ function isManager(member) {
     if (!member) return false;
 
     // 1. Check if Bot Owner
-    if (db.isOwner(member.id)) return true;
+    if (await db.isOwner(member.id)) return true;
 
     // 2. Check Role-based permissions
     const adminRoles = process.env.ADMIN_ROLE_IDS;
