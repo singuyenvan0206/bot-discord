@@ -53,8 +53,8 @@ module.exports = {
         DAILY_REWARD: 5000,
         FISH_COOLDOWN: 15,
         SELL_RECOVERY: 0.7, // 70% return
-        MIN_WORK_EARNINGS: 200,
-        MAX_WORK_EARNINGS: 1000,
+        MIN_WORK_EARNINGS: 2000,
+        MAX_WORK_EARNINGS: 10000,
         CRIME_COOLDOWN: 3600, // 1 hour
         CRIME_SUCCESS_RATE: 0.35,
         CRIME_MIN_REWARD: 5000,
