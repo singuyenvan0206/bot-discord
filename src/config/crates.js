@@ -2,6 +2,7 @@ module.exports = {
     TYPES: {
         common: {
             id: 'common',
+            numeric_id: 801,
             name: { vi: 'Rương Thường', en: 'Common Crate' },
             price: 10000,
             icon: '📦',
@@ -9,6 +10,7 @@ module.exports = {
         },
         rare: {
             id: 'rare',
+            numeric_id: 802,
             name: { vi: 'Rương Hiếm', en: 'Rare Crate' },
             price: 50000,
             icon: '🔷',
@@ -16,6 +18,7 @@ module.exports = {
         },
         legendary: {
             id: 'legendary',
+            numeric_id: 803,
             name: { vi: 'Rương Huyền Thoại', en: 'Legendary Crate' },
             price: 250000,
             icon: '🔶',
@@ -23,6 +26,7 @@ module.exports = {
         },
         forbidden: {
             id: 'forbidden',
+            numeric_id: 804,
             name: { vi: 'Rương Cấm', en: 'Forbidden Crate' },
             price: 2000000,
             icon: '💀',
@@ -30,6 +34,7 @@ module.exports = {
         },
         mythical: {
             id: 'mythical',
+            numeric_id: 805,
             name: { vi: 'Rương Thần Thoại', en: 'Mythical Crate' },
             price: 10000000,
             icon: '👑',
@@ -37,6 +42,7 @@ module.exports = {
         },
         ethereal: {
             id: 'ethereal',
+            numeric_id: 806,
             name: { vi: 'Rương Linh Hồn', en: 'Ethereal Crate' },
             price: 50000000,
             icon: '✨',

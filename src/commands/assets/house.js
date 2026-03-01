@@ -13,12 +13,21 @@ module.exports = {
         const user = await db.getUser(message.author.id);
 
         if (sub === 'buy') {
-            const tierId = args[1] ? args[1].toLowerCase() : null;
-            if (!tierId || !housingConfig.TIERS[tierId]) {
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (!inputId) {
                 return message.reply(t('housing.buy_usage', lang));
             }
 
-            const tier = housingConfig.TIERS[tierId];
+            const tier = Object.values(housingConfig.TIERS).find(t =>
+                t.id.toLowerCase() === inputId ||
+                t.numeric_id.toString() === inputId
+            );
+
+            if (!tier) {
+                return message.reply('❌ Housing ID not found!');
+            }
+
+            const tierId = tier.id;
 
             if (user.balance < tier.price) {
                 return message.reply(t('housing.buy_error_funds', lang, { price: tier.price.toLocaleString(), name: tier.name[lang] }));
@@ -37,19 +46,28 @@ module.exports = {
             await db.removeBalance(message.author.id, tier.price);
             await db.updateUser(message.author.id, { house_id: tierId });
 
-            return message.reply(t('housing.sell_success', lang, { price: refund.toLocaleString() }));
+            return message.reply(t('housing.buy_success', lang, { name: tier.name[lang] }));
         }
 
         if (sub === 'decorate' || sub === 'upgrade') {
-            const interiorId = args[1] ? args[1].toLowerCase() : null;
-            if (!interiorId || !housingConfig.INTERIORS[interiorId]) {
-                const list = Object.entries(housingConfig.INTERIORS).map(([id, data]) => `\`${id}\` (${data.name[lang]}: ${data.price.toLocaleString()} coins)`).join('\n');
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (!inputId) {
+                const list = Object.entries(housingConfig.INTERIORS).map(([id, data]) => `\`${data.numeric_id}\` (${data.name[lang]}: ${data.price.toLocaleString()} coins)`).join('\n');
                 return message.reply(`${t('housing.decorate_usage', lang) || "Usage: $house decorate <id>"}\nAvailable:\n${list}`);
             }
 
             if (!user.house_id) return message.reply(t('housing.info_none', lang));
 
-            const interior = housingConfig.INTERIORS[interiorId];
+            const interiorEntry = Object.entries(housingConfig.INTERIORS).find(([id, data]) =>
+                id.toLowerCase() === inputId ||
+                data.numeric_id.toString() === inputId
+            );
+
+            if (!interiorEntry) {
+                return message.reply('❌ Decoration ID not found!');
+            }
+
+            const [interiorId, interior] = interiorEntry;
             const houseData = JSON.parse(user.house_data || '{}');
 
             if (houseData[interiorId]) return message.reply(t('housing.decorate_error_owned', lang) || "You already have this decoration!");
@@ -77,10 +95,14 @@ module.exports = {
                 embed.setDescription(t('housing.info_none', lang));
             } else {
                 const tier = housingConfig.TIERS[tierId];
-                // Calculate total buffs including interiors if implemented
-                // For now just tier buffs
+                const houseData = JSON.parse(user.house_data || '{}');
+                const interiors = Object.entries(housingConfig.INTERIORS)
+                    .filter(([id]) => houseData[id])
+                    .map(([_, data]) => data.name[lang])
+                    .join(', ') || 'None';
+
                 embed.addFields(
-                    { name: t('housing.info_tier', lang, { name: tier.name[lang], icon: tier.icon }), value: ' ' },
+                    { name: `${tier.icon} ${tier.name[lang]} (ID: \`${tier.numeric_id}\`)`, value: ' ' },
                     {
                         name: '✨ Buffs',
                         value: t('housing.info_buffs', lang, {
@@ -88,14 +110,14 @@ module.exports = {
                             income: (tier.income_buff * 100).toFixed(0),
                             max_bet: tier.max_bet_bonus.toLocaleString()
                         })
-                    }
+                    },
+                    { name: '🛋️ Decorations', value: interiors }
                 );
             }
 
             return message.channel.send({ embeds: [embed] });
         }
 
-        // Handle list of available houses if user just types $house
         if (sub === 'list') {
             const embed = new EmbedBuilder()
                 .setTitle('🏠 Real Estate Market')
@@ -104,7 +126,7 @@ module.exports = {
 
             Object.values(housingConfig.TIERS).forEach(t => {
                 embed.addFields({
-                    name: `${t.icon} ${t.name[lang]} (ID: ${t.id})`,
+                    name: `${t.icon} ${t.name[lang]} (ID: \`${t.numeric_id}\`)`,
                     value: `💰 **${t.price.toLocaleString()}** coins\nBuffs: +${(t.xp_buff * 100)}% XP, +${(t.income_buff * 100)}% Income\nMax Bet: +${t.max_bet_bonus.toLocaleString()}`
                 });
             });

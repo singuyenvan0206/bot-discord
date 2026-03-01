@@ -58,7 +58,8 @@ module.exports = {
                     durationExtra = ` • ⏳ ${timeStr}`;
                 }
 
-                return `**${name}** — ${config.EMOJIS.COIN} **${i.price.toLocaleString()}**${durationExtra}\n${desc}\nID: \`${i.id}\``;
+                const displayId = i.numeric_id || i.id;
+                return `**${name}** — ${config.EMOJIS.COIN} **${i.price.toLocaleString()}**${durationExtra}\n${desc}\nID: \`${displayId}\``;
             }).join('\n\n') : t('shop.empty', lang);
 
             const categoryName = t(`shop.categories.${category}`, lang);

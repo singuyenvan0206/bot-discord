@@ -12,13 +12,23 @@ module.exports = {
         const sub = args[0] ? args[0].toLowerCase() : 'info';
 
         if (sub === 'buy') {
-            const typeId = args[1] ? args[1].toLowerCase() : null;
-            if (!typeId || !bizConfig.TYPES[typeId]) {
-                const list = Object.values(bizConfig.TYPES).map(b => `\`${b.id}\` (${b.base_price.toLocaleString()} coins)`).join(', ');
-                return message.reply(`${t('business.buy_usage', lang)}\nAvailable: ${list}`);
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (!inputId) {
+                const list = Object.values(bizConfig.TYPES).map(b => `\`${b.numeric_id}\` (${b.name[lang]}: ${b.base_price.toLocaleString()} coins)`).join('\n');
+                return message.reply(`${t('business.buy_usage', lang)}\nAvailable:\n${list}`);
             }
 
-            const type = bizConfig.TYPES[typeId];
+            // Resolve ID (string or numeric)
+            const type = Object.values(bizConfig.TYPES).find(b =>
+                b.id.toLowerCase() === inputId ||
+                b.numeric_id.toString() === inputId
+            );
+
+            if (!type) {
+                return message.reply('❌ Business ID not found!');
+            }
+
+            const typeId = type.id;
             const user = await db.getUser(message.author.id);
             const userBizs = await db.getUserBusinesses(message.author.id);
 
@@ -54,14 +64,8 @@ module.exports = {
                     totalIncome += hourly;
 
                     embed.addFields({
-                        name: t('business.info_item', lang, {
-                            icon: type.icon,
-                            name: type.name[lang],
-                            level: b.level,
-                            income: hourly.toLocaleString(),
-                            staff: b.staff
-                        }),
-                        value: ' '
+                        name: `${type.icon} ${type.name[lang]} (ID: \`${type.numeric_id}\`)`,
+                        value: `Level: **${b.level}** | Staff: **${b.staff}**\nIncome: **${hourly.toLocaleString()}** coins/hour`
                     });
                 });
                 embed.setDescription(`📈 **Total Passive Income:** ${totalIncome.toLocaleString()} coins/hour`);
@@ -100,13 +104,19 @@ module.exports = {
         }
 
         if (sub === 'upgrade') {
-            const bizId = args[1] ? args[1].toLowerCase() : null;
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (!inputId) return message.reply('❌ Please specify the business ID to upgrade!');
+
             const userBizs = await db.getUserBusinesses(message.author.id);
-            const biz = userBizs.find(b => b.business_id === bizId);
+            const biz = userBizs.find(b => {
+                const type = bizConfig.TYPES[b.business_id];
+                return type.id.toLowerCase() === inputId || type.numeric_id.toString() === inputId;
+            });
 
-            if (!biz) return message.reply('❌ You dont own this business or forgot to specify the ID!');
+            if (!biz) return message.reply('❌ You dont own this business or invaild ID!');
 
-            const type = bizConfig.TYPES[biz.business_id];
+            const bizId = biz.business_id;
+            const type = bizConfig.TYPES[bizId];
             if (biz.level >= type.max_level) return message.reply('❌ This business is already at maximum level!');
 
             const upgradeCost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, biz.level));
@@ -123,12 +133,18 @@ module.exports = {
         }
 
         if (sub === 'hire') {
-            const bizId = args[1] ? args[1].toLowerCase() : null;
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (!inputId) return message.reply('❌ Please specify the business ID to hire staff!');
+
             const userBizs = await db.getUserBusinesses(message.author.id);
-            const biz = userBizs.find(b => b.business_id === bizId);
+            const biz = userBizs.find(b => {
+                const type = bizConfig.TYPES[b.business_id];
+                return type.id.toLowerCase() === inputId || type.numeric_id.toString() === inputId;
+            });
 
-            if (!biz) return message.reply('❌ Specify which business to hire staff for!');
+            if (!biz) return message.reply('❌ You dont own this business or invaild ID!');
 
+            const bizId = biz.business_id;
             const cost = bizConfig.STAFF_COST;
             const user = await db.getUser(message.author.id);
 
@@ -139,7 +155,7 @@ module.exports = {
             await db.removeBalance(message.author.id, cost);
             await db.updateUserBusiness(message.author.id, bizId, { staff: biz.staff + 1 });
 
-            return message.reply(t('business.staff_success', lang, { name: bizConfig.TYPES[biz.business_id].name[lang] }));
+            return message.reply(t('business.staff_success', lang, { name: bizConfig.TYPES[bizId].name[lang] }));
         }
     }
 };

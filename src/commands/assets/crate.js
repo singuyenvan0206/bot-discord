@@ -20,8 +20,8 @@ module.exports = {
 
             Object.values(crateConfig.TYPES).forEach(c => {
                 embed.addFields({
-                    name: t('crate.list_item', lang, { icon: c.icon, name: c.name[lang], price: c.price.toLocaleString() }),
-                    value: ' '
+                    name: `${c.icon} ${c.name[lang]} (ID: \`${c.numeric_id}\`)`,
+                    value: `💰 **${c.price.toLocaleString()}** coins`
                 });
             });
 
@@ -29,22 +29,32 @@ module.exports = {
         }
 
         if (sub === 'open') {
-            const crateId = args[1] ? args[1].toLowerCase() : null;
-            if (!crateId || !crateConfig.TYPES[crateId]) {
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (!inputId) {
                 return message.reply(t('crate.open_usage', lang));
             }
 
+            const crate = Object.values(crateConfig.TYPES).find(c =>
+                c.id.toLowerCase() === inputId ||
+                c.numeric_id.toString() === inputId
+            );
+
+            if (!crate) {
+                return message.reply('❌ Crate ID not found!');
+            }
+
+            const crateId = crate.id;
             const user = await db.getUser(message.author.id);
             const inventory = JSON.parse(user.inventory || '{}');
 
             if (!inventory[crateId] || inventory[crateId] <= 0) {
-                return message.reply(t('crate.open_error_none', lang, { name: crateConfig.TYPES[crateId].name[lang] }));
+                return message.reply(t('crate.open_error_none', lang, { name: crate.name[lang] }));
             }
 
             // Remove 1 crate
             await db.removeItem(message.author.id, crateId, 1);
 
-            const msg = await message.reply(t('crate.open_loading', lang, { name: crateConfig.TYPES[crateId].name[lang] }));
+            const msg = await message.reply(t('crate.open_loading', lang, { name: crate.name[lang] }));
 
             // Simulate "loading" for effect
             setTimeout(async () => {
@@ -52,16 +62,12 @@ module.exports = {
 
                 // Roll for loot
                 let rewardText = '';
-                const roll = Math.random();
-                let cumulativeChance = 0;
-                let finalReward = null;
-
-                // Sort loot to ensure consistent rolling
                 const sortedLoot = [...lootTable].sort((a, b) => a.chance - b.chance);
 
                 // Simple weighted random
                 const totalWeight = lootTable.reduce((acc, curr) => acc + curr.chance, 0);
                 let random = Math.random() * totalWeight;
+                let finalReward = null;
 
                 for (const loot of lootTable) {
                     if (random < loot.chance) {
@@ -88,10 +94,10 @@ module.exports = {
                 }
 
                 const embed = new EmbedBuilder()
-                    .setTitle(t('crate.open_success', lang, { name: crateConfig.TYPES[crateId].name[lang] }))
+                    .setTitle(t('crate.open_success', lang, { name: crate.name[lang] }))
                     .setDescription(rewardText)
-                    .setColor(crateConfig.TYPES[crateId].color)
-                    .setThumbnail('https://i.imgur.com/8E8Lh5D.png'); // Placeholder for crate open animation or static image
+                    .setColor(crate.color)
+                    .setThumbnail('https://i.imgur.com/8E8Lh5D.png');
 
                 await msg.edit({ content: ' ', embeds: [embed] });
             }, 2000);

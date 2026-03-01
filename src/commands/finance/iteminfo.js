@@ -19,6 +19,7 @@ module.exports = {
         // Try to find by numerical ID, then by partial name (internal name)
         const item = SHOP_ITEMS.find(i =>
             String(i.id) === query ||
+            (i.numeric_id && String(i.numeric_id) === query) ||
             i.name.toLowerCase().includes(query)
         );
 

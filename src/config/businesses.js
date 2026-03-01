@@ -2,6 +2,7 @@ module.exports = {
     TYPES: {
         cafe: {
             id: 'cafe',
+            numeric_id: 901,
             name: { vi: 'Quán Cà Phê', en: 'Cafe' },
             base_price: 200000,
             base_income: 2500,
@@ -10,6 +11,7 @@ module.exports = {
         },
         casino: {
             id: 'casino',
+            numeric_id: 902,
             name: { vi: 'Sòng Bạc', en: 'Casino' },
             base_price: 2000000,
             base_income: 30000,
@@ -18,6 +20,7 @@ module.exports = {
         },
         hotel: {
             id: 'hotel',
+            numeric_id: 903,
             name: { vi: 'Khách Sạn', en: 'Hotel' },
             base_price: 10000000,
             base_income: 200000,
@@ -26,6 +29,7 @@ module.exports = {
         },
         startup: {
             id: 'startup',
+            numeric_id: 904,
             name: { vi: 'Công Ty Công Nghệ', en: 'Tech Startup' },
             base_price: 50000000,
             base_income: 1200000,
@@ -34,6 +38,7 @@ module.exports = {
         },
         studio: {
             id: 'studio',
+            numeric_id: 905,
             name: { vi: 'Hãng Phim', en: 'Production Studio' },
             base_price: 250000000,
             base_income: 6000000,
@@ -42,6 +47,7 @@ module.exports = {
         },
         airline: {
             id: 'airline',
+            numeric_id: 906,
             name: { vi: 'Hãng Hàng Không', en: 'Airline' },
             base_price: 1500000000,
             base_income: 50000000,
