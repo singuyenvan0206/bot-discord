@@ -8,7 +8,7 @@ module.exports = {
             xp_buff: 0.02,
             income_buff: 0.01,
             max_bet_bonus: 25000,
-            cap_bonus: 0.1,
+            cap_bonus: 0.05,
             icon: '🏠'
         },
         apartment: {
@@ -17,9 +17,9 @@ module.exports = {
             name: { vi: 'Căn Hộ', en: 'Apartment' },
             price: 500000,
             xp_buff: 0.05,
-            income_buff: 0.03,
+            income_buff: 0.02,
             max_bet_bonus: 100000,
-            cap_bonus: 0.3,
+            cap_bonus: 0.1,
             icon: '🏙️'
         },
         villa: {
@@ -27,10 +27,10 @@ module.exports = {
             numeric_id: 1003,
             name: { vi: 'Biệt Thự', en: 'Villa' },
             price: 2500000,
-            xp_buff: 0.12,
-            income_buff: 0.08,
+            xp_buff: 0.10,
+            income_buff: 0.05,
             max_bet_bonus: 500000,
-            cap_bonus: 0.8,
+            cap_bonus: 0.2,
             icon: '🏡'
         },
         mansion: {
@@ -38,10 +38,10 @@ module.exports = {
             numeric_id: 1004,
             name: { vi: 'Siêu Biệt Thự', en: 'Mansion' },
             price: 10000000,
-            xp_buff: 0.25,
-            income_buff: 0.15,
-            max_bet_bonus: 2500000,
-            cap_bonus: 1.5,
+            xp_buff: 0.20,
+            income_buff: 0.10,
+            max_bet_bonus: 1000000,
+            cap_bonus: 0.4,
             icon: '🏰'
         },
         island: {
@@ -49,10 +49,10 @@ module.exports = {
             numeric_id: 1005,
             name: { vi: 'Đảo Tư Nhân', en: 'Private Island' },
             price: 50000000,
-            xp_buff: 0.60,
-            income_buff: 0.40,
-            max_bet_bonus: 25000000,
-            cap_bonus: 4.0,
+            xp_buff: 0.35,
+            income_buff: 0.15,
+            max_bet_bonus: 5000000,
+            cap_bonus: 0.7,
             icon: '🏝️'
         },
         penthouse: {
@@ -60,10 +60,10 @@ module.exports = {
             numeric_id: 1006,
             name: { vi: 'Căn Hộ Áp Mái (Penthouse)', en: 'Penthouse' },
             price: 250000000,
-            xp_buff: 1.2,
-            income_buff: 0.8,
-            max_bet_bonus: 100000000,
-            cap_bonus: 8.0,
+            xp_buff: 0.50,
+            income_buff: 0.20,
+            max_bet_bonus: 15000000,
+            cap_bonus: 1.0,
             icon: '🏢'
         },
         space_station: {
@@ -71,10 +71,10 @@ module.exports = {
             numeric_id: 1007,
             name: { vi: 'Trạm Vũ Trụ', en: 'Space Station' },
             price: 1500000000,
-            xp_buff: 3.5,
-            income_buff: 2.5,
-            max_bet_bonus: 500000000,
-            cap_bonus: 15.0,
+            xp_buff: 1.0,
+            income_buff: 0.5,
+            max_bet_bonus: 50000000,
+            cap_bonus: 2.0,
             icon: '🛰️'
         }
     },
