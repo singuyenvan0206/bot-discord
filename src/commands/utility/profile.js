@@ -4,6 +4,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { calculateNetWorth } = require('../../utils/economy');
 const { calculateLevel } = require('../../utils/leveling');
+const housingConfig = require('../../config/housing');
+const bizConfig = require('../../config/businesses');
 
 module.exports = {
     name: 'profile',
@@ -62,6 +64,14 @@ module.exports = {
             marriageStatus = `💍 **${partnerName}**\n↳ ${t('profile.marriage_bonus', lang, { percent: bonus })}`;
         }
 
+        // Housing & Business info
+        const houseTier = dbUser.house_id ? housingConfig.TIERS[dbUser.house_id] : null;
+        const userBizs = await db.getUserBusinesses(user.id);
+        let totalPassiveIncome = 0;
+        userBizs.forEach(b => {
+            totalPassiveIncome += bizConfig.calculateBusinessIncome(b.business_id, b.level, b.staff);
+        });
+
         const embed = new EmbedBuilder()
             .setAuthor({ name: t('profile.title', lang, { user: user.tag }), iconURL: user.displayAvatarURL({ dynamic: true, size: 256 }) })
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
@@ -71,6 +81,8 @@ module.exports = {
                 { name: t('job.name_field', lang), value: dbUser.job ? t(`job.name_${dbUser.job}`, lang) : t('job.none', lang), inline: true },
                 { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
                 { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
+                { name: t('profile.assets', lang) || "🏠 Assets", value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]}` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length })}`, inline: true },
+                { name: t('business.passive_income', lang) || "📈 Passive Income", value: `+${totalPassiveIncome.toLocaleString()} coins/hour`, inline: true },
                 { name: t('profile.multipliers', lang), value: `💼 **${t('effects.income', lang)}:** +${incomeBonus}%\n🎲 **${t('effects.gamble', lang)}:** +${gambleBonus}%\n✨ **${t('effects.xpboost', lang)}:** +${xpBonus}%\n🛡️ **${t('profile.cap', lang)}:** ${maxCapPercent}%`, inline: true },
                 { name: t('profile.marriage', lang), value: marriageStatus, inline: true },
                 { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length }), inline: true },

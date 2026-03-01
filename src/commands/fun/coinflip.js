@@ -3,7 +3,7 @@ const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
 const { startCooldown } = require('../../utils/cooldown');
-const { parseAmount, addHouseProfit } = require('../../utils/economy');
+const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 
@@ -17,7 +17,8 @@ module.exports = {
         const user = await db.getUser(message.author.id, message.guild.id);
 
         let call = args[0] ? args[0].toLowerCase() : null;
-        let bet = args[1] ? parseAmount(args[1], user.balance, config.ECONOMY.MAX_BET) : 0;
+        const maxBetLimit = await getMaxBet(message.author.id);
+        let bet = args[1] ? parseAmount(args[1], user.balance, maxBetLimit) : 0;
 
         // Support vn side names and shorthands
         if (call === 'ngửa' || call === 'ngua' || call === 'h' || call === 'head' || call === 'n') call = 'heads';
@@ -29,7 +30,8 @@ module.exports = {
 
         if (bet > 0) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
-            const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+
+            const maxBet = await getMaxBet(message.author.id);
             if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
             if (bet < 10) return message.reply(t('common.min_bet_error', lang, { limit: '10' }));
             await db.removeBalance(message.guild.id, user.id, bet);

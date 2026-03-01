@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
-const { parseAmount, addHouseProfit } = require('../../utils/economy');
+const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 
@@ -34,12 +34,13 @@ module.exports = {
         let bet = 0;
 
         // Check if first arg is a bet amount using all known aliases
+        const maxBet = await getMaxBet(message.author.id);
         const allValidChoices = [...choices, ...rockAliases, ...paperAliases, ...scissorsAliases];
         if (args[0] && !allValidChoices.includes(args[0]?.toLowerCase())) {
-            bet = parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET);
+            bet = parseAmount(args[0], user.balance, maxBet);
             userChoice = null; // No choice made yet
         } else if (args[1]) {
-            bet = parseAmount(args[1], user.balance, config.ECONOMY.MAX_BET);
+            bet = parseAmount(args[1], user.balance, maxBet);
         }
 
         // Default Bet if none provided
@@ -50,7 +51,7 @@ module.exports = {
         // Validate Bet
         if (bet > 0) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
-            if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
+            if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
             await db.removeBalance(message.guild.id, user.id, bet);
         } else if (bet < 0) {
             return message.reply(`❌ ${t('common.invalid_amount', lang)}`);

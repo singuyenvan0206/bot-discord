@@ -1,5 +1,6 @@
 const db = require('../database');
 const SHOP_ITEMS = require('./shopItems');
+const housingConfig = require('../config/housing');
 
 const LEGENDARY_BUFF_IDS = [601, 602, 603, 604, 605, 606];
 
@@ -24,6 +25,23 @@ async function getMultiplierData(memberOrId, guildId, type) {
     }
 
     return calculateMultiplierFromBuffs(activeBuffs, user.job, type, userId, gId);
+}
+
+function calculateHouseMulti(user, type) {
+    if (!user.house_id) return 0;
+    const tier = housingConfig.TIERS[user.house_id];
+    let multi = (type === 'income') ? (tier?.income_buff || 0) : 0;
+
+    // Add interiors
+    const houseData = JSON.parse(user.house_data || '{}');
+    Object.keys(houseData).forEach(id => {
+        const deco = housingConfig.INTERIORS[id];
+        if (deco && deco.buff === type) {
+            multi += deco.value;
+        }
+    });
+
+    return multi;
 }
 
 function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
@@ -80,6 +98,7 @@ async function getTotalMultiplier(memberOrId, type = 'income') {
 
     const itemData = await getMultiplierData(memberOrId, guildId, type);
     const levelMulti = getLevelMultiplier(user.level);
+    const houseMulti = calculateHouseMulti(user, type);
 
     let jobMulti = 0;
     if (user.job) {
@@ -120,8 +139,8 @@ async function getTotalMultiplier(memberOrId, type = 'income') {
 
     const maxCap = await getDynamicCap(memberOrId);
 
-    // Sum all CAPPABLE multipliers (Items, Level, Job)
-    const cappableTotal = itemData.normal + levelMulti + jobMulti;
+    // Sum all CAPPABLE multipliers (Items, Level, Job, House)
+    const cappableTotal = itemData.normal + levelMulti + jobMulti + houseMulti;
     const cappedResult = Math.min(cappableTotal, maxCap);
 
     // Final result = Capped bonuses + Uncapped legendary bonuses + Uncapped role bonuses + Uncapped Marriage
@@ -137,6 +156,21 @@ async function getXpMultiplier(memberOrId) {
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
     const user = await db.getUser(userId, guildId);
     let multi = 1.0;
+
+    // Housing XP Buff
+    if (user.house_id) {
+        const tier = housingConfig.TIERS[user.house_id];
+        if (tier) multi += tier.xp_buff;
+
+        const houseData = JSON.parse(user.house_data || '{}');
+        Object.keys(houseData).forEach(id => {
+            const deco = housingConfig.INTERIORS[id];
+            if (deco && deco.buff === 'xp') {
+                multi += deco.value;
+            }
+        });
+    }
+
     if (user.job === 'teacher') multi += 1.0; // Teacher XP Base: +100%
     if (user.job === 'teacher' && await hasActiveItem(guildId, userId, 208)) multi += 2.0; // Whiteboard Interaction: +200%
     if (await hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion: +100%
@@ -170,8 +204,27 @@ async function hasActiveItem(guildId, userId, itemId) {
 async function getDynamicCap(memberOrId, guildId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
+
     // Standard: 3.0 (300% bonus), VIP: 6.0 (600% bonus)
-    return await hasActiveItem(gId, userId, 108) ? 6.0 : 3.0;
+    let cap = await hasActiveItem(gId, userId, 108) ? 6.0 : 3.0;
+
+    // Housing Cap Bonus
+    const user = await db.getUser(userId, gId);
+    if (user.house_id) {
+        const tier = housingConfig.TIERS[user.house_id];
+        if (tier && tier.cap_bonus) cap += tier.cap_bonus;
+
+        // Add interior cap bonuses
+        const houseData = JSON.parse(user.house_data || '{}');
+        Object.keys(houseData).forEach(id => {
+            const deco = housingConfig.INTERIORS[id];
+            if (deco && deco.buff === 'cap') {
+                cap += deco.value;
+            }
+        });
+    }
+
+    return cap;
 }
 
 async function calculateReward(base, memberOrId, type = 'income') {

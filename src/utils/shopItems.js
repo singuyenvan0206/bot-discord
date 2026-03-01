@@ -96,4 +96,14 @@ module.exports = [
     { id: 701, name: 'Wedding Ring', price: 50000, multiplier: 0.25, type: 'social', unusable: true },
     { id: 702, name: 'Diamond Ring', price: 500000, multiplier: 0.50, type: 'social', unusable: true },
     { id: 703, name: 'Wedding Bouquet', price: 10000, multiplier: 0.25, type: 'social', unusable: true },
+
+    // ==========================================
+    // GROUP 800 — crates (gacha crates)
+    // ==========================================
+    { id: 801, name: 'Common Crate', price: 10000, type: 'other' },
+    { id: 802, name: 'Rare Crate', price: 50000, type: 'other' },
+    { id: 803, name: 'Legendary Crate', price: 250000, type: 'other' },
+    { id: 804, name: 'Forbidden Crate', price: 2000000, type: 'other' },
+    { id: 805, name: 'Mythical Crate', price: 10000000, type: 'other' },
+    { id: 806, name: 'Ethereal Crate', price: 50000000, type: 'other' },
 ];

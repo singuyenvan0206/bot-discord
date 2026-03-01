@@ -78,10 +78,12 @@ for (const file of eventFiles) {
 }
 
 const db = require('./database');
+const { initScheduler } = require('./utils/scheduler');
 
 async function startBot() {
     await db.getDb();
     console.log('💾 Database initialized (Pre-login)');
+    initScheduler(client);
     client.login(TOKEN);
 }
 

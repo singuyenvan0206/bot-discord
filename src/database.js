@@ -114,7 +114,9 @@ async function initSchema() {
             warnings INTEGER DEFAULT 0,
             language TEXT DEFAULT NULL,
             server_data TEXT DEFAULT '{}',
-            last_dist_amount BIGINT DEFAULT 0
+            last_dist_amount BIGINT DEFAULT 0,
+            house_id TEXT DEFAULT NULL,
+            house_data TEXT DEFAULT '{}'
         )
     `);
 
@@ -185,6 +187,18 @@ async function initSchema() {
             user_id TEXT NOT NULL,
             count INTEGER NOT NULL DEFAULT 0,
             PRIMARY KEY (guild_id, user_id)
+        )
+    `);
+
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS user_businesses (
+            user_id TEXT NOT NULL,
+            business_id TEXT NOT NULL,
+            level INTEGER NOT NULL DEFAULT 1,
+            staff INTEGER NOT NULL DEFAULT 0,
+            last_harvest BIGINT NOT NULL DEFAULT (extract(epoch from now())),
+            PRIMARY KEY (user_id, business_id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
     `);
 
@@ -743,6 +757,32 @@ async function setGuildSetting(guildId, key, value) {
     `, [guildId, key, String(value)]);
 }
 
+// ─── Housing & Business Helpers ─────────────────────────────────────
+
+async function getUserBusinesses(userId) {
+    return await queryAll('SELECT * FROM user_businesses WHERE user_id = ?', [userId]);
+}
+
+async function addUserBusiness(userId, businessId) {
+    await execute('INSERT INTO user_businesses (user_id, business_id) VALUES (?, ?) ON CONFLICT DO NOTHING', [userId, businessId]);
+}
+
+async function updateUserBusiness(userId, businessId, updates) {
+    const fields = [];
+    const values = [];
+    Object.entries(updates).forEach(([key, value]) => {
+        fields.push(`${key} = ?`);
+        values.push(value);
+    });
+    if (fields.length === 0) return;
+    values.push(userId, businessId);
+    await execute(`UPDATE user_businesses SET ${fields.join(', ')} WHERE user_id = ? AND business_id = ?`, values);
+}
+
+async function getAllUserBusinesses() {
+    return await queryAll('SELECT * FROM user_businesses');
+}
+
 module.exports = {
     getDb,
     saveDb,
@@ -798,6 +838,10 @@ module.exports = {
     addLotteryJackpot,
     setLotteryJackpot,
     addGuildRole,
+    getUserBusinesses,
+    addUserBusiness,
+    updateUserBusiness,
+    getAllUserBusinesses,
     removeGuildRole,
     updateGuildRoleId,
     getGuildRoles,

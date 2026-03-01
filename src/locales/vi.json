@@ -1,6 +1,7 @@
 {
     "common": {
         "error": "Có lỗi xảy ra khi thực hiện lệnh này! ❌",
+        "teacher_tutoring_simple": "\n👨‍🏫 **Gia sư:** Bạn nhận được thêm +50% tiền và +10 XP!",
         "insufficient_funds": "❌ Bạn không đủ tiền! Số dư: **{{balance}}**",
         "invalid_amount": "❌ Số tiền không hợp lệ.",
         "cooldown": "Vui lòng đợi **{{time}}** để tiếp tục sử dụng lệnh này! ⏱️",
@@ -431,10 +432,56 @@
         "fact_streamer": "Streamer có khả năng 'viral', giúp nhân số tiền kiếm được từ công việc lên gấp 5 lần!",
         "fact_chef": "Đầu bếp được Nhà cái Blackjack nể phục, sẵn sàng tặng tiền tip ngay cả khi kết quả hòa.",
         "fact_musician": "Nhạc sĩ có trạng thái 'Flow State' giúp nhân đôi may mắn trong các trò chơi cá cược.",
-        "fact_soldier": "Binh lính luôn hoàn thành nhiệm vụ xuất sắc và nhận được tiền thưởng lương cố định.",
-        "fact_trader": "Thương nhân có tin mật từ thị trường, giúp nhận lại 1/2 tiền cược ngay cả khi thua cuộc.",
-        "fact_teacher": "Giáo viên không chỉ dạy học mà còn giúp mọi người nhận được nhiều tiền và XP hơn trong Trivia!",
-        "teacher_tutoring_simple": "\n👨‍🏫 **Gia sư:** Bạn nhận được thêm +50% tiền và +10 XP!"
+        "fact_soldier": "Chiến binh tinh nhuệ luôn nhận được các khoản trợ cấp cố định sau mỗi đợt hành quân.",
+        "fact_trader": "Thương nhân có linh cảm thị trường nhạy bén, giúp họ luôn nhận được tiền thưởng khi tìm kiếm.",
+        "fact_teacher": "Giáo viên giúp mọi người xung quanh học tập hiệu quả hơn và nhận được nhiều tiền hơn."
+    },
+    "housing": {
+        "buy_usage": "❌ Cách dùng: `$house buy <tier>`\nVí dụ: `$house buy room`",
+        "buy_error_funds": "❌ Bạn không có đủ **{{price}}** coins để mua {{name}}!",
+        "buy_error_already_owned": "❌ Bạn đã sở hữu một ngôi nhà xịn hơn hoặc cùng cấp rồi!",
+        "buy_success": "✅ Chúc mừng! Bạn đã mua thành công **{{name}}** với giá **{{price}}** coins! {{icon}}",
+        "info_title": "🏠 Thông Tin Nhà Ở",
+        "info_none": "Bạn chưa sở hữu ngôi nhà nào. Hãy dùng `$house buy` để bắt đầu!",
+        "info_tier": "**Cấp độ:** {{name}} {{icon}}",
+        "tier_penthouse": "Căn Hộ Áp Mái (Penthouse) 🏢",
+        "tier_space_station": "Trạm Vũ Trụ 🛰️",
+        "info_buffs": "**Buff hiện tại:**\n• XP: +{{xp}}%\n• Thu nhập: +{{income}}%\n• Lượt cược tối đa: +{{max_bet}}\n• Giới hạn bonus (Cap): +{{cap}}%",
+        "decorate_usage": "❌ Cách dùng: `$house decorate <id>`\nVí dụ: `$house decorate gaming_setup`",
+        "decorate_error_owned": "❌ Bạn đã sở hữu món trang trí này rồi!",
+        "upgrade_title": "🛋️ Trang Trí Nội Thất",
+        "upgrade_success": "✅ Bạn đã mua **{{name}}**! Buff: {{buff}}",
+        "sell_success": "💰 Bạn đã bán nhà và nhận lại **{{price}}** coins."
+    },
+    "business": {
+        "buy_usage": "❌ Cách dùng: `$business buy <loại>`\nVí dụ: `$business buy cafe`",
+        "buy_error_funds": "❌ Bạn cần **{{price}}** coins để khởi nghiệp với {{name}}!",
+        "buy_error_owned": "❌ Bạn đã làm chủ doanh nghiệp này rồi!",
+        "buy_success": "🏢 Chúc mừng CEO! Bạn đã sở hữu **{{name}}**. Thu nhập thụ động: **{{income}}**/giờ.",
+        "info_title": "🏢 Đế Chế Kinh Doanh của {{user}}",
+        "info_none": "Bạn chưa sở hữu cơ sở kinh doanh nào.",
+        "info_item": "**{{icon}} {{name}}** (Cấp {{level}})\n• Thu nhập: {{income}}/giờ\n• Nhân viên: {{staff}}",
+        "type_startup": "Công Ty Công Nghệ 🚀",
+        "type_studio": "Hãng Phim 🎬",
+        "type_airline": "Hãng Hàng Không ✈️",
+        "upgrade_success": "🔼 Doanh nghiệp đã được nâng cấp lên Cấp {{level}}!",
+        "harvest_success": "💰 Bạn đã thu hoạch **{{amount}}** coins từ các doanh nghiệp của mình!",
+        "event_title": "📢 Sự kiện Kinh doanh!",
+        "staff_success": "👥 Bạn đã thuê thêm 1 nhân viên cho {{name}}!",
+        "info_count": "Sở hữu: {{count}} doanh nghiệp",
+        "passive_income": "📈 Thu nhập thụ động"
+    },
+    "crate": {
+        "list_title": "🎁 Danh Sách Rương May Mắn",
+        "list_item": "**{{icon}} {{name}}**: {{price}} coins",
+        "type_mythical": "Rương Thần Thoại 👑",
+        "type_ethereal": "Rương Linh Hồn ✨",
+        "open_usage": "❌ Cách dùng: `$crate open <loại>`",
+        "open_error_none": "❌ Bạn không có rương {{name}} trong kho đồ!",
+        "open_loading": "🔍 Đang mở rương **{{name}}**...",
+        "open_success": "🎊 Chúc mừng! Bạn đã nhận được:\n**{{reward}}**",
+        "reward_coins": "💰 {{amount}} coins",
+        "reward_item": "📦 x{{count}} {{item}}"
     },
     "slut": {
         "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{time}}**.",

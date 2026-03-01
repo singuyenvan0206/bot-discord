@@ -1,5 +1,6 @@
 {
     "common": {
+        "teacher_tutoring_simple": "\n👨‍🏫 **Tutoring:** You received +50% coins and +10 XP bonus!",
         "error": "An error occurred while executing this command! ❌",
         "insufficient_funds": "❌ You don't have enough money! Balance: **{{balance}}**",
         "invalid_amount": "❌ Invalid amount.",
@@ -369,15 +370,61 @@
         "fact_criminal": "Master thieves have higher success rates and pay lower fines when equipped.",
         "fact_doctor": "Doctors earn passive income from citizens who unfortunately end up hospitalized.",
         "fact_programmer": "Programmers skilled in Regex get extra hints in the Scramble game!",
-        "fact_farmer": "Farmers are the only professionals who can catch legendary rare fish.",
-        "fact_hacker": "Hackers can automatically detect the location of one mine in Minesweeper.",
+        "fact_farmer": "Farmers are the only ones who can catch extremely rare types of fish.",
+        "fact_hacker": "Hackers can automatically find the location of a mine in the Minesweeper game.",
         "fact_streamer": "Streamers can go viral, multiplying their work earnings by 5x!",
         "fact_chef": "Chefs are respected by the Dealer, earning tips even on a Blackjack Push.",
         "fact_musician": "Musicians can reach a Flow State, doubling their luck in gambling games.",
-        "fact_soldier": "Soldiers always complete missions successfully, earning a guaranteed salary bonus.",
-        "fact_trader": "Traders have market insight, receiving a partial refund even on lost bets.",
-        "fact_teacher": "Teachers help everyone gain more coins and XP during Trivia sessions!",
-        "teacher_tutoring_simple": "\n👨‍🏫 **Tutoring:** You received +50% coins and +10 XP bonus!"
+        "fact_soldier": "Elite soldiers always receive fixed stipends after each mission deployment.",
+        "fact_trader": "Traders have sharp market intuition, ensuring they always get bonuses when searching.",
+        "fact_teacher": "Teachers help everyone around them learn more effectively and earn more coins."
+    },
+    "housing": {
+        "buy_usage": "❌ Usage: `$house buy <tier>`\nExample: `$house buy room`",
+        "buy_error_funds": "❌ You don't have enough **{{price}}** coins to buy {{name}}!",
+        "buy_error_already_owned": "❌ You already own a better or same-tier house!",
+        "buy_success": "✅ Congratulations! You have successfully purchased **{{name}}** for **{{price}}** coins! {{icon}}",
+        "info_title": "🏠 Housing Information",
+        "info_none": "You don't own a house yet. Use `$house buy` to get started!",
+        "info_tier": "**Tier:** {{name}} {{icon}}",
+        "tier_penthouse": "Penthouse 🏢",
+        "tier_space_station": "Space Station 🛰️",
+        "info_buffs": "**Active Buffs:**\n• XP: +{{xp}}%\n• Income: +{{income}}%\n• Max Bet: +{{max_bet}}\n• Bonus Cap: +{{cap}}%",
+        "decorate_usage": "❌ Usage: `$house decorate <id>`\nExample: `$house decorate gaming_setup`",
+        "decorate_error_owned": "❌ You already own this decoration!",
+        "upgrade_title": "🛋️ Interior Decoration",
+        "upgrade_success": "✅ You purchased **{{name}}**! Buff: {{buff}}",
+        "sell_success": "💰 You sold your house and received **{{price}}** coins."
+    },
+    "business": {
+        "buy_usage": "❌ Usage: `$business buy <type>`\nExample: `$business buy cafe`",
+        "buy_error_funds": "❌ You need **{{price}}** coins to start your business with {{name}}!",
+        "buy_error_owned": "❌ You already own this business!",
+        "buy_success": "🏢 Congratulations CEO! You now own **{{name}}**. Passive income: **{{income}}**/hour.",
+        "info_title": "🏢 {{user}}'s Business Empire",
+        "info_none": "You don't own any businesses yet.",
+        "info_item": "**{{icon}} {{name}}** (Level {{level}})\n• Income: {{income}}/hour\n• Staff: {{staff}}",
+        "type_startup": "Tech Startup 🚀",
+        "type_studio": "Production Studio 🎬",
+        "type_airline": "Airline ✈️",
+        "upgrade_success": "🔼 Business upgraded to Level {{level}}!",
+        "harvest_success": "💰 You harvested **{{amount}}** coins from your businesses!",
+        "event_title": "📢 Business Event!",
+        "staff_success": "👥 You hired a staff member for {{name}}!",
+        "info_count": "Owned: {{count}} businesses",
+        "passive_income": "📈 Passive Income"
+    },
+    "crate": {
+        "list_title": "🎁 Lucky Crate List",
+        "list_item": "**{{icon}} {{name}}**: {{price}} coins",
+        "type_mythical": "Mythical Crate 👑",
+        "type_ethereal": "Ethereal Crate ✨",
+        "open_usage": "❌ Usage: `$crate open <type>`",
+        "open_error_none": "❌ You don't have a {{name}} in your inventory!",
+        "open_loading": "🔍 Opening **{{name}}**...",
+        "open_success": "🎊 Congratulations! You received:\n**{{reward}}**",
+        "reward_coins": "💰 {{amount}} coins",
+        "reward_item": "📦 x{{count}} {{item}}"
     },
     "slut": {
         "cooldown": "❌ You need to rest and recover! Come back in **{{time}}**.",
@@ -606,7 +653,7 @@
             "desc": "Heads or tails (+50% Gamble | 7 days)"
         },
         "304": {
-            "name": "� Emerald Necklace",
+            "name": " Emerald Necklace",
             "desc": "The beauty of purity and luck (+50% Gamble | 30 days)"
         },
         "305": {
@@ -1008,7 +1055,6 @@
         "balance": "**Balance:** {{emoji}} {{amount}}",
         "net_worth": "**Net Worth:** {{emoji}} {{amount}}",
         "ranking": "🏆 Ranking",
-        "wealth_rank": "**Wealth Rank:** {{rank}}",
         "unranked": "Unranked (>100)",
         "inventory_value": "💰 Inventory Value: {{amount}}",
         "collection": "🎒 Collection",
@@ -1021,7 +1067,9 @@
         "marriage": "💞 Relationship",
         "cap": "Max Cap",
         "marriage_bonus": "🎁 Buff: +{{percent}}% income",
-        "footer": "Type {{prefix}}inventory to see item details"
+        "footer": "Use {{prefix}}shop to see more.",
+        "assets": "🏠 Assets",
+        "wealth_rank": "Wealth Rank: **{{rank}}**"
     },
     "wordchain": {
         "title": "🔗  Word Chain",

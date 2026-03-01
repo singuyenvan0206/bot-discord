@@ -106,4 +106,33 @@ async function addHouseProfit(context, amount) {
     }
 }
 
-module.exports = { parseAmount, calculateNetWorth, addHouseProfit };
+/**
+ * Calculates the dynamic maximum bet for a user, considering housing bonuses.
+ * @param {string} userId User ID.
+ * @returns {number} The maximum bet amount.
+ */
+async function getMaxBet(userId) {
+    const config = require('../config');
+    const db = require('../database');
+    const housingConfig = require('../config/housing');
+
+    const user = await db.getUser(userId);
+    let maxBet = config.ECONOMY.MAX_BET || 250000;
+
+    if (user.house_id && housingConfig.TIERS[user.house_id]) {
+        maxBet += housingConfig.TIERS[user.house_id].max_bet_bonus;
+
+        // Add interiors
+        const houseData = JSON.parse(user.house_data || '{}');
+        Object.keys(houseData).forEach(id => {
+            const deco = housingConfig.INTERIORS[id];
+            if (deco && deco.buff === 'max_bet') {
+                maxBet += deco.value;
+            }
+        });
+    }
+
+    return maxBet;
+}
+
+module.exports = { parseAmount, calculateNetWorth, addHouseProfit, getMaxBet };

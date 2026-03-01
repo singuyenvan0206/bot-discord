@@ -15,8 +15,9 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
-        const { parseAmount, addHouseProfit } = require('../../utils/economy');
-        const minBuyIn = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
+        const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
+        const maxBet = await getMaxBet(message.author.id);
+        const minBuyIn = args[0] ? parseAmount(args[0], user.balance, maxBet) : 50;
         const hostId = message.author.id;
 
         // Game State
@@ -96,10 +97,10 @@ module.exports = {
                         return submit.reply({ content: `${config.EMOJIS.ERROR} ${t('poker.invalid_amount', lang, { min: minBuyIn })}`, flags: 64 });
                     }
 
-                    if (amount > config.ECONOMY.MAX_BET) {
+                    if (amount > maxBet) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
-                        return submit.reply({ content: `${config.EMOJIS.ERROR} ${t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() })}`, flags: 64 });
+                        return submit.reply({ content: `${config.EMOJIS.ERROR} ${t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() })}`, flags: 64 });
                     }
 
 
@@ -349,8 +350,8 @@ module.exports = {
                     if (isNaN(val) || val < minTotal) {
                         return submit.reply({ content: `❌ ${t('poker.invalid_raise', lang, { min: minTotal })}`, flags: 64 });
                     }
-                    if (val > config.ECONOMY.MAX_BET) {
-                        return submit.reply({ content: t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }), flags: 64 });
+                    if (val > maxBet) {
+                        return submit.reply({ content: t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }), flags: 64 });
                     }
                     if (val > p.chips + p.currentBet) {
                         return submit.reply({ content: t('common.insufficient_funds', lang, { balance: p.chips + p.currentBet }), flags: 64 });

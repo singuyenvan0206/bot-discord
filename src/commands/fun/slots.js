@@ -5,6 +5,7 @@ const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
 const { calculateReward } = require('../../utils/multiplier');
 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 
 module.exports = {
     name: 'slots',
@@ -15,14 +16,14 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
         const user = await db.getUser(message.author.id, message.guild.id);
-        const { parseAmount, addHouseProfit } = require('../../utils/economy');
-        let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
+        const maxBetLimit = await getMaxBet(message.author.id);
+        let bet = args[0] ? parseAmount(args[0], user.balance, maxBetLimit) : 50;
 
         if (args[0] && (isNaN(bet) || bet <= 0)) return message.reply(t('common.invalid_amount', lang));
 
         if (bet) {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
-            const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
+            const maxBet = await getMaxBet(message.author.id);
             if (bet > maxBet) return message.reply(t('gamble.max_bet', lang, { max: maxBet.toLocaleString() }));
             if (bet < 10) return message.reply(t('gamble.min_bet', lang, { min: '10' }));
             await db.removeBalance(message.guild.id, user.id, bet);

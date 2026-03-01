@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
-const { parseAmount, addHouseProfit } = require('../../utils/economy');
+const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 
@@ -18,11 +18,12 @@ module.exports = {
         const user = await db.getUser(message.author.id, message.guild.id);
 
         // Parse bet amount: $dice <bet> or $dice (default 50)
-        let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 50;
+        const maxBet = await getMaxBet(message.author.id);
+        let bet = args[0] ? parseAmount(args[0], user.balance, maxBet) : 50;
 
         if (isNaN(bet) || bet <= 0) return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
         if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
-        if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
+        if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
 
         const uid = Date.now().toString(36);
 
