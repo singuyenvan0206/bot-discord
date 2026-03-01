@@ -25,16 +25,16 @@ module.exports = {
         const actualJobId = job.id;
         const name = t(`job.name_${actualJobId}`, lang);
         const description = t(`job.desc_${actualJobId}`, lang);
-        const perks = t(`job.info_${actualJobId}`, lang).split('\n').filter(p => p.trim()).map(p => `• ${p.trim()}`).join('\n');
+        const perks = t(`job.info_${actualJobId}`, lang).split('\n').filter(p => p.trim()).map(p => p.trim().startsWith('•') ? p.trim() : `• ${p.trim()}`).join('\n');
 
         // Accurate Statistics
-        const salaryBonus = job.bonus ? `+${Math.round((job.bonus - 1) * 100)}%` : 'None';
+        const bonusVal = Math.round((jobBonusMult - 1) * 100);
+        const salaryBonus = bonusVal >= 0 ? `+${bonusVal}%` : `${bonusVal}%`;
         const luckBonus = job.luck ? `x${job.luck}` : 'None';
 
         // Calculate Salary Range based on work.js logic
         const minBase = config.ECONOMY.MIN_WORK_EARNINGS;
         const maxBase = config.ECONOMY.MAX_WORK_EARNINGS;
-        const jobBonusMult = job.bonus || 1;
 
         // Estimation (Min-Max range without external multipliers)
         const estMin = Math.floor(minBase * jobBonusMult);
@@ -42,7 +42,7 @@ module.exports = {
         const salaryRange = `\`${estMin.toLocaleString()} - ${estMax.toLocaleString()}\``;
 
         const embed = new EmbedBuilder()
-            .setTitle(`${job.icon} ${name}`)
+            .setTitle(`${job.icon} ${name.replace(job.icon, '').trim()}`)
             .setDescription(`*${description}*`)
             .addFields(
                 { name: '🆔 ' + t('job.id_label', lang), value: `\`${actualJobId}\` (ID: ${job.numericId})`, inline: true },
