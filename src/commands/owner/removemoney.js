@@ -11,15 +11,29 @@ module.exports = {
     usage: '<@user> <amount>',
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
-        const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
-        if (!target) return message.reply(t('common.error', lang));
+        // Collect all mentioned users
+        let targets = Array.from(message.mentions.users.values());
 
-        const amount = parseAmount(args[1]);
+        // If no mentions, try to fetch from ID in first argument
+        if (targets.length === 0 && args[0]) {
+            const target = await message.client.users.fetch(args[0]).catch(() => null);
+            if (target) targets.push(target);
+        }
+
+        if (targets.length === 0) return message.reply(t('common.error', lang));
+
+        const amountStr = args[args.length - 1];
+        const amount = parseAmount(amountStr);
+
         if (isNaN(amount) || amount <= 0) return message.reply(t('common.invalid_amount', lang));
 
-        await db.removeBalance(message.guild.id, target.id, amount);
+        // Process all targets
+        for (const target of targets) {
+            await db.removeBalance(message.guild.id, target.id, amount);
+        }
 
-        return message.reply(`✅ Đã trừ **${amount.toLocaleString()}** ${config.EMOJIS.COIN} của **${target.username}**.`);
+        const userList = targets.map(u => `**${u.username}**`).join(', ');
+        return message.reply(`✅ Đã trừ **${amount.toLocaleString()}** ${config.EMOJIS.COIN} của: ${userList}.`);
     }
 };

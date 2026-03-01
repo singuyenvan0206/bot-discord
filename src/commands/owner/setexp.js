@@ -9,25 +9,41 @@ module.exports = {
     usage: '<@user> <amount>',
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
-        const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
-        if (!target) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập ID của người dùng.' : '❌ Please provide the ID of the user.');
+        // Collect all mentioned users
+        let targets = Array.from(message.mentions.users.values());
 
-        const amount = parseInt(args[1]);
+        // If no mentions, try ID in first argument
+        if (targets.length === 0 && args[0]) {
+            const target = await message.client.users.fetch(args[0]).catch(() => null);
+            if (target) targets.push(target);
+        }
+
+        if (targets.length === 0) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập ID hoặc ping người dùng.' : '❌ Please provide the ID or ping the user.');
+
+        const amount = parseInt(args[args.length - 1]);
         if (isNaN(amount) || amount < 0) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập số hợp lệ.' : '❌ Please provide a valid amount.');
 
         const { calculateLevel, assignJobIfEligible } = require('../../utils/leveling');
         const newLevel = calculateLevel(amount);
 
-        await db.updateUser(target.id, { xp: amount, level: newLevel });
+        let results = [];
 
-        // Trigger job assignment if eligible
-        const member = message.guild.members.cache.get(target.id) || await message.guild.members.fetch(target.id).catch(() => target);
-        const assignedJob = await assignJobIfEligible(member, message.guild.id, newLevel);
+        for (const target of targets) {
+            await db.updateUser(target.id, { xp: amount, level: newLevel });
 
-        let response = `✅ Đã đặt XP của **${target.username}** thành **${amount.toLocaleString()}** (Cấp độ: **${newLevel}**).`;
-        if (assignedJob) {
-            response += `\n💼 **Job Assigned:** **${assignedJob.name}** đã được gán cho người dùng này!`;
+            // Trigger job assignment if eligible
+            const member = message.guild.members.cache.get(target.id) || await message.guild.members.fetch(target.id).catch(() => target);
+            const assignedJob = await assignJobIfEligible(member, message.guild.id, newLevel);
+
+            results.push({ target, assignedJob });
+        }
+
+        let response = `✅ Đã đặt XP của ${results.map(r => `**${r.target.username}**`).join(', ')} thành **${amount.toLocaleString()}** (Cấp độ: **${newLevel}**).`;
+
+        const jobAssignedResults = results.filter(r => r.assignedJob);
+        if (jobAssignedResults.length > 0) {
+            response += `\n💼 **Job Assigned:** ${jobAssignedResults.map(r => `**${r.assignedJob.name}** cho **${r.target.username}**`).join(', ')}!`;
         }
 
         return message.reply(response);
