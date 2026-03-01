@@ -50,28 +50,28 @@ module.exports = {
         TRIVIA_REWARD: 500,
         WORK_COOLDOWN: 3600, // 1 hour in seconds
         DAILY_COOLDOWN: 86400, // 24 hours in seconds
-        DAILY_REWARD: 750,
+        DAILY_REWARD: 5000,
         FISH_COOLDOWN: 15,
         SELL_RECOVERY: 0.7, // 70% return
-        MIN_WORK_EARNINGS: 50,
-        MAX_WORK_EARNINGS: 200,
+        MIN_WORK_EARNINGS: 200,
+        MAX_WORK_EARNINGS: 1000,
         CRIME_COOLDOWN: 3600, // 1 hour
         CRIME_SUCCESS_RATE: 0.35,
-        CRIME_MIN_REWARD: 500,
-        CRIME_MAX_REWARD: 2000,
+        CRIME_MIN_REWARD: 5000,
+        CRIME_MAX_REWARD: 10000,
         PENALTY_PER_LEVEL: 500, // Fixed penalty amount per level
         SLUT_COOLDOWN: 7200, // 2 hours
         SLUT_SUCCESS_RATE: 0.6,
-        SLUT_MIN_REWARD: 400,
-        SLUT_MAX_REWARD: 1000,
-        SLUT_FAIL_PENALTY: 200, // Fixed fine
+        SLUT_MIN_REWARD: 4000,
+        SLUT_MAX_REWARD: 10000,
+        SLUT_FAIL_PENALTY: 2000, // Fixed fine
         BEG_COOLDOWN: 300, // 5 minutes
         BEG_SUCCESS_RATE: 0.55,
-        BEG_MIN_REWARD: 200,
-        BEG_MAX_REWARD: 500,
+        BEG_MIN_REWARD: 2000,
+        BEG_MAX_REWARD: 5000,
         SEARCH_COOLDOWN: 600, // 10 minutes
-        SEARCH_MIN_REWARD: 250,
-        SEARCH_MAX_REWARD: 1000,
+        SEARCH_MIN_REWARD: 5000,
+        SEARCH_MAX_REWARD: 25000,
         ROB_COOLDOWN: 3600, // 1 hour
         ROB_SUCCESS_CHANCE: 0.45,
         MAX_BET: 250000,
@@ -79,26 +79,26 @@ module.exports = {
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins
         DEFAULT_COOLDOWN: 3,
         JOBS: {
-            police: { id: 'police', bonus: 0.10, color: '#3498db', icon: '👮' },
-            criminal: { id: 'criminal', bonus: 0.15, color: '#e74c3c', icon: '🥷' },
-            doctor: { id: 'doctor', bonus: 0.05, color: '#2ecc71', icon: '👨‍⚕️' },
-            programmer: { id: 'programmer', bonus: 0.20, color: '#9b59b6', icon: '💻' },
-            farmer: { id: 'farmer', bonus: 0.10, color: '#f1c40f', icon: '👨‍🌾', luck: 1.5 },
-            hacker: { id: 'hacker', bonus: 0.25, color: '#27ae60', icon: '👨‍💻' },
-            streamer: { id: 'streamer', bonus: 0.12, color: '#6441a5', icon: '🎥' },
-            chef: { id: 'chef', bonus: 0.12, color: '#e67e22', icon: '👨‍🍳' },
-            musician: { id: 'musician', bonus: 0.10, color: '#1abc9c', icon: '🎸' },
-            soldier: { id: 'soldier', bonus: 0.10, color: '#95a5a6', icon: '🪖' },
-            trader: { id: 'trader', bonus: 0.15, color: '#f39c12', icon: '📈' },
-            teacher: { id: 'teacher', bonus: 0.08, color: '#3498db', icon: '📚' }
+            police: { id: 'police', bonus: 0.60, color: '#3498db', icon: '👮' },
+            criminal: { id: 'criminal', bonus: 0.90, color: '#e74c3c', icon: '🥷' },
+            doctor: { id: 'doctor', bonus: 1.00, color: '#2ecc71', icon: '👨‍⚕️' },
+            programmer: { id: 'programmer', bonus: 1.50, color: '#9b59b6', icon: '💻' },
+            farmer: { id: 'farmer', bonus: 0.75, color: '#f1c40f', icon: '👨‍🌾', luck: 1.5 },
+            hacker: { id: 'hacker', bonus: 2.00, color: '#27ae60', icon: '👨‍💻' },
+            streamer: { id: 'streamer', bonus: 1.10, color: '#6441a5', icon: '🎥' },
+            chef: { id: 'chef', bonus: 1.15, color: '#e67e22', icon: '👨‍🍳' },
+            musician: { id: 'musician', bonus: 0.80, color: '#1abc9c', icon: '🎸' },
+            soldier: { id: 'soldier', bonus: 0.70, color: '#95a5a6', icon: '🪖' },
+            trader: { id: 'trader', bonus: 1.30, color: '#f39c12', icon: '📈' },
+            teacher: { id: 'teacher', bonus: 0.65, color: '#3498db', icon: '📚' }
         },
         LEVELING: {
             XP_MULTIPLIER: 1.5 // Triple the XP gain for faster progression
         },
         LOTTERY: {
-            TICKET_PRICE: 1000,
+            TICKET_PRICE: 10000,
             DRAW_INTERVAL: 86400, // 24 hours
-            INITIAL_JACKPOT: 100000
+            INITIAL_JACKPOT: 1000000
         },
         ROLE_SHOP: [
             { id: '1344933994791538698', name: 'Rich', price: 1000000, color: '#f1c40f', income_buff: 0.10 },

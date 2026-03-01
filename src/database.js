@@ -308,20 +308,32 @@ async function getBonusEntries(giveawayId, userId) {
 
 // ─── Global Scope: User / Economy ──────────────────────────────────────────────
 
+// ─── Global Scope: User / Economy ──────────────────────────────────────────────
+
 async function getUser(userId, guildId = null) {
-    let user = await queryOne('SELECT * FROM users WHERE id = ?', [userId]);
+    if (!userId) return null;
+    const uId = String(userId);
+
+    let user = await queryOne('SELECT * FROM users WHERE id = ?', [uId]);
     if (!user) {
-        await execute('INSERT INTO users (id) VALUES (?) ON CONFLICT DO NOTHING', [userId]);
-        user = { id: userId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_slut: 0, last_beg: 0, last_search: 0, last_dist_amount: 0, job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null };
+        await execute('INSERT INTO users (id) VALUES (?) ON CONFLICT DO NOTHING', [uId]);
+        // Refetch to get the actual row (including any default values or existing data if the conflict was handled)
+        user = await queryOne('SELECT * FROM users WHERE id = ?', [uId]);
+
+        // If still not found (should be impossible but for safety), return a default object
+        if (!user) {
+            user = { id: uId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_slut: 0, last_beg: 0, last_search: 0, last_dist_amount: 0, job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null };
+        }
     }
 
     if (guildId) {
-        await execute('INSERT INTO user_guilds (userId, guildId) VALUES (?, ?) ON CONFLICT DO NOTHING', [userId, guildId]);
+        await execute('INSERT INTO user_guilds (userId, guildId) VALUES (?, ?) ON CONFLICT DO NOTHING', [uId, guildId]);
     }
 
     // Force numeric conversions because Postgres driver returns BIGINT as String
-    user.balance = Number(user.balance);
-    user.xp = Number(user.xp);
+    user.balance = Number(user.balance || 0);
+    user.xp = Number(user.xp || 0);
+    user.level = Number(user.level || 0);
 
     return user;
 }
@@ -343,22 +355,26 @@ async function updateUser(guildIdOrUserId, userIdOrUpdates, updatesOnly) {
 }
 
 async function updateGlobalUser(userId, updates) {
+    if (!userId) return;
+    const uId = String(userId);
     const fields = [];
     const values = [];
     let i = 1;
+
     Object.entries(updates).forEach(([key, value]) => {
         // Prevent NaN from crashing the database
         let sanitizedValue = value;
         if (typeof value === 'number' && isNaN(value)) {
-            console.error(`⚠️ Detected NaN update for user ${userId} on field ${key}. Setting to 0.`);
+            console.error(`⚠️ Detected NaN update for user ${uId} on field ${key}. Setting to 0.`);
             sanitizedValue = 0;
         }
 
         fields.push(`${key} = $${i++}`);
         values.push(sanitizedValue);
     });
+
     if (fields.length === 0) return;
-    values.push(userId);
+    values.push(uId);
     await pool.query(`UPDATE users SET ${fields.join(', ')} WHERE id = $${i}`, values);
 }
 
@@ -377,7 +393,25 @@ async function addBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
 }
 
 async function addGlobalBalance(userId, amount) {
-    await execute('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, userId]);
+    if (!userId) return;
+    const uId = String(userId);
+    // Atomic update to prevent balance race conditions
+    await execute('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, uId]);
+}
+
+async function addGlobalXp(userId, amount) {
+    if (!userId) return;
+    const uId = String(userId);
+    // Atomic update for XP. We return the NEW values to handle leveling logic in JS safely.
+    // However, since we're using Postgres, we can use RETURNING.
+    const row = await queryOne('UPDATE users SET xp = xp + ? WHERE id = ? RETURNING xp, level', [amount, uId]);
+    return row;
+}
+
+async function setGlobalLevel(userId, level) {
+    if (!userId) return;
+    const uId = String(userId);
+    await execute('UPDATE users SET level = ? WHERE id = ?', [level, uId]);
 }
 
 async function removeBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
@@ -732,6 +766,8 @@ module.exports = {
     updateUser,
     addBalance,
     removeBalance,
+    addGlobalXp,
+    setGlobalLevel,
     getTopUsers,
     addItem,
     removeItem,

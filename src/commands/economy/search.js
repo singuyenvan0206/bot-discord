@@ -45,18 +45,18 @@ module.exports = {
             dataMineMsg = t('search.data_mine', lang);
         }
 
-        // Hacker Interaction: Data Breach (15% chance +200-500 flat)
+        // Hacker Interaction: Data Breach (15% chance +2000-5000 flat)
         let dataBreachMsg = '';
         if (user.job === 'hacker' && Math.random() < 0.15) {
-            const extra = Math.floor(Math.random() * 301) + 200;
+            const extra = Math.floor(Math.random() * 3001) + 2000;
             total += extra;
             dataBreachMsg = t('search.data_breach', lang, { amount: extra });
         }
 
-        // Job Bonus: Trader Market Tip (+150 flat)
+        // Job Bonus: Trader Market Tip (+1200 flat)
         let marketTipMsg = '';
         if (user.job === 'trader') {
-            total += 150;
+            total += 1200;
             marketTipMsg = t('search.market_tip', lang);
         }
 

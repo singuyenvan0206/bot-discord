@@ -40,26 +40,25 @@ async function addXp(memberOrId, amount, guildId = null) {
 
     const finalAmount = Math.floor(amount * xpBoost * (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * guildXpMulti);
 
-    const xp = Number(user.xp || 0);
-    const level = Number(user.level || 0);
-    const newXp = Math.floor(xp + finalAmount);
-    const newLevel = calculateLevel(newXp);
+    // Atomic update for XP. Returns {xp, level} from the row (RETURNING clause)
+    const userState = await db.addGlobalXp(userId, finalAmount);
+    if (!userState) return { level: 0, leveledUp: false };
 
-    const leveledUp = newLevel > level;
+    const currentXp = Number(userState.xp);
+    const oldLevel = Number(userState.level);
+    const newLevel = calculateLevel(currentXp);
 
-    let bonus = 0;
+    const leveledUp = newLevel > oldLevel;
+
     if (leveledUp) {
-        bonus = newLevel * 100;
+        // Atomic update of the level field only if it changed
+        await db.setGlobalLevel(userId, newLevel);
+        const bonus = newLevel * 100;
         await db.addBalance(gId, userId, bonus);
     }
 
-    await db.updateUser(gId, userId, {
-        xp: newXp,
-        level: newLevel
-    });
-
     let assignedJob = null;
-    if (level < 20 && newLevel >= 20) {
+    if (oldLevel < 20 && newLevel >= 20) {
         assignedJob = await assignJobIfEligible(memberOrId, gId, newLevel);
     }
 
@@ -163,6 +162,13 @@ async function sendLevelUpMessage(message, level, bonus, lang) {
     const { t } = require('./i18n');
     const config = require('../config');
 
+    // ─── Channel Blacklist Check ───
+    const guildBlacklistRaw = await db.getGuildSetting(message.guild.id, 'blacklisted_channels', '[]');
+    let guildBlacklist = [];
+    try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+
+    if (config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id)) return;
+
     const embed = new EmbedBuilder()
         .setTitle(t('leveling.levelup_title', lang) || '🎉 Thăng cấp!')
         .setDescription(t('leveling.levelup_desc', lang, {
@@ -216,24 +222,20 @@ async function deductLevel(userId, guildId, levels = 1) {
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
 async function deductXp(userId, guildId, amount) {
-    const user = await db.getUser(userId, guildId);
-    const oldXp = Number(user.xp || 0);
-    const oldLevel = Number(user.level || 0);
+    // Atomic update with negative amount
+    const userState = await db.addGlobalXp(userId, -amount);
+    if (!userState) return { deducted: 0 };
 
-    const newXp = Math.max(0, oldXp - amount);
+    const newXp = Math.max(0, Number(userState.xp));
     const newLevel = calculateLevel(newXp);
 
-    await db.updateUser(guildId, userId, {
-        xp: newXp,
-        level: newLevel
-    });
+    // Update level to match the new XP (atomic set)
+    await db.setGlobalLevel(userId, newLevel);
 
     return {
-        oldXp,
         newXp,
-        oldLevel,
         newLevel,
-        deducted: oldXp - newXp
+        deducted: amount // This is the requested amount
     };
 }
 

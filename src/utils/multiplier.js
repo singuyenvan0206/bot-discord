@@ -145,9 +145,9 @@ async function getXpMultiplier(memberOrId) {
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
     const user = await db.getUser(userId, guildId);
     let multi = 1.0;
-    if (user.job === 'teacher') multi += 0.5;
-    if (user.job === 'teacher' && await hasActiveItem(guildId, userId, 208)) multi += 1.0;
-    if (await hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion
+    if (user.job === 'teacher') multi += 1.0; // Teacher XP Base: +100%
+    if (user.job === 'teacher' && await hasActiveItem(guildId, userId, 208)) multi += 2.0; // Whiteboard Interaction: +200%
+    if (await hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion: +100%
 
     // Role XP Boost
     const config = require('../config');
@@ -167,7 +167,7 @@ async function getXpMultiplier(memberOrId) {
         });
     }
 
-    return Math.min(multi, 10.0); // Increased cap because of role stacks
+    return Math.min(multi, 15.0); // Increased cap to 15.0 to allow stacks
 }
 
 async function isProtectedFromRob(guildId, userId) {

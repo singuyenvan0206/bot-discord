@@ -11,6 +11,17 @@ module.exports = {
         const { client } = interaction;
         const lang = await getLanguage(interaction.user.id, interaction.guildId);
 
+        // ─── Channel Blacklist Check ───
+        if (interaction.guildId) {
+            const guildBlacklistRaw = await db.getGuildSetting(interaction.guildId, 'blacklisted_channels', '[]');
+            let guildBlacklist = [];
+            try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+
+            if (config.BLACKLISTED_CHANNELS.includes(interaction.channelId) || guildBlacklist.includes(interaction.channelId)) {
+                return;
+            }
+        }
+
         // 1. Button Interactions (Giveaways)
         if (interaction.isButton() && interaction.customId === BUTTON_ID) {
             return handleButtonEntry(interaction);

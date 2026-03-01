@@ -14,13 +14,38 @@ module.exports = {
 
         if (!target) return message.reply(t('common.error', lang));
 
-        const itemId = args[1];
-        const amount = parseInt(args[2]) || 1;
+        const itemQuery = args.slice(1).join(' ').toLowerCase();
+        let amount = 1;
 
-        const item = shopItems.find(i => i.id === itemId);
-        if (!item) return message.reply('❌ ID vật phẩm không hợp lệ.');
+        // Try to find if last arg is a number (amount)
+        const lastArg = args[args.length - 1];
+        if (args.length > 2 && /^\d+$/.test(lastArg)) {
+            amount = parseInt(lastArg);
+            // Re-evaluate itemQuery without the amount
+            const queryWithoutAmount = args.slice(1, -1).join(' ').toLowerCase();
+            if (queryWithoutAmount) {
+                const item = shopItems.find(i =>
+                    String(i.id) === queryWithoutAmount ||
+                    i.name.toLowerCase() === queryWithoutAmount ||
+                    i.name.toLowerCase().replace(/\s+/g, '_') === queryWithoutAmount
+                );
+                if (item) {
+                    await db.addItem(target.id, item.id, amount);
+                    return message.reply(`✅ Đã thêm **${amount}** x **${item.name}** cho **${target.username}**.`);
+                }
+            }
+        }
 
-        await db.addItem(target.id, itemId, amount);
+        // Standard lookup (ID or Name)
+        const item = shopItems.find(i =>
+            String(i.id) === itemQuery ||
+            i.name.toLowerCase() === itemQuery ||
+            i.name.toLowerCase().replace(/\s+/g, '_') === itemQuery
+        );
+
+        if (!item) return message.reply('❌ ID hoặc tên vật phẩm không hợp lệ.');
+
+        await db.addItem(target.id, item.id, amount);
 
         return message.reply(`✅ Đã thêm **${amount}** x **${item.name}** cho **${target.username}**.`);
     }

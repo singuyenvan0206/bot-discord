@@ -48,6 +48,14 @@ async function finishGiveaway(client, giveaway) {
         const channel = await guild.channels.fetch(giveaway.channel_id).catch(() => null);
         if (!channel) return;
 
+        // ─── Channel Blacklist Check ───
+        const guildBlacklistRaw = await db.getGuildSetting(guild.id, 'blacklisted_channels', '[]');
+        let guildBlacklist = [];
+        try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+
+        const isBlacklisted = config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id);
+        if (isBlacklisted) return;
+
         const message = await channel.messages.fetch(giveaway.message_id).catch(() => null);
         if (!message) return;
 
@@ -270,6 +278,13 @@ async function processHouseDistribution(client) {
         }
 
         if (channel && channel.send) {
+            // ─── Channel Blacklist Check ───
+            const guildBlacklistRaw = await db.getGuildSetting(guild.id, 'blacklisted_channels', '[]');
+            let guildBlacklist = [];
+            try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+
+            if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) continue;
+
             const embed = new EmbedBuilder()
                 .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
                 .setDescription(t('economy.distribution_random_desc', lang, {
@@ -348,6 +363,13 @@ async function processLotteryDraw(client) {
         }
 
         if (channel && channel.send) {
+            // ─── Channel Blacklist Check ───
+            const guildBlacklistRaw = await db.getGuildSetting(guild.id, 'blacklisted_channels', '[]');
+            let guildBlacklist = [];
+            try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+
+            if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) return;
+
             const winner = await client.users.fetch(winnerId).catch(() => ({ username: 'Unknown' }));
             const embed = new EmbedBuilder()
                 .setTitle(t('lottery.draw_title', lang) || "🎉 Kết Quả Xổ Số Hôm Nay!")

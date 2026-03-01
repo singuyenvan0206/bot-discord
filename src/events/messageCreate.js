@@ -33,7 +33,11 @@ module.exports = {
         }
 
         // ─── Channel Blacklist Check ───
-        if (config.BLACKLISTED_CHANNELS.includes(message.channel.id)) return;
+        const guildBlacklistRaw = await db.getGuildSetting(message.guild.id, 'blacklisted_channels', '[]');
+        let guildBlacklist = [];
+        try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+
+        if (config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id)) return;
 
         if (!shouldSkipChatXp && !xpCooldowns.has(message.author.id)) {
             const { MESSAGE } = XP_AMOUNTS;
