@@ -21,8 +21,13 @@ module.exports = {
         const hasServerAvatar = serverAvatar && serverAvatar !== globalAvatar;
 
         // Format links for different sizes
-        const sizes = [128, 256, 512, 1024, 4096];
-        const links = sizes.map(s => `[\`${s}px\`](${user.displayAvatarURL({ dynamic: true, size: s })})`).join(' • ');
+        // Format links explicitly at maximum size
+        const isAnimated = user.avatar?.startsWith('a_') || false;
+        const formats = ['png', 'jpg'];
+        if (isAnimated) formats.push('gif');
+        else formats.push('webp');
+
+        const links = formats.map(f => `[${f.toUpperCase()}](${user.displayAvatarURL({ extension: f, forceStatic: false, size: 4096 })})`).join(' • ');
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
