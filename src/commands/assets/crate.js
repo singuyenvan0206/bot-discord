@@ -44,7 +44,8 @@ module.exports = {
                 return message.reply('❌ Crate ID not found!');
             }
 
-            const crateId = crate.numeric_id.toString();
+            const storageId = crate.numeric_id.toString();
+            const configId = crate.id;
             const count = parseInt(args[2]) || 1;
 
             if (isNaN(count) || count <= 0) {
@@ -59,12 +60,13 @@ module.exports = {
             const user = await db.getUser(message.author.id);
             const inventory = JSON.parse(user.inventory || '{}');
 
-            if (!inventory[crateId] || inventory[crateId] < count) {
+            if (!inventory[storageId] || inventory[storageId] < count) {
                 return message.reply(t('crate.open_error_none', lang, { name: crate.name[lang] }));
             }
 
             // Remove crates
-            await db.removeItem(message.author.id, crateId, count);
+            // Fixed: Pass guildId as first argument to match (guildId, userId, itemId, count)
+            await db.removeItem(message.guild?.id || 'global', message.author.id, storageId, count);
 
             const msg = await message.reply(count > 1
                 ? t('crate.open_loading', lang, { name: `${count}x ${crate.name[lang]}` })
@@ -73,72 +75,79 @@ module.exports = {
 
             // Simulate "loading" for effect
             setTimeout(async () => {
-                const lootTable = crateConfig.LOOT_TABLES[crateId];
-                const totalRewards = {
-                    coins: 0,
-                    items: {}
-                };
+                try {
+                    const lootTable = crateConfig.LOOT_TABLES[configId];
+                    if (!lootTable) throw new Error(`Loot table for crate ${configId} not found`);
 
-                for (let i = 0; i < count; i++) {
-                    const totalWeight = lootTable.reduce((acc, curr) => acc + curr.chance, 0);
-                    let random = Math.random() * totalWeight;
-                    let finalReward = null;
+                    const totalRewards = {
+                        coins: 0,
+                        items: {}
+                    };
 
-                    for (const loot of lootTable) {
-                        if (random < loot.chance) {
-                            finalReward = loot;
-                            break;
+                    for (let i = 0; i < count; i++) {
+                        const totalWeight = lootTable.reduce((acc, curr) => acc + curr.chance, 0);
+                        let random = Math.random() * totalWeight;
+                        let finalReward = null;
+
+                        for (const loot of lootTable) {
+                            if (random < loot.chance) {
+                                finalReward = loot;
+                                break;
+                            }
+                            random -= loot.chance;
                         }
-                        random -= loot.chance;
+
+                        if (!finalReward) finalReward = lootTable[lootTable.length - 1];
+
+                        if (finalReward.coins) {
+                            const [min, max] = finalReward.coins;
+                            const amount = Math.floor(Math.random() * (max - min + 1)) + min;
+                            totalRewards.coins += amount;
+                        } else if (finalReward.item) {
+                            const itemCount = finalReward.count || 1;
+                            totalRewards.items[finalReward.item] = (totalRewards.items[finalReward.item] || 0) + itemCount;
+                        }
                     }
 
-                    if (!finalReward) finalReward = lootTable[lootTable.length - 1];
-
-                    if (finalReward.coins) {
-                        const [min, max] = finalReward.coins;
-                        const amount = Math.floor(Math.random() * (max - min + 1)) + min;
-                        totalRewards.coins += amount;
-                    } else if (finalReward.item) {
-                        const itemCount = finalReward.count || 1;
-                        totalRewards.items[finalReward.item] = (totalRewards.items[finalReward.item] || 0) + itemCount;
+                    // Apply rewards
+                    if (totalRewards.coins > 0) {
+                        await db.addBalance(message.guild?.id || 'global', message.author.id, totalRewards.coins);
                     }
+
+                    for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
+                        await db.addItem(message.guild?.id || 'global', message.author.id, itemId, itemCount);
+                    }
+
+                    // Construct reward text
+                    let rewardText = '';
+                    if (totalRewards.coins > 0) {
+                        rewardText += t('crate.reward_coins', lang, { amount: totalRewards.coins.toLocaleString() }) + '\n';
+                    }
+
+                    for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
+                        const itemObj = shopItems.find(i => i.id.toString() === itemId.toString());
+                        const itemName = itemObj ? itemObj.name : itemId;
+                        rewardText += t('crate.reward_item', lang, { count: itemCount, item: itemName }) + '\n';
+                    }
+
+                    const embed = new EmbedBuilder()
+                        .setTitle(count > 1
+                            ? t('crate.open_bulk_success', lang, { count, name: crate.name[lang] })
+                            : t('crate.open_success', lang, { name: crate.name[lang] })
+                        )
+                        .setDescription(rewardText || 'Nothing...')
+                        .setColor(crate.color)
+                        .setThumbnail('https://i.imgur.com/8E8Lh5D.png');
+
+                    if (count > 1) {
+                        embed.setFooter({ text: t('crate.total_loot', lang) });
+                    }
+
+                    await msg.edit({ content: null, embeds: [embed] });
+                } catch (error) {
+                    console.error('Error in crate open:', error);
+                    await msg.edit('❌ An error occurred while opening the crate. Please contact an admin.');
                 }
-
-                // Apply rewards
-                if (totalRewards.coins > 0) {
-                    await db.addBalance(message.author.id, totalRewards.coins);
-                }
-
-                for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
-                    await db.addItem(message.author.id, itemId, itemCount);
-                }
-
-                // Construct reward text
-                let rewardText = '';
-                if (totalRewards.coins > 0) {
-                    rewardText += t('crate.reward_coins', lang, { amount: totalRewards.coins.toLocaleString() }) + '\n';
-                }
-
-                for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
-                    const itemObj = shopItems.find(i => i.id.toString() === itemId.toString());
-                    const itemName = itemObj ? itemObj.name : itemId;
-                    rewardText += t('crate.reward_item', lang, { count: itemCount, item: itemName }) + '\n';
-                }
-
-                const embed = new EmbedBuilder()
-                    .setTitle(count > 1
-                        ? t('crate.open_bulk_success', lang, { count, name: crate.name[lang] })
-                        : t('crate.open_success', lang, { name: crate.name[lang] })
-                    )
-                    .setDescription(rewardText || 'Nothing...')
-                    .setColor(crate.color)
-                    .setThumbnail('https://i.imgur.com/8E8Lh5D.png');
-
-                if (count > 1) {
-                    embed.setFooter({ text: t('crate.total_loot', lang) });
-                }
-
-                await msg.edit({ content: ' ', embeds: [embed] });
             }, 2000);
         }
     }
