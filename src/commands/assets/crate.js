@@ -46,10 +46,27 @@ module.exports = {
 
             const storageId = crate.numeric_id.toString();
             const configId = crate.id;
-            const count = parseInt(args[2]) || 1;
+            const user = await db.getUser(message.author.id);
+            const inventory = JSON.parse(user.inventory || '{}');
+            const availableCount = inventory[storageId] || 0;
+
+            let count;
+            if (args[2]?.toLowerCase() === 'all') {
+                count = availableCount;
+            } else {
+                count = parseInt(args[2]) || 1;
+            }
 
             if (isNaN(count) || count <= 0) {
+                if (args[2]?.toLowerCase() === 'all' && availableCount === 0) {
+                    return message.reply(t('crate.open_error_none', lang, { name: crate.name[lang] }));
+                }
                 return message.reply(t('crate.error_invalid_count', lang));
+            }
+
+            // Auto-cap to available inventory
+            if (count > availableCount) {
+                count = availableCount;
             }
 
             const LIMIT = 100;
@@ -57,10 +74,7 @@ module.exports = {
                 return message.reply(t('crate.open_limit_error', lang, { limit: LIMIT }));
             }
 
-            const user = await db.getUser(message.author.id);
-            const inventory = JSON.parse(user.inventory || '{}');
-
-            if (!inventory[storageId] || inventory[storageId] < count) {
+            if (count === 0) {
                 return message.reply(t('crate.open_error_none', lang, { name: crate.name[lang] }));
             }
 
