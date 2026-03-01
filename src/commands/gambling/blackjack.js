@@ -33,8 +33,8 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     const playerIsNatural = playerHand.length === 2 && playerVal === 21;
     const playerIsNguLinh = playerHand.length === 5 && playerVal <= 21;
 
-    // Dealer draws only if player didn't bust and doesn't have a natural
-    if (playerVal <= 21 && !playerIsNatural) {
+    // Dealer draws up to 17 regardless of player's hand value (unless player has natural)
+    if (!playerIsNatural) {
         while (handValue(dealerHand) < 17) {
             if (dealerHand.length >= 5) break;
             dealerHand.push(drawCard());
