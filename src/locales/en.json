@@ -704,32 +704,32 @@
         },
         "601": {
             "name": "🦈 Megalodon's Blessing",
-            "desc": "Power of the ancient shark (+50% Income | 1 hour)",
+            "desc": "Power of the ancient shark (+50% All Rewards | 1 hour)",
             "details": "The aura of the king of the sea, Megalodon, makes earning money easier than ever."
         },
         "602": {
             "name": "🔱 Poseidon's Favor",
-            "desc": "Might of the sea god (+100% Income | 2 hours)",
+            "desc": "Might of the sea god (+100% All Rewards | 2 hours)",
             "details": "Divine power from the Trident helps you dominate the ocean and earn massive income."
         },
         "603": {
             "name": "🔮 Pearl's Radiance",
-            "desc": "Guiding light (+40% Income | 1 hour)",
+            "desc": "Guiding light (+40% All Rewards | 1 hour)",
             "details": "The radiance from the Mythical Pearl sharpens your focus and boosts earnings."
         },
         "604": {
             "name": "🐙 Kraken's Might",
-            "desc": "Ocean's rage (+60% Income | 1.5 hours)",
+            "desc": "Ocean's rage (+60% All Rewards | 1.5 hours)",
             "details": "The raw power of the Kraken Monster helps you crush financial barriers."
         },
         "605": {
             "name": "🐢 Turtle's Longevity",
-            "desc": "Turtle's Blessing (+70% Income | 3 hours)",
+            "desc": "Turtle's Blessing (+70% All Rewards | 3 hours)",
             "details": "Blessing from the Thousand-Year Turtle, increasing income by +70% for 3 hours."
         },
         "606": {
             "name": "🐉 Dragon's Majesty",
-            "desc": "Dragon's power (+150% Income | 2 hours)",
+            "desc": "Dragon's power (+150% All Rewards | 2 hours)",
             "details": "Divine power from the Ocean Dragon, increasing income by +150% for 2 hours."
         },
         "701": {

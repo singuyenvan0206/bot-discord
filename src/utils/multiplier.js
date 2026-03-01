@@ -34,7 +34,7 @@ function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
         const item = SHOP_ITEMS.find(i => i.id === buff.itemId);
         if (!item || !item.multiplier) continue;
 
-        const isMatch = item.type === type || item.type === 'daily';
+        const isMatch = item.type === type || item.type === 'daily' || LEGENDARY_BUFF_IDS.includes(buff.itemId);
         if (!isMatch) continue;
 
         let itemBonus = item.multiplier;
