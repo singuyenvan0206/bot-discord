@@ -28,6 +28,7 @@ module.exports = {
         const perks = t(`job.info_${actualJobId}`, lang).split('\n').filter(p => p.trim()).map(p => p.trim().startsWith('•') ? p.trim() : `• ${p.trim()}`).join('\n');
 
         // Accurate Statistics
+        const jobBonusMult = job.bonus || 1;
         const bonusVal = Math.round((jobBonusMult - 1) * 100);
         const salaryBonus = bonusVal >= 0 ? `+${bonusVal}%` : `${bonusVal}%`;
         const luckBonus = job.luck ? `x${job.luck}` : 'None';
