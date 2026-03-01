@@ -14,14 +14,18 @@ module.exports = {
             return message.reply(t('job.detail_usage', lang, { prefix: config.PREFIX }));
         }
 
-        const job = config.ECONOMY.JOBS[jobName];
+        let job = config.ECONOMY.JOBS[jobName];
+        if (!job && !isNaN(jobName)) {
+            job = Object.values(config.ECONOMY.JOBS).find(j => j.numericId === parseInt(jobName));
+        }
         if (!job) {
             return message.reply(t('job.set_error_invalid', lang));
         }
 
-        const name = t(`job.name_${jobName}`, lang);
-        const description = t(`job.desc_${jobName}`, lang);
-        const perks = t(`job.info_${jobName}`, lang).split('\n').filter(p => p.trim()).map(p => `• ${p.trim()}`).join('\n');
+        const actualJobId = job.id;
+        const name = t(`job.name_${actualJobId}`, lang);
+        const description = t(`job.desc_${actualJobId}`, lang);
+        const perks = t(`job.info_${actualJobId}`, lang).split('\n').filter(p => p.trim()).map(p => `• ${p.trim()}`).join('\n');
         const salaryBonus = job.bonus ? `+${Math.round((job.bonus - 1) * 100)}%` : 'None';
         const luckBonus = job.luck ? `x${job.luck}` : 'None';
 

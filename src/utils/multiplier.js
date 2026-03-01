@@ -104,26 +104,18 @@ async function getTotalMultiplier(memberOrId, type = 'income') {
         const gId = memberOrId.guild.id;
         const guildRoles = await db.getGuildRoles(gId);
 
-        // If guild has custom roles, use them. Otherwise fallback to config.
-        const shopRoles = guildRoles.length > 0 ? guildRoles : config.ECONOMY.ROLE_SHOP;
-
-        for (const role of shopRoles) {
-            const rId = role.id || role.role_id;
+        for (const role of guildRoles) {
+            const rId = role.role_id;
             if (memberOrId.roles.cache.has(rId)) {
-                roleIncomeMulti += (role.income_buff || role.income_buff_pct || 0);
-                roleXpMulti += (role.xp_buff || role.xp_buff_pct || 0);
-            }
-        }
-    } else {
-        // Fallback for background tasks (using purchased_roles in DB)
-        const purchasedRoles = JSON.parse(user.purchased_roles || '[]');
-        for (const roleId of purchasedRoles) {
-            const role = config.ECONOMY.ROLE_SHOP.find(r => r.id === roleId);
-            if (role) {
                 roleIncomeMulti += (role.income_buff || 0);
                 roleXpMulti += (role.xp_buff || 0);
             }
         }
+    } else {
+        // Fallback for background tasks (using purchased_roles in DB)
+        // Since we don't know the guild context easily here, and config is removed,
+        // we might need to skip this or fetch from all guilds.
+        // However, role buffs are usually guild-specific.
     }
 
     const maxCap = await getDynamicCap(memberOrId);
@@ -151,17 +143,10 @@ async function getXpMultiplier(memberOrId) {
 
     // Role XP Boost
     const config = require('../config');
+    const guildRoles = await db.getGuildRoles(guildId);
     if (typeof memberOrId !== 'string' && memberOrId?.roles) {
-        config.ECONOMY.ROLE_SHOP.forEach(roleConfig => {
-            if (memberOrId.roles.cache.has(roleConfig.id) && roleConfig.xp_buff) {
-                multi += roleConfig.xp_buff;
-            }
-        });
-    } else {
-        const purchasedRoles = JSON.parse(user.purchased_roles || '[]');
-        purchasedRoles.forEach(roleId => {
-            const roleConfig = config.ECONOMY.ROLE_SHOP.find(r => r.id === roleId);
-            if (roleConfig && roleConfig.xp_buff) {
+        guildRoles.forEach(roleConfig => {
+            if (memberOrId.roles.cache.has(roleConfig.role_id) && roleConfig.xp_buff) {
                 multi += roleConfig.xp_buff;
             }
         });

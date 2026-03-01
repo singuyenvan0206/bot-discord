@@ -79,18 +79,17 @@ module.exports = {
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins
         DEFAULT_COOLDOWN: 3,
         JOBS: {
-            police: { id: 'police', bonus: 0.60, color: '#3498db', icon: '👮' },
-            criminal: { id: 'criminal', bonus: 0.90, color: '#e74c3c', icon: '🥷' },
-            doctor: { id: 'doctor', bonus: 1.00, color: '#2ecc71', icon: '👨‍⚕️' },
-            programmer: { id: 'programmer', bonus: 1.50, color: '#9b59b6', icon: '💻' },
-            farmer: { id: 'farmer', bonus: 0.75, color: '#f1c40f', icon: '👨‍🌾', luck: 1.5 },
-            hacker: { id: 'hacker', bonus: 2.00, color: '#27ae60', icon: '👨‍💻' },
-            streamer: { id: 'streamer', bonus: 1.10, color: '#6441a5', icon: '🎥' },
-            chef: { id: 'chef', bonus: 1.15, color: '#e67e22', icon: '👨‍🍳' },
-            musician: { id: 'musician', bonus: 0.80, color: '#1abc9c', icon: '🎸' },
-            soldier: { id: 'soldier', bonus: 0.70, color: '#95a5a6', icon: '🪖' },
-            trader: { id: 'trader', bonus: 1.30, color: '#f39c12', icon: '📈' },
-            teacher: { id: 'teacher', bonus: 0.65, color: '#3498db', icon: '📚' }
+            police: { id: 'police', numericId: 1, bonus: 0.60, color: '#3498db', icon: '👮' },
+            criminal: { id: 'criminal', numericId: 2, bonus: 0.90, color: '#e74c3c', icon: '🥷' },
+            doctor: { id: 'doctor', numericId: 3, bonus: 1.00, color: '#2ecc71', icon: '👨‍⚕️' },
+            programmer: { id: 'programmer', numericId: 4, bonus: 1.50, color: '#9b59b6', icon: '💻' },
+            farmer: { id: 'farmer', numericId: 5, bonus: 0.75, color: '#f1c40f', icon: '👨‍🌾', luck: 1.5 },
+            hacker: { id: 'hacker', numericId: 6, bonus: 2.00, color: '#27ae60', icon: '👨‍💻' },
+            streamer: { id: 'streamer', numericId: 7, bonus: 1.10, color: '#6441a5', icon: '🎥' },
+            chef: { id: 'chef', numericId: 8, bonus: 1.15, color: '#e67e22', icon: '👨‍🍳' },
+            musician: { id: 'musician', numericId: 9, bonus: 0.80, color: '#1abc9c', icon: '🎸' },
+            trader: { id: 'trader', numericId: 10, bonus: 1.20, color: '#f39c12', icon: '📈' },
+            teacher: { id: 'teacher', numericId: 11, bonus: 0.85, color: '#95a5a6', icon: '�‍🏫' }
         },
         LEVELING: {
             XP_MULTIPLIER: 1.5 // Triple the XP gain for faster progression
@@ -99,12 +98,7 @@ module.exports = {
             TICKET_PRICE: 10000,
             DRAW_INTERVAL: 86400, // 24 hours
             INITIAL_JACKPOT: 1000000
-        },
-        ROLE_SHOP: [
-            { id: '1477656836248309781', name: 'Rich', price: 1000000, color: '#f1c40f', income_buff: 0.10 },
-            { id: '1477656966372397177', name: 'Elite', price: 5000000, color: '#3498db', income_buff: 0.25, xp_buff: 0.15 },
-            { id: '1477657021942595634', name: 'Legendary', price: 10000000, color: '#9b59b6', income_buff: 0.50, xp_buff: 0.30 }
-        ]
+        }
     },
     BLACKLISTED_CHANNELS: ['842400189830529035'],
     OWNER_ID: '765577989663883364'

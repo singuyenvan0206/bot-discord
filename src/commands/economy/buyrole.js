@@ -11,8 +11,8 @@ module.exports = {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const guildRoles = await db.getGuildRoles(message.guild.id);
 
-        // Use guild roles if they exist, otherwise fallback to default config
-        const roles = guildRoles.length > 0 ? guildRoles : config.ECONOMY.ROLE_SHOP;
+        // Use guild roles if they exist
+        const roles = guildRoles;
 
         if (!roles || roles.length === 0) {
             return message.reply('❌ Shop hiện không có Role nào được bán.');

@@ -34,7 +34,7 @@ module.exports = {
                 const salaryBonus = j.bonus ? `+${Math.round((j.bonus - 1) * 100)}%` : 'None';
 
                 embed.addFields({
-                    name: `${j.icon} ${name}`,
+                    name: `ID: ${j.numericId} | ${j.icon} ${name}`,
                     value: `> ${info}\n> **Bonus:** \`${salaryBonus} Salary\``,
                     inline: true
                 });
@@ -45,10 +45,10 @@ module.exports = {
         }
 
         if (sub === 'set' || sub === 'select' || sub === 's') {
-            const jobId = args[1]?.toLowerCase();
-            if (!jobId) return message.reply(t('job.set_error_invalid', lang));
-
-            const job = config.ECONOMY.JOBS[jobId];
+            let job = config.ECONOMY.JOBS[jobId];
+            if (!job && !isNaN(jobId)) {
+                job = Object.values(config.ECONOMY.JOBS).find(j => j.numericId === parseInt(jobId));
+            }
             if (!job) return message.reply(t('job.set_error_invalid', lang));
 
             if (user.job === job.id) return message.reply(t('job.already_has', lang));
