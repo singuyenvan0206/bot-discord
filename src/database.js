@@ -208,6 +208,10 @@ async function initSchema() {
     await pool.query('CREATE INDEX IF NOT EXISTS idx_giveaways_active ON giveaways(ended, ends_at)');
     await pool.query('CREATE INDEX IF NOT EXISTS idx_participants_giveaway ON participants(giveaway_id)');
 
+    // Migrations
+    await safeAddColumn('users', 'house_id', 'TEXT DEFAULT NULL');
+    await safeAddColumn('users', 'house_data', "TEXT DEFAULT '{}'");
+
     console.log('✅ PostgreSQL Schema initialized.');
 }
 
