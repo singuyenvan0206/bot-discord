@@ -469,7 +469,8 @@
         "event_title": "📢 Sự kiện Kinh doanh!",
         "staff_success": "👥 Bạn đã thuê thêm 1 nhân viên cho {{name}}!",
         "info_count": "Sở hữu: {{count}} doanh nghiệp",
-        "passive_income": "📈 Thu nhập thụ động"
+        "passive_income": "📈 **Tổng thu nhập thụ động:** {{amount}} coins/giờ",
+        "info_footer": "Sử dụng $business collect để thu hoạch"
     },
     "crate": {
         "list_title": "🎁 Danh Sách Rương May Mắn",

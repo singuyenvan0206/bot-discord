@@ -66,11 +66,17 @@ module.exports = {
 
                     embed.addFields({
                         name: `${type.icon} ${type.name[lang]} (ID: \`${type.numeric_id}\`)`,
-                        value: `Level: **${b.level}** | Staff: **${b.staff}**\nIncome: **${hourly.toLocaleString()}** coins/hour`
+                        value: t('business.info_item', lang, {
+                            icon: type.icon,
+                            name: type.name[lang],
+                            level: b.level,
+                            income: hourly.toLocaleString(),
+                            staff: b.staff
+                        })
                     });
                 });
-                embed.setDescription(`📈 **Total Passive Income:** ${totalIncome.toLocaleString()} coins/hour`);
-                embed.setFooter({ text: 'Use $business collect to harvest' });
+                embed.setDescription(t('business.passive_income', lang, { amount: totalIncome.toLocaleString() }));
+                embed.setFooter({ text: t('business.info_footer', lang) });
             }
 
             return message.channel.send({ embeds: [embed] });

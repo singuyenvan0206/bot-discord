@@ -47,7 +47,11 @@ module.exports = {
             await db.removeBalance(message.author.id, tier.price);
             await db.updateUser(message.author.id, { house_id: tierId });
 
-            return message.reply(t('housing.buy_success', lang, { name: tier.name[lang] }));
+            return message.reply(t('housing.buy_success', lang, {
+                name: tier.name[lang],
+                price: tier.price.toLocaleString(),
+                icon: tier.icon
+            }));
         }
 
         if (sub === 'decorate' || sub === 'upgrade') {
@@ -109,7 +113,8 @@ module.exports = {
                         value: t('housing.info_buffs', lang, {
                             xp: (tier.xp_buff * 100).toFixed(0),
                             income: (tier.income_buff * 100).toFixed(0),
-                            max_bet: tier.max_bet_bonus.toLocaleString()
+                            max_bet: tier.max_bet_bonus.toLocaleString(),
+                            cap: (tier.cap_bonus * 100).toFixed(0)
                         })
                     },
                     { name: '🛋️ Decorations', value: interiors }
