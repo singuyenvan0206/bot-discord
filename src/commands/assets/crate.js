@@ -45,60 +45,98 @@ module.exports = {
             }
 
             const crateId = crate.id;
+            const count = parseInt(args[2]) || 1;
+
+            if (isNaN(count) || count <= 0) {
+                return message.reply('❌ Invalid count!');
+            }
+
+            const LIMIT = 100;
+            if (count > LIMIT) {
+                return message.reply(t('crate.open_limit_error', lang, { limit: LIMIT }));
+            }
+
             const user = await db.getUser(message.author.id);
             const inventory = JSON.parse(user.inventory || '{}');
 
-            if (!inventory[crateId] || inventory[crateId] <= 0) {
+            if (!inventory[crateId] || inventory[crateId] < count) {
                 return message.reply(t('crate.open_error_none', lang, { name: crate.name[lang] }));
             }
 
-            // Remove 1 crate
-            await db.removeItem(message.author.id, crateId, 1);
+            // Remove crates
+            await db.removeItem(message.author.id, crateId, count);
 
-            const msg = await message.reply(t('crate.open_loading', lang, { name: crate.name[lang] }));
+            const msg = await message.reply(count > 1
+                ? t('crate.open_loading', lang, { name: `${count}x ${crate.name[lang]}` })
+                : t('crate.open_loading', lang, { name: crate.name[lang] })
+            );
 
             // Simulate "loading" for effect
             setTimeout(async () => {
                 const lootTable = crateConfig.LOOT_TABLES[crateId];
+                const totalRewards = {
+                    coins: 0,
+                    items: {}
+                };
 
-                // Roll for loot
-                let rewardText = '';
-                const sortedLoot = [...lootTable].sort((a, b) => a.chance - b.chance);
+                for (let i = 0; i < count; i++) {
+                    const totalWeight = lootTable.reduce((acc, curr) => acc + curr.chance, 0);
+                    let random = Math.random() * totalWeight;
+                    let finalReward = null;
 
-                // Simple weighted random
-                const totalWeight = lootTable.reduce((acc, curr) => acc + curr.chance, 0);
-                let random = Math.random() * totalWeight;
-                let finalReward = null;
-
-                for (const loot of lootTable) {
-                    if (random < loot.chance) {
-                        finalReward = loot;
-                        break;
+                    for (const loot of lootTable) {
+                        if (random < loot.chance) {
+                            finalReward = loot;
+                            break;
+                        }
+                        random -= loot.chance;
                     }
-                    random -= loot.chance;
+
+                    if (!finalReward) finalReward = lootTable[lootTable.length - 1];
+
+                    if (finalReward.coins) {
+                        const [min, max] = finalReward.coins;
+                        const amount = Math.floor(Math.random() * (max - min + 1)) + min;
+                        totalRewards.coins += amount;
+                    } else if (finalReward.item) {
+                        const itemCount = finalReward.count || 1;
+                        totalRewards.items[finalReward.item] = (totalRewards.items[finalReward.item] || 0) + itemCount;
+                    }
                 }
 
-                // Fallback to last item if random logic misses
-                if (!finalReward) finalReward = lootTable[lootTable.length - 1];
+                // Apply rewards
+                if (totalRewards.coins > 0) {
+                    await db.addBalance(message.author.id, totalRewards.coins);
+                }
 
-                if (finalReward.coins) {
-                    const [min, max] = finalReward.coins;
-                    const amount = Math.floor(Math.random() * (max - min + 1)) + min;
-                    await db.addBalance(message.author.id, amount);
-                    rewardText = t('crate.reward_coins', lang, { amount: amount.toLocaleString() });
-                } else if (finalReward.item) {
-                    const count = finalReward.count || 1;
-                    await db.addItem(message.author.id, finalReward.item, count);
-                    const itemObj = shopItems.find(i => i.id.toString() === finalReward.item.toString());
-                    const itemName = itemObj ? itemObj.name : finalReward.item;
-                    rewardText = t('crate.reward_item', lang, { count, item: itemName });
+                for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
+                    await db.addItem(message.author.id, itemId, itemCount);
+                }
+
+                // Construct reward text
+                let rewardText = '';
+                if (totalRewards.coins > 0) {
+                    rewardText += t('crate.reward_coins', lang, { amount: totalRewards.coins.toLocaleString() }) + '\n';
+                }
+
+                for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
+                    const itemObj = shopItems.find(i => i.id.toString() === itemId.toString());
+                    const itemName = itemObj ? itemObj.name : itemId;
+                    rewardText += t('crate.reward_item', lang, { count: itemCount, item: itemName }) + '\n';
                 }
 
                 const embed = new EmbedBuilder()
-                    .setTitle(t('crate.open_success', lang, { name: crate.name[lang] }))
-                    .setDescription(rewardText)
+                    .setTitle(count > 1
+                        ? t('crate.open_bulk_success', lang, { count, name: crate.name[lang] })
+                        : t('crate.open_success', lang, { name: crate.name[lang] })
+                    )
+                    .setDescription(rewardText || 'Nothing...')
                     .setColor(crate.color)
                     .setThumbnail('https://i.imgur.com/8E8Lh5D.png');
+
+                if (count > 1) {
+                    embed.setFooter({ text: t('crate.total_loot', lang) });
+                }
 
                 await msg.edit({ content: ' ', embeds: [embed] });
             }, 2000);

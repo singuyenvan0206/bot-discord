@@ -424,7 +424,10 @@
         "open_loading": "🔍 Opening **{{name}}**...",
         "open_success": "🎊 Congratulations! You received:\n**{{reward}}**",
         "reward_coins": "💰 {{amount}} coins",
-        "reward_item": "📦 x{{count}} {{item}}"
+        "reward_item": "📦 x{{count}} {{item}}",
+        "open_limit_error": "❌ You can only open up to **{{limit}}** crates at once!",
+        "open_bulk_success": "🎊 Congratulations! You opened **{{count}}** **{{name}}** crates and received:",
+        "total_loot": "Total loot collected:"
     },
     "slut": {
         "cooldown": "❌ You need to rest and recover! Come back in **{{time}}**.",

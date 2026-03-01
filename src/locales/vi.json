@@ -481,7 +481,10 @@
         "open_loading": "🔍 Đang mở rương **{{name}}**...",
         "open_success": "🎊 Chúc mừng! Bạn đã nhận được:\n**{{reward}}**",
         "reward_coins": "💰 {{amount}} coins",
-        "reward_item": "📦 x{{count}} {{item}}"
+        "reward_item": "📦 x{{count}} {{item}}",
+        "open_limit_error": "❌ Bạn chỉ có thể mở tối đa **{{limit}}** rương một lúc!",
+        "open_bulk_success": "🎊 Chúc mừng! Bạn đã mở **{{count}}** rương **{{name}}** và nhận được:",
+        "total_loot": "Tổng vật phẩm thu hoạch được:"
     },
     "slut": {
         "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{time}}**.",
