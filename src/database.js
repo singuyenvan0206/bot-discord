@@ -711,6 +711,10 @@ async function removeGuildRole(guildId, roleId) {
     await execute('DELETE FROM guild_roles WHERE guild_id = ? AND role_id = ?', [guildId, roleId]);
 }
 
+async function updateGuildRoleId(guildId, oldRoleId, newRoleId) {
+    await execute('UPDATE guild_roles SET role_id = ? WHERE guild_id = ? AND role_id = ?', [newRoleId, guildId, oldRoleId]);
+}
+
 async function getGuildRoles(guildId) {
     return await queryAll('SELECT * FROM guild_roles WHERE guild_id = ? ORDER BY price ASC', [guildId]);
 }
@@ -795,6 +799,7 @@ module.exports = {
     setLotteryJackpot,
     addGuildRole,
     removeGuildRole,
+    updateGuildRoleId,
     getGuildRoles,
     getGuildRole,
     getGuildSetting,

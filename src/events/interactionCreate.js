@@ -60,6 +60,9 @@ module.exports = {
                         args.push(String(interaction.options.getInteger('income') || 0));
                         args.push(String(interaction.options.getInteger('xp') || 0));
                     }
+                } else if (sub === 'updateid') {
+                    args.push(interaction.options.getString('old_id'));
+                    args.push(`<@&${interaction.options.getRole('new_role').id}>`);
                 }
             } else {
                 const optionMap = {

@@ -296,6 +296,12 @@ const commands = [
             .addRoleOption(opt => opt.setName('role').setDescription('Role').setRequired(true))
         )
         .addSubcommand(sub => sub
+            .setName('updateid')
+            .setDescription('Thay đổi ID role trong shop')
+            .addStringOption(opt => opt.setName('old_id').setDescription('ID cũ của role trong shop').setRequired(true))
+            .addRoleOption(opt => opt.setName('new_role').setDescription('Role mới muốn thay thế').setRequired(true))
+        )
+        .addSubcommand(sub => sub
             .setName('list')
             .setDescription('Xem danh sách role trong shop')
         ),

@@ -10,7 +10,7 @@ module.exports = {
     description: 'Cài đặt role vào Shop cho server này (Set role for Shop in this server)',
     // Allow Server Owners or members with Manage Guild permission
     permissions: [PermissionFlagsBits.ManageGuild],
-    usage: 'add <@role> <price> <income_buff%> <xp_buff%> | remove <@role> | list',
+    usage: 'add <@role> <price> <income_buff%> <xp_buff%> | remove <@role> | updateid <old_id> <@new_role> | list',
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
         const sub = args[0]?.toLowerCase();
@@ -44,6 +44,21 @@ module.exports = {
 
             await db.removeGuildRole(message.guild.id, role.id);
             return message.reply(`✅ Đã xóa role khỏi Shop server này.`);
+        }
+        else if (sub === 'updateid' || sub === 'ui') {
+            const oldId = args[1];
+            const newRole = message.mentions.roles.first() || (args[2] ? await message.guild.roles.fetch(args[2]).catch(() => null) : null);
+
+            if (!oldId || !newRole) return message.reply(`❌ Sử dụng: \`$setrole updateid <old_id> <@new_role>\``);
+
+            const existingOld = await db.getGuildRole(message.guild.id, oldId);
+            if (!existingOld) return message.reply(`❌ Không tìm thấy role với ID \`${oldId}\` trong shop.`);
+
+            const existingNew = await db.getGuildRole(message.guild.id, newRole.id);
+            if (existingNew) return message.reply(`❌ Role mới **${newRole.name}** đã có trong shop rồi.`);
+
+            await db.updateGuildRoleId(message.guild.id, oldId, newRole.id);
+            return message.reply(`✅ Đã cập nhật ID role trong shop: \`${oldId}\` ➔ **${newRole.name}** (\`${newRole.id}\`)`);
         }
 
         else if (sub === 'list' || sub === 'ls' || sub === 'l' || !sub) {
