@@ -215,37 +215,37 @@ function startTimer(client) {
  */
 async function processHouseDistribution(client) {
     const config = require('../config');
-    const { EmbedBuilder } = require('discord.js');
+    const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
     const { t, getLanguage } = require('./i18n');
 
     const now = Math.floor(Date.now() / 1000);
     const interval = config.ECONOMY.HOUSE_DISTRIBUTION_INTERVAL;
     const botId = client.user.id;
 
+    const lastDistStr = db.getGlobalSetting('last_house_distribution', '0');
+    const lastDist = parseInt(lastDistStr);
+
+    if (now - lastDist < interval) return;
+
+    const botUser = db.getGlobalUser(botId);
+    const balance = botUser.balance || 0;
+
+    if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) return;
+
+    const userCount = db.getUserCount();
+    if (userCount <= 1) return;
+
+    // Exclude bot from distribution; split only among human users.
+    const humanCount = Math.max(1, userCount - 1);
+    const amountPerUser = Math.floor(balance / humanCount);
+    if (amountPerUser <= 0) return;
+
+    // Distribute balance globally
+    db.distributeBalanceRandomly(balance, botId);
+    db.setGlobalSetting('last_house_distribution', now.toString());
+
+    // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
-        const lastDist = parseInt(db.getGuildSetting(guild.id, 'last_house_distribution', '0'));
-        if (now - lastDist < interval) continue;
-
-        // Time to distribute!
-        const botUser = db.getUser(botId, guild.id);
-        const balance = botUser.balance || 0;
-
-        if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) continue;
-
-        // Use getTopUsers just to reliably get guild users count
-        const guildUsers = db.getTopUsers(guild.id, 999999, 'balance');
-        const userCount = guildUsers.length;
-        if (userCount <= 1) continue;
-
-        // Exclude bot from distribution; split only among human users.
-        const humanCount = Math.max(1, userCount - 1);
-        const amountPerUser = Math.floor(balance / humanCount);
-        if (amountPerUser <= 0) continue;
-
-        db.distributeBalanceRandomly(balance, botId);
-        db.setGuildSetting(guild.id, 'last_house_distribution', now.toString());
-
-        // Announce to the guild
         const lang = getLanguage(null, guild.id);
         const guildData = db.getGuild(guild.id);
 

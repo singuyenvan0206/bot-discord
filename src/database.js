@@ -774,6 +774,10 @@ function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
 
     let distributed = 0;
     const results = [];
+
+    // Reset all users' last distribution amount to 0
+    execute('UPDATE users SET last_dist_amount = 0' + (excludeUserId ? ' WHERE id != ?' : ''), excludeUserId ? [excludeUserId] : []);
+
     users.forEach((user, i) => {
         let amount = 0;
         if (i === users.length - 1) {
@@ -784,7 +788,8 @@ function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
         }
 
         if (amount > 0) {
-            addBalance(user.id, amount);
+            // Update balance and last_dist_amount at the same time
+            execute('UPDATE users SET balance = balance + ?, last_dist_amount = ? WHERE id = ?', [amount, amount, user.id]);
             results.push({ userId: user.id, amount });
         }
     });
