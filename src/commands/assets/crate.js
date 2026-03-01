@@ -44,7 +44,7 @@ module.exports = {
                 return message.reply('❌ Crate ID not found!');
             }
 
-            const crateId = crate.id;
+            const crateId = crate.numeric_id.toString();
             const count = parseInt(args[2]) || 1;
 
             if (isNaN(count) || count <= 0) {
