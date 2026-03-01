@@ -28,7 +28,7 @@ module.exports = {
         }
 
         if (bet > 0) {
-            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
             const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
             if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
             if (bet < 10) return message.reply(t('common.min_bet_error', lang, { limit: '10' }));
@@ -69,7 +69,7 @@ module.exports = {
                 flavorText += t('common.flow_state', lang);
             }
         } else {
-            flavorText = t('coinflip.lose', lang, { amount: bet });
+            flavorText = t('coinflip.lose', lang, { amount: bet.toLocaleString() });
             if (bet) await addHouseProfit(message, bet);
 
             // Trader Interaction: Market Tip (25% chance to refund 50% on loss)

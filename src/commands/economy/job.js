@@ -24,16 +24,23 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle(t('job.list_title', lang))
                 .setColor(config.COLORS.INFO)
-                .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }));
+                .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }))
+                .setDescription(t('job.list_desc', lang));
 
-            let desc = '';
             Object.values(jobs).forEach(j => {
                 const name = t(`job.name_${j.id}`, lang);
-                const info = t(`job.info_${j.id}`, lang);
-                desc += `${j.icon} **${name}**\n${info}\n\n`;
+                // Get summary (first line of info) or just the info
+                const info = t(`job.info_${j.id}`, lang).split('\n')[0];
+                const salaryBonus = j.bonus ? `+${Math.round((j.bonus - 1) * 100)}%` : 'None';
+
+                embed.addFields({
+                    name: `${j.icon} ${name}`,
+                    value: `> ${info}\n> **Bonus:** \`${salaryBonus} Salary\``,
+                    inline: true
+                });
             });
 
-            embed.setDescription(t('job.list_desc', lang) + '\n\n' + desc + `\n${t('job.tip_detail', lang, { prefix: config.PREFIX })}`);
+            embed.addFields({ name: '\u200B', value: t('job.tip_detail', lang, { prefix: config.PREFIX }), inline: false });
             return message.reply({ embeds: [embed] });
         }
 

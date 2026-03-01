@@ -50,7 +50,7 @@ module.exports = {
         if (user.job === 'hacker' && Math.random() < 0.15) {
             const extra = Math.floor(Math.random() * 3001) + 2000;
             total += extra;
-            dataBreachMsg = t('search.data_breach', lang, { amount: extra });
+            dataBreachMsg = t('search.data_breach', lang, { amount: extra.toLocaleString() });
         }
 
         // Job Bonus: Trader Market Tip (+1200 flat)

@@ -37,14 +37,14 @@ module.exports = {
         if (user.job === 'doctor' && Math.random() < 0.15) {
             const grant = Math.floor(Math.random() * 2001) + 1000;
             total += grant;
-            eventMsg += t('daily_events.medical_trial', lang, { amount: grant });
+            eventMsg += t('daily_events.medical_trial', lang, { amount: grant.toLocaleString() });
         }
 
         // Streamer Interaction: Subathon (20% chance +3x bonus)
         if (user.job === 'streamer' && Math.random() < 0.20) {
             const subBonus = Math.floor(total * 3);
             total += subBonus;
-            eventMsg += t('daily_events.subathon', lang, { amount: subBonus });
+            eventMsg += t('daily_events.subathon', lang, { amount: subBonus.toLocaleString() });
         }
 
         await db.updateUser(message.guild.id, message.author.id, { last_daily: now });

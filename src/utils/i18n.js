@@ -37,7 +37,8 @@ function getTranslation(key, lang, replace = {}) {
 
     // Handle replacements {{var}}
     Object.entries(replace).forEach(([k, v]) => {
-        value = value.replace(new RegExp(`{{${k}}}`, 'g'), v);
+        const valueToReplace = (typeof v === 'number') ? v.toLocaleString() : v;
+        value = value.replace(new RegExp(`{{${k}}}`, 'g'), valueToReplace);
     });
 
     return value;

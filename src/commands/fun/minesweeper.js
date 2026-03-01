@@ -22,7 +22,7 @@ module.exports = {
 
         if (bet > 0) {
             if (user.balance < bet) {
-                return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+                return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
             }
             if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
             await db.removeBalance(message.guild.id, user.id, bet);
@@ -228,8 +228,8 @@ module.exports = {
                         .setTitle(t('minesweeper.lose_title', lang))
                         .setDescription(t('minesweeper.lose_desc', lang) + '\n' +
                             (shieldUsed
-                                ? t('minesweeper.shield_used', lang, { amount: loseAmount })
-                                : t('minesweeper.bet_lost', lang, { amount: loseAmount })))
+                                ? t('minesweeper.shield_used', lang, { amount: loseAmount.toLocaleString() })
+                                : t('minesweeper.bet_lost', lang, { amount: loseAmount.toLocaleString() })))
                         .setColor(0xE74C3C);
                     if (bet) await addHouseProfit(message, loseAmount);
                     await i.update({ embeds: [loseEmbed], components: renderComponents(true, false) });

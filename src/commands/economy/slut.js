@@ -86,7 +86,7 @@ module.exports = {
                 const doctorUser = message.guild?.members?.cache.get(randomDoctorId);
                 let failureMsg = t('slut.failure_xp', lang, {
                     amount: penalty.toLocaleString(),
-                    xp: xpResult.deducted,
+                    xp: xpResult.deducted.toLocaleString(),
                     hospital: t('common.hospital_time', lang)
                 });
 
@@ -104,7 +104,7 @@ module.exports = {
 
             let failMsg = t('slut.failure_xp', lang, {
                 amount: penalty.toLocaleString(),
-                xp: xpResult.deducted,
+                xp: xpResult.deducted.toLocaleString(),
                 hospital: t('common.hospital_time', lang)
             });
             if (user.job === 'teacher') {

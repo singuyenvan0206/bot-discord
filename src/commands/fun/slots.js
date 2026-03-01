@@ -21,7 +21,7 @@ module.exports = {
         if (args[0] && (isNaN(bet) || bet <= 0)) return message.reply(t('common.invalid_amount', lang));
 
         if (bet) {
-            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
             const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
             if (bet > maxBet) return message.reply(t('gamble.max_bet', lang, { max: maxBet.toLocaleString() }));
             if (bet < 10) return message.reply(t('gamble.min_bet', lang, { min: '10' }));
@@ -113,7 +113,7 @@ module.exports = {
                 result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
             }
         } else if (bet) {
-            result += t('slots.lost_coins', lang, { amount: bet });
+            result += t('slots.lost_coins', lang, { amount: bet.toLocaleString() });
             // Transfer lost bet to bot profit
             await addHouseProfit(message, bet); // If payout is 0, the full bet is lost
         }

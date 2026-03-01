@@ -30,7 +30,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle(t('dice.title', lang))
             .setDescription(
-                t('dice.bet_info', lang, { amount: bet }) +
+                t('dice.bet_info', lang, { amount: bet.toLocaleString() }) +
                 t('dice.high', lang) + '\n' +
                 t('dice.low', lang) + '\n' +
                 t('dice.odd', lang) + '\n' +
@@ -38,7 +38,7 @@ module.exports = {
                 t('dice.lucky_7', lang, { emoji: config.EMOJIS.LUCKY })
             )
             .setColor(config.COLORS.INFO)
-            .setFooter({ text: t('dice.balance_footer', lang, { balance: user.balance }) });
+            .setFooter({ text: t('dice.balance_footer', lang, { balance: user.balance.toLocaleString() }) });
 
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder().setCustomId(`dice_high_${uid}`).setLabel(t('dice.label_high', lang)).setEmoji('🔼').setStyle(ButtonStyle.Primary),
@@ -122,6 +122,19 @@ module.exports = {
                 }
             }
 
+            let lossMsgResult = '';
+            if (!won) {
+                await addHouseProfit(i, bet);
+                lossMsgResult = t('dice.lose_msg', lang, { amount: bet.toLocaleString() });
+                // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
+                const u = await db.getUser(message.author.id, i.guild.id);
+                if (u.job === 'trader' && Math.random() < 0.15) {
+                    const refund = Math.floor(bet * 0.5);
+                    await db.addBalance(i.guild.id, message.author.id, refund);
+                    lossMsgResult += t('common.market_tip', lang);
+                }
+            }
+
             const diceEmojis = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
             const labels = {
                 'high': t('dice.label_high', lang) + ' (8-12)',
@@ -135,22 +148,9 @@ module.exports = {
                 .setTitle(t('dice.result_title', lang))
                 .setDescription(
                     `**${t('dice.prediction', lang)}:** ${labels[choice]}\n` +
-                    `**${t('rps.betting', lang, { amount: bet })}\n\n` +
+                    `**${t('rps.betting', lang, { amount: bet.toLocaleString() })}\n\n` +
                     `${diceEmojis[d1] || '🎲'} **${d1}** + ${diceEmojis[d2] || '🎲'} **${d2}** = **${roll}**\n\n` +
-                    (won
-                        ? bonusText
-                        : (async () => {
-                            await addHouseProfit(i, bet);
-                            let lossMsg = t('dice.lose_msg', lang, { amount: bet });
-                            // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
-                            const u = await db.getUser(message.author.id, i.guild.id);
-                            if (u.job === 'trader' && Math.random() < 0.15) {
-                                const refund = Math.floor(bet * 0.5);
-                                await db.addBalance(i.guild.id, message.author.id, refund);
-                                lossMsg += t('common.market_tip', lang);
-                            }
-                            return lossMsg;
-                        })())
+                    (won ? bonusText : lossMsgResult)
                 )
                 .setColor(won ? config.COLORS.GAMBLE_WIN : config.COLORS.GAMBLE_LOSS);
 

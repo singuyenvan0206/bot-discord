@@ -106,5 +106,6 @@ module.exports = {
             { id: '1294158169911726161', name: 'Legendary', price: 10000000, color: '#9b59b6', income_buff: 0.50, xp_buff: 0.30 }
         ]
     },
-    BLACKLISTED_CHANNELS: ['842400189830529035']
+    BLACKLISTED_CHANNELS: ['842400189830529035'],
+    OWNER_ID: '765577989663883364'
 };

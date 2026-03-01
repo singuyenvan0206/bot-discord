@@ -116,43 +116,34 @@ module.exports = {
             if (user.job === 'police') excludeIds.push(message.author.id);
 
             const randomPoliceId = await db.getRandomUserByJob('police', excludeIds);
+            const policeUser = randomPoliceId ? message.guild?.members?.cache.get(randomPoliceId) : null;
             if (randomPoliceId) {
                 await db.addBalance(message.guild.id, randomPoliceId, fine);
-                const policeUser = message.guild?.members?.cache.get(randomPoliceId);
-
-                let failureMsg = escapeMsg ? `❌ ${escapeMsg}` : t('crime.failure_xp', lang, {
-                    amount: fine.toLocaleString(),
-                    xp: xpResult.deducted,
-                    jail: t('common.jail_time', lang)
-                });
-
-                if (itemBrokenMsg) failureMsg += itemBrokenMsg;
-
-                if (user.job === 'teacher') {
-                    const result = await deductLevel(message.author.id, message.guild.id);
-                    failureMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
-                }
-
-                if (policeUser && !escapeMsg) {
-                    failureMsg += `\n${t('job.police_notification', lang, { amount: fine.toLocaleString() }).replace('👮 **Trực ban:** ', '').replace('👮 **On Duty:** ', '')} (<@${randomPoliceId}>)`;
-                }
-
-                return message.reply(failureMsg);
             }
 
-            let failMsg = t('crime.failure_xp', lang, {
+            // Base failure message
+            let baseFailMsg = t('crime.failure_xp', lang, {
                 amount: fine.toLocaleString(),
-                xp: xpResult.deducted,
+                xp: xpResult.deducted.toLocaleString(),
                 jail: t('common.jail_time', lang)
             });
-            if (itemBrokenMsg) failMsg += itemBrokenMsg;
+
+            let finalMsg = `❌ `;
+            if (escapeMsg) finalMsg += escapeMsg + '\n';
+            finalMsg += baseFailMsg;
+
+            if (itemBrokenMsg) finalMsg += '\n' + itemBrokenMsg;
 
             if (user.job === 'teacher') {
                 const result = await deductLevel(message.author.id, message.guild.id);
-                failMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
+                finalMsg += `\n👨‍🏫 **Teacher Penalty:** ${t('crime.teacher_penalty', lang, { level: result.newLevel })}`;
             }
 
-            return message.reply(failMsg);
+            if (randomPoliceId && policeUser && !escapeMsg) {
+                finalMsg += `\n${t('job.police_notification', lang, { amount: fine.toLocaleString() }).replace('👮 **Trực ban:** ', '').replace('👮 **On Duty:** ', '')} (<@${randomPoliceId}>)`;
+            }
+
+            return message.reply(finalMsg);
         }
     }
 };

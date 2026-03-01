@@ -138,7 +138,7 @@ module.exports = {
             let failMsg = t('rob.failure_xp', lang, {
                 user: target.username,
                 amount: penalty.toLocaleString(),
-                xp: xpResult.deducted,
+                xp: xpResult.deducted.toLocaleString(),
                 jail: t('common.jail_time', lang)
             });
 

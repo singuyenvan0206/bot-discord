@@ -192,7 +192,7 @@ module.exports = {
         }
 
         if (bet && user.balance < bet) {
-            return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+            return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
         }
         const maxBet = await db.getGuildSetting(message.guild.id, 'max_bet', config.ECONOMY.MAX_BET);
         const minBet = await db.getGuildSetting(message.guild.id, 'min_bet', config.ECONOMY.MIN_BET);

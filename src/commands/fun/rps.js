@@ -49,7 +49,7 @@ module.exports = {
 
         // Validate Bet
         if (bet > 0) {
-            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+            if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
             if (bet > config.ECONOMY.MAX_BET) return message.reply(t('common.max_bet_error', lang, { limit: config.ECONOMY.MAX_BET.toLocaleString() }));
             await db.removeBalance(message.guild.id, user.id, bet);
         } else if (bet < 0) {
@@ -157,7 +157,7 @@ module.exports = {
                     await db.addBalance(message.guild.id, user.id, betAmount); // Refund
                     result += t('rps.refund', lang);
                 } else {
-                    result += t('rps.lost_coins', lang, { amount: betAmount });
+                    result += t('rps.lost_coins', lang, { amount: betAmount.toLocaleString() });
                     await addHouseProfit(interaction || msgObj, betAmount);
 
                     // Trader Interaction: Market Tip (35% chance to refund 50% on loss)
