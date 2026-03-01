@@ -43,10 +43,7 @@ module.exports = {
             clearCooldown();
             return message.reply(t('rob.invalid_user', lang));
         }
-        if (await db.isOwner(target.id)) {
-            clearCooldown();
-            return message.reply(t('rob.target_owner', lang));
-        }
+
 
         const victim = await db.getUser(target.id, message.guild.id);
         if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
@@ -73,8 +70,15 @@ module.exports = {
         const isSuccess = Math.random() < baseSuccessChance;
 
         if (isSuccess) {
+            // Base Steal calculation (5-10% of victim's balance)
             const targetBalance = (victim.balance || 0);
-            let baseSteal = Math.floor(targetBalance * (Math.random() * 0.05 + 0.05)); // 5-10% of victim's balance
+            let baseSteal = Math.floor(targetBalance * (Math.random() * 0.05 + 0.05));
+
+            // Cap at 2,000,000 if target is an owner
+            const isTargetOwner = await db.isOwner(target.id);
+            if (isTargetOwner) {
+                baseSteal = Math.min(baseSteal, 2000000);
+            }
 
             // Bonus: if robbing a Police officer, criminal earns +50%
             let policeRobMsg = '';
@@ -84,7 +88,7 @@ module.exports = {
             }
 
             // Ensure we don't steal more than they have total
-            const victimLoss = Math.min(baseSteal, (victim.balance || 0));
+            const victimLoss = Math.min(baseSteal, targetBalance);
 
             const { total: robberGain, bonus, percent } = await calculateReward(victimLoss, message.member, 'income');
 
