@@ -16,9 +16,11 @@ module.exports = {
 
         const member = await message.guild.members.fetch(user.id).catch(() => null);
 
-        const globalAvatar = user.displayAvatarURL({ dynamic: true, size: 4096 });
-        const serverAvatar = member?.displayAvatarURL({ dynamic: true, size: 4096 });
-        const hasServerAvatar = serverAvatar && serverAvatar !== globalAvatar;
+        const globalExt = user.avatar?.startsWith('a_') ? 'gif' : 'png';
+        const globalAvatar = user.displayAvatarURL({ extension: globalExt, size: 4096 });
+        const serverExt = member?.avatar?.startsWith('a_') ? 'gif' : 'png';
+        const serverAvatar = member?.avatar ? member.displayAvatarURL({ extension: serverExt, size: 4096 }) : null;
+        const hasServerAvatar = !!serverAvatar;
 
         // Format links for different sizes
         // Format links explicitly at maximum size
@@ -30,7 +32,7 @@ module.exports = {
         const links = formats.map(f => `[${f.toUpperCase()}](${user.displayAvatarURL({ extension: f, forceStatic: false, size: 4096 })})`).join(' • ');
 
         const embed = new EmbedBuilder()
-            .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({ name: `${user.tag}`, iconURL: globalAvatar })
             .setTitle(t('avatar.title', lang))
             .setImage(globalAvatar)
             .addFields(
@@ -52,7 +54,8 @@ module.exports = {
         // Check for banner
         const fetchedUser = await user.fetch(true).catch(() => null);
         if (fetchedUser?.bannerURL()) {
-            const bannerUrl = fetchedUser.bannerURL({ dynamic: true, size: 4096 });
+            const bannerExt = fetchedUser.banner?.startsWith('a_') ? 'gif' : 'png';
+            const bannerUrl = fetchedUser.bannerURL({ extension: bannerExt, size: 4096 });
             embed.addFields(
                 { name: t('avatar.banner', lang), value: t('avatar.banner_link', lang, { url: bannerUrl }), inline: true }
             );
