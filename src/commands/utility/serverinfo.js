@@ -45,7 +45,7 @@ module.exports = {
             .filter(r => r.id !== guild.id)
             .sort((a, b) => b.position - a.position)
             .first(15)
-            .map(r => `${r}`)
+            .map(r => r.name)
             .join(' ');
         const roleCount = guild.roles.cache.size - 1;
 
@@ -57,7 +57,7 @@ module.exports = {
             .setTitle(t('serverinfo.title', lang, { name: guild.name }))
             .setThumbnail(guild.iconURL({ dynamic: true, size: 512 }))
             .addFields(
-                { name: t('serverinfo.owner', lang), value: owner ? `${owner.user.tag}\n${owner.user}` : t('serverinfo.unknown', lang), inline: true },
+                { name: t('serverinfo.owner', lang), value: owner ? `${owner.user.tag}` : t('serverinfo.unknown', lang), inline: true },
                 { name: t('serverinfo.created', lang), value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:D>\n<t:${Math.floor(guild.createdTimestamp / 1000)}:R>`, inline: true },
                 { name: t('serverinfo.verification', lang), value: `${verificationLevel}`, inline: true },
 

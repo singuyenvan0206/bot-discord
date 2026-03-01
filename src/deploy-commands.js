@@ -275,6 +275,106 @@ const commands = [
         .setDescription('Set the language for you or the server')
         .addStringOption(opt => opt.setName('choice').setDescription('Language choice (en/vi)').setRequired(true).addChoices({ name: 'English', value: 'en' }, { name: 'Tiếng Việt', value: 'vi' }))
         .addStringOption(opt => opt.setName('scope').setDescription('Apply to (user/server)').addChoices({ name: 'Personal (User)', value: 'user' }, { name: 'Default (Server Admin)', value: 'server' })),
+    new SlashCommandBuilder()
+        .setName('setdistchannel')
+        .setDescription('Kênh chia tiền (Set distribution channel)')
+        .addChannelOption(opt => opt.setName('channel').setDescription('Channel to set (optional - leave blank to unset)')),
+    new SlashCommandBuilder()
+        .setName('setrole')
+        .setDescription('Cài đặt role vào Shop cho server này')
+        .addRoleOption(opt => opt.setName('role').setDescription('Role').setRequired(true))
+        .addIntegerOption(opt => opt.setName('price').setDescription('Price').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('buyrole')
+        .setDescription('Mua phẩm hàm (Buy roles)'),
+    new SlashCommandBuilder()
+        .setName('lottery')
+        .setDescription('Xổ số (Participate in lottery)'),
+    new SlashCommandBuilder()
+        .setName('additem')
+        .setDescription('Thêm vật phẩm cho người dùng (Add item to user)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true))
+        .addStringOption(opt => opt.setName('item').setDescription('Item name/ID').setRequired(true))
+        .addIntegerOption(opt => opt.setName('amount').setDescription('Amount').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('addmoney')
+        .setDescription('Thêm tiền cho người dùng (Add money to user)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true))
+        .addIntegerOption(opt => opt.setName('amount').setDescription('Amount').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('leaveserver')
+        .setDescription('Rời khỏi server (Leave a server)')
+        .addStringOption(opt => opt.setName('id').setDescription('Server ID').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('removemoney')
+        .setDescription('Trừ tiền của người dùng (Remove money from user)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true))
+        .addIntegerOption(opt => opt.setName('amount').setDescription('Amount').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('resetdatabase')
+        .setDescription('Đặt lại toàn bộ database (Reset entire database)')
+        .addStringOption(opt => opt.setName('confirm').setDescription('Type YES to confirm').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('resetuser')
+        .setDescription('Đặt lại dữ liệu của một người dùng (Reset a user\'s data)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true))
+        .addStringOption(opt => opt.setName('confirm').setDescription('Type confirm to proceed').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('serverlist')
+        .setDescription('Danh sách server bot đang tham gia (List all servers)')
+        .addIntegerOption(opt => opt.setName('page').setDescription('Page number')),
+    new SlashCommandBuilder()
+        .setName('setexp')
+        .setDescription('Đặt điểm kinh nghiệm cho người dùng (Set XP for user)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true))
+        .addIntegerOption(opt => opt.setName('amount').setDescription('Amount').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('setlevel')
+        .setDescription('Đặt cấp độ cho người dùng (Set level for user)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true))
+        .addIntegerOption(opt => opt.setName('level').setDescription('Level').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('setowner')
+        .setDescription('[OWNER] Chuyển quyền Owner (Transfer bot ownership)')
+        .addUserOption(opt => opt.setName('user').setDescription('New owner').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('setstatus')
+        .setDescription('Đặt trạng thái cho bot (Set bot status activity)')
+        .addStringOption(opt => opt.setName('type').setDescription('Type (playing, watching, listening, competing)').setRequired(true))
+        .addStringOption(opt => opt.setName('text').setDescription('Status text').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('shutdown')
+        .setDescription('Tắt bot (Shutdown the bot)'),
+    new SlashCommandBuilder()
+        .setName('startup')
+        .setDescription('[OWNER] Khởi động lại hệ thống lệnh (Re-enable command system)'),
+    new SlashCommandBuilder()
+        .setName('update')
+        .setDescription('Cập nhật bot từ GitHub (Update bot from GitHub)'),
+    new SlashCommandBuilder()
+        .setName('divorce')
+        .setDescription('Ly hôn (Divorce)'),
+    new SlashCommandBuilder()
+        .setName('gift')
+        .setDescription('Tặng quà (Send a gift)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true))
+        .addStringOption(opt => opt.setName('item').setDescription('Item ID/Name').setRequired(true))
+        .addIntegerOption(opt => opt.setName('amount').setDescription('Amount').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('marriage')
+        .setDescription('Hôn nhân (Marriage info)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user (optional)')),
+    new SlashCommandBuilder()
+        .setName('marry')
+        .setDescription('Kết hôn (Propose to someone)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('level')
+        .setDescription('Cấp độ (View level)')
+        .addUserOption(opt => opt.setName('user').setDescription('Target user (optional)')),
+    new SlashCommandBuilder()
+        .setName('support')
+        .setDescription('Ủng hộ (Support developer)'),
 ].map(cmd => cmd.toJSON());
 
 // ─── Register Commands ───────────────────────────────────────────
