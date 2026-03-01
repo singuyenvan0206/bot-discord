@@ -38,6 +38,7 @@ module.exports = {
         }
 
         // Map commands to categories based on their folder
+        const commandsPath = path.join(__dirname, '..');
         const loadCommandsRecursive = (dir, topLevelFolder) => {
             const files = fs.readdirSync(dir);
             for (const file of files) {
