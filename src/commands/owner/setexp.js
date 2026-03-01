@@ -1,11 +1,9 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const { getLanguage, t } = require('../../utils/i18n');
-const config = require('../../config');
+const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'setexp',
-    aliases: ['sexp'],
+    aliases: ['sexp','se'],
     description: 'Đặt điểm kinh nghiệm cho người dùng (Set XP for user)',
     ownerOnly: true,
     usage: '<@user> <amount>',
@@ -13,10 +11,10 @@ module.exports = {
         const lang = getLanguage(message.author.id, message.guild.id);
         const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
-        if (!target) return message.reply(t('common.error', lang));
+        if (!target) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập ID của người dùng.' : '❌ Please provide the ID of the user.');
 
         const amount = parseInt(args[1]);
-        if (isNaN(amount) || amount < 0) return message.reply(t('common.invalid_amount', lang));
+        if (isNaN(amount) || amount < 0) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập số hợp lệ.' : '❌ Please provide a valid amount.');
 
         const { calculateLevel, assignJobIfEligible } = require('../../utils/leveling');
         const newLevel = calculateLevel(amount);

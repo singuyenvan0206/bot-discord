@@ -1,6 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const config = require('../../config');
 const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
@@ -13,22 +11,13 @@ module.exports = {
 
         const lang = getLanguage(message.author.id, message.guild?.id);
 
-        const embed = new EmbedBuilder()
-            .setTitle('🔌 System Shutdown')
-            .setDescription(lang === 'vi' ? `**Bot đang tiến hành sập nguồn theo lệnh của Owner.**\nTạm biệt! 👋` : `**Bot is shutting down by Owner command.**\nGoodbye! 👋`)
-            .setColor(config.COLORS.ERROR)
-            .setTimestamp();
-
-        await message.reply({ embeds: [embed] });
-
-        // Persistently mark as stopped so restarts won't re-enable commands
+        // Persistently mark as stopped
         db.setGlobalSetting('bot_is_stopped', 'true');
 
         console.log(`[SHUTDOWN] Initiated by owner (${message.author.tag}) at ${new Date().toISOString()}`);
 
-        // Let the message send before exiting
-        setTimeout(() => {
-            process.exit(0);
-        }, 1000);
+        return message.reply(lang === 'vi'
+            ? `**Hệ thống đã chuyển sang chế độ ngủ theo lệnh của Owner.**\nTạm biệt! 👋\n*(Sử dụng lệnh \`startup\` để đánh thức bot)*`
+            : `**System is now in sleep mode by Owner command.**\nGoodbye! 👋\n*(Use \`startup\` to wake up the bot)*`);
     }
 };

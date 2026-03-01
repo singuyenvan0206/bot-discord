@@ -1,6 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const config = require('../../config');
 const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
@@ -30,11 +28,7 @@ module.exports = {
         const end = start + MAX_PER_PAGE;
         const currentList = guilds.slice(start, end).join('\n\n') || (lang === 'vi' ? 'Không có dữ liệu.' : 'No data.');
 
-        const embed = new EmbedBuilder()
-            .setTitle(lang === 'vi' ? '🌐 Danh sách Máy chủ' : '🌐 Server List')
-            .setDescription(lang === 'vi' ? `Bot đang ở **${message.client.guilds.cache.size}** máy chủ với tổng cộng **${totalMembers.toLocaleString()}** thành viên.\n\n${currentList}` : `Bot is in **${message.client.guilds.cache.size}** servers with a total of **${totalMembers.toLocaleString()}** members.\n\n${currentList}`)
-            .setColor(config.COLORS.INFO)
-            .setFooter({ text: lang === 'vi' ? `Trang ${page}/${totalPages || 1}` : `Page ${page}/${totalPages || 1}` });
+        return message.reply(lang === 'vi' ? `Bot đang ở **${message.client.guilds.cache.size}** máy chủ với tổng cộng **${totalMembers.toLocaleString()}** thành viên.\n\n${currentList}` : `Bot is in **${message.client.guilds.cache.size}** servers with a total of **${totalMembers.toLocaleString()}** members.\n\n${currentList}`);
 
         message.reply({ embeds: [embed] });
     }

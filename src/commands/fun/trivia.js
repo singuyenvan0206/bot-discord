@@ -2,7 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
-const { getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
+const {     calculateReward } = require('../../utils/multiplier');
 const config = require('../../config');
 
 

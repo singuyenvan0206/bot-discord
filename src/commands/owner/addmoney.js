@@ -1,4 +1,3 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');

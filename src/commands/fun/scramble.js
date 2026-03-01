@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
-const { getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
+const { calculateReward } = require('../../utils/multiplier');
 
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');

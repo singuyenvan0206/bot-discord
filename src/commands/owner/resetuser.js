@@ -1,11 +1,9 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const config = require('../../config');
-const { t, getLanguage } = require('../../utils/i18n');
+const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'resetuser',
-    aliases: ['wipeuser', 'ureset', 'resetp'],
+    aliases: ['wipeuser', 'ureset', 'resetp', 'ru'],
     description: 'Đặt lại dữ liệu của một người dùng (Reset a user\'s data)',
     ownerOnly: true,
     usage: '<@user> [confirm]',
@@ -13,18 +11,13 @@ module.exports = {
         const lang = getLanguage(message.author.id, message.guild?.id);
         const target = message.mentions.users.first() || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
 
-        if (!target) return message.reply(t('common.error', lang));
+        if (!target) return message.reply(  lang === 'vi' ? '❌ Vui lòng nhập ID của người dùng cần reset.' : '❌ Please provide the ID of the user to reset.');
 
         // Require confirmation
         if (args[1] !== 'confirm') {
-            const embed = new EmbedBuilder()
-                .setTitle('⚠️ CẢNH BÁO / WARNING')
-                .setDescription(lang === 'vi'
-                    ? `Bạn đang chuẩn bị xóa **TẤT CẢ** dữ liệu của **${target.username}** (Tiền, Đồ, Cấp độ, Nghề nghiệp).\n\n**HÀNH ĐỘNG NÀY KHÔNG THỂ KHÔI PHỤC!**\n\nHãy gõ lệnh: \`$resetuser ${target.id} confirm\` để tiếp tục.`
-                    : `You are about to wipe **ALL** data for **${target.username}** (Money, Items, Levels, Jobs).\n\n**THIS ACTION IS IRREVERSIBLE!**\n\nType: \`$resetuser ${target.id} confirm\` to proceed.`)
-                .setColor(config.COLORS.WARNING);
-
-            return message.reply({ embeds: [embed] });
+            return message.reply(lang === 'vi'
+                ? `Bạn đang chuẩn bị xóa **TẤT CẢ** dữ liệu của **${target.username}** (Tiền, Đồ, Cấp độ, Nghề nghiệp).\n\n**HÀNH ĐỘNG NÀY KHÔNG THỂ KHÔI PHỤC!**\n\nHãy gõ lệnh: \`$resetuser ${target.id} confirm\` để tiếp tục.`
+                : `You are about to wipe **ALL** data for **${target.username}** (Money, Items, Levels, Jobs).\n\n**THIS ACTION IS IRREVERSIBLE!**\n\nType: \`$resetuser ${target.id} confirm\` to proceed.`);
         }
 
         try {
@@ -40,17 +33,11 @@ module.exports = {
                 }
             }
 
-            const embed = new EmbedBuilder()
-                .setTitle('✅ User Data Reset')
-                .setDescription(lang === 'vi'
-                    ? `Đã xóa sạch dữ liệu của **${target.username}** thành công.`
-                    : `Successfully wiped all data for **${target.username}**.`)
-                .setColor(config.COLORS.SUCCESS)
-                .setTimestamp();
-
-            message.reply({ embeds: [embed] });
+            return message.reply(lang === 'vi'
+                ? `Đã xóa sạch dữ liệu của **${target.username}** thành công.`
+                : `Successfully wiped all data for **${target.username}**.`);
         } catch (e) {
-            message.reply(lang === 'vi' ? `❌ Lỗi khi reset người dùng: ${e.message}` : `❌ Error resetting user: ${e.message}`);
+            return message.reply(lang === 'vi' ? `❌ Lỗi khi reset người dùng: ${e.message}` : `❌ Error resetting user: ${e.message}`);
         }
     }
 };

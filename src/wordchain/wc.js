@@ -30,11 +30,44 @@ client.once(Events.ClientReady, () => {
     console.log(`✅ Word Chain Standalone Bot is ready as ${client.user.tag}`);
 });
 
+const fs = require('fs');
+const path = require('path');
+
+// Dictionary cache logic
+const CACHE_FILE = path.join(__dirname, 'wordCache.json');
+let dictCache = new Map();
+
+try {
+    if (fs.existsSync(CACHE_FILE)) {
+        const raw = fs.readFileSync(CACHE_FILE, 'utf-8');
+        const parsed = JSON.parse(raw);
+        dictCache = new Map(Object.entries(parsed));
+    }
+} catch (e) {
+    console.error('⚠️ Failed to load word dictionary cache:', e.message);
+}
+
+function saveDictCache() {
+    try {
+        const obj = Object.fromEntries(dictCache);
+        fs.writeFileSync(CACHE_FILE, JSON.stringify(obj));
+    } catch (e) {
+        console.error('⚠️ Failed to save word dictionary cache:', e.message);
+    }
+}
+
 // Helper: validate word via dictionary API
 const isValidWord = async (word) => {
+    if (dictCache.has(word)) return dictCache.get(word);
+
     try {
         const response = await fetch(`${config.API_URLS.DICTIONARY}${encodeURIComponent(word)}`);
-        return response.status === 200;
+        const isValid = response.status === 200;
+
+        dictCache.set(word, isValid);
+        saveDictCache();
+
+        return isValid;
     } catch (e) {
         console.warn('⚠️ Dictionary API error, skipping validation:', e.message);
         return true; // Allow if API is down
@@ -119,13 +152,7 @@ client.on('messageCreate', async (message) => {
             lastPlayerId = m.author.id;
 
             const baseReward = config.ECONOMY.WORDCHAIN_REWARD || 5;
-            let { total: totalReward } = calculateReward(baseReward, m.author.id);
-
-            // Programmer & Teacher Interaction: Intelligence Bonus (+20%)
-            const u = db.getUser(m.author.id);
-            if (u.job === 'programmer' || u.job === 'teacher') {
-                totalReward = Math.floor(totalReward * 1.2);
-            }
+            let { total: totalReward } = calculateReward(baseReward, m.member, 'income');
 
             db.addBalance(m.author.id, totalReward);
             playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
@@ -133,7 +160,7 @@ client.on('messageCreate', async (message) => {
             // Grant XP for valid word
             const { addXp, XP_AMOUNTS } = require('../utils/leveling');
             const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.MESSAGE.max - XP_AMOUNTS.MESSAGE.min + 1)) + XP_AMOUNTS.MESSAGE.min;
-            addXp(m.author.id, xpAmount);
+            addXp(m.member, xpAmount);
 
             await m.react(config.EMOJIS.SUCCESS).catch(() => { });
         });

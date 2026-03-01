@@ -1,4 +1,3 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
@@ -6,7 +5,7 @@ const { parseAmount } = require('../../utils/economy');
 
 module.exports = {
     name: 'removemoney',
-    aliases: ['rmm'],
+    aliases: ['rmm', 'rm'],
     description: 'Trừ tiền của người dùng (Remove money from user)',
     ownerOnly: true,
     usage: '<@user> <amount>',

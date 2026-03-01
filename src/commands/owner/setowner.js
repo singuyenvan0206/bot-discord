@@ -1,6 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const config = require('../../config');
 const fs = require('fs');
 const path = require('path');
 const { getLanguage } = require('../../utils/i18n');
@@ -53,15 +51,9 @@ module.exports = {
             // Update in memory so it applies immediately without restarting
             process.env.OWNER_ID = target.id;
 
-            const embed = new EmbedBuilder()
-                .setTitle('👑 Owner Transferred')
-                .setDescription(lang === 'vi' ? `Quyền lực tối cao đã được chuyển giao!\n<@${target.id}> hiện là **Owner duy nhất** của Bot.` : `Supreme authority transferred!\n<@${target.id}> is now the **sole Owner** of the Bot.`)
-                .setColor(config.COLORS.SUCCESS)
-                .setFooter({ text: lang === 'vi' ? 'Quyền Owner của bạn đã bị thu hồi.' : 'Your Owner privileges have been revoked.' });
-
-            message.reply({ embeds: [embed] });
+            return message.reply(lang === 'vi' ? `Quyền lực tối cao đã được chuyển giao!\n<@${target.id}> hiện là **Owner duy nhất** của Bot.` : `Supreme authority transferred!\n<@${target.id}> is now the **sole Owner** of the Bot.`);
         } catch (e) {
-            message.reply(lang === 'vi' ? `❌ Lỗi khi chuyển nhượng: ${e.message}` : `❌ Transfer error: ${e.message}`);
+            return message.reply(lang === 'vi' ? `❌ Lỗi khi chuyển nhượng: ${e.message}` : `❌ Transfer error: ${e.message}`);
         }
     }
 };

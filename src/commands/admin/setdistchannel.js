@@ -7,6 +7,7 @@ module.exports = {
     name: 'setdistchannel',
     aliases: ['sdc', 'setdist'],
     description: 'Kênh chia tiền (Set distribution channel)',
+    adminOnly: true,
     async execute(message, args) {
         const lang = getLanguage(message.author.id, message.guild?.id);
 

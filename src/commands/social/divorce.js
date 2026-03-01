@@ -1,7 +1,5 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../database');
 const { t, getLanguage } = require('../../utils/i18n');
-const config = require('../../config');
 
 module.exports = {
     name: 'divorce',
@@ -19,25 +17,22 @@ module.exports = {
         const partner = await message.client.users.fetch(partnerId).catch(() => ({ toString: () => 'Nửa kia' }));
 
         const bonus = marriage.ring_id === 702 ? 50 : 25;
-        const embed = new EmbedBuilder()
-            .setTitle(t('divorce.confirm_title', lang))
-            .setDescription(t('divorce.confirm_desc', lang, { partner: partner.toString(), percent: bonus }))
-            .setColor(config.COLORS.ERROR || '#FF0000');
 
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('confirm_divorce')
-                    .setLabel(t('divorce.confirm_label', lang))
-                    .setStyle(ButtonStyle.Danger),
-                new ButtonBuilder()
-                    .setCustomId('cancel_divorce')
-                    .setLabel(t('divorce.cancel_label', lang))
-                    .setStyle(ButtonStyle.Secondary)
-            );
+        const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId('confirm_divorce')
+                .setLabel(t('divorce.confirm_label', lang))
+                .setStyle(ButtonStyle.Danger),
+            new ButtonBuilder()
+                .setCustomId('cancel_divorce')
+                .setLabel(t('divorce.cancel_label', lang))
+                .setStyle(ButtonStyle.Secondary)
+        );
 
         const msg = await message.reply({
-            embeds: [embed],
+            content: t('divorce.confirm_desc', lang, { partner: partner.toString(), percent: bonus }),
             components: [row]
         });
 
@@ -53,13 +48,11 @@ module.exports = {
                 db.deleteMarriage(message.guild.id, message.author.id);
                 await i.update({
                     content: t('divorce.success', lang, { user: message.author.toString(), partner: partner.toString() }),
-                    embeds: [],
                     components: []
                 });
             } else {
                 await i.update({
                     content: t('divorce.cancelled', lang),
-                    embeds: [],
                     components: []
                 });
             }

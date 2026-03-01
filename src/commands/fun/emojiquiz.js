@@ -3,7 +3,7 @@ const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
-const { getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
+const { calculateReward } = require('../../utils/multiplier');
 const { getRandomQuestion } = require('../../utils/quizGenerator');
 
 module.exports = {

@@ -1,11 +1,10 @@
-const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const config = require('../../config');
 const { getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'leaveserver',
-    aliases: ['leavesvg', 'outguild', 'lsrv'],
+    aliases: ['leavesv', 'outguild', 'lsrv'],
     description: 'Rời khỏi server (Leave a server)',
     ownerOnly: true,
     async execute(message, args) {
@@ -25,12 +24,7 @@ module.exports = {
             const name = guildToLeave.name;
             await guildToLeave.leave();
 
-            const embed = new EmbedBuilder()
-                .setTitle('🚪 Leave Server')
-                .setDescription(lang === 'vi' ? `Đã chủ động rời khỏi máy chủ **${name}** (\`${guildId}\`).` : `Successfully left server **${name}** (\`${guildId}\`).`)
-                .setColor(config.COLORS.SUCCESS);
-
-            message.reply({ embeds: [embed] });
+            message.reply(lang === 'vi' ? `Đã chủ động rời khỏi máy chủ **${name}** (\`${guildId}\`).` : `Successfully left server **${name}** (\`${guildId}\`).`);
         } catch (e) {
             message.reply(lang === 'vi' ? `❌ Lỗi khi cố gắng rời máy chủ: ${e.message}` : `❌ Error attempting to leave server: ${e.message}`);
         }

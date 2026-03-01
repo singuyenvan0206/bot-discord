@@ -17,16 +17,36 @@ module.exports = {
         const cooldown = db.getGuildSetting(message.guild.id, 'rob_cooldown', config.ECONOMY.ROB_COOLDOWN);
         const lastRob = Number(user.last_rob || 0);
 
-        if (now - lastRob < cooldown) {
+        const isAlreadyOnCooldown = (now - lastRob < cooldown);
+
+        if (isAlreadyOnCooldown) {
             const timeLeft = cooldown - (now - lastRob);
             return message.reply(t('rob.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
+        const clearCooldown = () => {
+            if (!isAlreadyOnCooldown && message.client.cooldowns?.has('rob')) {
+                message.client.cooldowns.get('rob').delete(message.author.id);
+            }
+        };
+
         const target = message.mentions.users.first();
-        if (!target) return message.reply(t('rob.invalid_user', lang));
-        if (target.id === message.author.id) return message.reply(t('rob.invalid_user', lang));
-        if (target.bot) return message.reply(t('rob.invalid_user', lang));
-        if (db.isOwner(target.id)) return message.reply(t('rob.target_owner', lang));
+        if (!target) {
+            clearCooldown();
+            return message.reply(t('rob.invalid_user', lang));
+        }
+        if (target.id === message.author.id) {
+            clearCooldown();
+            return message.reply(t('rob.invalid_user', lang));
+        }
+        if (target.bot) {
+            clearCooldown();
+            return message.reply(t('rob.invalid_user', lang));
+        }
+        if (db.isOwner(target.id)) {
+            clearCooldown();
+            return message.reply(t('rob.target_owner', lang));
+        }
 
         const victim = db.getUser(target.id, message.guild.id);
         if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
