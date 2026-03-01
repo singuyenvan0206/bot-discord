@@ -48,8 +48,7 @@ module.exports = {
 
         // Use Diamond Ring if available, otherwise use Wedding Ring
         const ringId = diamondRingCount > 0 ? 702 : 701;
-        const ring = SHOP_ITEMS.find(i => i.id === ringId);
-        const ringName = ring ? ring.name : 'Unknown Ring';
+        const ringName = t(`items.${ringId}.name`, lang);
 
         const embed = new EmbedBuilder()
             .setTitle(t('marry.proposal_title', lang))

@@ -59,8 +59,10 @@ module.exports = {
 
         if (isNaN(quantity) || quantity < 1) quantity = 1;
 
+        const itemName = t(`items.${item.id}.name`, lang);
+
         if (ownedCount < quantity) {
-            return message.reply(t('gift.insufficient', lang, { count: ownedCount, item: item.name }));
+            return message.reply(t('gift.insufficient', lang, { count: ownedCount, item: itemName }));
         }
 
         // Perform the transfer
@@ -87,7 +89,7 @@ module.exports = {
 
         return message.reply(t('gift.success', lang, {
             quantity,
-            item: item.name,
+            item: itemName,
             user: message.author.toString(),
             target: target.toString()
         }));

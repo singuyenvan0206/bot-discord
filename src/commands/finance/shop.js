@@ -6,7 +6,7 @@ const config = require('../../config');
 module.exports = {
     name: 'shop',
     aliases: ['s', 'sh', 'store'],
-    description: 'Cửa hàng (View shop)',
+    description: t('shop.description', 'vi'),
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const ITEMS_PER_PAGE = 5;
@@ -42,7 +42,7 @@ module.exports = {
                 let desc = `*${description}*`;
                 if (i.multiplier && i.multiplier > 0) {
                     const percent = Math.round(i.multiplier * 100);
-                    const effectName = t(`effects.${i.type}`, lang) || 'hiệu ứng';
+                    const effectName = t(`effects.${i.type}`, lang) || t('common.effect', lang);
                     desc += t('shop.bonus_label', lang, { percent, effect: effectName });
                 }
                 let durationExtra = '';

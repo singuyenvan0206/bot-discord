@@ -68,7 +68,7 @@ const CATCHES = [
 module.exports = {
     name: 'fish',
     aliases: ['f'],
-    description: 'Câu cá (Go fishing)',
+    description: t('fish.command_desc', 'vi'),
     cooldown: config.ECONOMY.FISH_COOLDOWN,
     manualCooldown: true,
     async execute(message, args) {
@@ -294,7 +294,7 @@ module.exports = {
 
             // 1. Visual Flair
             embed.setColor(mythical.color);
-            if (isTrident) embed.setTitle(`🔱 ${t('fish.title', lang)} — MYTHICAL`);
+            if (isTrident) embed.setTitle(`🔱 ${t('fish.title', lang)} — ${t('fish.mythical_label', lang)}`);
 
             const assetName = mythical.asset;
             const assetPath = path.join(process.cwd(), 'src', 'assets', 'fishing', assetName);

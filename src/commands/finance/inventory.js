@@ -7,7 +7,7 @@ const config = require('../../config');
 module.exports = {
     name: 'inventory',
     aliases: ['inv', 'i', 'bag'],
-    description: 'Túi đồ (View inventory)',
+    description: t('inventory.description', 'vi'),
     usage: '[@user]',
     examples: ['', '@Simsimi'],
     async execute(message, args) {
@@ -40,7 +40,7 @@ module.exports = {
                     const catKey = item.type === 'xpboost' || item.type === 'robshield' ? 'other' : item.type;
                     cats[catKey]?.items.push(`**${itemName}** x${count} (ID: \`${id}\`)`);
                 } else {
-                    cats['other'].items.push(`**Unknown ID: ${id}** x${count}`);
+                    cats['other'].items.push(`**${t('common.unknown_id', lang)}: ${id}** x${count}`);
                 }
             }
             return cats;

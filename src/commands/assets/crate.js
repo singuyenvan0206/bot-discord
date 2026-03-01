@@ -17,7 +17,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle(t('crate.list_title', lang))
                 .setColor(config.COLORS.INFO)
-                .setDescription('Buy crates in the shop or find them in activities!');
+                .setDescription(t('crate.list_desc', lang));
 
             Object.values(crateConfig.TYPES).forEach(c => {
                 embed.addFields({
@@ -41,7 +41,7 @@ module.exports = {
             );
 
             if (!crate) {
-                return message.reply('❌ Crate ID not found!');
+                return message.reply(t('crate.error_id_not_found', lang));
             }
 
             const storageId = crate.numeric_id.toString();
@@ -49,7 +49,7 @@ module.exports = {
             const count = parseInt(args[2]) || 1;
 
             if (isNaN(count) || count <= 0) {
-                return message.reply('❌ Invalid count!');
+                return message.reply(t('crate.error_invalid_count', lang));
             }
 
             const LIMIT = 100;
@@ -125,8 +125,7 @@ module.exports = {
                     }
 
                     for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
-                        const itemObj = shopItems.find(i => i.id.toString() === itemId.toString());
-                        const itemName = itemObj ? itemObj.name : itemId;
+                        const itemName = t(`items.${itemId}.name`, lang);
                         rewardText += t('crate.reward_item', lang, { count: itemCount, item: itemName }) + '\n';
                     }
 
@@ -135,7 +134,7 @@ module.exports = {
                             ? t('crate.open_bulk_success', lang, { count, name: crate.name[lang] })
                             : t('crate.open_success', lang, { name: crate.name[lang] })
                         )
-                        .setDescription(rewardText || 'Nothing...')
+                        .setDescription(rewardText || t('crate.reward_nothing', lang))
                         .setColor(crate.color)
                         .setThumbnail('https://i.imgur.com/8E8Lh5D.png');
 
@@ -146,7 +145,7 @@ module.exports = {
                     await msg.edit({ content: null, embeds: [embed] });
                 } catch (error) {
                     console.error('Error in crate open:', error);
-                    await msg.edit('❌ An error occurred while opening the crate. Please contact an admin.');
+                    await msg.edit(t('crate.error_internal', lang));
                 }
             }, 2000);
         }
