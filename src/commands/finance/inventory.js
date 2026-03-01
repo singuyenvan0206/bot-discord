@@ -29,7 +29,8 @@ module.exports = {
                 'daily': { name: t('inventory.categories.daily', lang), items: [] },
                 'gamble': { name: t('inventory.categories.gamble', lang), items: [] },
                 'social': { name: t('inventory.categories.social', lang), items: [] },
-                'other': { name: t('inventory.categories.other', lang), items: [] }
+                'other': { name: t('inventory.categories.other', lang), items: [] },
+                'crate': { name: t('inventory.categories.crate', lang), items: [] }
             };
 
             for (const [id, count] of Object.entries(inv)) {
@@ -178,7 +179,8 @@ module.exports = {
             );
 
             const row2 = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('inv_other').setLabel('📦').setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.other.items.length === 0)
+                new ButtonBuilder().setCustomId('inv_other').setLabel('📦').setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.other.items.length === 0),
+                new ButtonBuilder().setCustomId('inv_crate').setLabel('🎁').setStyle(category === 'crate' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.crate.items.length === 0)
             );
 
             const components = [row1, row2];

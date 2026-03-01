@@ -157,5 +157,21 @@ module.exports = {
 
             return message.reply(t('business.staff_success', lang, { name: bizConfig.TYPES[bizId].name[lang] }));
         }
+
+        if (sub === 'list') {
+            const embed = new EmbedBuilder()
+                .setTitle('💼 Business Market')
+                .setColor(config.COLORS.INFO)
+                .setDescription('Use `$business buy <id>` to start your empire.');
+
+            Object.values(bizConfig.TYPES).forEach(b => {
+                embed.addFields({
+                    name: `${b.icon} ${b.name[lang]} (ID: \`${b.numeric_id}\`)`,
+                    value: `💰 **${b.base_price.toLocaleString()}** coins\n📈 Base Income: **${b.base_income.toLocaleString()}** coins/hour\n⭐ Max Level: **${b.max_level}**`
+                });
+            });
+
+            return message.channel.send({ embeds: [embed] });
+        }
     }
 };

@@ -87,7 +87,8 @@ module.exports = {
 
             const categoryRow2 = new ActionRowBuilder()
                 .addComponents(
-                    new ButtonBuilder().setCustomId('cat_other').setLabel(t('shop.labels.other', lang)).setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary)
+                    new ButtonBuilder().setCustomId('cat_other').setLabel(t('shop.labels.other', lang)).setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('cat_crate').setLabel(t('shop.labels.crate', lang)).setStyle(category === 'crate' ? ButtonStyle.Success : ButtonStyle.Secondary)
                 );
 
             const navRow = new ActionRowBuilder()

@@ -100,10 +100,10 @@ module.exports = [
     // ==========================================
     // GROUP 800 — crates (gacha crates)
     // ==========================================
-    { id: 801, name: 'Common Crate', price: 10000, type: 'other' },
-    { id: 802, name: 'Rare Crate', price: 50000, type: 'other' },
-    { id: 803, name: 'Legendary Crate', price: 250000, type: 'other' },
-    { id: 804, name: 'Forbidden Crate', price: 2000000, type: 'other' },
-    { id: 805, name: 'Mythical Crate', price: 10000000, type: 'other' },
-    { id: 806, name: 'Ethereal Crate', price: 50000000, type: 'other' },
+    { id: 801, name: 'Common Crate', price: 10000, type: 'crate' },
+    { id: 802, name: 'Rare Crate', price: 50000, type: 'crate' },
+    { id: 803, name: 'Legendary Crate', price: 250000, type: 'crate' },
+    { id: 804, name: 'Forbidden Crate', price: 2000000, type: 'crate' },
+    { id: 805, name: 'Mythical Crate', price: 10000000, type: 'crate' },
+    { id: 806, name: 'Ethereal Crate', price: 50000000, type: 'crate' },
 ];

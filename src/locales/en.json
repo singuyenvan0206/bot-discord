@@ -841,7 +841,8 @@
             "gamble": "🎲 Gamble Win",
             "tools": "🛠️ Tools",
             "social": "💍 Social Items",
-            "other": "💎 Other"
+            "other": "💎 Other",
+            "crate": "🎁 Lucky Crates"
         },
         "labels": {
             "income": "💼 Income",
@@ -849,7 +850,8 @@
             "gamble": "🎲 Gamble",
             "tools": "🎣 Tools",
             "social": "💍 Social",
-            "other": "💎 Other"
+            "other": "💎 Other",
+            "crate": "🎁 Crates"
         }
     },
     "rank": {
@@ -876,7 +878,8 @@
             "other": "📦 Others",
             "social": "💞 Social",
             "robshield": "🛡️ Protection Shield",
-            "xpboost": "✨ XP Boost"
+            "xpboost": "✨ XP Boost",
+            "crate": "🎁 Crates"
         },
         "info": "📊 Summary",
         "active_buffs": "⚡ Active Buffs",

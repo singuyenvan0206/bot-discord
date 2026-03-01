@@ -898,7 +898,8 @@
             "gamble": "🎲 Tăng Thắng Cược",
             "tools": "🛠️ Công Cụ",
             "social": "💍 Đồ Dùng Xã Hội",
-            "other": "💎 Khác"
+            "other": "💎 Khác",
+            "crate": "🎁 Rương May Mắn"
         },
         "labels": {
             "income": "💼 Thu Nhập",
@@ -906,7 +907,8 @@
             "gamble": "🎲 Cờ Bạc",
             "tools": "🛠️ Công Cụ",
             "social": "💍 Xã Hội",
-            "other": "💎 Khác"
+            "other": "💎 Khác",
+            "crate": "🎁 Rương"
         }
     },
     "rank": {
@@ -933,7 +935,8 @@
             "other": "📦 Khác",
             "social": "💞 Tình Cảm",
             "robshield": "🛡️ Khiên Bảo Vệ",
-            "xpboost": "✨ Tăng XP"
+            "xpboost": "✨ Tăng XP",
+            "crate": "🎁 Rương"
         },
         "info": "📊 Tổng quan",
         "active_buffs": "Buff Đang Hoạt Động",
