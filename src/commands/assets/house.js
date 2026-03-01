@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const { t } = require('../../utils/i18n');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const housingConfig = require('../../config/housing');
 
@@ -8,7 +8,8 @@ module.exports = {
     name: 'house',
     description: 'Manage your housing and buffs',
     aliases: ['home', 'nha'],
-    async execute(message, args, lang) {
+    async execute(message, args) {
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const sub = args[0] ? args[0].toLowerCase() : 'info';
         const user = await db.getUser(message.author.id);
 

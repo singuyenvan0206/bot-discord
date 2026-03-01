@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const { t } = require('../../utils/i18n');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const crateConfig = require('../../config/crates');
 const shopItems = require('../../utils/shopItems');
@@ -9,7 +9,8 @@ module.exports = {
     name: 'crate',
     description: 'Lucky crate system',
     aliases: ['ruong', 'gacha', 'crate-open'],
-    async execute(message, args, lang) {
+    async execute(message, args) {
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const sub = args[0] ? args[0].toLowerCase() : 'list';
 
         if (sub === 'list') {

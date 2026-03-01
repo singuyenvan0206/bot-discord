@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const { t } = require('../../utils/i18n');
+const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const bizConfig = require('../../config/businesses');
 
@@ -8,7 +8,8 @@ module.exports = {
     name: 'business',
     description: 'Manage your business empire',
     aliases: ['biz', 'kinhdoanh'],
-    async execute(message, args, lang) {
+    async execute(message, args) {
+        const lang = await getLanguage(message.author.id, message.guild?.id);
         const sub = args[0] ? args[0].toLowerCase() : 'info';
 
         if (sub === 'buy') {
