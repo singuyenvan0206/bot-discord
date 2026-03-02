@@ -8,7 +8,7 @@ const { calculateReward } = require('../../utils/multiplier');
 module.exports = {
     name: 'minesweeper',
     aliases: ['mine', 'ms'],
-    description: 'Dò mìn (Play Minesweeper game)',
+    description: 'Thử thách dò mìn mạo hiểm và ăn tiền (Play high-stakes Minesweeper gambling)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {

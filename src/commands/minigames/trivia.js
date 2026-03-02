@@ -27,7 +27,7 @@ function decodeHtml(html) {
 module.exports = {
     name: 'trivia',
     aliases: ['triv', 'tv'],
-    description: 'Đố vui (Play Trivia game)',
+    description: 'Thách thức kiến thức với kho câu hỏi đa dạng (Challenge your knowledge with diverse trivia)',
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {

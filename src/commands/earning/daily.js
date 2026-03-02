@@ -7,7 +7,7 @@ const config = require('../../config');
 module.exports = {
     name: 'daily',
     aliases: ['dy', 'd'],
-    description: 'Điểm danh (Daily reward)',
+    description: 'Nhận quà tặng coins miễn phí hàng ngày (Claim your free daily coin reward)',
     cooldown: config.ECONOMY.DAILY_COOLDOWN,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);

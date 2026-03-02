@@ -331,41 +331,41 @@
         "current_title": "Current Profession",
         "none": "None",
         "name_police": "👮 Police Officer",
-        "desc_police": "Maintain law and order in the city. Officers earn from illegal activity fines.",
-        "info_police": "• **Overtime**: 40% chance for +1500 coins on `work`.\n• **Crime Sweep**: +50% bonus when catching criminals in the `crime` command.\n• **Deterrence**: Double the fine for others if they fail a `rob` attempt where you are.",
-        "name_criminal": "🥷 Criminal",
-        "desc_criminal": "Live life on the edge. High risks, high rewards, and a constant game of cat and mouse.",
-        "info_criminal": "• **Master Thief**: +15% success rate on `rob` and `crime` commands.\n• **Escape Artist**: 50% chance to pay a much lower fine when caught (with gear).\n• **High Stakes**: +50% bonus when successfully robbing Police Headquarters.",
+        "desc_police": "A dedicated guardian of justice, standing between order and chaos. Enforce the law and protect the peace of Grand Line's residents.",
+        "info_police": "✨ **Police Perks:**\n• **Overtime**: 15% chance to receive a hot bonus (+150 coins).\n• **Law Enforcement**: Higher success rate in catching criminals.\n• **Patrol**: Receive an extra 100-200 coins when using the `search` command.",
+        "name_criminal": "👤 Criminal",
+        "desc_criminal": "A skilled outlaw living by wit and daring. The shadows are your ally, and the vault is your ultimate destination.",
+        "info_criminal": "• **Heist Master**: +20% success rate when performing a `crime`.\n• **Expert Thief**: +15% success rate when attempting to `rob` others.\n• **Evasion**: Reduce jail time by 25% if caught by the authorities.",
         "name_doctor": "👨‍⚕️ Doctor",
-        "desc_doctor": "Save lives and study the human body. Earn from the misfortunes of others.",
-        "info_doctor": "• **Treatment Fees**: Earn coins whenever someone fails a `slut` attempt.\n• **Medical Grant**: 30% chance for +100-300 coins on `daily` rewards.\n• **First Aid**: Passive +5% income bonus from all sources.",
-        "name_programmer": "💻 Programmer",
-        "desc_programmer": "Build the future with code. High efficiency and guaranteed income.",
-        "info_programmer": "• **Code Optimization**: Flat +2500 coins bonus on every `work` command.\n• **Regex Master**: Reveals extra special character hints in `scramble` game.\n• **High Focus**: +30% bonus in Word Chain & Scramble brain games.",
+        "desc_doctor": "An angel in white with gifted hands. Holder of the keys to survival and recovery, bringing hope to those in distress.",
+        "info_doctor": "• **Clinical Trial**: Chance to receive 100-300 bonus coins when claiming daily rewards.\n• **Fast Recovery**: 20% increased rate of receiving buff items while working.\n• **Medical Grant**: Receive a commission from every hospitalized user in the server.",
+        "name_programmer": "👨‍💻 Programmer",
+        "desc_programmer": "Architect of the digital world. Your lines of code build the foundation of the future and bring steady, sustainable income.",
+        "info_programmer": "• **Algorithm Optimization**: Guaranteed +200 coins professional allowance every hour.\n• **Regex Master**: Automatically receive 1 extra hint letter in Scramble games.\n• **High Focus**: +25% bonus rewards from puzzle and brain games.",
         "name_farmer": "👨‍🌾 Farmer",
-        "desc_farmer": "Connect with the earth. Hard work leads to bountiful harvests.",
-        "info_farmer": "• **Bumper Crop**: 25% chance for x2.5 rewards on `work`.\n• **Master Angler**: Highest chance to catch Super Rare/Mythical fish.\n• **Thrift**: 10% chance to not consume bait while fishing.",
-        "name_hacker": "👨‍💻 Hacker",
-        "desc_hacker": "Data is the new gold. Exploit systems for gain.",
-        "info_hacker": "• **System Breach**: 35% chance for x2 rewards on the `search` command.\n• **Minesweeper**: Automatically flags one mine correctly at the start.\n• **Data Leak**: 15% chance to find valuable files for +200-500 coins on `search`.",
+        "desc_farmer": "A friend of Mother Earth and nature. Your perseverance and care reap the essence of the land and the deep blue sea.",
+        "info_farmer": "• **Bumper Crop**: 15% chance to receive 2.5x rewards while working.\n• **Master Angler**: 15% higher chance to catch Trophy Fish and underwater treasures.\n• **Sustainability**: High chance to salvage bait after a failed fishing attempt.",
+        "name_hacker": "👤 Hacker",
+        "desc_hacker": "A ghost in the digital network. With superior intelligence, you control the flow of information and exploit loopholes in the system.",
+        "info_hacker": "• **System Breach**: Higher success rate in performing Heists (Crime) than normal.\n• **Data Mining**: Automatically flag one mine correctly at the start of Minesweeper.\n• **Double Down**: Chance to double (x2) all coins stolen from the system.",
         "name_streamer": "🎥 Streamer",
-        "desc_streamer": "Build your audience and go viral. High potential for massive hype.",
-        "info_streamer": "• **Viral Content**: 25% chance for x5 rewards on `work` command.\n• **Subathon**: 50% chance for +200% `daily` reward bonus.\n• **Sub Hype**: 20% chance for double winnings in slot machines.",
-        "name_chef": "👨‍🍳 Chef",
-        "desc_chef": "Cook up a storm. Precision in the kitchen leads to tips and fame.",
-        "info_chef": "• **Michelin Star**: 50% chance to triple the `daily` reward.\n• **VIP Menu**: 20% chance for x2 rewards on `work` command.\n• **Tips**: Receive 50-100 coins on a Blackjack Push (Tie).",
+        "desc_streamer": "A rising star of the digital age. Your charm and influence turn every broadcast into a major, revenue-generating event.",
+        "info_streamer": "• **Viral Content**: 15% chance for a media explosion, granting 5x rewards while working.\n• **Subathon Hype**: Chance to receive an extra +25% total daily rewards.\n• **Donation Goal**: 10% chance to significantly increase Slot machine winnings.",
+        "name_chef": "👨‍视觉 Chef",
+        "desc_chef": "A culinary master turning ordinary ingredients into worldly delicacies. Your passion for flavor can unite every soul.",
+        "info_chef": "• **Michelin Star**: Chance to triple (x3) your daily reward gifts.\n• **VIP Menu**: +20% flat reward bonus when performing work commands.\n• **Drinks on Me**: Refund bet amount when a Blackjack game ends in a Push.",
         "name_musician": "🎸 Musician",
-        "desc_musician": "Let the rhythm guide you. Find your flow and double your luck.",
-        "info_musician": "• **Flow State**: 20% chance to double rewards in `rps` and `gamble`.\n• **Performance**: +20% coins in active interaction games.\n• **Rhythm**: Slight reduction in game interaction cooldowns.",
+        "desc_musician": "A soulful artist inspiring through every note. Your melodies have the power to move hearts and bring unexpected fortune.",
+        "info_musician": "• **Flow State**: 15% chance to double (x2) Blackjack and Gamble winnings.\n• **Public Performance**: Receive extra tips from fans after every work shift.\n• **Lucky Rhythm**: Reduces cooldown of entertainment commands by 10%.",
         "name_soldier": "🪖 Soldier",
-        "desc_soldier": "Serve and protect. Disciplined training provides guaranteed bonuses.",
-        "info_soldier": "• **Iron Discipline**: Guaranteed +2000 coins salary bonus on every `work` command.\n• **Armed**: -30% lower fines for failed `crime` attempts.\n• **Advance**: +10% higher `rob` success rate.",
+        "desc_soldier": "An elite warrior with iron discipline. Always ready to undertake the most dangerous missions to protect global peace.",
+        "info_soldier": "• **Military Discipline**: Guaranteed mission allowance (+200 coins) for every work shift.\n• **Fully Armed**: Reduce failure penalties for dangerous commands by 50%.\n• **Rapid Deployment**: Gain significantly more experience (XP) after every action.",
         "name_trader": "📈 Trader",
-        "desc_trader": "Buy low, sell high. Master the market to minimize losses.",
-        "info_trader": "• **Loss Insurance**: 35% chance for 50% refund on `rps` loss / 25% `coinflip`.\n• **Market Tip**: Flat +150 coins on every `search` command.\n• **Manipulation**: +10% higher winning odds in slot machines.",
-        "name_teacher": "📚 Teacher",
-        "desc_teacher": "Shape the next generation. Knowledge is power and multiplier.",
-        "info_teacher": "• **Academic**: Permanent 1.5x XP multiplier for all bot actions.\n• **Tutoring**: In `trivia`, all other participants get +50% coins and +10 XP.\n• **Demerit**: Heavier penalties and risk of demotion on failed `rob` or `crime`.",
+        "desc_trader": "A market wizard with sharp business vision. You rotate capital and optimize profits in every transaction.",
+        "info_trader": "• **Market Insurance**: High probability of 50% bet refund on lost Blackjack/Coinflip.\n• **Business Intel**: Always receive bonus coins when searching for items or money.\n• **Slot Manipulation**: Slightly improved odds for winning rare Slot symbols.",
+        "name_teacher": "👨‍🏫 Teacher",
+        "desc_teacher": "Architect of the soul. The knowledge you share not only enlightens minds but multiplies the success of those around you.",
+        "info_teacher": "• **Academic Focus**: Permanent 1.5x XP multiplier for the holder.\n• **Dedicated Mentor**: When you play Trivia, all other players receive extra coins and XP.\n• **Iron Discipline**: Penalties for illegal acts (Rob/Crime) are doubled due to status.",
         "chef_tip": "\n👨‍🍳 **Chef's Tip!** The dealer tips you {{amount}} coins for your precision! 🍳",
         "job_facts": "Fun Fact:",
         "fact_police": "Police Officers can receive extra fines from caught criminals!",
@@ -559,215 +559,234 @@
     },
     "items": {
         "101": {
-            "name": "🍪 Cookie",
-            "desc": "Sugar rush! (+10% Extra Bonus | 1 day)",
-            "details": "A simple chocolate chip cookie. Sweet enough to keep you motivated for more daily rewards."
+            "name": "🍪 Fortune Cookie",
+            "desc": "A sweet surge of luck! (+10% Extra Bonus | 1 day)",
+            "details": "A freshly baked chocolate chip cookie. Its sweet aroma keeps you motivated for your daily rewards."
         },
         "102": {
-            "name": "🧸 Shag Rug",
-            "desc": "Soft on the feet (+40% Extra Bonus | 7 days)"
+            "name": "🧸 Luxury Shag Rug",
+            "desc": "Ultimate comfort (+40% Extra Bonus | 7 days)",
+            "details": "A soft, plush rug that feels like walking on clouds, helping you start your day with a sense of peace."
         },
         "103": {
-            "name": "🗿 Moai Statue",
-            "desc": "Steady as a rock (+80% Extra Bonus | 30 days)"
+            "name": "🗿 Mystic Moai Statue",
+            "desc": "Steady as a mountain (+80% Extra Bonus | 30 days)",
+            "details": "An ancient monument imbued with mysterious energy, ensuring your luck remains stable and grounded."
         },
         "104": {
             "name": "🎫 VIP Golden Ticket",
-            "desc": "VIP perks (+150% Extra Bonus | 30 days)"
+            "desc": "Elite privileges (+150% Extra Bonus | 30 days)",
+            "details": "A symbol of prestige. This ticket opens up exclusive benefits reserved for the elite of Grand Line."
         },
         "105": {
-            "name": "🚀 Space Station",
-            "desc": "Orbital rewards (+500% Extra Bonus | 30 days)"
+            "name": "🚀 Orbital Space Station",
+            "desc": "Rewards from the stars (+500% Extra Bonus | 30 days)",
+            "details": "High-tech engineering that allows you to collect resources from orbit, providing benefits far beyond the ground."
         },
         "201": {
-            "name": "📱 Smartphone",
-            "desc": "Stay connected (+15% Income | 7 days)",
-            "details": "A high-end smartphone with a fast connection. Essential for staying on top of your work."
+            "name": "📱 Smartphone Ultra",
+            "desc": "Boundless connectivity (+15% Income | 7 days)",
+            "details": "A high-end smartphone with a 6G connection. Essential for managing your finances on the move."
         },
         "202": {
-            "name": "⌨️ RGB Keyboard",
-            "desc": "Clicky keys (+40% Income | 7 days)"
+            "name": "⌨️ Custom Mechanical Keyboard",
+            "desc": "Smooth tactile feedback (+40% Income | 7 days)",
+            "details": "The satisfying click-clack of precision keys boosts your productivity and reaction speed."
         },
         "203": {
-            "name": "🖥️ 4K Monitor",
-            "desc": "Clear vision (+70% Income | 7 days)"
+            "name": "🖥️ 8K HDR Monitor",
+            "desc": "Brilliant vision (+70% Income | 7 days)",
+            "details": "Ultra-high resolution allows you to observe every market trend and make precise decisions."
         },
         "204": {
-            "name": "📈 Trading Terminal",
-            "desc": "Analyze the market (+100% Income | 30 days)"
+            "name": "📈 Professional Trading Terminal",
+            "desc": "Market dominance (+100% Income | 30 days)",
+            "details": "A real-time data analysis system for financial wizards, optimizing every source of income."
         },
         "205": {
-            "name": "🛥️ Superyacht",
-            "desc": "Ocean office (+600% Income | 30 days)"
+            "name": "🛥️ Royal Superyacht",
+            "desc": "An office on the ocean (+600% Income | 30 days)",
+            "details": "The ultimate symbol of success. Working from the sea attracts billion-dollar contracts."
         },
         "301": {
-            "name": "🎲 Golden Dice",
-            "desc": "Roll high (+25% Gamble | 7 days)",
-            "details": "Weighted golden dice that feel lucky in your hand. Improves your odds in various gambling games."
+            "name": "🎲 Golden Sovereign Dice",
+            "desc": "Fortune's roll (+25% Gamble | 7 days)",
+            "details": "Solid gold dice that feel heavy with luck. Improves your odds in various gambling games."
         },
         "302": {
-            "name": " Emerald Necklace",
-            "desc": "The beauty of purity and luck (+50% Gamble | 30 days)"
+            "name": "📿 Imperial Jade Necklace",
+            "desc": "Pure serenity (+50% Gamble | 30 days)",
+            "details": "Exquisite jade filled with natural spirit, keeping your mind sharp and your luck unexpected."
         },
         "303": {
-            "name": "🪙 Clay Chips",
-            "desc": "Professional feel (+70% Gamble | 30 days)"
+            "name": "🪙 Pro Clay Chips",
+            "desc": "Professional edge (+70% Gamble | 30 days)",
+            "details": "Premium casino-grade chips that bring confidence and class to every bet you place."
         },
         "304": {
-            "name": "🍀 4-Leaf Clover",
-            "desc": "Feeling lucky? (+150% Gamble | 30 days)"
+            "name": "🍀 Miracle 4-Leaf Clover",
+            "desc": "Lucky mascot (+150% Gamble | 30 days)",
+            "details": "A rare gift from nature. Carrying this ensures the protection of the God of Fortune."
         },
         "305": {
-            "name": "⏳ Time Machine",
-            "desc": "Rewrite history (+1000% Gamble | 30 days)"
+            "name": "⏳ Advanced Time Machine",
+            "desc": "Seize the future (+500% Gamble | 30 days)",
+            "details": "A cutting-edge device that lets you glimpse future possibilities, turning the tide of any major bet."
         },
         "401": {
-            "name": "🍞 Bread Bait",
-            "desc": "Simple scraps for small fish. (Luck: +5%)",
-            "details": "Simple bread crumbs. Attracts small fish but rarely anything big."
+            "name": "🍞 Bread Crumbs",
+            "desc": "Simple bait (Luck: +5%)",
+            "details": "Dry bread scraps, suitable for attracting small common fish near the shore."
         },
         "402": {
-            "name": "🪱 Worm Bait",
-            "desc": "One-time use bait. Required for fishing. (Luck: +15%)"
+            "name": "🪱 Fresh Earthworms",
+            "desc": "Popular bait (Luck: +15%)",
+            "details": "A traditional bait essential for any fisherman starting their aquatic journey."
         },
         "403": {
-            "name": "🦐 Shrimp Bait",
-            "desc": "Salty and tasty. (Luck: +40%)",
-            "details": "Fresh shrimp that larger fish find irresistible."
+            "name": "🦐 Ocean Shrimp",
+            "desc": "Irresistible flavor (Luck: +40%)",
+            "details": "Fresh shrimp with a distinct scent, attracting larger and more aggressive fish species."
         },
         "404": {
-            "name": "🦗 Cricket Bait",
-            "desc": "Favorited by many fish. (Luck: +75%)"
+            "name": "🦗 Field Crickets",
+            "desc": "Versatile bait (Luck: +75%)",
+            "details": "The lively movement of crickets on the water's surface makes them a prime target for active predators."
         },
         "405": {
-            "name": "🦑 Squid Bait",
-            "desc": "Irresistible to big fish. (Luck: +150%)"
+            "name": "🦑 Deep-Sea Squid",
+            "desc": "Deep sea flavor (Luck: +150%)",
+            "details": "Sliced fresh squid, the top choice for large-scale predatory fish from the depths."
         },
         "406": {
-            "name": "✨ Golden Bait",
-            "desc": "Shimmering bait for rare finds. (Luck: +300%)",
-            "details": "Enchanted bait that glows underwater, attracting the rarest creatures in the sea."
+            "name": "✨ Enchanted Glow Bait",
+            "desc": "Magical allure (Luck: +300%)",
+            "details": "Infused with a subtle glow and essence, attracting the rarest creatures from the deepest ocean trenches."
         },
         "407": {
-            "name": "🎣 Plastic Rod",
-            "desc": "Toy-grade rod. (Luck: 0.5x)",
-            "details": "A cheap, flexible rod made of recycled plastic. Not very efficient, but it's a start."
+            "name": "🎣 Novice Plastic Rod",
+            "desc": "For beginners (Luck: 0.5x)",
+            "details": "A lightweight plastic rod, perfect for getting a feel for the rhythm of the water."
         },
         "408": {
-            "name": "🎣 Bamboo Rod",
-            "desc": "Basic fishing rod. (Luck: 1.0x)"
+            "name": "🎣 Aged Bamboo Rod",
+            "desc": "Flexible and traditional (Luck: 1.0x)",
+            "details": "Crafted from seasoned bamboo, providing durability and a natural feel when reeling in a catch."
         },
         "409": {
-            "name": "🎣 Fiberglass Rod",
-            "desc": "Durable and flexible. (Luck: 1.8x)"
+            "name": "🎣 Professional Fiberglass Rod",
+            "desc": "Modern technology (Luck: 1.8x)",
+            "details": "Advanced materials enhance sensitivity and provide superior strength-to-weight ratio."
         },
         "410": {
-            "name": "🎣 Steel Rod",
-            "desc": "Heavy and reliable. (Luck: 2.5x)",
-            "details": "Reinforced with industrial steel to handle heavier catches."
+            "name": "🎣 Steel Alloy Rod",
+            "desc": "Sturdy and powerful (Luck: 2.5x)",
+            "details": "Reinforced with stainless steel, ready to challenge the heaviest catches in the sea."
         },
         "411": {
-            "name": "🎣 Carbon Rod",
-            "desc": "Top of the line. (Luck: 3.5x)"
+            "name": "🎣 Ultra Carbon Rod",
+            "desc": "Lightweight and resilient (Luck: 3.5x)",
+            "details": "The choice of professional anglers, optimizing control and reaction speed for precision fishing."
         },
         "412": {
-            "name": "🎣 Titanium Rod",
-            "desc": "Absolute power. (Luck: 5.0x)"
+            "name": "🎣 Tactical Titanium Rod",
+            "desc": "Military-grade material (Luck: 5.0x)",
+            "details": "Eternal durability and incredibly light, helping you conquer the most treacherous waters."
         },
         "413": {
-            "name": "🔱 Neptune's Rod",
-            "desc": "Gift from the god of the sea. (Luck: 7.5x)",
-            "details": "A legendary rod forged from ocean crystals. Grants incredible luck to the wielder."
+            "name": "🔱 Neptune's Sovereign Rod",
+            "desc": "Gift of Poseidon (Luck: 7.5x)",
+            "details": "A legendary rod forged from ocean crystals, carrying the glory of the sea god himself."
         },
         "501": {
-            "name": "🛡️ Shield of Protection",
-            "desc": "Block one robbery attempt from other users | 1 day",
-            "details": "A sturdy physical shield that can deflect one robbery attempt from other malicious users."
+            "name": "🛡️ Guardian Shield",
+            "desc": "Solid defense (Block 1 robbery attempt | 1 day)",
+            "details": "A shield forged from reinforced steel, providing absolute security for your assets against greedy hands."
         },
         "502": {
-            "name": "🧪 XP Boost Potion",
-            "desc": "Gain +50% XP when performing activities | 1 day",
-            "details": "A glowing blue elixir that sharpens your focus. Grants double energy and faster experience gain."
+            "name": "🧪 Elixir of Knowledge",
+            "desc": "Accelerated progression (+50% XP | 1 day)",
+            "details": "A glowing blue mixture that triggers your learning potential, helping you level up rapidly."
         },
         "503": {
-            "name": "🎟️ Career Change Voucher",
-            "desc": "Use to switch to a different job path.",
-            "details": "A prestigious document that allows you to legally change your career path through the $job command."
+            "name": "📜 Career Change Voucher",
+            "desc": "Required to switch your profession.",
+            "details": "An official document issued by the Grand Line Council. Allows you to resign from your current job and embark on a new professional journey without losing your experience."
         },
         "601": {
-            "name": "🦈 Megalodon's Blessing",
-            "desc": "Power of the ancient shark (+50% All Rewards | 1 hour)",
-            "details": "The aura of the king of the sea, Megalodon, makes earning money easier than ever."
+            "name": "🦈 Blessing of the Megalodon",
+            "desc": "Tyrant of the deep's majesty (+50% All Rewards | 1 hour)",
+            "details": "Feel the primal power of the Megalodon, helping you conquer all challenges and optimize your gains."
         },
         "602": {
-            "name": "🔱 Poseidon's Favor",
-            "desc": "Might of the sea god (+100% All Rewards | 2 hours)",
-            "details": "Divine power from the Trident helps you dominate the ocean and earn massive income."
+            "name": "🔱 Poseidon's Divine Power",
+            "desc": "Domain over the ocean (+100% All Rewards | 2 hours)",
+            "details": "Protection from the sea god Poseidon, granting celestial luck and massive income streams."
         },
         "603": {
-            "name": "🔮 Pearl's Radiance",
-            "desc": "Guiding light (+40% All Rewards | 1 hour)",
-            "details": "The radiance from the Mythical Pearl sharpens your focus and boosts earnings."
+            "name": "🔮 Radiant Ocean Pearl",
+            "desc": "Pure guiding light (+40% All Rewards | 1 hour)",
+            "details": "The gentle light from this ancient pearl clears the mind, enhancing focus and work efficiency."
         },
         "604": {
-            "name": "🐙 Kraken's Might",
-            "desc": "Ocean's rage (+60% All Rewards | 1.5 hours)",
-            "details": "The raw power of the Kraken Monster helps you crush financial barriers."
+            "name": "🐙 Kraken's Abyssal Rage",
+            "desc": "Power from the depths (+60% All Rewards | 1.5 hours)",
+            "details": "An explosion of energy from the Kraken beast helps you crush your current financial boundaries."
         },
         "605": {
-            "name": "🐢 Turtle's Longevity",
-            "desc": "Turtle's Blessing (+70% All Rewards | 3 hours)",
-            "details": "Blessing from the Thousand-Year Turtle, increasing income by +70% for 3 hours."
+            "name": "🐢 Blessing of the Millennium Turtle",
+            "desc": "Patience and longevity (+70% All Rewards | 3 hours)",
+            "details": "Experience the resilience and aura of the ancient turtle spirit, helping your income grow steadily."
         },
         "606": {
-            "name": "🐉 Dragon's Majesty",
-            "desc": "Dragon's power (+150% All Rewards | 2 hours)",
-            "details": "Divine power from the Ocean Dragon, increasing income by +150% for 2 hours."
+            "name": "🐉 Majesty of the Ocean Dragon",
+            "desc": "Might of the dragon's hoard (+150% All Rewards | 2 hours)",
+            "details": "The ultimate divine power from the Sea Dragon brings absolute wealth and authority to its owner."
         },
         "701": {
             "name": "💍 Wedding Ring",
-            "desc": "A token of eternal love.",
-            "details": "Use `$marry` to propose to someone."
+            "desc": "Propose to your partner (+25% Income).",
+            "details": "A beautiful ring crafted from fine silver and a small but sparkling gemstone. A symbol of commitment and a promise of a better future together."
         },
         "702": {
             "name": "💎 Diamond Ring",
-            "desc": "The most luxurious symbol of love.",
-            "details": "Replaces the Wedding Ring, providing better marriage perks."
+            "desc": "Propose with luxury (+50% Income).",
+            "details": "A masterpiece of jewelry, featuring a flawless, high-carat diamond. This ring represents an eternal and unwavering love that shines brighter than any star."
         },
         "703": {
             "name": "💐 Wedding Bouquet",
-            "desc": "A beautiful and vibrant bouquet.",
-            "details": "You can `$gift` this to your partner for a temporary buff."
+            "desc": "Gift to your spouse for a 2h income buff.",
+            "details": "A hand-picked selection of the most fragrant and vibrant flowers in the world. Gifting this to your spouse will fill their heart with joy and boost their productivity."
         },
         "801": {
             "name": "🎁 Common Crate",
             "desc": "Contains basic items and rewards.",
-            "details": "Open to receive a random amount of coins or common items."
+            "details": "A weathered wooden crate found throughout the continent. It may contain a small amount of coins or common utility items to assist you on your journey."
         },
         "802": {
             "name": "💎 Rare Crate",
             "desc": "Contains high-value items and rewards.",
-            "details": "Higher chance of receiving more coins and rarer items than a common crate."
+            "details": "Crafted from natural gemstones, this crate hides treasures of significant commercial value and a notably higher chance of containing rare items."
         },
         "803": {
             "name": "🌟 Legendary Crate",
             "desc": "Contains legendary treasures and massive rewards.",
-            "details": "A chance to receive a fortune in coins and extremely rare items."
+            "details": "A gift from the ancient heroes. Owning this is the dream of every adventurer, offering a chance at massive fortunes and top-tier equipment."
         },
         "804": {
             "name": "💀 Forbidden Crate",
             "desc": "Contains forgotten secrets and dark rewards.",
-            "details": "Only for those who dare to risk it all for immense power and wealth."
+            "details": "Legends say this crate was sealed with dark curses. Only the most daring venture to open it and touch the priceless rewards forgotten by history."
         },
         "805": {
             "name": "👑 Mythical Crate",
             "desc": "Treasures of the gods.",
-            "details": "Divine power and unimaginable rewards await inside."
+            "details": "A divine treasure fallen from the heavens, radiating a brilliant aura. Contains the power of the gods and some of the rarest items in the world."
         },
         "806": {
             "name": "✨ Ethereal Crate",
             "desc": "Contains the essence of the universe.",
-            "details": "The most precious crate, bringing luck that can change your destiny."
+            "details": "The most precious crate ever known, crystallized from the souls of the stars. The rewards within can shift the very destiny of its owner."
         }
     },
     "shop": {
@@ -996,6 +1015,37 @@
             "MentionEveryone": "📢 Mention Everyone"
         }
     },
+    "profile": {
+        "title": "🔇 PERSONAL PASSPORT — {{user}}",
+        "identity_section": "🆔 Identity Information",
+        "economy_section": "📊 Wealth & Assets",
+        "progression_section": "✨ Career Path",
+        "social_section": "💞 Social & Connections",
+        "experience": "Experience",
+        "level_label": "Lvl",
+        "level": "**Level:** {{level}}",
+        "economy": "Economy",
+        "balance": "**Balance:** {{emoji}} {{amount}}",
+        "net_worth": "**Net Worth:** {{emoji}} {{amount}}",
+        "ranking": "Ranking",
+        "wealth_rank": "**Wealth Rank:** {{rank}}",
+        "unranked": "Unranked (>100)",
+        "inventory_value": "💰 Inventory Value: {{amount}}",
+        "collection": "Collection",
+        "active_buffs": "⚡ Active Buffs",
+        "total_items": "**Total Items:** {{count}}",
+        "item_types": "**Item Types:** {{count}}",
+        "joined": "📅 Joined Date",
+        "id": "🆔 User ID",
+        "multipliers": "Multipliers",
+        "marriage": "Relationship",
+        "cap": "Earning Cap",
+        "marriage_bonus": "🎁 Bonus: +{{percent}}% Income",
+        "assets": "Assets",
+        "passive_income": "📈 Passive Income",
+        "passive_income_value": "+{{amount}} coins/hr",
+        "footer": "Use {{prefix}}inventory for more details | {{prefix}}help profile"
+    },
     "minesweeper": {
         "title": "💣  Minesweeper",
         "description": "Mines: **{{mineCount}}**\nBet: **{{bet}}**\n\nClick to open cells. Toggle Flag mode to mark mines.",
@@ -1009,31 +1059,6 @@
         "bet_lost": "Bet lost: **{{amount}}**",
         "win_title": "Victory!",
         "win_desc": "You cleared the minefield!"
-    },
-    "profile": {
-        "title": "{{user}}'s Profile",
-        "experience": "✨ Experience",
-        "level_label": "Level",
-        "level": "**Level:** {{level}}",
-        "economy": "💰 Economy",
-        "balance": "**Balance:** {{emoji}} {{amount}}",
-        "net_worth": "**Net Worth:** {{emoji}} {{amount}}",
-        "ranking": "🏆 Ranking",
-        "unranked": "Unranked (>100)",
-        "inventory_value": "💰 Inventory Value: {{amount}}",
-        "collection": "🎒 Collection",
-        "active_buffs": "⚡ Active Buffs",
-        "total_items": "**Total Items:** {{count}}",
-        "item_types": "**Item Types:** {{count}}",
-        "joined": "📅 Joined on",
-        "id": "🆔 User ID",
-        "multipliers": "⚡ Multipliers",
-        "marriage": "💞 Relationship",
-        "cap": "Max Cap",
-        "marriage_bonus": "🎁 Buff: +{{percent}}% income",
-        "footer": "Use {{prefix}}shop to see more.",
-        "assets": "🏠 Assets",
-        "wealth_rank": "Wealth Rank: **{{rank}}**"
     },
     "wordchain": {
         "title": "🔗  Word Chain",
@@ -1390,11 +1415,11 @@
             "gift": "Send items to another user. Gifting flowers to your spouse gives them a 2h buff!",
             "rank": "View the server leaderboard sorted by XP, balance, or job.",
             "lvl": "See your current level, XP, and a visual progress bar towards the next level.",
-            "profile": "Your personal digital profile: level, coins, net worth, job, marriage & more.",
-            "ping": "Check bot latency, heartbeat, uptime, and system resource info.",
-            "avatar": "View any user's avatar in 4096px high-resolution. Supports animated avatars.",
-            "help": "Open the interactive help menu. Use `$help <command>` for detailed guides.",
-            "language": "Switch your personal display language between English and Vietnamese.",
+            "profile": "Your comprehensive digital passport showing level, coins, assets, career, and marital status.",
+            "ping": "Check real-time network latency, uptime, and system resource utilization.",
+            "avatar": "View high-resolution user avatars (up to 4096px). Supports animated GIF formats.",
+            "help": "Access the interactive command manual. Use `$help <command>` for in-depth gameplay guides.",
+            "language": "Seamlessly switch your display interface between English and Vietnamese.",
             "setrole": "Admin tool: Add, remove, or update roles available in the server's Role Shop.",
             "giveaway": "Host transparent giveaways with timers, role requirements, and multi-winners.",
             "serverinfo": "View detailed server stats: members, channels, boosts, roles, and emojis.",
@@ -1428,7 +1453,7 @@
             "emojiquiz": "🌟 **Description:** A fun visual puzzle! Guess the common phrase, movie, or object described by a set of emojis.\n\n🕹️ **How to Play:**\n- Analyze the emoji string (e.g., 🍎🥧 -> Apple Pie).\n- You have **30 seconds** to type the exact answer.\n\n✨ **Teacher Perk:** **Tutoring** — Correct answers grant a **+50% coin bonus** and extra XP!\n\n💰 **Rewards:** Fast and correct answers provide a coin reward based on difficulty.",
             "guess": "🌟 **Description:** A simple but addictive numbers game. Can you find the number I'm thinking of?\n\n🕹️ **How to Play:**\n- Bot picks a random number between **1 and 100**.\n- You have **7 attempts** to guess it.\n- After each guess, the bot tells you if the number is **higher** (🔼) or **lower** (🔽).\n\n💰 **Rewards:** The reward starts high and decreases with every failed attempt. Guess fast for maximum profit!",
             "rps": "🌟 **Description:** Rock, Paper, Scissors! A classic game of prediction available in Solo or PvP mode.\n\n🕹️ **How to Play:**\n- Choose your weapon: 🪨 Rock, 📄 Paper, or ✂️ Scissors.\n- **Solo:** Play against the bot for a bet.\n- **PvP:** Challenge another user to a high-stakes duel.\n\n⚖️ **Counters:** Rock beats Scissors, Scissors beats Paper, Paper beats Rock.",
-            "tictactoe": "🌟 **Description:** The timeless 3x3 strategy game. Get three in a row to win.\n\n🕹️ **How to Play:**\n1. Challenge another user: `$ttt @user [bet]`.\n2. Take turns placing your mark (❌ or ⭕).\n\n💰 **Outcome:** Winner takes the pot. Refund on draw.",
+            "tictactoe": "🌟 **Description:** The ultimate 3x3 strategy duel. Be the first to align three marks to claim victory.\n\n🕹️ **How to Play:**\n1. Challenge an opponent: `$ttt @user [bet]`.\n2. Take turns placing your mark (❌ or ⭕) on the grid.\n\n💰 **Outcome:** Winner takes the entire pot. Refund issued on a draw.",
             "fish": "🌟 **Description:** Relax and cast your line! Catch anything from tiny minnows to legendary sea monsters.\n\n🎣 **Gear:**\n- **Rod:** Buy Bamboo, Fiberglass, or Carbon rods in `$shop`.\n- **Bait:** Buy worms, crickets, or squid to attract different fish.\n\n🕹️ **How to Play:**\n- Simply use the `$fish` command. The bot automatically uses your best gear.\n- Each trip consumes 1 bait and has a short cooldown.\n\n✨ **Luck Factor:** Better gear increases your 'Luck' stat, making it easier to catch rare fish (Sharks, Kraken) with massive values!",
             "crate": "🌟 **Description:** The ultimate gacha system! Seek out incredibly rare and powerful items hidden inside various types of crates.\n\n🕹️ **Usage:**\n- `$crate list`: View the crates you currently own.\n- `$crate open <ID> [quantity]`: Open your crates (e.g., `$crate open 805 10`).\n\n💰 **Rewards:**\n- Coins, consumable items, and high-tier cosmetic/buff items.\n- Higher-tier crates (Legendary, Mythical) contain much more valuable rewards!",
             "marry": "🌟 **Description:** Marry the one you love and build a life together.\n\n🕹️ **How to Play:**\n1. Propose using the `$marry @user` command.\n2. You must have a **Wedding Ring** or **Diamond Ring** in your inventory.\n3. If they accept, you will be officially married.\n\n💰 **Rewards (Permanent Buff):**\n- **Wedding Ring:** +25% income for both spouses.\n- **Diamond Ring:** +50% income for both spouses.\n\n⚠️ **Note:** This bonus is lost if you divorce.",
@@ -1502,11 +1527,11 @@
         "luck_label": "Luck Stat"
     },
     "effects": {
-        "income": "Boost (`$work, $slut, $crime, $fish, $search`)",
-        "daily": "Boost (`$daily`)",
-        "gamble": "Profit (`$cf, $dice, $slots, $bj, $poker`)",
+        "income": "Earnings Boost",
+        "daily": "Daily Boost",
+        "gamble": "Gambling Profit",
         "xpboost": "Bonus XP Gain",
-        "robshield": "Safe from `$rob`",
+        "robshield": "Robbery Shield",
         "social": "Social Bonus",
         "tool": "Rare fish fishing luck",
         "bait": "Fishing skill luck",

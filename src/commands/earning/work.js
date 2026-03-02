@@ -8,7 +8,7 @@ const { formatDuration } = require('../../utils/time'); // Assuming formatDurati
 module.exports = {
     name: 'work',
     aliases: ['wk', 'w'],
-    description: 'Làm việc (Work to earn money)',
+    description: 'Xây dựng sự nghiệp và tạo thu nhập (Build your career and earn income)',
     cooldown: config.ECONOMY.WORK_COOLDOWN,
     async execute(message, args) {
         const { client } = message; // Added this line as per the edit, assuming it's needed later

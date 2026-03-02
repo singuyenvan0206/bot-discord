@@ -8,7 +8,7 @@ const config = require('../../config');
 module.exports = {
     name: 'crime',
     aliases: ['cr'],
-    description: 'Phi vụ (Commit a crime)',
+    description: 'Thực hiện các phi vụ bất hợp pháp (Commit illegal heists for fast cash)',
     cooldown: config.ECONOMY.CRIME_COOLDOWN,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);

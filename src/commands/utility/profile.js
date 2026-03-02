@@ -10,7 +10,7 @@ const bizConfig = require('../../config/businesses');
 module.exports = {
     name: 'profile',
     aliases: ['pf', 'pr', 'p'],
-    description: 'Hồ sơ (User profile)',
+    description: 'Xem hồ sơ cá nhân, tài sản và cấp độ (View your personal profile, assets, and level)',
     skipXp: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
@@ -47,9 +47,10 @@ module.exports = {
         const xpProgress = (dbUser.xp || 0) - currentLevelXp;
         const progressPercent = Math.min(100, Math.max(0, (xpProgress / xpNeeded) * 100));
 
-        // Create Progress Bar (10 blocks)
-        const filledBlocks = Math.floor(progressPercent / 10);
-        const emptyBlocks = 10 - filledBlocks;
+        // Create Progress Bar (20 blocks)
+        const totalBlocks = 10;
+        const filledBlocks = Math.floor((progressPercent / 100) * totalBlocks);
+        const emptyBlocks = totalBlocks - filledBlocks;
         const progressBar = '▮'.repeat(filledBlocks) + '▯'.repeat(emptyBlocks);
 
         // Marriage Status
@@ -73,21 +74,75 @@ module.exports = {
         });
 
         const embed = new EmbedBuilder()
-            .setAuthor({ name: t('profile.title', lang, { user: user.tag }), iconURL: user.displayAvatarURL({ dynamic: true, size: 256 }) })
+            .setAuthor({
+                name: t('profile.title', lang, { user: user.tag }),
+                iconURL: user.displayAvatarURL({ dynamic: true, size: 256 })
+            })
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
             .setColor(config.COLORS.INFO)
+            .setDescription(` ${t('profile.identity_section', lang)} ${'\u3164'.repeat(25)}`)
             .addFields(
-                { name: t('profile.experience', lang), value: t('profile.level', lang, { level: dbUser.level.toLocaleString() }) + `\n\`${progressBar}\` ${Math.floor(progressPercent).toLocaleString()}%\n(${Math.floor(dbUser.xp).toLocaleString()}/${Math.floor(nextLevelXp).toLocaleString()} XP)`, inline: false },
-                { name: t('job.name_field', lang), value: dbUser.job ? t(`job.name_${dbUser.job}`, lang) : t('job.none', lang), inline: true },
-                { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
-                { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
-                { name: t('profile.assets', lang) || "🏠 Assets", value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]}` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length.toLocaleString() })}`, inline: true },
-                { name: t('business.passive_income_title', lang) || "📈 Passive Income", value: `+${totalPassiveIncome.toLocaleString()} coins/hour`, inline: true },
-                { name: t('profile.multipliers', lang), value: `💼 **${t('effects.income', lang)}:** +${incomeBonus}%\n🎲 **${t('effects.gamble', lang)}:** +${gambleBonus}%\n✨ **${t('effects.xpboost', lang)}:** +${xpBonus}%\n🛡️ **${t('profile.cap', lang)}:** ${maxCapPercent}%`, inline: true },
-                { name: t('profile.marriage', lang), value: marriageStatus, inline: true },
-                { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount.toLocaleString() }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length.toLocaleString() }), inline: true },
-                { name: t('profile.joined', lang), value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>`, inline: true },
-                { name: t('profile.id', lang), value: `\`${user.id}\``, inline: true }
+                {
+                    name: `👤 ${t('userinfo.username', lang)}`,
+                    value: `**${user.username}**\n`,
+                    inline: true
+                },
+                {
+                    name: `📅 ${t('profile.joined', lang)}`,
+                    value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>`,
+                    inline: true
+                },
+                {
+                    name: `💼 ${t('job.name_field', lang)}`,
+                    value: dbUser.job ? t(`job.name_${dbUser.job}`, lang) : t('job.none', lang),
+                    inline: true
+                },
+
+                { name: '\u200B', value: ` ${t('profile.economy_section', lang)} ${'\u3164'.repeat(25)}`, inline: false },
+                {
+                    name: t('profile.economy', lang),
+                    value: `${config.EMOJIS.COIN} **${dbUser.balance.toLocaleString()}**\n↳ ${t('profile.net_worth', lang, { emoji: '', amount: netWorth.toLocaleString() })}`,
+                    inline: true
+                },
+                {
+                    name: t('profile.ranking', lang),
+                    value: `🏆 **${rank}**\n↳ ${t('profile.wealth_rank', lang, { rank: '' }).replace(':', '').trim()}`,
+                    inline: true
+                },
+                {
+                    name: t('profile.assets', lang),
+                    value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]}` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length.toLocaleString() })}`,
+                    inline: true
+                },
+
+                { name: '\u200B', value: ` ${t('profile.progression_section', lang)} ${'\u3164'.repeat(25)}`, inline: false },
+                {
+                    name: `${t('profile.level_label', lang)} ${dbUser.level.toLocaleString()}`,
+                    value: `\`${progressBar}\` **${Math.floor(progressPercent)}%**\n${Math.floor(dbUser.xp).toLocaleString()} / ${Math.floor(nextLevelXp).toLocaleString()} XP`,
+                    inline: false
+                },
+                {
+                    name: t('profile.multipliers', lang),
+                    value: `💼 **${incomeBonus}%** | 🎲 **${gambleBonus}%** | ✨ **${xpBonus}%**\n🛡️ ${t('profile.cap', lang)}: **${maxCapPercent}%**`,
+                    inline: true
+                },
+                {
+                    name: t('profile.passive_income', lang),
+                    value: `**+${totalPassiveIncome.toLocaleString()}** coins/hr`,
+                    inline: true
+                },
+
+                { name: '\u200B', value: ` ${t('profile.social_section', lang)} ${'\u3164'.repeat(25)}`, inline: false },
+                {
+                    name: t('profile.marriage', lang),
+                    value: marriageStatus,
+                    inline: true
+                },
+                {
+                    name: t('profile.collection', lang),
+                    value: t('profile.total_items', lang, { count: itemCount.toLocaleString() }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length.toLocaleString() }),
+                    inline: true
+                }
             )
             .setFooter({ text: t('profile.footer', lang, { prefix: config.PREFIX }) })
             .setTimestamp();

@@ -9,7 +9,7 @@ const path = require('path');
 module.exports = {
     name: 'help',
     aliases: ['h'],
-    description: 'Trợ giúp (Help menu)',
+    description: 'Mở menu trợ giúp hệ thống và hướng dẫn lệnh (Open the system help menu and command guides)',
     skipXp: true,
     async execute(message, args) {
         const prefix = config.PREFIX;

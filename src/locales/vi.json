@@ -388,41 +388,41 @@
         "dm_disabled_random": "📬 Vì DM của bạn đang tắt, tôi đã gán cho bạn nghề ngẫu nhiên: **{{job}}**! (Dùng {{prefix}}job me để xem)",
         "none": "Không có",
         "name_police": "👮 Cảnh Sát",
-        "desc_police": "Duy trì trật tự và an ninh thành phố. Cảnh sát có thu nhập từ tiền phạt tội phạm.",
-        "info_police": "• **Làm Thêm Giờ**: 40% tỉ lệ nhận thêm +1500 coins cố định khi làm việc.\n• **Truy Quét Tội Phạm**: Tăng 50% tiền thưởng khi bắt giữ tội phạm trong lệnh `crime`.\n• **Răn Đe**: Tăng gấp đôi mức phạt cho người khác nếu họ trộm (`rob`) thất bại trên kênh có bạn.",
-        "name_criminal": "🥷 Tội Phạm",
-        "desc_criminal": "Sống ngoài vòng pháp luật. Rủi ro cao nhưng phần thưởng cực lớn.",
-        "info_criminal": "• **Nghề Nguy Hiểm**: Tăng 15% tỉ lệ thành công cho các lệnh `rob` và `crime`.\n• **Tẩu Thoát**: 50% tỉ lệ được giảm mức phạt tiền khi bị bắt (nếu có trang bị).\n• **Đột Nhập**: +50% tiền thưởng nếu đột nhập thành công đồn cảnh sát.",
+        "desc_police": "Vệ binh tận tụy của công lý, người đứng giữa ranh giới của trật tự và hỗn loạn. Thực thi pháp luật và bảo vệ bình yên cho cư dân Grand Line.",
+        "info_police": "✨ **Đặc quyền Cảnh Sát:**\n• **Tăng ca**: 15% xác xuất nhận thêm tiền thưởng nóng (+150 coins).\n• **Thực thi pháp luật**: Tỷ lệ thành công khi truy bắt tội phạm cao hơn.\n• **Tuần tra**: Nhận thêm 100-200 coins khi thực hiện lệnh `search`.",
+        "name_criminal": "👤 Tội Phạm",
+        "desc_criminal": "Kẻ ngoài vòng pháp luật sống bằng bản lĩnh và sự liều lĩnh. Bóng tối là bạn đồng hành, ngân khố là mục tiêu tối thượng của bạn.",
+        "info_criminal": "• **Phi Vụ Thế Kỷ**: Tăng 20% tỉ lệ thành công khi thực hiện lệnh `crime`.\n• **Bậc Thầy Trộm Cắp**: Tăng 15% tỉ lệ thành công khi đi `rob` người khác.\n• **Lẩn Trốn**: Giảm 25% thời gian phải ngồi tù nếu bị cảnh sát bắt.",
         "name_doctor": "👨‍⚕️ Bác Sĩ",
-        "desc_doctor": "Cứu người và nghiên cứu y học. Nhận phí điều trị từ những người gặp nạn.",
-        "info_doctor": "• **Phí Điều Trị**: Tự động nhận tiền khi có người chơi khác thất bại lệnh `slut`.\n• **Trợ Cấp Y Tế**: 30% tỉ lệ nhận thêm +100 đến +300 coins vào mỗi đợt `daily`.\n• **Sơ Cứu**: Tăng thêm +5% thu nhập thụ động từ mọi nguồn.",
-        "name_programmer": "💻 Lập Trình Viên",
-        "desc_programmer": "Xây dựng tương lai bằng mã nguồn. Thu nhập nhận được cao và ổn định.",
-        "info_programmer": "• **Tối Ưu Hóa**: Chắc chắn nhận thêm +2500 coins vào cuối mỗi ca làm việc (`work`).\n• **Regex Master**: Hiển thị thêm gợi ý ký tự đặc biệt trong trò chơi `scramble`.\n• **Tập Trung Cao Độ**: Tăng 30% tiền thưởng khi chơi Word Chain và Scramble.",
+        "desc_doctor": "Thiên sứ áo trắng với đôi tay tài hoa. Người nắm giữ chìa khóa của sự sinh tồn và hồi phục, mang lại hy vọng cho những người đang lầm than.",
+        "info_doctor": "• **Thử Nghiệm Lâm Sàng**: Có cơ hội nhận thêm 100-300 coins bonus khi nhận quà hàng ngày.\n• **Hồi Phục Thần Tốc**: Tăng 20% tỉ lệ nhận được vật phẩm buff khi làm việc.\n• **Trợ Cấp Y Tế**: Nhận hoa hồng từ mỗi người dùng phải nhập viện trong server.",
+        "name_programmer": "👨‍💻 Lập Trình Viên",
+        "desc_programmer": "Kiến trúc sư của thế giới số. Những dòng code của bạn xây dựng nên nền tảng của tương lai và mang lại nguồn thu nhập ổn định bền vững.",
+        "info_programmer": "• **Tối Ưu Hóa Thuật Toán**: Chắc chắn nhận thêm +200 coins phụ cấp chuyên môn mỗi giờ.\n• **Regex Master**: Tự động nhận thêm 1 chữ cái gợi ý trong trò chơi Sắp Xếp Chữ.\n• **Tập Trung Cao Độ**: Tăng 25% tiền thưởng từ các trò chơi giải đố và trí tuệ.",
         "name_farmer": "👨‍🌾 Nông Dân",
-        "desc_farmer": "Gắn bó với đất đai. Sự chăm chỉ sẽ mang lại những vụ mùa bội thu.",
-        "info_farmer": "• **Mùa Màng Bội Thu**: 25% tỉ lệ nhận được phần thưởng x2.5 lần khi `work`.\n• **Bậc Thầy Câu Cá**: Tỉ lệ câu được cá Siêu Hiếm/Thần Thoại cao nhất.\n• **Tiết Kiệm**: 10% tỉ lệ không mất mồi câu khi đi câu cá.",
-        "name_hacker": "👨‍💻 Hacker",
-        "desc_hacker": "Dữ liệu là vàng. Khai thác các hệ thống để trục lợi.",
-        "info_hacker": "• **Xâm Nhập Hệ Thống**: 35% tỉ lệ nhận được x2 tiền thưởng từ lệnh `search`.\n• **Dò Mìn (Minesweeper)**: Tự động gỡ và cắm cờ chính xác 1 quả mìn khi bắt đầu.\n• **Rò Rỉ Dữ Liệu**: 15% tỉ lệ nhận thêm +200 đến +500 coins khi `search`.",
+        "desc_farmer": "Người làm bạn với đất mẹ và thiên nhiên. Sự kiên trì và tỉ mỉ giúp bạn gặt hái những tinh túy từ lòng đất và đại dương xanh thẳm.",
+        "info_farmer": "• **Mùa Màng Bội Thu**: 15% tỉ lệ nhận được phần thưởng x2.5 lần khi làm việc.\n• **Bậc Thầy Ngư Phủ**: Tăng 15% tỉ lệ câu được Cá Khổng Lồ và báu vật dưới nước.\n• **Tiết Kiệm**: Tỷ lệ hoàn lại mồi câu cao khi câu cá thất bại.",
+        "name_hacker": "👤 Hacker",
+        "desc_hacker": "Bóng ma trong mạng lưới kỹ thuật số. Với trí tuệ siêu việt, bạn điều khiển dòng chảy thông tin và khai thác những kẽ hở của hệ thống tài chính.",
+        "info_hacker": "• **Bẻ Khóa Hệ Thống**: Tỷ lệ thành công khi thực hiện Phi Vụ (Crime) cao hơn bình thường.\n• **Dò Tìm Dữ Liệu**: Tự động gỡ và cắm cờ chính xác 1 quả mìn khi bắt đầu trò chơi Dò Mìn.\n• **Nhân Đôi Lợi Nhuận**: Có cơ hội nhân đôi (x2) toàn bộ tiền cướp được từ hệ thống.",
         "name_streamer": "🎥 Streamer",
-        "desc_streamer": "Xây dựng cộng đồng và trở nên nổi tiếng. Tiềm năng viral cực lớn.",
-        "info_streamer": "• **Viral Content**: 25% tỉ lệ bùng nổ truyền thông, nhận thưởng x5 lần khi `work`.\n• **Subathon**: 50% tỉ lệ nhận thêm +200% giá trị phần thưởng từ lệnh `daily`.\n• **Sub Hype**: Tăng 20% tỉ lệ nhận được x2 tiền thưởng khi chơi `slots`.",
+        "desc_streamer": "Thần tượng tiềm năng của giới trẻ. Sự duyên dáng và sức ảnh hưởng của bạn biến mỗi buổi livestream thành một sự kiện bùng nổ doanh thu.",
+        "info_streamer": "• **Viral Content**: 15% tỉ lệ bùng nổ truyền thông, nhận thưởng x5 lần khi làm việc.\n• **Hype Subathon**: Có cơ hội nhận thêm +25% tổng phần thưởng hàng ngày.\n• **Donate Hype**: 10% cơ hội tăng mạnh tiền thắng cược từ máy Quay Hũ (Slots).",
         "name_chef": "👨‍🍳 Đầu Bếp",
-        "desc_chef": "Sáng tạo những món ăn ngon. Sự tỉ mỉ mang lại tiền tip và danh tiếng.",
-        "info_chef": "• **Sao Michelin**: 50% tỉ lệ nhận được phần thưởng x3 lần từ lệnh `daily`.\n• **Thực Đơn VIP**: 20% tỉ lệ nhận được đơn hàng đặc biệt, nhân x2 tiền khi `work`.\n• **Tiền Tip**: Nhận 50-100 coins từ Nhà Cái nếu Hòa (Push) trong Blackjack.",
+        "desc_chef": "Bậc thầy ẩm thực biến những nguyên liệu tầm thường thành mỹ vị nhân gian. Niềm đam mê hương vị của bạn có thể gắn kết mọi tâm hồn.",
+        "info_chef": "• **Tiêu Chuẩn Michelin**: Có cơ hội nhân ba (x3) phần thưởng quà tặng hàng ngày.\n• **Thực Đơn VIP**: Tăng 20% tiền thưởng cố định khi thực hiện lệnh làm việc.\n• **Mời Nước**: Hoàn trả tiền cược khi ván Blackjack có kết quả Hòa (Push).",
         "name_musician": "🎸 Nhạc Sĩ",
-        "desc_musician": "Để âm nhạc dẫn lối. Tìm thấy trạng thái thăng hoa để nhân đôi may mắn.",
-        "info_musician": "• **Flow State**: 20% tỉ lệ x2 tiền thắng trong `rps` và `gamble`.\n• **Trình Diễn**: Tăng 20% tiền thưởng từ tất cả các trò chơi tương tác.\n• **Nhịp Điệu**: Giảm nhẹ thời gian cooldown của các trò chơi nhỏ.",
+        "desc_musician": "Nghệ sĩ tâm hồn truyền cảm hứng qua từng nốt nhạc. Giai điệu của bạn có sức mạnh lay động lòng người và mang lại vận may bất ngờ.",
+        "info_musician": "• **Trạng Thái Thăng Hoa**: 15% cơ hội nhân đôi (x2) tiền thắng cược Blackjack và Gamble.\n• **Biểu Diễn Công Chúng**: Nhận thêm tiền tip từ người hâm mộ sau mỗi lần làm việc.\n• **Giai Điệu May Mắn**: Giảm 10% thời gian chờ (cooldown) của các lệnh giải trí.",
         "name_soldier": "🪖 Quân Nhân",
-        "desc_soldier": "Phục vụ và bảo vệ. Kỷ luật quân đội mang lại những khoản thưởng chắc chắn.",
-        "info_soldier": "• **Kỷ Luật Thép**: Chắc chắn nhận thêm +2000 coins thưởng lương cho mọi ca `work`.\n• **Vũ Trang**: Giảm 30% mức phạt tiền mặt nếu thất bại khi thực hiện lệnh `crime`.\n• **Tiến Công**: Tăng thêm 10% tỉ lệ thành công khi đi `rob` người khác.",
+        "desc_soldier": "Chiến binh tinh nhuệ với kỷ luật thép. Luôn sẵn sàng dấn thân vào những nhiệm vụ nguy hiểm nhất để bảo vệ nền hòa bình thế giới.",
+        "info_soldier": "• **Kỷ Luật Quân Đội**: Đảm bảo nhận thêm phụ cấp nhiệm vụ (+200 coins) mỗi ca làm việc.\n• **Vũ Trang Tận Răng**: Giảm 50% số tiền bị phạt nếu thất bại trong các lệnh nguy hiểm.\n• **Hành Quân Cấp Tốc**: Nhận thêm kinh nghiệm (XP) đáng kể sau mỗi hành động.",
         "name_trader": "📈 Thương Nhân",
-        "desc_trader": "Mua thấp, bán cao. Làm chủ thị trường để giảm thiểu thua lỗ.",
-        "info_trader": "• **Bảo Hiểm Thua Lỗ**: 35% tỉ lệ hoàn lại 50% tiền cược khi thua `rps` / 25% `coinflip`.\n• **Mẹo Thị Trường**: Luôn tìm ra kẽ hở nhận thêm +150 coins cho mỗi lần `search`.\n• **Thao Túng**: Có tỉ lệ nổ hũ trong máy quay `slots` cao hơn 10%.",
-        "name_teacher": "📚 Giáo Viên",
-        "desc_teacher": "Đào tạo thế hệ tương lai. Kiến thức là sức mạnh và hệ số nhân.",
-        "info_teacher": "• **Học Thuật**: Hệ số x1.5 XP vĩnh viễn cho tất cả các hành động trên bot.\n• **Gia Sư**: Khi tham gia `trivia`, mọi người khác được +50% tiền và +10 XP.\n• **Hắc Điểm**: Nếu đi `rob` hoặc `crime` thất bại, bạn sẽ bị phạt nặng hơn.",
+        "desc_trader": "Phù thủy thị trường với nhãn quan kinh doanh sắc bén. Bạn biết cách luân chuyển dòng vốn và tối ưu hóa lợi nhuận trong mọi giao dịch.",
+        "info_trader": "• **Bảo Hiểm Thị Trường**: Hoàn lại 50% tiền cược nếu thua Blackjack/Coinflip (xác suất cao).\n• **Mẹo Kinh Doanh**: Luôn nhận thêm tiền bonus khi tìm kiếm vật phẩm hoặc tiền bạc.\n• **Thao Túng Slots**: Tăng nhẹ tỷ lệ thắng các biểu tượng hiếm trong máy Quay Hũ.",
+        "name_teacher": "👨‍🏫 Giáo Viên",
+        "desc_teacher": "Kiến trúc sư của tâm hồn. Kiến thức bạn truyền dạy không chỉ khai sáng tư duy mà còn nhân bội thành quả cho những người xung quanh.",
+        "info_teacher": "• **Học Thuật Uyên Thâm**: Hệ số nhân XP vĩnh viễn (x1.5) cho chủ sở hữu.\n• **Gia Sư Tận Tâm**: Khi bạn chơi Trivia, tất cả người chơi khác đều được thưởng thêm tiền và XP.\n• **Kỷ Luật Nghiêm Khắc**: Nếu vi phạm pháp luật (Rob/Crime), bạn sẽ bị phạt gấp đôi người thường.",
         "chef_tip": "\n👨‍🍳 **Tiền tip từ Đầu bếp!** Dealer thưởng cho bạn {{amount}} coins vì sự tỉ mỉ! 🍳",
         "job_facts": "Sự thật thú vị:",
         "fact_police": "Cảnh sát có thể nhận thêm tiền phạt từ những kẻ trộm cướp bị bắt quả tang!",
@@ -615,67 +615,79 @@
     },
     "items": {
         "101": {
-            "name": "🍪 Bánh Quy",
-            "desc": "Bổ sung đường! (+10% Thưởng Thêm | 1 ngày)",
-            "details": "Một chiếc bánh quy sô-cô-la đơn giản. Đủ ngọt để giữ cho bạn động lực nhận thêm nhiều phần thưởng hàng ngày."
+            "name": "🍪 Bánh Quy May Mắn",
+            "desc": "Năng lượng ngọt ngào! (+10% Thưởng Thêm | 1 ngày)",
+            "details": "Một chiếc bánh quy socola mới nướng, thơm lừng. Vị ngọt ngào của nó giúp bạn luôn tràn đầy hứng khởi khi nhận quà hàng ngày."
         },
         "102": {
-            "name": "🧸 Thảm Lông",
-            "desc": "Mềm mại đôi chân (+40% Thưởng Thêm | 7 ngày)"
+            "name": "🧸 Thảm Lông Cừu",
+            "desc": "Cực kỳ êm ái (+40% Thưởng Thêm | 7 ngày)",
+            "details": "Chiếc thảm lông mềm mại mang lại cảm giác thư thái tuyệt đối cho đôi chân, giúp bạn bắt đầu ngày mới một cách nhẹ nhàng."
         },
         "103": {
-            "name": "🗿 Tượng Đá Moai",
-            "desc": "Vững như bàn thạch (+80% Thưởng Thêm | 30 ngày)"
+            "name": "🗿 Tượng Moai Bí Ẩn",
+            "desc": "Kiên định như đá (+80% Thưởng Thêm | 30 ngày)",
+            "details": "Bức tượng cổ xưa mang trong mình sức mạnh huyền bí, giúp vận may của bạn luôn duy trì ở trạng thái ổn định nhất."
         },
         "104": {
-            "name": "🎫 Vé Vàng VIP",
-            "desc": "Đặc quyền VIP (+150% Thưởng Thêm | 30 ngày)"
+            "name": "🎫 Thẻ Vàng VIP",
+            "desc": "Đặc quyền thượng lưu (+150% Thưởng Thêm | 30 ngày)",
+            "details": "Biểu tượng của sự đẳng cấp. Chiếc thẻ này mở ra những ưu đãi độc quyền dành riêng cho giới tinh hoa của Grand Line."
         },
         "105": {
             "name": "🚀 Trạm Không Gian",
-            "desc": "Phần thưởng từ quỹ đạo (+500% Thưởng Thêm | 30 ngày)"
+            "desc": "Phần thưởng từ quỹ đạo (+500% Thưởng Thêm | 30 ngày)",
+            "details": "Kỹ thuật công nghệ đỉnh cao giúp bạn thu thập tài nguyên từ không gian, mang lại lợi ích khổng lồ vượt xa mặt đất."
         },
         "201": {
-            "name": "📱 Điện Thoại",
-            "desc": "Luôn kết nối (+15% Thu Nhập | 7 ngày)",
-            "details": "Điện thoại thông minh cao cấp với kết nối nhanh. Cần thiết để luôn dẫn đầu trong công việc của bạn."
+            "name": "📱 Smartphone Ultra",
+            "desc": "Kết nối không giới hạn (+15% Thu Nhập | 7 ngày)",
+            "details": "Siêu điện thoại với kết nối 6G siêu tốc, giúp bạn xử lý công việc và quản lý tài chính mọi lúc mọi nơi."
         },
         "202": {
-            "name": "⌨️ Bàn Phím RGB",
-            "desc": "Gõ phím lạch cạch (+40% Thu Nhập | 7 ngày)"
+            "name": "⌨️ Bàn Phím Cơ Custom",
+            "desc": "Gõ phím mượt mà (+40% Thu Nhập | 7 ngày)",
+            "details": "Tiếng gõ lạch cạch đầy cảm hứng giúp tăng cường hiệu suất làm việc và tốc độ phản xạ của bạn."
         },
         "203": {
-            "name": "🖥️ Màn Hình 4K",
-            "desc": "Rõ nét từng chi tiết (+70% Thu Nhập | 7 ngày)"
+            "name": "🖥️ Màn Hình 8K HDR",
+            "desc": "Tầm nhìn rực rỡ (+70% Thu Nhập | 7 ngày)",
+            "details": "Độ phân giải siêu cao giúp bạn quan sát mọi biến động nhỏ nhất, từ đó đưa ra những quyết định chính xác."
         },
         "204": {
-            "name": "📈 Máy Tính Giao Dịch",
-            "desc": "Phân tích thị trường (+100% Thu Nhập | 30 ngày)"
+            "name": "📈 Trạm Giao Dịch Chuyên Nghiệp",
+            "desc": "Làm chủ thị trường (+100% Thu Nhập | 30 ngày)",
+            "details": "Hệ thống phân tích dữ liệu thời gian thực dành cho những bậc thầy tài chính, tối ưu hóa mọi nguồn thu nhập."
         },
         "205": {
-            "name": "🛥️ Siêu Du Thuyền",
-            "desc": "Văn phòng trên biển (+600% Thu Nhập | 30 ngày)"
+            "name": "🛥️ Siêu Du Thuyền Hoàng Gia",
+            "desc": "Văn phòng trên đại dương (+600% Thu Nhập | 30 ngày)",
+            "details": "Biểu tượng cực hạn của sự thành công. Khi làm việc trên biển, tầm vóc của bạn sẽ thu hút những hợp đồng tỷ đô."
         },
         "301": {
-            "name": "🎲 Xúc Xắc Vàng",
-            "desc": "Đổ số cao (+25% Gamble | 7 ngày)",
-            "details": "Xúc xắc vàng nặng tay cảm thấy rất may mắn. Cải thiện tỉ lệ thắng của bạn trong các trò chơi cá cược."
+            "name": "🎲 Xúc Xắc Hoàng Kim",
+            "desc": "Xúc xắc may mắn (+25% Gamble | 7 ngày)",
+            "details": "Xúc xắc đúc từ vàng ròng, mang lại cảm giác nặng tay và uy lực trong mỗi lần đổ. Cải thiện đáng kể tỉ lệ thắng của bạn."
         },
         "302": {
             "name": "📿 Vòng Cổ Phỉ Thúy",
-            "desc": "Vẻ đẹp thuần khiết và may mắn (+50% Gamble | 30 ngày)"
+            "desc": "Vẻ đẹp thuần khiết (+50% Gamble | 30 ngày)",
+            "details": "Viên ngọc phỉ thúy tinh xảo chứa đựng linh khí thiên nhiên, giúp chủ sở hữu luôn giữ được sự tỉnh táo và vận may bất ngờ."
         },
         "303": {
-            "name": "🪙 Chip Đất Sét",
-            "desc": "Cảm giác chuyên nghiệp (+70% Gamble | 30 ngày)"
+            "name": "🪙 Chip Đất Sét Pro",
+            "desc": "Phong cách chuyên nghiệp (+70% Gamble | 30 ngày)",
+            "details": "Mẫu chip dành riêng cho các sòng bạc lớn, mang lại sự tự tin và đẳng cấp cho người chơi trong mọi ván cược."
         },
         "304": {
-            "name": "🍀 Cỏ 4 Lá",
-            "desc": "Cảm thấy may mắn? (+150% Gamble | 30 ngày)"
+            "name": "🍀 Cỏ 4 Lá Thần Kỳ",
+            "desc": "Linh vật may mắn (+150% Gamble | 30 ngày)",
+            "details": "Một món quà hiếm hoi từ thiên nhiên. Chỉ cần mang bên mình, bạn sẽ cảm nhận được sự bảo hộ của thần may mắn."
         },
         "305": {
             "name": "⏳ Cỗ Máy Thời Gian",
-            "desc": "Viết lại lịch sử (+1000% Gamble | 30 ngày)"
+            "desc": "Nắm giữ tương lai (+500% Gamble | 30 ngày)",
+            "details": "Thiết bị tối tân cho phép bạn nhìn thấy các khả năng trong tương lai, giúp xoay chuyển cục diện của mọi ván cược lớn."
         },
         "401": {
             "name": "🍞 Mồi Bánh Mì",
@@ -736,59 +748,59 @@
             "details": "Cần câu huyền thoại đúc từ tinh thể đại dương. Mang lại may mắn cực lớn cho người sử dụng."
         },
         "501": {
-            "name": "🛡️ Khiên Bảo Vệ",
-            "desc": "Chặn một lần bị người khác cướp tiền | 1 ngày",
-            "details": "Một chiếc khiên vật lý chắc chắn có thể chặn một lần bị người khác cướp tiền."
+            "name": "🛡️ Khiên Hộ Vệ",
+            "desc": "Lớp bảo vệ vững chãi (Chặn 1 lần bị cướp | 1 ngày)",
+            "details": "Một tấm khiên được rèn từ thép cường lực, cung cấp sự bảo mật tuyệt đối cho tài sản của bạn trước những kẻ tham lam."
         },
         "502": {
-            "name": "🧪 Thuốc Tăng XP",
-            "desc": "Nhận thêm +50% XP khi thực hiện các hoạt động | 1 ngày",
-            "details": "Tiên dược màu xanh tỏa sáng giúp bạn tập trung cao độ. Nhận gấp đôi năng lượng và thăng cấp nhanh hơn."
+            "name": "🧪 Tiên Dược Tri Thức",
+            "desc": "Gia tăng tốc độ thăng tiến (+50% XP | 1 ngày)",
+            "details": "Dung dịch tỏa ra ánh sáng xanh huyền ảo, kích thích tiềm năng học hỏi và giúp bạn thăng cấp nhanh chóng."
         },
         "503": {
-            "name": "🎟️ Thẻ Chuyển Nghề",
-            "desc": "Dùng để thay đổi định hướng nghề nghiệp của bạn.",
-            "details": "Một văn bản uy tín cho phép bạn thay đổi định hướng nghề nghiệp của mình thông qua lệnh $job."
+            "name": "🎟️ Thẻ Cấp Bậc Nghề Nghiệp",
+            "desc": "Tái định hướng sự nghiệp (Dùng để đổi nghề)",
+            "details": "Văn bản chính thức cho phép bạn thay đổi lộ trình sự nghiệp của mình, mở ra những chân trời mới trong Grand Line."
         },
         "601": {
-            "name": "🦈 Lời Chúc Của Megalodon",
-            "desc": "Sức mạnh cá mập khổng lồ (+50% Mọi Thưởng | 1 giờ)",
-            "details": "Hào quang từ vua biển cả Megalodon giúp bạn kiếm tiền dễ dàng hơn bao giờ hết."
+            "name": "🦈 Chúc Phúc Megalodon",
+            "desc": "Uy thế của bạo chúa biển sâu (+50% Thưởng | 1 giờ)",
+            "details": "Cảm nhận sức mạnh cuồng bạo của Megalodon, giúp bạn thu phục mọi thử thách và tối ưu hóa lợi nhuận."
         },
         "602": {
-            "name": "🔱 Ân Điển Của Poseidon",
-            "desc": "Quyền năng thần biển cả (+100% Mọi Thưởng | 2 giờ)",
-            "details": "Sức mạnh thần thánh từ Đinh ba giúp bạn thống trị đại dương và nhận thu nhập cực lớn."
+            "name": "🔱 Thần Lực Poseidon",
+            "desc": "Quyền kiểm soát đại dương (+100% Thưởng | 2 giờ)",
+            "details": "Sự bảo hộ từ vị thần biển cả Poseidon, mang lại vận may thiên giới và nguồn thu nhập khổng lồ."
         },
         "603": {
-            "name": "🔮 Hào Quang Ngọc Trai",
-            "desc": "Ánh sáng dẫn lối (+40% Mọi Thưởng | 1 giờ)",
-            "details": "Hào quang từ Ngọc Trai Thần Thoại giúp bạn tập trung và tăng hiệu quả công việc."
+            "name": "🔮 Hào Quang Ngọc Trai Biển",
+            "desc": "Ánh sáng tinh khiết (+40% Thưởng | 1 giờ)",
+            "details": "Ánh sáng dịu nhẹ từ viên ngọc cổ xưa giúp làm sạch tâm trí, tăng cường sự tập trung và hiệu quả làm việc."
         },
         "604": {
-            "name": "🐙 Sức Mạnh Kraken",
-            "desc": "Cơn thịnh nộ đại dương (+60% Mọi Thưởng | 1.5 giờ)",
-            "details": "Nhận được sự uy lực của Kraken, tăng +60% thu nhập trong 1.5 giờ."
+            "name": "🐙 Cơn Thịnh Nộ Kraken",
+            "desc": "Sức mạnh từ vực thẳm (+60% Thưởng | 1.5 giờ)",
+            "details": "Năng lượng bộc phát từ quái thú Kraken giúp bạn phá vỡ mọi giới hạn tài chính hiện tại."
         },
         "605": {
-            "name": "🐢 Trường Thọ Rùa Thần",
-            "desc": "Phúc lành Rùa Thần (+70% Mọi Thưởng | 3 giờ)",
-            "details": "Phúc lành từ Rùa Nghìn Năm, tăng +70% thu nhập trong 3 giờ."
+            "name": "🐢 Chúc Phúc Rùa Nghìn Năm",
+            "desc": "Sự kiên nhẫn và bền bỉ (+70% Thưởng | 3 giờ)",
+            "details": "Trải nghiệm sự trường thọ và vận khí từ rùa thần, giúp nguồn thu nhập của bạn tăng trưởng ổn định."
         },
         "606": {
-            "name": "🐉 Uy Phong Hải Long",
-            "desc": "Thần lực Hải Long (+150% Mọi Thưởng | 2 giờ)",
-            "details": "Thần lực từ Hải Long, tăng +150% thu nhập trong 2 giờ."
+            "name": "🐉 Long Uy Đại Dương",
+            "desc": "Sức mạnh của báu vật rồng (+150% Thưởng | 2 giờ)",
+            "details": "Thần lực tối thượng từ Hải Long mang lại sự giàu sang và quyền lực tuyệt đối cho người sở hữu."
         },
         "701": {
-            "name": "💍 Nhẫn Cưới",
-            "desc": "Kỷ vật minh chứng tình yêu vĩnh hằng.",
-            "details": "Dùng lệnh `$marry` để cầu hôn người khác."
+            "name": "💍 Nhẫn Cưới Vĩnh Cửu",
+            "desc": "Minh chứng cho một tình yêu đẹp.",
+            "details": "Vật đính ước đại diện cho sự gắn kết bền chặt. Sử dụng lệnh `$marry` để khẳng định chủ quyền tình cảm."
         },
         "702": {
-            "name": "💎 Nhẫn Kim Cương",
-            "desc": "Kỷ vật tình yêu xa xỉ bậc nhất.",
-            "details": "Thay thế Nhẫn Cưới, cung cấp nhiều phần thưởng hơn."
+            "name": "💎 Nhẫn Kim Cương Lấp Lánh",
+            "desc": "Biểu tượng của sự sang trọng và chung thủy.",
+            "details": "Nâng cấp từ Nhẫn Cưới, không chỉ đẹp hơn mà còn mang lại những đặc quyền xã hội cao cấp hơn."
         },
         "703": {
             "name": "💐 Hoa Cưới",
@@ -797,33 +809,33 @@
         },
         "801": {
             "name": "🎁 Rương Thường",
-            "desc": "Chứa những vật phẩm cơ bản.",
-            "details": "Mở để nhận ngẫu nhiên tiền hoặc vật phẩm thông dụng."
+            "desc": "Chứa đựng những món quà bất ngờ.",
+            "details": "Chiếc rương gỗ cũ kỹ phổ biến trên khắp lục địa. Bên trong có thể chứa một ít tiền mặt hoặc các vật phẩm thông dụng giúp ích cho hành trình của bạn."
         },
         "802": {
             "name": "💎 Rương Hiếm",
             "desc": "Chứa những vật phẩm giá trị cao.",
-            "details": "Tỉ lệ nhận được nhiều tiền và vật phẩm hiếm hơn rương thường."
+            "details": "Được chế tác từ đá quý tự nhiên, rương này ẩn giấu những báu vật có giá trị thương mại lớn và tỉ lệ xuất hiện vật phẩm quý hiếm cao hơn đáng kể."
         },
         "803": {
             "name": "🌟 Rương Huyền Thoại",
             "desc": "Chứa đựng những báu vật huyền thoại.",
-            "details": "Cơ hội nhận được số tiền khổng lồ và các vật phẩm cực kỳ quý hiếm."
+            "details": "Món quà từ các anh hùng thời cổ đại. Sở hữu nó là giấc mơ của mọi nhà thám hiểm bởi khả năng mang lại khối tài sản khổng lồ và trang bị cực phẩm."
         },
         "804": {
             "name": "💀 Rương Cấm",
             "desc": "Chứa những bí mật bị lãng quên.",
-            "details": "Chỉ dành cho những người dám mạo hiểm với phần thưởng vô cùng giá trị."
+            "details": "Tương truyền rương này bị phong ấn bởi những lời nguyền hắc ám. Chỉ kẻ gan dạ nhất mới dám mở nó để chạm tay vào những phần thưởng vô giá bị lịch sử bỏ quên."
         },
         "805": {
             "name": "👑 Rương Thần Thoại",
             "desc": "Báu vật của các vị thần.",
-            "details": "Chứa đựng sức mạnh thần thánh và những phần thưởng không tưởng."
+            "details": "Báu vật rơi xuống từ thiên đường, tỏa ra hào quang rực rỡ. Chứa đựng sức mạnh của các vị thần và những vật phẩm hiếm hoi nhất thế giới cơ cực."
         },
         "806": {
             "name": "✨ Rương Linh Hồn",
             "desc": "Chứa đựng tinh hoa của vũ trụ.",
-            "details": "Loại rương quý giá nhất, mang lại những vận may thay đổi cả số phận."
+            "details": "Loại rương quý giá nhất từng được biết đến, kết tinh từ linh hồn của các vì vì tinh tú. Phần thưởng bên trong có thể xoay chuyển cả vận mệnh của người sở hữu."
         }
     },
     "shop": {
@@ -976,29 +988,35 @@
         "uptime_format": "{{d}}n {{h}}g {{m}}p {{s}}s"
     },
     "profile": {
-        "title": "Hồ sơ của {{user}}",
-        "experience": "✨ Kinh nghiệm",
+        "title": "🔇 HỒ SƠ CÁ NHÂN — {{user}}",
+        "identity_section": "🆔 Thông Tin Danh Tính",
+        "economy_section": "📊 Tài Chính & Tài Sản",
+        "progression_section": "✨ Tiến Trình Sự Nghiệp",
+        "social_section": "💞 Quan Hệ & Xã Hội",
+        "experience": "Kinh nghiệm",
         "level_label": "Cấp",
         "level": "**Cấp độ:** {{level}}",
-        "economy": "💰 Kinh tế",
+        "economy": "Kinh tế",
         "balance": "**Số dư:** {{emoji}} {{amount}}",
         "net_worth": "**Tổng tài sản:** {{emoji}} {{amount}}",
-        "ranking": "🏆 Xếp hạng",
+        "ranking": "Xếp hạng",
         "wealth_rank": "**Hạng giàu có:** {{rank}}",
         "unranked": "Chưa xếp hạng (>100)",
         "inventory_value": "💰 Giá trị kho đồ: {{amount}}",
-        "collection": "🎒 Bộ sưu tập",
+        "collection": "Bộ sưu tập",
         "active_buffs": "⚡ Buff Đang Hoạt Động",
         "total_items": "**Tổng vật phẩm:** {{count}}",
         "item_types": "**Số loại vật phẩm:** {{count}}",
         "joined": "📅 Tham gia từ",
-        "id": "🆔 Định danh (ID)",
-        "multipliers": "⚡ Hệ số nhân",
-        "marriage": "💞 Tình cảm",
-        "cap": "Hệ số tối đa",
-        "marriage_bonus": "🎁 Buff: +{{percent}}% thu nhập",
-        "assets": "🏠 Tài sản",
-        "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm"
+        "id": "🆔 ID người dùng",
+        "multipliers": "Hệ số nhân",
+        "marriage": "Tình cảm",
+        "cap": "Giới hạn thưởng",
+        "marriage_bonus": "🎁 Thưởng: +{{percent}}% thu nhập",
+        "assets": "Tài sản",
+        "passive_income": "📈 Tiền thụ động",
+        "passive_income_value": "+{{amount}} coins/giờ",
+        "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm | {{prefix}}help profile"
     },
     "serverinfo": {
         "title": "📊  Thông tin máy chủ: {{name}}",
@@ -1502,11 +1520,11 @@
         "luck_label": "Chỉ số May mắn"
     },
     "effects": {
-        "income": "Tăng tiền (`$work, $slut, $crime, $fish, $search`)",
-        "daily": "Tăng thưởng (`$daily`)",
-        "gamble": "Tăng lời (`$cf, $dice, $slots, $bj, $poker`)",
+        "income": "Tăng tiền",
+        "daily": "Tăng thưởng",
+        "gamble": "Tăng lời",
         "xpboost": "Thu thập Kinh Nghiệm",
-        "robshield": "Chống trộm (`$rob`)",
+        "robshield": "Chống trộm",
         "social": "Tăng thưởng Tình Cảm",
         "tool": "Tăng tỷ lệ câu cá hiếm",
         "bait": "Tỷ lệ bắt cá bằng kỹ năng",
