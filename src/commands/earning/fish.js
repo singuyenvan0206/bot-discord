@@ -118,7 +118,10 @@ module.exports = {
             return pool.map(c => {
                 let modWeight = c.weight;
 
-                if (c.value < 5000) {
+                if (['old_boot', 'rusty_can', 'seaweed'].includes(c.key)) {
+                    // Trash items reach 0 rate at luck 40
+                    modWeight *= Math.max(0, 1 - (luck / 40));
+                } else if (c.value < 5000) {
                     // Suppress common fish at high luck
                     modWeight *= Math.max(0.01, 1 - (luck / 60));
                 } else if (c.value < 20000) {
