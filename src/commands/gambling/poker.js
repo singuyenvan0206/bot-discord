@@ -290,15 +290,41 @@ module.exports = {
 
         async function playBot(bot) {
             const toCall = currentBet - bot.currentBet;
-            let action = 'fold';
+            const evalRes = evaluateHand(bot.hand, communityCards, lang);
+            const score = evalRes.score;
+
+            let foldChance = 0.25; // Base fold chance
+            let raiseChance = 0.15; // Base raise chance
+
+            // Adjust based on hand strength
+            if (communityCards.length === 0) { // Pre-flop
+                if (score >= 200) foldChance = 0.02; // Pair (e.g. 22 to AA) - extremely rare to fold
+                else if (bot.hand.some(c => c.value >= 13)) foldChance = 0.05; // Has an A or K
+                else if (bot.hand.some(c => c.value >= 10)) foldChance = 0.15; // J, Q, 10
+            } else { // Post-flop
+                if (score >= 300) foldChance = 0.01; // Two Pair or better - basically never fold
+                else if (score >= 200) foldChance = 0.05; // One Pair
+                else if (score >= 112) foldChance = 0.15; // Strong High Card (Kicker J+)
+            }
+
+            // Influence of bet size
+            const chipsRatio = toCall / (bot.chips + 1);
+            if (chipsRatio > 0.8) foldChance *= 1.5; // Scared of big bets
+            else if (chipsRatio < 0.1) foldChance *= 0.5; // Rarely fold on tiny bets
+
+            if (toCall === 0) foldChance = 0; // Never fold on check
+
             const r = Math.random();
+            let action = 'call';
 
-            if (toCall === 0) action = 'check';
-            else if (r > 0.8) action = 'raise';
-            else if (r > 0.3) action = 'call';
-            else action = 'fold';
-
-            if (action === 'fold' && toCall === 0) action = 'check';
+            if (toCall === 0) {
+                // When we can check, maybe raise instead
+                action = (r < raiseChance) ? 'raise' : 'check';
+            } else {
+                if (r < foldChance) action = 'fold';
+                else if (r > (1 - raiseChance)) action = 'raise';
+                else action = 'call';
+            }
 
             if (action === 'raise') {
                 const minRaise = Math.max(10, Math.floor(minBuyIn * 0.1));
