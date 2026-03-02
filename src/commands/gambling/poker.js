@@ -618,12 +618,12 @@ module.exports = {
 
             const activePlayers = players.filter(p => !p.folded && !p.allIn);
             if (activePlayers.length === 0) {
-                await updateTable();
+                await updateTable(true);
                 await sleep(2500);
                 await nextPhase();
                 return;
             }
-            await startBettingRound();
+            await startBettingRound(true);
         }
 
         async function endRound() {
@@ -690,7 +690,17 @@ module.exports = {
                 .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.winners', lang, { names: winnerNames })}\n**${footerText}\n\n${resultText}`)
                 .setColor(config.COLORS.WARNING);
 
-            await reply.edit({ embeds: [embed], components: [] });
+            // Repost the final result to move it to the bottom
+            try {
+                if (reply.channel.id === (gameThread?.id || message.channel.id)) {
+                    await reply.delete().catch(() => { });
+                }
+                const boardTarget = gameThread || message.channel;
+                await boardTarget.send({ embeds: [embed], components: [] });
+            } catch (err) {
+                await reply.edit({ embeds: [embed], components: [] }).catch(() => { });
+            }
+
             players.forEach(p => {
                 if (!p.isBot) startCooldown(message.client, 'poker', p.id);
             });
