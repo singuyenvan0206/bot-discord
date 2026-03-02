@@ -58,7 +58,7 @@ module.exports = {
 
         if (item.multiplier > 0) {
             let effectLabel = t('iteminfo.effect_label', lang);
-            let effectValue = `+${Math.round(item.multiplier * 100)}% ${t(`effects.${item.type}`, lang)}`;
+            let effectValue = `+${Math.round(item.multiplier * 100).toLocaleString()}% ${t(`effects.${item.type}`, lang)}`;
 
             // Custom display for fishing tools/baits
             if (item.type === 'tool' || item.type === 'bait') {

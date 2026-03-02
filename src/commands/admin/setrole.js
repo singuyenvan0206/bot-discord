@@ -78,7 +78,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle(t('setrole.title', lang, { guild: message.guild.name }))
                 .setColor(config.COLORS.INFO)
-                .setDescription(roles.map(r => `• **${r.name}** (\`${r.role_id}\`)\n  - Price: ${r.price.toLocaleString()} ${config.EMOJIS.COIN}\n  - Buff: Income +${(r.income_buff * 100).toFixed(0)}%, XP +${(r.xp_buff * 100).toFixed(0)}%`).join('\n\n'));
+                .setDescription(roles.map(r => `• **${r.name}** (\`${r.role_id}\`)\n  - Price: **${Number(r.price).toLocaleString()}** ${config.EMOJIS.COIN}\n  - Buff: Income +${(Number(r.income_buff) * 100).toLocaleString()}%, XP +${(Number(r.xp_buff) * 100).toLocaleString()}%`).join('\n\n'));
 
             return message.reply({ embeds: [embed] });
         }

@@ -31,10 +31,10 @@ module.exports = {
                 const name = t(`job.name_${j.id}`, lang);
                 // Get summary (first line of info) or just the info
                 const info = t(`job.info_${j.id}`, lang).split('\n')[0];
-                const salaryBonus = j.bonus ? `+${Math.round((j.bonus - 1) * 100)}%` : 'None';
+                const salaryBonus = j.bonus ? `+${Math.round((j.bonus - 1) * 100).toLocaleString()}%` : 'None';
 
                 embed.addFields({
-                    name: `ID: ${j.numericId} | ${j.icon} ${name}`,
+                    name: `ID: ${j.numericId.toLocaleString()} | ${j.icon} ${name}`,
                     value: `> ${info}\n> **Bonus:** \`${salaryBonus} Salary\``,
                     inline: true
                 });
@@ -57,7 +57,7 @@ module.exports = {
             if (user.job === job.id) return message.reply(t('job.already_has', lang));
 
             // Requirements (Example: Level 20)
-            if (user.level < 20) return message.reply(t('job.set_error_level', lang, { level: 20 }));
+            if (user.level < 20) return message.reply(t('job.set_error_level', lang, { level: (20).toLocaleString() }));
 
             await db.updateUser(message.guild.id, message.author.id, { job: job.id });
             const jobName = t(`job.name_${job.id}`, lang);

@@ -186,10 +186,10 @@ module.exports = {
                     {
                         name: '✨ Buffs',
                         value: t('housing.info_buffs', lang, {
-                            xp: Math.round(tier.xp_buff * 100),
-                            income: Math.round(tier.income_buff * 100),
-                            max_bet: tier.max_bet_bonus,
-                            cap: Math.round(tier.cap_bonus * 100)
+                            xp: Math.round(tier.xp_buff * 100).toLocaleString(),
+                            income: Math.round(tier.income_buff * 100).toLocaleString(),
+                            max_bet: tier.max_bet_bonus.toLocaleString(),
+                            cap: Math.round(tier.cap_bonus * 100).toLocaleString()
                         })
                     },
                     { name: '🛋️ Decorations', value: interiors }
@@ -207,8 +207,8 @@ module.exports = {
 
             Object.values(housingConfig.TIERS).forEach(t => {
                 embed.addFields({
-                    name: `${t.icon} ${t.name[lang]} (ID: \`${t.numeric_id}\`)`,
-                    value: `💰 **${t.price.toLocaleString()}** coins\nBuffs: +${(t.xp_buff * 100)}% XP, +${(t.income_buff * 100)}% Income\nMax Bet: +${t.max_bet_bonus.toLocaleString()}`
+                    name: `${t.icon} ${t.name[lang]} (ID: \`${t.numeric_id.toLocaleString()}\`)`,
+                    value: `💰 **${t.price.toLocaleString()}** coins\nBuffs: +${(t.xp_buff * 100).toLocaleString()}% XP, +${(t.income_buff * 100).toLocaleString()}% Income\nMax Bet: +${t.max_bet_bonus.toLocaleString()}`
                 });
             });
 

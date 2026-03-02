@@ -146,7 +146,7 @@ module.exports = {
 
             if (user.job === 'teacher') {
                 const result = await deductLevel(message.author.id, message.guild.id);
-                failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('rob.teacher_penalty', lang, { level: result.newLevel })}`;
+                failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('rob.teacher_penalty', lang, { level: result.newLevel.toLocaleString() })}`;
             }
 
             if (isVictimPolice) {

@@ -29,7 +29,7 @@ module.exports = {
                 await db.addItem(message.guild.id, message.author.id, item.id, 1);
             }
 
-            return message.reply(t('buy.all_success', lang, { count: buyableItems.length, price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN }));
+            return message.reply(t('buy.all_success', lang, { count: buyableItems.length.toLocaleString(), price: totalCost.toLocaleString(), emoji: config.EMOJIS.COIN }));
         }
 
         const requests = fullArg.split(',').map(s => s.trim()).filter(s => s.length > 0);

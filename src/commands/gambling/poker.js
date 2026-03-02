@@ -40,7 +40,7 @@ module.exports = {
             .setDescription(t('poker.lobby_desc', lang, {
                 host: message.author.toString(),
                 emoji: config.EMOJIS.COIN,
-                min: minBuyIn,
+                min: minBuyIn.toLocaleString(),
                 count: 0,
                 list: t('poker.waiting_players', lang)
             }))
@@ -84,9 +84,9 @@ module.exports = {
 
                 const input = new TextInputBuilder()
                     .setCustomId('amount')
-                    .setLabel(t('poker.buyin_amount_label', lang, { min: minBuyIn }))
+                    .setLabel(t('poker.buyin_amount_label', lang, { min: minBuyIn.toLocaleString() }))
                     .setStyle(TextInputStyle.Short)
-                    .setPlaceholder(`${minBuyIn}`)
+                    .setPlaceholder(`${minBuyIn.toLocaleString()}`)
                     .setRequired(true);
 
                 modal.addComponents(new ActionRowBuilder().addComponents(input));
@@ -118,7 +118,7 @@ module.exports = {
                     if (user.balance < amount) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
-                        return submit.reply({ content: t('common.insufficient_funds', lang, { balance: user.balance }), flags: 64 });
+                        return submit.reply({ content: t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }), flags: 64 });
                     }
 
                     await db.removeBalance(i.guild.id, i.user.id, amount);
@@ -172,9 +172,9 @@ module.exports = {
 
                 const input = new TextInputBuilder()
                     .setCustomId('min_buyin')
-                    .setLabel(t('poker.buyin_amount_label', lang, { min: 10 }))
+                    .setLabel(t('poker.buyin_amount_label', lang, { min: (10).toLocaleString() }))
                     .setStyle(TextInputStyle.Short)
-                    .setPlaceholder(`${minBuyIn}`)
+                    .setPlaceholder(`${minBuyIn.toLocaleString()}`)
                     .setRequired(true);
 
                 modal.addComponents(new ActionRowBuilder().addComponents(input));
@@ -426,9 +426,9 @@ module.exports = {
 
                 const input = new TextInputBuilder()
                     .setCustomId('amount')
-                    .setLabel(t('poker.raise_amount_label', lang, { min: minTotal }))
+                    .setLabel(t('poker.raise_amount_label', lang, { min: minTotal.toLocaleString() }))
                     .setStyle(TextInputStyle.Short)
-                    .setPlaceholder(`${minTotal}`)
+                    .setPlaceholder(`${minTotal.toLocaleString()}`)
                     .setRequired(true);
 
                 modal.addComponents(new ActionRowBuilder().addComponents(input));
@@ -446,7 +446,7 @@ module.exports = {
                         return submit.reply({ content: t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }), flags: 64 });
                     }
                     if (val > p.chips + p.currentBet) {
-                        return submit.reply({ content: t('common.insufficient_funds', lang, { balance: p.chips + p.currentBet }), flags: 64 });
+                        return submit.reply({ content: t('common.insufficient_funds', lang, { balance: (p.chips + p.currentBet).toLocaleString() }), flags: 64 });
                     }
 
                     await submit.deferUpdate();
@@ -526,7 +526,7 @@ module.exports = {
 
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('fold').setLabel(t('poker.action_fold', lang)).setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? t('poker.action_check', lang) : t('poker.action_call', lang, { amount: toCall })).setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? t('poker.action_check', lang) : t('poker.action_call', lang, { amount: toCall.toLocaleString() })).setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder().setCustomId('raise').setLabel(t('poker.action_raise', lang)).setStyle(ButtonStyle.Primary),
                 new ButtonBuilder().setCustomId('allin').setLabel(t('poker.action_allin', lang)).setStyle(ButtonStyle.Danger)
             );

@@ -130,7 +130,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             if (u.job === 'chef') {
                 const tip = Math.floor(Math.random() * 51) + 50;
                 payout += tip;
-                result += t('job.chef_tip', lang, { amount: tip });
+                result += t('job.chef_tip', lang, { amount: tip.toLocaleString() });
             }
 
             if (playerIsNatural && dealerIsNatural) {

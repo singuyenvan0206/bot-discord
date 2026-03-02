@@ -223,7 +223,7 @@ module.exports = {
                         : Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level)).toLocaleString();
 
                     embed.addFields({
-                        name: `${type.icon} ${type.name[lang]} (ID: \`${type.numeric_id}\`)`,
+                        name: `${type.icon} ${type.name[lang]} (ID: \`${type.numeric_id.toLocaleString()}\`)`,
                         value: t('business.info_item', lang, {
                             icon: type.icon,
                             name: type.name[lang],
@@ -409,8 +409,8 @@ module.exports = {
 
             Object.values(bizConfig.TYPES).forEach(b => {
                 embed.addFields({
-                    name: `${b.icon} ${b.name[lang]} (ID: \`${b.numeric_id}\`)`,
-                    value: `💰 **${b.base_price.toLocaleString()}** coins\n📈 Base Income: **${b.base_income.toLocaleString()}** coins/hour\n⭐ Max Level: **${b.max_level}**`
+                    name: `${b.icon} ${b.name[lang]} (ID: \`${b.numeric_id.toLocaleString()}\`)`,
+                    value: `💰 **${b.base_price.toLocaleString()}** coins\n📈 Base Income: **${b.base_income.toLocaleString()}** coins/hour\n⭐ Max Level: **${b.max_level.toLocaleString()}**`
                 });
             });
 

@@ -26,7 +26,7 @@ module.exports = {
 
         roles.forEach(role => {
             const isOwned = message.member.roles.cache.has(role.id || role.role_id);
-            const status = isOwned ? `[${t('shop.owned', lang)}]` : `${role.price.toLocaleString()}${config.EMOJIS.COIN}`;
+            const status = isOwned ? `[${t('shop.owned', lang)}]` : `**${Number(role.price).toLocaleString()}** ${config.EMOJIS.COIN}`;
 
             let buffText = '';
             const inc = role.income_buff || role.income_buff_pct || 0;

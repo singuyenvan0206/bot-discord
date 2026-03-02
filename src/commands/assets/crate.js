@@ -140,12 +140,12 @@ module.exports = {
 
                     for (const [itemId, itemCount] of Object.entries(totalRewards.items)) {
                         const itemName = t(`items.${itemId}.name`, lang);
-                        rewardText += t('crate.reward_item', lang, { count: itemCount, item: itemName }) + '\n';
+                        rewardText += t('crate.reward_item', lang, { count: itemCount.toLocaleString(), item: itemName }) + '\n';
                     }
 
                     const embed = new EmbedBuilder()
                         .setTitle(count > 1
-                            ? t('crate.open_bulk_success', lang, { count, name: crate.name[lang] })
+                            ? t('crate.open_bulk_success', lang, { count: count.toLocaleString(), name: crate.name[lang] })
                             : t('crate.open_success', lang, { name: crate.name[lang] })
                         )
                         .setDescription(rewardText || t('crate.reward_nothing', lang))
