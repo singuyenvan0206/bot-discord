@@ -195,7 +195,7 @@ module.exports = {
                         await addXp(winMember, winXp, i.guild.id);
 
                         const baseReward = bet > 0 ? bet * 2 : (config.ECONOMY.TICTACTOE_REWARD || 100);
-                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winMember);
+                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winMember, 'income', { pvpMode: bet > 0 });
                         const winId = winner === P1 ? p1Id : p2Id;
                         const winName = winner === P1 ? message.author.username : opponent.username;
 

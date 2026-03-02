@@ -18,7 +18,7 @@ module.exports = {
         const user = await db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
         const maxBet = await getMaxBet(message.author.id);
-        let minBuyIn = args[0] ? parseAmount(args[0], user.balance, maxBet) : 50;
+        let minBuyIn = Math.max(50, args[0] ? parseAmount(args[0], user.balance, maxBet) : 50);
         const hostId = message.author.id;
 
         // Game State
@@ -100,9 +100,9 @@ module.exports = {
                     const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `buyin_modal_${i.user.id}` });
                     const user = await db.getUser(i.user.id, i.guild.id);
                     const amountStr = submit.fields.getTextInputValue('amount');
-                    const amount = parseAmount(amountStr, user.balance);
+                    const amount = parseAmount(amountStr, user.balance, maxBet);
 
-                    if (isNaN(amount) || amount < minBuyIn) {
+                    if (isNaN(amount) || amount <= 0 || amount < minBuyIn) {
                         joiningPlayers.delete(i.user.id);
                         updateLobby();
                         return submit.reply({ content: `${config.EMOJIS.ERROR} ${t('poker.invalid_amount', lang, { min: minBuyIn })}`, flags: 64 });
@@ -113,7 +113,6 @@ module.exports = {
                         updateLobby();
                         return submit.reply({ content: `${config.EMOJIS.ERROR} ${t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() })}`, flags: 64 });
                     }
-
 
                     if (user.balance < amount) {
                         joiningPlayers.delete(i.user.id);
@@ -182,10 +181,10 @@ module.exports = {
 
                 try {
                     const submit = await i.awaitModalSubmit({ time: 30_000, filter: s => s.customId === `settings_modal_${i.user.id}` });
-                    const val = parseAmount(submit.fields.getTextInputValue('min_buyin'), 1_000_000_000); // Admin like
+                    const val = parseAmount(submit.fields.getTextInputValue('min_buyin'), maxBet);
                     if (isNaN(val) || val < 10) return submit.reply({ content: t('poker.invalid_amount', lang, { min: 10 }), flags: 64 });
 
-                    minBuyIn = val;
+                    minBuyIn = Math.max(10, val);
                     await submit.deferUpdate().catch(() => { });
                     updateLobby();
                 } catch (e) { }
@@ -637,7 +636,7 @@ module.exports = {
             let totalCap = 250; // Default fallback for footer if multiple winners
 
             for (const w of winners) {
-                const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = await calculateReward(prizePerWinner, w.member, 'gamble');
+                const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = await calculateReward(prizePerWinner, w.member, 'gamble', { pvpMode: true });
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
                 totalCap = winPercent; // Using the percent value

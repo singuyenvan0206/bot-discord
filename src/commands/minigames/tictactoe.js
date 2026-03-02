@@ -174,7 +174,8 @@ module.exports = {
 
                     if (winnerId !== message.client.user.id) {
                         const winnerMember = winner === 'X' ? playerXMember : playerOMember;
-                        const { total: totalReward, bonus: bonusAmount, cap } = await calculateReward(baseReward, winnerMember);
+                        const loserIsBot = (winner === 'X' ? playerO.id : playerX.id) === message.client.user.id;
+                        const { total: totalReward, bonus: bonusAmount, cap } = await calculateReward(baseReward, winnerMember, 'income', { pvpMode: !loserIsBot });
                         await db.addBalance(message.guild.id, winnerId, totalReward);
 
                         // Grant Win XP

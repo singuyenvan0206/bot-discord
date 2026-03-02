@@ -90,7 +90,7 @@ module.exports = {
             // Ensure we don't steal more than they have total
             const victimLoss = Math.min(baseSteal, targetBalance);
 
-            const { total: robberGain, bonus, percent } = await calculateReward(victimLoss, message.member, 'income');
+            const { total: robberGain, bonus, percent } = await calculateReward(victimLoss, message.member, 'income', { pvpMode: true });
 
             await db.addBalance(message.guild.id, message.author.id, robberGain);
             await db.removeBalance(message.guild.id, target.id, victimLoss);

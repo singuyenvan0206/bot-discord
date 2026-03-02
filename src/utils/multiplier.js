@@ -227,7 +227,11 @@ async function getDynamicCap(memberOrId, guildId) {
     return cap;
 }
 
-async function calculateReward(base, memberOrId, type = 'income') {
+async function calculateReward(base, memberOrId, type = 'income', options = {}) {
+    // PvP mode: no bonus applied — keeps user-vs-user transactions zero-sum
+    if (options.pvpMode) {
+        return { total: base, bonus: 0, percent: 0, cap: 0, capReached: false };
+    }
     const guildId = memberOrId.guild ? memberOrId.guild.id : null;
     const bonusPart = await getTotalMultiplier(memberOrId, type);
     const bonus = Math.floor(base * bonusPart);
