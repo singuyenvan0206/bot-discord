@@ -620,38 +620,18 @@
             "details": "Một chiếc bánh quy sô-cô-la đơn giản. Đủ ngọt để giữ cho bạn động lực nhận thêm nhiều phần thưởng hàng ngày."
         },
         "102": {
-            "name": "🛋️ Đèn Dung Nham",
-            "desc": "Cảm giác thư thái (+20% Thưởng Thêm | 7 ngày)"
-        },
-        "103": {
-            "name": "👨‍🍳 Mũ Đầu Bếp",
-            "desc": "Đẳng cấp bếp trưởng (+30% Thưởng Thêm | 7 ngày)"
-        },
-        "104": {
             "name": "🧸 Thảm Lông",
             "desc": "Mềm mại đôi chân (+40% Thưởng Thêm | 7 ngày)"
         },
-        "105": {
-            "name": "🎨 Tranh Trừu Tượng",
-            "desc": "Trang trí đẳng cấp (+40% Thưởng Thêm | 30 ngày)"
-        },
-        "106": {
-            "name": "📖 Sách Nấu Ăn",
-            "desc": "Bí kíp ẩm thực (+60% Thưởng Thêm | 30 ngày)"
-        },
-        "107": {
+        "103": {
             "name": "🗿 Tượng Đá Moai",
             "desc": "Vững như bàn thạch (+80% Thưởng Thêm | 30 ngày)"
         },
-        "108": {
+        "104": {
             "name": "🎫 Vé Vàng VIP",
             "desc": "Đặc quyền VIP (+150% Thưởng Thêm | 30 ngày)"
         },
-        "109": {
-            "name": "🏰 Biệt Thự",
-            "desc": "Sống đời thượng lưu (+300% Thưởng Thêm | 30 ngày)"
-        },
-        "110": {
+        "105": {
             "name": "🚀 Trạm Không Gian",
             "desc": "Phần thưởng từ quỹ đạo (+500% Thưởng Thêm | 30 ngày)"
         },
@@ -661,80 +641,18 @@
             "details": "Điện thoại thông minh cao cấp với kết nối nhanh. Cần thiết để luôn dẫn đầu trong công việc của bạn."
         },
         "202": {
-            "name": "🛡️ Khiên",
-            "desc": "Bảo vệ công lý (+12% Thu Nhập | 7 ngày)"
-        },
-        "203": {
-            "name": "⚔️ Kiếm Hiệp Sĩ",
-            "desc": "Trở thành lính đánh thuê (+30% Thu Nhập | 7 ngày)"
-        },
-        "204": {
-            "name": "👟 Giày Thể Thao",
-            "desc": "Chạy nhanh hơn (+25% Thu Nhập | 7 ngày)"
-        },
-        "205": {
-            "name": "⛏️ Cuốc Khai Thác",
-            "desc": "Đào tìm kho báu! (+35% Thu Nhập | 7 ngày)",
-            "details": "Công cụ hạng nặng giúp tăng thu nhập khi làm việc hoặc tìm kiếm tài nguyên."
-        },
-        "206": {
             "name": "⌨️ Bàn Phím RGB",
             "desc": "Gõ phím lạch cạch (+40% Thu Nhập | 7 ngày)"
         },
-        "207": {
-            "name": "🖱️ Chuột Gaming",
-            "desc": "Click chuột chính xác (+40% Thu Nhập | 7 ngày)"
-        },
-        "208": {
-            "name": "📋 Bảng Trắng",
-            "desc": "Truyền đạt kiến thức (+50% Thu Nhập | 7 ngày)"
-        },
-        "209": {
-            "name": "🎸 Đàn Guitar",
-            "desc": "Giai điệu lôi cuốn (+60% Thu Nhập | 7 ngày)"
-        },
-        "210": {
+        "203": {
             "name": "🖥️ Màn Hình 4K",
             "desc": "Rõ nét từng chi tiết (+70% Thu Nhập | 7 ngày)"
         },
-        "211": {
-            "name": "🔫 Súng Trường",
-            "desc": "Sức mạnh quân đội (+80% Thu Nhập | 7 ngày)"
-        },
-        "212": {
-            "name": "💻 Laptop",
-            "desc": "Làm việc chăm chỉ hơn! (+60% Thu Nhập | 30 ngày)",
-            "details": "Máy tính xách tay mạnh mẽ. Tuyệt vời cho việc đa nhiệm và tăng thu nhập lập trình của bạn."
-        },
-        "213": {
-            "name": "🪑 Bàn Đứng",
-            "desc": "Tư thế tốt hơn (+75% Thu Nhập | 30 ngày)"
-        },
-        "214": {
+        "204": {
             "name": "📈 Máy Tính Giao Dịch",
             "desc": "Phân tích thị trường (+100% Thu Nhập | 30 ngày)"
         },
-        "215": {
-            "name": "💺 Ghế Công Thái Học",
-            "desc": "Ngồi làm việc cả ngày (+120% Thu Nhập | 30 ngày)"
-        },
-        "216": {
-            "name": "👔 Bộ Vest Công Sở",
-            "desc": "Trông chuyên nghiệp hơn (+150% Thu Nhập | 30 ngày)"
-        },
-        "217": {
-            "name": "🛡️ Giáp Chiến Đấu",
-            "desc": "Phòng thủ kiên cố (+180% Thu Nhập | 30 ngày)"
-        },
-        "218": {
-            "name": "🎹 Đàn Piano",
-            "desc": "Nghệ thuật đích thực (+220% Thu Nhập | 30 ngày)"
-        },
-        "219": {
-            "name": "🏎️ Siêu Xe",
-            "desc": "Vút bay trên đường! (+350% Thu Nhập | 30 ngày)"
-        },
-        "220": {
+        "205": {
             "name": "🛥️ Siêu Du Thuyền",
             "desc": "Văn phòng trên biển (+600% Thu Nhập | 30 ngày)"
         },
@@ -744,38 +662,18 @@
             "details": "Xúc xắc vàng nặng tay cảm thấy rất may mắn. Cải thiện tỉ lệ thắng của bạn trong các trò chơi cá cược."
         },
         "302": {
-            "name": "🃏 Bộ Bài Ám Hiệu",
-            "desc": "Biết khi nào nên theo (+40% Gamble | 7 ngày)"
-        },
-        "303": {
-            "name": "🪙 Đồng Tiền May Mắn",
-            "desc": "Sấp hay ngửa (+50% Gamble | 7 ngày)"
-        },
-        "304": {
             "name": "📿 Vòng Cổ Phỉ Thúy",
             "desc": "Vẻ đẹp thuần khiết và may mắn (+50% Gamble | 30 ngày)"
         },
-        "305": {
+        "303": {
             "name": "🪙 Chip Đất Sét",
             "desc": "Cảm giác chuyên nghiệp (+70% Gamble | 30 ngày)"
         },
-        "306": {
-            "name": "📊 Biểu Đồ Chứng Khoán",
-            "desc": "Dự đoán xu hướng (+100% Gamble | 30 ngày)"
-        },
-        "307": {
+        "304": {
             "name": "🍀 Cỏ 4 Lá",
             "desc": "Cảm thấy may mắn? (+150% Gamble | 30 ngày)"
         },
-        "308": {
-            "name": "⌚ Đồng Hồ Rolex",
-            "desc": "Thời gian là tiền bạc (+200% Gamble | 30 ngày)"
-        },
-        "309": {
-            "name": "🐴 Móng Ngựa Vàng",
-            "desc": "May mắn thuần khiết (+350% Gamble | 30 ngày)"
-        },
-        "310": {
+        "305": {
             "name": "⏳ Cỗ Máy Thời Gian",
             "desc": "Viết lại lịch sử (+1000% Gamble | 30 ngày)"
         },

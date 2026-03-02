@@ -28,10 +28,8 @@ module.exports = {
         let successRate = await db.getGuildSetting(message.guild.id, 'crime_rate', config.ECONOMY.CRIME_SUCCESS_RATE);
         successRate += (isCriminal ? 0.1 : 0); // Base criminal bonus
 
-        // Hacker Synergy: +5% success with high-tech gear
-        if (isHacker && (await hasActiveItem(message.guild.id, message.author.id, 212) || await hasActiveItem(message.guild.id, message.author.id, 220))) {
-            successRate += 0.25;
-        }
+        // Hacker Synergy: +25% success rate bonus
+        if (isHacker) successRate += 0.25;
 
         const isSuccess = Math.random() < successRate;
         const actions = t('crime.actions', lang);
@@ -44,9 +42,9 @@ module.exports = {
             const maxReward = await db.getGuildSetting(message.guild.id, 'crime_max', config.ECONOMY.CRIME_MAX_REWARD);
             let reward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            // Hacker Interaction: Chance to double base reward if using Laptop (212) or Superyacht (220)
+            // Hacker Interaction: 20% chance to double reward
             let hackedMsg = '';
-            if (isHacker && (await hasActiveItem(message.guild.id, message.author.id, 212) || await hasActiveItem(message.guild.id, message.author.id, 220)) && Math.random() < 0.2) {
+            if (isHacker && Math.random() < 0.2) {
                 reward *= 2;
                 hackedMsg = t('crime.hacker_hacked', lang);
             }
@@ -78,20 +76,20 @@ module.exports = {
                 fine = Math.floor(fine * 0.5);
             }
 
-            // Criminal Interaction: Escape chance with Sneakers (204) or Supercar (219)
+            // Criminal Interaction: 50% escape chance — reduces fine by 80%
             let escapeMsg = '';
-            if (isCriminal && (await hasActiveItem(message.guild.id, message.author.id, 204) || await hasActiveItem(message.guild.id, message.author.id, 219)) && Math.random() < 0.5) {
-                fine = Math.floor(fine * 0.2); // 80% reduction
+            if (isCriminal && Math.random() < 0.5) {
+                fine = Math.floor(fine * 0.2);
                 escapeMsg = t('crime.criminal_escaped', lang, { amount: fine.toLocaleString() });
             }
 
-            // Soldier Interaction: Armed — always reduces fine by 30%
+            // Soldier Interaction: Always reduces fine by 30%
             if (user.job === 'soldier') {
                 fine = Math.floor(fine * 0.7);
                 escapeMsg = (escapeMsg || '') + t('crime.soldier_armed', lang);
             }
 
-            // XP Penalty
+            // XP Penalty & Fine
             const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, fine);
 
@@ -99,19 +97,7 @@ module.exports = {
             const jailCooldown = config.ECONOMY.CRIME_COOLDOWN;
             await db.updateUser(message.guild.id, message.author.id, { last_crime: now + jailCooldown });
 
-            // Item Breakage: 10% chance to lose high-tech gear
-            let itemBrokenMsg = '';
-            if (Math.random() < 0.1) {
-                if (await removeActiveBuff(message.guild.id, message.author.id, 212)) {
-                    await db.removeItem(message.guild.id, message.author.id, 212, 1);
-                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.212.name', lang) });
-                } else if (await removeActiveBuff(message.guild.id, message.author.id, 220)) {
-                    await db.removeItem(message.guild.id, message.author.id, 220, 1);
-                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.220.name', lang) });
-                }
-            }
-
-            // Interaction: Transfer fine to a random Police in the guild
+            // Transfer fine to a random Police in the guild
             const excludeIds = [message.client.user.id];
             if (user.job === 'police') excludeIds.push(message.author.id);
 
@@ -131,8 +117,6 @@ module.exports = {
             let finalMsg = `❌ `;
             if (escapeMsg) finalMsg += escapeMsg + '\n';
             finalMsg += baseFailMsg;
-
-            if (itemBrokenMsg) finalMsg += '\n' + itemBrokenMsg;
 
             if (user.job === 'teacher') {
                 const result = await deductLevel(message.author.id, message.guild.id);

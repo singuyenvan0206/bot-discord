@@ -8,7 +8,7 @@ module.exports = {
             xp_buff: 0.02,
             income_buff: 0.01,
             max_bet_bonus: 5000,
-            cap_bonus: 0.05,
+            cap_bonus: 0.03,
             icon: '🏠'
         },
         apartment: {
@@ -19,7 +19,7 @@ module.exports = {
             xp_buff: 0.05,
             income_buff: 0.02,
             max_bet_bonus: 10000,
-            cap_bonus: 0.1,
+            cap_bonus: 0.07,
             icon: '🏙️'
         },
         villa: {
@@ -30,7 +30,7 @@ module.exports = {
             xp_buff: 0.10,
             income_buff: 0.05,
             max_bet_bonus: 25000,
-            cap_bonus: 0.2,
+            cap_bonus: 0.10,
             icon: '🏡'
         },
         mansion: {
@@ -41,7 +41,7 @@ module.exports = {
             xp_buff: 0.20,
             income_buff: 0.10,
             max_bet_bonus: 75000,
-            cap_bonus: 0.4,
+            cap_bonus: 0.20,
             icon: '🏰'
         },
         island: {
@@ -51,8 +51,8 @@ module.exports = {
             price: 50000000,
             xp_buff: 0.35,
             income_buff: 0.15,
-            max_bet_bonus: 200000,
-            cap_bonus: 0.7,
+            max_bet_bonus: 150000,
+            cap_bonus: 0.40,
             icon: '🏝️'
         },
         penthouse: {
@@ -63,7 +63,7 @@ module.exports = {
             xp_buff: 0.50,
             income_buff: 0.20,
             max_bet_bonus: 500000,
-            cap_bonus: 1.0,
+            cap_bonus: 0.60,
             icon: '🏢'
         },
         space_station: {
@@ -73,8 +73,8 @@ module.exports = {
             price: 1500000000,
             xp_buff: 1.0,
             income_buff: 0.5,
-            max_bet_bonus: 1000000,
-            cap_bonus: 2.0,
+            max_bet_bonus: 750000,
+            cap_bonus: 1.20,
             icon: '🛰️'
         }
     },
@@ -82,7 +82,7 @@ module.exports = {
         gaming_setup: { numeric_id: 1101, name: { vi: 'Dàn Máy Gaming', en: 'Gaming Setup' }, price: 50000, buff: 'xp', value: 0.1 },
         designer_sofa: { numeric_id: 1102, name: { vi: 'Sofa Thiết Kế', en: 'Designer Sofa' }, price: 30000, buff: 'income', value: 0.05 },
         gold_safe: { numeric_id: 1103, name: { vi: 'Két Sắt Vàng', en: 'Gold Safe' }, price: 200000, buff: 'max_bet', value: 50000 },
-        library: { numeric_id: 1104, name: { vi: 'Thư Viện Gia Đình', en: 'Home Library' }, price: 1000000, buff: 'cap', value: 0.5 },
+        library: { numeric_id: 1104, name: { vi: 'Thư Viện Gia Đình', en: 'Home Library' }, price: 1000000, buff: 'cap', value: 0.30 },
         art_gallery: { numeric_id: 1105, name: { vi: 'Phòng Triển Lãm', en: 'Art Gallery' }, price: 5000000, buff: 'income', value: 0.15 },
         home_gym: { numeric_id: 1106, name: { vi: 'Phòng Gym Tại Gia', en: 'Home Gym' }, price: 1500000, buff: 'xp', value: 0.2 }
     }

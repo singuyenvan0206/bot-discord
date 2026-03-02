@@ -56,9 +56,6 @@ function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
         if (!isMatch) continue;
 
         let itemBonus = item.multiplier;
-        if (item.idealJob && item.idealJob === userJob) {
-            itemBonus *= 1.5;
-        }
 
         if (LEGENDARY_BUFF_IDS.includes(buff.itemId)) {
             legendary += itemBonus;
@@ -172,7 +169,6 @@ async function getXpMultiplier(memberOrId) {
     }
 
     if (user.job === 'teacher') multi += 1.0; // Teacher XP Base: +100%
-    if (user.job === 'teacher' && await hasActiveItem(guildId, userId, 208)) multi += 2.0; // Whiteboard Interaction: +200%
     if (await hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion: +100%
 
     // Role XP Boost
@@ -205,8 +201,8 @@ async function getDynamicCap(memberOrId, guildId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
 
-    // Standard: 3.0 (300% bonus), VIP: 6.0 (600% bonus)
-    let cap = await hasActiveItem(gId, userId, 108) ? 6.0 : 3.0;
+    // Standard: 2.0 (200% bonus), VIP: 3.5 (350% bonus)
+    let cap = await hasActiveItem(gId, userId, 104) ? 3.5 : 2.0;
 
     // Housing Cap Bonus
     const user = await db.getUser(userId, gId);

@@ -51,66 +51,54 @@ module.exports = {
     },
     LOOT_TABLES: {
         common: [
-            { item: '101', chance: 0.1 },  // Cookie
-            { item: '201', chance: 0.1 },  // Smartphone
-            { item: '202', chance: 0.1 },  // Shield
+            { item: '101', chance: 0.15 }, // Cookie (daily)
+            { item: '201', chance: 0.15 }, // Smartphone (income)
             { item: '401', chance: 0.15 }, // Bread Bait
             { item: '402', chance: 0.15 }, // Worm Bait
-            { item: '601', chance: 0.05 }, // Basic Rod
-            { item: '611', chance: 0.1 },  // Basic Bait
-            { coins: [1000, 5000], chance: 0.25 }
+            { item: '501', chance: 0.05 }, // Shield of Protection
+            { coins: [1000, 5000], chance: 0.35 }
         ],
         rare: [
-            { item: '203', chance: 0.08 }, // Knight Sword
-            { item: '204', chance: 0.08 }, // Sneakers
-            { item: '205', chance: 0.08 }, // Pickaxe
-            { item: '206', chance: 0.08 }, // RGB Keyboard
-            { item: '207', chance: 0.08 }, // Gaming Mouse
-            { item: '403', chance: 0.1 },  // Shrimp Bait
-            { item: '404', chance: 0.1 },  // Cricket Bait
-            { item: '501', chance: 0.05 }, // Shield of Protection
-            { item: '602', chance: 0.05 }, // Better Rod
-            { item: '701', chance: 0.05 }, // Ordinary Ring
-            { coins: [5000, 20000], chance: 0.27 }
+            { item: '102', chance: 0.10 }, // Shag Rug (daily)
+            { item: '202', chance: 0.10 }, // RGB Keyboard (income)
+            { item: '301', chance: 0.10 }, // Golden Dice (gamble)
+            { item: '403', chance: 0.10 }, // Shrimp Bait
+            { item: '404', chance: 0.08 }, // Cricket Bait
+            { item: '407', chance: 0.05 }, // Plastic Rod
+            { item: '408', chance: 0.05 }, // Bamboo Rod
+            { item: '701', chance: 0.05 }, // Wedding Ring
+            { coins: [5000, 20000], chance: 0.37 }
         ],
         legendary: [
-            { item: '208', chance: 0.07 }, // Whiteboard
-            { item: '209', chance: 0.07 }, // Guitar
-            { item: '210', chance: 0.07 }, // 4K Monitor
-            { item: '211', chance: 0.07 }, // Rifle
-            { item: '212', chance: 0.07 }, // Laptop
-            { item: '405', chance: 0.1 },  // Squid Bait
-            { item: '406', chance: 0.1 },  // Golden Bait
+            { item: '103', chance: 0.08 }, // Moai Statue (daily)
+            { item: '203', chance: 0.08 }, // 4K Monitor (income)
+            { item: '302', chance: 0.08 }, // Emerald Necklace (gamble)
+            { item: '405', chance: 0.08 }, // Squid Bait
+            { item: '406', chance: 0.08 }, // Golden Bait
+            { item: '409', chance: 0.06 }, // Fiberglass Rod
             { item: '502', chance: 0.05 }, // XP Boost Potion
-            { item: '603', chance: 0.05 }, // Expert Rod
-            { item: '702', chance: 0.05 }, // Silver Ring
-            { coins: [50000, 150000], chance: 0.3 }
+            { item: '702', chance: 0.05 }, // Diamond Ring
+            { coins: [50000, 150000], chance: 0.44 }
         ],
         forbidden: [
-            { item: '213', chance: 0.06 }, // Standing Desk
-            { item: '214', chance: 0.06 }, // Trading Terminal
-            { item: '215', chance: 0.06 }, // Ergonomic Chair
-            { item: '216', chance: 0.06 }, // Business Suit
-            { item: '217', chance: 0.06 }, // Combat Armor
-            { item: '503', chance: 0.05 }, // Career Change Voucher
-            { item: '604', chance: 0.05 }, // Master Rod
-            { item: '703', chance: 0.05 }, // Gold Ring
-            { item: 'hidden_vanity_1', chance: 0.05 }, // Special cosmetic
-            { coins: [1000000, 5000000], chance: 0.5 }
+            { item: '104', chance: 0.07 }, // VIP Golden Ticket (daily — doubles cap!)
+            { item: '204', chance: 0.09 }, // Trading Terminal (income)
+            { item: '303', chance: 0.09 }, // Clay Chips (gamble)
+            { item: '411', chance: 0.06 }, // Carbon Rod
+            { item: '503', chance: 0.04 }, // Career Change Voucher
+            { coins: [1000000, 5000000], chance: 0.65 }
         ],
         mythical: [
-            { item: '218', chance: 0.1 }, // Grand Piano
-            { item: '308', chance: 0.1 }, // Rolex
-            { item: '219', chance: 0.05 }, // Supercar
+            { item: '304', chance: 0.12 }, // 4-Leaf Clover (gamble)
+            { item: '412', chance: 0.08 }, // Titanium Rod
             { item: '413', chance: 0.05 }, // Neptune's Rod
-            { item: '309', chance: 0.05 }, // Golden Horseshoe
-            { coins: [5000000, 25000000], chance: 0.65 }
+            { coins: [5000000, 25000000], chance: 0.75 }
         ],
         ethereal: [
-            { item: '110', chance: 0.15 }, // Space Station
-            { item: '220', chance: 0.25 }, // Superyacht
-            { item: '310', chance: 0.15 }, // Time Machine
-            { coins: [50000000, 200000000], chance: 0.45 }
+            { item: '105', chance: 0.15 }, // Space Station (daily)
+            { item: '205', chance: 0.20 }, // Superyacht (income)
+            { item: '305', chance: 0.15 }, // Time Machine (gamble)
+            { coins: [50000000, 200000000], chance: 0.50 }
         ]
     }
 };

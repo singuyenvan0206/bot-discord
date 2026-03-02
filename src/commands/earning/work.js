@@ -49,9 +49,9 @@ module.exports = {
         const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
         let { total, bonus, percent } = await calculateReward(baseReward, message.member, 'income');
 
-        // Streamer Interaction: Go Viral (10% chance)
+
         let viralMsg = '';
-        if (user.job === 'streamer' && (await hasActiveItem(message.guild.id, message.author.id, 220) || await hasActiveItem(message.guild.id, message.author.id, 107)) && Math.random() < 0.10) {
+        if (user.job === 'streamer' && Math.random() < 0.10) {
             total *= 5;
             bonus *= 5;
             viralMsg = t('work.viral', lang);

@@ -37,9 +37,9 @@ module.exports = {
 
         let { total, bonus, percent } = await calculateReward(reward, message.member, 'income');
 
-        // Job Bonus: Hacker Data Mine (35% chance for 2x if having Laptop/Superyacht)
+        // Job Bonus: Hacker Data Mine (35% chance for 2x)
         let dataMineMsg = '';
-        if (user.job === 'hacker' && (await hasActiveItem(message.guild.id, message.author.id, 212) || await hasActiveItem(message.guild.id, message.author.id, 220)) && Math.random() < 0.35) {
+        if (user.job === 'hacker' && Math.random() < 0.35) {
             total *= 2;
             bonus *= 2;
             dataMineMsg = t('search.data_mine', lang);

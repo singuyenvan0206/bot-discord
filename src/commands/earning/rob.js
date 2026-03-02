@@ -55,15 +55,14 @@ module.exports = {
         const isSoldier = user.job === 'soldier';
         const isVictimPolice = victim.job === 'police';
 
-        const hasVictimShield = await hasActiveItem(message.guild.id, target.id, 202); // Shield (ID 202)
-        const hasVictimRobShield = await isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (502)
+        const hasVictimRobShield = await isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (501)
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
         if (isCriminal) baseSuccessChance += 0.10;
         if (isSoldier) baseSuccessChance += 0.10;
 
-        // Interaction: Police/Shield protection
-        if (isVictimPolice || hasVictimShield || hasVictimRobShield) {
+
+        if (isVictimPolice || hasVictimRobShield) {
             baseSuccessChance /= 2;
         }
 
@@ -74,13 +73,6 @@ module.exports = {
             const targetBalance = (victim.balance || 0);
             let baseSteal = Math.floor(targetBalance * (Math.random() * 0.05 + 0.05));
 
-            // Cap at 2,000,000 if target is an owner
-            // const isTargetOwner = await db.isOwner(target.id);
-            // if (isTargetOwner) {
-            //     baseSteal = Math.min(baseSteal, 2000000);
-            // }
-
-            // Bonus: if robbing a Police officer, criminal earns +50%
             let policeRobMsg = '';
             if (isVictimPolice && isCriminal) {
                 baseSteal = Math.floor(baseSteal * 1.5);
@@ -125,15 +117,7 @@ module.exports = {
             const bustedCooldown = config.ECONOMY.ROB_COOLDOWN;
             await db.updateUser(message.guild.id, message.author.id, { last_rob: now + bustedCooldown });
 
-            // Item Breakage: 15% chance to lose Sneakers (204) or Shield (202)
-            let itemBrokenMsg = '';
-            if (Math.random() < 0.15) {
-                if (await removeActiveBuff(message.guild.id, message.author.id, 204)) {
-                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.204.name', lang) });
-                } else if (await removeActiveBuff(message.guild.id, message.author.id, 202)) {
-                    itemBrokenMsg = t('common.item_broken', lang, { item: t('items.202.name', lang) });
-                }
-            }
+
 
             let failMsg = t('rob.failure_xp', lang, {
                 user: target.username,
