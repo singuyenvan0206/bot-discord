@@ -33,6 +33,7 @@ const client = new Client({
         Partials.User,
         Partials.Channel,
     ],
+    allowedMentions: { repliedUser: false },
 });
 
 // ─── Collections ──────────────────────────────────────────────────
