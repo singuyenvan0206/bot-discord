@@ -45,7 +45,7 @@ module.exports = [
     { id: 410, name: 'Steel Rod', price: 120000, multiplier: 2.5, type: 'tool' },
     { id: 411, name: 'Carbon Rod', price: 350000, multiplier: 3.5, type: 'tool' },
     { id: 412, name: 'Titanium Rod', price: 800000, multiplier: 5.0, type: 'tool' },
-    { id: 413, name: "Neptune's Rod", price: 1500000, multiplier: 7.5, type: 'tool' },
+    { id: 413, name: "Neptune's Rod", price: 2000000, multiplier: 7.5, type: 'tool' },
 
     // ==========================================
     // GROUP 500 — other (special utility items)
