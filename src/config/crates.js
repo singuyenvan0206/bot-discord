@@ -107,10 +107,10 @@ module.exports = {
             { coins: [5000000, 25000000], chance: 0.65 }
         ],
         ethereal: [
-            { item: '110', chance: 0.05 }, // Space Station
-            { item: '220', chance: 0.05 }, // Superyacht
-            { item: '310', chance: 0.05 }, // Time Machine
-            { coins: [50000000, 200000000], chance: 0.85 }
+            { item: '110', chance: 0.1 }, // Space Station
+            { item: '220', chance: 0.25 }, // Superyacht
+            { item: '310', chance: 0.15 }, // Time Machine
+            { coins: [50000000, 200000000], chance: 0.5 }
         ]
     }
 };
