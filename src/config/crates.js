@@ -98,7 +98,7 @@ module.exports = {
             { item: '105', chance: 0.15 }, // Space Station (daily)
             { item: '205', chance: 0.20 }, // Superyacht (income)
             { item: '305', chance: 0.15 }, // Time Machine (gamble)
-            { coins: [5000000, 20000000], chance: 0.5 }
+            { coins: [10000000, 40000000], chance: 0.5 }
         ]
     }
 };
