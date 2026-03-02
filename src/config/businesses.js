@@ -55,7 +55,7 @@ module.exports = {
             icon: '✈️'
         }
     },
-    UPGRADE_COST_MULTIPLIER: 1.5,
+    UPGRADE_COST_MULTIPLIER: 1.15,
     STAFF_COST: 50000,
     STAFF_INCOME_BONUS: 0.1, // 10% more income per staff
     RANDOM_EVENTS: [
