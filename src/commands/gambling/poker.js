@@ -68,7 +68,7 @@ module.exports = {
             return rows;
         }
 
-        const reply = await message.reply({ embeds: [lobbyEmbed], components: getLobbyButtons() });
+        let reply = await message.reply({ embeds: [lobbyEmbed], components: getLobbyButtons() });
 
         // Lobby Collector
         const lobbyCollector = reply.createMessageComponentCollector({ time: 300_000 });
@@ -359,7 +359,7 @@ module.exports = {
             }
 
             const player = players[turnIndex];
-            await updateTable();
+            await updateTable(true);
 
             if (player.isBot) {
                 setTimeout(async () => await playBot(player), 1500 + Math.random() * 1000);
