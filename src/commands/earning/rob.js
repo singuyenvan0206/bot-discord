@@ -113,11 +113,8 @@ module.exports = {
             await db.removeBalance(message.guild.id, message.author.id, penalty);
             await db.addBalance(message.guild.id, target.id, penalty);
 
-            // Cooldown Penalty: Busted Time (2x cooldown)
-            const bustedCooldown = config.ECONOMY.ROB_COOLDOWN;
-            await db.updateUser(message.guild.id, message.author.id, { last_rob: now + bustedCooldown });
-
-
+            // Cooldown Penalty: Start cooldown from now
+            await db.updateUser(message.guild.id, message.author.id, { last_rob: now });
 
             let failMsg = t('rob.failure_xp', lang, {
                 user: target.username,
@@ -125,8 +122,6 @@ module.exports = {
                 xp: xpResult.deducted.toLocaleString(),
                 jail: t('common.jail_time', lang)
             });
-
-            if (itemBrokenMsg) failMsg += itemBrokenMsg;
 
             if (user.job === 'teacher') {
                 const result = await deductLevel(message.author.id, message.guild.id);
@@ -137,8 +132,6 @@ module.exports = {
                 failMsg += t('rob.police_busted', lang);
             } else if (hasVictimRobShield) {
                 failMsg += t('rob.rob_shield_blocked', lang);
-            } else if (hasVictimShield) {
-                failMsg += t('rob.shield_blocked', lang);
             }
 
             await message.reply(failMsg);
