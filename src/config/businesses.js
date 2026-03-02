@@ -55,8 +55,8 @@ module.exports = {
             icon: '✈️'
         }
     },
-    UPGRADE_COST_MULTIPLIER: 1.15,
-    MANAGER_HOURLY_COST: 500000,
+    UPGRADE_COST_MULTIPLIER: 1.1,
+    MANAGER_HOURLY_COST: 250000,
     MANAGER_INCOME_MULTIPLIER: 1.5, // 50% more income while active
     RANDOM_EVENTS: [
         { name: { vi: 'Thuế Hội Đồng', en: 'Council Tax' }, chance: 0.05, cost_mult: 0.1 },
