@@ -118,6 +118,11 @@ module.exports = {
                     const hourly = bizConfig.calculateBusinessIncome(b.business_id, b.level, b.staff);
                     totalIncome += hourly;
 
+                    const isMax = b.level >= type.max_level;
+                    const upgradeCost = isMax
+                        ? (lang === 'vi' ? 'Tối đa' : 'Max')
+                        : Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level)).toLocaleString();
+
                     embed.addFields({
                         name: `${type.icon} ${type.name[lang]} (ID: \`${type.numeric_id}\`)`,
                         value: t('business.info_item', lang, {
@@ -125,7 +130,9 @@ module.exports = {
                             name: type.name[lang],
                             level: b.level,
                             income: hourly.toLocaleString(),
-                            staff: b.staff
+                            staff: b.staff,
+                            upgrade_cost: upgradeCost,
+                            staff_cost: bizConfig.STAFF_COST.toLocaleString()
                         })
                     });
                 });

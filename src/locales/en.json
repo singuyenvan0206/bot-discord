@@ -419,7 +419,7 @@
         "hire_all_success": "✅ You hired 1 new staff member for all your businesses for **{{price}}** coins!",
         "info_title": "🏢 {{user}}'s Business Empire",
         "info_none": "You don't own any businesses yet.",
-        "info_item": "**{{icon}} {{name}}** (Level {{level}})\n• Income: {{income}}/hour\n• Staff: {{staff}}",
+        "info_item": "**{{icon}} {{name}}** (Level {{level}})\n• Income: {{income}}/hour\n• Staff: {{staff}}\n• Upgrade Cost: {{upgrade_cost}}\n• Hire Staff: {{staff_cost}}",
         "type_startup": "Tech Startup 🚀",
         "type_studio": "Production Studio 🎬",
         "type_airline": "Airline ✈️",

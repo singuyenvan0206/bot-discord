@@ -476,7 +476,7 @@
         "hire_all_success": "✅ Bạn đã thuê thêm 1 nhân viên cho toàn bộ doanh nghiệp với giá **{{price}}** coins!",
         "info_title": "🏢 Đế Chế Kinh Doanh của {{user}}",
         "info_none": "Bạn chưa sở hữu cơ sở kinh doanh nào.",
-        "info_item": "**{{icon}} {{name}}** (Cấp {{level}})\n• Thu nhập: {{income}}/giờ\n• Nhân viên: {{staff}}",
+        "info_item": "**{{icon}} {{name}}** (Cấp {{level}})\n• Thu nhập: {{income}}/giờ\n• Nhân viên: {{staff}}\n• Phí nâng cấp: {{upgrade_cost}}\n• Phí thuê NV: {{staff_cost}}",
         "type_startup": "Công Ty Công Nghệ 🚀",
         "type_studio": "Hãng Phim 🎬",
         "type_airline": "Hãng Hàng Không ✈️",
