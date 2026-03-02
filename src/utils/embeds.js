@@ -57,11 +57,11 @@ function createGiveawayEmbed(giveaway, participantCount = 0, lang = 'vi') {
             '',
             giveaway.description ? `${giveaway.description}\n` : '',
             `⏰ ${t('giveaway.ends', lang)}: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
-            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count}**`,
+            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count.toLocaleString()}**`,
             `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
             giveaway.required_role_id ? `🔒 ${t('giveaway.required_role', lang)}: <@&${giveaway.required_role_id}>` : '',
             '',
-            `📥 ${t('giveaway.entries', lang, { count: participantCount })}`,
+            `📥 ${t('giveaway.entries', lang, { count: participantCount.toLocaleString() })}`,
             '',
             t('giveaway.join_instruction', lang, { emoji: EMOJI }),
         ].filter(Boolean).join('\n'))
@@ -83,11 +83,11 @@ function createPausedEmbed(giveaway, participantCount = 0, lang = 'vi') {
             '',
             giveaway.description ? `${giveaway.description}\n` : '',
             `⏰ ${t('giveaway.ends', lang)}: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
-            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count}**`,
+            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count.toLocaleString()}**`,
             `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
             giveaway.required_role_id ? `🔒 ${t('giveaway.required_role', lang)}: <@&${giveaway.required_role_id}>` : '',
             '',
-            `📥 ${t('giveaway.entries', lang, { count: participantCount })}`,
+            `📥 ${t('giveaway.entries', lang, { count: participantCount.toLocaleString() })}`,
             '',
             t('giveaway.paused_desc', lang),
         ].filter(Boolean).join('\n'))
@@ -115,7 +115,7 @@ function createEndedEmbed(giveaway, winners, participantCount = 0, lang = 'vi') 
             `🏆 ${t('giveaway.ended_desc', lang, { winners: winnerText })}`,
             `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
             '',
-            `📥 ${t('giveaway.total_entries', lang, { count: participantCount })}`,
+            `📥 ${t('giveaway.total_entries', lang, { count: participantCount.toLocaleString() })}`,
         ].filter(Boolean).join('\n'))
         .setColor(COLORS.ENDED)
         .setFooter({ text: `${t('giveaway.footer_id', lang, { id: giveaway.message_id })}` })
@@ -166,10 +166,10 @@ function createInfoStatsEmbed(giveaway, participantCount, totalEntries, lang = '
         ].filter(Boolean).join('\n'))
         .addFields(
             { name: t('giveaway.status', lang), value: status, inline: true },
-            { name: t('giveaway.winners', lang), value: `${giveaway.winner_count}`, inline: true },
+            { name: t('giveaway.winners', lang), value: `${giveaway.winner_count.toLocaleString()}`, inline: true },
             { name: t('giveaway.host', lang), value: `<@${giveaway.host_id}>`, inline: true },
-            { name: t('giveaway.entries', lang, { count: participantCount }), value: `${totalEntries.toLocaleString()} (with bonus)`, inline: true },
-            { name: t('giveaway.time_left', lang), value: isEnded ? t('giveaway.status_ended', lang) : `${formatTimestamp(giveaway.ends_at)} (${formatDuration(timeLeft, lang)})`, inline: true },
+            { name: t('giveaway.entries', lang, { count: participantCount.toLocaleString() }), value: `${totalEntries.toLocaleString()} (with bonus)`, inline: true },
+            { name: t('giveaway.time_left', lang), value: isEnded ? t('giveaway.status_ended', lang) : `${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(Math.floor(Date.now() / 1000) + timeLeft / 1000, 'R')})`, inline: true },
             { name: t('giveaway.required_role', lang), value: giveaway.required_role_id ? `<@&${giveaway.required_role_id}>` : t('help.none', lang), inline: true },
         )
         .setColor(color)
@@ -191,7 +191,7 @@ function createScheduledEmbed(giveaway, lang = 'vi') {
             giveaway.description ? `${giveaway.description}\n` : '',
             `📅 ${t('giveaway.starts', lang)}: ${formatTimestamp(giveaway.scheduled_start)} (${formatTimestamp(giveaway.scheduled_start, 'f')})`,
             `⏰ ${t('giveaway.ends', lang)}: ${formatTimestamp(giveaway.ends_at)} (${formatTimestamp(giveaway.ends_at, 'f')})`,
-            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count}**`,
+            `🏆 ${t('giveaway.winners', lang)}: **${giveaway.winner_count.toLocaleString()}**`,
             `👤 ${t('giveaway.host', lang)}: <@${giveaway.host_id}>`,
             giveaway.required_role_id ? `🔒 ${t('giveaway.required_role', lang)}: <@&${giveaway.required_role_id}>` : '',
             '',

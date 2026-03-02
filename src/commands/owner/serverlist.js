@@ -12,7 +12,7 @@ module.exports = {
         const lang = await getLanguage(message.author.id, message.guild?.id);
 
         const guilds = message.client.guilds.cache.map(guild => {
-            return `**${guild.name}**\n\`ID: ${guild.id}\` | 👥 ${guild.memberCount} ${lang === 'vi' ? 'thành viên' : 'members'}`;
+            return `**${guild.name}**\n\`ID: ${guild.id}\` | 👥 ${guild.memberCount.toLocaleString()} ${lang === 'vi' ? 'thành viên' : 'members'}`;
         });
 
         const totalMembers = message.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
@@ -28,7 +28,7 @@ module.exports = {
         const end = start + MAX_PER_PAGE;
         const currentList = guilds.slice(start, end).join('\n\n') || (lang === 'vi' ? 'Không có dữ liệu.' : 'No data.');
 
-        return message.reply(lang === 'vi' ? `Bot đang ở **${message.client.guilds.cache.size}** máy chủ với tổng cộng **${totalMembers.toLocaleString()}** thành viên.\n\n${currentList}` : `Bot is in **${message.client.guilds.cache.size}** servers with a total of **${totalMembers.toLocaleString()}** members.\n\n${currentList}`);
+        return message.reply(lang === 'vi' ? `Bot đang ở **${message.client.guilds.cache.size.toLocaleString()}** máy chủ với tổng cộng **${totalMembers.toLocaleString()}** thành viên.\n\n${currentList}` : `Bot is in **${message.client.guilds.cache.size.toLocaleString()}** servers with a total of **${totalMembers.toLocaleString()}** members.\n\n${currentList}`);
 
         message.reply({ embeds: [embed] });
     }

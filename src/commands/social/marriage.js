@@ -27,7 +27,7 @@ module.exports = {
 
         const ringName = marriage.ring_id ? t(`items.${marriage.ring_id}.name`, lang) : t('common.none', lang);
         const ring = shopItems.find(i => i.id === marriage.ring_id);
-        const bonus = ring ? (ring.multiplier * 100).toFixed(0) : '0';
+        const bonus = ring ? (ring.multiplier * 100).toLocaleString() : '0';
 
         const embed = new EmbedBuilder()
             .setTitle(t('marriage.title', lang))

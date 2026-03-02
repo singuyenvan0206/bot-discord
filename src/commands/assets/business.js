@@ -319,7 +319,7 @@ module.exports = {
                     await db.updateUserBusiness(message.author.id, b.id, { level: b.newLevel });
                 }
 
-                return message.reply(t('business.upgrade_all_success', lang, { count: eligibleCount, price: totalCost.toLocaleString() }) || `✅ Bạn đã nâng cấp thành công ${eligibleCount} doanh nghiệp với tổng chi phí **${totalCost.toLocaleString()}** coins!`);
+                return message.reply(t('business.upgrade_all_success', lang, { count: eligibleCount, price: totalCost.toLocaleString() }) || `✅ Bạn đã nâng cấp thành công ${eligibleCount.toLocaleString()} doanh nghiệp với tổng chi phí **${totalCost.toLocaleString()}** coins!`);
             }
 
             const biz = userBizs.find(b => {

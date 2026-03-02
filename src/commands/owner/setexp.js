@@ -39,7 +39,7 @@ module.exports = {
             results.push({ target, assignedJob });
         }
 
-        let response = `✅ Đã đặt XP của ${results.map(r => `**${r.target.username}**`).join(', ')} thành **${amount.toLocaleString()}** (Cấp độ: **${newLevel}**).`;
+        let response = `✅ Đã đặt XP của ${results.map(r => `**${r.target.username}**`).join(', ')} thành **${amount.toLocaleString()}** (Cấp độ: **${newLevel.toLocaleString()}**).`;
 
         const jobAssignedResults = results.filter(r => r.assignedJob);
         if (jobAssignedResults.length > 0) {

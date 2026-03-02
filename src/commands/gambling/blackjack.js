@@ -113,7 +113,7 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             }
 
             if (bonusAmount > 0) {
-                flavorText += `\n✨ **Bonus:** +${percent}% (${bonusAmount.toLocaleString()} ${config.EMOJIS.COIN})`;
+                flavorText += `\n✨ **Bonus:** +${percent.toLocaleString()}% (${bonusAmount.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
             // Musician Interaction: Flow State (15% chance to double final win)
             const u = await db.getUser(i.user.id, i.guild.id);

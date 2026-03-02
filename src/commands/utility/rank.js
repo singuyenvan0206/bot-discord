@@ -117,7 +117,7 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
 
         const valueDisplay = sortBy === 'balance'
             ? `${config.EMOJIS.COIN} **${(u.balance || 0).toLocaleString()}**`
-            : `${t('profile.level_label', lang) || 'Level'} **${u.level || 0}**`;
+            : `${t('profile.level_label', lang) || 'Level'} **${(u.level || 0).toLocaleString()}**`;
 
         lines.push(`${rankLabel} ${username} — ${valueDisplay}${jobDisplay}${isAuthor}`);
     }

@@ -111,7 +111,7 @@ module.exports = {
                     multiplier: winMultiplier
                 });
                 if (bonus > 0) {
-                    bonusText += `\n✨ **Bonus:** +${percent}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
+                    bonusText += `\n✨ **Bonus:** +${percent.toLocaleString()}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
                 }
 
                 // Musician Interaction: Flow State (10% chance to double final win)

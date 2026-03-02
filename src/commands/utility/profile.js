@@ -85,7 +85,7 @@ module.exports = {
                 { name: t('business.passive_income_title', lang) || "📈 Passive Income", value: `+${totalPassiveIncome.toLocaleString()} coins/hour`, inline: true },
                 { name: t('profile.multipliers', lang), value: `💼 **${t('effects.income', lang)}:** +${incomeBonus}%\n🎲 **${t('effects.gamble', lang)}:** +${gambleBonus}%\n✨ **${t('effects.xpboost', lang)}:** +${xpBonus}%\n🛡️ **${t('profile.cap', lang)}:** ${maxCapPercent}%`, inline: true },
                 { name: t('profile.marriage', lang), value: marriageStatus, inline: true },
-                { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length }), inline: true },
+                { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount.toLocaleString() }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length.toLocaleString() }), inline: true },
                 { name: t('profile.joined', lang), value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>`, inline: true },
                 { name: t('profile.id', lang), value: `\`${user.id}\``, inline: true }
             )

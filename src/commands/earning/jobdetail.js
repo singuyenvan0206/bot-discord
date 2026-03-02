@@ -46,7 +46,7 @@ module.exports = {
             .setTitle(`${job.icon} ${name.replace(job.icon, '').trim()}`)
             .setDescription(`*${description}*`)
             .addFields(
-                { name: '🆔 ' + t('job.id_label', lang), value: `\`${actualJobId}\` (ID: ${job.numericId})`, inline: true },
+                { name: '🆔 ' + t('job.id_label', lang), value: `\`${actualJobId}\` (ID: ${job.numericId.toLocaleString()})`, inline: true },
                 { name: '⭐ ' + t('job.requirement_label', lang), value: `\`Level 20\``, inline: true },
                 { name: '⏱️ ' + t('job.cooldown_label', lang), value: `\`1 Hour\``, inline: true },
                 { name: '💼 ' + t('job.salary_label', lang), value: `\`${salaryBonus} Bonus\``, inline: true },

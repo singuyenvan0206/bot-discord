@@ -86,7 +86,7 @@ module.exports = {
             totalCost += cost;
 
             itemsToBuy.push({ item, quantity, itemName });
-            purchaseDetails.push(`**${quantity}x** ${itemName}`);
+            purchaseDetails.push(`**${quantity.toLocaleString()}x** ${itemName}`);
         }
 
         if ((user.balance || 0) < totalCost) {
@@ -101,7 +101,7 @@ module.exports = {
 
         if (itemsToBuy.length === 1) {
             const single = itemsToBuy[0];
-            return message.reply(t('buy.success', lang, { quantity: single.quantity, item: single.itemName, price: totalCost.toLocaleString() }));
+            return message.reply(t('buy.success', lang, { quantity: single.quantity.toLocaleString(), item: single.itemName, price: totalCost.toLocaleString() }));
         } else {
             return message.reply(t('buy.success_multiple', lang, { items: purchaseDetails.join(', '), price: totalCost.toLocaleString() }));
         }

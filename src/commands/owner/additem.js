@@ -59,6 +59,6 @@ module.exports = {
 
         const userNames = targets.map(u => `**${u.username}**`).join(', ');
         const itemName = t(`items.${item.id}.name`, lang);
-        return message.reply(`✅ Đã thêm **${amount}** x **${itemName}** cho: ${userNames}.`);
+        return message.reply(`✅ Đã thêm **${amount.toLocaleString()}** x **${itemName}** cho: ${userNames}.`);
     }
 };

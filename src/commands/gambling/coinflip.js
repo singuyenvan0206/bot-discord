@@ -61,7 +61,7 @@ module.exports = {
 
             flavorText = t('coinflip.win_msg', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (bonus > 0) {
-                flavorText += `\n✨ **Bonus:** +${percent}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
+                flavorText += `\n✨ **Bonus:** +${percent.toLocaleString()}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
 
             // Musician Interaction: Flow State (15% chance to double final win)

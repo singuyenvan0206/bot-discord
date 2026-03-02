@@ -31,8 +31,8 @@ module.exports = {
             let buffText = '';
             const inc = role.income_buff || role.income_buff_pct || 0;
             const xp = role.xp_buff || role.xp_buff_pct || 0;
-            if (inc > 0) buffText += `\n╰ ✨ +${Math.round(inc * 100)}% ${t('effects.income', lang)}`;
-            if (xp > 0) buffText += `\n╰ ⚡ +${Math.round(xp * 100)}% ${t('effects.xpboost', lang)}`;
+            if (inc > 0) buffText += `\n╰ ✨ +${Math.round(inc * 100).toLocaleString()}% ${t('effects.income', lang)}`;
+            if (xp > 0) buffText += `\n╰ ⚡ +${Math.round(xp * 100).toLocaleString()}% ${t('effects.xpboost', lang)}`;
 
             embed.addFields({
                 name: `${role.name} ${status}`,

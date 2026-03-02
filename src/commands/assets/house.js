@@ -64,10 +64,10 @@ module.exports = {
 
                 Object.values(housingConfig.INTERIORS).forEach(data => {
                     let buffDesc = '';
-                    if (data.buff === 'xp') buffDesc = `+${(data.value * 100).toFixed(0)}% XP`;
-                    else if (data.buff === 'income') buffDesc = `+${(data.value * 100).toFixed(0)}% Income`;
+                    if (data.buff === 'xp') buffDesc = `+${(data.value * 100).toLocaleString()}% XP`;
+                    else if (data.buff === 'income') buffDesc = `+${(data.value * 100).toLocaleString()}% Income`;
                     else if (data.buff === 'max_bet') buffDesc = `+${data.value.toLocaleString()} Max Bet`;
-                    else if (data.buff === 'cap') buffDesc = `+${(data.value * 100).toFixed(0)}% Bonus Cap`;
+                    else if (data.buff === 'cap') buffDesc = `+${(data.value * 100).toLocaleString()}% Bonus Cap`;
 
                     embed.addFields({
                         name: `${data.name[lang]} (ID: \`${data.numeric_id}\`)`,
@@ -131,7 +131,7 @@ module.exports = {
             houseData[interiorId] = true;
             await db.updateUser(message.author.id, { house_data: JSON.stringify(houseData) });
 
-            return message.reply(t('housing.upgrade_success', lang, { name: interior.name[lang], buff: `+${interior.value} ${interior.buff}` }));
+            return message.reply(t('housing.upgrade_success', lang, { name: interior.name[lang], buff: `+${interior.value.toLocaleString()} ${interior.buff}` }));
         }
 
         if (sub === 'sell') {
@@ -186,10 +186,10 @@ module.exports = {
                     {
                         name: '✨ Buffs',
                         value: t('housing.info_buffs', lang, {
-                            xp: (tier.xp_buff * 100).toFixed(0),
-                            income: (tier.income_buff * 100).toFixed(0),
-                            max_bet: tier.max_bet_bonus.toLocaleString(),
-                            cap: (tier.cap_bonus * 100).toFixed(0)
+                            xp: Math.round(tier.xp_buff * 100),
+                            income: Math.round(tier.income_buff * 100),
+                            max_bet: tier.max_bet_bonus,
+                            cap: Math.round(tier.cap_bonus * 100)
                         })
                     },
                     { name: '🛋️ Decorations', value: interiors }

@@ -38,9 +38,9 @@ module.exports = {
                 if (item) {
                     const itemName = t(`items.${item.id}.name`, lang);
                     const catKey = item.type === 'xpboost' || item.type === 'robshield' ? 'other' : item.type;
-                    cats[catKey]?.items.push(`**${itemName}** x${count} (ID: \`${id}\`)`);
+                    cats[catKey]?.items.push(`**${itemName}** x${count.toLocaleString()} (ID: \`${id}\`)`);
                 } else {
-                    cats['other'].items.push(`**${t('common.unknown_id', lang)}: ${id}** x${count}`);
+                    cats['other'].items.push(`**${t('common.unknown_id', lang)}: ${id}** x${count.toLocaleString()}`);
                 }
             }
             return cats;
@@ -80,7 +80,7 @@ module.exports = {
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),
-                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus}% / ${maxCapPercent}%\n**${t('inventory.gamble_bonus', lang)}:** +${gambleBonus}% / ${maxCapPercent}%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus}% / 400%`,
+                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus.toLocaleString()}% / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.gamble_bonus', lang)}:** +${gambleBonus.toLocaleString()}% / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus.toLocaleString()}% / 400%`,
                     inline: true
                 });
 
@@ -131,10 +131,10 @@ module.exports = {
                         let h = Math.floor(remaining / 3600);
                         let m = Math.round((remaining % 3600) / 60);
                         if (m === 60) { h += 1; m = 0; }
-                        const timeStr = h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m`;
+                        const timeStr = h > 0 ? (m > 0 ? `${h.toLocaleString()}h ${m.toLocaleString()}m` : `${h.toLocaleString()}h`) : `${m.toLocaleString()}m`;
                         const emoji = TYPE_EMOJIS[type] || '⚡';
-                        const countNote = data.count > 1 ? ` ×${data.count}` : '';
-                        return `${emoji} **${effectType}:** +${pct}%${countNote} ${t('common.next_expiry', lang, { time: timeStr })}`;
+                        const countNote = data.count > 1 ? ` ×${data.count.toLocaleString()}` : '';
+                        return `${emoji} **${effectType}:** +${pct.toLocaleString()}%${countNote} ${t('common.next_expiry', lang, { time: timeStr })}`;
                     });
 
                     embed.addFields({
