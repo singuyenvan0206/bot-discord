@@ -312,7 +312,10 @@ module.exports = {
             // Phase 1: Pre-Flop
             phase = t('poker.phases.preflop', lang);
 
-            const ante = Math.max(1, Math.floor(maxBuyIn * 0.05));
+            // Ante: 5% of the smallest stack at the table, minimum 1
+            const smallestStack = Math.min(...players.map(p => p.chips));
+            const ante = Math.max(1, Math.floor(smallestStack * 0.05));
+
             players.forEach(p => {
                 const contribution = Math.min(p.chips, ante);
                 p.chips -= contribution;
@@ -471,23 +474,26 @@ module.exports = {
             await processTurn();
         }
 
-        function getActionRow(currentPlayer) {
-            if (phase === t('poker.phases.showdown', lang)) return [];
-            const toCall = currentBet - (currentPlayer ? currentPlayer.currentBet : 0);
-
-            const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('fold').setLabel(t('poker.action_fold', lang)).setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? t('poker.action_check', lang) : t('poker.action_call', lang, { amount: toCall.toLocaleString() })).setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('raise').setLabel(t('poker.action_raise', lang)).setStyle(ButtonStyle.Primary),
-                new ButtonBuilder().setCustomId('allin').setLabel(t('poker.action_allin', lang)).setStyle(ButtonStyle.Danger)
-            );
+        function getActionRow(currentPlayer, showActions = false) {
+            const rows = [];
+            if (showActions && phase !== t('poker.phases.showdown', lang)) {
+                const toCall = currentBet - (currentPlayer ? currentPlayer.currentBet : 0);
+                const row = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('fold').setLabel(t('poker.action_fold', lang)).setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder().setCustomId('call').setLabel(toCall === 0 ? t('poker.action_check', lang) : t('poker.action_call', lang, { amount: toCall.toLocaleString() })).setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('raise').setLabel(t('poker.action_raise', lang)).setStyle(ButtonStyle.Primary),
+                    new ButtonBuilder().setCustomId('allin').setLabel(t('poker.action_allin', lang)).setStyle(ButtonStyle.Danger)
+                );
+                rows.push(row);
+            }
 
             const viewRow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('view_cards').setLabel(t('poker.btn_view_cards', lang)).setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder().setCustomId('call_to_front').setLabel('🔄').setStyle(ButtonStyle.Secondary)
             );
+            rows.push(viewRow);
 
-            return [row, viewRow];
+            return rows;
         }
 
         async function updateTable(forceRepost = false) {
@@ -511,12 +517,8 @@ module.exports = {
                 .setColor(config.COLORS.INFO)
                 .setFooter({ text: t('poker.view_cards_hint', lang) });
 
-            const components = [];
-            if (activeP && !activeP.isBot) {
-                components.push(...getActionRow(activeP));
-            } else if (phase !== t('poker.phases.showdown', lang)) {
-                components.push(...getActionRow(null));
-            }
+            const isHumanTurn = activeP && !activeP.isBot && phase !== t('poker.phases.showdown', lang);
+            const components = getActionRow(isHumanTurn ? activeP : null, isHumanTurn);
 
             if (forceRepost) {
                 try {
