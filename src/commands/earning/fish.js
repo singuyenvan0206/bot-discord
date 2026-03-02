@@ -58,11 +58,11 @@ const CATCHES = [
     { key: 'anglerfish', emoji: '🏮', value: 22000, weight: 80, minLuck: 25.0 },
     { key: 'treasure_chest', emoji: '💰', value: 35000, weight: 60, minLuck: 28.0 },
     { key: 'mythical_pearl', emoji: '🔮', value: 80000, weight: 100, minLuck: 32.0 },
-    { key: 'kraken', emoji: '🐙', value: 160000, weight: 80, minLuck: 35.0 },
-    { key: 'megalodon', emoji: '🦈', value: 350000, weight: 120, minLuck: 38.0 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 500000, weight: 150, minLuck: 40.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 650000, weight: 180, minLuck: 42.0 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 1000000, weight: 150, minLuck: 45.0 }
+    { key: 'kraken', emoji: '🐙', value: 160000, weight: 120, minLuck: 35.0 },
+    { key: 'megalodon', emoji: '🦈', value: 350000, weight: 225, minLuck: 38.0 },
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 500000, weight: 250, minLuck: 40.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 650000, weight: 225, minLuck: 42.0 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 1000000, weight: 250, minLuck: 45.0 }
 ];
 
 module.exports = {

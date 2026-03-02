@@ -201,8 +201,8 @@ async function getDynamicCap(memberOrId, guildId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
 
-    // Standard: 2.0 (200% bonus), VIP: 3.5 (350% bonus)
-    let cap = await hasActiveItem(gId, userId, 104) ? 3.5 : 2.0;
+    // Standard: 5.0 (500% bonus), VIP: 10.0 (1000% bonus)
+    let cap = await hasActiveItem(gId, userId, 104) ? 6.0 : 4.0;
 
     // Housing Cap Bonus
     const user = await db.getUser(userId, gId);
