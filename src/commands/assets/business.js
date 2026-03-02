@@ -283,35 +283,49 @@ module.exports = {
             if (userBizs.length === 0) return message.reply(t('business.sell_error_none', lang) || '❌ You don\'t own any businesses!');
 
             const user = await db.getUser(message.author.id);
-            const requestedLevels = args[2] ? Math.max(1, parseInt(args[2]) || 1) : 1;
+            const levelArg = args[2] ? args[2].toLowerCase() : '1';
+            const isAllLevels = levelArg === 'all' || levelArg === 'max';
+            const requestedLevels = isAllLevels ? Infinity : Math.max(1, parseInt(levelArg) || 1);
 
             if (inputId === 'all') {
                 let totalCost = 0;
+                let totalLevelsAdded = 0;
                 let eligibleCount = 0;
                 const businessesToUpgrade = [];
+
+                // To handle 'all' levels across 'all' businesses fairly, we upgrade them one level at a time
+                // to distribute funds across all businesses if funds are limited.
+                // However, the current logic is simpler: calculate max for each.
 
                 for (const b of userBizs) {
                     const type = bizConfig.TYPES[b.business_id];
                     if (type && b.level < type.max_level) {
-                        const upgradeable = Math.min(requestedLevels, type.max_level - b.level);
-                        if (upgradeable > 0) {
-                            let itemCost = 0;
-                            for (let i = 0; i < upgradeable; i++) {
-                                itemCost += Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level + i));
+                        let canUpgrade = 0;
+                        let itemCost = 0;
+                        const maxPossible = type.max_level - b.level;
+                        const target = Math.min(requestedLevels, maxPossible);
+
+                        for (let i = 0; i < target; i++) {
+                            const nextLevelCost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level + i));
+                            if (user.balance >= totalCost + nextLevelCost) {
+                                itemCost += nextLevelCost;
+                                canUpgrade++;
+                            } else {
+                                break;
                             }
+                        }
+
+                        if (canUpgrade > 0) {
                             totalCost += itemCost;
                             eligibleCount++;
-                            businessesToUpgrade.push({ id: b.business_id, newLevel: b.level + upgradeable });
+                            totalLevelsAdded += canUpgrade;
+                            businessesToUpgrade.push({ id: b.business_id, newLevel: b.level + canUpgrade });
                         }
                     }
                 }
 
                 if (eligibleCount === 0) {
-                    return message.reply(t('business.upgrade_all_max', lang) || "❌ Tất cả doanh nghiệp của bạn đã đạt cấp tối đa!");
-                }
-
-                if (user.balance < totalCost) {
-                    return message.reply(t('business.upgrade_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để nâng cấp đồng loạt tất cả doanh nghiệp!`);
+                    return message.reply(t('business.upgrade_all_max', lang) || "❌ Tất cả doanh nghiệp của bạn đã đạt cấp tối đa hoặc bạn không đủ tiền nâng cấp!");
                 }
 
                 await db.removeBalance(message.author.id, totalCost);
@@ -319,7 +333,7 @@ module.exports = {
                     await db.updateUserBusiness(message.author.id, b.id, { level: b.newLevel });
                 }
 
-                return message.reply(t('business.upgrade_all_success', lang, { count: eligibleCount, price: totalCost.toLocaleString() }) || `✅ Bạn đã nâng cấp thành công ${eligibleCount.toLocaleString()} doanh nghiệp với tổng chi phí **${totalCost.toLocaleString()}** coins!`);
+                return message.reply(t('business.upgrade_all_success', lang, { count: eligibleCount, price: totalCost.toLocaleString() }) || `✅ Đã nâng cấp ${eligibleCount} doanh nghiệp (tổng cộng ${totalLevelsAdded} cấp) với chi phí **${totalCost.toLocaleString()}** coins!`);
             }
 
             const biz = userBizs.find(b => {
@@ -333,14 +347,23 @@ module.exports = {
             const type = bizConfig.TYPES[bizId];
             if (biz.level >= type.max_level) return message.reply('❌ This business is already at maximum level!');
 
-            const upgradeable = Math.min(requestedLevels, type.max_level - biz.level);
+            let upgradeable = 0;
             let upgradeCost = 0;
-            for (let i = 0; i < upgradeable; i++) {
-                upgradeCost += Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, biz.level + i));
+            const maxPossible = type.max_level - biz.level;
+            const target = Math.min(requestedLevels, maxPossible);
+
+            for (let i = 0; i < target; i++) {
+                const nextLevelCost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, biz.level + i));
+                if (user.balance >= upgradeCost + nextLevelCost) {
+                    upgradeCost += nextLevelCost;
+                    upgradeable++;
+                } else {
+                    break;
+                }
             }
 
-            if (user.balance < upgradeCost) {
-                return message.reply(`❌ You need **${upgradeCost.toLocaleString()}** coins for this upgrade!`);
+            if (upgradeable === 0) {
+                return message.reply(`❌ You need at least **${Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, biz.level)).toLocaleString()}** coins for the next upgrade!`);
             }
 
             await db.removeBalance(message.author.id, upgradeCost);
