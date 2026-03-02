@@ -186,6 +186,8 @@ module.exports = {
             playerMap.delete(id);
         }
 
+        const sleep = ms => new Promise(res => setTimeout(res, ms));
+
         function updateLobby() {
             const playerList = [];
             players.forEach(p => {
@@ -240,7 +242,7 @@ module.exports = {
                 if (p.chips === 0) p.allIn = true;
             });
 
-            startBettingRound();
+            await startBettingRound();
         }
 
         async function startBettingRound() {
@@ -250,8 +252,8 @@ module.exports = {
             });
             currentBet = 0;
             turnIndex = (dealerIndex + 1) % players.length;
-            updateTable();
-            processTurn();
+            await updateTable();
+            await processTurn();
         }
 
         async function processTurn() {
@@ -259,7 +261,7 @@ module.exports = {
             const nonFolded = players.filter(p => !p.folded);
 
             if (nonFolded.length === 1) {
-                endRound();
+                await endRound();
                 return;
             }
 
@@ -267,7 +269,7 @@ module.exports = {
             const allActed = activePlayers.every(p => p.hasActed);
 
             if (activePlayers.length === 0 || (allActed && allMatched)) {
-                nextPhase();
+                await nextPhase();
                 return;
             }
 
@@ -275,14 +277,14 @@ module.exports = {
             while (players[turnIndex].folded || players[turnIndex].allIn) {
                 turnIndex = (turnIndex + 1) % players.length;
                 loopCount++;
-                if (loopCount > players.length) { nextPhase(); return; }
+                if (loopCount > players.length) { await nextPhase(); return; }
             }
 
             const player = players[turnIndex];
-            updateTable();
+            await updateTable();
 
             if (player.isBot) {
-                setTimeout(() => playBot(player), 1500 + Math.random() * 1000);
+                setTimeout(async () => await playBot(player), 1500 + Math.random() * 1000);
             }
         }
 
@@ -300,9 +302,9 @@ module.exports = {
 
             if (action === 'raise') {
                 const minRaise = Math.max(10, Math.floor(minBuyIn * 0.1));
-                handleAction(bot, 'raise', null, minRaise);
+                await handleAction(bot, 'raise', null, minRaise);
             } else {
-                handleAction(bot, action);
+                await handleAction(bot, action);
             }
         }
 
@@ -373,6 +375,9 @@ module.exports = {
         });
 
         async function handleAction(player, action, interaction = null, numericValue = 0) {
+            const exceededMaxBet = (numericValue > maxBet);
+            if (exceededMaxBet && action === 'raise') return; // Double check
+
             const toCall = currentBet - player.currentBet;
 
             if (action === 'fold') {
@@ -411,7 +416,12 @@ module.exports = {
                 player.allIn = true;
                 player.hasActed = true;
 
+                if (player.currentBet > currentBet) {
+                    currentBet = player.currentBet;
+                    players.forEach(op => { if (op.id !== player.id && !op.folded && !op.allIn) op.hasActed = false; });
+                }
             }
+
             // Grant Action XP
             if (!player.isBot) {
                 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
@@ -419,7 +429,7 @@ module.exports = {
             }
 
             turnIndex = (turnIndex + 1) % players.length;
-            processTurn();
+            await processTurn();
         }
 
         function getActionRow(currentPlayer) {
@@ -478,20 +488,27 @@ module.exports = {
             players.forEach(p => { p.currentBet = 0; p.hasActed = false; });
             currentBet = 0;
 
-            if (phase === t('poker.phases.preflop', lang)) {
+            const activePlayers = players.filter(p => !p.folded && !p.allIn);
+            if (activePlayers.length === 0) {
+                await updateTable();
+                await sleep(2500); // Give players time to see the board
+            }
+
+            if (communityCards.length === 0) { // Was Pre-flop
                 phase = t('poker.phases.flop', lang);
                 communityCards.push(...deck.deal(3));
-            } else if (phase === t('poker.phases.flop', lang)) {
+            } else if (communityCards.length === 3) { // Was Flop
                 phase = t('poker.phases.turn', lang);
                 communityCards.push(...deck.deal(1));
-            } else if (phase === t('poker.phases.turn', lang)) {
+            } else if (communityCards.length === 4) { // Was Turn
                 phase = t('poker.phases.river', lang);
                 communityCards.push(...deck.deal(1));
-            } else if (phase === t('poker.phases.river', lang)) {
-                endRound();
+            } else { // Was River
+                await endRound();
                 return;
             }
-            startBettingRound();
+
+            await startBettingRound();
         }
 
         async function endRound() {
