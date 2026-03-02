@@ -6,7 +6,7 @@ module.exports = [
     { id: 102, name: 'Shag Rug', price: 12000, multiplier: 0.40, duration: 604800, type: 'daily' },
     { id: 103, name: 'Moai Statue', price: 120000, multiplier: 0.80, duration: 2592000, type: 'daily' },
     { id: 104, name: 'VIP Golden Ticket', price: 500000, multiplier: 1.50, duration: 2592000, type: 'daily' },
-    { id: 105, name: 'Space Station', price: 3500000, multiplier: 3.50, duration: 2592000, type: 'daily' },
+    { id: 105, name: 'Space Station', price: 2000000, multiplier: 3.50, duration: 2592000, type: 'daily' },
 
     // ==========================================
     // GROUP 200 — income (buff $work, $fish, $search)
@@ -15,7 +15,7 @@ module.exports = [
     { id: 202, name: 'RGB Keyboard', price: 15000, multiplier: 0.40, duration: 604800, type: 'income' },
     { id: 203, name: '4K Monitor', price: 40000, multiplier: 0.70, duration: 604800, type: 'income' },
     { id: 204, name: 'Trading Terminal', price: 200000, multiplier: 1.20, duration: 2592000, type: 'income' },
-    { id: 205, name: 'Superyacht', price: 5000000, multiplier: 4.00, duration: 2592000, type: 'income' },
+    { id: 205, name: 'Superyacht', price: 2000000, multiplier: 4.00, duration: 2592000, type: 'income' },
 
     // ==========================================
     // GROUP 300 — gamble (buff $coinflip, $slots, $dice, $blackjack)
@@ -24,7 +24,7 @@ module.exports = [
     { id: 302, name: 'Emerald Necklace', price: 100000, multiplier: 0.60, duration: 2592000, type: 'gamble' },
     { id: 303, name: 'Clay Chips', price: 200000, multiplier: 1.00, duration: 2592000, type: 'gamble' },
     { id: 304, name: '4-Leaf Clover', price: 500000, multiplier: 1.80, duration: 2592000, type: 'gamble' },
-    { id: 305, name: 'Time Machine', price: 8000000, multiplier: 5.00, duration: 2592000, type: 'gamble' },
+    { id: 305, name: 'Time Machine', price: 2000000, multiplier: 5.00, duration: 2592000, type: 'gamble' },
 
     // ==========================================
     // GROUP 400 — bait (fishing baits)
