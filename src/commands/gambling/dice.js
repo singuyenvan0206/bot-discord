@@ -22,7 +22,7 @@ module.exports = {
         let bet = args[0] ? parseAmount(args[0], user.balance, maxBet) : 50;
 
         if (isNaN(bet) || bet <= 0) return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
-        if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance }));
+        if (bet && user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
         if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
 
         const uid = Date.now().toString(36);

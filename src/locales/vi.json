@@ -272,7 +272,7 @@
         "viral": "\n🚀 **Lên xu hướng!** Buổi stream của bạn đã lọt vào trang chủ! Phần thưởng nhân **5x**!",
         "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!",
         "special_order": "\n👨‍🍳 **Đơn đặc biệt!** Thực đơn VIP được gọi, thu nhập nhân **2x**!",
-        "mission_bonus": "\n🪖 **Thưởng nhiệm vụ!** Hoàn thành nhiệm vụ đặc biệt, nhận thêm **+100** coins!",
+        "mission_bonus": "\n🪖 **Thưởng nhiệm vụ!** Hoàn thành nhiệm vụ đặc biệt, nhận thêm **+2,000** coins!",
         "code_crunch": "\n💻 **Code Crunch!** Programmer tối ưu hóa mã nguồn, nhận thêm **+200** coins!",
         "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được tiền bồi dưỡng **+150** coins!"
     },
@@ -470,7 +470,16 @@
         "buy_all_funds": "❌ Bạn cần **{{price}}** coins để mua tất cả doanh nghiệp còn lại!",
         "buy_all_success": "✅ Bạn đã mua toàn bộ doanh nghiệp còn thiếu với giá **{{price}}** coins!",
         "hire_usage": "❌ Cách dùng: `$business hire <loại> [số giờ]` - Thuê quản lý tăng 50% doanh thu trong thời gian thuê.",
-        "sell_usage": "❌ Cách dùng: `$business sell all` để bán tất cả doanh nghiệp.",
+        "sell_usage": "❌ Cách dùng: `$biz sell <ID> <@người_chơi> <giá>` hoặc `$biz sell all`",
+        "sell_p2p_usage": "❌ Cách dùng: `$biz sell <ID> <@người_chơi> <giá>`\nVí dụ: `$biz sell 1 @Sim 100000`",
+        "sell_p2p_not_self": "❌ Bạn không thể tự bán cho chính mình!",
+        "sell_p2p_confirm_title": "🤝 Đề Nghị Mua Lại Doanh Nghiệp",
+        "sell_p2p_confirm_desc": "**{{seller}}** muốn bán **{{bizName}}** cho bạn với giá **{{price}}** coins.\n\nBạn có đồng ý mua không?",
+        "sell_p2p_success": "✅ Chúc mừng! **{{buyer}}** đã mua thành công **{{bizName}}** từ **{{seller}}** với giá **{{price}}** coins!",
+        "sell_p2p_rejected": "❌ **{{buyer}}** đã từ chối lời đề nghị mua **{{bizName}}**.",
+        "sell_p2p_no_funds": "❌ **{{buyer}}** không đủ tiền để thực hiện giao dịch này!",
+        "sell_p2p_already_owned": "❌ **{{buyer}}** đã sở hữu doanh nghiệp này rồi!",
+        "sell_p2p_timeout": "⌛ Hết thời gian giao dịch. Lời đề nghị đã bị hủy.",
         "sell_error_none": "❌ Bạn chưa có doanh nghiệp nào để bán!",
         "sell_all_success": "💰 Bạn đã bán toàn bộ doanh nghiệp và nhận lại **{{price}}** coins (50% giá gốc).",
         "staff_success": "👨‍💼 Bạn đã thuê quản lý cho **{{name}}** trong {{hours}} giờ!",
@@ -944,18 +953,6 @@
             "other": "💎 Khác",
             "crate": "🎁 Rương"
         }
-    },
-    "rank": {
-        "leaderboard_title": "🏆 Bảng Xếp Hạng XP: {{server}}",
-        "leaderboard_balance_title": "💰 Bảng Xếp Hạng Giàu Có: {{server}}",
-        "leaderboard_job_title": "💼 Bảng Xếp Hạng {{job}}: {{server}}",
-        "you": "Bạn",
-        "footer": "Bảng xếp hạng dựa trên người dùng trong máy chủ này",
-        "select_job": "Chọn nghề nghiệp...",
-        "select_sort": "Sắp xếp theo...",
-        "all_jobs": "Tất cả nghề nghiệp",
-        "sort_xp": "Sắp xếp: Cấp độ/XP",
-        "sort_balance": "Sắp xếp: Số dư"
     },
     "inventory": {
         "description": "Xem kho đồ và các chỉ số nhân vật của bạn.",
@@ -1712,5 +1709,16 @@
         "bonus": "📈 Buff thu nhập:",
         "no_marriage": "❌ Cưng vẫn đang 'độc thân vui tính' mà, có giấy tờ gì đâu! 😂",
         "footer": "Chúc hai bạn trăm năm hạnh phúc! ❤️✨"
+    },
+    "rank": {
+        "leaderboard_title": "🏆 Bảng Xếp Hạng — {{server}}",
+        "leaderboard_balance_title": "💰 Đại Gia — {{server}}",
+        "leaderboard_job_title": "💼 {{job}} — {{server}}",
+        "sort_xp": "Kinh nghiệm",
+        "sort_balance": "Số dư",
+        "select_job": "Lọc theo nghề nghiệp...",
+        "all_jobs": "Tất cả nghề",
+        "you": "Bạn",
+        "footer": "Tích cực trò chuyện và làm việc để thăng hạng!"
     }
 }

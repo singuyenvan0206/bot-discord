@@ -176,7 +176,7 @@ async function sendLevelUpMessage(message, level, bonus, lang) {
             level: level,
             bonus: bonus,
             emoji: config.EMOJIS.COIN
-        }) || `Chúc mừng! Bạn đã đạt cấp độ **${level}** và nhận được **${bonus}** ${config.EMOJIS.COIN}!`)
+        }) || `Chúc mừng! Bạn đã đạt cấp độ **${level.toLocaleString()}** và nhận được **${bonus.toLocaleString()}** ${config.EMOJIS.COIN}!`)
         .setColor(config.COLORS.SUCCESS)
         .setTimestamp();
 

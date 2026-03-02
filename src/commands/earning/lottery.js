@@ -50,11 +50,11 @@ module.exports = {
             .setTitle(t('lottery.title', lang) || "🎫 Xổ Số May Mắn")
             .setDescription(t('lottery.status_desc', lang, {
                 jackpot: jackpot.toLocaleString(),
-                total: totalTickets,
-                user: userTickets,
+                total: totalTickets.toLocaleString(),
+                user: userTickets.toLocaleString(),
                 emoji: config.EMOJIS.COIN,
                 price: config.ECONOMY.LOTTERY.TICKET_PRICE.toLocaleString()
-            }) || `💰 Jackpot hiện tại: **${jackpot.toLocaleString()}** ${config.EMOJIS.COIN}\n🎟️ Tổng số vé đã bán: **${totalTickets}**\n👤 Vé của bạn: **${userTickets}**\n\nGiá mỗi vé: **${config.ECONOMY.LOTTERY.TICKET_PRICE.toLocaleString()}** coins.`)
+            }) || `💰 Jackpot hiện tại: **${jackpot.toLocaleString()}** ${config.EMOJIS.COIN}\n🎟️ Tổng số vé đã bán: **${totalTickets.toLocaleString()}**\n👤 Vé của bạn: **${userTickets.toLocaleString()}**\n\nGiá mỗi vé: **${config.ECONOMY.LOTTERY.TICKET_PRICE.toLocaleString()}** coins.`)
             .addFields({
                 name: t('lottery.time_remaining', lang) || "⏱️ Thời gian còn lại",
                 value: `**${hours}g ${minutes}p**`

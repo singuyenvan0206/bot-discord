@@ -168,7 +168,7 @@ function createInfoStatsEmbed(giveaway, participantCount, totalEntries, lang = '
             { name: t('giveaway.status', lang), value: status, inline: true },
             { name: t('giveaway.winners', lang), value: `${giveaway.winner_count}`, inline: true },
             { name: t('giveaway.host', lang), value: `<@${giveaway.host_id}>`, inline: true },
-            { name: t('giveaway.entries', lang, { count: participantCount }), value: `${totalEntries} (with bonus)`, inline: true },
+            { name: t('giveaway.entries', lang, { count: participantCount }), value: `${totalEntries.toLocaleString()} (with bonus)`, inline: true },
             { name: t('giveaway.time_left', lang), value: isEnded ? t('giveaway.status_ended', lang) : `${formatTimestamp(giveaway.ends_at)} (${formatDuration(timeLeft, lang)})`, inline: true },
             { name: t('giveaway.required_role', lang), value: giveaway.required_role_id ? `<@&${giveaway.required_role_id}>` : t('help.none', lang), inline: true },
         )

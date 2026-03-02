@@ -792,6 +792,10 @@ async function removeAllUserBusinesses(userId) {
     await execute('DELETE FROM user_businesses WHERE user_id = ?', [userId]);
 }
 
+async function transferUserBusiness(fromUserId, toUserId, businessId) {
+    await execute('UPDATE user_businesses SET user_id = ? WHERE user_id = ? AND business_id = ?', [toUserId, fromUserId, businessId]);
+}
+
 module.exports = {
     getDb,
     saveDb,
@@ -852,6 +856,7 @@ module.exports = {
     updateUserBusiness,
     getAllUserBusinesses,
     removeAllUserBusinesses,
+    transferUserBusiness,
     removeGuildRole,
     updateGuildRoleId,
     getGuildRoles,

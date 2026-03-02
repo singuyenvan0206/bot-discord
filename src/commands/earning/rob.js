@@ -75,10 +75,10 @@ module.exports = {
             let baseSteal = Math.floor(targetBalance * (Math.random() * 0.05 + 0.05));
 
             // Cap at 2,000,000 if target is an owner
-            const isTargetOwner = await db.isOwner(target.id);
-            if (isTargetOwner) {
-                baseSteal = Math.min(baseSteal, 2000000);
-            }
+            // const isTargetOwner = await db.isOwner(target.id);
+            // if (isTargetOwner) {
+            //     baseSteal = Math.min(baseSteal, 2000000);
+            // }
 
             // Bonus: if robbing a Police officer, criminal earns +50%
             let policeRobMsg = '';

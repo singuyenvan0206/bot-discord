@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const db = require('../../database');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -78,27 +78,116 @@ module.exports = {
 
         if (sub === 'sell') {
             const inputId = args[1] ? args[1].toLowerCase() : null;
-            if (inputId !== 'all') {
-                return message.reply(t('business.sell_usage', lang) || "❌ Cách dùng: `$business sell all` để bán tất cả doanh nghiệp.");
+            if (!inputId) return message.reply(t('business.sell_usage', lang));
+
+            if (inputId === 'all') {
+                const userBizs = await db.getUserBusinesses(message.author.id);
+                if (userBizs.length === 0) return message.reply(t('business.sell_error_none', lang));
+
+                let totalValue = 0;
+                for (const b of userBizs) {
+                    const type = bizConfig.TYPES[b.business_id];
+                    if (type) totalValue += type.base_price;
+                }
+
+                const refund = Math.floor(totalValue * 0.5);
+                await db.removeAllUserBusinesses(message.author.id);
+                await db.addBalance(message.author.id, refund);
+
+                return message.reply(t('business.sell_all_success', lang, { price: refund.toLocaleString() }));
             }
+
+            // P2P Selling
+            const targetUser = message.mentions.users.first();
+            const price = args[3] ? parseInt(args[3]) : null;
+
+            if (!targetUser || isNaN(price) || price < 0) {
+                return message.reply(t('business.sell_p2p_usage', lang));
+            }
+
+            if (targetUser.id === message.author.id) {
+                return message.reply(t('business.sell_p2p_not_self', lang));
+            }
+
+            const type = Object.values(bizConfig.TYPES).find(b =>
+                b.id.toLowerCase() === inputId ||
+                b.numeric_id.toString() === inputId
+            );
+
+            if (!type) return message.reply('❌ Business ID not found!');
 
             const userBizs = await db.getUserBusinesses(message.author.id);
-            if (userBizs.length === 0) {
-                return message.reply(t('business.sell_error_none', lang) || "❌ Bạn chưa có doanh nghiệp nào để bán!");
+            const bizToSell = userBizs.find(b => b.business_id === type.id);
+            if (!bizToSell) return message.reply(t('business.sell_error_none', lang));
+
+            // Check if buyer already owns it
+            const buyerBizs = await db.getUserBusinesses(targetUser.id);
+            if (buyerBizs.some(b => b.business_id === type.id)) {
+                return message.reply(t('business.sell_p2p_already_owned', lang, { buyer: targetUser.username }));
             }
 
-            let totalValue = 0;
-            for (const b of userBizs) {
-                const type = bizConfig.TYPES[b.business_id];
-                if (type) totalValue += type.base_price;
-            }
+            const confirmEmbed = new EmbedBuilder()
+                .setTitle(t('business.sell_p2p_confirm_title', lang))
+                .setDescription(t('business.sell_p2p_confirm_desc', lang, {
+                    seller: message.author.username,
+                    bizName: type.name[lang],
+                    price: price.toLocaleString()
+                }))
+                .setColor(config.COLORS.INFO)
+                .setFooter({ text: t('common.timeout', lang) });
 
-            const refund = Math.floor(totalValue * 0.5);
+            const row = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId('accept_biz_sale').setLabel(t('connect4.accept', lang)).setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId('reject_biz_sale').setLabel(t('connect4.deny', lang)).setStyle(ButtonStyle.Danger)
+            );
 
-            await db.removeAllUserBusinesses(message.author.id);
-            await db.addBalance(message.author.id, refund);
+            const reply = await message.reply({ content: `<@${targetUser.id}>`, embeds: [confirmEmbed], components: [row] });
 
-            return message.reply(t('business.sell_all_success', lang, { price: refund.toLocaleString() }) || `💰 Bạn đã bán toàn bộ doanh nghiệp và nhận lại **${refund.toLocaleString()}** coins (50% giá gốc).`);
+            const collector = reply.createMessageComponentCollector({
+                filter: i => i.user.id === targetUser.id,
+                time: 60000,
+                max: 1
+            });
+
+            collector.on('collect', async i => {
+                if (i.customId === 'reject_biz_sale') {
+                    return i.update({ content: t('business.sell_p2p_rejected', lang, { buyer: targetUser.username, bizName: type.name[lang] }), embeds: [], components: [] });
+                }
+
+                // Verify buyer still has the money
+                const buyer = await db.getUser(targetUser.id);
+                if (buyer.balance < price) {
+                    return i.update({ content: t('business.sell_p2p_no_funds', lang, { buyer: targetUser.username }), embeds: [], components: [] });
+                }
+
+                // Double check seller still has the biz
+                const sellerBizs = await db.getUserBusinesses(message.author.id);
+                if (!sellerBizs.some(b => b.business_id === type.id)) {
+                    return i.update({ content: "❌ Giao dịch thất bại: Người bán không còn sở hữu doanh nghiệp này.", embeds: [], components: [] });
+                }
+
+                // Perform transfer
+                await db.removeBalance(targetUser.id, price);
+                await db.addBalance(message.author.id, price);
+                await db.transferUserBusiness(message.author.id, targetUser.id, type.id);
+
+                return i.update({
+                    content: t('business.sell_p2p_success', lang, {
+                        buyer: targetUser.username,
+                        seller: message.author.username,
+                        bizName: type.name[lang],
+                        price: price.toLocaleString()
+                    }),
+                    embeds: [],
+                    components: []
+                });
+            });
+
+            collector.on('end', (_, reason) => {
+                if (reason === 'time') {
+                    reply.edit({ content: t('business.sell_p2p_timeout', lang), embeds: [], components: [] }).catch(() => { });
+                }
+            });
         }
 
         if (sub === 'info' || !sub) {

@@ -55,9 +55,17 @@ async function processRandomEvents(client) {
 
                 // Notify user via DM if possible
                 try {
+                    const { t, getLanguage } = require('./i18n');
+                    const lang = await getLanguage(b.user_id);
                     const user = await client.users.fetch(b.user_id);
                     if (user) {
-                        user.send(`⚠️ **Business Event:** ${event.name.en} for your ${type.name.en}. You lost **${loss.toLocaleString()}** coins in maintenance/taxes.`).catch(() => { });
+                        const eventName = event.name[lang] || event.name.en;
+                        const bizName = type.name[lang] || type.name.en;
+                        user.send(t('business.event_notification', lang, {
+                            event: eventName,
+                            business: bizName,
+                            amount: loss
+                        })).catch(() => { });
                     }
                 } catch (e) { }
             }

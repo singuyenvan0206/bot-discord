@@ -118,8 +118,8 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
     const embed = new EmbedBuilder()
         .setTitle(title)
         .setDescription(lines.join('\n'))
-        .setColor(jobId && jobs[jobId] ? jobs[jobId].color : config.COLORS.INFO)
-        .setThumbnail(guild.iconURL({ dynamic: true }))
+        .setColor(jobId && jobs[jobId]?.color ? jobs[jobId].color : config.COLORS.INFO)
+        .setThumbnail(guild.iconURL({ dynamic: true }) || null)
         .setFooter({ text: t('rank.footer', lang) })
         .setTimestamp();
 

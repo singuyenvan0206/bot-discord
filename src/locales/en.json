@@ -216,7 +216,7 @@
         "viral": "\n🚀 **Going Viral!** Your stream reached the front page! Reward multiplied by **5x**!",
         "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **2.5x**!",
         "special_order": "\n👨‍🍳 **Special Order!** A VIP menu was requested, income doubled **×2**!",
-        "mission_bonus": "\n🪖 **Mission Bonus!** Completed a special mission, earned an extra **+100** coins!",
+        "mission_bonus": "\n🪖 **Mission Bonus!** Completed a special operation, earned an extra **+2,000** coins!",
         "code_crunch": "\n💻 **Code Crunch!** Programmer optimized the code, received **+200** extra coins!",
         "overtime": "\n👮 **Overtime!** Officer received a **+150** coins bonus!"
     },
@@ -413,9 +413,18 @@
         "buy_all_funds": "❌ You need **{{price}}** coins to buy all remaining businesses!",
         "buy_all_success": "✅ You purchased all missing businesses for **{{price}}** coins!",
         "hire_usage": "❌ Usage: `$business hire <type> [hours]` - Hire a manager to boost income by 50%.",
-        "sell_usage": "❌ Usage: `$business sell all` to sell all businesses.",
-        "sell_error_none": "❌ You don't have any businesses to sell!",
-        "sell_all_success": "💰 You sold all businesses and received **{{price}}** coins (50% of base value).",
+        "sell_usage": "❌ Usage: `$biz sell <ID> <@user> <price>` or `$biz sell all`",
+        "sell_p2p_usage": "❌ Usage: `$biz sell <ID> <@user> <price>`\nExample: `$biz sell 1 @User 100000`",
+        "sell_all_success": "💰 You sold all businesses for **{{price}}** coins (50% value).",
+        "sell_error_none": "❌ You don't own any businesses!",
+        "sell_p2p_not_self": "❌ You can't sell to yourself!",
+        "sell_p2p_confirm_title": "🤝 Business Purchase Offer",
+        "sell_p2p_confirm_desc": "**{{seller}}** wants to sell **{{bizName}}** to you for **{{price}}** coins.\n\nDo you accept?",
+        "sell_p2p_success": "✅ Success! **{{buyer}}** bought **{{bizName}}** from **{{seller}}** for **{{price}}** coins!",
+        "sell_p2p_rejected": "❌ **{{buyer}}** rejected the offer to buy **{{bizName}}**.",
+        "sell_p2p_no_funds": "❌ **{{buyer}}** doesn't have enough coins for this transaction!",
+        "sell_p2p_already_owned": "❌ **{{buyer}}** already owns this business!",
+        "sell_p2p_timeout": "⌛ Transaction timed out.",
         "staff_success": "👨‍💼 You hired a manager for **{{name}}** for {{hours}} hours!",
         "hire_all_funds": "❌ You need **{{price}}** coins to hire managers for all businesses!",
         "hire_all_success": "✅ You hired managers for {{hours}} hours across all your businesses for **{{price}}** coins!",
@@ -431,6 +440,7 @@
         "upgrade_all_funds": "❌ You need **{{price}}** coins to upgrade all businesses!",
         "upgrade_all_success": "✅ Successfully upgraded your businesses {{count}} times for a total of **{{price}}** coins!",
         "harvest_success": "💰 You harvested **{{amount}}** coins from your businesses!",
+        "event_notification": "⚠️ **Business Event:** {{event}} for your {{business}}. You lost **{{amount}}** coins in maintenance/taxes.",
         "event_title": "📢 Business Event!",
         "info_count": "Owned: {{count}} businesses",
         "passive_income_title": "📈 Total Passive Income",
@@ -887,18 +897,6 @@
             "other": "💎 Other",
             "crate": "🎁 Crates"
         }
-    },
-    "rank": {
-        "leaderboard_title": "🏆 XP Leaderboard: {{server}}",
-        "leaderboard_balance_title": "💰 Wealth Leaderboard: {{server}}",
-        "leaderboard_job_title": "💼 {{job}} Leaderboard: {{server}}",
-        "you": "You",
-        "footer": "Leaderboard based on users in this server",
-        "select_job": "Select job...",
-        "select_sort": "Sort by...",
-        "all_jobs": "All Jobs",
-        "sort_xp": "Sort: Level/XP",
-        "sort_balance": "Sort: Balance"
     },
     "inventory": {
         "description": "View your inventory and character stats.",
@@ -1711,5 +1709,16 @@
         "bonus": "📈 Income Bonus:",
         "no_marriage": "❌ You are currently single! No certificates to show. 😂",
         "footer": "Wishing you both a lifetime of happiness! ❤️✨"
+    },
+    "rank": {
+        "leaderboard_title": "🏆 Leaderboard — {{server}}",
+        "leaderboard_balance_title": "💰 Wealthiest — {{server}}",
+        "leaderboard_job_title": "💼 {{job}} — {{server}}",
+        "sort_xp": "Experience",
+        "sort_balance": "Balance",
+        "select_job": "Filter by job...",
+        "all_jobs": "All Jobs",
+        "you": "You",
+        "footer": "Stay active in chat and work to climb the ranks!"
     }
 }
