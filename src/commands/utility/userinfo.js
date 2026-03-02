@@ -100,11 +100,11 @@ module.exports = {
                 { name: t('userinfo.activity', lang), value: activityStr, inline: true },
 
                 { name: t('userinfo.badges', lang), value: badges, inline: false },
-                { name: t('userinfo.roles', lang, { count: member ? member.roles.cache.size - 1 : 0 }), value: rolesStr, inline: false },
+                { name: t('userinfo.roles', lang, { count: member ? (member.roles.cache.size - 1).toLocaleString() : '0' }), value: rolesStr, inline: false },
                 { name: t('userinfo.permissions', lang), value: permStr, inline: false },
 
                 { name: t('userinfo.balance', lang), value: t('userinfo.balance_val', lang, { amount: dbUser.balance.toLocaleString() }), inline: true },
-                { name: t('userinfo.items', lang), value: t('userinfo.items_val', lang, { count: itemCount }), inline: true },
+                { name: t('userinfo.items', lang), value: t('userinfo.items_val', lang, { count: itemCount.toLocaleString() }), inline: true },
                 { name: t('userinfo.id', lang), value: `\`${user.id}\``, inline: true },
             )
             .setColor(color)

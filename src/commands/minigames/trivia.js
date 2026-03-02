@@ -105,21 +105,22 @@ module.exports = {
 
                 const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, i.member);
 
-                await db.addBalance(message.guild.id, i.user.id, totalReward);
-
-                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
-                if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
-
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                let teacherBonusApplied = false;
 
                 // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
                 const u = await db.getUser(i.user.id, message.guild.id);
                 if (u.job === 'teacher') {
                     totalReward = Math.floor(totalReward * 1.5);
                     winXp += 10;
-                    resultMsg += t('job.teacher_tutoring_simple', lang);
+                    teacherBonusApplied = true;
                 }
+
+                await db.addBalance(message.guild.id, i.user.id, totalReward);
+
+                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
+                if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                if (teacherBonusApplied) resultMsg += t('job.teacher_tutoring_simple', lang);
 
                 await addXp(i.member, winXp, message.guild.id);
 

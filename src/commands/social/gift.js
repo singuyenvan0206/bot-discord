@@ -62,7 +62,7 @@ module.exports = {
         const itemName = t(`items.${item.id}.name`, lang);
 
         if (ownedCount < quantity) {
-            return message.reply(t('gift.insufficient', lang, { count: ownedCount, item: itemName }));
+            return message.reply(t('gift.insufficient', lang, { count: ownedCount.toLocaleString(), item: itemName }));
         }
 
         // Perform the transfer
@@ -88,7 +88,7 @@ module.exports = {
         }
 
         return message.reply(t('gift.success', lang, {
-            quantity,
+            quantity: quantity.toLocaleString(),
             item: itemName,
             user: message.author.toString(),
             target: target.toString()

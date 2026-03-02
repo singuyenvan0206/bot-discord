@@ -61,22 +61,22 @@ module.exports = {
                 { name: t('serverinfo.created', lang), value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:D>\n<t:${Math.floor(guild.createdTimestamp / 1000)}:R>`, inline: true },
                 { name: t('serverinfo.verification', lang), value: `${verificationLevel}`, inline: true },
 
-                { name: t('serverinfo.members', lang, { total: totalMembers }), value: t('serverinfo.member_stats', lang, { humans, bots, online, idle, dnd }), inline: false },
+                { name: t('serverinfo.members', lang, { total: totalMembers.toLocaleString() }), value: t('serverinfo.member_stats', lang, { humans: humans.toLocaleString(), bots: bots.toLocaleString(), online: online.toLocaleString(), idle: idle.toLocaleString(), dnd: dnd.toLocaleString() }), inline: false },
 
                 {
-                    name: t('serverinfo.channels', lang, { total: guild.channels.cache.size }),
+                    name: t('serverinfo.channels', lang, { total: guild.channels.cache.size.toLocaleString() }),
                     value: t('serverinfo.channel_stats', lang, {
-                        text: textChannels,
-                        voice: voiceChannels,
-                        categories,
-                        extra: (forums || stages) ? t('serverinfo.extra_channels', lang, { forums, stages }) : ''
+                        text: textChannels.toLocaleString(),
+                        voice: voiceChannels.toLocaleString(),
+                        categories: categories.toLocaleString(),
+                        extra: (forums || stages) ? t('serverinfo.extra_channels', lang, { forums: forums.toLocaleString(), stages: stages.toLocaleString() }) : ''
                     }),
                     inline: false
                 },
 
-                { name: t('serverinfo.boost', lang), value: t('serverinfo.boost_stats', lang, { level: boostLabels[boostLevel], count: boostCount }), inline: true },
-                { name: t('serverinfo.emojis', lang, { total: emojis }), value: t('serverinfo.emoji_stats', lang, { static: emojis - animated, animated, stickers }), inline: true },
-                { name: t('serverinfo.roles', lang, { count: roleCount }), value: roles.length > 0 ? (roles.length > 900 ? roles.slice(0, 900) + '...' : roles) : t('serverinfo.none', lang), inline: false },
+                { name: t('serverinfo.boost', lang), value: t('serverinfo.boost_stats', lang, { level: boostLabels[boostLevel], count: boostCount.toLocaleString() }), inline: true },
+                { name: t('serverinfo.emojis', lang, { total: emojis.toLocaleString() }), value: t('serverinfo.emoji_stats', lang, { static: (emojis - animated).toLocaleString(), animated: animated.toLocaleString(), stickers: stickers.toLocaleString() }), inline: true },
+                { name: t('serverinfo.roles', lang, { count: roleCount.toLocaleString() }), value: roles.length > 0 ? (roles.length > 900 ? roles.slice(0, 900) + '...' : roles) : t('serverinfo.none', lang), inline: false },
             )
             .setColor(config.COLORS.SCHEDULED)
             .setFooter({ text: t('serverinfo.footer', lang, { id: guild.id }) })

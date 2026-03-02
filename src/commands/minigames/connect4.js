@@ -26,11 +26,11 @@ module.exports = {
         const opponentUser = await db.getUser(opponent.id, message.guild.id);
 
         if (bet > 0) {
-            if (authorUser.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: authorUser.balance }));
-            if (opponentUser.balance < bet) return message.reply(t('common.opponent_insufficient_funds', lang, { opponent: opponent.username, balance: opponentUser.balance }));
+            if (authorUser.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: authorUser.balance.toLocaleString() }));
+            if (opponentUser.balance < bet) return message.reply(t('common.opponent_insufficient_funds', lang, { opponent: opponent.username, balance: opponentUser.balance.toLocaleString() }));
         }
 
-        const betStr = bet > 0 ? t('connect4.bet_amount', lang, { emoji: config.EMOJIS.COIN, amount: bet }) : '';
+        const betStr = bet > 0 ? t('connect4.bet_amount', lang, { emoji: config.EMOJIS.COIN, amount: bet.toLocaleString() }) : '';
 
         // Ask opponent to accept
         const confirmEmbed = new EmbedBuilder()
