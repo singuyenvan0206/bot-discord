@@ -196,13 +196,14 @@ module.exports = {
 
                         const baseReward = bet > 0 ? bet * 2 : (config.ECONOMY.TICTACTOE_REWARD || 100);
                         const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winMember);
-                        await db.addBalance(i.guild.id, winId, totalReward);
+                        const winId = winner === P1 ? p1Id : p2Id;
+                        const winName = winner === P1 ? message.author.username : opponent.username;
 
                         resultText = t('connect4.win', lang, { winner: winName, symbol: winner }) +
                             t('connect4.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
                         if (bonusAmount > 0) {
-                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
                         }
                     }
 

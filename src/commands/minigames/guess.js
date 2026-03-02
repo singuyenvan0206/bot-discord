@@ -49,14 +49,14 @@ module.exports = {
                     checkAndSendMilestone(m, result.reachedLevel20, lang).catch(() => { });
                 }
 
-                let winMsg = t('guess.win', lang, { number, attempts, amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN });
-                if (bonusAmount > 0) winMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                let winMsg = t('guess.win', lang, { number, attempts: attempts.toLocaleString(), amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN });
+                if (bonusAmount > 0) winMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
 
                 await m.reply(winMsg);
                 collector.stop('win');
             } else if (attempts < maxAttempts) {
                 const hintKey = guess < number ? 'guess.higher' : 'guess.lower';
-                await m.reply(t(hintKey, lang, { attempts: attemptsLeft }));
+                await m.reply(t(hintKey, lang, { attempts: attemptsLeft.toLocaleString() }));
             }
         });
 

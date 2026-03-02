@@ -119,7 +119,7 @@ module.exports = {
                 await db.addBalance(message.guild.id, i.user.id, totalReward);
 
                 let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
-                if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
                 if (teacherBonusApplied) resultMsg += t('job.teacher_tutoring_simple', lang);
 
                 await addXp(i.member, winXp, message.guild.id);

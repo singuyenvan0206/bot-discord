@@ -254,7 +254,7 @@ module.exports = {
 
                             let winDesc = t('minesweeper.win_desc', lang) + `\n\n**${t('effects.income', lang)}:** ${config.EMOJIS.COIN} +${totalReward.toLocaleString()} coins`;
                             if (bonusAmount > 0) {
-                                winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                                winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
                             }
 
                             const winEmbed = new EmbedBuilder()

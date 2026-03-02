@@ -92,7 +92,7 @@ module.exports = {
 
                 if (user.job === 'teacher') {
                     const result = await deductLevel(message.author.id, message.guild.id);
-                    failureMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;
+                    failureMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel.toLocaleString() })}`;
                 }
 
                 if (doctorUser) {
@@ -109,7 +109,7 @@ module.exports = {
             });
             if (user.job === 'teacher') {
                 const result = await deductLevel(message.author.id, message.guild.id);
-                failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel })}`;
+                failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel.toLocaleString() })}`;
             }
 
             return message.reply(failMsg);

@@ -30,8 +30,8 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: user.username, iconURL: user.displayAvatarURL({ dynamic: true, size: 1024 }) })
-            .setTitle(t('profile.level_label', lang) + ` ${dbUser.level}`)
-            .setDescription(`\`${progressBar}\` ${Math.floor(progressPercent)}%\n(${Math.floor(dbUser.xp).toLocaleString()}/${Math.floor(nextLevelXp).toLocaleString()} XP)`)
+            .setTitle(t('profile.level_label', lang) + ` ${dbUser.level.toLocaleString()}`)
+            .setDescription(`\`${progressBar}\` ${Math.floor(progressPercent).toLocaleString()}%\n(${Math.floor(dbUser.xp).toLocaleString()}/${Math.floor(nextLevelXp).toLocaleString()} XP)`)
             .setColor(config.COLORS.INFO)
             .setTimestamp();
 

@@ -70,7 +70,7 @@ module.exports = {
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
-            if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+            if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
             if (u.job === 'teacher') resultDesc += t('job.teacher_tutoring_simple', lang);
 
             await winnerMsg.reply({

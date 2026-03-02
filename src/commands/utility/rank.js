@@ -141,7 +141,7 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
     let footerText = t('rank.footer', lang);
     if (authorPos > 0) {
         const authorData = topUsers[authorPos - 1];
-        const val = sortBy === 'balance' ? authorData.balance.toLocaleString() : `Lvl ${authorData.level}`;
+        const val = sortBy === 'balance' ? authorData.balance.toLocaleString() : `Lvl ${authorData.level.toLocaleString()}`;
         footerText = `${t('rank.your_rank', lang, { rank: authorPos, value: val })}\n${footerText}`;
     }
     embed.setFooter({ text: footerText });

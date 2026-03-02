@@ -157,9 +157,10 @@ module.exports = {
                 return message.reply(`❌ ${t('giveaway.no_active', lang)}`);
             }
 
-            const list = giveaways.map(g =>
-                `ID: \`${g.message_id}\` | ${t('giveaway.prize', lang)}: **${g.prize}** | ${t('giveaway.ends', lang)}: <t:${g.ends_at}:R>`
-            ).join('\n');
+            const list = giveaways.map(g => {
+                const prizeDisplay = isNaN(Number(g.prize)) ? g.prize : Number(g.prize).toLocaleString();
+                return `ID: \`${g.message_id}\` | ${t('giveaway.prize', lang)}: **${prizeDisplay}** | ${t('giveaway.ends', lang)}: <t:${g.ends_at}:R>`;
+            }).join('\n');
 
             return message.reply(`🎉 **${t('giveaway.active_list_title', lang)}**\n${list}`);
         }

@@ -58,8 +58,8 @@ module.exports = {
                 .filter(r => r.id !== message.guild.id)
                 .sort((a, b) => b.position - a.position)
                 .first(20)
-                .map(r => `${r}`);
-            rolesStr = roles.length > 0 ? roles.join(' ') : t('userinfo.none', lang);
+                .map(r => r.name);
+            rolesStr = roles.length > 0 ? roles.map(name => `\`${name}\``).join(' ') : t('userinfo.none', lang);
             if (rolesStr.length > 900) rolesStr = rolesStr.slice(0, 900) + '...';
         }
 
@@ -117,6 +117,6 @@ module.exports = {
             embed.setImage(fetchedUser.bannerURL({ dynamic: true, size: 1024 }));
         }
 
-        return message.reply({ embeds: [embed] });
+        return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     }
 };

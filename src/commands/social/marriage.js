@@ -37,7 +37,7 @@ module.exports = {
                 { name: t('marriage.partner', lang), value: partner ? `${partner.tag} (${partner.toString()})` : 'Unknown', inline: false },
                 { name: t('marriage.anniversary', lang), value: `📅 ${anniversary}`, inline: true },
                 { name: t('marriage.ring', lang), value: `💍 ${ringName}`, inline: true },
-                { name: t('marriage.bonus', lang), value: `📈 +${bonus}% Income`, inline: true }
+                { name: t('marriage.bonus', lang), value: `📈 +${bonus.toLocaleString()}% Income`, inline: true }
             )
             .setFooter({ text: t('marriage.footer', lang) })
             .setTimestamp();

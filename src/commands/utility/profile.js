@@ -61,7 +61,7 @@ module.exports = {
             const partnerName = partnerUser ? partnerUser.tag : `ID: ${partnerId}`;
 
             const bonus = marriage.ring_id === 702 ? 50 : 25;
-            marriageStatus = `💍 **${partnerName}**\n↳ ${t('profile.marriage_bonus', lang, { percent: bonus })}`;
+            marriageStatus = `💍 **${partnerName}**\n↳ ${t('profile.marriage_bonus', lang, { percent: bonus.toLocaleString() })}`;
         }
 
         // Housing & Business info
@@ -77,11 +77,11 @@ module.exports = {
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
             .setColor(config.COLORS.INFO)
             .addFields(
-                { name: t('profile.experience', lang), value: t('profile.level', lang, { level: dbUser.level }) + `\n\`${progressBar}\` ${Math.floor(progressPercent)}%\n(${Math.floor(dbUser.xp).toLocaleString()}/${Math.floor(nextLevelXp).toLocaleString()} XP)`, inline: false },
+                { name: t('profile.experience', lang), value: t('profile.level', lang, { level: dbUser.level.toLocaleString() }) + `\n\`${progressBar}\` ${Math.floor(progressPercent).toLocaleString()}%\n(${Math.floor(dbUser.xp).toLocaleString()}/${Math.floor(nextLevelXp).toLocaleString()} XP)`, inline: false },
                 { name: t('job.name_field', lang), value: dbUser.job ? t(`job.name_${dbUser.job}`, lang) : t('job.none', lang), inline: true },
                 { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
                 { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
-                { name: t('profile.assets', lang) || "🏠 Assets", value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]}` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length })}`, inline: true },
+                { name: t('profile.assets', lang) || "🏠 Assets", value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]}` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length.toLocaleString() })}`, inline: true },
                 { name: t('business.passive_income_title', lang) || "📈 Passive Income", value: `+${totalPassiveIncome.toLocaleString()} coins/hour`, inline: true },
                 { name: t('profile.multipliers', lang), value: `💼 **${t('effects.income', lang)}:** +${incomeBonus}%\n🎲 **${t('effects.gamble', lang)}:** +${gambleBonus}%\n✨ **${t('effects.xpboost', lang)}:** +${xpBonus}%\n🛡️ **${t('profile.cap', lang)}:** ${maxCapPercent}%`, inline: true },
                 { name: t('profile.marriage', lang), value: marriageStatus, inline: true },

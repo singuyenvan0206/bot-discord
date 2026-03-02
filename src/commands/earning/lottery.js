@@ -30,7 +30,7 @@ module.exports = {
                 amount,
                 cost: cost.toLocaleString(),
                 emoji: config.EMOJIS.COIN
-            }) || `✅ Bạn đã mua **${amount}** vé số với giá **${cost.toLocaleString()}** ${config.EMOJIS.COIN}!`);
+            }) || `✅ Bạn đã mua **${amount.toLocaleString()}** vé số với giá **${cost.toLocaleString()}** ${config.EMOJIS.COIN}!`);
         }
 
         // Show status (guild-specific)

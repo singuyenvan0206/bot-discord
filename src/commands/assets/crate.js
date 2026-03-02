@@ -83,7 +83,7 @@ module.exports = {
             await db.removeItem(message.guild?.id || 'global', message.author.id, storageId, count);
 
             const msg = await message.reply(count > 1
-                ? t('crate.open_loading', lang, { name: `${count}x ${crate.name[lang]}` })
+                ? t('crate.open_loading', lang, { name: `${count.toLocaleString()}x ${crate.name[lang]}` })
                 : t('crate.open_loading', lang, { name: crate.name[lang] })
             );
 

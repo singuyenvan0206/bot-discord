@@ -97,7 +97,7 @@ module.exports = {
                     await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                     let resultStr = `**${t('hangman.word', lang)}:** ${word}\n\n${config.EMOJIS.SUCCESS} **${t('hangman.win_msg', lang)}** (${t('hangman.word_guess_win', lang)})\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()} coins!**`;
-                    if (bonusAmount > 0) resultStr += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                    if (bonusAmount > 0) resultStr += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
 
                     embed.setDescription(resultStr).setColor(config.COLORS.SUCCESS);
                     collector.stop();
@@ -132,7 +132,7 @@ module.exports = {
                     await addXp(message.member, winXp, message.guild.id);
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins!`;
-                    if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                    if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
                 }
                 embed.setDescription(`**${t('hangman.word', lang)}:** ${word}\n\n${resultText}`)
                     .setColor(won ? config.COLORS.SUCCESS : config.COLORS.ERROR);

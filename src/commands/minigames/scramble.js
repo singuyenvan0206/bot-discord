@@ -114,7 +114,7 @@ module.exports = {
                 amount: totalReward.toLocaleString()
             });
 
-            if (bonusAmount > 0) msgText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+            if (bonusAmount > 0) msgText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
 
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;

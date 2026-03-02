@@ -186,7 +186,7 @@ module.exports = {
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
 
                         if (bonusAmount > 0) {
-                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), cap });
+                            resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: (percent || 0).toLocaleString(), cap: (cap || 0).toLocaleString() });
                         }
                     } else {
                         await addHouseProfit(i, baseReward);
