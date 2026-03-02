@@ -13,11 +13,12 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
+        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
         const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
         const maxBet = await getMaxBet(message.author.id);
-        const minBuyIn = args[0] ? parseAmount(args[0], user.balance, maxBet) : 50;
+        let minBuyIn = args[0] ? parseAmount(args[0], user.balance, maxBet) : 50;
         const hostId = message.author.id;
 
         // Game State
@@ -47,15 +48,25 @@ module.exports = {
             .setFooter({ text: t('poker.min_players_note', lang) });
 
         function getLobbyButtons() {
-            return new ActionRowBuilder().addComponents(
+            const rows = [];
+            const row1 = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId(`join_poker_${hostId}`).setLabel(t('poker.btn_join', lang)).setStyle(ButtonStyle.Success),
-                new ButtonBuilder().setCustomId(`add_bot_poker_${hostId}`).setLabel(t('poker.btn_add_bot', lang)).setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder().setCustomId(`leave_poker_${hostId}`).setLabel(t('poker.btn_leave', lang)).setStyle(ButtonStyle.Danger),
-                new ButtonBuilder().setCustomId(`start_poker_${hostId}`).setLabel(t('poker.btn_start', lang)).setStyle(ButtonStyle.Primary)
+                new ButtonBuilder().setCustomId(`add_bot_poker_${hostId}`).setLabel(t('poker.btn_add_bot', lang)).setStyle(ButtonStyle.Secondary)
             );
+            rows.push(row1);
+
+            const row2 = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId(`ready_poker_${hostId}`).setLabel(t('poker.btn_ready', lang)).setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId(`settings_poker_${hostId}`).setLabel(t('poker.btn_adjust_buyin', lang)).setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId(`start_poker_${hostId}`).setLabel(t('poker.btn_start', lang)).setStyle(ButtonStyle.Success)
+            );
+            rows.push(row2);
+
+            return rows;
         }
 
-        const reply = await message.reply({ embeds: [lobbyEmbed], components: [getLobbyButtons()] });
+        const reply = await message.reply({ embeds: [lobbyEmbed], components: getLobbyButtons() });
 
         // Lobby Collector
         const lobbyCollector = reply.createMessageComponentCollector({ time: 300_000 });
@@ -126,7 +137,9 @@ module.exports = {
                 if (gameStarted) return i.reply({ content: t('poker.already_started', lang), flags: 64 });
 
                 await i.deferUpdate().catch(() => { });
-                addPlayer(null, null, true, minBuyIn); // Bots buy in for min
+                const hostPlayer = players.find(p => p.id === hostId);
+                const botAmount = hostPlayer ? hostPlayer.chips : minBuyIn;
+                addPlayer(null, null, true, botAmount);
                 updateLobby();
 
             } else if (i.customId === `leave_poker_${hostId}`) {
@@ -140,10 +153,51 @@ module.exports = {
                 removePlayer(i.user.id);
                 updateLobby();
 
+            } else if (i.customId === `ready_poker_${hostId}`) {
+                if (gameStarted) return i.reply({ content: t('poker.already_started', lang), flags: 64 });
+                const p = playerMap.get(i.user.id);
+                if (!p) return i.reply({ content: t('poker.not_in_game', lang), flags: 64 });
+
+                p.isReady = !p.isReady;
+                await i.deferUpdate().catch(() => { });
+                updateLobby();
+
+            } else if (i.customId === `settings_poker_${hostId}`) {
+                if (i.user.id !== hostId) return i.reply({ content: t('poker.host_only_bot', lang), flags: 64 }); // Shared string
+                if (gameStarted) return i.reply({ content: t('poker.already_started', lang), flags: 64 });
+
+                const modal = new ModalBuilder()
+                    .setCustomId(`settings_modal_${i.user.id}`)
+                    .setTitle(t('poker.btn_adjust_buyin', lang));
+
+                const input = new TextInputBuilder()
+                    .setCustomId('min_buyin')
+                    .setLabel(t('poker.buyin_amount_label', lang, { min: 10 }))
+                    .setStyle(TextInputStyle.Short)
+                    .setPlaceholder(`${minBuyIn}`)
+                    .setRequired(true);
+
+                modal.addComponents(new ActionRowBuilder().addComponents(input));
+                await i.showModal(modal);
+
+                try {
+                    const submit = await i.awaitModalSubmit({ time: 30_000, filter: s => s.customId === `settings_modal_${i.user.id}` });
+                    const val = parseAmount(submit.fields.getTextInputValue('min_buyin'), 1_000_000_000); // Admin like
+                    if (isNaN(val) || val < 10) return submit.reply({ content: t('poker.invalid_amount', lang, { min: 10 }), flags: 64 });
+
+                    minBuyIn = val;
+                    await submit.deferUpdate().catch(() => { });
+                    updateLobby();
+                } catch (e) { }
+
             } else if (i.customId === `start_poker_${hostId}`) {
                 if (i.user.id !== hostId) return i.reply({ content: t('poker.host_only_start', lang), flags: 64 });
+                if (!playerMap.has(hostId)) return i.reply({ content: t('poker.not_in_game', lang), flags: 64 });
                 if (joiningPlayers.size > 0) return i.reply({ content: t('poker.wait_joining', lang), flags: 64 });
                 if (players.length < 2) return i.reply({ content: t('poker.need_players', lang), flags: 64 });
+
+                const allReady = players.every(p => p.isReady);
+                if (!allReady) return i.reply({ content: t('poker.not_all_ready', lang), flags: 64 });
 
                 await i.deferUpdate().catch(() => { });
                 gameStarted = true;
@@ -171,6 +225,7 @@ module.exports = {
                 member: member,
                 hand: [],
                 chips: amount,
+                isReady: isBot, // Bots are always ready
                 currentBet: 0,
                 folded: false,
                 allIn: false,
@@ -192,7 +247,8 @@ module.exports = {
             const playerList = [];
             players.forEach(p => {
                 const name = p.isBot ? p.name : `<@${p.id}>`;
-                playerList.push(t('poker.player_item', lang, { name, chips: p.chips }));
+                const status = p.isReady ? t('poker.status_ready', lang) : t('poker.status_not_ready', lang);
+                playerList.push(t('poker.player_item', lang, { name, chips: p.chips.toLocaleString(), status }));
             });
 
             if (joiningPlayers.size > 0) {
@@ -204,11 +260,11 @@ module.exports = {
             lobbyEmbed.setDescription(t('poker.lobby_desc', lang, {
                 host: message.author.toString(),
                 emoji: config.EMOJIS.COIN,
-                min: minBuyIn,
+                min: minBuyIn.toLocaleString(),
                 count: players.length + joiningPlayers.size,
                 list: listStr
             }));
-            reply.edit({ embeds: [lobbyEmbed], components: [getLobbyButtons()] }).catch(() => { });
+            reply.edit({ embeds: [lobbyEmbed], components: getLobbyButtons() }).catch(() => { });
         }
 
         // --- Game Logic ---
@@ -219,6 +275,13 @@ module.exports = {
             pot = 0;
             communityCards = [];
             dealerIndex = Math.floor(Math.random() * players.length);
+
+            // Sync bot chips with the highest human buy-in at the table
+            const humanChips = players.filter(p => !p.isBot).map(p => p.chips);
+            const syncAmount = humanChips.length > 0 ? Math.max(...humanChips) : minBuyIn;
+            for (const p of players) {
+                if (p.isBot) p.chips = syncAmount;
+            }
 
             // Deal Hands
             for (const p of players) {
@@ -450,7 +513,6 @@ module.exports = {
 
             // Grant Action XP
             if (!player.isBot) {
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 await addXp(player.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
             }
 
@@ -482,18 +544,18 @@ module.exports = {
 
             const statusTxt = players.map(p => {
                 let s = p.isBot ? p.name : `<@${p.id}>`;
-                s += ` (💰${p.chips})`;
+                s += ` (💰${p.chips.toLocaleString()})`;
                 if (p.folded) s += ` [${t('poker.status_folded', lang)}]`;
                 else if (p.allIn) s += ` [${t('poker.status_allin', lang)}]`;
                 else if (activeP && p.id === activeP.id) s += ` 👈 **${t('poker.status_turn', lang)}**`;
 
-                if (p.currentBet > 0) s += ` [${t('poker.status_bet', lang)}: ${p.currentBet}]`;
+                if (p.currentBet > 0) s += ` [${t('poker.status_bet', lang)}: ${p.currentBet.toLocaleString()}]`;
                 return s;
             }).join('\n');
 
             const embed = new EmbedBuilder()
                 .setTitle(`${t('poker.title', lang)} - ${phase}`)
-                .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.pot', lang, { amount: pot, emoji: config.EMOJIS.COIN })}\n**${t('poker.current_bet', lang, { amount: currentBet, emoji: config.EMOJIS.COIN })}\n\n${statusTxt}`)
+                .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.pot', lang, { amount: pot.toLocaleString(), emoji: config.EMOJIS.COIN })}\n**${t('poker.current_bet', lang, { amount: currentBet.toLocaleString(), emoji: config.EMOJIS.COIN })}\n\n${statusTxt}`)
                 .setColor(config.COLORS.INFO)
                 .setFooter({ text: t('poker.view_cards_hint', lang) });
 
@@ -514,23 +576,25 @@ module.exports = {
             players.forEach(p => { p.currentBet = 0; p.hasActed = false; });
             currentBet = 0;
 
+            if (communityCards.length === 0) { // Deal Flop
+                phase = t('poker.phases.flop', lang);
+                communityCards.push(...deck.deal(3));
+            } else if (communityCards.length === 3) { // Deal Turn
+                phase = t('poker.phases.turn', lang);
+                communityCards.push(...deck.deal(1));
+            } else if (communityCards.length === 4) { // Deal River
+                phase = t('poker.phases.river', lang);
+                communityCards.push(...deck.deal(1));
+            } else { // Showdown
+                await endRound();
+                return;
+            }
+
             const activePlayers = players.filter(p => !p.folded && !p.allIn);
             if (activePlayers.length === 0) {
                 await updateTable();
                 await sleep(2500); // Give players time to see the board
-            }
-
-            if (communityCards.length === 0) { // Was Pre-flop
-                phase = t('poker.phases.flop', lang);
-                communityCards.push(...deck.deal(3));
-            } else if (communityCards.length === 3) { // Was Flop
-                phase = t('poker.phases.turn', lang);
-                communityCards.push(...deck.deal(1));
-            } else if (communityCards.length === 4) { // Was Turn
-                phase = t('poker.phases.river', lang);
-                communityCards.push(...deck.deal(1));
-            } else { // Was River
-                await endRound();
+                await nextPhase();
                 return;
             }
 
@@ -580,7 +644,6 @@ module.exports = {
 
                 // Grant Win XP
                 if (!w.isBot) {
-                    const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                     await addXp(w.member, winXp, message.guild.id);
                 }
