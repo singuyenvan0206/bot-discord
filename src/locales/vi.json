@@ -1303,7 +1303,8 @@
             "two_pair": "Thú (Hai Đôi)",
             "pair": "Đôi",
             "high_card": "Mậu Thầu"
-        }
+        },
+        "view_cards_hint": "💡 Bạn có thể xem lại bài của mình bất cứ lúc nào bằng nút bên dưới!"
     },
     "emojiquiz": {
         "title": "🧩  Emoji Quiz",

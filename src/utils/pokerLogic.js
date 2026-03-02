@@ -82,7 +82,11 @@ function evaluateHand(holeCards, communityCards, lang = 'vi') {
 
     // Flush
     if (isFlush) {
-        return { score: 600 + isFlush[0].value + (isFlush[1].value / 100), name: t('poker.hand_names.flush', lang) };
+        // Use top 5 flush cards for score
+        return {
+            score: 600 + isFlush[0].value + (isFlush[1].value / 100) + (isFlush[2].value / 10000) + (isFlush[3].value / 1000000) + (isFlush[4].value / 100000000),
+            name: t('poker.hand_names.flush', lang)
+        };
     }
 
     // Straight
@@ -93,7 +97,10 @@ function evaluateHand(holeCards, communityCards, lang = 'vi') {
     // 3 of a Kind
     if (maxCount === 3) {
         const tripValue = Math.max(...Object.keys(rankCounts).filter(k => rankCounts[k] === 3).map(Number));
-        return { score: 400 + tripValue, name: t('poker.hand_names.three_of_a_kind', lang) };
+        const kickers = allCards.filter(c => c.value !== tripValue).sort((a, b) => b.value - a.value);
+        const k1 = kickers.length > 0 ? kickers[0].value : 0;
+        const k2 = kickers.length > 1 ? kickers[1].value : 0;
+        return { score: 400 + tripValue + (k1 / 100) + (k2 / 10000), name: t('poker.hand_names.three_of_a_kind', lang) };
     }
 
     // Two Pair
@@ -110,11 +117,21 @@ function evaluateHand(holeCards, communityCards, lang = 'vi') {
         const remaining = allCards.filter(c => c.value !== pairValue).sort((a, b) => b.value - a.value);
         const kicker1 = remaining.length > 0 ? remaining[0].value : 0;
         const kicker2 = remaining.length > 1 ? remaining[1].value : 0;
-        return { score: 200 + pairValue + (kicker1 / 100) + (kicker2 / 10000), name: t('poker.hand_names.pair', lang) };
+        const kicker3 = remaining.length > 2 ? remaining[2].value : 0;
+        return { score: 200 + pairValue + (kicker1 / 100) + (kicker2 / 10000) + (kicker3 / 1000000), name: t('poker.hand_names.pair', lang) };
     }
 
     // High Card
-    return { score: 100 + allCards[0].value, name: t('poker.hand_names.high_card', lang) };
+    // Use up to 5 cards for accurate tie-break
+    const k1 = allCards[0].value;
+    const k2 = allCards.length > 1 ? allCards[1].value : 0;
+    const k3 = allCards.length > 2 ? allCards[2].value : 0;
+    const k4 = allCards.length > 3 ? allCards[3].value : 0;
+    const k5 = allCards.length > 4 ? allCards[4].value : 0;
+    return {
+        score: 100 + k1 + (k2 / 100) + (k3 / 10000) + (k4 / 1000000) + (k5 / 100000000),
+        name: t('poker.hand_names.high_card', lang)
+    };
 }
 
 function getFlushSuit(cards) {

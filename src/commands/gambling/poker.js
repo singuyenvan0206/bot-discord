@@ -237,6 +237,7 @@ module.exports = {
                 const contribution = Math.min(p.chips, ante);
                 p.chips -= contribution;
                 pot += contribution;
+                if (p.chips === 0) p.allIn = true;
             });
 
             startBettingRound();
@@ -457,7 +458,8 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle(`${t('poker.title', lang)} - ${phase}`)
                 .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.pot', lang, { amount: pot, emoji: config.EMOJIS.COIN })}\n**${t('poker.current_bet', lang, { amount: currentBet, emoji: config.EMOJIS.COIN })}\n\n${statusTxt}`)
-                .setColor(config.COLORS.INFO);
+                .setColor(config.COLORS.INFO)
+                .setFooter({ text: t('poker.view_cards_hint', lang) });
 
             const components = [];
             if (activeP && !activeP.isBot) {
@@ -555,9 +557,11 @@ module.exports = {
                 footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString(), percent: totalCap });
             }
 
+            const cardsStr = communityCards.map(c => c.toString()).join(' ');
+
             const embed = new EmbedBuilder()
                 .setTitle(t('poker.end_title', lang))
-                .setDescription(`**${t('poker.winners', lang, { names: winnerNames })}\n**${footerText}\n\n${resultText}`)
+                .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.winners', lang, { names: winnerNames })}\n**${footerText}\n\n${resultText}`)
                 .setColor(config.COLORS.WARNING);
 
             await reply.edit({ embeds: [embed], components: [] });

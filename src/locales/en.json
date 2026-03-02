@@ -1246,7 +1246,8 @@
             "two_pair": "Two Pair",
             "pair": "Pair",
             "high_card": "High Card"
-        }
+        },
+        "view_cards_hint": "💡 You can view your cards anytime using the button below!"
     },
     "emojiquiz": {
         "title": "🧩  Emoji Quiz",
