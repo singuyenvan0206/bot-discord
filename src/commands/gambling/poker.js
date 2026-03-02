@@ -323,7 +323,7 @@ module.exports = {
                 if (p.chips === 0) p.allIn = true;
             });
 
-            await startBettingRound(true); // First round in thread
+            await startBettingRound(false); // First round in thread
         }
 
         async function startBettingRound(forceRepost = false) {
@@ -333,7 +333,7 @@ module.exports = {
             });
             currentBet = 0;
             turnIndex = (dealerIndex + 1) % players.length; // Restored original dealer-relative logic
-            await updateTable(forceRepost);
+            await updateTable(false);
             await processTurn();
         }
 
@@ -362,7 +362,7 @@ module.exports = {
             }
 
             const player = players[turnIndex];
-            await updateTable(true);
+            await updateTable(false);
 
             if (player.isBot) {
                 setTimeout(async () => await playBot(player), 1500 + Math.random() * 1000);
@@ -620,12 +620,12 @@ module.exports = {
 
             const activePlayers = players.filter(p => !p.folded && !p.allIn);
             if (activePlayers.length === 0) {
-                await updateTable(true);
+                await updateTable(false);
                 await sleep(2500);
                 await nextPhase();
                 return;
             }
-            await startBettingRound(true);
+            await startBettingRound(false);
         }
 
         async function endRound() {
