@@ -1083,6 +1083,7 @@
         "marriage": "💞 Tình cảm",
         "cap": "Hệ số tối đa",
         "marriage_bonus": "🎁 Buff: +{{percent}}% thu nhập",
+        "assets": "🏠 Tài sản",
         "footer": "Nhập {{prefix}}inventory để xem chi tiết vật phẩm"
     },
     "serverinfo": {
