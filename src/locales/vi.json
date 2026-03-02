@@ -1196,6 +1196,12 @@
     "wordchain": {
         "title": "🔗  Nối Chữ (Word Chain)",
         "already_running": "❌ Một trò chơi Nối Chữ đang diễn ra trong kênh này! Gõ `{{prefix}}stop` để dừng lại.",
+        "wrong_channel": "❌ Trò chơi Nối Chữ chỉ được phép chơi tại {{channel}} thôi nha! 🎮",
+        "channel_set": "✅ Đã thiết lập {{channel}} là kênh Nối Chữ độc quyền cho server này!",
+        "channel_reset": "✅ Đã xóa kênh Nối Chữ. Từ nay lệnh `$wordchain` hoạt động ở mọi kênh.",
+        "channel_invalid": "❌ Vui lòng mention một kênh văn bản hợp lệ. (ví dụ: `$setwcchannel #wordchain`)",
+        "channel_usage": "📌 Hiện chưa có kênh Nối Chữ riêng.\n\n🛠️ Dùng lệnh: `{{prefix}}setwcchannel <#kênh>` để thiết lập.\n🔓 Dùng `{{prefix}}setwcchannel reset` để xóa giới hạn.",
+        "channel_current": "📌 Kênh Nối Chữ hiện tại: {{channel}}\n\n🔓 Dùng `$setwcchannel reset` để xóa giới hạn.",
         "start_desc": "Trò chơi bắt đầu! Từ đầu tiên phải bắt đầu bằng chữ **{{char}}**.\n\n*(Lưu ý: Hiện tại chỉ hỗ trợ từ tiếng Anh)*\n\nGõ một từ để tham gia!",
         "stop_footer": "Gõ {{prefix}}stop để kết thúc trò chơi",
         "stopped_by": "Trò chơi đã bị dừng bởi Quản lý {{user}}!",

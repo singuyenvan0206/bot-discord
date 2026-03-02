@@ -83,6 +83,13 @@ client.on('messageCreate', async (message) => {
 
     // Command Check: $wordchain or $wc
     if (content.startsWith(`${prefix}wordchain`) || content.startsWith(`${prefix}wc`)) {
+        // Channel Lock: check if wordchain is restricted to a specific channel
+        const guildRow = await db.getGuild(message.guild.id);
+        const wcChannelId = guildRow?.wordchain_channel;
+        if (wcChannelId && message.channel.id !== wcChannelId) {
+            return message.reply(t('wordchain.wrong_channel', lang, { channel: `<#${wcChannelId}>` }));
+        }
+
         if (activeGames.has(message.channel.id)) {
             return message.reply(t('wordchain.already_running', lang, { prefix }));
         }
