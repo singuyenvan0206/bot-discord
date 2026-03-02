@@ -56,7 +56,7 @@ module.exports = {
         MIN_WORK_EARNINGS: 3000,
         MAX_WORK_EARNINGS: 15000,
         CRIME_COOLDOWN: 3600, // 1 hour
-        CRIME_SUCCESS_RATE: 0.40,
+        CRIME_SUCCESS_RATE: 0.45,
         CRIME_MIN_REWARD: 8000,
         CRIME_MAX_REWARD: 20000,
         PENALTY_PER_LEVEL: 500, // Fixed penalty amount per level
@@ -92,7 +92,7 @@ module.exports = {
             teacher: { id: 'teacher', numericId: 11, bonus: 0.90, color: '#95a5a6', icon: '👩‍🏫' }
         },
         LEVELING: {
-            XP_MULTIPLIER: 1.5 // Triple the XP gain for faster progression
+            XP_MULTIPLIER: 1 // Triple the XP gain for faster progression
         },
         LOTTERY: {
             TICKET_PRICE: 10000,
