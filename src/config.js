@@ -89,7 +89,7 @@ module.exports = {
             chef: { id: 'chef', numericId: 8, bonus: 1.15, color: '#e67e22', icon: '👨‍🍳' },
             musician: { id: 'musician', numericId: 9, bonus: 0.80, color: '#1abc9c', icon: '🎸' },
             trader: { id: 'trader', numericId: 10, bonus: 1.20, color: '#f39c12', icon: '📈' },
-            teacher: { id: 'teacher', numericId: 11, bonus: 0.85, color: '#95a5a6', icon: '�‍🏫' }
+            teacher: { id: 'teacher', numericId: 11, bonus: 0.85, color: '#95a5a6', icon: '👩‍🏫' }
         },
         LEVELING: {
             XP_MULTIPLIER: 1.5 // Triple the XP gain for faster progression
