@@ -188,12 +188,13 @@ module.exports = {
 
         if (sub === 'upgrade') {
             const inputId = args[1] ? args[1].toLowerCase() : null;
-            if (!inputId) return message.reply('❌ Please specify the business ID to upgrade!');
+            if (!inputId) return message.reply(t('business.upgrade_usage', lang) || '❌ Cách dùng: `$business upgrade <id|all> [số_cấp]`');
 
             const userBizs = await db.getUserBusinesses(message.author.id);
             if (userBizs.length === 0) return message.reply(t('business.sell_error_none', lang) || '❌ You don\'t own any businesses!');
 
             const user = await db.getUser(message.author.id);
+            const requestedLevels = args[2] ? Math.max(1, parseInt(args[2]) || 1) : 1;
 
             if (inputId === 'all') {
                 let totalCost = 0;
@@ -203,10 +204,16 @@ module.exports = {
                 for (const b of userBizs) {
                     const type = bizConfig.TYPES[b.business_id];
                     if (type && b.level < type.max_level) {
-                        const cost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level));
-                        totalCost += cost;
-                        eligibleCount++;
-                        businessesToUpgrade.push({ id: b.business_id, newLevel: b.level + 1 });
+                        const upgradeable = Math.min(requestedLevels, type.max_level - b.level);
+                        if (upgradeable > 0) {
+                            let itemCost = 0;
+                            for (let i = 0; i < upgradeable; i++) {
+                                itemCost += Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level + i));
+                            }
+                            totalCost += itemCost;
+                            eligibleCount++;
+                            businessesToUpgrade.push({ id: b.business_id, newLevel: b.level + upgradeable });
+                        }
                     }
                 }
 
@@ -237,16 +244,20 @@ module.exports = {
             const type = bizConfig.TYPES[bizId];
             if (biz.level >= type.max_level) return message.reply('❌ This business is already at maximum level!');
 
-            const upgradeCost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, biz.level));
+            const upgradeable = Math.min(requestedLevels, type.max_level - biz.level);
+            let upgradeCost = 0;
+            for (let i = 0; i < upgradeable; i++) {
+                upgradeCost += Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, biz.level + i));
+            }
 
             if (user.balance < upgradeCost) {
                 return message.reply(`❌ You need **${upgradeCost.toLocaleString()}** coins for this upgrade!`);
             }
 
             await db.removeBalance(message.author.id, upgradeCost);
-            await db.updateUserBusiness(message.author.id, bizId, { level: biz.level + 1 });
+            await db.updateUserBusiness(message.author.id, bizId, { level: biz.level + upgradeable });
 
-            return message.reply(t('business.upgrade_success', lang, { level: biz.level + 1 }));
+            return message.reply(t('business.upgrade_success', lang, { level: biz.level + upgradeable, added: upgradeable }));
         }
 
         if (sub === 'hire') {
