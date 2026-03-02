@@ -312,11 +312,18 @@ module.exports = {
             const p = playerMap.get(i.user.id);
             if (!p) return i.reply({ content: t('poker.not_in_game', lang), flags: 64 });
 
+            const action = i.customId;
+
+            // View cards can be done anytime by anyone in the game
+            if (action === 'view_cards') {
+                const cards = `${p.hand[0]} ${p.hand[1]}`;
+                return i.reply({ content: t('poker.view_cards_ephemeral', lang, { cards }), flags: 64 });
+            }
+
+            // Other actions must be on player's turn
             if (players[turnIndex].id !== p.id) {
                 return i.reply({ content: t('poker.not_your_turn', lang, { name: players[turnIndex].name }), flags: 64 });
             }
-
-            const action = i.customId;
 
             if (action === 'raise') {
                 const modal = new ModalBuilder()
@@ -351,19 +358,16 @@ module.exports = {
                     }
 
                     await submit.deferUpdate();
-                    handleAction(p, 'raise', null, val);
+                    await handleAction(p, 'raise', null, val);
 
                 } catch (e) { }
 
             } else if (action === 'allin') {
                 await i.deferUpdate().catch(() => { });
-                handleAction(p, 'allin');
-            } else if (action === 'view_cards') {
-                const cards = `${p.hand[0]} ${p.hand[1]}`;
-                return i.reply({ content: t('poker.view_cards_ephemeral', lang, { cards }), flags: 64 });
+                await handleAction(p, 'allin');
             } else {
                 await i.deferUpdate().catch(() => { });
-                handleAction(p, action);
+                await handleAction(p, action);
             }
         });
 
