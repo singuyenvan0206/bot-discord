@@ -19,6 +19,35 @@ module.exports = {
                 return message.reply(`${t('business.buy_usage', lang)}\nAvailable:\n${list}`);
             }
 
+            if (inputId === 'all') {
+                const userBizs = await db.getUserBusinesses(message.author.id);
+                const user = await db.getUser(message.author.id);
+                let totalCost = 0;
+                let bizAdded = 0;
+
+                for (const [id, type] of Object.entries(bizConfig.TYPES)) {
+                    if (!userBizs.some(b => b.business_id === id)) {
+                        totalCost += type.base_price;
+                        bizAdded++;
+                    }
+                }
+
+                if (bizAdded === 0) return message.reply(t('business.buy_all_owned', lang) || "❌ Bạn đã sở hữu tất cả doanh nghiệp rồi!");
+
+                if (user.balance < totalCost) {
+                    return message.reply(t('business.buy_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để mua tất cả doanh nghiệp còn lại!`);
+                }
+
+                await db.removeBalance(message.author.id, totalCost);
+                for (const [id, type] of Object.entries(bizConfig.TYPES)) {
+                    if (!userBizs.some(b => b.business_id === id)) {
+                        await db.addUserBusiness(message.author.id, id);
+                    }
+                }
+
+                return message.reply(t('business.buy_all_success', lang, { price: totalCost.toLocaleString() }) || `✅ Bạn đã mua toàn bộ doanh nghiệp còn thiếu với giá **${totalCost.toLocaleString()}** coins!`);
+            }
+
             // Resolve ID (string or numeric)
             const type = Object.values(bizConfig.TYPES).find(b =>
                 b.id.toLowerCase() === inputId ||
@@ -45,6 +74,31 @@ module.exports = {
             await db.addUserBusiness(message.author.id, typeId);
 
             return message.reply(t('business.buy_success', lang, { name: type.name[lang], income: type.base_income.toLocaleString() }));
+        }
+
+        if (sub === 'sell') {
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (inputId !== 'all') {
+                return message.reply(t('business.sell_usage', lang) || "❌ Cách dùng: `$business sell all` để bán tất cả doanh nghiệp.");
+            }
+
+            const userBizs = await db.getUserBusinesses(message.author.id);
+            if (userBizs.length === 0) {
+                return message.reply(t('business.sell_error_none', lang) || "❌ Bạn chưa có doanh nghiệp nào để bán!");
+            }
+
+            let totalValue = 0;
+            for (const b of userBizs) {
+                const type = bizConfig.TYPES[b.business_id];
+                if (type) totalValue += type.base_price;
+            }
+
+            const refund = Math.floor(totalValue * 0.5);
+
+            await db.removeAllUserBusinesses(message.author.id);
+            await db.addBalance(message.author.id, refund);
+
+            return message.reply(t('business.sell_all_success', lang, { price: refund.toLocaleString() }) || `💰 Bạn đã bán toàn bộ doanh nghiệp và nhận lại **${refund.toLocaleString()}** coins (50% giá gốc).`);
         }
 
         if (sub === 'info' || !sub) {
@@ -144,6 +198,26 @@ module.exports = {
             if (!inputId) return message.reply('❌ Please specify the business ID to hire staff!');
 
             const userBizs = await db.getUserBusinesses(message.author.id);
+            if (userBizs.length === 0) return message.reply(t('business.sell_error_none', lang) || '❌ You don\'t own any businesses!');
+
+            const user = await db.getUser(message.author.id);
+            const cost = bizConfig.STAFF_COST;
+
+            if (inputId === 'all') {
+                const totalCost = userBizs.length * cost;
+
+                if (user.balance < totalCost) {
+                    return message.reply(t('business.hire_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để thuê nhân viên cho tất cả doanh nghiệp!`);
+                }
+
+                await db.removeBalance(message.author.id, totalCost);
+                for (const b of userBizs) {
+                    await db.updateUserBusiness(message.author.id, b.business_id, { staff: b.staff + 1 });
+                }
+
+                return message.reply(t('business.hire_all_success', lang, { price: totalCost.toLocaleString() }) || `✅ Bạn đã thuê thêm 1 nhân viên cho toàn bộ doanh nghiệp với giá **${totalCost.toLocaleString()}** coins!`);
+            }
+
             const biz = userBizs.find(b => {
                 const type = bizConfig.TYPES[b.business_id];
                 return type.id.toLowerCase() === inputId || type.numeric_id.toString() === inputId;
@@ -152,8 +226,6 @@ module.exports = {
             if (!biz) return message.reply('❌ You dont own this business or invaild ID!');
 
             const bizId = biz.business_id;
-            const cost = bizConfig.STAFF_COST;
-            const user = await db.getUser(message.author.id);
 
             if (user.balance < cost) {
                 return message.reply(`❌ You need **${cost.toLocaleString()}** coins to hire a staff member!`);

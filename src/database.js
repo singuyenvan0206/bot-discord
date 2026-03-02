@@ -787,6 +787,10 @@ async function getAllUserBusinesses() {
     return await queryAll('SELECT * FROM user_businesses');
 }
 
+async function removeAllUserBusinesses(userId) {
+    await execute('DELETE FROM user_businesses WHERE user_id = ?', [userId]);
+}
+
 module.exports = {
     getDb,
     saveDb,
@@ -846,6 +850,7 @@ module.exports = {
     addUserBusiness,
     updateUserBusiness,
     getAllUserBusinesses,
+    removeAllUserBusinesses,
     removeGuildRole,
     updateGuildRoleId,
     getGuildRoles,

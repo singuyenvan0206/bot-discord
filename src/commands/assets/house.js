@@ -81,6 +81,35 @@ module.exports = {
 
             if (!user.house_id) return message.reply(t('housing.info_none', lang));
 
+            const houseData = JSON.parse(user.house_data || '{}');
+
+            if (inputId === 'all') {
+                let totalCost = 0;
+                let itemsAdded = 0;
+                const newHouseData = { ...houseData };
+
+                for (const [id, data] of Object.entries(housingConfig.INTERIORS)) {
+                    if (!houseData[id]) {
+                        totalCost += data.price;
+                        itemsAdded++;
+                        newHouseData[id] = true;
+                    }
+                }
+
+                if (itemsAdded === 0) {
+                    return message.reply(t('housing.decorate_all_owned', lang) || "❌ Bạn đã sở hữu tất cả nội thất rồi!");
+                }
+
+                if (user.balance < totalCost) {
+                    return message.reply(t('housing.decorate_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để mua tất cả nội thất còn lại!`);
+                }
+
+                await db.removeBalance(message.author.id, totalCost);
+                await db.updateUser(message.author.id, { house_data: JSON.stringify(newHouseData) });
+
+                return message.reply(t('housing.decorate_all_success', lang, { price: totalCost.toLocaleString() }) || `✅ Bạn đã mua toàn bộ nội thất còn thiếu với giá **${totalCost.toLocaleString()}** coins!`);
+            }
+
             const interiorEntry = Object.entries(housingConfig.INTERIORS).find(([id, data]) =>
                 id.toLowerCase() === inputId ||
                 data.numeric_id.toString() === inputId
@@ -91,7 +120,6 @@ module.exports = {
             }
 
             const [interiorId, interior] = interiorEntry;
-            const houseData = JSON.parse(user.house_data || '{}');
 
             if (houseData[interiorId]) return message.reply(t('housing.decorate_error_owned', lang) || "You already have this decoration!");
 
@@ -104,6 +132,35 @@ module.exports = {
             await db.updateUser(message.author.id, { house_data: JSON.stringify(houseData) });
 
             return message.reply(t('housing.upgrade_success', lang, { name: interior.name[lang], buff: `+${interior.value} ${interior.buff}` }));
+        }
+
+        if (sub === 'sell') {
+            const inputId = args[1] ? args[1].toLowerCase() : null;
+            if (inputId !== 'all') {
+                return message.reply(t('housing.sell_usage', lang) || "❌ Cách dùng: `$house sell all` để bán tất cả tài sản nhà đất.");
+            }
+
+            if (!user.house_id) {
+                return message.reply(t('housing.sell_error_none', lang) || "❌ Bạn không có tài sản nào để bán!");
+            }
+
+            const tierId = user.house_id;
+            const tier = housingConfig.TIERS[tierId];
+            let totalValue = tier.price;
+
+            const houseData = JSON.parse(user.house_data || '{}');
+            for (const [id, data] of Object.entries(housingConfig.INTERIORS)) {
+                if (houseData[id]) {
+                    totalValue += data.price;
+                }
+            }
+
+            const refund = Math.floor(totalValue * 0.5);
+
+            await db.addBalance(message.author.id, refund);
+            await db.updateUser(message.author.id, { house_id: null, house_data: '{}' });
+
+            return message.reply(t('housing.sell_all_success', lang, { price: refund.toLocaleString() }) || `💰 Bạn đã bán nhà và tất cả nội thất. Nhận lại **${refund.toLocaleString()}** coins (50% giá trị).`);
         }
 
         if (sub === 'info' || !sub) {
