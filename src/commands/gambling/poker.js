@@ -19,6 +19,7 @@ module.exports = {
         const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
         const maxBet = await getMaxBet(message.author.id);
         let minBuyIn = Math.max(50, args[0] ? parseAmount(args[0], user.balance, maxBet) : 50);
+        let maxBuyIn = Math.min(maxBet, args[1] ? parseAmount(args[1], user.balance, maxBet) : maxBet);
         const hostId = message.author.id;
 
         // Game State
@@ -34,6 +35,7 @@ module.exports = {
         let dealerIndex = 0;
         let turnIndex = 0;
         let phase = t('poker.phases.lobby', lang);
+        let gameThread = null; // Store thread reference
 
         const lobbyEmbed = new EmbedBuilder()
             .setTitle(t('poker.title', lang))
@@ -201,6 +203,20 @@ module.exports = {
                 await i.deferUpdate().catch(() => { });
                 gameStarted = true;
                 lobbyCollector.stop('started');
+
+                // Create Thread for the game to prevent "drifting"
+                if (message.guild.members.me.permissions.has('CreatePublicThreads')) {
+                    try {
+                        gameThread = await reply.startThread({
+                            name: `Poker: ${message.author.username}`,
+                            autoArchiveDuration: 60,
+                        });
+                        // Note: Collector will still be handled in startGame
+                    } catch (e) {
+                        console.error('[Poker Thread Error]:', e);
+                    }
+                }
+
                 startGame();
             }
         });
@@ -296,7 +312,7 @@ module.exports = {
             // Phase 1: Pre-Flop
             phase = t('poker.phases.preflop', lang);
 
-            const ante = Math.max(1, Math.floor(minBuyIn * 0.05));
+            const ante = Math.max(1, Math.floor(maxBuyIn * 0.05));
             players.forEach(p => {
                 const contribution = Math.min(p.chips, ante);
                 p.chips -= contribution;
@@ -304,17 +320,17 @@ module.exports = {
                 if (p.chips === 0) p.allIn = true;
             });
 
-            await startBettingRound();
+            await startBettingRound(true); // First round in thread
         }
 
-        async function startBettingRound() {
+        async function startBettingRound(forceRepost = false) {
             players.forEach(p => {
                 p.currentBet = 0;
                 p.hasActed = false;
             });
             currentBet = 0;
-            turnIndex = (dealerIndex + 1) % players.length;
-            await updateTable();
+            turnIndex = (dealerIndex + 1) % players.length; // Restored original dealer-relative logic
+            await updateTable(forceRepost);
             await processTurn();
         }
 
@@ -396,73 +412,9 @@ module.exports = {
             }
         }
 
-        const gameCollector = reply.createMessageComponentCollector({ time: 600_000 });
-
-        gameCollector.on('collect', async i => {
-            if (!gameStarted) return;
-            const p = playerMap.get(i.user.id);
-            if (!p) return i.reply({ content: t('poker.not_in_game', lang), flags: 64 });
-
-            const action = i.customId;
-
-            // View cards can be done anytime by anyone in the game
-            if (action === 'view_cards') {
-                const cards = `${p.hand[0]} ${p.hand[1]}`;
-                return i.reply({ content: t('poker.view_cards_ephemeral', lang, { cards }), flags: 64 });
-            }
-
-            // Other actions must be on player's turn
-            if (players[turnIndex].id !== p.id) {
-                return i.reply({ content: t('poker.not_your_turn', lang, { name: players[turnIndex].name }), flags: 64 });
-            }
-
-            if (action === 'raise') {
-                const modal = new ModalBuilder()
-                    .setCustomId(`raise_modal_${i.user.id}`)
-                    .setTitle(t('poker.raise_modal_title', lang));
-
-                const minTotal = currentBet + Math.max(10, Math.floor(minBuyIn * 0.1));
-
-                const input = new TextInputBuilder()
-                    .setCustomId('amount')
-                    .setLabel(t('poker.raise_amount_label', lang, { min: minTotal.toLocaleString() }))
-                    .setStyle(TextInputStyle.Short)
-                    .setPlaceholder(`${minTotal.toLocaleString()}`)
-                    .setRequired(true);
-
-                modal.addComponents(new ActionRowBuilder().addComponents(input));
-
-                await i.showModal(modal);
-
-                try {
-                    const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `raise_modal_${i.user.id}` });
-                    const val = parseAmount(submit.fields.getTextInputValue('amount'), p.chips + p.currentBet);
-
-                    if (isNaN(val) || val < minTotal) {
-                        return submit.reply({ content: `❌ ${t('poker.invalid_raise', lang, { min: minTotal })}`, flags: 64 });
-                    }
-                    if (val > maxBet) {
-                        return submit.reply({ content: t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }), flags: 64 });
-                    }
-                    if (val > p.chips + p.currentBet) {
-                        return submit.reply({ content: t('common.insufficient_funds', lang, { balance: (p.chips + p.currentBet).toLocaleString() }), flags: 64 });
-                    }
-
-                    await submit.deferUpdate();
-                    await handleAction(p, 'raise', null, val);
-
-                } catch (e) { }
-
-            } else if (action === 'allin') {
-                await i.deferUpdate().catch(() => { });
-                await handleAction(p, 'allin');
-            } else {
-                await i.deferUpdate().catch(() => { });
-                await handleAction(p, action);
-            }
-        });
-
         async function handleAction(player, action, interaction = null, numericValue = 0) {
+            const { getMaxBet } = require('../../utils/economy');
+            const maxBet = await getMaxBet(message.author.id);
             const exceededMaxBet = (numericValue > maxBet);
             if (exceededMaxBet && action === 'raise') return; // Double check
 
@@ -531,13 +483,14 @@ module.exports = {
             );
 
             const viewRow = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('view_cards').setLabel(t('poker.btn_view_cards', lang)).setStyle(ButtonStyle.Secondary)
+                new ButtonBuilder().setCustomId('view_cards').setLabel(t('poker.btn_view_cards', lang)).setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId('call_to_front').setLabel('🔄').setStyle(ButtonStyle.Secondary)
             );
 
             return [row, viewRow];
         }
 
-        async function updateTable() {
+        async function updateTable(forceRepost = false) {
             const activeP = players[turnIndex];
             const cardsStr = communityCards.length > 0 ? communityCards.map(c => c.toString()).join(' ') : `[ ${t('poker.waiting_label', lang)} ]`;
 
@@ -562,29 +515,103 @@ module.exports = {
             if (activeP && !activeP.isBot) {
                 components.push(...getActionRow(activeP));
             } else if (phase !== t('poker.phases.showdown', lang)) {
-                // Not active player but game still going - show View Cards button only
-                components.push(new ActionRowBuilder().addComponents(
-                    new ButtonBuilder().setCustomId('view_cards').setLabel(t('poker.btn_view_cards', lang)).setStyle(ButtonStyle.Secondary)
-                ));
+                components.push(...getActionRow(null));
             }
 
-            await reply.edit({ embeds: [embed], components }).catch(() => { });
+            if (forceRepost) {
+                try {
+                    if (reply.channel.id === (gameThread?.id || message.channel.id)) {
+                        await reply.delete().catch(() => { });
+                    }
+                    const boardTarget = gameThread || message.channel;
+                    const newBoard = await boardTarget.send({ embeds: [embed], components });
+                    const oldCollector = gameCollector;
+                    reply = newBoard;
+                    setupGameCollector();
+                    if (oldCollector) oldCollector.stop('reposted');
+                } catch (err) {
+                    console.error('[Poker Repost Error]:', err);
+                    await reply.edit({ embeds: [embed], components }).catch(() => { });
+                }
+            } else {
+                await reply.edit({ embeds: [embed], components }).catch(() => { });
+            }
+        }
+
+        let gameCollector = null;
+        function setupGameCollector() {
+            gameCollector = reply.createMessageComponentCollector({ time: 600_000 });
+            gameCollector.on('collect', pokerActionHandler);
+        }
+
+        async function pokerActionHandler(i) {
+            if (!gameStarted) return;
+            const p = playerMap.get(i.user.id);
+            if (!p) return i.reply({ content: t('poker.not_in_game', lang), flags: 64 });
+
+            const action = i.customId;
+
+            if (action === 'view_cards') {
+                const cards = `${p.hand[0]} ${p.hand[1]}`;
+                const evalHand = evaluateHand(p.hand, communityCards, lang);
+                return i.reply({
+                    content: `${t('poker.view_cards_ephemeral', lang, { cards })}\n**${t('poker.current_hand_label', lang)}**: ${evalHand.name}`,
+                    flags: 64
+                });
+            }
+
+            if (action === 'call_to_front') {
+                await i.deferUpdate().catch(() => { });
+                return updateTable(true);
+            }
+
+            if (players[turnIndex].id !== p.id) {
+                return i.reply({ content: t('poker.not_your_turn', lang, { name: players[turnIndex].name }), flags: 64 });
+            }
+
+            if (action === 'raise') {
+                const modal = new ModalBuilder().setCustomId(`raise_modal_${i.user.id}`).setTitle(t('poker.raise_modal_title', lang));
+                const minTotal = currentBet + Math.max(10, Math.floor(minBuyIn * 0.1));
+                const input = new TextInputBuilder()
+                    .setCustomId('amount')
+                    .setLabel(t('poker.raise_amount_label', lang, { min: minTotal.toLocaleString() }))
+                    .setStyle(TextInputStyle.Short)
+                    .setPlaceholder(`${minTotal.toLocaleString()}`)
+                    .setRequired(true);
+                modal.addComponents(new ActionRowBuilder().addComponents(input));
+                await i.showModal(modal);
+                try {
+                    const submit = await i.awaitModalSubmit({ time: 30000, filter: s => s.customId === `raise_modal_${i.user.id}` });
+                    const val = parseAmount(submit.fields.getTextInputValue('amount'), p.chips + p.currentBet);
+                    if (isNaN(val) || val < minTotal) return submit.reply({ content: `❌ ${t('poker.invalid_raise', lang, { min: minTotal })}`, flags: 64 });
+                    if (val > maxBet) return submit.reply({ content: t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }), flags: 64 });
+                    if (val > p.chips + p.currentBet) return submit.reply({ content: t('common.insufficient_funds', lang, { balance: (p.chips + p.currentBet).toLocaleString() }), flags: 64 });
+                    await submit.deferUpdate();
+                    await handleAction(p, 'raise', null, val);
+                } catch (e) { }
+            } else if (action === 'allin') {
+                await i.deferUpdate().catch(() => { });
+                await handleAction(p, 'allin');
+            } else {
+                await i.deferUpdate().catch(() => { });
+                await handleAction(p, action);
+            }
         }
 
         async function nextPhase() {
             players.forEach(p => { p.currentBet = 0; p.hasActed = false; });
             currentBet = 0;
 
-            if (communityCards.length === 0) { // Deal Flop
+            if (communityCards.length === 0) {
                 phase = t('poker.phases.flop', lang);
                 communityCards.push(...deck.deal(3));
-            } else if (communityCards.length === 3) { // Deal Turn
+            } else if (communityCards.length === 3) {
                 phase = t('poker.phases.turn', lang);
                 communityCards.push(...deck.deal(1));
-            } else if (communityCards.length === 4) { // Deal River
+            } else if (communityCards.length === 4) {
                 phase = t('poker.phases.river', lang);
                 communityCards.push(...deck.deal(1));
-            } else { // Showdown
+            } else {
                 await endRound();
                 return;
             }
@@ -592,16 +619,15 @@ module.exports = {
             const activePlayers = players.filter(p => !p.folded && !p.allIn);
             if (activePlayers.length === 0) {
                 await updateTable();
-                await sleep(2500); // Give players time to see the board
+                await sleep(2500);
                 await nextPhase();
                 return;
             }
-
             await startBettingRound();
         }
 
         async function endRound() {
-            gameCollector.stop();
+            if (gameCollector) gameCollector.stop();
             phase = t('poker.phases.showdown', lang);
 
             const active = players.filter(p => !p.folded);
@@ -632,16 +658,14 @@ module.exports = {
 
             const prizePerWinner = Math.floor(pot / winners.length);
             let totalBonusGiven = 0;
-
-            let totalCap = 250; // Default fallback for footer if multiple winners
+            let totalCap = 250;
 
             for (const w of winners) {
                 const { total: totalPrize, bonus: bonusAmount, percent: winPercent } = await calculateReward(prizePerWinner, w.member, 'gamble', { pvpMode: true });
                 w.chips += totalPrize;
                 totalBonusGiven += bonusAmount;
-                totalCap = winPercent; // Using the percent value
+                totalCap = winPercent;
 
-                // Grant Win XP
                 if (!w.isBot) {
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                     await addXp(w.member, winXp, message.guild.id);
@@ -658,12 +682,9 @@ module.exports = {
 
             const winnerNames = winners.map(w => w.name).join(', ');
             let footerText = t('poker.pot', lang, { amount: (pot + totalBonusGiven).toLocaleString(), emoji: config.EMOJIS.COIN });
-            if (totalBonusGiven > 0) {
-                footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString(), percent: totalCap });
-            }
+            if (totalBonusGiven > 0) footerText += t('common.bonus_capped', lang, { amount: totalBonusGiven.toLocaleString(), percent: totalCap });
 
             const cardsStr = communityCards.map(c => c.toString()).join(' ');
-
             const embed = new EmbedBuilder()
                 .setTitle(t('poker.end_title', lang))
                 .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.winners', lang, { names: winnerNames })}\n**${footerText}\n\n${resultText}`)
