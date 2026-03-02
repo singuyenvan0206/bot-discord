@@ -1229,7 +1229,8 @@
             "pair": "Đôi",
             "high_card": "Mậu Thầu"
         },
-        "view_cards_hint": "💡 Bạn có thể xem lại bài của mình bất cứ lúc nào bằng nút bên dưới!"
+        "view_cards_hint": "💡 Bạn có thể xem lại bài của mình bất cứ lúc nào bằng nút bên dưới!",
+        "current_hand_label": "Bộ Bài Hiện Tại"
     },
     "emojiquiz": {
         "title": "🧩  Emoji Quiz",
