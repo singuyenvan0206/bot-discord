@@ -323,7 +323,7 @@ module.exports = {
                 if (p.chips === 0) p.allIn = true;
             });
 
-            await startBettingRound(false); // First round in thread
+            await startBettingRound(true); // First round in thread MUST be a repost to bind collector
         }
 
         async function startBettingRound(forceRepost = false) {
@@ -536,6 +536,9 @@ module.exports = {
                     await reply.edit({ embeds: [embed], components }).catch(() => { });
                 }
             } else {
+                if (!gameCollector && phase !== t('poker.phases.showdown', lang)) {
+                    setupGameCollector();
+                }
                 await reply.edit({ embeds: [embed], components }).catch(() => { });
             }
         }
