@@ -226,14 +226,7 @@ module.exports = {
                 p.allIn = false;
                 p.hasActed = false;
 
-                if (!p.isBot) {
-                    try {
-                        await p.user.send(t('poker.private_hand_dm', lang, {
-                            cards: `${p.hand[0]} ${p.hand[1]}`,
-                            channel: `<#${message.channel.id}>`
-                        }));
-                    } catch (e) { }
-                }
+                // Private cards are now viewed via the "View Cards" button (ephemeral message)
             }
 
             // Phase 1: Pre-Flop
