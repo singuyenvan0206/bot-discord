@@ -56,8 +56,8 @@ module.exports = {
         }
     },
     UPGRADE_COST_MULTIPLIER: 1.15,
-    STAFF_COST: 50000,
-    STAFF_INCOME_BONUS: 0.1, // 10% more income per staff
+    MANAGER_HOURLY_COST: 50000,
+    MANAGER_INCOME_MULTIPLIER: 1.5, // 50% more income while active
     RANDOM_EVENTS: [
         { name: { vi: 'Thuế Hội Đồng', en: 'Council Tax' }, chance: 0.05, cost_mult: 0.1 },
         { name: { vi: 'Sửa Chữa Định Kỳ', en: 'Routine Maintenance' }, chance: 0.03, cost_mult: 0.05 },
@@ -66,13 +66,12 @@ module.exports = {
         { name: { vi: 'Đứt Gãy Chuỗi Cung Ứng', en: 'Supply Shortfall' }, chance: 0.03, cost_mult: 0.15 }
     ],
 
-    calculateBusinessIncome(businessId, level, staff) {
+    calculateBusinessIncome(businessId, level) {
         const type = this.TYPES[businessId];
         if (!type) return 0;
 
-        // Income formula: base * (1 + (level-1)*0.5) * (1 + staff * STAFF_INCOME_BONUS)
+        // Income formula: base * (1 + (level-1)*0.5)
         const levelBonus = 1 + (level - 1) * 0.5;
-        const staffBonus = 1 + staff * this.STAFF_INCOME_BONUS;
-        return Math.floor(type.base_income * levelBonus * staffBonus);
+        return Math.floor(type.base_income * levelBonus);
     }
 };

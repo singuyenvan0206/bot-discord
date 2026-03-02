@@ -211,6 +211,7 @@ async function initSchema() {
     // Migrations
     await safeAddColumn('users', 'house_id', 'TEXT DEFAULT NULL');
     await safeAddColumn('users', 'house_data', "TEXT DEFAULT '{}'");
+    await safeAddColumn('user_businesses', 'manager_expires_at', 'BIGINT DEFAULT 0');
 
     console.log('✅ PostgreSQL Schema initialized.');
 }

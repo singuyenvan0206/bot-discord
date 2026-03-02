@@ -115,8 +115,18 @@ module.exports = {
                 let totalIncome = 0;
                 userBizs.forEach(b => {
                     const type = bizConfig.TYPES[b.business_id];
-                    const hourly = bizConfig.calculateBusinessIncome(b.business_id, b.level, b.staff);
-                    totalIncome += hourly;
+                    const hourly = bizConfig.calculateBusinessIncome(b.business_id, b.level);
+                    const now = Math.floor(Date.now() / 1000);
+                    const isBuffed = (b.manager_expires_at || 0) > now;
+                    let managerStatus = '🔴 Đang nghỉ ngơi';
+                    if (isBuffed) {
+                        const leftSeconds = b.manager_expires_at - now;
+                        const h = Math.floor(leftSeconds / 3600);
+                        const m = Math.floor((leftSeconds % 3600) / 60);
+                        managerStatus = `🟢 Đang quản lý (còn ${h}h ${m}m)`;
+                    }
+
+                    totalIncome += isBuffed ? Math.floor(hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) : hourly;
 
                     const isMax = b.level >= type.max_level;
                     const upgradeCost = isMax
@@ -129,10 +139,10 @@ module.exports = {
                             icon: type.icon,
                             name: type.name[lang],
                             level: b.level,
-                            income: hourly.toLocaleString(),
-                            staff: b.staff,
+                            income: (isBuffed ? Math.floor(hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) : hourly).toLocaleString(),
+                            staff: managerStatus,
                             upgrade_cost: upgradeCost,
-                            staff_cost: bizConfig.STAFF_COST.toLocaleString()
+                            staff_cost: `${bizConfig.MANAGER_HOURLY_COST.toLocaleString()}/h`
                         })
                     });
                 });
@@ -151,13 +161,18 @@ module.exports = {
             const now = Math.floor(Date.now() / 1000);
 
             for (const b of userBizs) {
-                const hourly = bizConfig.calculateBusinessIncome(b.business_id, b.level, b.staff);
-
+                const now = Math.floor(Date.now() / 1000);
                 const secondsPassed = now - b.last_harvest;
                 const hoursPassed = secondsPassed / 3600;
 
                 if (hoursPassed >= 1) {
-                    const amount = Math.floor(hourly * hoursPassed);
+                    const buffEnd = Math.min(now, b.manager_expires_at || 0);
+                    const buffSeconds = Math.max(0, buffEnd - b.last_harvest);
+                    const normalSeconds = secondsPassed - buffSeconds;
+
+                    const hourly = bizConfig.calculateBusinessIncome(b.business_id, b.level);
+                    const amount = Math.floor((buffSeconds / 3600) * (hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) + (normalSeconds / 3600) * hourly);
+
                     totalReward += amount;
                     await db.updateUserBusiness(message.author.id, b.business_id, { last_harvest: now });
                 }
@@ -236,27 +251,31 @@ module.exports = {
 
         if (sub === 'hire') {
             const inputId = args[1] ? args[1].toLowerCase() : null;
-            if (!inputId) return message.reply('❌ Please specify the business ID to hire staff!');
+            if (!inputId) return message.reply(t('business.hire_usage', lang) || '❌ Please specify the business ID to hire a manager!');
 
             const userBizs = await db.getUserBusinesses(message.author.id);
             if (userBizs.length === 0) return message.reply(t('business.sell_error_none', lang) || '❌ You don\'t own any businesses!');
 
             const user = await db.getUser(message.author.id);
-            const cost = bizConfig.STAFF_COST;
+            const costPerHour = bizConfig.MANAGER_HOURLY_COST;
+            const now = Math.floor(Date.now() / 1000);
 
             if (inputId === 'all') {
-                const totalCost = userBizs.length * cost;
+                const hours = args[2] ? Math.max(1, parseInt(args[2]) || 1) : 1;
+                const totalCost = userBizs.length * costPerHour * hours;
 
                 if (user.balance < totalCost) {
-                    return message.reply(t('business.hire_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để thuê nhân viên cho tất cả doanh nghiệp!`);
+                    return message.reply(t('business.hire_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để thuê quản lý cho tất cả doanh nghiệp!`);
                 }
 
                 await db.removeBalance(message.author.id, totalCost);
                 for (const b of userBizs) {
-                    await db.updateUserBusiness(message.author.id, b.business_id, { staff: b.staff + 1 });
+                    const currentExpires = b.manager_expires_at || 0;
+                    const newExpiresAt = Math.max(now, currentExpires) + (hours * 3600);
+                    await db.updateUserBusiness(message.author.id, b.business_id, { manager_expires_at: newExpiresAt });
                 }
 
-                return message.reply(t('business.hire_all_success', lang, { price: totalCost.toLocaleString() }) || `✅ Bạn đã thuê thêm 1 nhân viên cho toàn bộ doanh nghiệp với giá **${totalCost.toLocaleString()}** coins!`);
+                return message.reply(t('business.hire_all_success', lang, { price: totalCost.toLocaleString(), hours: hours }) || `✅ Bạn đã thuê quản lý ${hours} giờ cho toàn bộ doanh nghiệp với giá **${totalCost.toLocaleString()}** coins!`);
             }
 
             const biz = userBizs.find(b => {
@@ -266,16 +285,20 @@ module.exports = {
 
             if (!biz) return message.reply('❌ You dont own this business or invaild ID!');
 
+            const hours = args[2] ? Math.max(1, parseInt(args[2]) || 1) : 1;
+            const totalCost = costPerHour * hours;
             const bizId = biz.business_id;
 
-            if (user.balance < cost) {
-                return message.reply(`❌ You need **${cost.toLocaleString()}** coins to hire a staff member!`);
+            if (user.balance < totalCost) {
+                return message.reply(`❌ You need **${totalCost.toLocaleString()}** coins to hire a manager!`);
             }
 
-            await db.removeBalance(message.author.id, cost);
-            await db.updateUserBusiness(message.author.id, bizId, { staff: biz.staff + 1 });
+            await db.removeBalance(message.author.id, totalCost);
+            const currentExpires = biz.manager_expires_at || 0;
+            const newExpiresAt = Math.max(now, currentExpires) + (hours * 3600);
+            await db.updateUserBusiness(message.author.id, bizId, { manager_expires_at: newExpiresAt });
 
-            return message.reply(t('business.staff_success', lang, { name: bizConfig.TYPES[bizId].name[lang] }));
+            return message.reply(t('business.staff_success', lang, { name: bizConfig.TYPES[bizId].name[lang], hours: hours }));
         }
 
         if (sub === 'list') {
