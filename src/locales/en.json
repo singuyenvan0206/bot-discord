@@ -414,6 +414,7 @@
         "event_title": "📢 Business Event!",
         "staff_success": "👥 You hired a staff member for {{name}}!",
         "info_count": "Owned: {{count}} businesses",
+        "passive_income_title": "📈 Total Passive Income",
         "passive_income": "📈 **Total Passive Income:** {{amount}} coins/hour",
         "info_footer": "Use $business collect to harvest"
     },

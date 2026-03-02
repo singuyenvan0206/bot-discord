@@ -82,7 +82,7 @@ module.exports = {
                 { name: t('profile.economy', lang), value: t('profile.balance', lang, { emoji: config.EMOJIS.COIN, amount: dbUser.balance.toLocaleString() }) + '\n' + t('profile.net_worth', lang, { emoji: config.EMOJIS.COIN, amount: netWorth.toLocaleString() }), inline: true },
                 { name: t('profile.ranking', lang), value: t('profile.wealth_rank', lang, { rank }), inline: true },
                 { name: t('profile.assets', lang) || "🏠 Assets", value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]}` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length })}`, inline: true },
-                { name: t('business.passive_income', lang) || "📈 Passive Income", value: `+${totalPassiveIncome.toLocaleString()} coins/hour`, inline: true },
+                { name: t('business.passive_income_title', lang) || "📈 Passive Income", value: `+${totalPassiveIncome.toLocaleString()} coins/hour`, inline: true },
                 { name: t('profile.multipliers', lang), value: `💼 **${t('effects.income', lang)}:** +${incomeBonus}%\n🎲 **${t('effects.gamble', lang)}:** +${gambleBonus}%\n✨ **${t('effects.xpboost', lang)}:** +${xpBonus}%\n🛡️ **${t('profile.cap', lang)}:** ${maxCapPercent}%`, inline: true },
                 { name: t('profile.marriage', lang), value: marriageStatus, inline: true },
                 { name: t('profile.collection', lang), value: t('profile.total_items', lang, { count: itemCount }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length }), inline: true },
