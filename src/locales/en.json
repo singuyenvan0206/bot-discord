@@ -1719,6 +1719,8 @@
         "select_job": "Filter by job...",
         "all_jobs": "All Jobs",
         "you": "You",
+        "empty": "No data available for this leaderboard.",
+        "your_rank": "Your Rank: #{{rank}} ({{value}})",
         "footer": "Stay active in chat and work to climb the ranks!"
     }
 }

@@ -1719,6 +1719,8 @@
         "select_job": "Lọc theo nghề nghiệp...",
         "all_jobs": "Tất cả nghề",
         "you": "Bạn",
+        "empty": "Chưa có dữ liệu cho bảng xếp hạng này.",
+        "your_rank": "Hạng của bạn: #{{rank}} ({{value}})",
         "footer": "Tích cực trò chuyện và làm việc để thăng hạng!"
     }
 }

@@ -77,34 +77,49 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
     };
 
     const emptyEmbed = new EmbedBuilder()
-        .setDescription(t('leaderboard.empty', lang) || 'Không có dữ liệu.')
+        .setDescription(t('rank.empty', lang) || 'Không có dữ liệu.')
         .setColor(config.COLORS.INFO);
 
     if (!topUsers || topUsers.length === 0) {
         return generateUI(sortBy, jobId, lang, emptyEmbed);
     }
 
-    const userIds = topUsers.map(u => u.id);
-    const members = await guild.members.fetch({ user: userIds, withPresences: false }).catch(() => new Map());
+    // Determine user IDs to fetch (top 10 + author if provided)
+    const displayLimit = 10;
+    const topUsersToDisplay = topUsers.slice(0, displayLimit);
+    const userIds = [...new Set(topUsersToDisplay.map(u => u.id))];
+    if (authorId) userIds.push(authorId);
+
+    // Fetch members with a timeout/catch to prevent freezing
+    const members = await guild.members.fetch({ user: userIds, withPresences: false }).catch(err => {
+        console.error(`[Leaderboard Fetch Error]:`, err);
+        return new Map();
+    });
 
     const lines = [];
     const medals = ['🥇', '🥈', '🥉'];
     let position = 0;
+    let authorPos = -1;
 
-    for (const u of topUsers) {
-        const member = members.get(u.id);
-        if (!member) continue;
+    // Track author rank in the full topUsers list (up to 100)
+    if (authorId) {
+        authorPos = topUsers.findIndex(u => u.id === authorId) + 1;
+    }
 
+    for (const u of topUsersToDisplay) {
         position++;
+        const member = members.get(u.id);
+        const username = member ? member.user.username : (u.id === authorId ? 'Bạn' : `Unknown (${u.id})`);
+
         const rankLabel = medals[position - 1] || `**${position}.**`;
-        const isAuthor = u.id === (authorId || '') ? ` **(${t('rank.you', lang) || 'Bạn'})**` : '';
+        const isAuthor = u.id === authorId ? ` **(${t('rank.you', lang) || 'Bạn'})**` : '';
         const jobDisplay = u.job && !jobId ? ` | ${t(`job.name_${u.job}`, lang) || u.job}` : '';
+
         const valueDisplay = sortBy === 'balance'
             ? `${config.EMOJIS.COIN} **${(u.balance || 0).toLocaleString()}**`
             : `${t('profile.level_label', lang) || 'Level'} **${u.level || 0}**`;
 
-        lines.push(`${rankLabel} ${member.user.username} — ${valueDisplay}${jobDisplay}${isAuthor}`);
-        if (position >= 10) break;
+        lines.push(`${rankLabel} ${username} — ${valueDisplay}${jobDisplay}${isAuthor}`);
     }
 
     if (lines.length === 0) {
@@ -120,8 +135,16 @@ async function getLeaderboardData(guild, sortBy = 'xp', jobId = null, authorId =
         .setDescription(lines.join('\n'))
         .setColor(jobId && jobs[jobId]?.color ? jobs[jobId].color : config.COLORS.INFO)
         .setThumbnail(guild.iconURL({ dynamic: true }) || null)
-        .setFooter({ text: t('rank.footer', lang) })
         .setTimestamp();
+
+    // Footer with "Your Rank"
+    let footerText = t('rank.footer', lang);
+    if (authorPos > 0) {
+        const authorData = topUsers[authorPos - 1];
+        const val = sortBy === 'balance' ? authorData.balance.toLocaleString() : `Lvl ${authorData.level}`;
+        footerText = `${t('rank.your_rank', lang, { rank: authorPos, value: val })}\n${footerText}`;
+    }
+    embed.setFooter({ text: footerText });
 
     console.log(`[TRACE][${traceId}] Leaderboard Data Ready (${Date.now() - startTime}ms)`);
     return generateUI(sortBy, jobId, lang, embed);

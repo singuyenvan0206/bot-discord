@@ -211,6 +211,11 @@ module.exports = {
                 setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
             }
 
+            // Defer reply for commands that might take time (utility/data heavy)
+            if (commandName === 'rank' || commandName === 'leaderboard' || command.defer) {
+                await interaction.deferReply().catch(() => { });
+            }
+
             try {
                 await command.execute(messageAdapter, args);
 
