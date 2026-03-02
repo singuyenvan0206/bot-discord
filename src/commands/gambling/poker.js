@@ -365,6 +365,9 @@ module.exports = {
             } else if (action === 'allin') {
                 await i.deferUpdate().catch(() => { });
                 handleAction(p, 'allin');
+            } else if (action === 'view_cards') {
+                const cards = `${p.hand[0]} ${p.hand[1]}`;
+                return i.reply({ content: t('poker.view_cards_ephemeral', lang, { cards }), flags: 64 });
             } else {
                 await i.deferUpdate().catch(() => { });
                 handleAction(p, action);
@@ -431,7 +434,12 @@ module.exports = {
                 new ButtonBuilder().setCustomId('raise').setLabel(t('poker.action_raise', lang)).setStyle(ButtonStyle.Primary),
                 new ButtonBuilder().setCustomId('allin').setLabel(t('poker.action_allin', lang)).setStyle(ButtonStyle.Danger)
             );
-            return [row];
+
+            const viewRow = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId('view_cards').setLabel(t('poker.btn_view_cards', lang)).setStyle(ButtonStyle.Secondary)
+            );
+
+            return [row, viewRow];
         }
 
         async function updateTable() {
@@ -454,7 +462,16 @@ module.exports = {
                 .setDescription(`**${t('poker.community_cards', lang)}:** ${cardsStr}\n\n**${t('poker.pot', lang, { amount: pot, emoji: config.EMOJIS.COIN })}\n**${t('poker.current_bet', lang, { amount: currentBet, emoji: config.EMOJIS.COIN })}\n\n${statusTxt}`)
                 .setColor(config.COLORS.INFO);
 
-            const components = (activeP && !activeP.isBot) ? getActionRow(activeP) : [];
+            const components = [];
+            if (activeP && !activeP.isBot) {
+                components.push(...getActionRow(activeP));
+            } else if (phase !== t('poker.phases.showdown', lang)) {
+                // Not active player but game still going - show View Cards button only
+                components.push(new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('view_cards').setLabel(t('poker.btn_view_cards', lang)).setStyle(ButtonStyle.Secondary)
+                ));
+            }
+
             await reply.edit({ embeds: [embed], components }).catch(() => { });
         }
 

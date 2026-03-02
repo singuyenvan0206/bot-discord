@@ -1190,6 +1190,8 @@
         "btn_add_bot": "Add Bot",
         "btn_leave": "Leave",
         "btn_start": "Start",
+        "btn_view_cards": "View Cards",
+        "view_cards_ephemeral": "🃏 Your cards: **{{cards}}**",
         "already_started": "❌ Game already started!",
         "already_joined": "❌ You've already joined!",
         "joining_process": "❌ You are already in the process of joining!",

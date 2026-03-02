@@ -1247,6 +1247,8 @@
         "btn_add_bot": "Thêm Bot",
         "btn_leave": "Rời Khỏi",
         "btn_start": "Bắt Đầu",
+        "btn_view_cards": "Xem Bài",
+        "view_cards_ephemeral": "🃏 Bài của bạn: **{{cards}}**",
         "already_started": "❌ Trò chơi đã bắt đầu!",
         "already_joined": "❌ Bạn đã tham gia rồi!",
         "joining_process": "❌ Bạn đang thực hiện quá trình tham gia!",
