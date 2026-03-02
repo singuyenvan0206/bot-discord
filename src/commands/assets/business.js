@@ -176,6 +176,41 @@ module.exports = {
             if (!inputId) return message.reply('❌ Please specify the business ID to upgrade!');
 
             const userBizs = await db.getUserBusinesses(message.author.id);
+            if (userBizs.length === 0) return message.reply(t('business.sell_error_none', lang) || '❌ You don\'t own any businesses!');
+
+            const user = await db.getUser(message.author.id);
+
+            if (inputId === 'all') {
+                let totalCost = 0;
+                let eligibleCount = 0;
+                const businessesToUpgrade = [];
+
+                for (const b of userBizs) {
+                    const type = bizConfig.TYPES[b.business_id];
+                    if (type && b.level < type.max_level) {
+                        const cost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level));
+                        totalCost += cost;
+                        eligibleCount++;
+                        businessesToUpgrade.push({ id: b.business_id, newLevel: b.level + 1 });
+                    }
+                }
+
+                if (eligibleCount === 0) {
+                    return message.reply(t('business.upgrade_all_max', lang) || "❌ Tất cả doanh nghiệp của bạn đã đạt cấp tối đa!");
+                }
+
+                if (user.balance < totalCost) {
+                    return message.reply(t('business.upgrade_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để nâng cấp đồng loạt tất cả doanh nghiệp!`);
+                }
+
+                await db.removeBalance(message.author.id, totalCost);
+                for (const b of businessesToUpgrade) {
+                    await db.updateUserBusiness(message.author.id, b.id, { level: b.newLevel });
+                }
+
+                return message.reply(t('business.upgrade_all_success', lang, { count: eligibleCount, price: totalCost.toLocaleString() }) || `✅ Bạn đã nâng cấp thành công ${eligibleCount} doanh nghiệp với tổng chi phí **${totalCost.toLocaleString()}** coins!`);
+            }
+
             const biz = userBizs.find(b => {
                 const type = bizConfig.TYPES[b.business_id];
                 return type.id.toLowerCase() === inputId || type.numeric_id.toString() === inputId;
@@ -188,7 +223,6 @@ module.exports = {
             if (biz.level >= type.max_level) return message.reply('❌ This business is already at maximum level!');
 
             const upgradeCost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, biz.level));
-            const user = await db.getUser(message.author.id);
 
             if (user.balance < upgradeCost) {
                 return message.reply(`❌ You need **${upgradeCost.toLocaleString()}** coins for this upgrade!`);
