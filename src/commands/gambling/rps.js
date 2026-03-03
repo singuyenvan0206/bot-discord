@@ -158,7 +158,7 @@ module.exports = {
                     await db.addBalance(message.guild.id, user.id, betAmount); // Refund
                     result += t('rps.refund', lang);
                 } else {
-                    result += t('rps.lost_coins', lang, { amount: betAmount.toLocaleString() });
+                    result += t('rps.lost_coins', lang, { amount: betAmount.toLocaleString(), emoji: config.EMOJIS.COIN });
                     await addHouseProfit(interaction || msgObj, betAmount);
 
                     // Trader Interaction: Market Tip (35% chance to refund 50% on loss)

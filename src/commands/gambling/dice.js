@@ -126,7 +126,7 @@ module.exports = {
             let lossMsgResult = '';
             if (!won) {
                 await addHouseProfit(i, bet);
-                lossMsgResult = t('dice.lose_msg', lang, { amount: bet.toLocaleString() });
+                lossMsgResult = t('dice.lose_msg', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN });
                 // Trader Interaction: Market Tip (15% chance to refund 50% on loss)
                 const u = await db.getUser(message.author.id, i.guild.id);
                 if (u.job === 'trader' && Math.random() < 0.15) {

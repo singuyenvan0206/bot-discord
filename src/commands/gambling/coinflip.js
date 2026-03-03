@@ -71,7 +71,7 @@ module.exports = {
                 flavorText += t('common.flow_state', lang);
             }
         } else {
-            flavorText = t('coinflip.lose', lang, { amount: bet.toLocaleString() });
+            flavorText = t('coinflip.lose', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (bet) await addHouseProfit(message, bet);
 
             // Trader Interaction: Market Tip (25% chance to refund 50% on loss)
