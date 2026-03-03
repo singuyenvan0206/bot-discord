@@ -60,11 +60,11 @@ module.exports = {
         CRIME_MIN_REWARD: 8000,
         CRIME_MAX_REWARD: 20000,
         PENALTY_PER_LEVEL: 500, // Fixed penalty amount per level
-        SLUT_COOLDOWN: 7200, // 2 hours
-        SLUT_SUCCESS_RATE: 0.6,
-        SLUT_MIN_REWARD: 5000,
-        SLUT_MAX_REWARD: 15000,
-        SLUT_FAIL_PENALTY: 2000, // Fixed fine
+        FREELANCE_COOLDOWN: 7200, // 2 hours
+        FREELANCE_SUCCESS_RATE: 0.6,
+        FREELANCE_MIN_REWARD: 5000,
+        FREELANCE_MAX_REWARD: 15000,
+        FREELANCE_FAIL_PENALTY: 2000, // Fixed fine
         BEG_COOLDOWN: 300, // 5 minutes
         BEG_SUCCESS_RATE: 0.55,
         BEG_MIN_REWARD: 1000,

@@ -6,32 +6,41 @@ const config = require('../../config');
 const { formatDuration } = require('../../utils/time');
 
 module.exports = {
-    name: 'slut',
-    aliases: ['sl', 'slt'],
-    description: 'Đi khách (Work as slut)',
-    cooldown: config.ECONOMY.SLUT_COOLDOWN,
+    name: 'freelance',
+    aliases: ['fl', 'free'],
+    description: 'Làm việc tự do (Freelance work)',
+    cooldown: config.ECONOMY.FREELANCE_COOLDOWN,
+    manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
 
-        const cooldown = await db.getGuildSetting(message.guild.id, 'slut_cooldown', config.ECONOMY.SLUT_COOLDOWN);
-        const lastSlut = Number(user.last_slut || 0);
+        const cooldown = await db.getGuildSetting(message.guild.id, 'freelance_cooldown', config.ECONOMY.FREELANCE_COOLDOWN);
+        const lastFreelance = Number(user.last_freelance || 0);
 
-        if (now - lastSlut < cooldown) {
-            const timeLeft = cooldown - (now - lastSlut);
-            return message.reply(t('slut.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
+        if (now - lastFreelance < cooldown) {
+            const timeLeft = cooldown - (now - lastFreelance);
+            return message.reply(t('freelance.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
-        const successRate = await db.getGuildSetting(message.guild.id, 'slut_rate', config.ECONOMY.SLUT_SUCCESS_RATE);
-        const actions = t('slut.actions', lang);
+        const successRate = await db.getGuildSetting(message.guild.id, 'freelance_rate', config.ECONOMY.FREELANCE_SUCCESS_RATE);
+        const actions = t('freelance.actions', lang);
         const action = actions[Math.floor(Math.random() * actions.length)];
 
-        await db.updateUser(message.guild.id, message.author.id, { last_slut: now });
+        // Valid attempt - Set Cooldowns
+        const timestamps = message.client.cooldowns.get('freelance');
+        const cooldownAmount = (this.cooldown || config.ECONOMY.FREELANCE_COOLDOWN) * 1000;
+        if (timestamps) {
+            timestamps.set(message.author.id, now * 1000);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        }
+
+        await db.updateUser(message.guild.id, message.author.id, { last_freelance: now });
 
         if (Math.random() < successRate) {
-            const minReward = await db.getGuildSetting(message.guild.id, 'slut_min', config.ECONOMY.SLUT_MIN_REWARD);
-            const maxReward = await db.getGuildSetting(message.guild.id, 'slut_max', config.ECONOMY.SLUT_MAX_REWARD);
+            const minReward = await db.getGuildSetting(message.guild.id, 'freelance_min', config.ECONOMY.FREELANCE_MIN_REWARD);
+            const maxReward = await db.getGuildSetting(message.guild.id, 'freelance_max', config.ECONOMY.FREELANCE_MAX_REWARD);
             let baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
             // Job Bonus: Musician (20%) or Streamer (15%)
@@ -40,18 +49,18 @@ module.exports = {
             if (user.job === 'musician') {
                 const bonusValue = Math.floor(baseReward * 0.2);
                 baseReward += bonusValue;
-                performMsg = t('slut.musician_bonus', lang, { amount: bonusValue.toLocaleString() });
+                performMsg = t('freelance.musician_bonus', lang, { amount: bonusValue.toLocaleString() });
             } else if (user.job === 'streamer') {
                 const bonusValue = Math.floor(baseReward * 0.15);
                 baseReward += bonusValue;
-                streamMsg = t('slut.streamer_bonus', lang, { amount: bonusValue.toLocaleString() });
+                streamMsg = t('freelance.streamer_bonus', lang, { amount: bonusValue.toLocaleString() });
             }
 
             const { total, bonus, percent } = await calculateReward(baseReward, message.member, 'income');
 
             await db.addBalance(message.guild.id, message.author.id, total);
 
-            let msg = t('slut.success', lang, {
+            let msg = t('freelance.success', lang, {
                 action,
                 amount: total.toLocaleString(),
                 emoji: config.EMOJIS.COIN
@@ -65,7 +74,7 @@ module.exports = {
 
             return message.reply(msg);
         } else {
-            // New Scaled Penalty: 200 + (2% of balance)
+            // Penalty Logic
             let penalty = 200 + Math.floor((user.balance || 0) * 0.02);
             const xpLoss = 30;
 
@@ -74,25 +83,31 @@ module.exports = {
             const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, penalty);
 
-            // Cooldown Penalty: Hospital Time (1.5x cooldown)
-            const hospitalCooldown = Math.floor(cooldown * 0.5);
-            await db.updateUser(message.guild.id, message.author.id, { last_slut: now + hospitalCooldown });
+            // Cooldown Penalty: Project Delay (1.5x cooldown)
+            const delayCooldown = Math.floor(cooldown * 0.5);
+            await db.updateUser(message.guild.id, message.author.id, { last_freelance: now + delayCooldown });
 
-            // Interaction: Transfer penalty to a random Doctor in the guild
+            // Memory Cooldown sync
+            if (timestamps) {
+                timestamps.set(message.author.id, (now + delayCooldown) * 1000);
+                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            }
+
+            // Interaction: Transfer penalty to a random Doctor in the guild (Insurance/Medical)
             const randomDoctorId = await db.getRandomUserByJob('doctor', [message.client.user.id]);
             if (randomDoctorId) {
                 await db.addBalance(message.guild.id, randomDoctorId, penalty);
 
                 const doctorUser = message.guild?.members?.cache.get(randomDoctorId);
-                let failureMsg = t('slut.failure_xp', lang, {
+                let failureMsg = t('freelance.failure_xp', lang, {
                     amount: penalty.toLocaleString(),
                     xp: xpResult.deducted.toLocaleString(),
-                    hospital: t('common.hospital_time', lang)
+                    hospital: t('common.hospital_time', lang) // Reusing hospital_time for injury/stress
                 });
 
                 if (user.job === 'teacher') {
                     const result = await deductLevel(message.author.id, message.guild.id);
-                    failureMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel.toLocaleString() })}`;
+                    failureMsg += `\n${t('common.teacher_penalty_label', lang)}${t('freelance.teacher_penalty', lang, { level: result.newLevel.toLocaleString() })}`;
                 }
 
                 if (doctorUser) {
@@ -102,14 +117,14 @@ module.exports = {
                 return message.reply(failureMsg);
             }
 
-            let failMsg = t('slut.failure_xp', lang, {
+            let failMsg = t('freelance.failure_xp', lang, {
                 amount: penalty.toLocaleString(),
                 xp: xpResult.deducted.toLocaleString(),
                 hospital: t('common.hospital_time', lang)
             });
             if (user.job === 'teacher') {
                 const result = await deductLevel(message.author.id, message.guild.id);
-                failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('slut.teacher_penalty', lang, { level: result.newLevel.toLocaleString() })}`;
+                failMsg += `\n${t('common.teacher_penalty_label', lang)}${t('freelance.teacher_penalty', lang, { level: result.newLevel.toLocaleString() })}`;
             }
 
             return message.reply(failMsg);

@@ -523,20 +523,20 @@
         "reward_nothing": "Không có gì...",
         "error_internal": "❌ Có lỗi xảy ra khi mở rương. Vui lòng liên hệ admin."
     },
-    "slut": {
-        "cooldown": "❌ Bạn cần nghỉ ngơi để hồi phục sức khỏe! Quay lại sau **{{time}}**.",
-        "success": "💋 Bạn đã đi khách thành công và nhận được **{{amount}}** coins từ khách hàng tốt bụng! {{emoji}}",
-        "failure": "👠 Xui quá! Bạn gặp phải khách 'bùng' tiền hoặc bị bảo kê đánh, tốn **{{amount}}** coins tiền thuốc men.",
+    "freelance": {
+        "cooldown": "❌ Bạn cần nghỉ ngơi sau dự án! Quay lại sau **{{time}}**.",
+        "success": "💻 Bạn đã hoàn thành **{{action}}** thành công và nhận được **{{amount}}** coins từ khách hàng! {{emoji}}",
+        "failure": "📂 Dự án gặp trục trặc! Bạn bị khách hàng bùng tiền hoặc phải đền bù hợp đồng tốn **{{amount}}** coins.",
         "musician_bonus": "\n🎸 **Màn trình diễn xuất sắc!** Nhạc sĩ đốt cháy sân khấu! +{{amount}} coins!",
         "streamer_bonus": "\n🎥 **Lên sóng trực tiếp!** Fans donate ủng hộ! +{{amount}} coins!",
         "actions": [
-            "đứng đường ở Công viên Gia Định",
-            "tiếp khách trong quán karaoke",
-            "đi tour với đại gia",
-            "làm sugar baby"
+            "làm gia sư dạy kèm online",
+            "thiết kế đồ họa cho startup",
+            "viết lách tự do trên blog",
+            "dịch thuật tài liệu kỹ thuật"
         ],
-        "teacher_penalty": "Là một giáo viên, hành động này thật không thể chấp nhận được. Bạn bị giáng xuống Cấp độ **{{level}}**! 📉",
-        "failure_xp": "👠 Xui quá! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{hospital}}"
+        "teacher_penalty": "Là một giáo viên, bạn nên tập trung vào giảng dạy hơn là làm thêm bên ngoài. Bạn bị giáng xuống Cấp độ **{{level}}**! 📉",
+        "failure_xp": "📂 Dự án thất bại! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{hospital}}"
     },
     "daily_events": {
         "michelin_star": "\n🌟 **Sao Michelin!** Danh tiếng của Đầu bếp giúp nhận x3 phần thưởng hàng ngày!",
@@ -1385,7 +1385,7 @@
             "crime": "Thực hiện phi vụ bất hợp pháp: tỉ lệ thắng 40%, lợi nhuận và XP cực cao.",
             "rob": "Cướp một phần tiền ví của người dùng khác. Có thể bị phản đòn!",
             "search": "Lục lọi các địa điểm ngẫu nhiên để tìm coins rơi trên đường phố.",
-            "slut": "Nhận 'việc làm thêm' rủi ro để kiếm thu nhập khá. Tỉ lệ thành công 60%.",
+            "freelance": "Nhận 'việc làm thêm' (Freelance) để kiếm thu nhập khá. Tỉ lệ thành công 60%.",
             "fish": "Thả câu! Dùng cần và mồi từ shop để câu cá hiếm và cá huyền thoại.",
             "job": "Hệ thống sự nghiệp chuyên sâu (Cấp độ 20+). Mỗi nghề có đặc quyền riêng.",
             "buyrole": "Mua phẩm hàm (role) độc quyền bằng coins từ Cửa Hàng Role của server.",
@@ -1459,7 +1459,7 @@
             "beg": "🌟 **Mô tả:** Thử vận may bằng cách đi xin tiền người qua đường.\n\n💰 **Phần thưởng:** Tiền thưởng cực nhỏ, nhưng ít rủi ro.",
             "search": "🌟 **Mô tả:** Lục lọi các địa điểm ngẫu nhiên để tìm tiền rơi.\n\n💰 **Phần thưởng:** Thu nhập ở mức trung bình, thường tìm thấy trong thùng rác hoặc dưới đệm sofa.",
             "rob": "🌟 **Mô tả:** Đột nhập và trộm tiền của người dùng khác.\n\n⚠️ **Rủi ro:**\n- Nếu thất bại, bạn sẽ phải nộp phạt và bồi thường 20% số dư của mình cho nạn nhân.\n\n💰 **Phần thưởng:** Cướp được một phần tài sản của người khác.",
-            "slut": "🌟 **Mô tả:** Đi khách để kiếm thêm thu nhập.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công 60%.\n- Nếu thất bại, bạn sẽ mất một khoản tiền thuốc men cố định.\n\n💰 **Phần thưởng:** Tiền thưởng ở mức trung bình, cân bằng giữa rủi ro và lợi nhuận.",
+            "freelance": "🌟 **Mô tả:** Làm việc tự do (Freelance) để kiếm thêm thu nhập.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công 60%.\n- Nếu thất bại, dự án có thể gặp trục trặc hoặc bạn phải bồi thường hợp đồng.\n\n💰 **Phần thưởng:** Tiền thưởng ở mức trung bình, cân bằng giữa rủi ro và lợi nhuận.",
             "profile": "🌟 **Mô tả:** Hồ sơ cá nhân toàn diện. Nơi thể hiện đẳng cấp, sự giàu sang và tiến trình thăng hạng của bạn trong thế giới Bot.\n\n📊 **Thông số chi tiết:**\n- **Số dư ví:** Tiền mặt bạn đang có.\n- **Tổng tài sản (Net Worth):** Tổng giá trị tiền mặt + toàn bộ vật phẩm trong kho đồ.\n- **Thứ hạng:** Vị trí của bạn trên bảng xếp hạng giàu có toàn cầu.\n- **Kinh nghiệm:** Cấp độ hiện tại và tiến trình điểm để lên cấp.",
             "addmoney": "🌟 **Mô tả:** Thêm số tiền tùy ý vào tài khoản của người chơi. (Admin)\n\n🕹️ **Cách dùng:**\n`$addmoney @user <số_tiền>`",
             "removemoney": "🌟 **Mô tả:** Trừ số tiền tùy ý khỏi tài khoản của người chơi. (Admin)\n\n🕹️ **Cách dùng:**\n`$removemoney @user <số_tiền>`",

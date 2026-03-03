@@ -104,7 +104,7 @@ async function initSchema() {
             last_work BIGINT DEFAULT 0,
             last_rob BIGINT DEFAULT 0,
             last_crime BIGINT DEFAULT 0,
-            last_slut BIGINT DEFAULT 0,
+            last_freelance BIGINT DEFAULT 0,
             last_beg BIGINT DEFAULT 0,
             last_search BIGINT DEFAULT 0,
             job TEXT DEFAULT NULL,
@@ -213,6 +213,25 @@ async function initSchema() {
     await safeAddColumn('users', 'house_data', "TEXT DEFAULT '{}'");
     await safeAddColumn('user_businesses', 'manager_expires_at', 'BIGINT DEFAULT 0');
     await safeAddColumn('guilds', 'wordchain_channel', 'TEXT DEFAULT NULL');
+
+    // ─── Automated Command Renaming Migration ─────────
+    try {
+        // 1. Rename last_slut column to last_freelance in the users table
+        await pool.query('ALTER TABLE users RENAME COLUMN last_slut TO last_freelance');
+    } catch (err) {
+        // Common errors: Column already renamed or table doesn't exist yet
+    }
+
+    try {
+        // 2. Migrate guild settings: Update keys like 'slut_cooldown' to 'freelance_cooldown'
+        await pool.query(`
+            UPDATE guild_settings 
+            SET key = REPLACE(key, 'slut_', 'freelance_') 
+            WHERE key LIKE 'slut_%'
+        `);
+    } catch (err) {
+        // Silently fail if settings table isn't ready or already migrated
+    }
 
     console.log('✅ PostgreSQL Schema initialized.');
 }
@@ -342,7 +361,7 @@ async function getUser(userId, guildId = null) {
 
         // If still not found (should be impossible but for safety), return a default object
         if (!user) {
-            user = { id: uId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_slut: 0, last_beg: 0, last_search: 0, last_dist_amount: 0, job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null };
+            user = { id: uId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_freelance: 0, last_beg: 0, last_search: 0, last_dist_amount: 0, job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null };
         }
     }
 

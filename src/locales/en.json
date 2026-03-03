@@ -467,20 +467,20 @@
         "reward_nothing": "Nothing...",
         "error_internal": "❌ An error occurred while opening the crate. Please contact an admin."
     },
-    "slut": {
-        "cooldown": "❌ You need to rest and recover! Come back in **{{time}}**.",
-        "success": "💋 You successfully went out and received **{{amount}}** coins from a kind customer! {{emoji}}",
-        "failure": "👠 Unlucky! You met a 'dine and dash' customer or got harassed, spending **{{amount}}** coins on medical bills.",
+    "freelance": {
+        "cooldown": "❌ You need to rest after the project! Come back in **{{time}}**.",
+        "success": "💻 You successfully finished **{{action}}** and received **{{amount}}** coins from your client! {{emoji}}",
+        "failure": "📂 Project failed! The client didn't pay or you had to refund **{{amount}}** coins for contract breach.",
         "musician_bonus": "\n🎸 **Outstanding Performance!** The musician set the stage on fire! +{{amount}} coins!",
         "streamer_bonus": "\n🎥 **Live on Air!** Fans donated to support your performance! +{{amount}} coins!",
         "actions": [
-            "worked the streets at the park",
-            "entertained guests at a karaoke bar",
-            "went on a tour with a tycoon",
-            "became a sugar baby"
+            "online tutoring",
+            "freelance graphic design",
+            "content writing for a blog",
+            "technical translation"
         ],
-        "teacher_penalty": "As a teacher, this action is unacceptable. You have been demoted to Level **{{level}}**! 📉",
-        "failure_xp": "👠 Unlucky! You were fined **{{amount}}** coins and lost **{{xp}}** XP.{{hospital}}"
+        "teacher_penalty": "As a teacher, you should focus on your students. You have been demoted to Level **{{level}}**! 📉",
+        "failure_xp": "📂 Project failed! You were fined **{{amount}}** coins and lost **{{xp}}** XP.{{hospital}}"
     },
     "daily_events": {
         "michelin_star": "\n🌟 **Michelin Star!** Chef's reputation earned a 3x daily reward!",
@@ -1392,7 +1392,7 @@
             "crime": "Pull off risky illegal heists. 40% success rate, high coin & XP reward.",
             "rob": "Attempt to steal a portion of another user's wallet. Can backfire badly!",
             "search": "Scavenge random locations around town for dropped coins.",
-            "slut": "Take on risky 'side-job' gigs for moderate income. 60% success rate.",
+            "freelance": "Take on freelance 'side-job' projects for moderate income. 60% success rate.",
             "fish": "Cast your line! Use rods & bait from the shop for rare & legendary fish.",
             "job": "Advanced career system (Level 20+). Unique perks per profession.",
             "buyrole": "Buy exclusive server roles/titles with coins from the Role Shop.",
@@ -1466,7 +1466,7 @@
             "beg": "🌟 **Description:** Try your luck by begging strangers for money.\n\n💰 **Rewards:** Very small payouts, but low risk.",
             "search": "🌟 **Description:** Scavenge random locations for dropped coins.\n\n💰 **Rewards:** Moderate income, usually found in trash cans or under sofa cushions.",
             "rob": "🌟 **Description:** Break in and steal coins from another user.\n\n⚠️ **Risks:**\n- If you fail, you'll pay a 20% fine of your balance to the victim.\n\n💰 **Rewards:** Steal a portion of someone else's wealth.",
-            "slut": "🌟 **Description:** Go out and earn extra income through 'side' services.\n\n⚠️ **Risks:**\n- Success rate is 60%.\n- If you fail, you'll pay a fixed medical fee.\n\n💰 **Rewards:** Moderate payouts, balancing risk and profit.",
+            "freelance": "🌟 **Description:** Go out and earn extra income through freelance work projects.\n\n⚠️ **Risks:**\n- Success rate is 60%.\n- If you fail, you'll encounter project issues or pay for contract breach.\n\n💰 **Rewards:** Moderate payouts, balancing risk and profit.",
             "profile": "🌟 **Description:** Your comprehensive digital passport. Showcase your status, wealth, and ranking progress in the Bot's world.\n\n📊 **Details:**\n- Shows Level, XP, Job, and Marriage status.\n- Tracks Wallet balance and total Net Worth.",
             "addmoney": "🌟 **Description:** Add any amount of coins to a player's account. (Admin Only)\n\n🕹️ **Usage:**\n`$addmoney @user <amount>`",
             "removemoney": "🌟 **Description:** Deduct any amount of coins from a player's account. (Admin Only)\n\n🕹️ **Usage:**\n`$removemoney @user <amount>`",

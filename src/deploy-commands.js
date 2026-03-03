@@ -173,8 +173,8 @@ const commands = [
         .setDescription('Search for coins in random locations'),
 
     new SlashCommandBuilder()
-        .setName('slut')
-        .setDescription('Go out and earn some quick coins (risky)'),
+        .setName('freelance')
+        .setDescription('Go out and earn some quick coins through freelance projects (risky)'),
 
     new SlashCommandBuilder()
         .setName('rob')
