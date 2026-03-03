@@ -10,6 +10,7 @@ module.exports = {
     aliases: ['cr'],
     description: 'Thực hiện các phi vụ bất hợp pháp (Commit illegal heists for fast cash)',
     cooldown: config.ECONOMY.CRIME_COOLDOWN,
+    manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
@@ -34,6 +35,12 @@ module.exports = {
         const isSuccess = Math.random() < successRate;
         const actions = t('crime.actions', lang);
         const action = actions[Math.floor(Math.random() * actions.length)];
+
+        // Valid attempt - Set Cooldowns
+        const timestamps = message.client.cooldowns.get('crime');
+        const cooldownAmount = (this.cooldown || config.ECONOMY.CRIME_COOLDOWN) * 1000;
+        timestamps.set(message.author.id, now * 1000); // Set start time to now
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
         await db.updateUser(message.guild.id, message.author.id, { last_crime: now });
 
@@ -96,6 +103,12 @@ module.exports = {
             // Cooldown Penalty: Jail Time (2x cooldown for next time)
             const jailCooldown = config.ECONOMY.CRIME_COOLDOWN;
             await db.updateUser(message.guild.id, message.author.id, { last_crime: now + jailCooldown });
+
+            // Update memory cooldown to match jail time
+            if (timestamps) {
+                timestamps.set(message.author.id, (now + jailCooldown) * 1000);
+                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            }
 
             // Transfer fine to a random Police in the guild
             const excludeIds = [message.client.user.id];
