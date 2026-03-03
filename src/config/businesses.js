@@ -35,8 +35,8 @@ module.exports = {
             numeric_id: 904,
             name: { vi: 'Công Ty Công Nghệ', en: 'Tech Startup' },
             base_price: 50000000,
-            base_income: 300000,
-            manager_hourly_cost: 240000,
+            base_income: 150000,
+            manager_hourly_cost: 120000,
             max_level: 10,
             icon: '🚀'
         },
@@ -45,8 +45,8 @@ module.exports = {
             numeric_id: 905,
             name: { vi: 'Hãng Phim', en: 'Production Studio' },
             base_price: 250000000,
-            base_income: 1000000,
-            manager_hourly_cost: 120000,
+            base_income: 400000,
+            manager_hourly_cost: 300000,
             max_level: 15,
             icon: '🎬'
         },
@@ -54,14 +54,14 @@ module.exports = {
             id: 'airline',
             numeric_id: 906,
             name: { vi: 'Hãng Hàng Không', en: 'Airline' },
-            base_price: 150000000,
-            base_income: 2000000,
-            manager_hourly_cost: 100000,
+            base_price: 1500000000, // Increased from 150M to 1.5B
+            base_income: 750000,
+            manager_hourly_cost: 600000,
             max_level: 25,
             icon: '✈️'
         }
     },
-    UPGRADE_COST_MULTIPLIER: 1.1,
+    UPGRADE_COST_MULTIPLIER: 1.08,
     MANAGER_INCOME_MULTIPLIER: 1.2, // 20% more income while active
     RANDOM_EVENTS: [
         { name: { vi: 'Thuế Hội Đồng', en: 'Council Tax' }, chance: 0.05, cost_mult: 0.1 },

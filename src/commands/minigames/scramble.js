@@ -18,7 +18,8 @@ module.exports = {
 
         try {
             // Try fetching from Random Word API
-            const response = await fetch('https://random-word-api.herokuapp.com/word?number=1');
+            // Try fetching from a more reliable Random Word API
+            const response = await fetch('https://random-word-api.vercel.app/api?words=1');
             const data = await response.json();
 
             if (data && data.length > 0) {
