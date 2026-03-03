@@ -19,8 +19,9 @@ module.exports = {
         const cooldown = await db.getGuildSetting(message.guild.id, 'freelance_cooldown', config.ECONOMY.FREELANCE_COOLDOWN);
         const lastFreelance = Number(user.last_freelance || 0);
 
-        if (now - lastFreelance < cooldown) {
-            const timeLeft = cooldown - (now - lastFreelance);
+        // Check for both future timestamps (penalties) and normal cooldown
+        if (lastFreelance > now || (now - lastFreelance < cooldown)) {
+            const timeLeft = lastFreelance > now ? (lastFreelance - now) : (cooldown - (now - lastFreelance));
             return message.reply(t('freelance.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 

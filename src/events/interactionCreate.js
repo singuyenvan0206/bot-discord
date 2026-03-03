@@ -101,7 +101,8 @@ module.exports = {
                     'gift': ['user', 'item', 'amount'],
                     'marriage': ['user'],
                     'marry': ['user'],
-                    'level': ['user']
+                    'level': ['user'],
+                    'freelance': [],
                 };
 
                 const optionNames = optionMap[commandName] || [];
