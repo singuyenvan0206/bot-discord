@@ -17,33 +17,31 @@ module.exports = {
         let word, category, hint;
 
         try {
-            // Try fetching from Random Word API
-            // Try fetching from a more reliable Random Word API
-            const response = await fetch('https://random-word-api.vercel.app/api?words=1');
+            // Using Datamuse API - Extremely stable and professional
+            // We use a random 'seed' word to get related common words for variety
+            const seeds = ['common', 'object', 'thing', 'person', 'place', 'nature', 'life', 'world', 'time', 'space'];
+            const seed = seeds[Math.floor(Math.random() * seeds.length)];
+
+            const response = await fetch(`https://api.datamuse.com/words?ml=${seed}&max=100&md=d`);
             const data = await response.json();
 
             if (data && data.length > 0) {
-                word = data[0];
+                // Filter for reasonable length words (4-10 chars) and pick one
+                const validWords = data.filter(w => w.word.length >= 4 && w.word.length <= 10 && !w.word.includes(' '));
+                const selected = validWords[Math.floor(Math.random() * validWords.length)] || data[0];
+
+                word = selected.word;
                 category = t('scramble.cat_random', lang);
 
-                // Try fetching definition for hint
-                try {
-                    const defResponse = await fetch(`${config.API_URLS.DICTIONARY}${word}`);
-                    const defData = await defResponse.json();
-
-                    if (defData && defData.length > 0 && defData[0].meanings && defData[0].meanings.length > 0) {
-                        const meaning = defData[0].meanings[0];
-                        if (meaning.definitions && meaning.definitions.length > 0) {
-                            category = t('scramble.cat_def', lang);
-                            hint = meaning.definitions[0].definition;
-                        }
-                    }
-                } catch (e) {
-                    console.error('Error fetching definition:', e);
+                // Extract definition from Datamuse metadata if available
+                if (selected.defs && selected.defs.length > 0) {
+                    category = t('scramble.cat_def', lang);
+                    // Datamuse defs are often prefixed with 'part of speech\t', clean it up
+                    hint = selected.defs[0].split('\t').pop();
                 }
             }
         } catch (error) {
-            console.error('Error fetching random word:', error);
+            console.error('Error fetching word from Datamuse:', error);
         }
 
         // --- FALLBACK: If API fails, use local words ---
