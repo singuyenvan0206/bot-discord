@@ -33,8 +33,8 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
     const playerIsNatural = playerHand.length === 2 && playerVal === 21;
     const playerIsNguLinh = playerHand.length === 5 && playerVal <= 21;
 
-    // Dealer draws up to 17 regardless of player's hand value (unless player has natural)
-    if (!playerIsNatural) {
+    // Dealer draws up to 17 regardless of player's hand value (unless player has natural or player busted)
+    if (!playerIsNatural && playerVal <= 21) {
         while (handValue(dealerHand) < 17) {
             if (dealerHand.length >= 5) break;
             dealerHand.push(drawCard());
@@ -79,6 +79,9 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
         color = config.COLORS.GAMBLE_LOSS;
         if (bet) await addHouseProfit(i, bet);
         title = t('blackjack.ngu_linh_title', lang);
+    } else if (playerVal > 21) {
+        color = config.COLORS.GAMBLE_LOSS;
+        if (bet) await addHouseProfit(i, bet);
     } else if (dealerVal > 21) {
         color = config.COLORS.GAMBLE_WIN;
         payout = bet ? bet * 2 : 0;
