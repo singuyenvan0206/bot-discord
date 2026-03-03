@@ -19,7 +19,7 @@
         "unknown_id": "Unknown ID",
         "effect": "effect",
         "none": "None",
-        "bonus_capped": "\n✨ **Bonus:** +{{amount}} {{emoji}} ({{percent}}%)",
+        "bonus_capped": "\n-# *(Includes 🎁 Bonus ({{percent}}%): +{{amount}} coins)*",
         "cap_reached": " (Max cap reached!)",
         "hacked_msg": " (Hacked!)",
         "escaped_msg": "Escaped! (Fine: {{amount}})",

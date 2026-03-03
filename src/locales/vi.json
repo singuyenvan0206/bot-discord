@@ -19,7 +19,7 @@
         "unknown_id": "ID không xác định",
         "effect": "hiệu ứng",
         "none": "Không có",
-        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng ({{percent}}%): +{{amount}} {{emoji}})*",
+        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng ({{percent}}%): +{{amount}} coins)*",
         "hacked_msg": " (Hacked!)",
         "escaped_msg": "Đã tẩu thoát! (Phạt: {{amount}})",
         "armed_msg": " (Có vũ trang!)",
