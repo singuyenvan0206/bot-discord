@@ -118,7 +118,7 @@
         "total_payout": "Total Payout",
         "bust_title": "🃏 Blackjack — 💥 BUST!",
         "bust_msg": "💥 **You busted (over 21)! Dealer wins.**",
-        "won_coins": "\n{{emoji}} **Dealer won {{amount}} coins!**",
+        "won_coins": "\n💰 **Dealer Profit:** **{{amount}}** coins",
         "timeout_title": "🃏 Blackjack — {{emoji}} Timeout",
         "ngu_linh_win": "🏆 **Five Card Charlie!** You won with 5 cards!{{amount}}",
         "ngu_linh_lose": "😔 **Dealer has Five Card Charlie!** You lost{{amount}}!",
@@ -1225,8 +1225,8 @@
         "heads": "Heads",
         "tails": "Tails",
         "invalid_side": "❌ Please choose `heads` or `tails`!\nUsage: `{{prefix}}coinflip <heads|tails> [bet]`",
-        "win_msg": "🎉 **You won {{amount}} {{emoji}}!**",
-        "lose": "💸 **You lost {{amount}} coins.**"
+        "win_msg": "\n💰 **Profit:** **{{amount}}** coins",
+        "lose": "\n💰 **Profit:** **-{{amount}}** coins"
     },
     "dice": {
         "title": "🎲  Dice Roll (2d6)",
@@ -1246,8 +1246,8 @@
         "insufficient_bet": "❌ You don't have enough coins for this bet!",
         "result_title": "🎲  Dice Roll Result",
         "prediction": "Prediction",
-        "win_msg": "🎉 **You won {{amount}} {{emoji}}!** (x{{multiplier}} payout)",
-        "lose_msg": "💸 **You lost {{amount}} coins!**",
+        "win_msg": "\n💰 **Profit:** **{{amount}}** coins",
+        "lose_msg": "\n💰 **Profit:** **-{{amount}}** coins",
         "timeout": "❌ You took too long to choose. Game cancelled.",
         "prediction_labels": {
             "7": "Lucky 7",
@@ -1267,8 +1267,8 @@
         "win": "You won! 🎉",
         "lose": "I won! 😈",
         "tie": "It's a tie! 🤝",
-        "won_coins": "\n{{emoji}} **Received {{amount}} coins!**",
-        "lost_coins": "\n💸 **You lost {{amount}} coins.**",
+        "won_coins": "\n💰 **Profit:** **{{amount}}** coins",
+        "lost_coins": "\n💰 **Profit:** **-{{amount}}** coins",
         "refund": "\n🤝 **Bet has been refunded.**",
         "result_title": "Rock Paper Scissors Result",
         "user_chose": "You chose",

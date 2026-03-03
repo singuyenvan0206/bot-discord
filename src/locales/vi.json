@@ -117,8 +117,8 @@
         "heads": "Ngửa",
         "tails": "Sấp",
         "invalid_side": "❌ Vui lòng chọn `heads` hoặc `tails`!\nCách dùng: `{{prefix}}coinflip <heads|tails> [tiền_cược]`",
-        "win_msg": "🎉 **Bạn đã thắng {{amount}} {{emoji}}!**",
-        "lose": "💸 **Bạn đã mất {{amount}} coins.**"
+        "win_msg": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}}",
+        "lose": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}"
     },
     "dice": {
         "title": "🎲  Đổ Xúc Xắc (2d6)",
@@ -138,8 +138,8 @@
         "insufficient_bet": "❌ Bạn không còn đủ tiền cược!",
         "result_title": "🎲  Kết Quả Đổ Xúc Xắc",
         "prediction": "Dự đoán",
-        "win_msg": "🎉 **Bạn đã thắng {{amount}} {{emoji}}!** (x{{multiplier}} tiền cược)",
-        "lose_msg": "💸 **Bạn đã thua {{amount}} coins!**",
+        "win_msg": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}} (x{{multiplier}})",
+        "lose_msg": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}",
         "timeout": "❌ Bạn đã quá thời gian chọn! Lượt chơi bị hủy.",
         "prediction_labels": {
             "7": "Số 7 May Mắn",
@@ -159,8 +159,8 @@
         "win": "Bạn đã thắng! 🎉",
         "lose": "Tôi thắng rồi! 😈",
         "tie": "Hòa rồi! 🤝",
-        "won_coins": "\n{{emoji}} **Nhận được {{amount}} coins!**",
-        "lost_coins": "\n💸 **Bạn mất {{amount}} coins.**",
+        "won_coins": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}}",
+        "lost_coins": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}",
         "refund": "\n🤝 **Tiền cược đã được hoàn trả.**",
         "result_title": "Kết Quả Kéo Búa Bao",
         "user_chose": "Bạn chọn",
@@ -185,7 +185,7 @@
         "total_payout": "Tổng nhận",
         "bust_title": "🃏 Xì Dách — 💥 QUẮC!",
         "bust_msg": "💥 **Bạn đã bị quắc (quá 21)! Nhà cái thắng.**",
-        "won_coins": "\n{{emoji}} **Nhà cái thắng {{amount}} coins!**",
+        "won_coins": "\n💰 **Lợi nhuận nhà cái:** **{{amount}}** {{emoji}}",
         "timeout_title": "🃏 Xì Dách — {{emoji}} Hết Thời Gian",
         "ngu_linh_win": "🏆 **Ngũ Linh!** Bạn đã thắng tuyệt đối với 5 lá bài!{{amount}}",
         "ngu_linh_lose": "😔 **Nhà cái có Ngũ Linh!** Bạn đã thua{{amount}}!",

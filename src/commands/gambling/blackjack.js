@@ -256,16 +256,8 @@ module.exports = {
             if (i.customId.startsWith('bj_hit')) {
                 playerHand.push(drawCard());
                 if (handValue(playerHand) > 21) {
-                    const bustEmbed = buildEmbed(true).setTitle(t('blackjack.bust_title', lang)).setColor(config.COLORS.GAMBLE_LOSS);
-                    let bustDesc = bustEmbed.data.description + `\n\n${t('blackjack.bust_msg', lang)}`;
-                    if (bet) {
-                        await addHouseProfit(i, bet);
-                        bustDesc += `\n${t('blackjack.won_coins', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN })}`;
-                    }
-                    bustEmbed.setDescription(bustDesc);
-                    await i.update({ embeds: [bustEmbed], components: [] });
-                    startCooldown(i.client, 'blackjack', message.author.id);
-                    collector.stop();
+                    collector.stop('bust');
+                    await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
                 }
                 else if (handValue(playerHand) === 21 || playerHand.length === 5) {
                     collector.stop('stand');
