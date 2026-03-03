@@ -29,13 +29,14 @@ module.exports = {
 
             Object.values(jobs).forEach(j => {
                 const name = t(`job.name_${j.id}`, lang);
-                // Get summary (first line of info) or just the info
-                const info = t(`job.info_${j.id}`, lang).split('\n')[0];
-                const salaryBonus = j.bonus ? `+${Math.round((j.bonus - 1) * 100).toLocaleString()}%` : 'None';
+                const infoLines = t(`job.info_${j.id}`, lang).split('\n');
+                // Get the most important perk (usually the first one after the title)
+                const mainPerk = infoLines.find(l => l.includes('•')) || infoLines[0];
+                const bonusText = `+${Math.round((j.bonus || 0) * 100)}% Salary`;
 
                 embed.addFields({
-                    name: `ID: ${j.numericId.toLocaleString()} | ${j.icon} ${name}`,
-                    value: `> ${info}\n> **Bonus:** \`${salaryBonus} Salary\``,
+                    name: `\`${j.numericId}\` ${j.icon} ${name}`,
+                    value: `${mainPerk}\n**${bonusText}**`,
                     inline: true
                 });
             });

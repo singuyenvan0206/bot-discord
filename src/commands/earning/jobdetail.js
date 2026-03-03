@@ -25,34 +25,43 @@ module.exports = {
         const actualJobId = job.id;
         const name = t(`job.name_${actualJobId}`, lang);
         const description = t(`job.desc_${actualJobId}`, lang);
-        const perks = t(`job.info_${actualJobId}`, lang).split('\n').filter(p => p.trim()).map(p => p.trim().startsWith('•') ? p.trim() : `• ${p.trim()}`).join('\n');
+        const rawPerks = t(`job.info_${actualJobId}`, lang).split('\n');
+        // Clean up perks: remove titles and empty lines, ensure bullet points
+        const perks = rawPerks
+            .filter(p => p.trim() && !p.includes('**'))
+            .map(p => p.trim().startsWith('•') ? p.trim() : `• ${p.trim()}`)
+            .join('\n');
 
         // Accurate Statistics
         const jobBonusMult = job.bonus || 1;
         const bonusVal = Math.round((jobBonusMult - 1) * 100);
         const salaryBonus = bonusVal >= 0 ? `+${bonusVal}%` : `${bonusVal}%`;
-        const luckBonus = job.luck ? `x${job.luck}` : 'None';
 
-        // Calculate Salary Range based on work.js logic
-        const minBase = config.ECONOMY.MIN_WORK_EARNINGS;
-        const maxBase = config.ECONOMY.MAX_WORK_EARNINGS;
+        // Luck / XP Bonus
+        let secondaryBonus = 'None';
+        if (job.luck) secondaryBonus = `🍀 Luck x${job.luck}`;
+        if (actualJobId === 'teacher') secondaryBonus = `📚 XP x2.0`;
 
-        // Estimation (Min-Max range without external multipliers)
-        const estMin = Math.floor(minBase * jobBonusMult);
-        const estMax = Math.floor(maxBase * jobBonusMult);
+        // Calculate Salary Range based on work.js config
+        const minBase = config.ECONOMY.WORK_MIN || 1000;
+        const maxBase = config.ECONOMY.WORK_MAX || 5000;
+
+        // Estimation (Min-Max range with job bonus)
+        const estMin = Math.floor(minBase * (1 + (job.bonus || 0)));
+        const estMax = Math.floor(maxBase * (1 + (job.bonus || 0)));
         const salaryRange = `\`${estMin.toLocaleString()} - ${estMax.toLocaleString()}\``;
 
         const embed = new EmbedBuilder()
             .setTitle(`${job.icon} ${name.replace(job.icon, '').trim()}`)
             .setDescription(`*${description}*`)
             .addFields(
-                { name: '🆔 ' + t('job.id_label', lang), value: `\`${actualJobId}\` (ID: ${job.numericId.toLocaleString()})`, inline: true },
+                { name: '🆔 ' + t('job.id_label', lang), value: `\`${job.numericId}\` (\`${actualJobId}\`)`, inline: true },
                 { name: '⭐ ' + t('job.requirement_label', lang), value: `\`Level 20\``, inline: true },
                 { name: '⏱️ ' + t('job.cooldown_label', lang), value: `\`1 Hour\``, inline: true },
-                { name: '💼 ' + t('job.salary_label', lang), value: `\`${salaryBonus} Bonus\``, inline: true },
-                { name: '🍀 ' + t('job.luck_label', lang), value: `\`${luckBonus} Luck\``, inline: true },
+                { name: '💼 ' + t('job.salary_label', lang), value: `\`+${Math.round((job.bonus || 0) * 100)}%\``, inline: true },
+                { name: '✨ Extra', value: `\`${secondaryBonus}\``, inline: true },
                 { name: '💰 ' + t('job.est_salary_label', lang), value: salaryRange, inline: true },
-                { name: '✨ ' + t('job.perks_title', lang), value: perks || t('common.none', lang), inline: false }
+                { name: '💡 ' + t('job.perks_title', lang), value: perks || t('common.none', lang), inline: false }
             )
             .setColor(job.color || config.COLORS.INFO)
             .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 256 }))

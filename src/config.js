@@ -83,14 +83,14 @@ module.exports = {
             police: { id: 'police', numericId: 1, bonus: 0.15, color: '#3498db', icon: '👮' },
             criminal: { id: 'criminal', numericId: 2, bonus: 0.20, color: '#e74c3c', icon: '🥷' },
             doctor: { id: 'doctor', numericId: 3, bonus: 0.25, color: '#2ecc71', icon: '👨‍⚕️' },
-            programmer: { id: 'programmer', numericId: 4, bonus: 0.35, color: '#9b59b6', icon: '💻' },
-            farmer: { id: 'farmer', numericId: 5, bonus: 0.20, color: '#f1c40f', icon: '👨‍🌾', luck: 1.2 },
+            programmer: { id: 'programmer', numericId: 4, bonus: 0.30, color: '#9b59b6', icon: '💻' },
+            farmer: { id: 'farmer', numericId: 5, bonus: 0.15, color: '#f1c40f', icon: '👨‍🌾', luck: 1.2 },
             hacker: { id: 'hacker', numericId: 6, bonus: 0.40, color: '#27ae60', icon: '👨‍💻' },
             streamer: { id: 'streamer', numericId: 7, bonus: 0.25, color: '#6441a5', icon: '🎥' },
             chef: { id: 'chef', numericId: 8, bonus: 0.25, color: '#e67e22', icon: '👨‍🍳' },
             musician: { id: 'musician', numericId: 9, bonus: 0.15, color: '#1abc9c', icon: '🎸' },
             trader: { id: 'trader', numericId: 10, bonus: 0.30, color: '#f39c12', icon: '📈' },
-            teacher: { id: 'teacher', numericId: 11, bonus: 0.15, color: '#95a5a6', icon: '👩‍🏫' }
+            teacher: { id: 'teacher', numericId: 11, bonus: 0.10, color: '#95a5a6', icon: '👩‍🏫' }
         },
         LEVELING: {
             XP_MULTIPLIER: 1 // Triple the XP gain for faster progression
