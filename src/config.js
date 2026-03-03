@@ -97,7 +97,7 @@ module.exports = {
         LOTTERY: {
             TICKET_PRICE: 10000,
             DRAW_INTERVAL: 86400, // 24 hours
-            INITIAL_JACKPOT: 1000000
+            INITIAL_JACKPOT: 0
         }
     },
     BLACKLISTED_CHANNELS: ['842400189830529035'],

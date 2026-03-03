@@ -646,6 +646,11 @@ async function clearAllData() {
     await execute('TRUNCATE TABLE guilds CASCADE');
     await execute('TRUNCATE TABLE global_settings CASCADE');
     await execute('TRUNCATE TABLE marriages CASCADE');
+    await execute('TRUNCATE TABLE user_guilds CASCADE');
+    await execute('TRUNCATE TABLE guild_roles CASCADE');
+    await execute('TRUNCATE TABLE guild_settings CASCADE');
+    await execute('TRUNCATE TABLE lottery_tickets CASCADE');
+    await execute('TRUNCATE TABLE user_businesses CASCADE');
 }
 
 async function resetUser(userId) {
