@@ -40,7 +40,8 @@
         "item_broken": "\n💥 **Vật phẩm bị hỏng:** {{item}} của bạn đã bị hỏng hoặc bị cảnh sát tịch thu!",
         "no_permission": "❌ Bạn không có quyền thực hiện hành động này!",
         "user_not_found": "Không tìm thấy người dùng.",
-        "choices": "Lựa chọn"
+        "choices": "Lựa chọn",
+        "tax": "Thuế"
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -353,7 +354,8 @@
         "police_busted": "\n👮 **Bị tóm!** Bạn định trộm của cảnh sát và phải nộp phạt gấp đôi!",
         "shield_blocked": "\n🛡️ **Bị chặn!** Khiên của nạn nhân khiến việc trộm cướp khó khăn hơn nhiều.",
         "police_bounty": "\n💰 **Tiền thưởng cảnh sát!** Trộm đồn cảnh sát — bạn nhận thêm **+50%** tiền!",
-        "rob_shield_blocked": "\n🔰 **Khiên Bảo Vệ!** Nạn nhân đang được bảo vệ bởi Khiên Bảo Vệ — cuộc cướp thất bại hoàn toàn!",
+        "rob_shield_blocked": "\n🔰 **Khiên Bảo Vệ!** Nạn nhân đang được bảo vệ bởi Khiên Bảo Vệ — cuộc cướp khó khăn hơn rất nhiều!",
+        "shield_broken": "\n💥 **KHIÊN ĐÃ VỠ!** Khiên Bảo Vệ của {{user}} đã bị vỡ sau đợt cướp này!",
         "teacher_penalty": "Thật là một tấm gương xấu! Bạn đã bị giáng xuống Cấp độ **{{level}}** do hành vi này. 📉",
         "failure_xp": "🚔 Bạn bị {{user}} phát hiện! Phải bồi thường **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}"
     },
@@ -616,77 +618,77 @@
     "items": {
         "101": {
             "name": "🍪 Bánh Quy May Mắn",
-            "desc": "Năng lượng ngọt ngào! (+10% Thưởng Thêm | 1 ngày)",
+            "desc": "Năng lượng ngọt ngào! (+2% Thưởng Thêm | 1 ngày)",
             "details": "Một chiếc bánh quy socola mới nướng, thơm lừng. Vị ngọt ngào của nó giúp bạn luôn tràn đầy hứng khởi khi nhận quà hàng ngày."
         },
         "102": {
             "name": "🧸 Thảm Lông Cừu",
-            "desc": "Cực kỳ êm ái (+40% Thưởng Thêm | 7 ngày)",
+            "desc": "Cực kỳ êm ái (+5% Thưởng Thêm | 7 ngày)",
             "details": "Chiếc thảm lông mềm mại mang lại cảm giác thư thái tuyệt đối cho đôi chân, giúp bạn bắt đầu ngày mới một cách nhẹ nhàng."
         },
         "103": {
             "name": "🗿 Tượng Moai Bí Ẩn",
-            "desc": "Kiên định như đá (+80% Thưởng Thêm | 30 ngày)",
+            "desc": "Kiên định như đá (+15% Thưởng Thêm | 30 ngày)",
             "details": "Bức tượng cổ xưa mang trong mình sức mạnh huyền bí, giúp vận may của bạn luôn duy trì ở trạng thái ổn định nhất."
         },
         "104": {
             "name": "🎫 Thẻ Vàng VIP",
-            "desc": "Đặc quyền thượng lưu (+150% Thưởng Thêm | 30 ngày)",
+            "desc": "Đặc quyền thượng lưu (+30% Thưởng Thêm | 30 ngày)",
             "details": "Biểu tượng của sự đẳng cấp. Chiếc thẻ này mở ra những ưu đãi độc quyền dành riêng cho giới tinh hoa của Grand Line."
         },
         "105": {
             "name": "🚀 Trạm Không Gian",
-            "desc": "Phần thưởng từ quỹ đạo (+500% Thưởng Thêm | 30 ngày)",
+            "desc": "Phần thưởng từ quỹ đạo (+60% Thưởng Thêm | 30 ngày)",
             "details": "Kỹ thuật công nghệ đỉnh cao giúp bạn thu thập tài nguyên từ không gian, mang lại lợi ích khổng lồ vượt xa mặt đất."
         },
         "201": {
             "name": "📱 Smartphone Ultra",
-            "desc": "Kết nối không giới hạn (+15% Thu Nhập | 7 ngày)",
+            "desc": "Kết nối không giới hạn (+2% Thu Nhập | 7 ngày)",
             "details": "Siêu điện thoại với kết nối 6G siêu tốc, giúp bạn xử lý công việc và quản lý tài chính mọi lúc mọi nơi."
         },
         "202": {
             "name": "⌨️ Bàn Phím Cơ Custom",
-            "desc": "Gõ phím mượt mà (+40% Thu Nhập | 7 ngày)",
+            "desc": "Gõ phím mượt mà (+8% Thu Nhập | 7 ngày)",
             "details": "Tiếng gõ lạch cạch đầy cảm hứng giúp tăng cường hiệu suất làm việc và tốc độ phản xạ của bạn."
         },
         "203": {
             "name": "🖥️ Màn Hình 8K HDR",
-            "desc": "Tầm nhìn rực rỡ (+70% Thu Nhập | 7 ngày)",
+            "desc": "Tầm nhìn rực rỡ (+15% Thu Nhập | 7 ngày)",
             "details": "Độ phân giải siêu cao giúp bạn quan sát mọi biến động nhỏ nhất, từ đó đưa ra những quyết định chính xác."
         },
         "204": {
             "name": "📈 Trạm Giao Dịch Chuyên Nghiệp",
-            "desc": "Làm chủ thị trường (+100% Thu Nhập | 30 ngày)",
+            "desc": "Làm chủ thị trường (+30% Thu Nhập | 30 ngày)",
             "details": "Hệ thống phân tích dữ liệu thời gian thực dành cho những bậc thầy tài chính, tối ưu hóa mọi nguồn thu nhập."
         },
         "205": {
             "name": "🛥️ Siêu Du Thuyền Hoàng Gia",
-            "desc": "Văn phòng trên đại dương (+600% Thu Nhập | 30 ngày)",
+            "desc": "Văn phòng trên đại dương (+60% Thu Nhập | 30 ngày)",
             "details": "Biểu tượng cực hạn của sự thành công. Khi làm việc trên biển, tầm vóc của bạn sẽ thu hút những hợp đồng tỷ đô."
         },
         "301": {
             "name": "🎲 Xúc Xắc Hoàng Kim",
-            "desc": "Xúc xắc may mắn (+25% Gamble | 7 ngày)",
+            "desc": "Xúc xắc may mắn (+5% Gamble | 7 ngày)",
             "details": "Xúc xắc đúc từ vàng ròng, mang lại cảm giác nặng tay và uy lực trong mỗi lần đổ. Cải thiện đáng kể tỉ lệ thắng của bạn."
         },
         "302": {
             "name": "📿 Vòng Cổ Phỉ Thúy",
-            "desc": "Vẻ đẹp thuần khiết (+50% Gamble | 30 ngày)",
+            "desc": "Vẻ đẹp thuần khiết (+15% Gamble | 30 ngày)",
             "details": "Viên ngọc phỉ thúy tinh xảo chứa đựng linh khí thiên nhiên, giúp chủ sở hữu luôn giữ được sự tỉnh táo và vận may bất ngờ."
         },
         "303": {
             "name": "🪙 Chip Đất Sét Pro",
-            "desc": "Phong cách chuyên nghiệp (+70% Gamble | 30 ngày)",
+            "desc": "Phong cách chuyên nghiệp (+25% Gamble | 30 ngày)",
             "details": "Mẫu chip dành riêng cho các sòng bạc lớn, mang lại sự tự tin và đẳng cấp cho người chơi trong mọi ván cược."
         },
         "304": {
             "name": "🍀 Cỏ 4 Lá Thần Kỳ",
-            "desc": "Linh vật may mắn (+150% Gamble | 30 ngày)",
+            "desc": "Linh vật may mắn (+40% Gamble | 30 ngày)",
             "details": "Một món quà hiếm hoi từ thiên nhiên. Chỉ cần mang bên mình, bạn sẽ cảm nhận được sự bảo hộ của thần may mắn."
         },
         "305": {
             "name": "⏳ Cỗ Máy Thời Gian",
-            "desc": "Nắm giữ tương lai (+500% Gamble | 30 ngày)",
+            "desc": "Nắm giữ tương lai (+70% Gamble | 30 ngày)",
             "details": "Thiết bị tối tân cho phép bạn nhìn thấy các khả năng trong tương lai, giúp xoay chuyển cục diện của mọi ván cược lớn."
         },
         "401": {
@@ -727,24 +729,24 @@
         },
         "409": {
             "name": "🎣 Cần Sợi Thủy Tinh",
-            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.8x)"
+            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.1x)"
         },
         "410": {
             "name": "🎣 Cần Thép",
-            "desc": "Nặng và đáng tin cậy. (May mắn: 2.5x)",
+            "desc": "Nặng và đáng tin cậy. (May mắn: 1.4x)",
             "details": "Được gia cố bằng thép công nghiệp để chịu được những cú đớp mạnh hơn."
         },
         "411": {
             "name": "🎣 Cần Carbon",
-            "desc": "Đẳng cấp hàng đầu. (May mắn: 3.5x)"
+            "desc": "Đẳng cấp hàng đầu. (May mắn: 1.8x)"
         },
         "412": {
             "name": "🎣 Cần Titanium",
-            "desc": "Sức mạnh tuyệt đối. (May mắn: 5.0x)"
+            "desc": "Sức mạnh tuyệt đối. (May mắn: 2.3x)"
         },
         "413": {
             "name": "🔱 Cần Neptune",
-            "desc": "Món quà từ vị thần biển cả. (May mắn: 7.5x)",
+            "desc": "Món quà từ vị thần biển cả. (May mắn: 3.0x)",
             "details": "Cần câu huyền thoại đúc từ tinh thể đại dương. Mang lại may mắn cực lớn cho người sử dụng."
         },
         "501": {
@@ -764,32 +766,32 @@
         },
         "601": {
             "name": "🦈 Chúc Phúc Megalodon",
-            "desc": "Uy thế của bạo chúa biển sâu (+50% Thưởng | 1 giờ)",
+            "desc": "Uy thế của bạo chúa biển sâu (+15% Thưởng | 1 giờ)",
             "details": "Cảm nhận sức mạnh cuồng bạo của Megalodon, giúp bạn thu phục mọi thử thách và tối ưu hóa lợi nhuận."
         },
         "602": {
             "name": "🔱 Thần Lực Poseidon",
-            "desc": "Quyền kiểm soát đại dương (+100% Thưởng | 2 giờ)",
+            "desc": "Quyền kiểm soát đại dương (+30% Thưởng | 2 giờ)",
             "details": "Sự bảo hộ từ vị thần biển cả Poseidon, mang lại vận may thiên giới và nguồn thu nhập khổng lồ."
         },
         "603": {
             "name": "🔮 Hào Quang Ngọc Trai Biển",
-            "desc": "Ánh sáng tinh khiết (+40% Thưởng | 1 giờ)",
+            "desc": "Ánh sáng tinh khiết (+10% Thưởng | 1 giờ)",
             "details": "Ánh sáng dịu nhẹ từ viên ngọc cổ xưa giúp làm sạch tâm trí, tăng cường sự tập trung và hiệu quả làm việc."
         },
         "604": {
             "name": "🐙 Cơn Thịnh Nộ Kraken",
-            "desc": "Sức mạnh từ vực thẳm (+60% Thưởng | 1.5 giờ)",
+            "desc": "Sức mạnh từ vực thẳm (+20% Thưởng | 1.5 giờ)",
             "details": "Năng lượng bộc phát từ quái thú Kraken giúp bạn phá vỡ mọi giới hạn tài chính hiện tại."
         },
         "605": {
             "name": "🐢 Chúc Phúc Rùa Nghìn Năm",
-            "desc": "Sự kiên nhẫn và bền bỉ (+70% Thưởng | 3 giờ)",
+            "desc": "Sự kiên nhẫn và bền bỉ (+25% Thưởng | 3 giờ)",
             "details": "Trải nghiệm sự trường thọ và vận khí từ rùa thần, giúp nguồn thu nhập của bạn tăng trưởng ổn định."
         },
         "606": {
             "name": "🐉 Long Uy Đại Dương",
-            "desc": "Sức mạnh của báu vật rồng (+150% Thưởng | 2 giờ)",
+            "desc": "Sức mạnh của báu vật rồng (+40% Thưởng | 2 giờ)",
             "details": "Thần lực tối thượng từ Hải Long mang lại sự giàu sang và quyền lực tuyệt đối cho người sở hữu."
         },
         "701": {
@@ -1398,7 +1400,7 @@
             "shop": "Duyệt cửa hàng theo danh mục: tăng thu nhập, mồi câu, công cụ và hơn thế!",
             "inventory": "Xem toàn bộ kho đồ, buff đang hoạt động, và tổng tài sản của bạn.",
             "buy": "Mua vật phẩm từ shop theo tên hoặc ID.",
-            "sell": "Bán vật phẩm không dùng để lấy lại 70% giá trị ban đầu.",
+            "sell": "Bán vật phẩm không dùng để lấy lại 50% giá trị ban đầu.",
             "iteminfo": "Tra cứu chỉ số, hiệu ứng buff và nghề nghiệp phù hợp cho từng vật phẩm.",
             "transfer": "Chuyển tiền trực tiếp và an toàn cho người dùng khác.",
             "setdistchannel": "Thiết lập kênh thông báo hệ thống: lên cấp, xổ số và hơn thế.",
@@ -1479,7 +1481,7 @@
             "business": "🌟 **Mô tả:** Xây dựng đế chế tài chính của bạn! Sở hữu và quản lý nhiều doanh nghiệp để tạo ra thu nhập thụ động khổng lồ.\n\n🕹️ **Cách chơi:**\n- `$business buy <ID>`: Đầu tư vào một doanh nghiệp mới (vđ: Quán Cafe, Startup Công nghệ, Sân bay).\n- `$business info`: Kiểm tra cấp độ doanh nghiệp, số lượng nhân viên và thu nhập hàng giờ hiện tại.\n- `$business collect`: Thu hoạch lợi nhuận tích lũy từ tất cả các doanh nghiệp của bạn.\n- `$business upgrade <ID>`: Đầu tư coins để nâng cấp doanh nghiệp và thuê thêm nhân viên để tăng sản lượng.\n\n📈 **Thu nhập thụ động:**\n- Doanh nghiệp của bạn tạo ra coins mỗi giờ ngay cả khi bạn không online!\n\n💡 **Mẹo:** Đừng quên dùng lệnh `$collect` thường xuyên để bỏ lợi nhuận vào ví của bạn!",
             "inventory": "🌟 **Mô tả:** Kho lưu trữ cá nhân. Theo dõi tất cả tài sản, công cụ và những món đồ quý giá bạn đã thu thập được.\n\n🕹️ **Cách dùng:**\n- `$inventory` hoặc `$inv`: Xem túi đồ của chính mình.\n- `$inventory @user`: Xem túi đồ của người khác.\n\n💡 **Mẹo:** Sử dụng các nút phân loại bên dưới để lọc vật phẩm theo chức năng (Công cụ, Buff, Khác).",
             "buy": "🌟 **Mô tả:** Giao dịch vật phẩm. Mua sắm trang bị mới để nâng cấp thu nhập và giải trí.\n\n🕹️ **Cách dùng:**\n- `$buy <ID/Tên> [số lượng]`: Mua vật phẩm từ Shop.\n\n💡 **Mẹo:** Xem ID vật phẩm tại `$shop`.",
-            "sell": "🌟 **Mô tả:** Bán lại vật phẩm không dùng tới để thu hồi coins.\n\n🕹️ **Cách dùng:**\n- `$sell <ID/Tên> [số lượng]`: Bán vật phẩm trong kho.\n\n⚖️ **Hoàn tiền:** Nhận lại **70%** giá trị ban đầu.",
+            "sell": "🌟 **Mô tả:** Bán lại vật phẩm không dùng tới để thu hồi coins.\n\n🕹️ **Cách dùng:**\n- `$sell <ID/Tên> [số lượng]`: Bán vật phẩm trong kho.\n\n⚖️ **Hoàn tiền:** Nhận lại **50%** giá trị ban đầu.",
             "iteminfo": "🌟 **Mô tả:** Bách khoa toàn thư về vật phẩm. Cung cấp thông số chi tiết, hiệu ứng buff và các nghề nghiệp tương trợ tốt nhất.\n\n🕹️ **Cách dùng:**\n- `$iteminfo <ID/Tên>`: Xem chi tiết một vật phẩm cụ thể.\n\n💡 **Mẹo:** Một số vật phẩm phát huy sức mạnh tối đa khi được sử dụng bởi đúng nghề nghiệp (vđ: Laptop cho Hacker).",
             "use": "🌟 **Mô tả:** Sử dụng vật phẩm để kích hoạt hiệu ứng buff.\n\n🕹️ **Cách dùng:**\n- `$use <ID_vật_phẩm>`",
             "transfer": "🌟 **Mô tả:** Chuyển tiền an toàn. Chia sẻ sự giàu có của bạn với bạn bè hoặc thanh toán cho các giao dịch cá nhân.\n\n🕹️ **Cách dùng:**\n- `$transfer @user <số_tiền>`: Chuyển coins trực tiếp vào ví của người khác.\n\n⚠️ **Lưu ý:** Bot không thu phí chuyển tiền, nhưng hãy kiểm tra kỹ tên người nhận để tránh nhầm lẫn!",

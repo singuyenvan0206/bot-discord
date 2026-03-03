@@ -128,8 +128,8 @@ async function assignJobIfEligible(memberOrId, guildId, level) {
  * @returns {number} - Hệ số bonus, ví dụ: level 10 -> return 0.10 (tức +10%)
  */
 function getLevelMultiplier(level) {
-    const cap = 2.0;
-    const multiplier = level * 0.02;
+    const cap = 0.5; // Max 50% bonus from levels
+    const multiplier = level * 0.005; // 0.5% per level
     return Math.min(multiplier, cap);
 }
 

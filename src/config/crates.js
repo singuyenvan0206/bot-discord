@@ -56,7 +56,7 @@ module.exports = {
             { item: '401', chance: 0.15 }, // Bread Bait
             { item: '402', chance: 0.15 }, // Worm Bait
             { item: '501', chance: 0.05 }, // Shield of Protection
-            { coins: [5000, 20000], chance: 0.35 }
+            { coins: [500, 2000], chance: 0.35 }
         ],
         rare: [
             { item: '102', chance: 0.10 }, // Shag Rug (daily)
@@ -67,7 +67,7 @@ module.exports = {
             { item: '407', chance: 0.05 }, // Plastic Rod
             { item: '408', chance: 0.05 }, // Bamboo Rod
             { item: '701', chance: 0.05 }, // Wedding Ring
-            { coins: [25000, 100000], chance: 0.37 }
+            { coins: [2500, 10000], chance: 0.37 }
         ],
         legendary: [
             { item: '103', chance: 0.08 }, // Moai Statue (daily)
@@ -78,7 +78,7 @@ module.exports = {
             { item: '409', chance: 0.06 }, // Fiberglass Rod
             { item: '502', chance: 0.05 }, // XP Boost Potion
             { item: '702', chance: 0.05 }, // Diamond Ring
-            { coins: [125000, 500000], chance: 0.44 }
+            { coins: [12500, 50000], chance: 0.44 }
         ],
         forbidden: [
             { item: '104', chance: 0.07 }, // VIP Golden Ticket (daily — doubles cap!)
@@ -86,19 +86,19 @@ module.exports = {
             { item: '303', chance: 0.1 }, // Clay Chips (gamble)
             { item: '411', chance: 0.12 }, // Carbon Rod
             { item: '503', chance: 0.11 }, // Career Change Voucher
-            { coins: [500000, 2000000], chance: 0.5 }
+            { coins: [50000, 200000], chance: 0.5 }
         ],
         mythical: [
             { item: '304', chance: 0.15 }, // 4-Leaf Clover (gamble)
             { item: '412', chance: 0.25 }, // Titanium Rod
             { item: '413', chance: 0.1 }, // Neptune's Rod
-            { coins: [2000000, 8000000], chance: 0.5 }
+            { coins: [200000, 800000], chance: 0.5 }
         ],
         ethereal: [
             { item: '105', chance: 0.15 }, // Space Station (daily)
             { item: '205', chance: 0.15 }, // Superyacht (income)
             { item: '305', chance: 0.15 }, // Time Machine (gamble)
-            { coins: [10000000, 40000000], chance: 0.55 }
+            { coins: [1000000, 4000000], chance: 0.55 }
         ]
     }
 };

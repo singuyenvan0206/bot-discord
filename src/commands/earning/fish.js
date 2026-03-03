@@ -11,58 +11,58 @@ const { calculateReward } = require('../../utils/multiplier');
 
 // Rod Definitions (IDs match new category 400s)
 const RODS = [
-    { id: '413', luck: 7.5 },  // Neptune's Rod
-    { id: '412', luck: 5.0 },  // Titanium Rod
-    { id: '411', luck: 3.5 },  // Carbon Rod
-    { id: '410', luck: 2.5 },  // Steel Rod
-    { id: '409', luck: 1.8 },  // Fiberglass Rod
-    { id: '408', luck: 1.0 },  // Bamboo Rod
-    { id: '407', luck: 0.5 }   // Plastic Rod
+    { id: '413', luck: 2.5 },  // Neptune's Rod
+    { id: '412', luck: 1.8 },  // Titanium Rod
+    { id: '411', luck: 1.4 },  // Carbon Rod
+    { id: '410', luck: 1.1 },  // Steel Rod
+    { id: '409', luck: 0.8 },  // Fiberglass Rod
+    { id: '408', luck: 0.5 },  // Bamboo Rod
+    { id: '407', luck: 0.2 }   // Plastic Rod
 ];
 
 // Bait Definitions
 const BAITS = [
-    { id: '406', luck: 3.0 },  // Golden Bait
-    { id: '405', luck: 1.5 },  // Squid Bait
-    { id: '404', luck: 0.75 }, // Cricket Bait
-    { id: '403', luck: 0.4 },  // Shrimp Bait
-    { id: '402', luck: 0.15 }, // Worm Bait
-    { id: '401', luck: 0.05 }  // Bread Bait
+    { id: '406', luck: 1.00 },  // Golden Bait
+    { id: '405', luck: 0.60 },  // Squid Bait
+    { id: '404', luck: 0.35 }, // Cricket Bait
+    { id: '403', luck: 0.15 },  // Shrimp Bait
+    { id: '402', luck: 0.08 }, // Worm Bait
+    { id: '401', luck: 0.02 }  // Bread Bait
 ];
 
 // Fish Table
 const CATCHES = [
-    { key: 'old_boot', emoji: '👢', value: 0, weight: 30, minLuck: 0 },
-    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 30, minLuck: 0 },
-    { key: 'seaweed', emoji: '🌿', value: 5, weight: 80, minLuck: 0 },
-    { key: 'tilapia', emoji: '🐟', value: 30, weight: 100, minLuck: 0 },
-    { key: 'sardine', emoji: '🐟', value: 50, weight: 100, minLuck: 0 },
-    { key: 'carp', emoji: '🐟', value: 80, weight: 100, minLuck: 0 },
-    { key: 'brook_trout', emoji: '🐟', value: 120, weight: 100, minLuck: 0 },
-    { key: 'archerfish', emoji: '🐟', value: 300, weight: 110, minLuck: 1.0 },
-    { key: 'betta', emoji: '🐠', value: 450, weight: 100, minLuck: 3.0 },
-    { key: 'bass', emoji: '🐟', value: 1000, weight: 150, minLuck: 2.0 },
-    { key: 'sockeye_salmon', emoji: '🐟', value: 1500, weight: 150, minLuck: 4.0 },
-    { key: 'pufferfish', emoji: '🐡', value: 2500, weight: 180, minLuck: 6.0 },
-    { key: 'clownfish', emoji: '🐠', value: 4000, weight: 170, minLuck: 8.0 },
-    { key: 'arowana', emoji: '🐉', value: 5500, weight: 155, minLuck: 9.0 },
-    { key: 'stingray', emoji: '🐡', value: 7500, weight: 160, minLuck: 10.0 },
-    { key: 'sunfish', emoji: '☀️', value: 9000, weight: 150, minLuck: 11.0 },
-    { key: 'tuna', emoji: '🐟', value: 12000, weight: 150, minLuck: 12.0 },
-    { key: 'swordfish', emoji: '🗡️', value: 10000, weight: 130, minLuck: 15.0 },
-    { key: 'sturgeon', emoji: '🐟', value: 12000, weight: 130, minLuck: 16.0 },
-    { key: 'manta_ray', emoji: '🐋', value: 10000, weight: 120, minLuck: 18.0 },
-    { key: 'shark', emoji: '🦈', value: 12000, weight: 110, minLuck: 20.0 },
-    { key: 'alligator_gar', emoji: '🐊', value: 15000, weight: 100, minLuck: 21.0 },
-    { key: 'whale', emoji: '🐋', value: 18000, weight: 90, minLuck: 22.0 },
-    { key: 'anglerfish', emoji: '🏮', value: 22000, weight: 1500, minLuck: 25.0 },
-    { key: 'treasure_chest', emoji: '💰', value: 35000, weight: 1250, minLuck: 28.0 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 80000, weight: 1000, minLuck: 32.0 },
-    { key: 'kraken', emoji: '🐙', value: 160000, weight: 800, minLuck: 35.0 },
-    { key: 'megalodon', emoji: '🦈', value: 350000, weight: 650, minLuck: 38.0 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 500000, weight: 550, minLuck: 40.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 650000, weight: 475, minLuck: 42.0 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 1000000, weight: 400, minLuck: 45.0 }
+    { key: 'old_boot', emoji: '👢', value: 0, weight: 150, minLuck: 0 },
+    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 150, minLuck: 0 },
+    { key: 'seaweed', emoji: '🌿', value: 2, weight: 200, minLuck: 0 },
+    { key: 'tilapia', emoji: '🐟', value: 15, weight: 100, minLuck: 0 },
+    { key: 'sardine', emoji: '🐟', value: 25, weight: 100, minLuck: 0 },
+    { key: 'carp', emoji: '🐟', value: 40, weight: 100, minLuck: 0 },
+    { key: 'brook_trout', emoji: '🐟', value: 60, weight: 100, minLuck: 0 },
+    { key: 'archerfish', emoji: '🐟', value: 150, weight: 110, minLuck: 0.2 },
+    { key: 'betta', emoji: '🐠', value: 250, weight: 100, minLuck: 0.4 },
+    { key: 'bass', emoji: '🐟', value: 500, weight: 150, minLuck: 0.6 },
+    { key: 'sockeye_salmon', emoji: '🐟', value: 800, weight: 150, minLuck: 0.8 },
+    { key: 'pufferfish', emoji: '🐡', value: 1200, weight: 180, minLuck: 1.0 },
+    { key: 'clownfish', emoji: '🐠', value: 1800, weight: 170, minLuck: 1.2 },
+    { key: 'arowana', emoji: '🐉', value: 2500, weight: 155, minLuck: 1.4 },
+    { key: 'stingray', emoji: '🐡', value: 3500, weight: 160, minLuck: 1.6 },
+    { key: 'sunfish', emoji: '☀️', value: 4500, weight: 150, minLuck: 1.8 },
+    { key: 'tuna', emoji: '🐟', value: 6000, weight: 150, minLuck: 2.0 },
+    { key: 'swordfish', emoji: '🗡️', value: 5000, weight: 130, minLuck: 2.2 },
+    { key: 'sturgeon', emoji: '🐟', value: 6000, weight: 130, minLuck: 2.4 },
+    { key: 'manta_ray', emoji: '🐋', value: 4500, weight: 120, minLuck: 2.6 },
+    { key: 'shark', emoji: '🦈', value: 5000, weight: 110, minLuck: 2.8 },
+    { key: 'alligator_gar', emoji: '🐊', value: 8000, weight: 100, minLuck: 3.0 },
+    { key: 'whale', emoji: '🐋', value: 10000, weight: 90, minLuck: 3.2 },
+    { key: 'anglerfish', emoji: '🏮', value: 12000, weight: 300, minLuck: 3.5 },
+    { key: 'treasure_chest', emoji: '💰', value: 15000, weight: 150, minLuck: 3.8 },
+    { key: 'mythical_pearl', emoji: '🔮', value: 35000, weight: 100, minLuck: 4.2 },
+    { key: 'kraken', emoji: '🐙', value: 60000, weight: 80, minLuck: 4.5 },
+    { key: 'megalodon', emoji: '🦈', value: 120000, weight: 50, minLuck: 4.8 },
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 200000, weight: 30, minLuck: 5.0 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 300000, weight: 15, minLuck: 5.2 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 500000, weight: 8, minLuck: 5.5 }
 ];
 
 module.exports = {
@@ -109,7 +109,7 @@ module.exports = {
         // Calculate Total Luck (Farmer Job Bonus)
         let totalLuck = rod.luck * (1 + bait.luck);
         if (user.job === 'farmer') {
-            totalLuck *= 1.5; // Farmers get 50% more luck from gear
+            totalLuck *= 1.2; // Farmers get 20% more luck from gear
         }
 
         // helper to get weighted pool

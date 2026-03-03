@@ -21,9 +21,16 @@ module.exports = {
         if (targetUser.bot) return message.reply(t('transfer.bot', lang));
         if ((user.balance || 0) < amount) return message.reply(t('transfer.insufficient', lang, { balance: (user.balance || 0).toLocaleString() }));
 
-        await db.removeBalance(message.guild.id, message.author.id, amount);
-        await db.addBalance(message.guild.id, targetUser.id, amount);
+        const tax = Math.floor(amount * (config.ECONOMY.TRANSFER_TAX || 0));
+        const finalAmount = amount - tax;
 
-        return message.reply(t('transfer.success', lang, { amount: amount.toLocaleString(), user: targetUser.toString() }));
+        await db.removeBalance(message.guild.id, message.author.id, amount);
+        await db.addBalance(message.guild.id, targetUser.id, finalAmount);
+
+        let msg = t('transfer.success', lang, { amount: finalAmount.toLocaleString(), user: targetUser.toString() });
+        if (tax > 0) {
+            msg += `\n💸 **${t('common.tax', lang) || 'Tax'}:** ${tax.toLocaleString()} ${config.EMOJIS.COIN}`;
+        }
+        return message.reply(msg);
     }
 };

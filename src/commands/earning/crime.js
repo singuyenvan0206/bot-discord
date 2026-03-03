@@ -29,8 +29,8 @@ module.exports = {
         let successRate = await db.getGuildSetting(message.guild.id, 'crime_rate', config.ECONOMY.CRIME_SUCCESS_RATE);
         successRate += (isCriminal ? 0.1 : 0); // Base criminal bonus
 
-        // Hacker Synergy: +25% success rate bonus
-        if (isHacker) successRate += 0.25;
+        // Hacker Synergy: +15% success rate bonus
+        if (isHacker) successRate += 0.15;
 
         const isSuccess = Math.random() < successRate;
         const actions = t('crime.actions', lang);

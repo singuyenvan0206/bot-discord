@@ -40,7 +40,8 @@
         "item_broken": "\n💥 **Item Broken:** Your {{item}} was broken or confiscated!",
         "no_permission": "❌ You do not have permission to perform this action!",
         "user_not_found": "User not found.",
-        "choices": "Choices"
+        "choices": "Choices",
+        "tax": "Tax"
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -300,7 +301,8 @@
         "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
         "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder.",
         "police_bounty": "\n💰 **Police Bounty!** Robbing an officer earns +**50%** bonus!",
-        "rob_shield_blocked": "\n🔰 **Shield of Protection!** The victim is protected — robbery completely blocked!",
+        "rob_shield_blocked": "\n🔰 **Shield of Protection!** The victim is protected — the robbery is much harder!",
+        "shield_broken": "\n💥 **SHIELD BROKEN!** {{user}}'s Shield of Protection shattered after this robbery attempt!",
         "teacher_penalty": "What a terrible role model! You have been demoted to Level **{{level}}** for this behavior. 📉",
         "failure_xp": "🚔 {{user}} caught you! You had to pay **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}"
     },
@@ -565,17 +567,17 @@
         },
         "102": {
             "name": "🧸 Luxury Shag Rug",
-            "desc": "Ultimate comfort (+40% Extra Bonus | 7 days)",
+            "desc": "Ultra soft comfort (+5% Bonus | 7 days)",
             "details": "A soft, plush rug that feels like walking on clouds, helping you start your day with a sense of peace."
         },
         "103": {
             "name": "🗿 Mystic Moai Statue",
-            "desc": "Steady as a mountain (+80% Extra Bonus | 30 days)",
+            "desc": "Solid as a rock (+15% Bonus | 30 days)",
             "details": "An ancient monument imbued with mysterious energy, ensuring your luck remains stable and grounded."
         },
         "104": {
             "name": "🎫 VIP Golden Ticket",
-            "desc": "Elite privileges (+150% Extra Bonus | 30 days)",
+            "desc": "Elite privilege (+30% Bonus | 30 days)",
             "details": "A symbol of prestige. This ticket opens up exclusive benefits reserved for the elite of Grand Line."
         },
         "105": {
@@ -585,52 +587,52 @@
         },
         "201": {
             "name": "📱 Smartphone Ultra",
-            "desc": "Boundless connectivity (+15% Income | 7 days)",
+            "desc": "Unlimited connection (+2% Income | 7 days)",
             "details": "A high-end smartphone with a 6G connection. Essential for managing your finances on the move."
         },
         "202": {
             "name": "⌨️ Custom Mechanical Keyboard",
-            "desc": "Smooth tactile feedback (+40% Income | 7 days)",
+            "desc": "Smooth typing experience (+8% Income | 7 days)",
             "details": "The satisfying click-clack of precision keys boosts your productivity and reaction speed."
         },
         "203": {
             "name": "🖥️ 8K HDR Monitor",
-            "desc": "Brilliant vision (+70% Income | 7 days)",
+            "desc": "Sweet motivation! (+2% Bonus | 1 day)",
             "details": "Ultra-high resolution allows you to observe every market trend and make precise decisions."
         },
         "204": {
             "name": "📈 Professional Trading Terminal",
-            "desc": "Market dominance (+100% Income | 30 days)",
+            "desc": "Market dominance (+30% Income | 30 days)",
             "details": "A real-time data analysis system for financial wizards, optimizing every source of income."
         },
         "205": {
             "name": "🛥️ Royal Superyacht",
-            "desc": "An office on the ocean (+600% Income | 30 days)",
+            "desc": "An office on the ocean (+60% Income | 30 days)",
             "details": "The ultimate symbol of success. Working from the sea attracts billion-dollar contracts."
         },
         "301": {
             "name": "🎲 Golden Sovereign Dice",
-            "desc": "Fortune's roll (+25% Gamble | 7 days)",
+            "desc": "Fortune's roll (+5% Gamble | 7 days)",
             "details": "Solid gold dice that feel heavy with luck. Improves your odds in various gambling games."
         },
         "302": {
             "name": "📿 Imperial Jade Necklace",
-            "desc": "Pure serenity (+50% Gamble | 30 days)",
+            "desc": "Pure serenity (+15% Gamble | 30 days)",
             "details": "Exquisite jade filled with natural spirit, keeping your mind sharp and your luck unexpected."
         },
         "303": {
             "name": "🪙 Pro Clay Chips",
-            "desc": "Professional edge (+70% Gamble | 30 days)",
+            "desc": "Professional edge (+25% Gamble | 30 days)",
             "details": "Premium casino-grade chips that bring confidence and class to every bet you place."
         },
         "304": {
             "name": "🍀 Miracle 4-Leaf Clover",
-            "desc": "Lucky mascot (+150% Gamble | 30 days)",
+            "desc": "Lucky mascot (+40% Gamble | 30 days)",
             "details": "A rare gift from nature. Carrying this ensures the protection of the God of Fortune."
         },
         "305": {
             "name": "⏳ Advanced Time Machine",
-            "desc": "Seize the future (+500% Gamble | 30 days)",
+            "desc": "Seize the future (+70% Gamble | 30 days)",
             "details": "A cutting-edge device that lets you glimpse future possibilities, turning the tide of any major bet."
         },
         "401": {
@@ -675,27 +677,27 @@
         },
         "409": {
             "name": "🎣 Professional Fiberglass Rod",
-            "desc": "Modern technology (Luck: 1.8x)",
+            "desc": "Modern technology (Luck: 1.1x)",
             "details": "Advanced materials enhance sensitivity and provide superior strength-to-weight ratio."
         },
         "410": {
             "name": "🎣 Steel Alloy Rod",
-            "desc": "Sturdy and powerful (Luck: 2.5x)",
+            "desc": "Sturdy and powerful (Luck: 1.4x)",
             "details": "Reinforced with stainless steel, ready to challenge the heaviest catches in the sea."
         },
         "411": {
             "name": "🎣 Ultra Carbon Rod",
-            "desc": "Lightweight and resilient (Luck: 3.5x)",
+            "desc": "Lightweight and resilient (Luck: 1.8x)",
             "details": "The choice of professional anglers, optimizing control and reaction speed for precision fishing."
         },
         "412": {
             "name": "🎣 Tactical Titanium Rod",
-            "desc": "Military-grade material (Luck: 5.0x)",
+            "desc": "Military-grade material (Luck: 2.3x)",
             "details": "Eternal durability and incredibly light, helping you conquer the most treacherous waters."
         },
         "413": {
             "name": "🔱 Neptune's Sovereign Rod",
-            "desc": "Gift of Poseidon (Luck: 7.5x)",
+            "desc": "Gift of Poseidon (Luck: 3.0x)",
             "details": "A legendary rod forged from ocean crystals, carrying the glory of the sea god himself."
         },
         "501": {
@@ -715,32 +717,32 @@
         },
         "601": {
             "name": "🦈 Blessing of the Megalodon",
-            "desc": "Tyrant of the deep's majesty (+50% All Rewards | 1 hour)",
+            "desc": "Tyrant of the deep's majesty (+15% All Rewards | 1 hour)",
             "details": "Feel the primal power of the Megalodon, helping you conquer all challenges and optimize your gains."
         },
         "602": {
             "name": "🔱 Poseidon's Divine Power",
-            "desc": "Domain over the ocean (+100% All Rewards | 2 hours)",
+            "desc": "Domain over the ocean (+30% All Rewards | 2 hours)",
             "details": "Protection from the sea god Poseidon, granting celestial luck and massive income streams."
         },
         "603": {
             "name": "🔮 Radiant Ocean Pearl",
-            "desc": "Pure guiding light (+40% All Rewards | 1 hour)",
+            "desc": "Pure guiding light (+10% All Rewards | 1 hour)",
             "details": "The gentle light from this ancient pearl clears the mind, enhancing focus and work efficiency."
         },
         "604": {
             "name": "🐙 Kraken's Abyssal Rage",
-            "desc": "Power from the depths (+60% All Rewards | 1.5 hours)",
+            "desc": "Power from the depths (+20% All Rewards | 1.5 hours)",
             "details": "An explosion of energy from the Kraken beast helps you crush your current financial boundaries."
         },
         "605": {
             "name": "🐢 Blessing of the Millennium Turtle",
-            "desc": "Patience and longevity (+70% All Rewards | 3 hours)",
+            "desc": "Patience and longevity (+25% All Rewards | 3 hours)",
             "details": "Experience the resilience and aura of the ancient turtle spirit, helping your income grow steadily."
         },
         "606": {
             "name": "🐉 Majesty of the Ocean Dragon",
-            "desc": "Might of the dragon's hoard (+150% All Rewards | 2 hours)",
+            "desc": "Might of the dragon's hoard (+40% All Rewards | 2 hours)",
             "details": "The ultimate divine power from the Sea Dragon brings absolute wealth and authority to its owner."
         },
         "701": {
@@ -1405,7 +1407,7 @@
             "shop": "Browse the item store by category. Buy income boosters, bait, tools & more.",
             "inventory": "View your full item collection, active buffs, and net worth overview.",
             "buy": "Purchase items from the shop by name or ID.",
-            "sell": "Sell unwanted items back for 70% of their original price.",
+            "sell": "Sell unused items for 50% of their original price.",
             "iteminfo": "Look up detailed stats, buff effects, and job synergies for any item.",
             "transfer": "Send any amount of coins directly to another user's wallet.",
             "setdistchannel": "Set the server notification channel for level-ups, lottery results & more.",

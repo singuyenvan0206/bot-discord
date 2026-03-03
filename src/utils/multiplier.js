@@ -136,12 +136,12 @@ async function getTotalMultiplier(memberOrId, type = 'income') {
 
     const maxCap = await getDynamicCap(memberOrId);
 
-    // Sum all CAPPABLE multipliers (Items, Level, Job, House)
-    const cappableTotal = itemData.normal + levelMulti + jobMulti + houseMulti;
-    const cappedResult = Math.min(cappableTotal, maxCap);
+    // Sum ALL multipliers (Items, Level, Job, House, Roles, Marriage, Legendary)
+    const grandTotal = itemData.normal + itemData.legendary + levelMulti + jobMulti + houseMulti + roleIncomeMulti + marriageMulti;
 
-    // Final result = Capped bonuses + Uncapped legendary bonuses + Uncapped role bonuses + Uncapped Marriage
-    return cappedResult + itemData.legendary + roleIncomeMulti + marriageMulti;
+    // Final result: Everything is capped at maxCap (1.5x/2.0x total)
+    // NERF: Apply 0.5x multiplier to role buffs automatically
+    return Math.min(grandTotal - roleIncomeMulti + (roleIncomeMulti * 0.5), maxCap);
 }
 
 async function getTotalIncomeMultiplier(memberOrId) {
@@ -201,25 +201,8 @@ async function getDynamicCap(memberOrId, guildId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
 
-    // Standard: 5.0 (500% bonus), VIP: 10.0 (1000% bonus)
-    let cap = await hasActiveItem(gId, userId, 104) ? 6.0 : 4.0;
-
-    // Housing Cap Bonus
-    const user = await db.getUser(userId, gId);
-    if (user.house_id) {
-        const tier = housingConfig.TIERS[user.house_id];
-        if (tier && tier.cap_bonus) cap += tier.cap_bonus;
-
-        // Add interior cap bonuses
-        const houseData = JSON.parse(user.house_data || '{}');
-        Object.keys(houseData).forEach(id => {
-            const deco = housingConfig.INTERIORS[id];
-            if (deco && deco.buff === 'cap') {
-                cap += deco.value;
-            }
-        });
-    }
-
+    // Standard: 0.5 (150% total income), VIP: 1.0 (200% total income)
+    let cap = await hasActiveItem(gId, userId, 104) ? 1.0 : 0.5;
     return cap;
 }
 

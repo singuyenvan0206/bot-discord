@@ -51,46 +51,46 @@ module.exports = {
 
 
         let viralMsg = '';
-        if (user.job === 'streamer' && Math.random() < 0.10) {
-            total *= 5;
-            bonus *= 5;
+        if (user.job === 'streamer' && Math.random() < 0.05) {
+            total *= 2;
+            bonus *= 2;
             viralMsg = t('work.viral', lang);
         }
 
         // Farmer Interaction: Bumper Crop (20% chance)
         let bumperMsg = '';
-        if (user.job === 'farmer' && Math.random() < 0.20) {
-            total = Math.floor(total * 2.5);
-            bonus = Math.floor(bonus * 2.5);
+        if (user.job === 'farmer' && Math.random() < 0.15) {
+            total = Math.floor(total * 1.5);
+            bonus = Math.floor(bonus * 1.5);
             bumperMsg = t('work.bumper_crop', lang);
         }
 
         // Chef Interaction: Special Order (15% chance)
         let specialOrderMsg = '';
-        if (user.job === 'chef' && Math.random() < 0.15) {
-            total = Math.floor(total * 2);
-            bonus = Math.floor(bonus * 2);
+        if (user.job === 'chef' && Math.random() < 0.12) {
+            total = Math.floor(total * 1.3);
+            bonus = Math.floor(bonus * 1.3);
             specialOrderMsg = t('work.special_order', lang);
         }
 
         // Programmer Interaction: Code Crunch (+2500 flat)
         let codeCrunchMsg = '';
         if (user.job === 'programmer') {
-            total += 2500;
+            total += 1000;
             codeCrunchMsg = t('work.code_crunch', lang);
         }
 
         // Soldier Interaction: Mission Bonus (+2000 flat)
         let missionMsg = '';
         if (user.job === 'soldier') {
-            total += 2000;
+            total += 800;
             missionMsg = t('work.mission_bonus', lang);
         }
 
         // Police Interaction: Overtime (40% chance +1500 flat)
         let overtimeMsg = '';
-        if (user.job === 'police' && Math.random() < 0.40) {
-            total += 1500;
+        if (user.job === 'police' && Math.random() < 0.30) {
+            total += 500;
             overtimeMsg = t('work.overtime', lang);
         }
 

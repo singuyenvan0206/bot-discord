@@ -54,7 +54,7 @@ module.exports = {
 
 
         if (isVictimPolice || hasVictimRobShield) {
-            baseSuccessChance /= 2;
+            baseSuccessChance /= 1.5;
         }
 
         const isSuccess = Math.random() < baseSuccessChance;
@@ -88,6 +88,12 @@ module.exports = {
                 msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
             }
             if (policeRobMsg) msg += policeRobMsg;
+
+            // BREAK SHIELD AFTER SUCCESSFUL ROB
+            if (hasVictimRobShield) {
+                await removeActiveBuff(message.guild.id, target.id, 501);
+                msg += t('rob.shield_broken', lang, { user: target.username });
+            }
 
             return message.reply(msg);
         } else {
@@ -123,6 +129,9 @@ module.exports = {
                 failMsg += t('rob.police_busted', lang);
             } else if (hasVictimRobShield) {
                 failMsg += t('rob.rob_shield_blocked', lang);
+                // BREAK SHIELD AFTER FAILED ROB (BLOCKED)
+                await removeActiveBuff(message.guild.id, target.id, 501);
+                failMsg += t('rob.shield_broken', lang, { user: target.username });
             }
 
             await message.reply(failMsg);

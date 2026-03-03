@@ -231,7 +231,7 @@ module.exports = {
                             income: (isBuffed ? Math.floor(hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) : hourly).toLocaleString(),
                             staff: managerStatus,
                             upgrade_cost: upgradeCost,
-                            staff_cost: `${bizConfig.MANAGER_HOURLY_COST.toLocaleString()}/h`
+                            staff_cost: `${type.manager_hourly_cost.toLocaleString()}/h`
                         })
                     });
                 });
@@ -385,7 +385,12 @@ module.exports = {
 
             if (inputId === 'all') {
                 const hours = args[2] ? Math.max(1, parseInt(args[2]) || 1) : 1;
-                const totalCost = userBizs.length * costPerHour * hours;
+                let totalCost = 0;
+
+                for (const b of userBizs) {
+                    const type = bizConfig.TYPES[b.business_id];
+                    totalCost += type.manager_hourly_cost * hours;
+                }
 
                 if (user.balance < totalCost) {
                     return message.reply(t('business.hire_all_funds', lang, { price: totalCost.toLocaleString() }) || `❌ Bạn cần **${totalCost.toLocaleString()}** coins để thuê quản lý cho tất cả doanh nghiệp!`);
@@ -409,8 +414,9 @@ module.exports = {
             if (!biz) return message.reply('❌ You dont own this business or invaild ID!');
 
             const hours = args[2] ? Math.max(1, parseInt(args[2]) || 1) : 1;
-            const totalCost = costPerHour * hours;
             const bizId = biz.business_id;
+            const type = bizConfig.TYPES[bizId];
+            const totalCost = type.manager_hourly_cost * hours;
 
             if (user.balance < totalCost) {
                 return message.reply(`❌ You need **${totalCost.toLocaleString()}** coins to hire a manager!`);

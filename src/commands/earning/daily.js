@@ -28,8 +28,8 @@ module.exports = {
 
         // Chef Interaction: Michelin Star (10% chance — daily ×3)
         let eventMsg = '';
-        if (user.job === 'chef' && Math.random() < 0.10) {
-            total = Math.floor(total * 3);
+        if (user.job === 'chef' && Math.random() < 0.08) {
+            total = Math.floor(total * 1.5);
             eventMsg = t('daily_events.michelin_star', lang);
         }
 
@@ -41,8 +41,8 @@ module.exports = {
         }
 
         // Streamer Interaction: Subathon (20% chance +3x bonus)
-        if (user.job === 'streamer' && Math.random() < 0.20) {
-            const subBonus = Math.floor(total * 3);
+        if (user.job === 'streamer' && Math.random() < 0.15) {
+            const subBonus = Math.floor(total * 0.5);
             total += subBonus;
             eventMsg += t('daily_events.subathon', lang, { amount: subBonus.toLocaleString() });
         }
