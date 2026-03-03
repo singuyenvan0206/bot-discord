@@ -49,11 +49,11 @@ module.exports = {
                 if (i.duration) {
                     let timeStr = '';
                     if (i.duration >= 86400) {
-                        timeStr = `${Math.floor(i.duration / 86400).toLocaleString()}${lang === 'vi' ? 'd' : 'd'}`;
+                        timeStr = t('common.duration_days', lang, { days: Math.floor(i.duration / 86400).toLocaleString() });
                     } else if (i.duration >= 3600) {
-                        timeStr = `${Math.floor(i.duration / 3600).toLocaleString()}${lang === 'vi' ? 'h' : 'h'}`;
+                        timeStr = t('common.duration_hours', lang, { hours: Math.floor(i.duration / 3600).toLocaleString() });
                     } else {
-                        timeStr = `${Math.floor(i.duration / 60).toLocaleString()}${lang === 'vi' ? 'm' : 'm'}`;
+                        timeStr = t('common.duration_minutes', lang, { minutes: Math.floor(i.duration / 60).toLocaleString() });
                     }
                     durationExtra = ` • ⏳ ${timeStr}`;
                 }

@@ -41,7 +41,9 @@
         "no_permission": "❌ Bạn không có quyền thực hiện hành động này!",
         "user_not_found": "Không tìm thấy người dùng.",
         "choices": "Lựa chọn",
-        "tax": "Thuế"
+        "tax": "Thuế",
+        "cap_reached": " (Đã đạt giới hạn tối đa!)",
+        "profit": "Lợi nhuận ròng"
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -100,8 +102,8 @@
     },
     "slots": {
         "title": "🎰 Máy Quay Slot",
-        "won_coins": "\n🎉 Bạn đã thắng **{{amount}}** {{emoji}}!",
-        "lost_coins": "\n💀 Bạn đã mất **{{amount}}** coins.",
+        "won_coins": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}}",
+        "lost_coins": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}",
         "win_jackpot": "💰 **JACKPOT!** Ba hình **{{symbol}}**!",
         "win_small": "✨ **Thắng nhỏ!** Hai hình khớp nhau!",
         "lose": "❌ Chúc bạn may mắn lần sau!",
@@ -331,7 +333,6 @@
             "gầm cầu",
             "ghế đá công viên",
             "túi áo cũ",
-            "dưới đệm sofa",
             "ngách tủ",
             "bãi đậu xe",
             "cống rãnh"
@@ -396,7 +397,6 @@
         "name_doctor": "👨‍⚕️ Bác Sĩ",
         "desc_doctor": "Thiên sứ áo trắng nắm giữ chìa khóa của sự sinh tồn.",
         "info_doctor": "• **Trợ cấp y tế**: Nhận hoa hồng từ mỗi người dùng nhập viện.\n• **Y đức**: +25% thu nhập công việc cơ bản.\n• **Hồi phục**: Tăng 20% tỷ lệ nhận vật phẩm buff khi làm việc.",
-        "info_programmer": "• **Chuyên gia**: +30% thu nhập công việc cố định.\n• **Regex Assist**: Tự động hiện gợi ý x...y trong `scramble`.\n• **Tập trung**: Tăng 25% thưởng từ các trò chơi giải đố.",
         "name_farmer": "👨‍🌾 Nông Dân",
         "desc_farmer": "Người làm bạn với đất mẹ và biển cả.",
         "info_farmer": "• **Ngư phủ**: +15% tỷ lệ câu được Cá Khổng Lồ/Báu vật.\n• **Tiết kiệm**: Hoàn lại mồi câu khi thất bại (tỷ lệ cao).\n• **Mùa màng**: +15% thu nhập công việc cơ bản.",
@@ -411,11 +411,16 @@
         "info_chef": "• **Menu VIP**: +25% thu nhập công việc cố định.\n• **Michelin**: Cơ hội nhân ba (x3) phần thưởng $daily.\n• **Mời nước**: Hoàn cược Blackjack nếu kết quả Hòa (Push).",
         "name_musician": "🎸 Nhạc Sĩ",
         "desc_musician": "Nghệ sĩ tâm hồn truyền cảm hứng qua từng nốt nhạc.",
-        "info_musician": "• **Thăng hoa**: 15% cơ hội x2 tiền thắng cược Blackjack/Gamble.\n• **Tip**: Nhận thêm tiền tip ngẫu nhiên sau khi làm việc.\n• **Lương**: +15% thu nhập công việc cơ bản.",
+        "info_musician": "• **Flow**: 15% cơ hội nhân đôi (x2) tiền thắng Blackjack/Cờ bạc.\n• **Tip**: Nhận tiền tip ngẫu nhiên từ người hâm mộ sau mỗi ca làm việc.\n• **Salary**: +15% thưởng vào thu nhập làm việc cơ bản.",
+        "name_programmer": "👨‍💻 Lập trình viên",
+        "desc_programmer": "Kiến trúc sư của thế giới số. Những dòng mã của bạn xây dựng nền tảng cho tương lai và mang lại thu nhập ổn định, bền vững.",
+        "info_programmer": "✨ **Đặc quyền Lập trình viên:**\n• **Expert**: +30% thưởng cố định vào thu nhập làm việc.\n• **Regex Assist**: Tự động hiển thị gợi ý trong trò chơi Sắp Xếp Từ.\n• **High Focus**: +25% phần thưởng từ các trò chơi giải đố và trí tuệ.",
         "name_soldier": "🪖 Quân Nhân",
         "desc_soldier": "Chiến binh tinh nhuệ với kỷ luật thép. Luôn sẵn sàng dấn thân vào những nhiệm vụ nguy hiểm nhất để bảo vệ nền hòa bình thế giới.",
         "info_soldier": "• **Kỷ Luật Quân Đội**: Đảm bảo nhận thêm phụ cấp nhiệm vụ (+200 coins) mỗi ca làm việc.\n• **Vũ Trang Tận Răng**: Giảm 50% số tiền bị phạt nếu thất bại trong các lệnh nguy hiểm.\n• **Hành Quân Cấp Tốc**: Nhận thêm kinh nghiệm (XP) đáng kể sau mỗi hành động.",
-        "info_trader": "• **Vốn lớn**: +30% thu nhập công việc cơ bản.\n• **Bảo hiểm**: Cơ hội hoàn cược 50% nếu thua Coinflip/Blackjack.\n• **Mẹo**: Luôn nhận thêm tiền bonus khi thực hiện lệnh `search`.",
+        "name_trader": "📈 Nhà giao dịch",
+        "desc_trader": "Phù thủy thị trường với tầm nhìn kinh doanh sắc bén. Bạn xoay vòng vốn và tối ưu hóa lợi nhuận trong mọi giao dịch.",
+        "info_trader": "• **Big Capital**: +30% thưởng vào thu nhập làm việc cơ bản.\n• **Insurance**: Cơ hội cao được hoàn lại 50% tiền cược khi thua Coinflip/Blackjack.\n• **Tip**: Luôn nhận thêm coins thưởng khi sử dụng lệnh lùng sục (`search`).",
         "name_teacher": "👨‍🏫 Giáo Viên",
         "desc_teacher": "Kiến trúc sư của tâm hồn, người truyền lửa tri thức.",
         "info_teacher": "• **Uyên thâm**: Hệ số nhân XP vĩnh viễn x2.0.\n• **Gia sư**: Trivia cũng thưởng cho những người chơi khác.\n• **Kỷ luật**: Phạt gấp đôi tiền nếu đi cướp hoặc phạm tội.",
@@ -692,7 +697,8 @@
         },
         "402": {
             "name": "🪱 Mồi Giun",
-            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +15%)"
+            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +15%)",
+            "details": "Mồi giun béo ngậy, món ăn khoái khẩu của hầu hết các loài cá nước ngọt và cá tầng giữa."
         },
         "403": {
             "name": "🦐 Mồi Tôm",
@@ -701,11 +707,13 @@
         },
         "404": {
             "name": "🦗 Mồi Dế",
-            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +75%)"
+            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +75%)",
+            "details": "Những chu kỳ cử động linh hoạt của dế trên mặt nước là mục tiêu hàng đầu của các loài cá săn mồi."
         },
         "405": {
             "name": "🦑 Mồi Mực",
-            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +150%)"
+            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +150%)",
+            "details": "Mực tươi xẻ miếng, lựa chọn hàng đầu cho các loài cá săn mồi cỡ lớn từ đại dương."
         },
         "406": {
             "name": "✨ Mồi Vàng",
@@ -719,7 +727,8 @@
         },
         "408": {
             "name": "🎣 Cần Tre",
-            "desc": "Cần câu cơ bản. (May mắn: 1.0x)"
+            "desc": "Cần câu cơ bản. (May mắn: 1.0x)",
+            "details": "Được chế tác từ tre già phơi khô, mang lại sự dẻo dai và cảm giác kéo chân thực."
         },
         "409": {
             "name": "🎣 Cần Sợi Thủy Tinh",
@@ -841,7 +850,8 @@
         "empty": "*Hiện chưa có vật phẩm nào trong danh mục này.*",
         "tax": "Thuế",
         "profit": "Lợi nhuận ròng",
-        "bonus_capped": "\n✨ **Thưởng:** +{amount} {emoji} ({percent}%)",
+        "bonus_label": "\n✨ **Thưởng:** +{{percent}}% {{effect}}",
+        "bonus_capped": "\n✨ **Thưởng:** +{{amount}} {{emoji}} ({{percent}}%)",
         "cap_reached": " (Đã đạt giới hạn tối đa!)",
         "footer": "Trang {{page}}/{{total}} • Dùng {{prefix}}buy <id> [số_lượng]",
         "categories": {
