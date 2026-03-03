@@ -20,10 +20,41 @@ module.exports = {
         }
 
         try {
+            // Fetch all purchasable roles BEFORE clearing data
+            const allRoles = await db.getAllGuildRoles();
+
             db.clearAllData();
             message.client.cooldowns.clear();
 
-            return message.reply(lang === 'vi' ? 'Đã xóa sạch toàn bộ dữ liệu hệ thống thành công.' : 'Successfully wiped all system data.')
+            // Try to remove roles from members in each guild
+            if (allRoles.length > 0) {
+                // Group roles by guild for efficiency
+                const rolesByGuild = allRoles.reduce((acc, role) => {
+                    if (!acc[role.guild_id]) acc[role.guild_id] = [];
+                    acc[role.guild_id].push(role.role_id);
+                    return acc;
+                }, {});
+
+                for (const [guildId, roleIds] of Object.entries(rolesByGuild)) {
+                    const guild = message.client.guilds.cache.get(guildId);
+                    if (!guild) continue;
+
+                    try {
+                        // Fetch all members to ensure we have cached roles
+                        const members = await guild.members.fetch();
+                        for (const member of members.values()) {
+                            const rolesToRemove = roleIds.filter(id => member.roles.cache.has(id));
+                            if (rolesToRemove.length > 0) {
+                                await member.roles.remove(rolesToRemove, 'Database Reset').catch(() => { });
+                            }
+                        }
+                    } catch (err) {
+                        console.error(`Failed to cleanup roles in guild ${guildId}:`, err);
+                    }
+                }
+            }
+
+            return message.reply(lang === 'vi' ? 'Đã xóa sạch toàn bộ dữ liệu hệ thống và gỡ bỏ các chức vụ đã mua thành công.' : 'Successfully wiped all system data and removed all purchased roles.')
         } catch (e) {
             return message.reply(lang === 'vi' ? `❌ Lỗi khi reset database: ${e.message}` : `❌ Error resetting database: ${e.message}`);
         }

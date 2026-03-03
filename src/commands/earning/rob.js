@@ -10,6 +10,7 @@ module.exports = {
     aliases: ['r', 'rb', 'steal'],
     description: 'Cướp tiền (Rob someone)',
     cooldown: config.ECONOMY.ROB_COOLDOWN,
+    manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
@@ -24,30 +25,20 @@ module.exports = {
             return message.reply(t('rob.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
-        const clearCooldown = () => {
-            if (!isAlreadyOnCooldown && message.client.cooldowns?.has('rob')) {
-                message.client.cooldowns.get('rob').delete(message.author.id);
-            }
-        };
-
         const target = message.mentions.users.first();
-        if (!target) {
-            clearCooldown();
+        if (!target || target.id === message.author.id || target.bot) {
             return message.reply(t('rob.invalid_user', lang));
         }
-        if (target.id === message.author.id) {
-            clearCooldown();
-            return message.reply(t('rob.invalid_user', lang));
-        }
-        if (target.bot) {
-            clearCooldown();
-            return message.reply(t('rob.invalid_user', lang));
-        }
-
 
         const victim = await db.getUser(target.id, message.guild.id);
         if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
         if ((user.balance || 0) < 100) return message.reply(t('rob.no_money_self', lang));
+
+        // Valid attempt - Set Cooldowns
+        const timestamps = message.client.cooldowns.get('rob');
+        const cooldownAmount = (this.cooldown || config.ECONOMY.ROB_COOLDOWN) * 1000;
+        timestamps.set(message.author.id, Date.now());
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
         await db.updateUser(message.guild.id, message.author.id, { last_rob: now });
 
@@ -113,8 +104,8 @@ module.exports = {
             await db.removeBalance(message.guild.id, message.author.id, penalty);
             await db.addBalance(message.guild.id, target.id, penalty);
 
-            // Cooldown Penalty: Start cooldown from now
-            await db.updateUser(message.guild.id, message.author.id, { last_rob: now });
+            // Penalty applied - last_rob already updated above
+
 
             let failMsg = t('rob.failure_xp', lang, {
                 user: target.username,

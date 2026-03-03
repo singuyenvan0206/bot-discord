@@ -744,6 +744,10 @@ async function getGuildRoles(guildId) {
     return await queryAll('SELECT * FROM guild_roles WHERE guild_id = ? ORDER BY price ASC', [guildId]);
 }
 
+async function getAllGuildRoles() {
+    return await queryAll('SELECT * FROM guild_roles');
+}
+
 async function getGuildRole(guildId, roleId) {
     return await queryOne('SELECT * FROM guild_roles WHERE guild_id = ? AND role_id = ?', [guildId, roleId]);
 }
@@ -866,6 +870,7 @@ module.exports = {
     removeGuildRole,
     updateGuildRoleId,
     getGuildRoles,
+    getAllGuildRoles,
     getGuildRole,
     getGuildSetting,
     setGuildSetting
