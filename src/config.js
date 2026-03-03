@@ -40,9 +40,9 @@ module.exports = {
         DICTIONARY: 'https://api.dictionaryapi.dev/api/v2/entries/en/'
     },
     ECONOMY: {
-        WORDCHAIN_REWARD: 50,
-        SCRAMBLE_REWARD: 1000,
-        HANGMAN_REWARD: 1000,
+        WORDCHAIN_REWARD: 150,
+        SCRAMBLE_REWARD: 2000,
+        HANGMAN_REWARD: 2000,
         GUESS_REWARD_BASE: 2500,
         MEMORY_REWARD_BASE: 2500,
         EMOJIQUIZ_REWARD: 2000,
