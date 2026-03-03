@@ -30,8 +30,8 @@ module.exports = {
 
         // Get actual multipliers (%)
         const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
-        const incomeBonus = Math.round(await getTotalMultiplier(targetMember || user.id, message.guild.id, 'income') * 100);
-        const gambleBonus = Math.round(await getTotalMultiplier(targetMember || user.id, message.guild.id, 'gamble') * 100);
+        const incomeBonus = Math.round(await getTotalMultiplier(targetMember || user.id, 'income', message.guild.id) * 100);
+        const gambleBonus = Math.round(await getTotalMultiplier(targetMember || user.id, 'gamble', message.guild.id) * 100);
         const xpBonus = Math.round((await getXpMultiplier(targetMember || user.id, message.guild.id) - 1.0) * 100);
         const maxCapPercent = Math.round(await getDynamicCap(targetMember || user.id, message.guild.id) * 100);
 
@@ -111,7 +111,7 @@ module.exports = {
                 },
                 {
                     name: t('profile.assets', lang),
-                    value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]}` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length.toLocaleString() })}`,
+                    value: `${houseTier ? `${houseTier.icon} ${houseTier.name[lang]} (+${(houseTier.income_buff * 100).toLocaleString()}% Cash)` : t('housing.info_none', lang)}\n🏢 ${t('business.info_count', lang, { count: userBizs.length.toLocaleString() })}`,
                     inline: true
                 },
 

@@ -368,7 +368,7 @@ async function processLotteryDraw(client) {
             let guildBlacklist = [];
             try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
 
-            if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) return;
+            if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) continue;
 
             const winner = await client.users.fetch(winnerId).catch(() => ({ username: 'Unknown' }));
             const embed = new EmbedBuilder()

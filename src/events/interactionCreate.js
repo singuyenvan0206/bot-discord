@@ -243,8 +243,6 @@ module.exports = {
 
         // 3. Button Interactions
         else if (interaction.isButton()) {
-            // Immediate common handling (unless handled in specific blocks below)
-
             if (interaction.customId === 'check_dist_reward') {
                 const user = await db.getUser(interaction.user.id);
                 const amount = user ? (user.last_dist_amount || 0) : 0;
@@ -252,7 +250,7 @@ module.exports = {
                 if (amount <= 0) {
                     return interaction.reply({
                         content: t('economy.no_reward_msg', lang) || "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc phần thưởng đã hết hạn.",
-                        flags: [64] // MessageFlags.Ephemeral
+                        flags: [64]
                     });
                 }
 
@@ -261,50 +259,15 @@ module.exports = {
                         amount: amount.toLocaleString(),
                         emoji: config.EMOJIS.COIN
                     }) || `Bạn đã nhận được **${amount.toLocaleString()}** ${config.EMOJIS.COIN} từ đợt chia thưởng vừa rồi! 🎉`,
-                    flags: [64] // MessageFlags.Ephemeral
+                    flags: [64]
                 });
             }
-
-            // Leaderboard Sort Buttons
-            if (interaction.customId.startsWith('rank_btn_sort_')) {
-                const intId = interaction.id;
-                try {
-                    await interaction.deferUpdate();
-                    const parts = interaction.customId.split('_');
-                    const sortBy = parts[3];
-                    const jobIdPart = parts[4];
-                    const jobId = jobIdPart === 'all' ? null : jobIdPart;
-
-                    const rankCmd = client.commands.get('rank');
-                    if (!rankCmd) return;
-
-                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang, intId);
-                    await interaction.editReply(data);
-                } catch (e) {
-                    console.error(`[Leaderboard Error]:`, e);
-                }
-            }
+            // All rank_ interactions are handled by the inline collector in rank.js
         }
 
         // 4. Select Menu Interactions
         else if (interaction.isStringSelectMenu()) {
-            if (interaction.customId.startsWith('rank_menu_job_')) {
-                const intId = interaction.id;
-                try {
-                    await interaction.deferUpdate();
-                    const parts = interaction.customId.split('_');
-                    const sortBy = parts[3];
-                    const jobId = interaction.values[0] === 'all' ? null : interaction.values[0];
-
-                    const rankCmd = client.commands.get('rank');
-                    if (!rankCmd) return;
-
-                    const data = await rankCmd.getLeaderboardData(interaction.guild, sortBy, jobId, interaction.user.id, lang, intId);
-                    await interaction.editReply(data);
-                } catch (e) {
-                    console.error(`[Leaderboard Error]:`, e);
-                }
-            }
+            // All rank_ interactions are handled by the inline collector in rank.js
         }
     },
 };

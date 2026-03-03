@@ -87,13 +87,13 @@ async function getUserMultiplier(memberOrId, type) {
  * Normal items, Level, Job, and Marriage are subject to maxCap.
  * Legendary fish buffs are ADDED AFTER the cap.
  */
-async function getTotalMultiplier(memberOrId, type = 'income') {
+async function getTotalMultiplier(memberOrId, type = 'income', guildId = null) {
     const { getLevelMultiplier } = require('./leveling');
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
-    const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const user = await db.getUser(userId, guildId);
+    const actualGuildId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
+    const user = await db.getUser(userId, actualGuildId);
 
-    const itemData = await getMultiplierData(memberOrId, guildId, type);
+    const itemData = await getMultiplierData(memberOrId, actualGuildId, type);
     const levelMulti = getLevelMultiplier(user.level);
     const houseMulti = calculateHouseMulti(user, type);
 
