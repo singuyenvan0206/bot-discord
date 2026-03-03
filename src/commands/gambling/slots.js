@@ -107,14 +107,17 @@ module.exports = {
             await addXp(message.member, winXp, message.guild.id);
 
             await db.addBalance(message.guild.id, user.id, totalPayout);
-            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: (totalPayout - bet).toLocaleString() });
-
+            if (totalPayout > bet) {
+                result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: (totalPayout - bet).toLocaleString() });
+            } else {
+                result += t('slots.partial_refund', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString() });
+            }
             if (subHypeMsg) result += subHypeMsg;
             if (bonusAmount > 0) {
-                result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
+                result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent, emoji: config.EMOJIS.COIN });
             }
         } else if (bet) {
-            result += t('slots.lost_coins', lang, { amount: bet.toLocaleString() });
+            result += t('slots.lost_coins', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN });
             // Transfer lost bet to bot profit
             await addHouseProfit(message, bet); // If payout is 0, the full bet is lost
         }

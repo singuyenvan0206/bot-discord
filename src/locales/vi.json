@@ -19,7 +19,7 @@
         "unknown_id": "ID không xác định",
         "effect": "hiệu ứng",
         "none": "Không có",
-        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng ({{percent}}%): +{{amount}} coins)*",
+        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng ({{percent}}%): +{{amount}} {{emoji}})*",
         "hacked_msg": " (Hacked!)",
         "escaped_msg": "Đã tẩu thoát! (Phạt: {{amount}})",
         "armed_msg": " (Có vũ trang!)",
@@ -102,10 +102,11 @@
     },
     "slots": {
         "title": "🎰 Máy Quay Slot",
-        "won_coins": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}}",
-        "lost_coins": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}",
+        "won_coins": "\n🎉 **Bạn thắng** {{amount}} {{emoji}}!",
+        "lost_coins": "\n👔 Bạn thua **{{amount}}** {{emoji}}.",
         "win_jackpot": "💰 **JACKPOT!** Ba hình **{{symbol}}**!",
         "win_small": "✨ **Thắng nhỏ!** Hai hình khớp nhau!",
+        "partial_refund": "\n💰 **Tiền hoàn lại:** **{{amount}}** {{emoji}}",
         "lose": "❌ Chúc bạn may mắn lần sau!",
         "sub_hype": "\n🔥 **Sub Hype!** Fan Streamer đã nhân đôi tiền thắng!",
         "rolling": "🎰  **Đang quay...**",
@@ -692,32 +693,32 @@
         },
         "401": {
             "name": "🍞 Mồi Bánh Mì",
-            "desc": "Vụn bánh đơn giản cho cá nhỏ. (May mắn: +5%)",
+            "desc": "Vụn bánh đơn giản cho cá nhỏ. (May mắn: +0.1)",
             "details": "Những mẩu bánh mì vụn. Thu hút cá nhỏ nhưng hiếm khi bắt được cá lớn."
         },
         "402": {
             "name": "🪱 Mồi Giun",
-            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +15%)",
+            "desc": "Mồi câu sử dụng một lần. Cần thiết để câu cá. (May mắn: +0.3)",
             "details": "Mồi giun béo ngậy, món ăn khoái khẩu của hầu hết các loài cá nước ngọt và cá tầng giữa."
         },
         "403": {
             "name": "🦐 Mồi Tôm",
-            "desc": "Mặn và ngon miệng. (May mắn: +40%)",
+            "desc": "Mặn và ngon miệng. (May mắn: +0.7)",
             "details": "Tôm tươi sống, món khoái khẩu của những loài cá lớn hơn."
         },
         "404": {
             "name": "🦗 Mồi Dế",
-            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +75%)",
+            "desc": "Loại mồi yêu thích của nhiều loài cá. (May mắn: +1.2)",
             "details": "Những chu kỳ cử động linh hoạt của dế trên mặt nước là mục tiêu hàng đầu của các loài cá săn mồi."
         },
         "405": {
             "name": "🦑 Mồi Mực",
-            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +150%)",
+            "desc": "Không thể cưỡng lại đối với cá lớn. (May mắn: +2.0)",
             "details": "Mực tươi xẻ miếng, lựa chọn hàng đầu cho các loài cá săn mồi cỡ lớn từ đại dương."
         },
         "406": {
             "name": "✨ Mồi Vàng",
-            "desc": "Mồi lấp lánh cho những phát hiện hiếm. (May mắn: +300%)",
+            "desc": "Mồi lấp lánh cho những phát hiện hiếm. (May mắn: +3.5)",
             "details": "Mồi câu được yểm bùa phát sáng dưới nước, thu hút những sinh vật hiếm nhất đại dương."
         },
         "407": {

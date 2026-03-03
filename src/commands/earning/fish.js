@@ -11,23 +11,23 @@ const { calculateReward } = require('../../utils/multiplier');
 
 // Rod Definitions (IDs match new category 400s)
 const RODS = [
-    { id: '413', luck: 2.5 },  // Neptune's Rod
-    { id: '412', luck: 1.8 },  // Titanium Rod
-    { id: '411', luck: 1.4 },  // Carbon Rod
-    { id: '410', luck: 1.1 },  // Steel Rod
-    { id: '409', luck: 0.8 },  // Fiberglass Rod
-    { id: '408', luck: 0.5 },  // Bamboo Rod
-    { id: '407', luck: 0.2 }   // Plastic Rod
+    { id: '413', luck: 3.0 },  // Neptune's Rod
+    { id: '412', luck: 2.3 },  // Titanium Rod
+    { id: '411', luck: 1.8 },  // Carbon Rod
+    { id: '410', luck: 1.4 },  // Steel Rod
+    { id: '409', luck: 1.1 },  // Fiberglass Rod
+    { id: '408', luck: 1.0 },  // Bamboo Rod
+    { id: '407', luck: 0.5 }   // Plastic Rod
 ];
 
-// Bait Definitions
+// Bait Definitions (additive luck bonus)
 const BAITS = [
-    { id: '406', luck: 1.00 },  // Golden Bait
-    { id: '405', luck: 0.60 },  // Squid Bait
-    { id: '404', luck: 0.35 }, // Cricket Bait
-    { id: '403', luck: 0.15 },  // Shrimp Bait
-    { id: '402', luck: 0.08 }, // Worm Bait
-    { id: '401', luck: 0.02 }  // Bread Bait
+    { id: '406', luck: 3.5 },  // Golden Bait
+    { id: '405', luck: 2.0 },  // Squid Bait
+    { id: '404', luck: 1.2 },  // Cricket Bait
+    { id: '403', luck: 0.7 },  // Shrimp Bait
+    { id: '402', luck: 0.3 },  // Worm Bait
+    { id: '401', luck: 0.1 }   // Bread Bait
 ];
 
 // Fish Table
@@ -106,35 +106,40 @@ module.exports = {
         const rodName = t(`items.${rod.id}.name`, lang);
         const baitName = t(`items.${bait.id}.name`, lang);
 
-        // Calculate Total Luck (Farmer Job Bonus)
-        let totalLuck = rod.luck * (1 + bait.luck);
+        // Calculate Total Luck (Additive: rod + bait)
+        // Formula: totalLuck = rod.luck + bait.luck
+        // Farmer Job Bonus: totalLuck × 1.2
+        let totalLuck = rod.luck + bait.luck;
         if (user.job === 'farmer') {
             totalLuck *= 1.2; // Farmers get 20% more luck from gear
         }
 
-        // helper to get weighted pool
+        // Helper: build weighted pool based on current luck
         const getWeightedPool = (luck) => {
+            // Only include fish that the player's luck is sufficient to catch
             let pool = CATCHES.filter(c => c.minLuck <= luck);
             return pool.map(c => {
-                let modWeight = c.weight;
+                let w = c.weight;
+                const luckAboveMin = Math.max(0, luck - c.minLuck);
 
-                if (['old_boot', 'rusty_can', 'seaweed'].includes(c.key)) {
-                    // Trash items reach 0 rate at luck 40
-                    modWeight *= Math.max(0, 1 - (luck / 40));
+                if (c.value === 0) {
+                    // Trash: fades out quickly as luck increases (gone at luck ~7)
+                    w *= Math.max(0, 1 - luck * 0.15);
+                } else if (c.value < 500) {
+                    // Common fish: gently suppressed at higher luck
+                    w *= Math.max(0.02, 1 - luck * 0.08);
                 } else if (c.value < 5000) {
-                    // Suppress common fish at high luck
-                    modWeight *= Math.max(0.01, 1 - (luck / 60));
-                } else if (c.value < 20000) {
-                    // Mid-tier: boost
-                    const luckDiff = Math.max(0, luck - c.minLuck);
-                    modWeight *= 1 + (luckDiff * 0.01);
+                    // Mid-tier: slight boost per luck above minLuck
+                    w *= 1 + luckAboveMin * 0.06;
+                } else if (c.value < 25000) {
+                    // High-tier: moderate boost per luck above minLuck
+                    w *= 1 + luckAboveMin * 0.10;
                 } else {
-                    // Rare items (>= 20000): cap drop rates to prevent hyperinflation
-                    modWeight *= 0.028; // Drastically reduce base drop chance
-                    const luckDiff = Math.max(0, luck - c.minLuck);
-                    modWeight *= 1 + (luckDiff * 0.05); // Give a 5% relative boost per point of luck above requirement
+                    // Rare (25k+): strong boost, capped at 5× base weight
+                    w *= Math.min(5, 1 + luckAboveMin * 0.20);
                 }
-                return { ...c, weight: modWeight };
+
+                return { ...c, weight: w };
             });
         };
 

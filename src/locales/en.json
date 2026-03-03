@@ -143,10 +143,11 @@
         "title": "🎰  Slot Machine",
         "rolling": "🎰  Rolling...",
         "win_jackpot": "🎰 **JACKPOT! THREE {{symbol}} SYMBOLS!**",
-        "win_small": "🎰 **Two matching symbols.** (25% Refund)",
+        "win_small": "🎰 **Two matching symbols.**",
+        "partial_refund": "\n💰 **Refunded:** **{{amount}}** {{emoji}}",
         "lose": "🎰 No matches. Better luck next time!",
-        "won_coins": "\n💰 **Profit:** **{{amount}}** coins",
-        "lost_coins": "\n💰 **Profit:** **-{{amount}}** coins",
+        "won_coins": "\n🎉 **You won** {{amount}} {{emoji}}!",
+        "lost_coins": "\n👔 You lost **{{amount}}** {{emoji}}.",
         "sub_hype": "\n🔥 **Sub Hype!** Streamer's fans doubled the winnings!",
         "bonus_item": " *(Includes +{{amount}} bonus (Capped {{cap}}%): {{percent}}%)*"
     },
@@ -638,32 +639,32 @@
         },
         "401": {
             "name": "🍞 Bread Crumbs",
-            "desc": "Simple bait (Luck: +5%)",
+            "desc": "Simple bait (Luck: +0.1)",
             "details": "Dry bread scraps, suitable for attracting small common fish near the shore."
         },
         "402": {
             "name": "🪱 Fresh Earthworms",
-            "desc": "Popular bait (Luck: +15%)",
+            "desc": "Popular bait (Luck: +0.3)",
             "details": "A traditional bait essential for any fisherman starting their aquatic journey."
         },
         "403": {
             "name": "🦐 Ocean Shrimp",
-            "desc": "Irresistible flavor (Luck: +40%)",
+            "desc": "Irresistible flavor (Luck: +0.7)",
             "details": "Fresh shrimp with a distinct scent, attracting larger and more aggressive fish species."
         },
         "404": {
             "name": "🦗 Field Crickets",
-            "desc": "Versatile bait (Luck: +75%)",
+            "desc": "Versatile bait (Luck: +1.2)",
             "details": "The lively movement of crickets on the water's surface makes them a prime target for active predators."
         },
         "405": {
             "name": "🦑 Deep-Sea Squid",
-            "desc": "Deep sea flavor (Luck: +150%)",
+            "desc": "Deep sea flavor (Luck: +2.0)",
             "details": "Sliced fresh squid, the top choice for large-scale predatory fish from the depths."
         },
         "406": {
             "name": "✨ Enchanted Glow Bait",
-            "desc": "Magical allure (Luck: +300%)",
+            "desc": "Magical allure (Luck: +3.5)",
             "details": "Infused with a subtle glow and essence, attracting the rarest creatures from the deepest ocean trenches."
         },
         "407": {
