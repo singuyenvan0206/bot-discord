@@ -1,7 +1,7 @@
 const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
-const { parseAmount } = require('../../utils/economy');
+const { parseAmount, addHouseProfit } = require('../../utils/economy');
 
 module.exports = {
     name: 'transfer',
@@ -26,6 +26,10 @@ module.exports = {
 
         await db.removeBalance(message.guild.id, message.author.id, amount);
         await db.addBalance(message.guild.id, targetUser.id, finalAmount);
+
+        if (tax > 0) {
+            await addHouseProfit(message, tax);
+        }
 
         let msg = t('transfer.success', lang, { amount: finalAmount.toLocaleString(), user: targetUser.toString() });
         if (tax > 0) {

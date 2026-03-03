@@ -29,11 +29,22 @@ module.exports = {
         const targetMember = await message.guild.members.fetch(user.id).catch(() => null);
 
         // Get actual multipliers (%)
-        const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
-        const incomeBonus = Math.round(await getTotalMultiplier(targetMember || user.id, 'income', message.guild.id) * 100);
-        const gambleBonus = Math.round(await getTotalMultiplier(targetMember || user.id, 'gamble', message.guild.id) * 100);
+        const { getMultiplierBreakdown, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
+        const incData = await getMultiplierBreakdown(targetMember || user.id, 'income', message.guild.id);
+        const gamData = await getMultiplierBreakdown(targetMember || user.id, 'gamble', message.guild.id);
+
+        const incomeBonus = Math.round(incData.total * 100);
+        const gambleBonus = Math.round(gamData.total * 100);
         const xpBonus = Math.round((await getXpMultiplier(targetMember || user.id, message.guild.id) - 1.0) * 100);
         const maxCapPercent = Math.round(await getDynamicCap(targetMember || user.id, message.guild.id) * 100);
+
+        // UI strings for breakdown
+        const renderBonus = (data) => {
+            const cappedShift = Math.round(data.capped * 100);
+            const legendShift = Math.round(data.legendary * 100);
+            if (legendShift > 0) return `**${cappedShift}%**+**${legendShift}%**`;
+            return `**${cappedShift}%**`;
+        };
 
         // Find Rank (Position in guild-specific balance top)
         const topBalance = await db.getTopUsers(message.guild.id, 100, 'balance');
@@ -123,7 +134,7 @@ module.exports = {
                 },
                 {
                     name: t('profile.multipliers', lang),
-                    value: `💼 **${incomeBonus}%** | 🎲 **${gambleBonus}%** | ✨ **${xpBonus}%**\n🛡️ ${t('profile.cap', lang)}: **${maxCapPercent}%**`,
+                    value: `💼 ${renderBonus(incData)} | 🎲 ${renderBonus(gamData)} | ✨ **${xpBonus}%**\n🛡️ ${t('profile.cap', lang)}: **${maxCapPercent}%**`,
                     inline: true
                 },
                 {

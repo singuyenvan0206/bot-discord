@@ -54,7 +54,7 @@ module.exports = {
         if (!item) return message.reply('❌ ID hoặc tên vật phẩm không hợp lệ.');
 
         for (const target of targets) {
-            await db.addItem(target.id, item.id, amount);
+            await db.addItem(message.guild.id, target.id, item.id, amount);
         }
 
         const userNames = targets.map(u => `**${u.username}**`).join(', ');

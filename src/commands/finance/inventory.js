@@ -72,15 +72,26 @@ module.exports = {
 
                 // Global Multipliers (Capped 300% or 600%)
                 const targetMember = message.guild.members.cache.get(target.id) || target;
-                const { getTotalMultiplier, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
-                const incomeBonus = Math.round(await getTotalMultiplier(targetMember, 'income') * 100);
-                const gambleBonus = Math.round(await getTotalMultiplier(targetMember, 'gamble') * 100);
-                const xpBonus = Math.round((await getXpMultiplier(targetMember) - 1.0) * 100);
-                const maxCapPercent = Math.round(await getDynamicCap(targetMember) * 100);
+                const { getMultiplierBreakdown, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
+
+                const incData = await getMultiplierBreakdown(targetMember, 'income', message.guild.id);
+                const gamData = await getMultiplierBreakdown(targetMember, 'gamble', message.guild.id);
+
+                const incomeBonus = Math.round(incData.total * 100);
+                const gambleBonus = Math.round(gamData.total * 100);
+                const xpBonus = Math.round((await getXpMultiplier(targetMember, message.guild.id) - 1.0) * 100);
+                const maxCapPercent = Math.round(await getDynamicCap(targetMember, message.guild.id) * 100);
+
+                const renderBonus = (data) => {
+                    const cappedShift = Math.round(data.capped * 100);
+                    const legendShift = Math.round(data.legendary * 100);
+                    if (legendShift > 0) return `+${cappedShift}% + ${legendShift}%`;
+                    return `+${cappedShift}%`;
+                };
 
                 embed.addFields({
                     name: t('inventory.global_multipliers', lang),
-                    value: `**${t('inventory.income_bonus', lang)}:** +${incomeBonus.toLocaleString()}% / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.gamble_bonus', lang)}:** +${gambleBonus.toLocaleString()}% / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus.toLocaleString()}% / 400%`,
+                    value: `**${t('inventory.income_bonus', lang)}:** ${renderBonus(incData)} / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.gamble_bonus', lang)}:** ${renderBonus(gamData)} / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus.toLocaleString()}% / 1500%`,
                     inline: true
                 });
 
@@ -113,11 +124,9 @@ module.exports = {
                         }
                     }
 
-                    // Diminishing returns + Hard Cap 2.5
-                    const effectiveTotal = (raw) => {
-                        const eff = raw > 1.0 ? 1.0 + (raw - 1.0) * 0.5 : raw;
-                        return Math.min(eff, 2.5);
-                    };
+                    // Item data for display only
+                    const { calculateMultiplierFromBuffs } = require('../../utils/multiplier');
+                    // We just need the raw totals from items here for the buffs list
 
                     const TYPE_EMOJIS = {
                         daily: '📅', income: '💼', gamble: '🎲',
@@ -126,7 +135,12 @@ module.exports = {
 
                     const lines = Object.entries(typeMap).map(([type, data]) => {
                         const effectType = t(`effects.${type}`, lang);
-                        const pct = Math.round(data.total * 100);
+
+                        // Apply diminishing returns (matching multiplier.js)
+                        let rawTotal = data.total;
+                        let effectiveTotal = rawTotal > 1.0 ? 1.0 + (rawTotal - 1.0) * 0.5 : rawTotal;
+
+                        const pct = Math.round(effectiveTotal * 100);
                         const remaining = data.earliestExpiry - now;
                         let h = Math.floor(remaining / 3600);
                         let m = Math.round((remaining % 3600) / 60);

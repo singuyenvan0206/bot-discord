@@ -1,6 +1,7 @@
 const db = require('../../database');
 const SHOP_ITEMS = require('../../utils/shopItems');
 const { t, getLanguage } = require('../../utils/i18n');
+const { addHouseProfit } = require('../../utils/economy');
 const config = require('../../config');
 
 module.exports = {
@@ -94,6 +95,7 @@ module.exports = {
         }
 
         await db.removeBalance(message.guild.id, message.author.id, totalCost);
+        await addHouseProfit(message, totalCost);
 
         for (const purchase of itemsToBuy) {
             await db.addItem(message.guild.id, message.author.id, purchase.item.id, purchase.quantity);

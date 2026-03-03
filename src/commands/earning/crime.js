@@ -1,6 +1,7 @@
 const db = require('../../database');
 const { deductLevel, deductXp } = require('../../utils/leveling');
 const { calculateReward, hasActiveItem, removeActiveBuff } = require('../../utils/multiplier');
+const { addHouseProfit } = require('../../utils/economy');
 const { t, getLanguage } = require('../../utils/i18n');
 const { formatDuration } = require('../../utils/time');
 const config = require('../../config');
@@ -118,6 +119,8 @@ module.exports = {
             const policeUser = randomPoliceId ? message.guild?.members?.cache.get(randomPoliceId) : null;
             if (randomPoliceId) {
                 await db.addBalance(message.guild.id, randomPoliceId, fine);
+            } else {
+                await addHouseProfit(message, fine);
             }
 
             // Base failure message

@@ -88,6 +88,14 @@ async function getUserMultiplier(memberOrId, type) {
  * Legendary fish buffs are ADDED AFTER the cap.
  */
 async function getTotalMultiplier(memberOrId, type = 'income', guildId = null) {
+    const data = await getMultiplierBreakdown(memberOrId, type, guildId);
+    return data.total;
+}
+
+/**
+ * Detailed multiplier data for UI
+ */
+async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = null) {
     const { getLevelMultiplier } = require('./leveling');
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const actualGuildId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
@@ -105,43 +113,45 @@ async function getTotalMultiplier(memberOrId, type = 'income', guildId = null) {
     }
 
     let marriageMulti = 0;
-    const marriage = await db.getMarriage(guildId, userId);
+    const marriage = await db.getMarriage(actualGuildId, userId);
     if (marriage) {
         if (marriage.ring_id === 702) marriageMulti = 0.50;
         else if (marriage.ring_id === 701) marriageMulti = 0.25;
     }
 
     let roleIncomeMulti = 0;
-    let roleXpMulti = 0;
-    const config = require('../config');
-
-    // 1. Role Buffs (Dynamic from Database or Static Config)
+    // Role Buffs (Dynamic from Database)
     if (memberOrId && typeof memberOrId === 'object' && memberOrId.roles) {
-        const gId = memberOrId.guild.id;
-        const guildRoles = await db.getGuildRoles(gId);
-
+        const guildRoles = await db.getGuildRoles(actualGuildId);
         for (const role of guildRoles) {
-            const rId = role.role_id;
-            if (memberOrId.roles.cache.has(rId)) {
-                roleIncomeMulti += (role.income_buff || 0);
-                roleXpMulti += (role.xp_buff || 0);
+            if (memberOrId.roles.cache.has(role.role_id)) {
+                roleIncomeMulti += (type === 'income' ? (role.income_buff || 0) : (role.gamble_buff || 0));
             }
         }
-    } else {
-        // Fallback for background tasks (using purchased_roles in DB)
-        // Since we don't know the guild context easily here, and config is removed,
-        // we might need to skip this or fetch from all guilds.
-        // However, role buffs are usually guild-specific.
     }
 
-    const maxCap = await getDynamicCap(memberOrId);
+    const maxCap = await getDynamicCap(memberOrId, actualGuildId);
 
-    // Sum ALL multipliers (Items, Level, Job, House, Roles, Marriage, Legendary)
-    const grandTotal = itemData.normal + itemData.legendary + levelMulti + jobMulti + houseMulti + roleIncomeMulti + marriageMulti;
+    // Sum base multipliers (Items Normal, Level, Job, House, Marriage, Role Nerfed)
+    const baseRaw = itemData.normal + levelMulti + jobMulti + houseMulti + marriageMulti + (roleIncomeMulti * 0.5);
+    const cappedBase = Math.min(baseRaw, maxCap);
 
-    // Final result: Everything is capped at maxCap (1.5x/2.0x total)
-    // NERF: Apply 0.5x multiplier to role buffs automatically
-    return Math.min(grandTotal - roleIncomeMulti + (roleIncomeMulti * 0.5), maxCap);
+    // Final result: Capped Base + Legendary (uncapped)
+    const total = cappedBase + itemData.legendary;
+
+    return {
+        total,
+        base: baseRaw,
+        capped: cappedBase,
+        legendary: itemData.legendary,
+        cap: maxCap,
+        level: levelMulti,
+        job: jobMulti,
+        house: houseMulti,
+        marriage: marriageMulti,
+        role: roleIncomeMulti * 0.5,
+        itemsNormal: itemData.normal
+    };
 }
 
 async function getTotalIncomeMultiplier(memberOrId) {
@@ -270,6 +280,7 @@ module.exports = {
     hasActiveItem,
     calculateReward,
     removeActiveBuff,
-    getDynamicCap
+    getDynamicCap,
+    getMultiplierBreakdown
 };
 

@@ -1,6 +1,7 @@
 const db = require('../../database');
 const SHOP_ITEMS = require('../../utils/shopItems');
 const { t, getLanguage } = require('../../utils/i18n');
+const { addHouseProfit } = require('../../utils/economy');
 const config = require('../../config');
 
 module.exports = {
@@ -41,6 +42,15 @@ module.exports = {
             // Wipe inventory
             await db.updateUser(message.guild.id, message.author.id, { inventory: '{}' });
             await db.addBalance(message.guild.id, message.author.id, totalEarned);
+
+            // House profit from "burned" money
+            let totalMarketValue = 0;
+            for (const [idStr, count] of Object.entries(inv)) {
+                const item = SHOP_ITEMS.find(i => String(i.id) === idStr);
+                if (item) totalMarketValue += (item.price * count);
+            }
+            const burned = totalMarketValue - totalEarned;
+            if (burned > 0) await addHouseProfit(message, burned);
 
             return message.reply(t('sell.all_success', lang, { count: totalItemsCount, price: totalEarned.toLocaleString(), emoji: config.EMOJIS.COIN }));
         }
@@ -97,6 +107,9 @@ module.exports = {
         if (!success) return message.reply(t('sell.fail', lang));
 
         await db.addBalance(message.guild.id, message.author.id, sellPrice);
+
+        const burned = (item.price * quantity) - sellPrice;
+        if (burned > 0) await addHouseProfit(message, burned);
 
         return message.reply(t('sell.success', lang, {
             quantity,
