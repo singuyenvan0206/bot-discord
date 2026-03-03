@@ -59,7 +59,7 @@ module.exports = {
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
             await addXp(message.member, winXp, message.guild.id);
 
-            flavorText = t('coinflip.win_msg', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
+            flavorText = t('coinflip.win_msg', lang, { amount: total.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (bonus > 0) {
                 flavorText += `\n✨ **Bonus:** +${percent.toLocaleString()}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
             }

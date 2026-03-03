@@ -99,8 +99,8 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             const { total: totalRes, bonus: bonusAmount, percent } = await calculateReward(profit, i.member, 'gamble');
             payout = totalRes + bet; // Reward logic
 
-            // Generate amount suffix for win
-            const winAmountStr = t('blackjack.win_amount', lang, { amount: payout.toLocaleString(), emoji: config.EMOJIS.COIN });
+            // Generate amount suffix for win (Show total profit = base profit + bonus, excluding bet refund)
+            const winAmountStr = t('blackjack.win_amount', lang, { amount: totalRes.toLocaleString(), emoji: config.EMOJIS.COIN });
 
             if (playerIsNatural) {
                 result = t('blackjack.natural_win', lang) + winAmountStr;

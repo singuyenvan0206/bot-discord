@@ -21,8 +21,8 @@
 - 🌍 **Bilingual Support (i18n)** — Play seamlessly in English or Vietnamese. The bot supports global server defaults and custom user overwrites (`$language`)!
 - 🎁 **Giveaway Management** — Create timed giveaways with button/reaction entry, role restrictions, pause/resume, and auto winner selection.
 - 🎮 **18+ Interactive Mini-Games** — From Blackjack & Poker to Minesweeper, Trivia, Emoji Quiz, Hangman, and more — all with rich embeds & interactive button UIs.
-- 💰 **Virtual Economy** — Earn coins through daily rewards and working, bet in games, buy items from the shop, and climb the leaderboard.
-- 🛒 **Dynamic Shop & Inventory** — Purchase items spanning Tools, Baits, Income Boosts, Daily Boosts, and Luck Boosts. Increase your earnings permanently!
+- 💰 **Virtual Economy (Balanced)** — Earn coins through daily rewards and working. All bonuses are strictly capped (150% base / 200% VIP) to ensure long-term stability.
+- 🛒 **Dynamic Shop & Inventory** — Purchase items from 8 categories. Manage your wealth with a 10% Transfer Tax and 70% Sell Recovery rate.
 - 🔧 **Server Utilities** — Ping, avatar viewer, server/user stats, and rich profiles with *Net Worth* tracking.
 - 💾 **Safe & Isolated Storage** — Securely saved in local SQLite databases. The main bot and specialized instances (like Word Chain) use separate isolated database files for maximum stability.
 - ⚡ **Native Slash Commands** — Modern interaction support with integrated help tooltips and autocomplete.
@@ -93,7 +93,7 @@ All games feature interactive button-based UIs and rich embeds. Many support **c
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
-| `$blackjack [bet]` | `$bj` | Play Blackjack against the dealer. Hit or Stand. Default bet: 50. Pays 2× on win, 2.5× on natural! |
+| `$blackjack [bet]` | `$bj` | Play Blackjack against the dealer. Hit or Stand. Max bet: 250k. Pays 2× on win, 2.5× on natural! |
 | `$poker [bet]` | `$pk` | Texas Hold'em style multiplayer poker with lobby system. Join with buttons. Full betting rounds via modals! |
 | `$slots` | — | Spin the slot machine. Match 3 symbols to win huge Jackpots! |
 | `$coinflip` | `$cf`, `$flip` | Flip a coin — simple heads or tails betting |
@@ -147,9 +147,9 @@ Earn, spend, invest, and compete. All data flawlessly persists across restarts.
 | `$use` | — | Use a consumable item from your inventory to trigger its effects. |
 | `$inventory` | `$inv` | View your sorted inventory, total items, and absolute property value (`Net Worth`). |
 | `$iteminfo` | `$item`, `$info`| Read detailed lore, multiplier stats, and pricing for any specific item! |
-| `$transfer` | `$pay`, `$tf` | Send coins seamlessly to another user. |
+| `$transfer` | `$pay`, `$tf` | Send coins seamlessly to another user. (10% Tax applies) |
 | `$leaderboard` | `$lb`, `$top` | Global server ranking based strictly on accurate **Net Worth** (Wallet + Inventory). |
-| `$crate` | `$ruong`, `$gacha`| Open lucky crates in bulk (`$crate open <id> all`) for random rewards! |
+| `$crate` | `$ruong`, `$gacha`| Open lucky crates with nerfed, balanced cash rewards. |
 | `$house` | `$home`, `$nha` | Buy and decorate real estate for permanent income and cap multiplier buffs. |
 | `$business` | `$biz` | Buy and manage businesses to generate massive passive hourly income. |
 
@@ -158,7 +158,7 @@ Simsimi supports shorthand for betting and economy inputs to save you time.
 - `k` — Thousands (e.g., `$bj 5k` = 5,000)
 - `m` — Millions (e.g., `$bj 2m` = 2,000,000)
 - `b` — Billions (e.g., `$bj 1b` = 1,000,000,000)
-- `all` — Your entire wallet balance (e.g., `$cf all`)
+- `all` — Your entire wallet balance (up to Max Bet limit)
 
 ---
 

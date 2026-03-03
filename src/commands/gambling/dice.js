@@ -106,7 +106,7 @@ module.exports = {
                 await addXp(message.member, winXp, i.guild.id);
 
                 bonusText = t('dice.win_msg', lang, {
-                    amount: payout.toLocaleString(),
+                    amount: total.toLocaleString(),
                     emoji: config.EMOJIS.COIN,
                     multiplier: winMultiplier
                 });

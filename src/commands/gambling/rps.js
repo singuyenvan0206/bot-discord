@@ -140,7 +140,7 @@ module.exports = {
                     let prize = (betAmount * 2) + bonusAmount;
 
                     await db.addBalance(message.guild.id, user.id, prize);
-                    result += t('rps.won_coins', lang, { amount: prize.toLocaleString(), emoji: config.EMOJIS.COIN });
+                    result += t('rps.won_coins', lang, { amount: (prize - betAmount).toLocaleString(), emoji: config.EMOJIS.COIN });
 
                     // Grant Win XP
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;

@@ -107,7 +107,7 @@ module.exports = {
             await addXp(message.member, winXp, message.guild.id);
 
             await db.addBalance(message.guild.id, user.id, totalPayout);
-            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString() });
+            result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: (totalPayout - bet).toLocaleString() });
 
             if (subHypeMsg) result += subHypeMsg;
             if (bonusAmount > 0) {
