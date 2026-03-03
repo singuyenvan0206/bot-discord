@@ -25,6 +25,10 @@ const BAITS = [
 ];
 
 // Fish Table
+// minLuck reference: max luck = rod.luck + bait.luck
+//   Plastic(0.5)+Bread(0.1)=0.6 | Bamboo(1.0)+Worm(0.3)=1.3 | Steel(1.4)+Cricket(1.2)=2.6
+//   Carbon(1.8)+Squid(2.0)=3.8  | Titanium(2.3)+Squid(2.0)=4.3 | Neptune(3.0)+Squid(2.0)=5.0
+//   Neptune(3.0)+Golden(3.5)=6.5 (max) | Farmer x1.2 bonus
 const CATCHES = [
     { key: 'old_boot', emoji: '👢', value: 0, weight: 150, minLuck: 0 },
     { key: 'rusty_can', emoji: '🥫', value: 0, weight: 150, minLuck: 0 },
@@ -33,30 +37,30 @@ const CATCHES = [
     { key: 'sardine', emoji: '🐟', value: 20, weight: 100, minLuck: 0 },
     { key: 'carp', emoji: '🐟', value: 30, weight: 100, minLuck: 0 },
     { key: 'brook_trout', emoji: '🐟', value: 45, weight: 100, minLuck: 0 },
-    { key: 'archerfish', emoji: '🐟', value: 100, weight: 110, minLuck: 0.2 },
-    { key: 'betta', emoji: '🐠', value: 200, weight: 100, minLuck: 0.4 },
-    { key: 'bass', emoji: '🐟', value: 400, weight: 150, minLuck: 0.6 },
-    { key: 'sockeye_salmon', emoji: '🐟', value: 600, weight: 150, minLuck: 0.8 },
-    { key: 'pufferfish', emoji: '🐡', value: 900, weight: 180, minLuck: 1.0 },
-    { key: 'clownfish', emoji: '🐠', value: 1300, weight: 170, minLuck: 1.2 },
-    { key: 'arowana', emoji: '🐉', value: 1800, weight: 155, minLuck: 1.4 },
-    { key: 'stingray', emoji: '🐡', value: 2500, weight: 160, minLuck: 1.6 },
-    { key: 'sunfish', emoji: '☀️', value: 3500, weight: 150, minLuck: 1.8 },
-    { key: 'tuna', emoji: '🐟', value: 4500, weight: 150, minLuck: 2.0 },
-    { key: 'swordfish', emoji: '🗡️', value: 4000, weight: 130, minLuck: 2.2 },
-    { key: 'sturgeon', emoji: '🐟', value: 4500, weight: 130, minLuck: 2.4 },
-    { key: 'manta_ray', emoji: '🐋', value: 3500, weight: 120, minLuck: 2.6 },
-    { key: 'shark', emoji: '🦈', value: 4000, weight: 110, minLuck: 2.8 },
-    { key: 'alligator_gar', emoji: '🐊', value: 6000, weight: 100, minLuck: 3.0 },
-    { key: 'whale', emoji: '🐋', value: 8000, weight: 90, minLuck: 3.2 },
-    { key: 'anglerfish', emoji: '🏮', value: 10000, weight: 300, minLuck: 3.5 },
-    { key: 'treasure_chest', emoji: '💰', value: 12000, weight: 150, minLuck: 3.8 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 25000, weight: 100, minLuck: 4.2 },
-    { key: 'kraken', emoji: '🐙', value: 45000, weight: 80, minLuck: 4.5 },
-    { key: 'megalodon', emoji: '🦈', value: 80000, weight: 50, minLuck: 4.8 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 120000, weight: 30, minLuck: 5.0 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 180000, weight: 15, minLuck: 5.2 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 250000, weight: 8, minLuck: 5.5 }
+    { key: 'archerfish', emoji: '🐟', value: 100, weight: 110, minLuck: 0.5 },   // Plastic + any bait
+    { key: 'betta', emoji: '🐠', value: 200, weight: 100, minLuck: 0.8 },         // Bamboo + Bread
+    { key: 'bass', emoji: '🐟', value: 400, weight: 150, minLuck: 1.1 },          // Bamboo + Worm
+    { key: 'sockeye_salmon', emoji: '🐟', value: 600, weight: 150, minLuck: 1.4 },// Bamboo + Shrimp
+    { key: 'pufferfish', emoji: '🐡', value: 900, weight: 180, minLuck: 1.7 },    // Fiberglass + Shrimp
+    { key: 'clownfish', emoji: '🐠', value: 1300, weight: 170, minLuck: 2.0 },    // Steel + Worm
+    { key: 'arowana', emoji: '🐉', value: 1800, weight: 155, minLuck: 2.3 },      // Steel + Shrimp
+    { key: 'stingray', emoji: '🐡', value: 2500, weight: 160, minLuck: 2.6 },     // Steel + Cricket
+    { key: 'sunfish', emoji: '☀️', value: 3500, weight: 150, minLuck: 2.9 },      // Carbon + Worm
+    { key: 'swordfish', emoji: '🗡️', value: 4000, weight: 130, minLuck: 3.0 },   // Carbon + Shrimp
+    { key: 'tuna', emoji: '🐟', value: 4500, weight: 150, minLuck: 3.2 },         // Carbon + Cricket
+    { key: 'manta_ray', emoji: '🐋', value: 3500, weight: 120, minLuck: 3.2 },   // Carbon + Cricket
+    { key: 'sturgeon', emoji: '🐟', value: 4500, weight: 130, minLuck: 3.4 },     // Carbon + Cricket
+    { key: 'shark', emoji: '🦈', value: 4000, weight: 110, minLuck: 3.5 },        // Carbon + Cricket / Titanium + Bait
+    { key: 'alligator_gar', emoji: '🐊', value: 6000, weight: 100, minLuck: 3.8 },// Carbon + Squid
+    { key: 'whale', emoji: '🐋', value: 8000, weight: 90, minLuck: 4.1 },         // Titanium + Worm
+    { key: 'anglerfish', emoji: '🏮', value: 10000, weight: 300, minLuck: 4.2 },  // Titanium + Squid or Neptune + Cricket
+    { key: 'treasure_chest', emoji: '💰', value: 12000, weight: 150, minLuck: 4.5 },// Titanium + Cricket
+    { key: 'mythical_pearl', emoji: '🔮', value: 25000, weight: 100, minLuck: 5.0 },// Neptune + Squid
+    { key: 'kraken', emoji: '🐙', value: 45000, weight: 80, minLuck: 5.3 },       // Titanium/Neptune + Golden
+    { key: 'megalodon', emoji: '🦈', value: 80000, weight: 50, minLuck: 5.6 },    // Neptune + Squid/Golden
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 120000, weight: 30, minLuck: 5.9 }, // Neptune + Golden
+    { key: 'poseidon_trident', emoji: '🔱', value: 180000, weight: 15, minLuck: 6.7 },     // Farmer only: Neptune + Golden (7.8)
+    { key: 'ocean_dragon', emoji: '🐉', value: 250000, weight: 8, minLuck: 7.2 }           // Farmer only: Neptune + Golden (7.8)
 ];
 
 /**

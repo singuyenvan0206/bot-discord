@@ -1226,8 +1226,8 @@
         "heads": "Heads",
         "tails": "Tails",
         "invalid_side": "❌ Please choose `heads` or `tails`!\nUsage: `{{prefix}}coinflip <heads|tails> [bet]`",
-        "win_msg": "\n💰 **Profit:** **{{amount}}** coins",
-        "lose": "\n💰 **Profit:** **-{{amount}}** coins"
+        "win_msg": "\n🎉 **You won** {{amount}} {{emoji}}!",
+        "lose": "\n👔 You lost **{{amount}}** {{emoji}}."
     },
     "dice": {
         "title": "🎲  Dice Roll (2d6)",
@@ -1247,8 +1247,8 @@
         "insufficient_bet": "❌ You don't have enough coins for this bet!",
         "result_title": "🎲  Dice Roll Result",
         "prediction": "Prediction",
-        "win_msg": "\n💰 **Profit:** **{{amount}}** coins",
-        "lose_msg": "\n💰 **Profit:** **-{{amount}}** coins",
+        "win_msg": "\n🎉 **You won** {{amount}} {{emoji}}! (x{{multiplier}})",
+        "lose_msg": "\n👔 You lost **{{amount}}** {{emoji}}.",
         "timeout": "❌ You took too long to choose. Game cancelled.",
         "prediction_labels": {
             "7": "Lucky 7",
@@ -1268,8 +1268,8 @@
         "win": "You won! 🎉",
         "lose": "I won! 😈",
         "tie": "It's a tie! 🤝",
-        "won_coins": "\n💰 **Profit:** **{{amount}}** coins",
-        "lost_coins": "\n💰 **Profit:** **-{{amount}}** coins",
+        "won_coins": "\n🎉 **You won** {{amount}} {{emoji}}!",
+        "lost_coins": "\n👔 You lost **{{amount}}** {{emoji}}.",
         "refund": "\n🤝 **Bet has been refunded.**",
         "result_title": "Rock Paper Scissors Result",
         "user_chose": "You chose",

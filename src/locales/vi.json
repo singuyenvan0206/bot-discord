@@ -118,8 +118,8 @@
         "heads": "Ngửa",
         "tails": "Sấp",
         "invalid_side": "❌ Vui lòng chọn `heads` hoặc `tails`!\nCách dùng: `{{prefix}}coinflip <heads|tails> [tiền_cược]`",
-        "win_msg": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}}",
-        "lose": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}"
+        "win_msg": "\n🎉 **Bạn thắng** {{amount}} {{emoji}}!",
+        "lose": "\n👔 Bạn thua **{{amount}}** {{emoji}}."
     },
     "dice": {
         "title": "🎲  Đổ Xúc Xắc (2d6)",
@@ -139,8 +139,8 @@
         "insufficient_bet": "❌ Bạn không còn đủ tiền cược!",
         "result_title": "🎲  Kết Quả Đổ Xúc Xắc",
         "prediction": "Dự đoán",
-        "win_msg": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}} (x{{multiplier}})",
-        "lose_msg": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}",
+        "win_msg": "\n🎉 **Bạn thắng** {{amount}} {{emoji}}! (x{{multiplier}})",
+        "lose_msg": "\n👔 Bạn thua **{{amount}}** {{emoji}}.",
         "timeout": "❌ Bạn đã quá thời gian chọn! Lượt chơi bị hủy.",
         "prediction_labels": {
             "7": "Số 7 May Mắn",
@@ -160,8 +160,8 @@
         "win": "Bạn đã thắng! 🎉",
         "lose": "Tôi thắng rồi! 😈",
         "tie": "Hòa rồi! 🤝",
-        "won_coins": "\n💰 **Lợi nhuận:** **{{amount}}** {{emoji}}",
-        "lost_coins": "\n💰 **Lợi nhuận:** **-{{amount}}** {{emoji}}",
+        "won_coins": "\n🎉 **Bạn thắng** {{amount}} {{emoji}}!",
+        "lost_coins": "\n👔 Bạn thua **{{amount}}** {{emoji}}.",
         "refund": "\n🤝 **Tiền cược đã được hoàn trả.**",
         "result_title": "Kết Quả Kéo Búa Bao",
         "user_chose": "Bạn chọn",
