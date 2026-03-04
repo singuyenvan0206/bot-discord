@@ -552,34 +552,48 @@
             "old_boot": "Chiếc Ủng Cũ",
             "rusty_can": "Vỏ Lon Gỉ",
             "seaweed": "Rong Biển",
+            "goldfish": "Cá Vàng",
+            "bluegill": "Cá Thái Dương",
             "tilapia": "Cá Rô Phi",
+            "perch": "Cá Rô Châu Âu",
             "sardine": "Cá Mòi",
             "carp": "Cá Chép",
+            "catfish": "Cá Da Trơn",
             "brook_trout": "Cá Hồi Suối",
             "archerfish": "Cá Phun Nước",
             "betta": "Cá Xiêm",
             "bass": "Cá Vược",
+            "eel": "Lươn Điện",
             "sockeye_salmon": "Cá Hồi Đỏ",
             "tuna": "Cá Ngừ",
             "pufferfish": "Cá Nóc",
             "clownfish": "Cá Hề",
+            "octopus": "Bạch Tuộc",
             "arowana": "Cá Rồng",
+            "seahorse": "Cá Ngựa",
             "stingray": "Cá Đuối",
             "sunfish": "Cá Mặt Trăng",
             "swordfish": "Cá Kiếm",
+            "dolphin": "Cá Heo",
             "shark": "Cá Mập",
             "sturgeon": "Cá Tầm",
             "manta_ray": "Cá Đuối Manta",
+            "marlin": "Cá Kiếm Marlin",
+            "hammerhead": "Cá Mập Đầu Búa",
             "whale": "Cá Voi",
             "alligator_gar": "Cá Sấu Hỏa Tiễn",
+            "dragonfish": "Cá Rồng Phương Đông",
             "anglerfish": "Cá Lồng Đèn",
             "treasure_chest": "Rương Kho Báu",
+            "phoenix_fish": "Cá Phượng Hoàng",
             "mythical_pearl": "Ngọc Trai Huyền Thoại",
             "kraken": "Quái Vật Kraken",
             "megalodon": "Siêu Cá Mập Megalodon",
             "thousand_year_turtle": "Rùa Nghìn Năm",
             "poseidon_trident": "Đinh Ba Poseidon",
-            "ocean_dragon": "Hải Long"
+            "ocean_dragon": "Hải Long",
+            "galaxy_whale": "Cá Voi Thiên Hà",
+            "void_leviathan": "Thủy Quái Hư Không"
         }
     },
     "items": {
@@ -764,6 +778,16 @@
             "name": "🐉 Long Uy Đại Dương",
             "desc": "Sức mạnh của báu vật rồng (+40% Thưởng | 2 giờ)",
             "details": "Thần lực tối thượng từ Hải Long mang lại sự giàu sang và quyền lực tuyệt đối cho người sở hữu."
+        },
+        "607": {
+            "name": "🌌 Hào Quang Thiên Hà",
+            "desc": "Sức mạnh từ các vì tinh tú (+50% Thưởng | 3 giờ)",
+            "details": "Hào quang từ Cá Voi Thiên Hà bao phủ, giúp bạn hấp thụ tinh hoa vũ trụ và nhận được sự thịnh vượng không giới hạn."
+        },
+        "608": {
+            "name": "🌀 Chúc Phúc Hư Không",
+            "desc": "Sức mạnh từ thực thể hư không (+75% Thưởng | 4 giờ)",
+            "details": "Một món quà từ vực thẳm sâu nhất đại dương. Thủy Quái Hư Không ban cho bạn quyền năng thao túng vận mệnh và tiền tài."
         },
         "701": {
             "name": "💍 Nhẫn Cưới Vĩnh Cửu",
@@ -1632,5 +1656,103 @@
         "empty": "Chưa có dữ liệu cho bảng xếp hạng này.",
         "your_rank": "Hạng của bạn: #{{rank}} ({{value}})",
         "footer": "Tích cực trò chuyện và làm việc để thăng hạng!"
+    },
+    "event": {
+        "none_desc": "🌐 Hiện tại không có sự kiện kinh tế đặc biệt nào diễn ra.",
+        "duration": "Thời gian còn lại",
+        "footer": "Sử dụng các lệnh kinh tế để tận dụng sự kiện!",
+        "name_market_boom": "Bùng Nổ Thị Trường",
+        "desc_market_boom": "🚀 Nền kinh tế thế giới đang phát triển thần tốc! Thu nhập từ **tất cả các nguồn** được tăng thêm **25%**.",
+        "name_fishing_season": "Mùa Câu Cá Đại Dương",
+        "desc_fishing_season": "🎣 Đàn cá di cư đang đổ về! Tỉ lệ may mắn câu cá tăng **1.5x** và thu nhập từ cá tăng **50%**.",
+        "name_hacker_era": "Kỷ Nguyên Hacker",
+        "desc_hacker_era": "💻 Các hệ thống an ninh đang lỏng lẻo! Hacker nhận được thêm **50%** phần thưởng từ các Minigame.",
+        "name_police_patrol": "Tuần Tra Cao Điểm",
+        "desc_police_patrol": "🚔 Cảnh sát đang tăng cường tuần tra! Lương làm việc của Cảnh Sát tăng **50%**, nhưng Tội Phạm sẽ khó hoạt động hơn.",
+        "name_criminal_night": "Đêm Trắng Tội Phạm",
+        "desc_criminal_night": "🌑 Bóng tối bao trùm thành phố! Tội Phạm nhận được thêm **50%** tiền từ các phi vụ phạm pháp và cướp bóc.",
+        "name_golden_harvest": "Mùa Vàng Thu Hoạch",
+        "desc_golden_harvest": "🌾 Thời tiết thuận lợi cho đồng ruộng! Nông Dân nhận được thêm **40%** lương và tăng nhẹ tỉ lệ câu cá.",
+        "name_trader_heaven": "Thiên Đường Thương Nhân",
+        "desc_trader_heaven": "💹 Thị trường chứng khoán xanh sàn! Thương Nhân nhận được thêm **50%** lợi nhuận từ các cơ sở kinh doanh."
+    },
+    "museum": {
+        "title": "Bảo Tàng Hải Dương",
+        "description": "Nơi trưng bày những loài cá hiếm bạn đã câu được. Hoàn thành bộ sưu tập để nhận phần thưởng cực lớn!",
+        "footer": "Gõ $museum claim <tên_bộ> để nhận thưởng khi hoàn thành.",
+        "reward": "Phần thưởng",
+        "claimed": "Đã nhận thưởng",
+        "completed_ready": "Đã hoàn thành! Sẵn sàng nhận thưởng",
+        "invalid_set": "❌ Tên bộ sưu tập không hợp lệ.",
+        "missing_fish": "❌ Bạn vẫn còn thiếu {{count}} loài cá nữa để hoàn thành bộ sưu tập này.",
+        "already_claimed": "❌ Bạn đã nhận phần thưởng cho bộ sưu tập này rồi.",
+        "claim_success": "✨ Chúc mừng! Bạn đã hoàn thành bộ sưu tập **{{set}}** và nhận được {{emoji}} **{{amount}}** coins!",
+        "set_junk": "Kẻ Săn Rác Thải",
+        "set_common": "Cá Nước Ngọt Thông Thường",
+        "set_rare": "Cá Cảnh Quý Hiếm",
+        "set_exotic": "Sát Thủ Đại Dương",
+        "set_legendary": "Huyền Thoại Biển Sâu",
+        "set_mythical": "Thần Thoại Cổ Đại"
+    },
+    "wanted": {
+        "title": "Danh Sách Truy Nã Chính Phủ",
+        "description": "Những đối tượng nguy hiểm nhất đang lẩn trốn. Cảnh sát hãy thực hiện nhiệm vụ!",
+        "none": "✅ Hiện tại không có đối tượng nào bị truy nã. Thành phố thật yên bình!",
+        "footer": "Gõ $arrest <mention> để bắt giữ (Chỉ dành cho Cảnh Sát)"
+    },
+    "arrest": {
+        "police_only": "❌ Chỉ những người có nghề **Cảnh Sát** mới có thể thực hiện bắt giữ!",
+        "invalid_target": "❌ Bạn cần tag một người dùng hợp lệ để bắt giữ.",
+        "no_bounty": "❌ Người này không bị truy nã hoặc không có tiền thưởng trên đầu.",
+        "title_success": "BẮT GIỮ THÀNH CÔNG",
+        "success_desc": "👮 **{{police}}** đã bắt giữ được tên tội phạm nguy hiểm **{{criminal}}**! Chính phủ đã thưởng cho bạn {{emoji}} **{{amount}}** coins.",
+        "prison_label": "Phán quyết",
+        "prison_time": "Tù giam trong **{{time}}**. Mọi hoạt động phạm pháp sẽ bị đình chỉ.",
+        "failed": "❌ Tên tội phạm **{{user}}** đã quá xảo quyệt và trốn thoát thành công! Bạn bị trừ một ít kinh nghiệm vì sơ suất."
+    },
+    "hack": {
+        "hacker_only": "❌ Chỉ **Hacker** mới có đủ kỹ năng để thực hiện việc này!",
+        "cooldown": "⏳ Hệ thống bảo mật đang được làm mới. Hãy quay lại sau **{{time}}**.",
+        "usage": "💻 Cách dùng: `$hack coins` (Để lấy tiền số) hoặc `$hack luck` (Để hack vệ tinh dự báo cá).",
+        "success_coins": "🔓 Bạn đã xâm nhập thành công vào ví điện tử bỏ hoang và lấy được {{emoji}} **{{amount}}** coins!",
+        "fail_security": "🛡️ Tường lửa quá mạnh! Bạn phải hủy bỏ kết nối để tránh bị lộ IP.",
+        "success_luck": "🛰️ Thành công! Bạn đã chiếm quyền điều khiển vệ tinh, vận may câu cá được tăng thêm **25%** trong 30 phút.",
+        "fail_proxy": "❌ Proxy của bạn bị hỏng, kết nối thất bại.",
+        "invalid_sub": "❌ Lựa chọn không hợp lệ. Hãy chọn `coins` hoặc `luck`."
+    },
+    "market": {
+        "trader_only": "❌ Chỉ **Thương Nhân** mới có thể truy cập thị trường chợ đen!",
+        "cooldown": "⏳ Thị trường đang đóng cửa. Hãy quay lại sau **{{time}}**.",
+        "usage": "💹 Cách dùng: `$market deal` để săn tìm vật phẩm giảm giá.",
+        "deal_title": "ƯU ĐÃI THƯƠNG NHÂN",
+        "deal_desc": "📦 Bạn đã tìm được một nguồn hàng giá sỉ! Vật phẩm **{{item}}** sẽ được giảm giá **30%** (Chỉ còn {{emoji}} **{{price}}**) trong lần mua kế tiếp của bạn (Hiệu lực 10 phút).",
+        "deal_footer": "Lưu ý: Hiệu ứng chỉ áp dụng cho 01 vật phẩm duy nhất.",
+        "invalid_sub": "❌ Lựa chọn không hợp lệ. Hãy chọn `deal`."
+    },
+    "mentor": {
+        "teacher_only": "❌ Chỉ **Giáo Viên** mới có thể hướng dẫn người khác!",
+        "invalid_target": "❌ Bạn cần tag một người để hướng dẫn (không phải bản thân hoặc bot).",
+        "cooldown": "⏳ Bạn cần nghỉ ngơi sau giờ dạy. Hãy quay lại sau **{{time}}**.",
+        "success": "📚 Bạn đã hướng dẫn cho **{{user}}** tận tình! Người đó sẽ nhận được X2 Kinh nghiệm trong 60 phút tới."
+    },
+    "harvest": {
+        "farmer_only": "❌ Chỉ **Nông Dân** mới có thể thu hoạch mùa màng!",
+        "cooldown": "⏳ Đất đai đang hồi sức. Hãy quay lại sau **{{time}}**.",
+        "success_fish": "🌾 Bạn đi thăm bẫy cá ở ruộng và phát hiện một con {{emoji}} **{{name}}**!",
+        "success_coins": "🌾 Mùa màng bội thu! Bạn bán nông sản và thu về {{emoji}} **{{amount}}** coins."
+    },
+    "aquarium": {
+        "title": "Bể Cá Thủy Sinh",
+        "description": "Nơi bạn có thể nuôi dưỡng những con cá quý hiếm. Cá trong bể sẽ tạo ra tiền thụ động mỗi giờ!",
+        "footer": "Dùng $aquarium add <tên_cá> để thả cá vào bể.",
+        "add_usage": "❌ Gõ `$aquarium add <tên_cá>` (Tên cá phải có trong Bảo tàng).",
+        "not_in_museum": "❌ Bạn chưa câu được loài cá này hoặc không tìm thấy trong Bảo tàng.",
+        "full": "❌ Bể cá đã đầy (Tối đa 5 con). Hãy dùng `$aquarium clear` để dọn bể.",
+        "add_success": "✅ Đã thả cá {{emoji}} **{{name}}** vào bể thành công!",
+        "clear_success": "🧹 Đã dọn dẹp bể cá. Tất cả cá đã được đưa trở lại kho lưu trữ.",
+        "empty_title": "Bể trống",
+        "empty_desc": "Hãy thả vài con cá quý hiếm vào để ngắm nhìn và kiếm thêm thu nhập nhé!",
+        "fish_list": "Danh sách cá trong bể",
+        "passive_title": "Thu nhập thụ động"
     }
 }

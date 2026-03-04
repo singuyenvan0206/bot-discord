@@ -84,6 +84,12 @@ function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
 
         let itemBonus = item.multiplier;
 
+        // Custom Virtual Buff Logic
+        if (buff.itemId === 612 && type === 'xp') {
+            normal += 1.0; // +100% (2x) for Mentor
+            continue;
+        }
+
         if (LEGENDARY_BUFF_IDS.includes(buff.itemId)) {
             legendary += itemBonus;
         } else {
@@ -166,14 +172,28 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
     const baseRaw = itemData.normal + levelMulti + jobMulti + houseMulti + marriageMulti + (roleIncomeMulti * 0.5) + milestoneMulti;
     const cappedBase = Math.min(baseRaw, maxCap);
 
-    // Final result: Capped Base + Legendary (uncapped)
-    const total = cappedBase + itemData.legendary;
+    // Final result: Capped Base + Legendary (uncapped) + Event (uncapped)
+    const event = await require('./eventSystem').getCurrentEvent();
+    let eventBonus = 0;
+    if (event.incomeBuff) eventBonus += event.incomeBuff;
+    if (event.jobMatch === user.job) {
+        if (options.category === 'work' && event.salaryBuff) eventBonus += event.salaryBuff;
+        if ((options.category === 'crime' || options.category === 'rob') && event.crimeBonus) eventBonus += event.crimeBonus;
+        if (options.category === 'minigame' && event.minigameBonus) eventBonus += event.minigameBonus;
+        if (options.category === 'business' && event.businessBonus) eventBonus += event.businessBonus;
+    }
+    // Specific case for fishing which is handled both by incomeBuff and specialized fishIncome
+    if (options.category === 'fish' && event.fishIncome) eventBonus += event.fishIncome;
+
+    const total = cappedBase + itemData.legendary + eventBonus;
 
     return {
         total,
         base: baseRaw,
         capped: cappedBase,
         legendary: itemData.legendary,
+        event: eventBonus,
+        eventName: event.id !== 'none' ? event.id : null,
         cap: maxCap,
         level: levelMulti,
         job: jobMulti,

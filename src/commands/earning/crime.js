@@ -73,6 +73,11 @@ module.exports = {
 
             if (hackedMsg) msg += hackedMsg;
 
+            // Update Wanted Status
+            const bountyGain = Math.floor(total * 0.3);
+            await db.execute('UPDATE users SET bounty = bounty + ?, wanted_level = LEAST(5, wanted_level + 1) WHERE id = ?', [bountyGain, message.author.id]);
+            msg += `\n🚨 **Wanted Status:** +\`${bountyGain.toLocaleString()}\` bounty!`;
+
             return message.reply(msg);
         } else {
             // New Scaled Penalty: (level * 500) + (5% of balance)

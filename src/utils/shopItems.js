@@ -63,6 +63,8 @@ module.exports = [
     { id: 604, name: "Kraken's Might", price: 0, multiplier: 0.20, duration: 5400, type: 'income', unbuyable: true },
     { id: 605, name: "Turtle's Longevity", price: 0, multiplier: 0.25, duration: 10800, type: 'income', unbuyable: true },
     { id: 606, name: "Dragon's Majesty", price: 0, multiplier: 0.40, duration: 7200, type: 'income', unbuyable: true },
+    { id: 607, name: "Galaxy's Aura", price: 0, multiplier: 0.50, duration: 10800, type: 'income', unbuyable: true },
+    { id: 608, name: "Void's Blessing", price: 0, multiplier: 0.75, duration: 14400, type: 'income', unbuyable: true },
 
     // ==========================================
     // GROUP 700 — social (marriage items)

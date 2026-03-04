@@ -83,7 +83,21 @@ module.exports = {
             }
 
             const itemName = t(`items.${item.id}.name`, lang);
-            const cost = item.price * quantity;
+
+            // Trader Discount (611) Logic
+            let itemPrice = item.price;
+            let buffs = [];
+            try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+            const discountBuff = buffs.find(b => b.itemId === 611 && b.expiresAt > Math.floor(Date.now() / 1000));
+
+            if (discountBuff) {
+                itemPrice = Math.floor(itemPrice * (1 - (discountBuff.discount || 0.3)));
+                // Mark for removal later
+                buffs = buffs.filter(b => b.itemId !== 611);
+                await db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
+            }
+
+            const cost = itemPrice * quantity;
             totalCost += cost;
 
             itemsToBuy.push({ item, quantity, itemName });

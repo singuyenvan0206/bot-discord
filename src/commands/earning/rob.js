@@ -93,6 +93,11 @@ module.exports = {
                 msg += t('rob.shield_broken', lang, { user: target.username });
             }
 
+            // Increase Bounty & Wanted Level
+            const bountyGain = Math.floor(victimLoss * 0.5);
+            await db.execute('UPDATE users SET bounty = bounty + ?, wanted_level = LEAST(5, wanted_level + 1) WHERE id = ?', [bountyGain, message.author.id]);
+            msg += `\n🚨 **Wanted Alert:** Bạn bị truy nã thêm \`${bountyGain.toLocaleString()}\` coins!`;
+
             return message.reply(msg);
         } else {
             // New Scaled Penalty: (level * 500) + (5% of balance)

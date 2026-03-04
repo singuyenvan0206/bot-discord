@@ -57,12 +57,22 @@ module.exports = {
         // Farmer Job Bonus: totalLuck × 1.2
         let totalLuck = rod.luck + bait.luck;
         if (user.job === 'farmer') {
-            totalLuck *= 1.2; // Farmers get 20% more luck from gear
+            const farmerConfig = config.ECONOMY.JOBS.farmer;
+            totalLuck *= (farmerConfig.luck || 1.2); // Use config or fallback
 
-            // Milestone Bonus: +0.1 Luck per milestone point
+            // Enhanced Milestone Bonus: +0.2 Luck per milestone point
             const points = Number(user.milestone_count || 0);
-            totalLuck += points * 0.1;
+            totalLuck += points * 0.2;
         }
+
+        const event = await require('../../utils/eventSystem').getCurrentEvent();
+        if (event.fishLuck) totalLuck *= event.fishLuck;
+
+        // Hacker Luck Buff (610)
+        let buffs = [];
+        try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+        const luckBuff = buffs.find(b => b.itemId === 610 && b.expiresAt > Math.floor(Date.now() / 1000));
+        if (luckBuff) totalLuck *= 1.25;
 
         const weightedPool = getWeightedPool(totalLuck);
         const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);
@@ -123,7 +133,13 @@ module.exports = {
             'mythical_pearl': { asset: 'mythical_pearl.png', buff: 603, color: 0xFF00FF, announceKey: 'fish.mythical_pearl_announcement' },
             'kraken': { asset: 'kraken.png', buff: 604, color: 0xFF4500, announceKey: 'fish.kraken_announcement' },
             'thousand_year_turtle': { asset: 'thousand_year_turtle.png', buff: 605, color: 0x228B22, announceKey: 'fish.mythical_announcement' },
-            'ocean_dragon': { asset: 'ocean_dragon.png', buff: 606, color: 0x1E90FF, announceKey: 'fish.mythical_announcement' }
+            'ocean_dragon': { asset: 'ocean_dragon.png', buff: 606, color: 0x1E90FF, announceKey: 'fish.mythical_announcement' },
+            'dragonfish': { asset: 'dragonfish.png', color: 0xFFD700, announceKey: 'fish.legendary_announcement' },
+            'phoenix_fish': { asset: 'phoenix_fish.png', color: 0xFF4500, announceKey: 'fish.legendary_announcement' },
+            'anglerfish': { asset: 'anglerfish.png', color: 0x2F4F4F, announceKey: 'fish.legendary_announcement' },
+            'treasure_chest': { asset: 'treasure_chest.png', color: 0xFFD700, announceKey: 'fish.legendary_announcement' },
+            'galaxy_whale': { asset: 'galaxy_whale.png', buff: 607, color: 0x4B0082, announceKey: 'fish.mythical_announcement' },
+            'void_leviathan': { asset: 'void_leviathan.png', buff: 608, color: 0x000000, announceKey: 'fish.mythical_announcement' }
         };
 
         const mythical = mythicalItems[caughtItem.key];
@@ -206,10 +222,42 @@ module.exports = {
 
             const replyOptions = { embeds: [embed] };
             if (caughtItem.key === 'megalodon' || caughtItem.key === 'poseidon_trident' ||
-                caughtItem.key === 'mythical_pearl' || caughtItem.key === 'kraken') {
-                const mythicalItems = { 'megalodon': 'megalodon.png', 'poseidon_trident': 'poseidon_trident.png', 'mythical_pearl': 'mythical_pearl.png', 'kraken': 'kraken.png' };
+                caughtItem.key === 'mythical_pearl' || caughtItem.key === 'kraken' ||
+                caughtItem.key === 'galaxy_whale' || caughtItem.key === 'void_leviathan' ||
+                caughtItem.key === 'thousand_year_turtle' || caughtItem.key === 'ocean_dragon' ||
+                caughtItem.key === 'dragonfish' || caughtItem.key === 'phoenix_fish' ||
+                caughtItem.key === 'anglerfish' || caughtItem.key === 'treasure_chest') {
+                const mythicalItems = {
+                    'megalodon': 'megalodon.png',
+                    'poseidon_trident': 'poseidon_trident.png',
+                    'mythical_pearl': 'mythical_pearl.png',
+                    'kraken': 'kraken.png',
+                    'galaxy_whale': 'galaxy_whale.png',
+                    'void_leviathan': 'void_leviathan.png',
+                    'thousand_year_turtle': 'thousand_year_turtle.png',
+                    'ocean_dragon': 'ocean_dragon.png',
+                    'dragonfish': 'dragonfish.png',
+                    'phoenix_fish': 'phoenix_fish.png',
+                    'anglerfish': 'anglerfish.png',
+                    'treasure_chest': 'treasure_chest.png'
+                };
                 const assetName = mythicalItems[caughtItem.key];
                 replyOptions.files = [path.join(process.cwd(), 'src', 'assets', 'fishing', assetName)];
+            }
+
+            // Update Fish Ledger (Museum)
+            if (caughtItem.value > 0) {
+                let ledger = {};
+                try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
+
+                const speciesKey = caughtItem.key;
+                if (!ledger[speciesKey]) {
+                    ledger[speciesKey] = { count: 0, firstCaught: Math.floor(Date.now() / 1000) };
+                }
+                ledger[speciesKey].count += 1;
+                ledger[speciesKey].lastCaught = Math.floor(Date.now() / 1000);
+
+                await db.updateUser(message.guild.id, message.author.id, { fish_ledger: JSON.stringify(ledger) });
             }
 
             startCooldown(message.client, 'fish', message.author.id);

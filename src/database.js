@@ -215,6 +215,11 @@ async function initSchema() {
     await safeAddColumn('user_businesses', 'manager_expires_at', 'BIGINT DEFAULT 0');
     await safeAddColumn('guilds', 'wordchain_channel', 'TEXT DEFAULT NULL');
     await safeAddColumn('users', 'milestone_count', 'INTEGER NOT NULL DEFAULT 0');
+    await safeAddColumn('users', 'fish_ledger', "TEXT DEFAULT '{}'");
+    await safeAddColumn('users', 'bounty', 'BIGINT DEFAULT 0');
+    await safeAddColumn('users', 'wanted_level', 'INTEGER DEFAULT 0');
+    await safeAddColumn('users', 'skill_data', "TEXT DEFAULT '{}'");
+    await safeAddColumn('users', 'aquarium_data', "TEXT DEFAULT '{}'");
 
     // ─── Automated Command Renaming Migration ─────────
     try {
@@ -363,7 +368,12 @@ async function getUser(userId, guildId = null) {
 
         // If still not found (should be impossible but for safety), return a default object
         if (!user) {
-            user = { id: uId, balance: 0, xp: 0, level: 0, last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_freelance: 0, last_beg: 0, last_search: 0, last_dist_amount: 0, job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null };
+            user = {
+                id: uId, balance: 0, xp: 0, level: 0,
+                last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_freelance: 0, last_beg: 0, last_search: 0, last_dist_amount: 0,
+                job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null,
+                fish_ledger: '{}', bounty: 0, wanted_level: 0, skill_data: '{}', aquarium_data: '{}'
+            };
         }
     }
 

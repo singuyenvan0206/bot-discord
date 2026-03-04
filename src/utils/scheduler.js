@@ -13,6 +13,45 @@ async function initScheduler(client) {
         console.log('🎲 Running random business events scheduler...');
         await processRandomEvents(client);
     }, 10800_000); // 3 hours
+
+    // Global Economy Events (Rotate if expired every 15 mins)
+    const { getCurrentEvent } = require('./eventSystem');
+    await getCurrentEvent(); // Initial check/rotation
+    setInterval(async () => {
+        await getCurrentEvent();
+    }, 900_000); // 15 minutes
+
+    // Aquarium Passive Income (Every hour)
+    setInterval(async () => {
+        console.log('🐠 Processing Aquarium passive income...');
+        await processAquariumIncome(client);
+    }, 3600_000);
+}
+
+async function processAquariumIncome(client) {
+    const { CATCHES } = require('./fishData');
+    const users = await db.queryAll('SELECT id, aquarium_data FROM users WHERE aquarium_data != "{}"');
+
+    for (const u of users) {
+        let aquarium = {};
+        try { aquarium = JSON.parse(u.aquarium_data || '{}'); } catch { continue; }
+        if (!aquarium.fish || aquarium.fish.length === 0) continue;
+
+        let totalIncome = 0;
+        for (const f of aquarium.fish) {
+            const data = CATCHES.find(c => c.key === f.key);
+            if (!data) continue;
+            let reward = 10;
+            if (data.value >= 10000000) reward = 5000;
+            else if (data.value >= 500000) reward = 1000;
+            else if (data.value >= 10000) reward = 100;
+            totalIncome += reward;
+        }
+
+        if (totalIncome > 0) {
+            await db.addBalance(null, u.id, totalIncome);
+        }
+    }
 }
 
 async function processPassiveIncome(client) {
