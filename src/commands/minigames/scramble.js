@@ -5,6 +5,7 @@ const { calculateReward } = require('../../utils/multiplier');
 
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 module.exports = {
     name: 'scramble',
@@ -73,7 +74,6 @@ module.exports = {
 
         await message.reply({ embeds: [embed] });
 
-        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
         const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
         if (actionResult.leveledUp) {
             sendLevelUpMessage(message, actionResult, lang).catch(() => { });

@@ -5,6 +5,7 @@ const db = require('../../database');
 const config = require('../../config');
 const { t, getLanguage } = require('../../utils/i18n');
 const { addHouseProfit } = require('../../utils/economy');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 module.exports = {
     name: 'tictactoe',
@@ -146,7 +147,6 @@ module.exports = {
             board[idx] = currentTurn;
 
             if (i.user.id !== message.client.user.id) {
-                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                 const result = await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
                 if (result.leveledUp) {
                     sendLevelUpMessage(i, result, lang).catch(() => { });
@@ -177,11 +177,10 @@ module.exports = {
                     if (winnerId !== message.client.user.id) {
                         const winnerMember = winner === 'X' ? playerXMember : playerOMember;
                         const loserIsBot = (winner === 'X' ? playerO.id : playerX.id) === message.client.user.id;
-                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winnerMember, 'income', { category: 'minigame' });
+                        const { total: totalReward, bonus: bonusAmount, percent, cap } = await calculateReward(baseReward, winnerMember, 'income', { category: 'minigame' });
                         await db.addBalance(message.guild.id, winnerId, totalReward);
 
                         // Grant Win XP
-                        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                         const result = await addXp(winnerMember, winXp, message.guild.id);
                         if (result.leveledUp) {
@@ -198,7 +197,6 @@ module.exports = {
                         await addHouseProfit(i, baseReward);
 
                         // Grant Win XP to Bot
-                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                         await addXp(message.client.user.id, winXp, message.guild.id);
 

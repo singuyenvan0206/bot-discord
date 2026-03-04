@@ -5,6 +5,7 @@ const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
 const { calculateReward } = require('../../utils/multiplier');
 const { getRandomQuestion } = require('../../utils/quizGenerator');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 module.exports = {
     name: 'emojiquiz',
@@ -33,7 +34,6 @@ module.exports = {
         await message.reply({ embeds: [embed] });
 
         // Grant Action XP
-        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
         const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
         if (actionResult.leveledUp) {
             sendLevelUpMessage(message, actionResult, lang).catch(() => { });
@@ -52,30 +52,28 @@ module.exports = {
 
             const winnerMsg = collected.first();
             const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD || 50;
-            const { total: reward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winnerMsg.member, 'income', { category: 'minigame' });
+            let { total: reward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winnerMsg.member, 'income', { category: 'minigame' });
 
-
-            await db.addBalance(message.guild.id, winnerMsg.author.id, reward);
 
             // Grant XP
-            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
 
             // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
             const u = await db.getUser(winnerMsg.author.id, message.guild.id);
             if (u.job === 'teacher') {
-                totalReward = Math.floor(totalReward * 1.5);
+                reward = Math.floor(reward * 1.5);
                 winXp += 10;
             }
 
-            const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+            await db.addBalance(message.guild.id, winnerMsg.author.id, reward);
+
             const result = await addXp(winnerMsg.member, winXp, message.guild.id);
             if (result.leveledUp) {
                 sendLevelUpMessage(winnerMsg, result, lang).catch(() => { });
             }
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
-                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });
+                t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: reward.toLocaleString() });
 
             if (bonusAmount > 0) resultDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
             if (u.job === 'teacher') resultDesc += t('job.teacher_tutoring_simple', lang);
@@ -87,7 +85,7 @@ module.exports = {
                     .setColor(config.COLORS.SUCCESS)]
             });
             startCooldown(message.client, 'emojiquiz', message.author.id);
-        } catch {
+        } catch (err) {
             await message.channel.send({
                 embeds: [new EmbedBuilder()
                     .setTitle(t('emojiquiz.incorrect', lang).replace('✅', '⌛')) // Reusing or just using text

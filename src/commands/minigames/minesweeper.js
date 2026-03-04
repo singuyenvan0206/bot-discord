@@ -4,6 +4,8 @@ const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { calculateReward } = require('../../utils/multiplier');
+const { parseAmount, addHouseProfit } = require('../../utils/economy');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 module.exports = {
     name: 'minesweeper',
@@ -14,7 +16,6 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
-        const { parseAmount, addHouseProfit } = require('../../utils/economy');
         let bet = args[0] ? parseAmount(args[0], user.balance, config.ECONOMY.MAX_BET) : 0;
 
         if (args[0] && bet <= 0) return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
@@ -205,7 +206,6 @@ module.exports = {
 
                 const result = reveal(idx);
 
-                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                 const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
                 if (actionResult.leveledUp) {
                     sendLevelUpMessage(message, actionResult, lang).catch(() => { });
@@ -242,7 +242,6 @@ module.exports = {
                         collector.stop('win');
 
                         // Grant Win XP
-                        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                         const winResult = await addXp(message.member, winXp, message.guild.id);
                         if (winResult.leveledUp) {

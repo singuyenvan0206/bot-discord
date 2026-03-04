@@ -5,6 +5,7 @@ const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 const CARD_SUITS = config.CARDS.SUITS;
 const CARD_VALUES = config.CARDS.VALUES;
@@ -153,7 +154,6 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
 
         // Grant Win XP if payout is more than original bet (actual win)
         if (bet && payout > bet) {
-            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
             await addXp(i.member, winXp, i.guild.id);
         }
@@ -191,7 +191,6 @@ module.exports = {
         if (bet) await db.removeBalance(message.guild.id, user.id, bet);
 
         // Grant Action XP at start
-        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
         await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const playerHand = [drawCard(), drawCard()];
@@ -253,13 +252,11 @@ module.exports = {
                     await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);
                 } else {
                     // Grant Action XP for hitting
-                    const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                     await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
                     await i.update({ embeds: [buildEmbed()], components: [row] });
                 }
             } else if (i.customId.startsWith('bj_stand')) {
                 // Grant Action XP for standing
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
                 collector.stop('stand');
                 await finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang);

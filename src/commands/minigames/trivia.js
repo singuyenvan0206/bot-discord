@@ -4,6 +4,7 @@ const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const { calculateReward } = require('../../utils/multiplier');
 const config = require('../../config');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 
 // Helper function to decode HTML entities
@@ -94,18 +95,16 @@ module.exports = {
             if (answered.has(i.user.id)) return;
             answered.add(i.user.id);
 
-            const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
-            const actionResult = await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
-            if (actionResult.leveledUp) {
-                sendLevelUpMessage(i, actionResult, lang).catch(() => { });
-            }
-
             const selectedIndex = parseInt(i.customId.split('_')[1]);
 
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
+                const actionResult = await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                if (actionResult.leveledUp) {
+                    sendLevelUpMessage(i, actionResult, lang).catch(() => { });
+                }
 
-                const { total: reward, bonus: bonusAmount, percent } = await calculateReward(baseReward, i.member, 'income', { category: 'minigame' });
+                let { total: reward, bonus: bonusAmount, percent } = await calculateReward(baseReward, i.member, 'income', { category: 'minigame' });
 
                 let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                 let teacherBonusApplied = false;
@@ -113,14 +112,14 @@ module.exports = {
                 // Teacher Interaction: Tutoring Bonus (+50% coins, +10 XP)
                 const u = await db.getUser(i.user.id, message.guild.id);
                 if (u.job === 'teacher') {
-                    totalReward = Math.floor(totalReward * 1.5);
+                    reward = Math.floor(reward * 1.5);
                     winXp += 10;
                     teacherBonusApplied = true;
                 }
 
-                await db.addBalance(message.guild.id, i.user.id, totalReward);
+                await db.addBalance(message.guild.id, i.user.id, reward);
 
-                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
+                let resultMsg = t('trivia.correct', lang, { answer: q.a, emoji: config.EMOJIS.COIN, reward: reward.toLocaleString() });
                 if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
                 if (teacherBonusApplied) resultMsg += t('job.teacher_tutoring_simple', lang);
 

@@ -5,6 +5,7 @@ const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require
 
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 const MEM_EMOJIS = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍓', '🍑', '🍍'];
 
@@ -89,7 +90,6 @@ module.exports = {
                 attempts++;
 
                 // Grant Action XP
-                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                 const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
                 if (actionResult.leveledUp) {
                     sendLevelUpMessage(i, actionResult, lang).catch(() => { });
@@ -123,7 +123,6 @@ module.exports = {
                         await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                         // Grant Win XP
-                        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                         const winResult = await addXp(message.member, winXp, message.guild.id);
                         if (winResult.leveledUp) {

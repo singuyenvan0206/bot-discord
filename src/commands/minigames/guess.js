@@ -4,6 +4,7 @@ const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
 const { calculateReward } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 module.exports = {
     name: 'guess',
@@ -41,11 +42,9 @@ module.exports = {
                 await db.addBalance(message.guild.id, m.author.id, reward);
 
                 // Grant XP
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                 const result = await addXp(m.member, winXp, message.guild.id);
                 if (result.leveledUp) {
-                    const { sendLevelUpMessage } = require('../../utils/leveling');
                     sendLevelUpMessage(m, result, lang).catch(() => { });
                 }
 

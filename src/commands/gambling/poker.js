@@ -5,6 +5,8 @@ const { startCooldown } = require('../../utils/cooldown');
 const { getLanguage, t } = require('../../utils/i18n');
 const config = require('../../config');
 const { calculateReward } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 
 module.exports = {
     name: 'poker',
@@ -13,10 +15,8 @@ module.exports = {
     cooldown: 10,
     manualCooldown: true,
     async execute(message, args) {
-        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
-        const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
         const maxBet = await getMaxBet(message.author.id);
         let minBuyIn = Math.max(50, args[0] ? parseAmount(args[0], user.balance, maxBet) : 50);
         let maxBuyIn = Math.min(maxBet, args[1] ? parseAmount(args[1], user.balance, maxBet) : maxBet);
@@ -416,7 +416,6 @@ module.exports = {
         }
 
         async function handleAction(player, action, interaction = null, numericValue = 0) {
-            const { getMaxBet } = require('../../utils/economy');
             const maxBet = await getMaxBet(message.author.id);
             const exceededMaxBet = (numericValue > maxBet);
             if (exceededMaxBet && action === 'raise') return; // Double check

@@ -6,6 +6,7 @@ const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const { parseAmount } = require('../../utils/economy');
+const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
 module.exports = {
     name: 'connect4',
@@ -20,10 +21,10 @@ module.exports = {
         if (opponent.bot) return message.reply(t('common.no_challenge_bot', lang));
         if (opponent.id === message.author.id) return message.reply(t('common.no_challenge_self', lang));
 
-        let bet = args[1] ? parseAmount(args[1], authorUser.balance, config.ECONOMY.MAX_BET) : 0;
-
         const authorUser = await db.getUser(message.author.id, message.guild.id);
         const opponentUser = await db.getUser(opponent.id, message.guild.id);
+
+        let bet = args[1] ? parseAmount(args[1], authorUser.balance, config.ECONOMY.MAX_BET) : 0;
 
         if (bet > 0) {
             if (authorUser.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: authorUser.balance.toLocaleString() }));
@@ -169,7 +170,6 @@ module.exports = {
                 if (!success) return i.reply({ content: t('connect4.column_full', lang), ephemeral: true });
 
                 // Grant Action XP for the move
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                 await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
 
                 const winner = checkWin();
@@ -190,7 +190,6 @@ module.exports = {
                         const winMember = winner === P1 ? p1Member : p2Member;
 
                         // Grant Win XP
-                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                         await addXp(winMember, winXp, i.guild.id);
 
