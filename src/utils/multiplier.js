@@ -210,6 +210,7 @@ async function hasActiveItem(guildId, userId, itemId) {
 async function getDynamicCap(memberOrId, guildId) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
+    const user = await db.getUser(userId, gId);
 
     // Standard: 0.5 (150% total income), VIP: 1.0 (200% total income)
     let cap = await hasActiveItem(gId, userId, 104) ? 1.0 : 0.5;
@@ -225,7 +226,7 @@ async function calculateReward(base, memberOrId, type = 'income', options = {}) 
     if (options.pvpMode) {
         return { total: base, bonus: 0, percent: 0, cap: 0, capReached: false };
     }
-    const guildId = memberOrId.guild ? memberOrId.guild.id : null;
+    const guildId = (memberOrId && memberOrId.guild) ? memberOrId.guild.id : null;
     const bonusPart = await getTotalMultiplier(memberOrId, type);
     const bonus = Math.floor(base * bonusPart);
     const total = base + bonus;
