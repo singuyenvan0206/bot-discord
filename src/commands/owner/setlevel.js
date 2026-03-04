@@ -24,14 +24,18 @@ module.exports = {
         const level = parseInt(args[args.length - 1]);
         if (isNaN(level) || level < 0) return message.reply(lang === 'vi' ? '❌ Vui lòng nhập số hợp lệ.' : '❌ Please provide a valid amount.');
 
-        // XP = (Level / 0.1)^2
-        const minXp = Math.floor(Math.pow(level / 0.1, 2));
-        const { assignJobIfEligible } = require('../../utils/leveling');
+        const config = require('../../config');
+        const milestoneInterval = config.ECONOMY?.LEVELING?.MILESTONE_INTERVAL || 20;
+        const milestoneCount = Math.floor(level / milestoneInterval);
 
         let results = [];
 
         for (const target of targets) {
-            await db.updateUser(target.id, { level: level, xp: minXp });
+            await db.updateUser(target.id, {
+                level: level,
+                xp: minXp,
+                milestone_count: milestoneCount
+            });
 
             // Trigger job assignment if eligible
             const member = message.guild.members.cache.get(target.id) || await message.guild.members.fetch(target.id).catch(() => target);
