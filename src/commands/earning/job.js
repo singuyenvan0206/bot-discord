@@ -32,7 +32,7 @@ module.exports = {
                 const infoLines = t(`job.info_${j.id}`, lang).split('\n');
                 // Get the most important perk (usually the first one after the title)
                 const mainPerk = infoLines.find(l => l.includes('•')) || infoLines[0];
-                const bonusText = `+${Math.round((j.bonus || 0) * 100)}% Salary`;
+                const bonusText = `+${Math.round((j.bonus || 0) * 100)}% ${t('job.salary_label', lang)}`;
 
                 embed.addFields({
                     name: `\`${j.numericId}\` ${j.icon} ${name}`,

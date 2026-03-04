@@ -38,9 +38,9 @@ module.exports = {
         const salaryBonus = bonusVal >= 0 ? `+${bonusVal}%` : `${bonusVal}%`;
 
         // Luck / XP Bonus
-        let secondaryBonus = 'None';
-        if (job.luck) secondaryBonus = `🍀 Luck x${job.luck}`;
-        if (actualJobId === 'teacher') secondaryBonus = `📚 XP x2.0`;
+        let secondaryBonus = t('common.none', lang);
+        if (job.luck) secondaryBonus = t('job.luck_bonus', lang, { val: job.luck });
+        if (actualJobId === 'teacher') secondaryBonus = t('job.xp_bonus', lang, { val: '2.0' });
 
         // Calculate Salary Range based on work.js config
         const minBase = config.ECONOMY.WORK_MIN || 1000;
@@ -56,10 +56,10 @@ module.exports = {
             .setDescription(`*${description}*`)
             .addFields(
                 { name: '🆔 ' + t('job.id_label', lang), value: `\`${job.numericId}\` (\`${actualJobId}\`)`, inline: true },
-                { name: '⭐ ' + t('job.requirement_label', lang), value: `\`Level 20\``, inline: true },
-                { name: '⏱️ ' + t('job.cooldown_label', lang), value: `\`1 Hour\``, inline: true },
+                { name: '⭐ ' + t('job.requirement_label', lang), value: `\`${t('job.level_val', lang, { level: 20 })}\``, inline: true },
+                { name: '⏱️ ' + t('job.cooldown_label', lang), value: `\`${t('job.hour_val', lang, { hours: 1 })}\``, inline: true },
                 { name: '💼 ' + t('job.salary_label', lang), value: `\`+${Math.round((job.bonus || 0) * 100)}%\``, inline: true },
-                { name: '✨ Extra', value: `\`${secondaryBonus}\``, inline: true },
+                { name: '✨ ' + t('job.extra_label', lang), value: `\`${secondaryBonus}\``, inline: true },
                 { name: '💰 ' + t('job.est_salary_label', lang), value: salaryRange, inline: true },
                 { name: '💡 ' + t('job.perks_title', lang), value: perks || t('common.none', lang), inline: false }
             )
