@@ -75,7 +75,7 @@ module.exports = {
         ROB_COOLDOWN: 3600, // 1 hour
         ROB_SUCCESS_CHANCE: 0.45,
         MAX_BET: 250000,
-        TRANSFER_TAX: 0.1, // 10% tax on transfers
+        TRANSFER_TAX: 0.05, // 10% tax on transfers
         HOUSE_DISTRIBUTION_INTERVAL: 21600, // 6 hours in seconds
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins
         DEFAULT_COOLDOWN: 3,
