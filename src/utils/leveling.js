@@ -4,11 +4,11 @@ const db = require('../database');
  * XP Constants
  */
 const XP_AMOUNTS = {
-    MESSAGE: { min: 5, max: 15 },
-    COMMAND_SUCCESS: { min: 20, max: 40 },
-    COMMAND_FAILURE: { min: 5, max: 10 },
-    GAME_WIN: { min: 30, max: 60 },
-    GAME_ACTION: { min: 5, max: 10 }
+    MESSAGE: { min: 3, max: 7 },
+    COMMAND_SUCCESS: { min: 10, max: 20 },
+    COMMAND_FAILURE: { min: 2, max: 5 },
+    GAME_WIN: { min: 15, max: 30 },
+    GAME_ACTION: { min: 2, max: 5 }
 };
 
 /**

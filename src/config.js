@@ -93,7 +93,7 @@ module.exports = {
             teacher: { id: 'teacher', numericId: 11, bonus: 0.10, color: '#95a5a6', icon: '👩‍🏫' }
         },
         LEVELING: {
-            XP_MULTIPLIER: 1 // Triple the XP gain for faster progression
+            XP_MULTIPLIER: 0.75 // Lowered for slower progression
         },
         LOTTERY: {
             TICKET_PRICE: 10000,
