@@ -96,12 +96,6 @@ module.exports = {
                 totalPayout = payout;
             }
 
-            // Streamer Interaction: Sub Hype (20% chance to double any win)
-            if (user.job === 'streamer' && totalPayout > 0 && Math.random() < 0.20) {
-                totalPayout *= 2;
-                subHypeMsg = t('slots.sub_hype', lang);
-            }
-
             // Grant Win XP
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
             await addXp(message.member, winXp, message.guild.id);

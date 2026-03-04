@@ -47,15 +47,8 @@ module.exports = {
         const minReward = await db.getGuildSetting(message.guild.id, 'work_min', config.ECONOMY.MIN_WORK_EARNINGS);
         const maxReward = await db.getGuildSetting(message.guild.id, 'work_max', config.ECONOMY.MAX_WORK_EARNINGS);
         const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
-        let { total, bonus, percent } = await calculateReward(baseReward, message.member, 'income');
+        let { total, bonus, percent } = await calculateReward(baseReward, message.member, 'income', { category: 'work' });
 
-
-        let viralMsg = '';
-        if (user.job === 'streamer' && Math.random() < 0.05) {
-            total *= 2;
-            bonus *= 2;
-            viralMsg = t('work.viral', lang);
-        }
 
         // Farmer Interaction: Bumper Crop (20% chance)
         let bumperMsg = '';
@@ -63,28 +56,6 @@ module.exports = {
             total = Math.floor(total * 1.5);
             bonus = Math.floor(bonus * 1.5);
             bumperMsg = t('work.bumper_crop', lang);
-        }
-
-        // Chef Interaction: Special Order (15% chance)
-        let specialOrderMsg = '';
-        if (user.job === 'chef' && Math.random() < 0.12) {
-            total = Math.floor(total * 1.3);
-            bonus = Math.floor(bonus * 1.3);
-            specialOrderMsg = t('work.special_order', lang);
-        }
-
-        // Programmer Interaction: Code Crunch (+2500 flat)
-        let codeCrunchMsg = '';
-        if (user.job === 'programmer') {
-            total += 1000;
-            codeCrunchMsg = t('work.code_crunch', lang);
-        }
-
-        // Soldier Interaction: Mission Bonus (+2000 flat)
-        let missionMsg = '';
-        if (user.job === 'soldier') {
-            total += 800;
-            missionMsg = t('work.mission_bonus', lang);
         }
 
         // Police Interaction: Overtime (40% chance +1500 flat)
@@ -102,10 +73,7 @@ module.exports = {
             msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
         }
 
-        if (viralMsg) msg += viralMsg;
         if (bumperMsg) msg += bumperMsg;
-        if (specialOrderMsg) msg += specialOrderMsg;
-        if (missionMsg) msg += missionMsg;
         if (overtimeMsg) msg += overtimeMsg;
 
         await message.reply(msg);

@@ -113,14 +113,6 @@ module.exports = {
                 if (bonus > 0) {
                     bonusText += `\n✨ **Bonus:** +${percent.toLocaleString()}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
                 }
-
-                // Musician Interaction: Flow State (10% chance to double final win)
-                const u = await db.getUser(message.author.id, i.guild.id);
-                if (u.job === 'musician' && Math.random() < 0.10) {
-                    prize *= 2;
-                    await db.addBalance(i.guild.id, message.author.id, prize / 2); // Add the extra half
-                    bonusText += t('common.flow_state', lang);
-                }
             }
 
             let lossMsgResult = '';

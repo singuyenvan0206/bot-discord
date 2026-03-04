@@ -118,23 +118,9 @@ async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, 
             if (bonusAmount > 0) {
                 flavorText += `\n✨ **Bonus:** +${percent.toLocaleString()}% (${bonusAmount.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
-            // Musician Interaction: Flow State (15% chance to double final win)
-            const u = await db.getUser(i.user.id, i.guild.id);
-            if (u.job === 'musician' && payout > bet && Math.random() < 0.15) {
-                payout *= 2;
-                flavorText += `\n` + t('common.flow_state', lang);
-            }
         } else {
             // It's a tie (payout == bet)
             result = t('blackjack.tie', lang, { refund: t('blackjack.refund', lang) });
-
-            // Chef Interaction: Complimentary Drink (Tie Tip: 50-100 coins)
-            const u = await db.getUser(i.user.id, i.guild.id);
-            if (u.job === 'chef') {
-                const tip = Math.floor(Math.random() * 51) + 50;
-                payout += tip;
-                result += t('job.chef_tip', lang, { amount: tip.toLocaleString() });
-            }
 
             if (playerIsNatural && dealerIsNatural) {
                 // Keep the natural tie title

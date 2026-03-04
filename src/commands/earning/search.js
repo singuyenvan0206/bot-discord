@@ -35,7 +35,7 @@ module.exports = {
         const maxReward = await db.getGuildSetting(message.guild.id, 'search_max', config.ECONOMY.SEARCH_MAX_REWARD);
         const reward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-        let { total, bonus, percent } = await calculateReward(reward, message.member, 'income');
+        const { total, bonus, percent } = await calculateReward(reward, message.member, 'income', { category: 'search' });
 
         // Job Bonus: Hacker Data Mine (35% chance for 2x)
         let dataMineMsg = '';

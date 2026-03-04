@@ -148,12 +148,6 @@ module.exports = {
                     if (bonusAmount > 0) {
                         result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent });
                     }
-
-                    // Musician Interaction: Flow State (20% chance to double final win)
-                    if (user.job === 'musician' && Math.random() < 0.20) {
-                        await db.addBalance(message.guild.id, user.id, prize); // Add another prize
-                        result += t('common.flow_state', lang);
-                    }
                 } else if (outcome === 'tie') {
                     await db.addBalance(message.guild.id, user.id, betAmount); // Refund
                     result += t('rps.refund', lang);

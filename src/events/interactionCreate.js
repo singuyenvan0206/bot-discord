@@ -18,7 +18,7 @@ module.exports = {
             try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
 
             if (config.BLACKLISTED_CHANNELS.includes(interaction.channelId) || guildBlacklist.includes(interaction.channelId)) {
-                return;
+                if (!await db.isOwner(interaction.user.id)) return;
             }
         }
 
@@ -30,6 +30,13 @@ module.exports = {
         // 2. Slash Commands
         if (interaction.isChatInputCommand()) {
             const commandName = interaction.commandName;
+
+            // Check if bot is "shut down"
+            const isStopped = await db.getGlobalSetting('bot_is_stopped') === 'true';
+            if (isStopped && commandName !== 'startup' && commandName !== 'boot' && !await db.isOwner(interaction.user.id)) {
+                return interaction.reply({ content: t('common.bot_shut_down', lang), flags: [64] });
+            }
+
             const command = client.commands.get(commandName);
             if (!command) return;
 
@@ -198,7 +205,7 @@ module.exports = {
 
             if (timestamps.has(interaction.user.id)) {
                 const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
-                if (now < expirationTime) {
+                if (now < expirationTime && !await db.isOwner(interaction.user.id)) {
                     const timeLeft = (expirationTime - now) / 1000;
                     return interaction.reply({
                         content: t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }),
@@ -222,9 +229,12 @@ module.exports = {
 
                 // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
+                    const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                    await addXp(interaction.member, xpAmount);
+                    const result = await addXp(interaction.member, xpAmount);
+                    if (result.leveledUp) {
+                        sendLevelUpMessage(messageAdapter, result, lang).catch(() => { });
+                    }
                 }
             } catch (error) {
                 console.error(`[Slash] Error executing /${commandName}:`, error);
@@ -234,9 +244,12 @@ module.exports = {
 
                 // Grant Command Failure XP (Skip for admin/owner/utility commands)
                 if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
+                    const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../utils/leveling');
                     const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                    await addXp(interaction.member, xpAmount);
+                    const result = await addXp(interaction.member, xpAmount);
+                    if (result.leveledUp) {
+                        sendLevelUpMessage(messageAdapter, result, lang).catch(() => { });
+                    }
                 }
             }
         }
@@ -304,9 +317,19 @@ async function handleButtonEntry(interaction) {
 
     await db.addParticipant(giveaway.id, interaction.user.id);
 
-    // Grant Entry XP
-    const { addXp, XP_AMOUNTS } = require('../utils/leveling');
-    await addXp(interaction.member, XP_AMOUNTS.MESSAGE.min);
+    // Interaction XP
+    const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../utils/leveling');
+    const result = await addXp(interaction.member, XP_AMOUNTS.GAME_ACTION.min); // Use game action min for interactions
+    if (result.leveledUp) {
+        // Need a minimal adapter for sendLevelUpMessage
+        const adapter = {
+            author: interaction.user,
+            channel: interaction.channel,
+            guild: interaction.guild,
+            reply: async (content) => interaction.followUp(content).catch(() => { })
+        };
+        sendLevelUpMessage(adapter, result, lang).catch(() => { });
+    }
 
     const newCount = await db.getParticipantCount(giveaway.id);
     const embed = createGiveawayEmbed(giveaway, newCount, lang);

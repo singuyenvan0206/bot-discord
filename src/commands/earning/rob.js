@@ -43,14 +43,12 @@ module.exports = {
         await db.updateUser(message.guild.id, message.author.id, { last_rob: now });
 
         const isCriminal = user.job === 'criminal';
-        const isSoldier = user.job === 'soldier';
         const isVictimPolice = victim.job === 'police';
 
         const hasVictimRobShield = await isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (501)
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
         if (isCriminal) baseSuccessChance += 0.10;
-        if (isSoldier) baseSuccessChance += 0.10;
 
 
         if (isVictimPolice || hasVictimRobShield) {
@@ -73,7 +71,7 @@ module.exports = {
             // Ensure we don't steal more than they have total
             const victimLoss = Math.min(baseSteal, targetBalance);
 
-            const { total: robberGain, bonus, percent } = await calculateReward(victimLoss, message.member, 'income', { pvpMode: true });
+            const { total: robberGain, bonus, percent } = await calculateReward(victimLoss, message.member, 'income', { pvpMode: true, category: 'rob' });
 
             await db.addBalance(message.guild.id, message.author.id, robberGain);
             await db.removeBalance(message.guild.id, target.id, victimLoss);

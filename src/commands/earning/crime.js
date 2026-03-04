@@ -57,7 +57,7 @@ module.exports = {
                 hackedMsg = t('crime.hacker_hacked', lang);
             }
 
-            const { total, bonus, percent } = await calculateReward(reward, message.member, 'income');
+            const { total, bonus, percent } = await calculateReward(reward, message.member, 'income', { category: 'crime' });
 
             await db.addBalance(message.guild.id, message.author.id, total);
 
@@ -79,22 +79,11 @@ module.exports = {
             let fine = (user.level * 500) + Math.floor((user.balance || 0) * 0.05);
             const xpLoss = 50;
 
-            // Doctor Interaction: Medical knowledge prevents heavy losses (50% reduction)
-            if (user.job === 'doctor') {
-                fine = Math.floor(fine * 0.5);
-            }
-
             // Criminal Interaction: 50% escape chance — reduces fine by 80%
             let escapeMsg = '';
             if (isCriminal && Math.random() < 0.5) {
                 fine = Math.floor(fine * 0.2);
                 escapeMsg = t('crime.criminal_escaped', lang, { amount: fine.toLocaleString() });
-            }
-
-            // Soldier Interaction: Always reduces fine by 30%
-            if (user.job === 'soldier') {
-                fine = Math.floor(fine * 0.7);
-                escapeMsg = (escapeMsg || '') + t('crime.soldier_armed', lang);
             }
 
             // XP Penalty & Fine

@@ -145,10 +145,12 @@ module.exports = {
 
             board[idx] = currentTurn;
 
-            // Grant Action XP for the move
             if (i.user.id !== message.client.user.id) {
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
+                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+                const result = await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
+                if (result.leveledUp) {
+                    sendLevelUpMessage(i, result, lang).catch(() => { });
+                }
             }
 
             let winner = checkWinner();
@@ -175,13 +177,16 @@ module.exports = {
                     if (winnerId !== message.client.user.id) {
                         const winnerMember = winner === 'X' ? playerXMember : playerOMember;
                         const loserIsBot = (winner === 'X' ? playerO.id : playerX.id) === message.client.user.id;
-                        const { total: totalReward, bonus: bonusAmount, cap } = await calculateReward(baseReward, winnerMember, 'income', { pvpMode: !loserIsBot });
+                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winnerMember, 'income', { category: 'minigame' });
                         await db.addBalance(message.guild.id, winnerId, totalReward);
 
                         // Grant Win XP
-                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        await addXp(winnerMember, winXp, message.guild.id);
+                        const result = await addXp(winnerMember, winXp, message.guild.id);
+                        if (result.leveledUp) {
+                            sendLevelUpMessage(i, result, lang).catch(() => { });
+                        }
 
                         resultText = t('tictactoe.winner_msg', lang, { winner: winnerName, symbol: winner === 'X' ? '❌' : '⭕' }) +
                             t('tictactoe.reward_msg', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });

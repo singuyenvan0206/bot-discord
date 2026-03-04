@@ -4,6 +4,33 @@ const housingConfig = require('../config/housing');
 
 const LEGENDARY_BUFF_IDS = [601, 602, 603, 604, 605, 606];
 
+const getJobMilestoneBonus = (user, type, options = {}) => {
+    const points = Number(user.milestone_count || 0);
+    if (points <= 0) return 0;
+
+    const job = user.job || 'default';
+    const category = options.category || 'general';
+
+    if (type === 'xp') {
+        if (job === 'teacher') return (points * 0.1); // +10% per point
+        return 0;
+    }
+
+    if (type === 'income') {
+        if (job === 'police' && (category === 'work' || category === 'search')) return points * 0.1;
+        if (job === 'criminal' && (category === 'crime' || category === 'rob')) return points * 0.1;
+        if (job === 'hacker' && category === 'minigame') return points * 0.1;
+        if (job === 'trader' && category === 'business') return points * 0.1;
+    }
+
+    if (type === 'gamble') {
+        if (job === 'hacker' && category === 'minigame') return points * 0.1;
+    }
+
+    return 0;
+};
+
+
 /**
  * Internal helper to get split multiplier data from active buffs.
  * Returns { normal: number, legendary: number }
@@ -87,15 +114,15 @@ async function getUserMultiplier(memberOrId, type) {
  * Normal items, Level, Job, and Marriage are subject to maxCap.
  * Legendary fish buffs are ADDED AFTER the cap.
  */
-async function getTotalMultiplier(memberOrId, type = 'income', guildId = null) {
-    const data = await getMultiplierBreakdown(memberOrId, type, guildId);
+async function getTotalMultiplier(memberOrId, type = 'income', guildId = null, options = {}) {
+    const data = await getMultiplierBreakdown(memberOrId, type, guildId, options);
     return data.total;
 }
 
 /**
  * Detailed multiplier data for UI
  */
-async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = null) {
+async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = null, options = {}) {
     const { getLevelMultiplier } = require('./leveling');
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const actualGuildId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
@@ -118,7 +145,6 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
         if (marriage.ring_id === 702) marriageMulti = 0.50;
         else if (marriage.ring_id === 701) marriageMulti = 0.25;
     }
-
     let roleIncomeMulti = 0;
     // Role Buffs (Dynamic from Database)
     if (memberOrId && typeof memberOrId === 'object' && memberOrId.roles) {
@@ -130,10 +156,14 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
         }
     }
 
+    // Milestone Perks (Job Specific)
+    let milestoneMulti = getJobMilestoneBonus(user, type, options);
+
+
     const maxCap = await getDynamicCap(memberOrId, actualGuildId);
 
-    // Sum base multipliers (Items Normal, Level, Job, House, Marriage, Role Nerfed)
-    const baseRaw = itemData.normal + levelMulti + jobMulti + houseMulti + marriageMulti + (roleIncomeMulti * 0.5);
+    // Sum base multipliers (Items Normal, Level, Job, House, Marriage, Role Nerfed, Milestone)
+    const baseRaw = itemData.normal + levelMulti + jobMulti + houseMulti + marriageMulti + (roleIncomeMulti * 0.5) + milestoneMulti;
     const cappedBase = Math.min(baseRaw, maxCap);
 
     // Final result: Capped Base + Legendary (uncapped)
@@ -150,6 +180,7 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
         house: houseMulti,
         marriage: marriageMulti,
         role: roleIncomeMulti * 0.5,
+        milestone: milestoneMulti,
         itemsNormal: itemData.normal
     };
 }
@@ -178,7 +209,7 @@ async function getXpMultiplier(memberOrId) {
         });
     }
 
-    if (user.job === 'teacher') multi += 1.0; // Teacher XP Base: +100%
+    multi += getJobMilestoneBonus(user, 'xp');
     if (await hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion: +100%
 
     // Role XP Boost
@@ -194,6 +225,7 @@ async function getXpMultiplier(memberOrId) {
 
     return Math.min(multi, 15.0); // Increased cap to 15.0 to allow stacks
 }
+
 
 async function isProtectedFromRob(guildId, userId) {
     return await hasActiveItem(guildId, userId, 501);
@@ -227,7 +259,7 @@ async function calculateReward(base, memberOrId, type = 'income', options = {}) 
         return { total: base, bonus: 0, percent: 0, cap: 0, capReached: false };
     }
     const guildId = (memberOrId && memberOrId.guild) ? memberOrId.guild.id : null;
-    const bonusPart = await getTotalMultiplier(memberOrId, type);
+    const bonusPart = await getTotalMultiplier(memberOrId, type, guildId, options);
     const bonus = Math.floor(base * bonusPart);
     const total = base + bonus;
     // For logging, let's keep the dynamic cap context
@@ -286,6 +318,7 @@ module.exports = {
     calculateReward,
     removeActiveBuff,
     getDynamicCap,
-    getMultiplierBreakdown
+    getMultiplierBreakdown,
+    getJobMilestoneBonus
 };
 

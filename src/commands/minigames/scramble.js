@@ -65,12 +65,6 @@ module.exports = {
             hint = `${t('scramble.category', lang)}: **${category}**` + (Math.random() > 0.5 ? ` | ${t('scramble.starts_with', lang)}: **${word[0].toUpperCase()}**` : ` | ${t('scramble.length', lang)}: **${word.length}**`);
         }
 
-        // Programmer Interaction: Regex Assist (Reveals 1st and Last letter if not already)
-        const user = await db.getUser(message.author.id, message.guild.id);
-        if (user.job === 'programmer' && word.length > 3) {
-            hint += `\n💻 **Regex Assist:** \`${word[0].toUpperCase()}...${word[word.length - 1].toUpperCase()}\``;
-        }
-
         const embed = new EmbedBuilder()
             .setTitle(t('scramble.title', lang))
             .setDescription(`${t('scramble.arrange_this', lang)}: **${scrambled}**\n\n💡 **${t('hangman.hint', lang)}:** ${hint}`)
@@ -79,9 +73,11 @@ module.exports = {
 
         await message.reply({ embeds: [embed] });
 
-        // Grant Action XP
-        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-        await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+        const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        if (actionResult.leveledUp) {
+            sendLevelUpMessage(message, actionResult, lang).catch(() => { });
+        }
 
         try {
             const collected = await message.channel.awaitMessages({
@@ -94,14 +90,7 @@ module.exports = {
             const winner = collected.first();
             const baseReward = config.ECONOMY.SCRAMBLE_REWARD;
 
-            let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winner.member);
-
-            // Programmer Interaction: Tech Bonus (+30%)
-            const winningUser = await db.getUser(winner.author.id, message.guild.id);
-            if (winningUser.job === 'programmer') {
-                totalReward = Math.floor(totalReward * 1.3);
-                bonusAmount = Math.floor(bonusAmount * 1.3);
-            }
+            let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winner.member, 'income', { category: 'minigame' });
 
             await db.addBalance(message.guild.id, winner.author.id, totalReward);
 
@@ -115,9 +104,11 @@ module.exports = {
 
             if (bonusAmount > 0) msgText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
 
-            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
             const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-            await addXp(winner.member, winXp, message.guild.id);
+            const winResult = await addXp(winner.member, winXp, message.guild.id);
+            if (winResult.leveledUp) {
+                sendLevelUpMessage(message, winResult, lang).catch(() => { });
+            }
 
             message.channel.send(msgText);
             startCooldown(message.client, 'scramble', message.author.id);

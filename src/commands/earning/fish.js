@@ -58,6 +58,10 @@ module.exports = {
         let totalLuck = rod.luck + bait.luck;
         if (user.job === 'farmer') {
             totalLuck *= 1.2; // Farmers get 20% more luck from gear
+
+            // Milestone Bonus: +0.1 Luck per milestone point
+            const points = Number(user.milestone_count || 0);
+            totalLuck += points * 0.1;
         }
 
         const weightedPool = getWeightedPool(totalLuck);
@@ -158,9 +162,7 @@ module.exports = {
                 let buffs = [];
                 try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
-                const isChef = user.job === 'chef';
                 let duration = buffItem.duration;
-                if (isChef) duration *= 2;
                 const expiresAt = Math.floor(Date.now() / 1000) + duration;
 
                 buffs.push({ itemId: buffItem.id, expiresAt });

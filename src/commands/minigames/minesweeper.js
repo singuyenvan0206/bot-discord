@@ -205,9 +205,11 @@ module.exports = {
 
                 const result = reveal(idx);
 
-                // Grant Action XP
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+                const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                if (actionResult.leveledUp) {
+                    sendLevelUpMessage(message, actionResult, lang).catch(() => { });
+                }
 
                 if (result === 'BOOM') {
                     collector.stop('boom');
@@ -240,15 +242,18 @@ module.exports = {
                         collector.stop('win');
 
                         // Grant Win XP
-                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        await addXp(message.member, winXp, message.guild.id);
+                        const winResult = await addXp(message.member, winXp, message.guild.id);
+                        if (winResult.leveledUp) {
+                            sendLevelUpMessage(message, winResult, lang).catch(() => { });
+                        }
 
                         let prize = 0;
                         if (bet > 0) {
                             const baseWin = Math.floor(bet * 2.5);
                             const profit = baseWin - bet;
-                            const { bonus: bonusAmount, percent } = await calculateReward(profit, message.member, 'gamble');
+                            const { bonus: bonusAmount, percent } = await calculateReward(profit, message.member, 'gamble', { category: 'minigame' });
                             const totalReward = baseWin + bonusAmount;
                             await db.addBalance(message.guild.id, user.id, totalReward);
 

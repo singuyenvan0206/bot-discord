@@ -3,6 +3,7 @@ const db = require('../../database');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const bizConfig = require('../../config/businesses');
+const { calculateReward, getJobMilestoneBonus } = require('../../utils/multiplier');
 
 module.exports = {
     name: 'business',
@@ -202,6 +203,9 @@ module.exports = {
                 embed.setDescription(t('business.info_none', lang));
             } else {
                 let totalIncome = 0;
+                const user = await db.getUser(message.author.id, message.guild?.id);
+                const traderBonus = getJobMilestoneBonus(user, 'income', { category: 'business' });
+
                 userBizs.forEach(b => {
                     const type = bizConfig.TYPES[b.business_id];
                     const hourly = bizConfig.calculateBusinessIncome(b.business_id, b.level);
@@ -215,7 +219,10 @@ module.exports = {
                         managerStatus = `🟢 Đang quản lý (còn ${h}h ${m}m)`;
                     }
 
-                    totalIncome += isBuffed ? Math.floor(hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) : hourly;
+                    let perHour = isBuffed ? Math.floor(hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) : hourly;
+                    if (traderBonus > 0) perHour = Math.floor(perHour * (1 + traderBonus));
+
+                    totalIncome += perHour;
 
                     const isMax = b.level >= type.max_level;
                     const upgradeCost = isMax
@@ -228,14 +235,19 @@ module.exports = {
                             icon: type.icon,
                             name: type.name[lang],
                             level: b.level,
-                            income: (isBuffed ? Math.floor(hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) : hourly).toLocaleString(),
+                            income: perHour.toLocaleString(),
                             staff: managerStatus,
                             upgrade_cost: upgradeCost,
                             staff_cost: `${type.manager_hourly_cost.toLocaleString()}/h`
                         })
                     });
                 });
-                embed.setDescription(t('business.passive_income', lang, { amount: totalIncome.toLocaleString() }));
+                if (traderBonus > 0) {
+                    const percent = Math.round(traderBonus * 100);
+                    embed.setDescription(t('business.passive_income', lang, { amount: totalIncome.toLocaleString() }) + `\n📈 **Trader Bonus:** +${percent}%`);
+                } else {
+                    embed.setDescription(t('business.passive_income', lang, { amount: totalIncome.toLocaleString() }));
+                }
                 embed.setFooter({ text: t('business.info_footer', lang) });
             }
 
@@ -248,9 +260,10 @@ module.exports = {
 
             let totalReward = 0;
             const now = Math.floor(Date.now() / 1000);
+            const user = await db.getUser(message.author.id, message.guild?.id);
+            const traderBonus = getJobMilestoneBonus(user, 'income', { category: 'business' });
 
             for (const b of userBizs) {
-                const now = Math.floor(Date.now() / 1000);
                 const secondsPassed = now - b.last_harvest;
                 const hoursPassed = secondsPassed / 3600;
 
@@ -260,7 +273,9 @@ module.exports = {
                     const normalSeconds = secondsPassed - buffSeconds;
 
                     const hourly = bizConfig.calculateBusinessIncome(b.business_id, b.level);
-                    const amount = Math.floor((buffSeconds / 3600) * (hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) + (normalSeconds / 3600) * hourly);
+                    let amount = Math.floor((buffSeconds / 3600) * (hourly * bizConfig.MANAGER_INCOME_MULTIPLIER) + (normalSeconds / 3600) * hourly);
+
+                    if (traderBonus > 0) amount = Math.floor(amount * (1 + traderBonus));
 
                     totalReward += amount;
                     await db.updateUserBusiness(message.author.id, b.business_id, { last_harvest: now });

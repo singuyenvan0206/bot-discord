@@ -94,16 +94,18 @@ module.exports = {
             if (answered.has(i.user.id)) return;
             answered.add(i.user.id);
 
-            // Grant Action XP
-            const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-            await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+            const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+            const actionResult = await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+            if (actionResult.leveledUp) {
+                sendLevelUpMessage(i, actionResult, lang).catch(() => { });
+            }
 
             const selectedIndex = parseInt(i.customId.split('_')[1]);
 
             if (selectedIndex === correctIndex) {
                 const baseReward = config.ECONOMY.TRIVIA_REWARD;
 
-                const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, i.member);
+                const { total: reward, bonus: bonusAmount, percent } = await calculateReward(baseReward, i.member, 'income', { category: 'minigame' });
 
                 let winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                 let teacherBonusApplied = false;
@@ -122,7 +124,10 @@ module.exports = {
                 if (bonusAmount > 0) resultMsg += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
                 if (teacherBonusApplied) resultMsg += t('job.teacher_tutoring_simple', lang);
 
-                await addXp(i.member, winXp, message.guild.id);
+                const winResult = await addXp(i.member, winXp, message.guild.id);
+                if (winResult.leveledUp) {
+                    sendLevelUpMessage(i, winResult, lang).catch(() => { });
+                }
 
                 await i.update({ content: resultMsg, components: [], embeds: [] });
             } else {

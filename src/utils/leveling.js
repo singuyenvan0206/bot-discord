@@ -54,7 +54,22 @@ async function addXp(memberOrId, amount, guildId = null) {
     if (leveledUp) {
         // Atomic update of the level field only if it changed
         await db.setGlobalLevel(userId, newLevel);
+
+        // Base bonus
         bonus = newLevel * 100;
+
+        // Milestone Reward (Every X levels)
+        const milestone = config.ECONOMY?.LEVELING?.MILESTONE_INTERVAL || 20;
+        const reachedMilestone = Math.floor(newLevel / milestone) > Math.floor(oldLevel / milestone);
+
+        if (reachedMilestone) {
+            // Increment permanent milestone points
+            await db.execute('UPDATE users SET milestone_count = milestone_count + 1 WHERE id = ?', [userId]);
+
+            userState.reachedMilestone = true;
+            userState.milestoneLevel = Math.floor(newLevel / milestone) * milestone;
+        }
+
         await db.addBalance(gId, userId, bonus);
     }
 
@@ -68,7 +83,9 @@ async function addXp(memberOrId, amount, guildId = null) {
         leveledUp: leveledUp,
         reachedLevel20: !!assignedJob,
         assignedJob: assignedJob,
-        bonus: bonus
+        bonus: bonus,
+        reachedMilestone: !!userState.reachedMilestone,
+        milestoneLevel: userState.milestoneLevel || 0
     };
 }
 
@@ -158,10 +175,12 @@ async function assignRandomJob(userId, guildId, lang) {
 /**
  * Gửi thông báo thăng cấp cơ bản.
  */
-async function sendLevelUpMessage(message, level, bonus, lang) {
+async function sendLevelUpMessage(message, result, lang) {
+    const { level, bonus, reachedMilestone, milestoneLevel } = result;
     const { EmbedBuilder } = require('discord.js');
     const { t } = require('./i18n');
     const config = require('../config');
+    const shopItems = require('./shopItems');
 
     // ─── Channel Blacklist Check ───
     const guildBlacklistRaw = await db.getGuildSetting(message.guild.id, 'blacklisted_channels', '[]');
@@ -170,13 +189,27 @@ async function sendLevelUpMessage(message, level, bonus, lang) {
 
     if (config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id)) return;
 
+    let description = t('leveling.levelup_desc', lang, {
+        level: level,
+        bonus: bonus.toLocaleString(),
+        emoji: config.EMOJIS.COIN
+    }) || `Chúc mừng! Bạn đã đạt cấp độ **${level.toLocaleString()}** và nhận được **${bonus.toLocaleString()}** ${config.EMOJIS.COIN}!`;
+
+    if (reachedMilestone) {
+        const user = await db.getUser(message.author.id, message.guild.id);
+        const points = user.milestone_count;
+        const job = user.job || 'default';
+
+        let perkVal = points * 10; // Default 10%
+        if (job === 'teacher' || job === 'farmer') perkVal = (points * 0.1).toFixed(1);
+
+        description += `\n\n⭐ **${t('leveling.milestone_reached', lang)} (Cấp ${milestoneLevel})!**`;
+        description += `\n${t(`job.perk_desc_${job}`, lang, { points, val: perkVal })}`;
+    }
+
     const embed = new EmbedBuilder()
         .setTitle(t('leveling.levelup_title', lang) || '🎉 Thăng cấp!')
-        .setDescription(t('leveling.levelup_desc', lang, {
-            level: level,
-            bonus: bonus,
-            emoji: config.EMOJIS.COIN
-        }) || `Chúc mừng! Bạn đã đạt cấp độ **${level.toLocaleString()}** và nhận được **${bonus.toLocaleString()}** ${config.EMOJIS.COIN}!`)
+        .setDescription(description)
         .setColor(config.COLORS.SUCCESS)
         .setTimestamp();
 

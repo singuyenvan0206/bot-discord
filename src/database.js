@@ -116,7 +116,8 @@ async function initSchema() {
             server_data TEXT DEFAULT '{}',
             last_dist_amount BIGINT DEFAULT 0,
             house_id TEXT DEFAULT NULL,
-            house_data TEXT DEFAULT '{}'
+            house_data TEXT DEFAULT '{}',
+            milestone_count INTEGER NOT NULL DEFAULT 0
         )
     `);
 
@@ -213,6 +214,7 @@ async function initSchema() {
     await safeAddColumn('users', 'house_data', "TEXT DEFAULT '{}'");
     await safeAddColumn('user_businesses', 'manager_expires_at', 'BIGINT DEFAULT 0');
     await safeAddColumn('guilds', 'wordchain_channel', 'TEXT DEFAULT NULL');
+    await safeAddColumn('users', 'milestone_count', 'INTEGER NOT NULL DEFAULT 0');
 
     // ─── Automated Command Renaming Migration ─────────
     try {

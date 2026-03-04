@@ -26,27 +26,6 @@ module.exports = {
         const baseReward = await db.getGuildSetting(message.guild.id, 'daily_reward', config.ECONOMY.DAILY_REWARD);
         let { total, bonus, percent } = await calculateReward(baseReward, message.member, 'daily');
 
-        // Chef Interaction: Michelin Star (10% chance — daily ×3)
-        let eventMsg = '';
-        if (user.job === 'chef' && Math.random() < 0.08) {
-            total = Math.floor(total * 1.5);
-            eventMsg = t('daily_events.michelin_star', lang);
-        }
-
-        // Doctor Interaction: Medical Trial (15% chance +1000-3000 coins)
-        if (user.job === 'doctor' && Math.random() < 0.15) {
-            const grant = Math.floor(Math.random() * 2001) + 1000;
-            total += grant;
-            eventMsg += t('daily_events.medical_trial', lang, { amount: grant.toLocaleString() });
-        }
-
-        // Streamer Interaction: Subathon (20% chance +3x bonus)
-        if (user.job === 'streamer' && Math.random() < 0.15) {
-            const subBonus = Math.floor(total * 0.5);
-            total += subBonus;
-            eventMsg += t('daily_events.subathon', lang, { amount: subBonus.toLocaleString() });
-        }
-
         await db.updateUser(message.guild.id, message.author.id, { last_daily: now });
         await db.addBalance(message.guild.id, message.author.id, total);
 

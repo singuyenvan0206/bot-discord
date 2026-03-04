@@ -32,7 +32,6 @@
         "duration_minutes": "{{minutes}}p",
         "duration_days": "{{days}}n",
         "duration_seconds": "{{seconds}} giây",
-        "flow_state": "\n🎸 **Flow State!** Nhạc sĩ thăng hoa, phần thưởng được nhân đôi!",
         "market_tip": "\n📈 **Mẹo thị trường!** Trader nhận được tin mật, hoàn lại 50% tiền cược!",
         "xp_loss": " (Mất {{amount}} XP!)",
         "jail_time": "\n⚖️ **Thi hành án:** Bạn bị tống giam! Cooldown tiếp theo sẽ lâu gấp đôi.",
@@ -108,7 +107,6 @@
         "win_small": "✨ **Thắng nhỏ!** Hai hình khớp nhau!",
         "partial_refund": "\n💰 **Tiền hoàn lại:** **{{amount}}** {{emoji}}",
         "lose": "❌ Chúc bạn may mắn lần sau!",
-        "sub_hype": "\n🔥 **Sub Hype!** Fan Streamer đã nhân đôi tiền thắng!",
         "rolling": "🎰  **Đang quay...**",
         "bonus_item": " *(Gồm +{{amount}} thưởng (Capped {{cap}}%): {{percent}}%)*"
     },
@@ -238,7 +236,6 @@
             ],
             "tier5": [
                 "Thợ xây",
-                "Đầu bếp",
                 "Thợ sửa xe",
                 "Bảo vệ",
                 "Tài xế công nghệ",
@@ -249,16 +246,12 @@
                 "Quản lý kho"
             ],
             "tier10": [
-                "Lập trình viên",
-                "Bác sĩ",
                 "Họa sĩ",
-                "Streamer",
                 "KTS",
                 "Luật sư",
                 "Kỹ sư AI",
                 "Nhà văn",
                 "Phiên dịch viên",
-                "Nhạc sĩ",
                 "Hacker mũ trắng"
             ],
             "tier20": [
@@ -273,11 +266,7 @@
                 "Nhà thám hiểm vũ trụ"
             ]
         },
-        "viral": "\n🚀 **Lên xu hướng!** Buổi stream của bạn đã lọt vào trang chủ! Phần thưởng nhân **5x**!",
         "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!",
-        "special_order": "\n👨‍🍳 **Đơn đặc biệt!** Thực đơn VIP được gọi, thu nhập nhân **2x**!",
-        "mission_bonus": "\n🪖 **Thưởng nhiệm vụ!** Hoàn thành nhiệm vụ đặc biệt, nhận thêm **+2,000** coins!",
-        "code_crunch": "\n💻 **Code Crunch!** Programmer tối ưu hóa mã nguồn, nhận thêm **+200** coins!",
         "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được tiền bồi dưỡng **+150** coins!"
     },
     "crime": {
@@ -294,7 +283,6 @@
         ],
         "hacker_hacked": "\n💻 **Hacker:** Bạn đã xâm nhập thành công hệ thống, phần thưởng được nhân đôi!",
         "criminal_escaped": "\n🥷 **Tội phạm:** Bạn đã trốn thoát thành công nhưng bị phạt {{amount}} coins!",
-        "soldier_armed": "\n🪖 **Binh lính:** Bạn có vũ khí tự vệ, giảm 30% mức phạt!",
         "teacher_penalty": "Vì vi phạm đạo đức nghề nghiệp, bạn đã bị giáng xuống Cấp độ **{{level}}**! 📉",
         "failure_xp": "🚔 Phi vụ thất bại! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}"
     },
@@ -363,7 +351,8 @@
     },
     "leveling": {
         "levelup_title": "🎉 Thăng cấp!",
-        "levelup_desc": "Chúc mừng! Bạn đã đạt cấp độ **{{level}}** và nhận được **{{bonus}}** {{emoji}}!"
+        "levelup_desc": "Chúc mừng! Bạn đã đạt cấp độ **{{level}}** và nhận được **{{bonus}}** {{emoji}}!",
+        "milestone_reached": "Điểm Mốc Cột Mốc Vĩnh Viễn"
     },
     "job": {
         "list_title": "💼 Trung Tâm Sự Nghiệp",
@@ -388,57 +377,32 @@
         "milestone_desc": "Bạn đã trở thành một chuyên gia thực thụ! Hội đồng thành phố đã chính thức cấp chứng chỉ hành nghề cho bạn.",
         "milestone_assigned": "🎯 Bạn đã được gán nghề nghiệp: **{{job}}** {{icon}}\n\n💡 **Sự thật thú vị:** {{fact}}\n\n*(Dùng `{{prefix}}job me` để xem chi tiết đặc quyền của bạn)*",
         "police_notification": "👮 **Trực ban:** Bạn vừa bắt được một tên tội phạm và nhận được **{{amount}}** coins tiền phạt! 💰",
-        "doctor_notification": "👨‍⚕️ **Bệnh viện:** Một bệnh nhân vừa nhập viện! Bạn nhận được **{{amount}}** coins phí điều trị. 🏥",
         "dm_disabled_random": "📬 Vì DM của bạn đang tắt, tôi đã gán cho bạn nghề ngẫu nhiên: **{{job}}**! (Dùng {{prefix}}job me để xem)",
         "none": "Không có",
         "info_police": "✨ **Đặc quyền Cảnh Sát:**\n• **Lương thưởng**: +15% thu nhập công việc cơ bản.\n• **Tuần tra**: Nhận thêm 100-200 coins khi dùng lệnh `search`.\n• **Thực thi pháp luật**: Tăng mạnh tỷ lệ bắt trộm thành công.",
         "name_criminal": "👤 Tội Phạm",
         "desc_criminal": "Kẻ ngoài vòng pháp luật sống bằng bản lĩnh và sự liều lĩnh.",
         "info_criminal": "• **Phi vụ**: +20% thu nhập từ công việc bất hợp pháp.\n• **Bậc thầy trộm**: +15% tỷ lệ thành công khi thực hiện `rob`.\n• **Lẩn trốn**: Giảm 25% thời gian ngồi tù nếu bị bắt.",
-        "name_doctor": "👨‍⚕️ Bác Sĩ",
-        "desc_doctor": "Thiên sứ áo trắng nắm giữ chìa khóa của sự sinh tồn.",
-        "info_doctor": "• **Trợ cấp y tế**: Nhận hoa hồng từ mỗi người dùng nhập viện.\n• **Y đức**: +25% thu nhập công việc cơ bản.\n• **Hồi phục**: Tăng 20% tỷ lệ nhận vật phẩm buff khi làm việc.",
-        "name_farmer": "👨‍🌾 Nông Dân",
-        "desc_farmer": "Người làm bạn với đất mẹ và biển cả.",
-        "info_farmer": "• **Ngư phủ**: +15% tỷ lệ câu được Cá Khổng Lồ/Báu vật.\n• **Tiết kiệm**: Hoàn lại mồi câu khi thất bại (tỷ lệ cao).\n• **Mùa màng**: +15% thu nhập công việc cơ bản.",
-        "name_hacker": "👤 Hacker",
-        "desc_hacker": "Bóng ma trong mạng lưới kỹ thuật số.",
-        "info_hacker": "• **Bẻ khóa**: Tăng mạnh tỷ lệ thành công lệnh `crime`.\n• **Khai thác**: +40% lợi nhuận từ các hoạt động bất hợp pháp.\n• **Dò tìm**: Tự động cắm cờ 1 quả mìn trong trò chơi `mines`.",
-        "name_streamer": "🎥 Streamer",
-        "desc_streamer": "Thần tượng tiềm năng của giới trẻ. Sự duyên dáng và sức ảnh hưởng của bạn biến mỗi buổi livestream thành một sự kiện bùng nổ doanh thu.",
-        "info_streamer": "• **Content**: +25% thu nhập công việc cơ bản.\n• **Viral**: 15% xác suất bùng nổ truyền thông (Nhận x5 thưởng).\n• **Hype**: Có cơ hội nhận thêm +25% thưởng hàng ngày ($daily).",
-        "name_chef": "👨‍🍳 Đầu Bếp",
-        "desc_chef": "Bậc thầy ẩm thực biến nguyên liệu thành mỹ vị.",
-        "info_chef": "• **Menu VIP**: +25% thu nhập công việc cố định.\n• **Michelin**: Cơ hội nhân ba (x3) phần thưởng $daily.\n• **Mời nước**: Hoàn cược Blackjack nếu kết quả Hòa (Push).",
-        "name_musician": "🎸 Nhạc Sĩ",
-        "desc_musician": "Nghệ sĩ tâm hồn truyền cảm hứng qua từng nốt nhạc.",
-        "info_musician": "• **Flow**: 15% cơ hội nhân đôi (x2) tiền thắng Blackjack/Cờ bạc.\n• **Tip**: Nhận tiền tip ngẫu nhiên từ người hâm mộ sau mỗi ca làm việc.\n• **Salary**: +15% thưởng vào thu nhập làm việc cơ bản.",
-        "name_programmer": "👨‍💻 Lập trình viên",
-        "desc_programmer": "Kiến trúc sư của thế giới số. Những dòng mã của bạn xây dựng nền tảng cho tương lai và mang lại thu nhập ổn định, bền vững.",
-        "info_programmer": "✨ **Đặc quyền Lập trình viên:**\n• **Expert**: +30% thưởng cố định vào thu nhập làm việc.\n• **Regex Assist**: Tự động hiển thị gợi ý trong trò chơi Sắp Xếp Từ.\n• **High Focus**: +25% phần thưởng từ các trò chơi giải đố và trí tuệ.",
-        "name_soldier": "🪖 Quân Nhân",
-        "desc_soldier": "Chiến binh tinh nhuệ với kỷ luật thép. Luôn sẵn sàng dấn thân vào những nhiệm vụ nguy hiểm nhất để bảo vệ nền hòa bình thế giới.",
-        "info_soldier": "• **Kỷ Luật Quân Đội**: Đảm bảo nhận thêm phụ cấp nhiệm vụ (+200 coins) mỗi ca làm việc.\n• **Vũ Trang Tận Răng**: Giảm 50% số tiền bị phạt nếu thất bại trong các lệnh nguy hiểm.\n• **Hành Quân Cấp Tốc**: Nhận thêm kinh nghiệm (XP) đáng kể sau mỗi hành động.",
-        "name_trader": "📈 Nhà giao dịch",
-        "desc_trader": "Phù thủy thị trường với tầm nhìn kinh doanh sắc bén. Bạn xoay vòng vốn và tối ưu hóa lợi nhuận trong mọi giao dịch.",
-        "info_trader": "• **Big Capital**: +30% thưởng vào thu nhập làm việc cơ bản.\n• **Insurance**: Cơ hội cao được hoàn lại 50% tiền cược khi thua Coinflip/Blackjack.\n• **Tip**: Luôn nhận thêm coins thưởng khi sử dụng lệnh lùng sục (`search`).",
+        "name_trader": "📈 Thương Nhân",
+        "desc_trader": "Phù thủy thị trường với tầm nhìn kinh doanh sắc bén. Bạn tối ưu hóa lợi nhuận trong mọi giao dịch.",
+        "info_trader": "• **Dòng tiền**: +30% thu nhập công việc cơ bản.\n• **Giao dịch**: Tăng thu nhập từ tất cả Doanh nghiệp ($business).\n• **Linh cảm**: Luôn nhận thêm coins thưởng khi sử dụng lệnh lùng sục (`search`).",
         "name_teacher": "👨‍🏫 Giáo Viên",
         "desc_teacher": "Kiến trúc sư của tâm hồn, người truyền lửa tri thức.",
         "info_teacher": "• **Uyên thâm**: Hệ số nhân XP vĩnh viễn x2.0.\n• **Gia sư**: Trivia cũng thưởng cho những người chơi khác.\n• **Kỷ luật**: Phạt gấp đôi tiền nếu đi cướp hoặc phạm tội.",
-        "chef_tip": "\n👨‍🍳 **Tiền tip từ Đầu bếp!** Dealer thưởng cho bạn {{amount}} coins vì sự tỉ mỉ! 🍳",
         "job_facts": "Sự thật thú vị:",
         "fact_police": "Cảnh sát có thể nhận thêm tiền phạt từ những kẻ trộm cướp bị bắt quả tang!",
         "fact_criminal": "Tội phạm chuyên nghiệp có tỉ lệ trộm cắp thành công cao hơn và ít bị phạt hơn khi có trang bị.",
-        "fact_doctor": "Bác sĩ luôn có thu nhập thụ động từ những người không may phải nhập viện.",
-        "fact_programmer": "Lập trình viên giỏi Regex sẽ nhận được gợi ý cực hữu ích trong trò chơi Scramble!",
         "fact_farmer": "Nông dân là nghề duy nhất có thể câu được những loại cá cực kỳ quý hiếm.",
-        "fact_hacker": "Hacker có thể tự động dò tìm vị trí của một quả mìn trong trò chơi Dò Mìn.",
-        "fact_streamer": "Streamer có khả năng 'viral', giúp nhân số tiền kiếm được từ công việc lên gấp 5 lần!",
-        "fact_chef": "Đầu bếp được Nhà cái Blackjack nể phục, sẵn sàng tặng tiền tip ngay cả khi kết quả hòa.",
-        "fact_musician": "Nhạc sĩ có trạng thái 'Flow State' giúp nhân đôi may mắn trong các trò chơi cá cược.",
-        "fact_soldier": "Chiến binh tinh nhuệ luôn nhận được các khoản trợ cấp cố định sau mỗi đợt hành quân.",
-        "fact_trader": "Thương nhân có linh cảm thị trường nhạy bén, giúp họ luôn nhận được tiền thưởng khi tìm kiếm.",
-        "fact_teacher": "Giáo viên giúp mọi người xung quanh học tập hiệu quả hơn và nhận được nhiều tiền hơn."
+        "fact_hacker": "Hacker có kỹ năng lập trình đỉnh cao, giúp tăng phần thưởng từ các trò chơi minigame.",
+        "fact_trader": "Thương nhân có linh cảm thị trường nhạy bén, giúp tăng lợi nhuận thu hoạch từ Doanh nghiệp.",
+        "fact_teacher": "Giáo viên giúp mọi người xung quanh học tập hiệu quả hơn và nhận được nhiều tiền hơn.",
+        "perk_desc_farmer": "🚜 **Đặc quyền Nông dân:** +0.1 May mắn câu cá mỗi mốc (Tổng: +{{val}} Luck)",
+        "perk_desc_teacher": "🎓 **Đặc quyền Giáo viên:** +0.1 Hệ số nhân XP mỗi mốc (Tổng: +{{val}}x XP)",
+        "perk_desc_police": "👮 **Đặc quyền Cảnh sát:** +10% thưởng Lùng sục & Làm việc mỗi mốc (Tổng: +{{val}}%)",
+        "perk_desc_criminal": "🥷 **Đặc quyền Tội phạm:** +10% thưởng Crime & Rob mỗi mốc (Tổng: +{{val}}%)",
+        "perk_desc_hacker": "💻 **Đặc quyền Hacker:** +10% thưởng Minigame mỗi mốc (Tổng: +{{val}}%)",
+        "perk_desc_trader": "📈 **Đặc quyền Thương nhân:** +10% thưởng Doanh nghiệp mỗi mốc (Tổng: +{{val}}%)",
+        "perk_desc_default": "🌟 **Đặc quyền Nghề nghiệp:** +10% thu nhập tổng quát mỗi mốc (Tổng: +{{val}}%)"
     },
     "housing": {
         "buy_usage": "❌ Cách dùng: `$house buy <tier>`\nVí dụ: `$house buy room`",
@@ -529,8 +493,6 @@
         "cooldown": "❌ Bạn cần nghỉ ngơi sau dự án! Quay lại sau **{{time}}**.",
         "success": "💻 Bạn đã hoàn thành **{{action}}** thành công và nhận được **{{amount}}** coins từ khách hàng! {{emoji}}",
         "failure": "📂 Dự án gặp trục trặc! Bạn bị khách hàng bùng tiền hoặc phải đền bù hợp đồng tốn **{{amount}}** coins.",
-        "musician_bonus": "\n🎸 **Màn trình diễn xuất sắc!** Nhạc sĩ đốt cháy sân khấu! +{{amount}} coins!",
-        "streamer_bonus": "\n🎥 **Lên sóng trực tiếp!** Fans donate ủng hộ! +{{amount}} coins!",
         "actions": [
             "làm gia sư dạy kèm online",
             "thiết kế đồ họa cho startup",
@@ -539,11 +501,6 @@
         ],
         "teacher_penalty": "Là một giáo viên, bạn nên tập trung vào giảng dạy hơn là làm thêm bên ngoài. Bạn bị giáng xuống Cấp độ **{{level}}**! 📉",
         "failure_xp": "📂 Dự án thất bại! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{hospital}}"
-    },
-    "daily_events": {
-        "michelin_star": "\n🌟 **Sao Michelin!** Danh tiếng của Đầu bếp giúp nhận x3 phần thưởng hàng ngày!",
-        "medical_trial": "\n🏥 **Trợ cấp y tế!** Bác sĩ nhận được bonus **{{amount}}** coins cho nghiên cứu.",
-        "subathon": "\n🎮 **Hype Subathon!** Fan của Streamer đã donate thêm **{{amount}}** coins!"
     },
     "balance": {
         "title": "💰 Tài khoản: {{user}}",
@@ -1454,7 +1411,7 @@
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
             "hangman": "🌟 **Mô tả:** Trò chơi đoán chữ kinh điển! Bạn phải tìm ra từ ẩn trước khi hình nhân bị treo hoàn toàn.\n\n🕹️ **Cách chơi:**\n- Bot sẽ chọn ngẫu nhiên một từ bí ẩn.\n- Bạn bắt đầu với **6 mạng** (❤️).\n- Nhắn một chữ cái bất kỳ để đoán (vđ: \"a\").\n- Nếu chữ cái đúng, nó sẽ hiển thị ở tất cả các vị trí trong từ.\n- Nếu sai, bạn sẽ mất 1 mạng.\n- Bạn có thể nhắn cả từ nếu đã chắc chắn.\n\n💡 **Mẹo:** Sử dụng nút Gợi ý (Hint) để xem định nghĩa, nhưng hãy dùng tiết kiệm nhé!\n\n💰 **Phần thưởng:** Thắng cuộc nhận **50 coins** cộng thêm thưởng dựa trên số mạng còn lại.",
-            "scramble": "🌟 **Mô tả:** Kiểm tra vốn từ vựng của bạn! Sắp xếp lại các chữ cái bị xáo trộn để tìm ra từ chính xác.\n\n🕹️ **Cách chơi:**\n- Một từ bị đảo lộn sẽ hiện ra (vđ: \"elppa\" -> \"apple\").\n- Bạn có **30 giây** để nhắn đáp án đúng vào kênh chat.\n\n✨ **Kỹ năng Lập trình viên:** **Regex Assist** — Tự động hiển thị thêm một chữ cái gợi ý giúp bạn giải mã nhanh hơn.\n\n💰 **Phần thưởng:** Người giải đúng đầu tiên nhận **50 coins**.",
+            "scramble": "🌟 **Mô tả:** Kiểm tra vốn từ vựng của bạn! Sắp xếp lại các chữ cái bị xáo trộn để tìm ra từ chính xác.\n\n🕹️ **Cách chơi:**\n- Một từ bị đảo lộn sẽ hiện ra (vđ: \"elppa\" -> \"apple\").\n- Bạn có **30 giây** để nhắn đáp án đúng vào kênh chat.\n\n💰 **Phần thưởng:** Người giải đúng đầu tiên nhận **50 coins**.",
             "connect4": "🌟 **Mô tả:** Trận chiến chiến thuật 1v1! Hãy là người đầu tiên xếp được 4 quân cờ cùng màu thành hàng dọc, ngang hoặc chéo.\n\n🕹️ **Cách chơi:**\n1. Thách đấu: `$connect4 @user [tiền cược]` (cược không bắt buộc).\n2. Đối thủ phải nhấn 'Chấp nhận' để bắt đầu.\n3. Hai người lần lượt nhấn vào số cột (1-7) để thả quân cờ (🔴 hoặc 🟡).\n\n⚖️ **Quy tắc:**\n- Trọng lực: Quân cờ sẽ rơi xuống vị trí thấp nhất còn trống trong cột.\n- Hòa nếu bảng (42 ô) đầy mà không ai thắng.\n\n💰 **Phần thưởng:** Người thắng nhận 100% tổng tiền cược (trừ một khoản phí nhỏ).",
             "memory": "🌟 **Mô tả:** Rèn luyện trí não! Tìm tất cả các cặp emoji giống nhau được ẩn sau các nút bấm.\n\n🕹️ **Cách chơi:**\n1. Một bảng 4x4 với các nút úp xuống sẽ hiện ra.\n2. Nhấn một nút để lật và xem emoji.\n3. Nhấn nút khác để tìm cặp tương ứng.\n4. Nếu khớp, chúng sẽ mở mãi. Nếu không, chúng sẽ úp lại sau 1 giây.\n\n🎯 **Mục tiêu:** Tìm đủ **8 cặp** với số lần thử ít nhất có thể.\n\n💰 **Phần thưởng:**\n- Thưởng cơ bản: **100 coins**.\n- Thưởng tốc độ: Thêm coins nếu hoàn thành dưới 30 hoặc 60 giây.",
             "minesweeper": "🌟 **Mô tả:** Phiên bản dò mìn mạo hiểm! Di chuyển qua bãi mìn để nhân số tiền thưởng của bạn lên gấp nhiều lần.\n\n🕹️ **Cách chơi:**\n- Bảng 5x5 chứa **5 quả mìn ẩn giấu**.\n- Nhấn các nút ⬜ để khám phá.\n- **Kim cương (💎):** Tăng hệ số nhân tiền thưởng. Bạn an toàn để tiếp tục!\n- **Mìn (💣):** Game over. Bạn mất toàn bộ số tiền cược hiện tại.\n- **Rút tiền (Cashout):** Nhấn nút Rút tiền bất cứ lúc nào để dừng lại và nhận thưởng hiện có.\n\n🛡️ **Phòng thủ:** Nếu có **Shield (Khiên)** trong kho đồ, nó sẽ tự vỡ để bảo toàn 50% tiền cược khi bạn dẫm phải mìn.\n\n💰 **Giới hạn:** Càng nhiều kim cương, rủi ro càng cao... nhưng phần thưởng cũng cực khủng!",
@@ -1472,7 +1429,7 @@
             "divorce": "🌟 **Mô tả:** Chấm dứt mối quan hệ hôn nhân hiện tại.\n\n🕹️ **Cách dùng:** `$divorce`\n\n⚠️ **Hệ quả:**\n- Mối quan hệ sẽ bị xóa khỏi hồ sơ.\n- Cả hai sẽ **mất toàn bộ buff thu nhập** từ cuộc hôn nhân này ngay lập tức.\n- Hành động này không thể hoàn tác, hãy suy nghĩ kỹ nhé!",
             "marriage": "🌟 **Mô tả:** Xem Giấy Chứng Nhận Kết Hôn chính thức trong game của bạn.\n\n🕹️ **Cách dùng:** `$marriage`\n\n📜 **Hiển thị:**\n- Tên và hồ sơ của bạn đời.\n- Ngày kỷ niệm.\n- Loại nhẫn (Nhẫn Cưới hay Nhẫn Kim Cương).\n- Buff thu nhập chung hiện tại (+25% hoặc +50%).\n\n💡 **Mẹo:** Ly hôn sẽ xóa giấy tờ này và loại bỏ ngay tất cả buff!",
             "gift": "🌟 **Mô tả:** Gửi tặng vật phẩm từ kho đồ của bạn cho người chơi khác.\n\n🕹️ **Cách dùng:** `$gift @user <số_lượng> <tên_vật_phẩm>`\n\n✨ **Combo lãng mạn:**\n- Tặng **Bó Hoa Cưới** cho vợ/chồng sẽ kích hoạt buff **+25% thu nhập** cho họ trong 2 giờ.\n- Một hành động nhỏ nhưng mang lại niềm vui lớn (và cả tiền bạc nữa)! 💖",
-            "work": "🌟 **Mô tả:** Xây dựng sự nghiệp và tạo thu nhập!\n\n🕹️ **Cơ chế:**\n- Làm việc mỗi giờ để nhận **XP** và **Coins**.\n- Cấp độ càng cao, bạn càng nhận được nhiều tiền thưởng mỗi lần kết thúc công việc.\n- Các công việc cao cấp (Bác sĩ, CEO...) yêu cầu Cấp độ cao hơn để có thể thực thi.\n\n💰 **Chuỗi ngày làm việc:** Làm việc đều đặn mỗi ngày để tăng streak, nhận thưởng bonus hàng ngày.",
+            "work": "🌟 **Mô tả:** Xây dựng sự nghiệp và tạo thu nhập!\n\n🕹️ **Cơ chế:**\n- Làm việc mỗi giờ để nhận **XP** và **Coins**.\n- Đạt Cấp độ 20 để mở khóa những đặc quyền nghề nghiệp vĩnh viễn.\n\n💼 **Đặc quyền nghề nghiệp:**\n- **Cảnh sát**: 15% cơ hội nhận **Tiền làm thêm giờ** (+500 coins).\n- **Nông dân**: 15% cơ hội nhận **Mùa màng bội thu** (x1.5 tổng phần thưởng).\n\n💰 **Chuỗi ngày làm việc:** Làm việc đều đặn mỗi ngày để tăng streak, nhận thưởng bonus hàng ngày.",
             "crime": "🌟 **Mô tả:** Thực hiện các phi vụ bất hợp pháp để kiếm tiền nhanh.\n\n⚠️ **Rủi ro:**\n- Tỉ lệ thành công chỉ 40%.\n- Nếu thất bại, bạn sẽ bị phạt **10% tổng số tiền** đang có.\n\n💰 **Phần thưởng:** Tiền thưởng cực lớn và nhiều XP hơn lệnh `$work`.",
             "beg": "🌟 **Mô tả:** Thử vận may bằng cách đi xin tiền người qua đường.\n\n💰 **Phần thưởng:** Tiền thưởng cực nhỏ, nhưng ít rủi ro.",
             "search": "🌟 **Mô tả:** Lục lọi các địa điểm ngẫu nhiên để tìm tiền rơi.\n\n💰 **Phần thưởng:** Thu nhập ở mức trung bình, thường tìm thấy trong thùng rác hoặc dưới đệm sofa.",

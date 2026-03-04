@@ -37,7 +37,7 @@ module.exports = {
 
             if (guess === number) {
                 const baseReward = config.ECONOMY.GUESS_REWARD_BASE || 100;
-                const { total: reward, bonus: bonusAmount, percent } = await calculateReward(Math.max(10, baseReward - (attempts * 5)), m.member);
+                const { total: reward, bonus: bonusAmount, percent } = await calculateReward(Math.max(10, baseReward - (attempts * 5)), m.member, 'income', { category: 'minigame' });
                 await db.addBalance(message.guild.id, m.author.id, reward);
 
                 // Grant XP
@@ -45,8 +45,8 @@ module.exports = {
                 const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
                 const result = await addXp(m.member, winXp, message.guild.id);
                 if (result.leveledUp) {
-                    const { checkAndSendMilestone } = require('../../utils/leveling');
-                    checkAndSendMilestone(m, result.reachedLevel20, lang).catch(() => { });
+                    const { sendLevelUpMessage } = require('../../utils/leveling');
+                    sendLevelUpMessage(m, result, lang).catch(() => { });
                 }
 
                 let winMsg = t('guess.win', lang, { number, attempts: attempts.toLocaleString(), amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN });

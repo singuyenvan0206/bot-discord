@@ -4,9 +4,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 
 // Helper: activate a single buff item for a user
-async function activateBuff(guildId, userId, item, buffs, isChef) {
+async function activateBuff(guildId, userId, item, buffs) {
     let duration = item.duration;
-    if (isChef) duration *= 2;
     const expiresAt = Math.floor(Date.now() / 1000) + duration;
     buffs.push({ itemId: item.id, expiresAt });
     await db.removeItem(guildId, userId, String(item.id), 1);
@@ -39,8 +38,6 @@ module.exports = {
             const now = Math.floor(Date.now() / 1000);
             const activated = [];
             let totalCount = 0;
-            const isChef = user.job === 'chef';
-
             for (const [id, count] of Object.entries(inv)) {
                 if (!count || count <= 0) continue;
                 const item = SHOP_ITEMS.find(i => String(i.id) === id);
@@ -50,7 +47,6 @@ module.exports = {
                 const qty = Number(count);
                 const itemIdNum = Number(id);
                 let addedDuration = item.duration * qty;
-                if (isChef) addedDuration *= 2;
 
                 const existingIndex = buffs.findIndex(b => b.itemId === itemIdNum);
                 if (existingIndex !== -1) {
@@ -125,8 +121,7 @@ module.exports = {
             let buffs = [];
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
-            const isChef = user.job === 'chef';
-            const durationStr = await activateBuff(message.guild.id, message.author.id, item, buffs, isChef);
+            const durationStr = await activateBuff(message.guild.id, message.author.id, item, buffs);
 
             await db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 

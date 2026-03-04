@@ -206,7 +206,7 @@ const commands = [
         .addSubcommand(sub => sub
             .setName('set')
             .setDescription('Switch to a new career')
-            .addStringOption(opt => opt.setName('id').setDescription('Job ID (e.g. farmer, programmer)').setRequired(true))
+            .addStringOption(opt => opt.setName('id').setDescription('Job ID (e.g. farmer, hacker)').setRequired(true))
         ),
 
     new SlashCommandBuilder()

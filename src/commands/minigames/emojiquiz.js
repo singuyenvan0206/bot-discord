@@ -33,8 +33,11 @@ module.exports = {
         await message.reply({ embeds: [embed] });
 
         // Grant Action XP
-        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-        await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+        const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+        if (actionResult.leveledUp) {
+            sendLevelUpMessage(message, actionResult, lang).catch(() => { });
+        }
 
         try {
             const collected = await message.channel.awaitMessages({
@@ -49,10 +52,10 @@ module.exports = {
 
             const winnerMsg = collected.first();
             const baseReward = config.ECONOMY.EMOJIQUIZ_REWARD || 50;
-            const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winnerMsg.member);
+            const { total: reward, bonus: bonusAmount, percent } = await calculateReward(baseReward, winnerMsg.member, 'income', { category: 'minigame' });
 
 
-            await db.addBalance(message.guild.id, winnerMsg.author.id, totalReward);
+            await db.addBalance(message.guild.id, winnerMsg.author.id, reward);
 
             // Grant XP
             const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
@@ -65,7 +68,11 @@ module.exports = {
                 winXp += 10;
             }
 
-            await addXp(winnerMsg.member, winXp, message.guild.id);
+            const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+            const result = await addXp(winnerMsg.member, winXp, message.guild.id);
+            if (result.leveledUp) {
+                sendLevelUpMessage(winnerMsg, result, lang).catch(() => { });
+            }
 
             let resultDesc = t('emojiquiz.correct', lang, { answer: displayAnswer, winner: winnerMsg.author.toString() }) +
                 t('emojiquiz.reward', lang, { emoji: config.EMOJIS.COIN, amount: totalReward.toLocaleString() });

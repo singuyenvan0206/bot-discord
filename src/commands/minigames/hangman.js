@@ -57,7 +57,7 @@ module.exports = {
 
         async function calcReward(userMember) {
             const baseReward = config.ECONOMY.HANGMAN_REWARD;
-            let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, userMember);
+            let { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(baseReward, userMember, 'income', { category: 'minigame' });
 
             // Teacher Interaction: Knowledge Bonus (+20%)
             const u = await db.getUser(userMember.id, userMember.guild.id);
@@ -127,9 +127,12 @@ module.exports = {
                     await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                     // Grant Win XP
-                    const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                    const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                     const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                    await addXp(message.member, winXp, message.guild.id);
+                    const result = await addXp(message.member, winXp, message.guild.id);
+                    if (result.leveledUp) {
+                        sendLevelUpMessage(message, result, lang).catch(() => { });
+                    }
 
                     resultText += `\n${config.EMOJIS.COIN} **+${totalReward.toLocaleString()}** coins!`;
                     if (bonusAmount > 0) resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
@@ -139,8 +142,11 @@ module.exports = {
                 collector.stop();
             } else {
                 // Grant Action XP for guessing correctly/wrongly but game continues
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+                const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                if (actionResult.leveledUp) {
+                    sendLevelUpMessage(message, actionResult, lang).catch(() => { });
+                }
 
                 embed.setDescription(`${t('hangman.hint', lang)}: ${hint}\n\n${t('hangman.word', lang)}: ${currentDisplay}\n${t('hangman.lives', lang)}: ${'❤️'.repeat(lives)}\n\n${t('hangman.guessed', lang)}: ${Array.from(guessed).join(', ') || t('userinfo.none', lang)}`);
             }

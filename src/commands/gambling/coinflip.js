@@ -63,13 +63,6 @@ module.exports = {
             if (bonus > 0) {
                 flavorText += `\n✨ **Bonus:** +${percent.toLocaleString()}% (${bonus.toLocaleString()} ${config.EMOJIS.COIN})`;
             }
-
-            // Musician Interaction: Flow State (15% chance to double final win)
-            if (user.job === 'musician' && Math.random() < 0.15) {
-                payout *= 2;
-                await db.addBalance(message.guild.id, user.id, payout - (payout / 2)); // Add the extra half
-                flavorText += t('common.flow_state', lang);
-            }
         } else {
             flavorText = t('coinflip.lose', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN });
             if (bet) await addHouseProfit(message, bet);

@@ -89,8 +89,11 @@ module.exports = {
                 attempts++;
 
                 // Grant Action XP
-                const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
-                await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
+                const actionResult = await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
+                if (actionResult.leveledUp) {
+                    sendLevelUpMessage(i, actionResult, lang).catch(() => { });
+                }
 
                 const firstCell = grid[firstPick];
 
@@ -115,14 +118,17 @@ module.exports = {
                         if (timeTaken < 30) reward += 50;
                         else if (timeTaken < 60) reward += 20;
 
-                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(reward, message.member);
+                        const { total: totalReward, bonus: bonusAmount, percent } = await calculateReward(reward, message.member, 'income', { category: 'minigame' });
 
                         await db.addBalance(message.guild.id, message.author.id, totalReward);
 
                         // Grant Win XP
-                        const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
+                        const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
-                        await addXp(message.member, winXp, message.guild.id);
+                        const winResult = await addXp(message.member, winXp, message.guild.id);
+                        if (winResult.leveledUp) {
+                            sendLevelUpMessage(i, winResult, lang).catch(() => { });
+                        }
 
                         let winDesc = t('memory.win_msg', lang, { time: Number(timeTaken).toLocaleString(), attempts: attempts.toLocaleString(), emoji: config.EMOJIS.COIN, reward: totalReward.toLocaleString() });
                         if (bonusAmount > 0) winDesc += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() });
