@@ -24,7 +24,7 @@ module.exports = {
 
             await db.removeBalance(message.guild.id, message.author.id, cost);
             await db.addLotteryTicket(message.guild.id, message.author.id, amount);
-            await db.addLotteryJackpot(message.guild.id, Math.floor(cost * 0.8)); // 80% price goes to jackpot
+            await db.addLotteryJackpot(message.guild.id, Math.floor(cost * (config.ECONOMY.LOTTERY.JACKPOT_PERCENT || 0.9)));
 
             return message.reply(t('lottery.buy_success', lang, {
                 amount,
