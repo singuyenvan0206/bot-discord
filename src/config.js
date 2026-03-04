@@ -80,11 +80,11 @@ module.exports = {
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins
         DEFAULT_COOLDOWN: 3,
         JOBS: {
-            police: { id: 'police', numericId: 1, bonus: 0.15, color: '#3498db', icon: '👮' },
-            criminal: { id: 'criminal', numericId: 2, bonus: 0.20, color: '#e74c3c', icon: '🥷' },
-            farmer: { id: 'farmer', numericId: 3, bonus: 0.15, color: '#f1c40f', icon: '👨‍🌾', luck: 1.2 },
-            hacker: { id: 'hacker', numericId: 4, bonus: 0.40, color: '#27ae60', icon: '👨‍💻' },
-            trader: { id: 'trader', numericId: 5, bonus: 0.30, color: '#f39c12', icon: '📈' },
+            police: { id: 'police', numericId: 1, bonus: 0.1, color: '#3498db', icon: '👮' },
+            criminal: { id: 'criminal', numericId: 2, bonus: 0.1, color: '#e74c3c', icon: '🥷' },
+            farmer: { id: 'farmer', numericId: 3, bonus: 0.1, color: '#f1c40f', icon: '👨‍🌾', luck: 1.2 },
+            hacker: { id: 'hacker', numericId: 4, bonus: 0.1, color: '#27ae60', icon: '👨‍💻' },
+            trader: { id: 'trader', numericId: 5, bonus: 0.1, color: '#f39c12', icon: '📈' },
             teacher: { id: 'teacher', numericId: 6, bonus: 0.10, color: '#95a5a6', icon: '👩‍🏫' }
         },
         LEVELING: {
