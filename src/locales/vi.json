@@ -1331,8 +1331,8 @@
         "command_not_found": "Không tìm thấy lệnh **{{name}}**!",
         "categories": {
             "earning": {
-                "label": "Kiếm Tiền",
-                "description": "Các công việc và hoạt động tạo thu nhập"
+                "label": "Nghề Nghiệp & Thu Nhập",
+                "description": "Công việc, kỹ năng nghề và hoạt động truy nã"
             },
             "finance": {
                 "label": "Tài Chính & Cửa Hàng",
@@ -1359,8 +1359,8 @@
                 "description": "Tổ chức và quản lý Giveaway"
             },
             "social": {
-                "label": "Hôn nhân & Tình cảm",
-                "description": "Kết hôn, ly hôn và tặng quà lãng mạn"
+                "label": "Hôn nhân & Tương tác",
+                "description": "Kết hôn, tặng quà và các hoạt động cộng đồng"
             },
             "owner": {
                 "label": "Đặc quyền Owner",
@@ -1440,7 +1440,16 @@
             "setowner": "[Owner] Chuyển quyền sở hữu bot. Yêu cầu thay đổi file .env.",
             "shutdown": "[Owner] Tắt tiến trình bot một cách an toàn.",
             "resetdatabase": "[Owner] Xóa TOÀN BỘ dữ liệu hệ thống. CỰC KỲ NGUY HIỂM. KHÔNG THỂ HOÀN TÁC.",
-            "update": "[Owner] Kéo mã nguồn Git mới nhất và tải lại toàn bộ lệnh bot."
+            "update": "[Owner] Kéo mã nguồn Git mới nhất và tải lại toàn bộ lệnh bot.",
+            "event": "Xem các sự kiện kinh tế đang diễn ra trên toàn cầu.",
+            "museum": "Trưng bày bộ sưu tập cá hiếm và nhận phần thưởng hoàn thành.",
+            "wanted": "Danh sách những kẻ bị truy nã gắt gao nhất server.",
+            "arrest": "Bắt giữ tội phạm bị truy nã để nhận thưởng bounty (Cảnh Sát).",
+            "hack": "Kỹ năng Hacker: Xâm nhập ví điện tử hoặc hack vệ tinh may mắn.",
+            "market": "Kỹ năng Thương Nhân: Săn tìm các gói hàng giảm giá hời.",
+            "mentor": "Kỹ năng Giáo Viên: Hướng dẫn người khác để tăng tốc độ nhận XP cho họ.",
+            "harvest": "Kỹ năng Nông Dân: Thu hoạch nông sản hoặc cá từ ruộng vườn.",
+            "aquarium": "Xây dựng bể cá thủy sinh để tạo thu nhập thụ động mỗi giờ."
         },
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
@@ -1511,7 +1520,16 @@
             "shop": "🌟 **Mô tả:** Trung tâm mua sắm sầm uất! Nơi bạn có thể nâng cấp trang bị và mua sắm các vật phẩm hỗ trợ đắc lực.\n\n🕹️ **Cách dùng:**\n- `$shop [trang]`: Xem danh sách vật phẩm đang bán.\n- `$shop <income|daily|gamble|tools|social>`: Xem theo danh mục.\n\n💡 **Mẹo:** Kiểm tra hiệu ứng tăng thu nhập (`multiplier`) để tối ưu hóa lợi nhuận!",
             "giveaway": "🌟 **Mô tả:** Quà tặng (Giveaway events)\n\n🕹️ **Cách dùng:** `$giveaway start`",
             "help": "🌟 **Mô tả:** Trợ giúp (Help menu)\n\n🕹️ **Cách dùng:** `$help [tên_lệnh]`",
-            "setrole": "🌟 **Mô tả:** Cài đặt role (Set role)\n\n🕹️ **Cách dùng:** `$setrole add <@role> <giá> <buff%>`"
+            "setrole": "🌟 **Mô tả:** Cài đặt role (Set role)\n\n🕹️ **Cách dùng:** `$setrole add <@role> <giá> <buff%>`",
+            "event": "🌟 **Mô tả:** Theo dõi các biến động kinh tế toàn cầu để tối ưu hóa thu nhập.\n\n📊 **Cơ chế:** Các sự kiện sẽ thay đổi ngẫu nhiên mỗi vài giờ, ảnh hưởng đến tỉ lệ may mắn, lương làm việc hoặc lợi nhuận kinh doanh.",
+            "museum": "🌟 **Mô tả:** Nơi lưu giữ chiến tích của các ngư dân. Hoàn thành các bộ sưu tập cá để nhận tiền thưởng khổng lồ.\n\n🕹️ **Cách dùng:**\n- `$museum`: Xem danh sách cá đã bắt và các bộ sưu tập.\n- `$museum claim <tên_bộ>`: Nhận thưởng khi đã đủ bộ.",
+            "wanted": "🌟 **Mô tả:** Bảng truy nã công khai của Chính phủ. Hiển thị những người chơi có mức Bounty (Tiền thưởng) cao nhất do phạm tội.\n\n📊 **Cơ chế:** Tiền thưởng của bạn tăng lên mỗi khi bạn cướp thành công hoặc thực hiện các phi vụ Crime cấp cao.",
+            "arrest": "🌟 **Mô tả:** Nhiệm vụ thực thi pháp luật dành riêng cho Cảnh Sát.\n\n🕹️ **Cách dùng:** `$arrest @user`\n\n⚖️ **Quy tắc:**\n- Chỉ bắt được người có Bounty > 0.\n- Tỉ lệ thành công phụ thuộc vào trang bị và may mắn.\n- **Thành công:** Nhận toàn bộ Bounty của đối phương. Đối phương bị tống giam (tăng cooldown tội phạm).\n- **Thất bại:** Bạn bị trừ kinh nghiệm vì để tội phạm trốn thoát.",
+            "hack": "🌟 **Mô tả:** Kỹ năng đặc biệt của Hacker.\n\n🕹️ **Các tùy chọn:**\n- `coins`: Xâm nhập ví điện tử nhận coins ngẫu nhiên.\n- `luck`: Hack vệ tinh tăng +25% may mắn câu cá trong 30 phút.",
+            "market": "🌟 **Mô tả:** Kỹ năng đặc biệt của Thương Nhân.\n\n🕹️ **Cách dùng:** `$market deal` để tìm một vật phẩm ngẫu nhiên trong Shop được giảm giá 30% cho lần mua tới.",
+            "mentor": "🌟 **Mô tả:** Kỹ năng đặc biệt của Giáo Viên.\n\n🕹️ **Cách dùng:** `$mentor @user` để truyền đạt kiến thức, giúp người đó nhận X2 XP trong 60 phút. Bạn nhận được XP cảm ơn.",
+            "harvest": "🌟 **Mô tả:** Kỹ năng đặc biệt của Nông Dân.\n\n🕹️ **Cơ chế:** Thu hoạch tức thì từ ruộng vườn. Bạn có cơ hội nhận một lượng coins lớn hoặc một con cá ngẫu nhiên mà không tốn mồi.",
+            "aquarium": "🌟 **Mô tả:** Hệ thống thu nhập thụ động trung và dài hạn.\n\n🕹️ **Cách dùng:**\n- `$aquarium add <tên_cá>`: Thả cá từ Bảo tàng vào bể (Tối đa 5 con).\n- `$aquarium clear`: Dọn dẹp bể để thả cá mới.\n\n💰 **Lợi nhuận:** Mỗi con cá trong bể sẽ tạo ra tiền thụ động mỗi giờ. Cá càng hiếm, tiền càng nhiều!"
         }
     },
     "iteminfo": {
