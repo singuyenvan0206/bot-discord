@@ -307,7 +307,7 @@ module.exports = {
 
                         for (let i = 0; i < target; i++) {
                             const nextLevelCost = Math.floor(type.base_price * Math.pow(bizConfig.UPGRADE_COST_MULTIPLIER, b.level + i));
-                            if (user.balance >= totalCost + nextLevelCost) {
+                            if (user.balance >= totalCost + itemCost + nextLevelCost) {
                                 itemCost += nextLevelCost;
                                 canUpgrade++;
                             } else {
