@@ -520,7 +520,7 @@
         "command_desc": "Đi câu cá và bắt những sinh vật quý hiếm!",
         "mythical_label": "THẦN THOẠI",
         "title": "🎣 Chuyến Câu Cá",
-        "rod_needed": "❌ Bạn cần một cái **Cần câu** để đi câu! Hãy mua một cái trong cửa hàng (`{{prefix}}buy 404`).",
+        "rod_needed": "❌ Bạn cần một cái **Cần câu** để đi câu! Hãy mua một cái trong cửa hàng (`{{prefix}}buy 407`).",
         "bait_needed": "❌ Bạn cần **Mồi câu** để đi câu! Hãy mua mồi trong cửa hàng (vđ: `{{prefix}}buy 401`).",
         "description": "Sử dụng **{{rod}}** và **{{bait}}**...",
         "caught": "Đã bắt được",
