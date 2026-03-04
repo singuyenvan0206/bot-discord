@@ -50,11 +50,11 @@ module.exports = {
         TRIVIA_REWARD: 2000,
         WORK_COOLDOWN: 3600, // 1 hour in seconds
         DAILY_COOLDOWN: 86400, // 24 hours in seconds
-        DAILY_REWARD: 3000,
+        DAILY_REWARD: 10000,
         FISH_COOLDOWN: 15,
         SELL_RECOVERY: 0.7, // 50% return
-        MIN_WORK_EARNINGS: 1000,
-        MAX_WORK_EARNINGS: 5000,
+        MIN_WORK_EARNINGS: 2000,
+        MAX_WORK_EARNINGS: 10000,
         CRIME_COOLDOWN: 3600, // 1 hour
         CRIME_SUCCESS_RATE: 0.45,
         CRIME_MIN_REWARD: 2000,
@@ -74,7 +74,7 @@ module.exports = {
         SEARCH_MAX_REWARD: 3000,
         ROB_COOLDOWN: 3600, // 1 hour
         ROB_SUCCESS_CHANCE: 0.45,
-        MAX_BET: 250000,
+        MAX_BET: 1000000,
         TRANSFER_TAX: 0.1, // 10% tax on transfers
         HOUSE_DISTRIBUTION_INTERVAL: 21600, // 6 hours in seconds
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins

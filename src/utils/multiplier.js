@@ -213,6 +213,10 @@ async function getDynamicCap(memberOrId, guildId) {
 
     // Standard: 0.5 (150% total income), VIP: 1.0 (200% total income)
     let cap = await hasActiveItem(gId, userId, 104) ? 1.0 : 0.5;
+
+    // Add housing cap bonus
+    cap += calculateHouseMulti(user, 'cap');
+
     return cap;
 }
 

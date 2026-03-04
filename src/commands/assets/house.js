@@ -176,9 +176,21 @@ module.exports = {
             } else {
                 const tier = housingConfig.TIERS[tierId];
                 const houseData = JSON.parse(user.house_data || '{}');
+                // Calculate total buffs (Tier + Decorations)
+                let totalXp = tier.xp_buff;
+                let totalIncome = tier.income_buff;
+                let totalMaxBet = tier.max_bet_bonus;
+                let totalCap = tier.cap_bonus || 0;
+
                 const interiors = Object.entries(housingConfig.INTERIORS)
                     .filter(([id]) => houseData[id])
-                    .map(([_, data]) => data.name[lang])
+                    .map(([_, data]) => {
+                        if (data.buff === 'xp') totalXp += data.value;
+                        else if (data.buff === 'income') totalIncome += data.value;
+                        else if (data.buff === 'max_bet') totalMaxBet += data.value;
+                        else if (data.buff === 'cap') totalCap += data.value;
+                        return data.name[lang];
+                    })
                     .join(', ') || 'None';
 
                 embed.addFields(
@@ -186,10 +198,10 @@ module.exports = {
                     {
                         name: '✨ Buffs',
                         value: t('housing.info_buffs', lang, {
-                            xp: Math.round(tier.xp_buff * 100).toLocaleString(),
-                            income: Math.round(tier.income_buff * 100).toLocaleString(),
-                            max_bet: tier.max_bet_bonus.toLocaleString(),
-                            cap: Math.round(tier.cap_bonus * 100).toLocaleString()
+                            xp: Math.round(totalXp * 100).toLocaleString(),
+                            income: Math.round(totalIncome * 100).toLocaleString(),
+                            max_bet: totalMaxBet.toLocaleString(),
+                            cap: Math.round(totalCap * 100).toLocaleString()
                         })
                     },
                     { name: '🛋️ Decorations', value: interiors }
