@@ -1449,7 +1449,12 @@
             "market": "Kỹ năng Thương Nhân: Săn tìm các gói hàng giảm giá hời.",
             "mentor": "Kỹ năng Giáo Viên: Hướng dẫn người khác để tăng tốc độ nhận XP cho họ.",
             "harvest": "Kỹ năng Nông Dân: Thu hoạch nông sản hoặc cá từ ruộng vườn.",
-            "aquarium": "Xây dựng bể cá thủy sinh để tạo thu nhập thụ động mỗi giờ."
+            "aquarium": "Xây dựng bể cá thủy sinh để tạo thu nhập thụ động mỗi giờ.",
+            "fishinfo": "Xem thông tin chi tiết về từng loài cá: độ hiếm, giá bán và địa điểm câu.",
+            "fishrates": "Xem tỉ lệ xuất hiện của các loài cá tại khu vực hiện tại dựa trên trang bị.",
+            "support": "Lấy link tham gia máy chủ hỗ trợ của Bot để báo cáo lỗi hoặc góp ý.",
+            "blacklistchannel": "Chặn bot phản hồi các lệnh tại một kênh cụ thể (Admin).",
+            "setwcchannel": "Cài đặt kênh thông báo khi có thành viên mới tham gia hoặc rời khỏi server (Admin)."
         },
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
@@ -1529,7 +1534,12 @@
             "market": "🌟 **Mô tả:** Kỹ năng đặc biệt của Thương Nhân.\n\n🕹️ **Cách dùng:** `$market deal` để tìm một vật phẩm ngẫu nhiên trong Shop được giảm giá 30% cho lần mua tới.",
             "mentor": "🌟 **Mô tả:** Kỹ năng đặc biệt của Giáo Viên.\n\n🕹️ **Cách dùng:** `$mentor @user` để truyền đạt kiến thức, giúp người đó nhận X2 XP trong 60 phút. Bạn nhận được XP cảm ơn.",
             "harvest": "🌟 **Mô tả:** Kỹ năng đặc biệt của Nông Dân.\n\n🕹️ **Cơ chế:** Thu hoạch tức thì từ ruộng vườn. Bạn có cơ hội nhận một lượng coins lớn hoặc một con cá ngẫu nhiên mà không tốn mồi.",
-            "aquarium": "🌟 **Mô tả:** Hệ thống thu nhập thụ động trung và dài hạn.\n\n🕹️ **Cách dùng:**\n- `$aquarium add <tên_cá>`: Thả cá từ Bảo tàng vào bể (Tối đa 5 con).\n- `$aquarium clear`: Dọn dẹp bể để thả cá mới.\n\n💰 **Lợi nhuận:** Mỗi con cá trong bể sẽ tạo ra tiền thụ động mỗi giờ. Cá càng hiếm, tiền càng nhiều!"
+            "aquarium": "🌟 **Mô tả:** Hệ thống thu nhập thụ động trung và dài hạn.\n\n🕹️ **Cách dùng:**\n- `$aquarium add <tên_cá>`: Thả cá từ Bảo tàng vào bể (Tối đa 5 con).\n- `$aquarium clear`: Dọn dẹp bể để thả cá mới.\n\n💰 **Lợi nhuận:** Mỗi con cá trong bể sẽ tạo ra tiền thụ động mỗi giờ. Cá càng hiếm, tiền càng nhiều!",
+            "fishinfo": "🌟 **Mô tả:** Bách khoa toàn thư về các loài cá. Giúp bạn nắm rõ giá trị và nơi cư ngụ của chúng.\n\n🕹️ **Cách dùng:** `$fishinfo <ID/Tên_cá>`",
+            "fishrates": "🌟 **Mô tả:** Phân tích tỉ lệ câu cá tại khu vực hiện tại. Tỉ lệ này thay đổi dựa trên Cần câu, Mồi và Buff may mắn bạn đang có.\n\n🕹️ **Cách dùng:** `$fishrates` (Tốt nhất nên dùng lệnh này trước khi quyết định thả câu xịn!)",
+            "support": "🌟 **Mô tả:** Nhận sự hỗ trợ trực tiếp từ đội ngũ phát triển.\n\n🕹️ **Nội dung:** Lệnh sẽ cung cấp link discord máy chủ hỗ trợ. Đây là nơi bạn có thể báo lỗi, đóng góp ý tưởng hoặc yêu cầu giải quyết các vấn đề tài khoản.",
+            "blacklistchannel": "🌟 **Mô tả:** Công cụ quản trị kênh dành cho Admin.\n\n🕹️ **Cách dùng:** `$blacklistchannel <#channel>` để bật/tắt (Toggle) trạng thái chặn của một kênh.\n\n⚠️ **Lưu ý:** Bot sẽ hoàn toàn phớt lờ các lệnh được gõ trong kênh bị blacklist (trừ lệnh admin).",
+            "setwcchannel": "🌟 **Mô tả:** Thiết lập hệ thống chào mừng/tạm biệt tự động.\n\n🕹️ **Cách dùng:** `$setwcchannel <#channel>`\n\n✨ **Tính năng:** Khi có người tham gia, Bot sẽ gửi một tin nhắn chào mừng kèm Badge và luật lệ server. Khi có người rời đi, Bot cũng sẽ thông báo để mọi người được biết."
         }
     },
     "iteminfo": {

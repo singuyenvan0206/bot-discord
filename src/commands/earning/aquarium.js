@@ -29,7 +29,7 @@ module.exports = {
 
             const fish = CATCHES.find(f =>
                 f.key === fishQuery ||
-                (t(`fish.${f.key}`, lang) || '').toLowerCase().includes(fishQuery) ||
+                (t(`fish.items.${f.key}`, lang) || '').toLowerCase().includes(fishQuery) ||
                 f.key.replace('_', ' ').toLowerCase() === fishQuery
             );
 
@@ -49,7 +49,7 @@ module.exports = {
             });
 
             await db.updateUser(message.guild.id, message.author.id, { aquarium_data: JSON.stringify(aquarium) });
-            return message.reply(t('aquarium.add_success', lang, { emoji: fish.emoji, name: t(`fish.${fish.key}`, lang) || fish.key }));
+            return message.reply(t('aquarium.add_success', lang, { emoji: fish.emoji, name: t(`fish.items.${fish.key}`, lang) || fish.key }));
         }
 
         if (sub === 'clear' || sub === 'don') {
@@ -79,7 +79,7 @@ module.exports = {
                 else if (data.value >= 10000) reward = 100;
 
                 passiveIncome += reward;
-                return `${data.emoji} **${t(`fish.${f.key}`, lang) || f.key}** (+${reward}/h)`;
+                return `${data.emoji} **${t(`fish.items.${f.key}`, lang) || f.key}** (+${reward}/h)`;
             }).join('\n');
 
             embed.addFields(

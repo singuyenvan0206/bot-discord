@@ -1448,7 +1448,12 @@
             "market": "Trader Skill: Find secret wholesale deals and discounts.",
             "mentor": "Teacher Skill: Guide others to boost their XP gain rates.",
             "harvest": "Farmer Skill: Instantly harvest crops or catch bonus fish.",
-            "aquarium": "Build a virtual aquarium for passive hourly income."
+            "aquarium": "Build a virtual aquarium for passive hourly income.",
+            "fishinfo": "View detailed information about any fish: rarity, value, and habitat.",
+            "fishrates": "Analyze your current fishing luck and catch rates based on equipment.",
+            "support": "Get the official support server link to report issues or suggest features.",
+            "blacklistchannel": "Disable bot commands in a specific channel (Admin Only).",
+            "setwcchannel": "Configure automated welcome and leave announcements for the server (Admin Only)."
         },
         "guides": {
             "trivia": "🌟 **Description:** Challenge your knowledge with a huge question bank covering Science, History, Entertainment, and more!\n\n🕹️ **How to Play:**\n1. Use the command to receive a multiple-choice question.\n2. You have **15 seconds** to analyze and answer.\n3. Click the button (A, B, C, D) corresponding to the correct answer.\n\n✨ **Teacher Perk:** **Tutoring** — Correct answers grant a **+50% coin bonus** and extra XP for you!\n\n💰 **Rewards:** Correct answers earn coins instantly. If no one answers, the coins remain in the bank!",
@@ -1527,6 +1532,11 @@
             "mentor": "🌟 **Description:** Professional guidance skill for the Teacher job.\n\n🕹️ **Usage:** `$mentor @user` to grant them 2x XP for 60 minutes. You receive bonus XP as a reward.",
             "harvest": "🌟 **Description:** Advanced agricultural skill for the Farmer job.\n\n🕹️ **Mechanics:** Instantly harvest from your fields. You have a chance to find bonus coins or a random fish without using bait.",
             "aquarium": "🌟 **Description:** A medium-to-long term passive income system.\n\n🕹️ **Usage:**\n- `$aquarium add <fish_name>`: Place a fish from your Museum into the tank (Max 5).\n- `$aquarium clear`: Empty the tank to place new fish.\n\n💰 **Profit:** Every fish in the tank generates passive coins every hour. Rarer fish yield much higher rates.",
+            "fishinfo": "🌟 **Description:** The ultimate angler's encyclopedia. Use this to check the worth and rarity of any fish in the game.\n\n🕹️ **Usage:** `$fishinfo <ID/Name>`",
+            "fishrates": "🌟 **Description:** Real-time analysis of your fishing potential in the current location. These rates factor in your Rod, Bait, and any active Luck buffs.\n\n🕹️ **Usage:** `$fishrates` (Pro tip: Check your rates before using expensive bait!)",
+            "support": "🌟 **Description:** Connect with the developers for direct assistance.\n\n🕹️ **Details:** This command provides an invite link to the official support server where you can report bugs, request features, or get help with account issues.",
+            "blacklistchannel": "🌟 **Description:** A channel management tool for administrators.\n\n🕹️ **Usage:** `$blacklistchannel <#channel>` to toggle the restricted status.\n\n⚠️ **Note:** The bot will ignore all non-admin commands in blacklisted channels to keep your server organized.",
+            "setwcchannel": "🌟 **Description:** Automate server hospitality with entry and exit logs.\n\n🕹️ **Usage:** `$setwcchannel <#channel>`\n\n✨ **Features:** Displays a welcome message with server badges for new members and a friendly farewell notification when someone leaves.",
             "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`",
             "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`"
         }

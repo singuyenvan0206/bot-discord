@@ -47,7 +47,7 @@ module.exports = {
             ledger[prize.key].lastCaught = now;
             await db.updateUser(message.guild.id, message.author.id, { fish_ledger: JSON.stringify(ledger) });
 
-            return message.reply(t('harvest.success_fish', lang, { emoji: prize.emoji, name: t(`fish.${prize.key}`, lang) || prize.key }));
+            return message.reply(t('harvest.success_fish', lang, { emoji: prize.emoji, name: t(`fish.items.${prize.key}`, lang) || prize.key }));
         } else {
             const amount = 5000 + (user.level * 300);
             await db.addBalance(message.guild.id, message.author.id, amount);
