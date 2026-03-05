@@ -109,4 +109,51 @@ function getWeightedPool(luck) {
     });
 }
 
-module.exports = { RODS, BAITS, CATCHES, getWeightedPool };
+/**
+ * Centralized fishing luck calculation.
+ * Standardizes luck logic across fish and fishrates commands.
+ * 
+ * @param {object} user - User database object
+ * @param {object} rod - Selected rod item
+ * @param {object} bait - Selected bait item
+ * @param {object} event - Current active event
+ * @param {Array} buffs - User's active buffs array
+ * @returns {number} - Total calculated luck
+ */
+function calculateFishingLuck(user, rod, bait, event = {}, buffs = []) {
+    // 1. Base User Luck (Level-based scaling)
+    // Formula: 1.0 + (level * 0.02)
+    // Level 50 = +1.0 Luck, Level 100 = +2.0 Luck
+    const baseLuck = 1.0 + ((user.level || 0) * 0.02);
+
+    // 2. Gear Luck (Additive rod + bait)
+    const rodLuck = rod?.luck || 1.0;
+    const baitLuck = bait?.luck || 0;
+    let gearLuck = rodLuck + baitLuck;
+
+    // 3. Combine Base and Gear
+    let totalLuck = baseLuck + gearLuck - 1.0; // Subtract 1.0 to avoid double-counting base-line
+
+    // 4. Job Bonuses (Farmer)
+    if (user.job === 'farmer') {
+        const farmerConfig = require('../config').ECONOMY.JOBS.farmer;
+        // Multiplier bonus (e.g. x1.2)
+        totalLuck *= (farmerConfig.luck || 1.2);
+
+        // Milestone Bonus: +0.2 Luck per point
+        const points = Number(user.milestone_count || 0);
+        totalLuck += points * 0.2;
+    }
+
+    // 5. Active Buffs (Hacker luck buff 610)
+    const now = Math.floor(Date.now() / 1000);
+    const luckBuff = buffs.find(b => b.itemId === 610 && b.expiresAt > now);
+    if (luckBuff) totalLuck *= 1.25;
+
+    // 6. Global Event Luck
+    if (event?.fishLuck) totalLuck *= event.fishLuck;
+
+    return Math.max(0.1, totalLuck); // Minimum luck floor
+}
+
+module.exports = { RODS, BAITS, CATCHES, getWeightedPool, calculateFishingLuck };

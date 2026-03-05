@@ -33,8 +33,12 @@ module.exports = {
         const rodName = t(`items.${effectiveRod.id}.name`, lang);
         const baitName = t(`items.${effectiveBait.id}.name`, lang);
 
-        let totalLuck = effectiveRod.luck + effectiveBait.luck;
-        if (user.job === 'farmer') totalLuck *= 1.2;
+        const event = await require('../../utils/eventSystem').getCurrentEvent();
+        let buffs = [];
+        try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+
+        const { calculateFishingLuck } = require('../../utils/fishData');
+        const totalLuck = calculateFishingLuck(user, effectiveRod, effectiveBait, event, buffs);
 
         const weightedPool = getWeightedPool(totalLuck);
         const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);

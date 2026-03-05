@@ -52,27 +52,13 @@ module.exports = {
         const rodName = t(`items.${rod.id}.name`, lang);
         const baitName = t(`items.${bait.id}.name`, lang);
 
-        // Calculate Total Luck (Additive: rod + bait)
-        // Formula: totalLuck = rod.luck + bait.luck
-        // Farmer Job Bonus: totalLuck × 1.2
-        let totalLuck = rod.luck + bait.luck;
-        if (user.job === 'farmer') {
-            const farmerConfig = config.ECONOMY.JOBS.farmer;
-            totalLuck *= (farmerConfig.luck || 1.2); // Use config or fallback
-
-            // Enhanced Milestone Bonus: +0.2 Luck per milestone point
-            const points = Number(user.milestone_count || 0);
-            totalLuck += points * 0.2;
-        }
-
+        // Calculate Total Luck
         const event = await require('../../utils/eventSystem').getCurrentEvent();
-        if (event.fishLuck) totalLuck *= event.fishLuck;
-
-        // Hacker Luck Buff (610)
         let buffs = [];
         try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
-        const luckBuff = buffs.find(b => b.itemId === 610 && b.expiresAt > Math.floor(Date.now() / 1000));
-        if (luckBuff) totalLuck *= 1.25;
+
+        const { calculateFishingLuck } = require('../../utils/fishData');
+        const totalLuck = calculateFishingLuck(user, rod, bait, event, buffs);
 
         const weightedPool = getWeightedPool(totalLuck);
         const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);
