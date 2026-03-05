@@ -266,8 +266,8 @@
                 "Nhà thám hiểm vũ trụ"
             ]
         },
-        "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **2.5x**!",
-        "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được tiền bồi dưỡng **+150** coins!"
+        "bumper_crop": "\n🌾 **Mùa màng bội thu!** Vụ mùa của bạn đặc biệt tốt trong mùa này! Phần thưởng nhân **1.5x**!",
+        "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được tiền bồi dưỡng **+500** coins!"
     },
     "crime": {
         "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{time}}**.",

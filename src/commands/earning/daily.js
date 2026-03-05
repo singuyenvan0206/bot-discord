@@ -33,7 +33,6 @@ module.exports = {
         if (bonus > 0) {
             msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
         }
-        if (eventMsg) msg += eventMsg;
 
         return message.reply(msg);
     }

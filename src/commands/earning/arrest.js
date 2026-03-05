@@ -2,6 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const { t, getLanguage } = require('../../utils/i18n');
 const db = require('../../database');
 const config = require('../../config');
+const { formatDuration } = require('../../utils/time');
 
 module.exports = {
     name: 'arrest',
@@ -55,7 +56,7 @@ module.exports = {
                     amount: bounty.toLocaleString(),
                     emoji: config.EMOJIS.COIN
                 }))
-                .addFields({ name: '⛓️ ' + t('arrest.prison_label', lang), value: t('arrest.prison_time', lang, { time: '2 hours' }) })
+                .addFields({ name: '⛓️ ' + t('arrest.prison_label', lang), value: t('arrest.prison_time', lang, { time: formatDuration(prisonTime, lang) }) })
                 .setTimestamp();
 
             return message.reply({ embeds: [embed] });

@@ -53,15 +53,18 @@ module.exports = {
         // Farmer Interaction: Bumper Crop (20% chance)
         let bumperMsg = '';
         if (user.job === 'farmer' && Math.random() < 0.15) {
-            total = Math.floor(total * 1.5);
-            bonus = Math.floor(bonus * 1.5);
+            const extra = Math.floor(total * 0.5); // 1.5x total
+            total += extra;
+            bonus += extra;
             bumperMsg = t('work.bumper_crop', lang);
         }
 
         // Police Interaction: Overtime (40% chance +1500 flat)
         let overtimeMsg = '';
         if (user.job === 'police' && Math.random() < 0.30) {
-            total += 500;
+            const extra = 500;
+            total += extra;
+            bonus += extra;
             overtimeMsg = t('work.overtime', lang);
         }
 

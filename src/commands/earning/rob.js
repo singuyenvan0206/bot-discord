@@ -96,7 +96,7 @@ module.exports = {
             // Increase Bounty & Wanted Level
             const bountyGain = Math.floor(victimLoss * 0.5);
             await db.execute('UPDATE users SET bounty = bounty + ?, wanted_level = LEAST(5, wanted_level + 1) WHERE id = ?', [bountyGain, message.author.id]);
-            msg += `\n🚨 **Wanted Alert:** Bạn bị truy nã thêm \`${bountyGain.toLocaleString()}\` coins!`;
+            msg += `\n${t('rob.wanted_alert', lang, { amount: bountyGain.toLocaleString() })}`;
 
             return message.reply(msg);
         } else {

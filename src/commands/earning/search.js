@@ -40,8 +40,9 @@ module.exports = {
         // Job Bonus: Hacker Data Mine (35% chance for 2x)
         let dataMineMsg = '';
         if (user.job === 'hacker' && Math.random() < 0.35) {
-            total *= 2;
-            bonus *= 2;
+            const extra = total;
+            total += extra;
+            bonus += extra;
             dataMineMsg = t('search.data_mine', lang);
         }
 
@@ -56,7 +57,9 @@ module.exports = {
         // Job Bonus: Trader Market Tip (+1200 flat)
         let marketTipMsg = '';
         if (user.job === 'trader') {
-            total += 1200;
+            const extra = 1200;
+            total += extra;
+            bonus += extra;
             marketTipMsg = t('search.market_tip', lang);
         }
 

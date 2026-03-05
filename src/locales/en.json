@@ -210,8 +210,8 @@
                 "Space Explorer"
             ]
         },
-        "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **2.5x**!",
-        "overtime": "\n👮 **Overtime!** Officer received a **+150** coins bonus!"
+        "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **1.5x**!",
+        "overtime": "\n👮 **Overtime!** Officer received a **+500** coins bonus!"
     },
     "crime": {
         "cooldown": "❌ You are being watched by the police! Wait **{{time}}** before your next heist.",
@@ -228,7 +228,8 @@
         "hacker_hacked": "\n💻 **Hacker:** You bypassed the security, reward doubled!",
         "criminal_escaped": "\n🥷 **Criminal:** You escaped successfully but were fined {{amount}} coins!",
         "teacher_penalty": "Due to professional misconduct, you have been demoted to Level **{{level}}**! 📉",
-        "failure_xp": "🚔 Heist failed! You were fined **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}"
+        "failure_xp": "🚔 Heist failed! You were fined **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}",
+        "wanted_alert": "🚨 **Wanted Alert:** Your bounty increased by `{{amount}}` coins!"
     },
     "leveling": {
         "levelup_title": "🎉 Level Up!",
