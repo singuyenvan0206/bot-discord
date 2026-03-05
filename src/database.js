@@ -855,6 +855,9 @@ async function transferUserBusiness(fromUserId, toUserId, businessId) {
 module.exports = {
     getDb,
     saveDb,
+    execute,
+    queryAll,
+    queryOne,
     createGiveaway,
     getGiveaway,
     getGiveawayById,
