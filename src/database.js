@@ -635,11 +635,26 @@ async function distributeBalanceToAll(amount, excludeUserId = null) {
 }
 
 async function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
-    let users = await queryAll('SELECT id FROM users' + (excludeUserId ? ' WHERE id != ?' : ''), excludeUserId ? [excludeUserId] : []);
+    // Fetch both id and balance to calculate wealth-based weights
+    let users = await queryAll('SELECT id, balance FROM users' + (excludeUserId ? ' WHERE id != ?' : ''), excludeUserId ? [excludeUserId] : []);
 
     if (users.length === 0) return [];
 
-    let weights = users.map(() => Math.random());
+    /**
+     * Inverse Wealth Weighting Logic:
+     * weight = random(0.5, 1.5) / log10(balance + 100)
+     * This ensures that as balance increases, the weight decreases,
+     * but everyone still has a chance to receive something.
+     */
+    let weights = users.map(u => {
+        const balance = Math.max(0, u.balance || 0);
+        // Using log10(balance + 100) to ensure weight exists even for 0 balance players
+        // and doesn't drop too sharply at very high balances.
+        const wealthFactor = Math.log10(balance + 100);
+        const randomFactor = 0.5 + Math.random(); // Random between 0.5 and 1.5
+        return randomFactor / wealthFactor;
+    });
+
     let totalWeight = weights.reduce((a, b) => a + b, 0);
 
     let distributed = 0;
