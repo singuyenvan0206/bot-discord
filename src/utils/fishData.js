@@ -89,20 +89,21 @@ function getWeightedPool(luck) {
         const luckAboveMin = Math.max(0, luck - c.minLuck);
 
         if (c.value === 0) {
-            // Trash: fades out quickly as luck increases (gone at luck ~7)
-            w *= Math.max(0, 1 - luck * 0.15);
+            // Trash: fades out as luck increases
+            w *= Math.max(0, 1 - luck * 0.10);
         } else if (c.value < 500) {
-            // Common fish: gently suppressed at higher luck
-            w *= Math.max(0.02, 1 - luck * 0.08);
+            // Common fish: suppressed at higher luck
+            w *= Math.max(0.01, 1 - luck * 0.05);
         } else if (c.value < 5000) {
-            // Mid-tier: slight boost per luck above minLuck
-            w *= 1 + luckAboveMin * 0.06;
+            // Mid-tier: slight boost, but capped at 10x to prevent crowding out rares
+            w *= Math.min(10, 1 + luckAboveMin * 0.12);
         } else if (c.value < 25000) {
-            // High-tier: moderate boost per luck above minLuck
-            w *= 1 + luckAboveMin * 0.10;
+            // High-tier: moderate boost, capped at 25x
+            w *= Math.min(25, 1 + luckAboveMin * 0.20);
         } else {
-            // Rare (25k+): strong boost, capped at 5× base weight
-            w *= Math.min(5, 1 + luckAboveMin * 0.20);
+            // Rare (25k+): strong boost, high cap (500x)
+            // This ensures that at extreme luck, rares actually become common.
+            w *= Math.min(500, 1 + luckAboveMin * 0.40);
         }
 
         return { ...c, weight: w };
