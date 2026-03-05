@@ -74,7 +74,7 @@ const CATCHES = [
     { key: 'poseidon_trident', emoji: '🔱', value: 40000000, weight: 5, minLuck: 8.0 },
     { key: 'ocean_dragon', emoji: '🐉', value: 75000000, weight: 3, minLuck: 8.1, jobRequired: 'farmer' },
     { key: 'galaxy_whale', emoji: '🌌', value: 150000000, weight: 2, minLuck: 8.3, jobRequired: 'farmer' },
-    { key: 'void_leviathan', emoji: '🌀', value: 250000000, weight: 10000000000, minLuck: 8.5, jobRequired: 'farmer' }
+    { key: 'void_leviathan', emoji: '🌀', value: 250000000, weight: 1, minLuck: 8.5, jobRequired: 'farmer' }
 ];
 
 /**
