@@ -230,23 +230,34 @@ module.exports = {
             }
 
             // Update Fish Ledger (Museum)
-            if (caughtItem.value > 0) {
-                let ledger = {};
-                try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
+            let ledger = {};
+            try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
 
-                const speciesKey = caughtItem.key;
-                if (!ledger[speciesKey]) {
-                    ledger[speciesKey] = { count: 0, firstCaught: Math.floor(Date.now() / 1000) };
-                }
-                ledger[speciesKey].count += 1;
-                ledger[speciesKey].lastCaught = Math.floor(Date.now() / 1000);
-
-                await db.updateUser(message.guild.id, message.author.id, { fish_ledger: JSON.stringify(ledger) });
+            const speciesKey = caughtItem.key;
+            if (!ledger[speciesKey]) {
+                ledger[speciesKey] = { count: 0, firstCaught: Math.floor(Date.now() / 1000) };
             }
+            ledger[speciesKey].count += 1;
+            ledger[speciesKey].lastCaught = Math.floor(Date.now() / 1000);
+
+            await db.updateUser(message.guild.id, message.author.id, { fish_ledger: JSON.stringify(ledger) });
 
             startCooldown(message.client, 'fish', message.author.id);
             return message.reply(replyOptions);
         } else {
+            // Update Fish Ledger even for 0-value items (Trash)
+            let ledger = {};
+            try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
+
+            const speciesKey = caughtItem.key;
+            if (!ledger[speciesKey]) {
+                ledger[speciesKey] = { count: 0, firstCaught: Math.floor(Date.now() / 1000) };
+            }
+            ledger[speciesKey].count += 1;
+            ledger[speciesKey].lastCaught = Math.floor(Date.now() / 1000);
+
+            await db.updateUser(message.guild.id, message.author.id, { fish_ledger: JSON.stringify(ledger) });
+
             embed.setFooter({ text: t('fish.footer_fail', lang) });
             startCooldown(message.client, 'fish', message.author.id);
             return message.reply({ embeds: [embed] });
