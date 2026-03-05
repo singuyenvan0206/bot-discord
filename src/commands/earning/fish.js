@@ -71,7 +71,7 @@ module.exports = {
 
         // 3. Consume Bait
         let baitSaved = false;
-        if (user.job === 'farmer' && Math.random() < 0.25) {
+        if (user.job === 'farmer' && Math.random() < 0.10) {
             baitSaved = true;
         }
 
@@ -178,9 +178,9 @@ module.exports = {
             let baseValue = caughtItem.value;
             let trophyMsg = '';
 
-            // Farmer Interaction: Trophy Fish (15% chance for 2x if possessing Fiberglass(409)/Carbon(411)/Titanium(412)/Neptune(413))
-            if (user.job === 'farmer' && (inventory['409'] || inventory['411'] || inventory['412'] || inventory['413']) && Math.random() < 0.15) {
-                baseValue *= 3;
+            // Farmer Interaction: Trophy Fish (10% chance for 1.5x if possessing Fiberglass(409)/Carbon(411)/Titanium(412)/Neptune(413))
+            if (user.job === 'farmer' && (inventory['409'] || inventory['411'] || inventory['412'] || inventory['413']) && Math.random() < 0.10) {
+                baseValue *= 1.5;
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 

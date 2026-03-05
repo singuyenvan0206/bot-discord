@@ -69,12 +69,12 @@ const CATCHES = [
     { key: 'phoenix_fish', emoji: '🔥', value: 1200000, weight: 40, minLuck: 6.7, buff: 616 },
     { key: 'mythical_pearl', emoji: '🔮', value: 1800000, weight: 30, minLuck: 7.0 },
     { key: 'kraken', emoji: '🐙', value: 3000000, weight: 20, minLuck: 7.3 },
-    { key: 'megalodon', emoji: '🦈', value: 6000000, weight: 15, minLuck: 7.6 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 15000000, weight: 10, minLuck: 7.8 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 40000000, weight: 5, minLuck: 8.0 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 75000000, weight: 3, minLuck: 8.1, jobRequired: 'farmer' },
-    { key: 'galaxy_whale', emoji: '🌌', value: 150000000, weight: 2, minLuck: 8.3, jobRequired: 'farmer' },
-    { key: 'void_leviathan', emoji: '🌀', value: 250000000, weight: 1, minLuck: 8.5, jobRequired: 'farmer' }
+    { key: 'megalodon', emoji: '🦈', value: 4000000, weight: 15, minLuck: 7.0 },
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 7000000, weight: 10, minLuck: 7.3 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 12000000, weight: 5, minLuck: 7.6 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 20000000, weight: 3, minLuck: 8.0, jobRequired: 'farmer' },
+    { key: 'galaxy_whale', emoji: '🌌', value: 40000000, weight: 2, minLuck: 8.5, jobRequired: 'farmer' },
+    { key: 'void_leviathan', emoji: '🌀', value: 70000000, weight: 1, minLuck: 9.0, jobRequired: 'farmer' }
 ];
 
 /**
@@ -157,7 +157,7 @@ function calculateFishingLuck(user, rod, bait, event = {}, buffs = []) {
 
         // Milestone Bonus: +0.1 Luck per point
         const points = Number(user.milestone_count || 0);
-        totalLuck += points * 0.1;
+        totalLuck += points * 0.2;
     }
 
     // 5. Active Buffs (Hacker luck buff 610)
