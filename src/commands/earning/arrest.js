@@ -39,13 +39,30 @@ module.exports = {
             // Reward: Bounty from "Government Fund"
             await db.addBalance(message.guild.id, message.author.id, bounty);
 
-            // Reset Criminal
+            // Penalty for Criminal:
+            // 1. Balance Fine (10% of their current balance)
+            const criminalBalance = Number(criminal.balance || 0);
+            const fine = Math.floor(criminalBalance * 0.10);
+            if (fine > 0) await db.removeBalance(message.guild.id, target.id, fine);
+
+            // 2. XP Deduction (200 XP)
+            const { deductXp } = require('../../utils/leveling');
+            const xpLoss = 200;
+            const xpResult = await deductXp(target.id, message.guild.id, xpLoss);
+
+            // 3. Reset Criminal Status
             await db.execute('UPDATE users SET bounty = 0, wanted_level = 0 WHERE id = ?', [target.id]);
 
-            // Penalty: Prison (increases rob/crime cooldown by setting last_rob/last_crime to future)
-            const prisonTime = 3600 * 2; // 2 hours
+            // 4. Penalty: Prison (Lockdown for 4 hours)
+            // Affects: rob, crime, work, daily
+            const prisonTime = 3600 * 4; // 4 hours
             const now = Math.floor(Date.now() / 1000);
-            await db.execute('UPDATE users SET last_rob = ?, last_crime = ? WHERE id = ?', [now + prisonTime, now + prisonTime, target.id]);
+            const releaseTime = now + prisonTime;
+
+            await db.execute(
+                'UPDATE users SET last_rob = ?, last_crime = ?, last_work = ?, last_daily = ? WHERE id = ?',
+                [releaseTime, releaseTime, releaseTime, releaseTime, target.id]
+            );
 
             const embed = new EmbedBuilder()
                 .setTitle(`🚔 ${t('arrest.title_success', lang)}`)
@@ -56,7 +73,11 @@ module.exports = {
                     amount: bounty.toLocaleString(),
                     emoji: config.EMOJIS.COIN
                 }))
-                .addFields({ name: '⛓️ ' + t('arrest.prison_label', lang), value: t('arrest.prison_time', lang, { time: formatDuration(prisonTime, lang) }) })
+                .addFields(
+                    { name: '⛓️ ' + t('arrest.prison_label', lang), value: t('arrest.prison_time', lang, { time: formatDuration(prisonTime, lang) }), inline: true },
+                    { name: '💸 ' + t('arrest.fine_label', lang), value: `-${fine.toLocaleString()} ${config.EMOJIS.COIN}`, inline: true },
+                    { name: '📉 ' + t('arrest.xp_loss_label', lang), value: `-${xpResult.deducted.toLocaleString()} XP`, inline: true }
+                )
                 .setTimestamp();
 
             return message.reply({ embeds: [embed] });

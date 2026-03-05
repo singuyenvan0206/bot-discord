@@ -17,7 +17,7 @@ const COLLECTIONS = [
 
 module.exports = {
     name: 'museum',
-    aliases: ['bo suu tap', 'ledger', 'collection'],
+    aliases: ['bo suu tap', 'ledger', 'collection','col'],
     description: 'Bộ sưu tập cá (View your fish collection)',
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
