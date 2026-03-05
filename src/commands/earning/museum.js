@@ -122,7 +122,7 @@ module.exports = {
                 const isCaught = !!ledgerData;
 
                 const fishEmbed = new EmbedBuilder()
-                    .setTitle(`${fish?.emoji || '🐟'} ${t(`fish.${key}`, lang)}`)
+                    .setTitle(`${fish?.emoji || '🐟'} ${t(`fish.items.${key}`, lang)}`)
                     .setColor(isCaught ? config.COLORS.SUCCESS : config.COLORS.NEUTRAL);
 
                 if (isCaught) {

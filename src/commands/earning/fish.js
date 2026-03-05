@@ -93,7 +93,7 @@ module.exports = {
             }
         }
 
-        const caughtName = t(`fish.${caughtItem.key}`, lang);
+        const caughtName = t(`fish.items.${caughtItem.key}`, lang);
 
         let description = t('fish.description', lang, { rod: rodName, bait: baitName });
         if (baitSaved) {
