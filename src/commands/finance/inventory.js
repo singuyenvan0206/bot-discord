@@ -115,10 +115,11 @@ module.exports = {
                         if (item.id === 501) multiplier = 1.0; // Shield of Protection: 100% Protection
 
                         if (!typeMap[type]) {
-                            typeMap[type] = { total: 0, earliestExpiry: b.expiresAt, count: 0 };
+                            typeMap[type] = { total: 0, earliestExpiry: b.expiresAt, count: 0, icons: new Set() };
                         }
                         typeMap[type].total += multiplier;
                         typeMap[type].count += 1;
+                        if (item.emoji) typeMap[type].icons.add(item.emoji);
                         if (b.expiresAt < typeMap[type].earliestExpiry) {
                             typeMap[type].earliestExpiry = b.expiresAt;
                         }
@@ -127,11 +128,6 @@ module.exports = {
                     // Item data for display only
                     const { calculateMultiplierFromBuffs } = require('../../utils/multiplier');
                     // We just need the raw totals from items here for the buffs list
-
-                    const TYPE_EMOJIS = {
-                        daily: '📅', income: '💼', gamble: '🎲',
-                        xpboost: '✨', robshield: '🛡️', bait: '🪱', tool: '🎣', other: '📦'
-                    };
 
                     const lines = Object.entries(typeMap).map(([type, data]) => {
                         const effectType = t(`effects.${type}`, lang);
@@ -146,9 +142,11 @@ module.exports = {
                         let m = Math.round((remaining % 3600) / 60);
                         if (m === 60) { h += 1; m = 0; }
                         const timeStr = h > 0 ? (m > 0 ? `${h.toLocaleString()}h ${m.toLocaleString()}m` : `${h.toLocaleString()}h`) : `${m.toLocaleString()}m`;
-                        const emoji = TYPE_EMOJIS[type] || '⚡';
+
+                        // Show all unique emojis for items contributing to this type
+                        const icons = Array.from(data.icons).join(' ');
                         const countNote = data.count > 1 ? ` ×${data.count.toLocaleString()}` : '';
-                        return `${emoji} **${effectType}:** +${pct.toLocaleString()}%${countNote} ${t('common.next_expiry', lang, { time: timeStr })}`;
+                        return `${icons} **${effectType}:** +${pct.toLocaleString()}%${countNote} ${t('common.next_expiry', lang, { time: timeStr })}`;
                     });
 
                     embed.addFields({

@@ -71,16 +71,14 @@ module.exports = {
             let passiveIncome = 0;
             const fishList = aquarium.fish.map(f => {
                 const data = CATCHES.find(c => c.key === f.key);
-                // Passive income check (High-rarity fish give more)
-                // Common: 10/h, Rare: 100/h, Legendary: 1000/h, Mythical: 5000/h
-                let reward = 10;
-                if (data.value >= 10000000) reward = 5000;
-                else if (data.value >= 500000) reward = 1000;
-                else if (data.value >= 10000) reward = 100;
+                if (!data) return null;
+
+                const { calculateFishPassiveIncome } = require('../../utils/fishData');
+                const reward = calculateFishPassiveIncome(data.value);
 
                 passiveIncome += reward;
-                return `${data.emoji} **${t(`fish.items.${f.key}`, lang) || f.key}** (+${reward}/h)`;
-            }).join('\n');
+                return `${data.emoji} **${t(`fish.items.${f.key}`, lang) || f.key}** (+${reward.toLocaleString()}/h)`;
+            }).filter(Boolean).join('\n');
 
             embed.addFields(
                 { name: t('aquarium.fish_list', lang), value: fishList, inline: false },

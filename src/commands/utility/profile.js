@@ -103,11 +103,6 @@ module.exports = {
                     value: `<t:${Math.floor(user.createdTimestamp / 1000)}:D>`,
                     inline: true
                 },
-                {
-                    name: `💼 ${t('job.name_field', lang)}`,
-                    value: dbUser.job ? t(`job.name_${dbUser.job}`, lang) : t('job.none', lang),
-                    inline: true
-                },
 
                 { name: '\u200B', value: ` ${t('profile.economy_section', lang)} ${'\u3164'.repeat(25)}`, inline: false },
                 {
@@ -133,11 +128,6 @@ module.exports = {
                     inline: false
                 },
                 {
-                    name: t('profile.multipliers', lang),
-                    value: `💼 ${renderBonus(incData)} | 🎲 ${renderBonus(gamData)} | ✨ **${xpBonus}%**\n🛡️ ${t('profile.cap', lang)}: **${maxCapPercent}%**`,
-                    inline: true
-                },
-                {
                     name: t('profile.passive_income', lang),
                     value: `**+${totalPassiveIncome.toLocaleString()}** coins/hr`,
                     inline: true
@@ -147,11 +137,6 @@ module.exports = {
                 {
                     name: t('profile.marriage', lang),
                     value: marriageStatus,
-                    inline: true
-                },
-                {
-                    name: t('profile.collection', lang),
-                    value: t('profile.total_items', lang, { count: itemCount.toLocaleString() }) + '\n' + t('profile.item_types', lang, { count: Object.keys(inv).length.toLocaleString() }),
                     inline: true
                 }
             )

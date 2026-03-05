@@ -63,18 +63,18 @@ const CATCHES = [
     { key: 'shark', emoji: '🦈', value: 120000, weight: 90, minLuck: 4.9 },
     { key: 'alligator_gar', emoji: '🐊', value: 160000, weight: 85, minLuck: 5.2 },
     { key: 'whale', emoji: '🐋', value: 240000, weight: 80, minLuck: 5.5 },
-    { key: 'dragonfish', emoji: '🐉', value: 400000, weight: 70, minLuck: 5.8, buff: 615 },
-    { key: 'anglerfish', emoji: '🏮', value: 600000, weight: 60, minLuck: 6.1, buff: 617 },
-    { key: 'treasure_chest', emoji: '💰', value: 800000, weight: 50, minLuck: 6.4, buff: 618 },
-    { key: 'phoenix_fish', emoji: '🔥', value: 1200000, weight: 40, minLuck: 6.7, buff: 616 },
-    { key: 'mythical_pearl', emoji: '🔮', value: 1800000, weight: 30, minLuck: 7.0 },
-    { key: 'kraken', emoji: '🐙', value: 3000000, weight: 20, minLuck: 7.3 },
-    { key: 'megalodon', emoji: '🦈', value: 4000000, weight: 15, minLuck: 7.0 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 7000000, weight: 10, minLuck: 7.3 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 12000000, weight: 5, minLuck: 7.6 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 20000000, weight: 3, minLuck: 8.0, jobRequired: 'farmer' },
-    { key: 'galaxy_whale', emoji: '🌌', value: 40000000, weight: 2, minLuck: 8.5, jobRequired: 'farmer' },
-    { key: 'void_leviathan', emoji: '🌀', value: 70000000, weight: 1, minLuck: 9.0, jobRequired: 'farmer' }
+    { key: 'dragonfish', emoji: '🐉', value: 400000, weight: 40, minLuck: 5.5, buff: 615 },
+    { key: 'anglerfish', emoji: '🏮', value: 600000, weight: 30, minLuck: 5.8, buff: 617 },
+    { key: 'treasure_chest', emoji: '💰', value: 800000, weight: 25, minLuck: 6.1, buff: 618 },
+    { key: 'phoenix_fish', emoji: '🔥', value: 1200000, weight: 20, minLuck: 6.4, buff: 616 },
+    { key: 'mythical_pearl', emoji: '🔮', value: 1800000, weight: 15, minLuck: 6.7 },
+    { key: 'kraken', emoji: '🐙', value: 5000000, weight: 10, minLuck: 7.0 },
+    { key: 'megalodon', emoji: '🦈', value: 10000000, weight: 5, minLuck: 6.0 },
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 25000000, weight: 3, minLuck: 6.3 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 50000000, weight: 2, minLuck: 6.6 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 100000000, weight: 1, minLuck: 7.0, },
+    { key: 'galaxy_whale', emoji: '🌌', value: 250000000, weight: 1, minLuck: 7.5, jobRequired: 'farmer' },
+    { key: 'void_leviathan', emoji: '🌀', value: 500000000, weight: 1, minLuck: 7.8, jobRequired: 'farmer' }
 ];
 
 /**
@@ -155,9 +155,9 @@ function calculateFishingLuck(user, rod, bait, event = {}, buffs = []) {
         // Multiplier bonus (e.g. x1.1)
         totalLuck *= (farmerConfig.luck_nerf || 1.1);
 
-        // Milestone Bonus: +0.1 Luck per point
+        // Milestone Bonus: +0.02 Luck per point (Reduced from 0.2 to prevent Level 20+ inflation)
         const points = Number(user.milestone_count || 0);
-        totalLuck += points * 0.2;
+        totalLuck += points * 0.02;
     }
 
     // 5. Active Buffs (Hacker luck buff 610)
@@ -171,4 +171,22 @@ function calculateFishingLuck(user, rod, bait, event = {}, buffs = []) {
     return Math.max(0.1, totalLuck); // Minimum luck floor
 }
 
-module.exports = { RODS, BAITS, CATCHES, getWeightedPool, calculateFishingLuck };
+/**
+ * Calculate the hourly passive income for a fish species based on its value.
+ * Centralized logic to ensure consistency across scheduler and commands.
+ * 
+ * @param {number} fishValue - The value of the fish species
+ * @returns {number} - Hourly passive income in coins
+ */
+function calculateFishPassiveIncome(fishValue) {
+    if (fishValue === 0) return 0; // Trash
+    if (fishValue < 1000) return 25; // Common
+    if (fishValue < 10000) return 150; // Uncommon/Rare
+    if (fishValue < 100000) return 1000; // Exotic
+    if (fishValue < 1000000) return 5000; // Legendary
+    if (fishValue < 10000000) return 25000; // Mythical
+    if (fishValue < 100000000) return 100000; // Ancient
+    return 500000; // God-tier
+}
+
+module.exports = { RODS, BAITS, CATCHES, getWeightedPool, calculateFishingLuck, calculateFishPassiveIncome };

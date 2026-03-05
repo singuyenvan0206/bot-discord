@@ -4,11 +4,11 @@ const db = require('../database');
  * XP Constants
  */
 const XP_AMOUNTS = {
-    MESSAGE: { min: 3, max: 7 },
-    COMMAND_SUCCESS: { min: 10, max: 20 },
-    COMMAND_FAILURE: { min: 2, max: 5 },
-    GAME_WIN: { min: 15, max: 30 },
-    GAME_ACTION: { min: 2, max: 5 }
+    MESSAGE: { min: 5, max: 15 },
+    COMMAND_SUCCESS: { min: 25, max: 50 },
+    COMMAND_FAILURE: { min: 5, max: 10 },
+    GAME_WIN: { min: 50, max: 100 },
+    GAME_ACTION: { min: 5, max: 15 }
 };
 
 /**
@@ -19,18 +19,34 @@ function calculateLevel(xp) {
     return Math.floor(0.1 * Math.sqrt(xp));
 }
 
+const xpCooldowns = new Map();
+
 /**
  * Thêm XP cho người dùng. 
  * Hàm này sẽ tự động cập nhật cả XP và Level trong database nhưng KHÔNG in ra thông báo thăng cấp.
  * 
  * @param {string} userId - ID người dùng
  * @param {number} amount - Số XP muốn cộng
+ * @param {boolean} bypassCooldown - Bỏ qua thời gian chờ (dùng cho phần thưởng nhiệm vụ, v.v.)
  * @returns {object} - Object chứa thông tin cấp độ hiện tại và việc có thăng cấp hay không { level, leveledUp }
  */
-async function addXp(memberOrId, amount, guildId = null) {
+async function addXp(memberOrId, amount, guildId = null, bypassCooldown = false) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
     const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
     const config = require('../config');
+
+    // ─── Anti-Spam Check ───
+    if (!bypassCooldown) {
+        const now = Date.now();
+        const lastXpGain = xpCooldowns.get(userId) || 0;
+        const xpCooldownTime = 60000; // 1 minute
+
+        if (now - lastXpGain < xpCooldownTime) {
+            return { level: 0, leveledUp: false, cooldown: true };
+        }
+        xpCooldowns.set(userId, now);
+    }
+
     const user = await db.getUser(userId, gId);
 
     // Apply global and user-specific XP multipliers

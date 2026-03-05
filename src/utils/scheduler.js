@@ -41,11 +41,9 @@ async function processAquariumIncome(client) {
         for (const f of aquarium.fish) {
             const data = CATCHES.find(c => c.key === f.key);
             if (!data) continue;
-            let reward = 10;
-            if (data.value >= 10000000) reward = 5000;
-            else if (data.value >= 500000) reward = 1000;
-            else if (data.value >= 10000) reward = 100;
-            totalIncome += reward;
+
+            const { calculateFishPassiveIncome } = require('./fishData');
+            totalIncome += calculateFishPassiveIncome(data.value);
         }
 
         if (totalIncome > 0) {
