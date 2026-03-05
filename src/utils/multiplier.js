@@ -230,7 +230,24 @@ async function getXpMultiplier(memberOrId) {
     }
 
     multi += getJobMilestoneBonus(user, 'xp');
-    if (await hasActiveItem(guildId, userId, 502)) multi += 1.0; // XP Boost Potion: +100%
+
+    // Dynamic XP Buffs from Items/Catches
+    let buffs = [];
+    try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
+    const now = Math.floor(Date.now() / 1000);
+
+    for (const buff of buffs) {
+        if (buff.expiresAt > now) {
+            const item = SHOP_ITEMS.find(i => i.id === buff.itemId);
+            if (item && item.type === 'xp') {
+                multi += item.multiplier;
+            }
+        }
+    }
+
+    // Legacy support for XP Boost Potion (502) if it doesn't use the type='xp' yet
+    // (Note: in our current shopItems.js 502 has type 'xpboost', so we handle specifically or update shopItems)
+    if (await hasActiveItem(guildId, userId, 502)) multi += 1.0;
 
     // Role XP Boost
     const config = require('../config');

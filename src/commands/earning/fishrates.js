@@ -33,18 +33,31 @@ module.exports = {
         const rodName = t(`items.${effectiveRod.id}.name`, lang);
         const baitName = t(`items.${effectiveBait.id}.name`, lang);
 
+        // Calculate total luck using centralized logic
+        const { calculateFishingLuck } = require('../../utils/fishData');
         const event = await require('../../utils/eventSystem').getCurrentEvent();
         let buffs = [];
         try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
-        const { calculateFishingLuck } = require('../../utils/fishData');
         const totalLuck = calculateFishingLuck(user, effectiveRod, effectiveBait, event, buffs);
 
-        const weightedPool = getWeightedPool(totalLuck);
-        const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);
+        // Get job-restricted pool
+        const pool = getWeightedPool(totalLuck, user.job);
+        const totalWeight = pool.reduce((acc, c) => acc + c.weight, 0);
+
+        // Header info
+        const luckDetails = [];
+        luckDetails.push(`${t('fish.rod', lang)}: **${rodName}** (${effectiveRod.luck.toFixed(1)}x)`);
+        luckDetails.push(`${t('fish.bait', lang)}: **${baitName}** (+${effectiveBait.luck.toFixed(1)}x)`);
+        if (user.level > 0) luckDetails.push(`Level Bonus: **+${(user.level * 0.01).toFixed(2)}x**`);
+        if (user.job === 'farmer') {
+            luckDetails.push(`Job Bonus: **x1.1**`);
+            if (user.milestone_count > 0) luckDetails.push(`Milestone Bonus: **+${(user.milestone_count * 0.1).toFixed(1)}x**`);
+        }
+        if (event && event.type === 'fish') luckDetails.push(`${t('common.event', lang)}: **x${event.multiplier || 1.1}**`);
 
         // Sort by value descending (rarest first)
-        const sortedPool = [...weightedPool].sort((a, b) => b.value - a.value);
+        const sortedPool = [...pool].sort((a, b) => b.value - a.value);
 
         // Pagination setup
         const ITEMS_PER_PAGE = 10;

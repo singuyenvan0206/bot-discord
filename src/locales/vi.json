@@ -789,6 +789,26 @@
             "desc": "Sức mạnh từ thực thể hư không (+75% Thưởng | 4 giờ)",
             "details": "Một món quà từ vực thẳm sâu nhất đại dương. Thủy Quái Hư Không ban cho bạn quyền năng thao túng vận mệnh và tiền tài."
         },
+        "615": {
+            "name": "🐲 Tri Thức Cá Rồng",
+            "desc": "Sự thông thái của rồng nước (+20% XP | 1 giờ)",
+            "details": "Hấp thụ tinh hoa từ loài cá rồng huyền thoại, giúp tâm trí minh mẫn và thăng tiến nhanh hơn."
+        },
+        "616": {
+            "name": "🔥 Sự Tái Sinh Phượng Hoàng",
+            "desc": "Ngọn lửa tri thức bất diệt (+25% XP | 1 giờ)",
+            "details": "Linh khí từ Cá Phượng Hoàng giúp tinh thần rực cháy, nhân đôi khả năng học hỏi và trải nghiệm."
+        },
+        "617": {
+            "name": "🏮 Tuệ Nhãn Cá Lồng Đèn",
+            "desc": "Ánh sáng dẫn lối học thuật (+15% XP | 30 phút)",
+            "details": "Ánh sáng từ lồng đèn kỳ ảo giúp bạn nhìn thấu những kiến thức phức tạp nhất."
+        },
+        "618": {
+            "name": "💰 Vận May Rương Báu",
+            "desc": "Kho báu thực tiễn (+10% XP | 30 phút)",
+            "details": "Không chỉ có vàng, rương báu này còn chứa đựng tri thức tích lũy từ những chuyến hải trình xa xôi."
+        },
         "701": {
             "name": "💍 Nhẫn Cưới Vĩnh Cửu",
             "desc": "Minh chứng cho một tình yêu đẹp.",
@@ -1720,7 +1740,14 @@
         "set_rare": "Cá Cảnh Quý Hiếm",
         "set_exotic": "Sát Thủ Đại Dương",
         "set_legendary": "Huyền Thoại Biển Sâu",
-        "set_mythical": "Thần Thoại Cổ Đại"
+        "set_mythical": "Thần Thoại Cổ Đại",
+        "btn_legendary": "Bộ Sưu Tập Huyền Thoại",
+        "btn_mythical": "Bộ Sưu Tập Thần Thoại",
+        "btn_back": "Quay Lại",
+        "gallery_title": "Phòng Trưng Bày: {{set}}",
+        "caught_at": "⏳ Đã bắt được vào: {{time}}",
+        "not_caught": "🔒 *Chưa bắt được*",
+        "fish_info": "📦 Giá trị: **{{value}}** {{emoji}}"
     },
     "wanted": {
         "title": "Danh Sách Truy Nã Chính Phủ",

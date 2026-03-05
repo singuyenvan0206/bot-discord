@@ -60,8 +60,6 @@ module.exports = {
         const { calculateFishingLuck } = require('../../utils/fishData');
         const totalLuck = calculateFishingLuck(user, rod, bait, event, buffs);
 
-        const weightedPool = getWeightedPool(totalLuck);
-        const totalWeight = weightedPool.reduce((acc, c) => acc + c.weight, 0);
 
         // --- SUBCOMMAND: info ---
         // Fish info is now its own command: $fishinfo / $fi
@@ -81,22 +79,22 @@ module.exports = {
             await db.removeItem(message.guild.id, message.author.id, bait.id, 1);
         }
 
-        // 5. Determine Catch
+        // Catching logic
+        const pool = getWeightedPool(totalLuck, user.job);
+        const totalWeight = pool.reduce((acc, c) => acc + c.weight, 0);
         let random = Math.random() * totalWeight;
-        let caughtItem = null;
+        let caughtItem = pool[0];
 
-        for (const c of weightedPool) {
+        for (const c of pool) {
             random -= c.weight;
             if (random <= 0) {
                 caughtItem = c;
                 break;
             }
         }
-        if (!caughtItem) caughtItem = weightedPool[0];
 
-        const caughtName = t(`fish.items.${caughtItem.key}`, lang);
+        const caughtName = t(`fish.${caughtItem.key}`, lang);
 
-        // 6. Respond
         let description = t('fish.description', lang, { rod: rodName, bait: baitName });
         if (baitSaved) {
             description += t('fish.bait_salvaged', lang);
@@ -120,10 +118,10 @@ module.exports = {
             'kraken': { asset: 'kraken.png', buff: 604, color: 0xFF4500, announceKey: 'fish.kraken_announcement' },
             'thousand_year_turtle': { asset: 'thousand_year_turtle.png', buff: 605, color: 0x228B22, announceKey: 'fish.mythical_announcement' },
             'ocean_dragon': { asset: 'ocean_dragon.png', buff: 606, color: 0x1E90FF, announceKey: 'fish.mythical_announcement' },
-            'dragonfish': { asset: 'dragonfish.png', color: 0xFFD700, announceKey: 'fish.legendary_announcement' },
-            'phoenix_fish': { asset: 'phoenix_fish.png', color: 0xFF4500, announceKey: 'fish.legendary_announcement' },
-            'anglerfish': { asset: 'anglerfish.png', color: 0x2F4F4F, announceKey: 'fish.legendary_announcement' },
-            'treasure_chest': { asset: 'treasure_chest.png', color: 0xFFD700, announceKey: 'fish.legendary_announcement' },
+            'dragonfish': { asset: 'dragonfish.png', buff: 615, color: 0xFFD700, announceKey: 'fish.legendary_announcement' },
+            'phoenix_fish': { asset: 'phoenix_fish.png', buff: 616, color: 0xFF4500, announceKey: 'fish.legendary_announcement' },
+            'anglerfish': { asset: 'anglerfish.png', buff: 617, color: 0x2F4F4F, announceKey: 'fish.legendary_announcement' },
+            'treasure_chest': { asset: 'treasure_chest.png', buff: 618, color: 0xFFD700, announceKey: 'fish.legendary_announcement' },
             'galaxy_whale': { asset: 'galaxy_whale.png', buff: 607, color: 0x4B0082, announceKey: 'fish.mythical_announcement' },
             'void_leviathan': { asset: 'void_leviathan.png', buff: 608, color: 0x000000, announceKey: 'fish.mythical_announcement' }
         };
@@ -158,7 +156,7 @@ module.exports = {
             }
 
             // 3. Grant Buff
-            const buffId = mythical?.buff || (isTrident ? 602 : 601);
+            const buffId = caughtItem.buff || mythical.buff;
             const buffItem = SHOP_ITEMS.find(i => i.id === buffId);
             if (buffItem) {
                 let buffs = [];

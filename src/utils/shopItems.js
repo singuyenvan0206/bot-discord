@@ -65,6 +65,10 @@ module.exports = [
     { id: 606, name: "Dragon's Majesty", price: 0, multiplier: 0.40, duration: 7200, type: 'income', unbuyable: true },
     { id: 607, name: "Galaxy's Aura", price: 0, multiplier: 0.50, duration: 10800, type: 'income', unbuyable: true },
     { id: 608, name: "Void's Blessing", price: 0, multiplier: 0.75, duration: 14400, type: 'income', unbuyable: true },
+    { id: 615, name: "Dragonfish's Wisdom", price: 0, multiplier: 0.20, duration: 3600, type: 'xp', unbuyable: true },
+    { id: 616, name: "Phoenix's Rebirth", price: 0, multiplier: 0.25, duration: 3600, type: 'xp', unbuyable: true },
+    { id: 617, name: "Angler's Insight", price: 0, multiplier: 0.15, duration: 1800, type: 'xp', unbuyable: true },
+    { id: 618, name: "Treasure's Luck", price: 0, multiplier: 0.10, duration: 1800, type: 'xp', unbuyable: true },
 
     // ==========================================
     // GROUP 700 — social (marriage items)

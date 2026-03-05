@@ -730,6 +730,36 @@
             "desc": "Might of the dragon's hoard (+40% All Rewards | 2 hours)",
             "details": "The ultimate divine power from the Sea Dragon brings absolute wealth and authority to its owner."
         },
+        "607": {
+            "name": "🌌 Galaxy's Aura",
+            "desc": "Power from the stars (+50% All Rewards | 3 hours)",
+            "details": "Surrounded by the aura of the Galaxy Whale, helping you absorb cosmic essence for unlimited prosperity."
+        },
+        "608": {
+            "name": "🌀 Void's Blessing",
+            "desc": "Power from the abyss (+75% All Rewards | 4 hours)",
+            "details": "A gift from the deepest trench. The Void Leviathan grants you the power to manipulate fate and fortune."
+        },
+        "615": {
+            "name": "🐲 Dragonfish's Wisdom",
+            "desc": "Ancient aquatic intelligence (+20% XP | 1 hour)",
+            "details": "Absorb the essence of the legendary dragonfish, clearing your mind for faster progression."
+        },
+        "616": {
+            "name": "🔥 Phoenix's Rebirth",
+            "desc": "Eternal flame of knowledge (+25% XP | 1 hour)",
+            "details": "The aura of the Phoenix Fish ignites your spirit, doubling your ability to learn and experience."
+        },
+        "617": {
+            "name": " Lantern of the Abyss",
+            "desc": "Guiding light of knowledge (+15% XP | 30 mins)",
+            "details": "The light from the mystical anglerfish helps you see through the most complex subjects."
+        },
+        "618": {
+            "name": "💰 Treasure's Luck",
+            "desc": "A lucky discovery (+10% XP | 30 mins)",
+            "details": "Beyond coins, this chest contains records of ancient voyages and valuable experiences."
+        },
         "701": {
             "name": "💍 Wedding Ring",
             "desc": "Propose to your partner (+25% Income).",
@@ -1720,7 +1750,14 @@
         "set_rare": "Rare Aquarium",
         "set_exotic": "Ocean Predators",
         "set_legendary": "Deep Sea Legends",
-        "set_mythical": "Ancient Myths"
+        "set_mythical": "Ancient Myths",
+        "btn_legendary": "Legendary Gallery",
+        "btn_mythical": "Mythical Gallery",
+        "btn_back": "Back",
+        "gallery_title": "Gallery: {{set}}",
+        "caught_at": "⏳ Caught at: {{time}}",
+        "not_caught": "🔒 *Not yet caught*",
+        "fish_info": "📦 Value: **{{value}}** {{emoji}}"
     },
     "wanted": {
         "title": "Government Most Wanted",
