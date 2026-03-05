@@ -295,10 +295,11 @@
         "police_busted": "\n👮 **Busted!** You tried to rob an officer and paid a double penalty!",
         "shield_blocked": "\n🛡️ **Blocked!** The victim's shield made the robbery much harder.",
         "police_bounty": "\n💰 **Police Bounty!** Robbing an officer earns +**50%** bonus!",
-        "rob_shield_blocked": "\n🔰 **Shield of Protection!** The victim is protected — the robbery is much harder!",
+        "rob_shield_blocked": "\n🔰 **Shield of Protection!!** The victim is protected — the robbery is much harder!",
         "shield_broken": "\n💥 **SHIELD BROKEN!** {{user}}'s Shield of Protection shattered after this robbery attempt!",
         "teacher_penalty": "What a terrible role model! You have been demoted to Level **{{level}}** for this behavior. 📉",
-        "failure_xp": "🚔 {{user}} caught you! You had to pay **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}"
+        "failure_xp": "🚔 You were caught by {{user}}! You must pay **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}",
+        "wanted_alert": "🚨 **Wanted Alert:** Your bounty increased by `{{amount}}` coins!"
     },
     "job": {
         "list_title": "💼 Career Center",

@@ -284,7 +284,8 @@
         "hacker_hacked": "\n💻 **Hacker:** Bạn đã xâm nhập thành công hệ thống, phần thưởng được nhân đôi!",
         "criminal_escaped": "\n🥷 **Tội phạm:** Bạn đã trốn thoát thành công nhưng bị phạt {{amount}} coins!",
         "teacher_penalty": "Vì vi phạm đạo đức nghề nghiệp, bạn đã bị giáng xuống Cấp độ **{{level}}**! 📉",
-        "failure_xp": "🚔 Phi vụ thất bại! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}"
+        "failure_xp": "🚔 Phi vụ thất bại! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}",
+        "wanted_alert": "🚨 **Cảnh báo truy nã:** Tiền thưởng của bạn đã tăng thêm `{{amount}}` coins!"
     },
     "beg": {
         "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{time}}**.",
@@ -347,7 +348,8 @@
         "rob_shield_blocked": "\n🔰 **Khiên Bảo Vệ!** Nạn nhân đang được bảo vệ bởi Khiên Bảo Vệ — cuộc cướp khó khăn hơn rất nhiều!",
         "shield_broken": "\n💥 **KHIÊN ĐÃ VỠ!** Khiên Bảo Vệ của {{user}} đã bị vỡ sau đợt cướp này!",
         "teacher_penalty": "Thật là một tấm gương xấu! Bạn đã bị giáng xuống Cấp độ **{{level}}** do hành vi này. 📉",
-        "failure_xp": "🚔 Bạn bị {{user}} phát hiện! Phải bồi thường **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}"
+        "failure_xp": "🚔 Bạn bị {{user}} phát hiện! Phải bồi thường **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}",
+        "wanted_alert": "🚨 **Cảnh báo truy nã:** Tiền thưởng của bạn đã tăng thêm `{{amount}}` coins!"
     },
     "leveling": {
         "levelup_title": "🎉 Thăng cấp!",
@@ -1758,7 +1760,7 @@
     "arrest": {
         "police_only": "❌ Chỉ những người có nghề **Cảnh Sát** mới có thể thực hiện bắt giữ!",
         "invalid_target": "❌ Bạn cần tag một người dùng hợp lệ để bắt giữ.",
-        "no_bounty": "❌ Người này không bị truy nã hoặc không có tiền thưởng trên đầu.",
+        "no_bounty": "❌ **{{user}}** không bị truy nã hoặc không có tiền thưởng trên đầu.",
         "title_success": "BẮT GIỮ THÀNH CÔNG",
         "success_desc": "👮 **{{police}}** đã bắt giữ được tên tội phạm nguy hiểm **{{criminal}}**! Chính phủ đã thưởng cho bạn {{emoji}} **{{amount}}** coins.",
         "prison_label": "Phán quyết",
