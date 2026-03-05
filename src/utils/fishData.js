@@ -70,11 +70,11 @@ const CATCHES = [
     { key: 'mythical_pearl', emoji: '🔮', value: 1800000, weight: 30, minLuck: 7.0 },
     { key: 'kraken', emoji: '🐙', value: 3000000, weight: 20, minLuck: 7.3 },
     { key: 'megalodon', emoji: '🦈', value: 6000000, weight: 15, minLuck: 7.6 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 15000000, weight: 10, minLuck: 7.9 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 40000000, weight: 5, minLuck: 8.2 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 75000000, weight: 3, minLuck: 8.5, jobRequired: 'farmer' },
-    { key: 'galaxy_whale', emoji: '🌌', value: 150000000, weight: 2, minLuck: 9.0, jobRequired: 'farmer' },
-    { key: 'void_leviathan', emoji: '🌀', value: 250000000, weight: 1, minLuck: 9.5, jobRequired: 'farmer' }
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 15000000, weight: 10, minLuck: 7.8 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 40000000, weight: 5, minLuck: 8.0 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 75000000, weight: 3, minLuck: 8.1, jobRequired: 'farmer' },
+    { key: 'galaxy_whale', emoji: '🌌', value: 150000000, weight: 2, minLuck: 8.3, jobRequired: 'farmer' },
+    { key: 'void_leviathan', emoji: '🌀', value: 250000000, weight: 1, minLuck: 8.5, jobRequired: 'farmer' }
 ];
 
 /**
