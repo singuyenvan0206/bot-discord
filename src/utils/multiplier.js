@@ -148,8 +148,8 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
     let marriageMulti = 0;
     const marriage = await db.getMarriage(actualGuildId, userId);
     if (marriage) {
-        if (marriage.ring_id === 702) marriageMulti = 0.50;
-        else if (marriage.ring_id === 701) marriageMulti = 0.25;
+        if (marriage.ring_id === 702) marriageMulti = 0.25; // Halved from 0.50
+        else if (marriage.ring_id === 701) marriageMulti = 0.125; // Halved from 0.25
     }
     let roleIncomeMulti = 0;
     // Role Buffs (Dynamic from Database)
@@ -168,8 +168,8 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
 
     const maxCap = await getDynamicCap(memberOrId, actualGuildId);
 
-    // Sum base multipliers (Items Normal, Level, Job, House, Marriage, Role Nerfed, Milestone)
-    const baseRaw = itemData.normal + levelMulti + jobMulti + houseMulti + marriageMulti + (roleIncomeMulti * 0.5) + milestoneMulti;
+    // Sum base multipliers (Items Normal, Level, Job, House, Role Nerfed, Milestone)
+    const baseRaw = itemData.normal + levelMulti + jobMulti + houseMulti + (roleIncomeMulti * 0.5) + milestoneMulti;
     const cappedBase = Math.min(baseRaw, maxCap);
 
     // Final result: Capped Base + Legendary (uncapped) + Event (uncapped)
@@ -185,7 +185,7 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
     // Specific case for fishing which is handled both by incomeBuff and specialized fishIncome
     if (options.category === 'fish' && event.fishIncome) eventBonus += event.fishIncome;
 
-    const total = cappedBase + itemData.legendary + eventBonus;
+    const total = cappedBase + itemData.legendary + eventBonus + marriageMulti;
 
     return {
         total,
