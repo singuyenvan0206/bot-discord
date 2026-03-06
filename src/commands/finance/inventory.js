@@ -23,8 +23,6 @@ module.exports = {
         const getCategories = () => {
             const cats = {
                 'summary': { name: t('inventory.info', lang), items: [] },
-                'tool': { name: t('inventory.categories.tool', lang), items: [] },
-                'bait': { name: t('inventory.categories.bait', lang), items: [] },
                 'income': { name: t('inventory.categories.income', lang), items: [] },
                 'daily': { name: t('inventory.categories.daily', lang), items: [] },
                 'gamble': { name: t('inventory.categories.gamble', lang), items: [] },
@@ -207,15 +205,14 @@ module.exports = {
             const categories = getCategories();
             const row1 = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('inv_summary').setLabel('📊').setStyle(category === 'summary' ? ButtonStyle.Success : ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('inv_tool').setLabel('🎣').setStyle(category === 'tool' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.tool.items.length === 0),
                 new ButtonBuilder().setCustomId('inv_income').setLabel('💼').setStyle(category === 'income' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.income.items.length === 0),
                 new ButtonBuilder().setCustomId('inv_gamble').setLabel('🎲').setStyle(category === 'gamble' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.gamble.items.length === 0),
-                new ButtonBuilder().setCustomId('inv_social').setLabel('💞').setStyle(category === 'social' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.social.items.length === 0)
+                new ButtonBuilder().setCustomId('inv_social').setLabel('💞').setStyle(category === 'social' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.social.items.length === 0),
+                new ButtonBuilder().setCustomId('inv_crate').setLabel('🎁').setStyle(category === 'crate' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.crate.items.length === 0)
             );
 
             const row2 = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('inv_other').setLabel('📦').setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.other.items.length === 0),
-                new ButtonBuilder().setCustomId('inv_crate').setLabel('🎁').setStyle(category === 'crate' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.crate.items.length === 0)
+                new ButtonBuilder().setCustomId('inv_other').setLabel('📦').setStyle(category === 'other' ? ButtonStyle.Success : ButtonStyle.Secondary).setDisabled(categories.other.items.length === 0)
             );
 
             const components = [row1, row2];
