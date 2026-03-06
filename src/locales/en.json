@@ -76,8 +76,9 @@
         "refund": "\nBet has been refunded.",
         "turn_footer": "Turn: {{user}} ({{symbol}})",
         "end_footer": "Game Over",
-        "timeout": "⌛ Game has timed out!",
-        "challenge_timeout": "⌛ Challenge time has expired."
+        "timeout": "⌛ Poker game timed out!",
+        "challenge_timeout": "⌛ Challenge time has expired.",
+        "raid_cancelled": "🚔 **RAIDED!** The poker game was cancelled because players were caught by police!"
     },
     "memory": {
         "title": "🧠 Memory Match",
@@ -151,7 +152,32 @@
     },
     "gamble": {
         "max_bet": "❌ The maximum bet is **{{max}}** coins!",
-        "min_bet": "❌ The minimum bet is **{{min}}** coins!"
+        "min_bet": "❌ The minimum bet is **{{min}}** coins!",
+        "raid_alert": "🚨 **POLICE RAID!** Your game has been confiscated, you've been fined **{{amount}}** coins! 🚔"
+    },
+    "events": {
+        "current_event_title": "🌐 Current Global Event",
+        "no_event": "No event active currently.",
+        "rotate_success": "✅ Event rotated successfully!",
+        "event_list_title": "📜 Global Events List",
+        "market_boom": "Market Boom",
+        "market_boom_desc": "Increases all income by 25%.",
+        "fishing_season": "Fishing Season",
+        "fishing_season_desc": "Increases luck (1.5x) and income (0.5x) for fishing.",
+        "hacker_era": "Hacker Era",
+        "hacker_era_desc": "Increases minigame rewards by 50%.",
+        "police_patrol": "Police Patrol",
+        "police_patrol_desc": "Increases work salary for police by 50%.",
+        "criminal_night": "Criminal Night",
+        "criminal_night_desc": "Increases crime and robbery rewards by 50%.",
+        "golden_harvest": "Golden Harvest",
+        "golden_harvest_desc": "Increases luck and work rewards for farmers.",
+        "trader_heaven": "Trader Heaven",
+        "trader_heaven_desc": "Increases business profit for traders.",
+        "police_raid": "Police Crackdown",
+        "police_raid_desc": "Greatly increases the chance of being raided by police during gambling.",
+        "ends_in": "Ends in: `{{time}}`",
+        "next_event": "Next Event: **{{event}}**"
     },
     "daily": {
         "cooldown": "❌ You can claim your daily reward in **{{time}}**.",

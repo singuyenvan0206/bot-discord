@@ -19,8 +19,8 @@ const getJobMilestoneBonus = (user, type, options = {}) => {
     if (type === 'income') {
         if (job === 'police' && (category === 'work' || category === 'search')) return points * 0.1;
         if (job === 'criminal' && (category === 'crime' || category === 'rob')) return points * 0.1;
-        if (job === 'hacker' && category === 'minigame') return points * 0.1;
-        if (job === 'trader' && category === 'business') return points * 0.1;
+        if (job === 'hacker' && category === 'minigame') return points * 0.25; // Buffed from 0.1
+        if (job === 'trader' && category === 'business') return points * 0.20; // Buffed from 0.1
     }
 
     if (type === 'gamble') {
@@ -173,7 +173,7 @@ async function getMultiplierBreakdown(memberOrId, type = 'income', guildId = nul
     const cappedBase = Math.min(baseRaw, maxCap);
 
     // Final result: Capped Base + Legendary (uncapped) + Event (uncapped)
-    const event = await require('./eventSystem').getCurrentEvent();
+    const event = await require('./eventSystem').getCurrentEvent(actualGuildId);
     let eventBonus = 0;
     if (event.incomeBuff) eventBonus += event.incomeBuff;
     if (event.jobMatch === user.job) {

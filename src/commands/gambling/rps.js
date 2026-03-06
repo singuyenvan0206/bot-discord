@@ -53,6 +53,9 @@ module.exports = {
             if (user.balance < bet) return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
             if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
             await db.removeBalance(message.guild.id, user.id, bet);
+
+            const { checkForGambleRaid } = require('../../utils/economy');
+            if (await checkForGambleRaid(message, bet)) return;
         } else if (bet < 0) {
             return message.reply(`❌ ${t('common.invalid_amount', lang)}`);
         }

@@ -71,6 +71,11 @@ module.exports = {
 
             await db.removeBalance(i.guild.id, message.author.id, bet);
 
+            const { checkForGambleRaid } = require('../../utils/economy');
+            if (await checkForGambleRaid(message, bet)) {
+                return i.update({ embeds: [], components: [], content: '🚔 RAIDED!' }).catch(() => { });
+            }
+
             // Grant Action XP
             await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);
 

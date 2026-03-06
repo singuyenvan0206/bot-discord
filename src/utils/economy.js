@@ -61,48 +61,31 @@ function calculateNetWorth(userData) {
 async function addHouseProfit(context, amount) {
     if (!amount || amount <= 0) return;
 
-    const client = context.client || context;
-    if (!client.user) return;
+    const guildId = context.guild?.id || context.guildId;
+    if (!guildId) return;
 
-    const botId = client.user.id;
     const db = require('../database');
-    const { addXp, assignRandomJob } = require('./leveling');
-    const { getLanguage, t } = require('./i18n');
-    const { EmbedBuilder } = require('discord.js');
-    const config = require('../config');
+    const { calculateLevel } = require('./leveling');
 
-    // Add balance to bot
-    await db.addBalance(botId, amount);
+    // Get current bot stats for this guild
+    const currentBalance = await db.getGuildSetting(guildId, 'bot_balance', 0);
+    const currentXp = await db.getGuildSetting(guildId, 'bot_xp', 0);
+    const currentLevel = await db.getGuildSetting(guildId, 'bot_level', 0);
+
+    // Update balance
+    const newBalance = currentBalance + amount;
+    await db.setGuildSetting(guildId, 'bot_balance', newBalance);
 
     // Grant XP to bot: 1 XP per 10 profit (min 5, max 50)
-    const xpAmount = Math.max(5, Math.min(50, Math.floor(amount / 10)));
-    const { reachedLevel20 } = await addXp(botId, xpAmount);
+    const xpGain = Math.max(5, Math.min(50, Math.floor(amount / 10)));
+    const newXp = currentXp + xpGain;
+    const newLevel = calculateLevel(newXp);
 
-    if (reachedLevel20) {
-        const guildId = context.guild?.id || context.guildId || null;
-        const lang = await getLanguage(botId, guildId);
-        const job = await assignRandomJob(botId, guildId, lang);
-        const channel = context.channel || (context.interaction && context.interaction.channel) || context.client?.channels?.cache?.get(context.channelId);
+    await db.setGuildSetting(guildId, 'bot_xp', newXp);
 
-        if (channel && channel.send) {
-            const embed = new EmbedBuilder()
-                .setTitle(t('job.milestone_title', lang))
-                .setDescription(`**${client.user.username}** ${t('job.milestone_desc', lang)}`)
-                .addFields({
-                    name: t('job.name_field', lang),
-                    value: t('job.milestone_assigned', lang, {
-                        job: job.name,
-                        icon: job.config.icon,
-                        fact: job.fact,
-                        prefix: config.PREFIX
-                    })
-                })
-                .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
-                .setColor(job.config.color || '#f1c40f')
-                .setTimestamp();
-
-            channel.send({ embeds: [embed] }).catch(() => { });
-        }
+    if (newLevel > currentLevel) {
+        await db.setGuildSetting(guildId, 'bot_level', newLevel);
+        // We can add a "Bot Level Up" message here if needed, but the user didn't explicitly ask for it.
     }
 }
 
@@ -135,4 +118,50 @@ async function getMaxBet(userId) {
     return maxBet;
 }
 
-module.exports = { parseAmount, calculateNetWorth, addHouseProfit, getMaxBet };
+/**
+ * Checks for a police raid during gambling activities.
+ * @param {object} message Discord message object.
+ * @param {number} bet The amount currently bet.
+ * @returns {Promise<boolean>} True if raid occurred, false otherwise.
+ */
+async function checkForGambleRaid(message, bet) {
+    if (!bet || bet <= 0) return false;
+
+    const { getCurrentEvent } = require('./eventSystem');
+    const { getLanguage, t } = require('./i18n');
+    const db = require('../database');
+    const config = require('../config');
+
+    const event = await getCurrentEvent(message.guild.id);
+    const baseChance = config.ECONOMY.GAMBLE_RAID_BASE_CHANCE || 0.005;
+
+    let chance = baseChance;
+    let penaltyMulti = config.ECONOMY.GAMBLE_RAID_PENALTY || 2.5;
+
+    if (event.id === 'police_raid') {
+        chance *= (event.raidChanceMultiplier || 15.0);
+        penaltyMulti *= (event.penaltyMultiplier || 1.5);
+    }
+
+    if (Math.random() < chance) {
+        const penalty = Math.floor(bet * penaltyMulti);
+        await db.removeBalance(message.guild.id, message.author.id, penalty);
+        await addHouseProfit(message, penalty);
+
+        const lang = await getLanguage(message.author.id, message.guild.id);
+        const { EmbedBuilder } = require('discord.js');
+
+        const embed = new EmbedBuilder()
+            .setTitle('🚔 POLICE RAID!')
+            .setDescription(t('gamble.raid_alert', lang, { amount: penalty.toLocaleString() }))
+            .setColor(config.COLORS.ERROR)
+            .setTimestamp();
+
+        await message.reply({ embeds: [embed] });
+        return true;
+    }
+
+    return false;
+}
+
+module.exports = { parseAmount, calculateNetWorth, addHouseProfit, getMaxBet, checkForGambleRaid };

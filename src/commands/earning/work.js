@@ -50,7 +50,7 @@ module.exports = {
         let { total, bonus, percent } = await calculateReward(baseReward, message.member, 'income', { category: 'work' });
 
 
-        // Farmer Interaction: Bumper Crop (20% chance)
+        // Farmer Interaction: Bumper Crop (15% chance for 1.5x bonus)
         let bumperMsg = '';
         if (user.job === 'farmer' && Math.random() < 0.15) {
             const extra = Math.floor(total * 0.5); // 1.5x total
@@ -59,13 +59,22 @@ module.exports = {
             bumperMsg = t('work.bumper_crop', lang);
         }
 
-        // Police Interaction: Overtime (40% chance +1500 flat)
+        // Police Interaction: Overtime (40% chance +2500 flat)
         let overtimeMsg = '';
-        if (user.job === 'police' && Math.random() < 0.30) {
-            const extra = 500;
+        if (user.job === 'police' && Math.random() < 0.40) {
+            const extra = 2500;
             total += extra;
             bonus += extra;
             overtimeMsg = t('work.overtime', lang);
+        }
+
+        // Teacher Interaction: Lesson Plan (30% chance +15% total reward)
+        let lessonMsg = '';
+        if (user.job === 'teacher' && Math.random() < 0.30) {
+            const extra = Math.floor(total * 0.15);
+            total += extra;
+            bonus += extra;
+            lessonMsg = `\n📚 **Kế hoạch bài giảng:** Bạn đã chuẩn bị bài kỹ lưỡng, nhận thêm **+15%** lương!`;
         }
 
         await db.addBalance(message.guild.id, message.author.id, total);
@@ -78,6 +87,7 @@ module.exports = {
 
         if (bumperMsg) msg += bumperMsg;
         if (overtimeMsg) msg += overtimeMsg;
+        if (lessonMsg) msg += lessonMsg;
 
         await message.reply(msg);
     }

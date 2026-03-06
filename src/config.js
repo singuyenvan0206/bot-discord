@@ -79,13 +79,16 @@ module.exports = {
         HOUSE_DISTRIBUTION_INTERVAL: 21600, // 6 hours in seconds
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins
         DEFAULT_COOLDOWN: 3,
+        MIN_BET: 50,
+        GAMBLE_RAID_BASE_CHANCE: 0.005, // 0.5% base chance per bet
+        GAMBLE_RAID_PENALTY: 2.5, // 2.5x bet as fine
         JOBS: {
-            police: { id: 'police', numericId: 1, bonus: 0.1, color: '#3498db', icon: '👮' },
-            criminal: { id: 'criminal', numericId: 2, bonus: 0.1, color: '#e74c3c', icon: '🥷' },
+            police: { id: 'police', numericId: 1, bonus: 0.35, color: '#3498db', icon: '👮' },
+            criminal: { id: 'criminal', numericId: 2, bonus: 0.40, color: '#e74c3c', icon: '🥷' },
             farmer: { id: 'farmer', numericId: 3, bonus: 0.1, color: '#f1c40f', icon: '👨‍🌾', luck: 1.5 },
-            hacker: { id: 'hacker', numericId: 4, bonus: 0.1, color: '#27ae60', icon: '👨‍💻' },
-            trader: { id: 'trader', numericId: 5, bonus: 0.1, color: '#f39c12', icon: '📈' },
-            teacher: { id: 'teacher', numericId: 6, bonus: 0.10, color: '#95a5a6', icon: '👩‍🏫' }
+            hacker: { id: 'hacker', numericId: 4, bonus: 0.30, color: '#27ae60', icon: '👨‍💻' },
+            trader: { id: 'trader', numericId: 5, bonus: 0.45, color: '#f39c12', icon: '📈' },
+            teacher: { id: 'teacher', numericId: 6, bonus: 0.25, color: '#95a5a6', icon: '👩‍🏫' }
         },
         LEVELING: {
             XP_MULTIPLIER: 1, // Lowered for slower progression

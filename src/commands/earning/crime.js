@@ -28,10 +28,10 @@ module.exports = {
         const isCriminal = user.job === 'criminal';
         const isHacker = user.job === 'hacker';
         let successRate = await db.getGuildSetting(message.guild.id, 'crime_rate', config.ECONOMY.CRIME_SUCCESS_RATE);
-        successRate += (isCriminal ? 0.1 : 0); // Base criminal bonus
+        successRate += (isCriminal ? 0.20 : 0); // Buffed criminal bonus from 0.1 to 0.2
 
-        // Hacker Synergy: +15% success rate bonus
-        if (isHacker) successRate += 0.15;
+        // Hacker Synergy: +25% success rate bonus (Buffed from 0.15)
+        if (isHacker) successRate += 0.25;
 
         const isSuccess = Math.random() < successRate;
         const actions = t('crime.actions', lang);
@@ -50,10 +50,10 @@ module.exports = {
             const maxReward = await db.getGuildSetting(message.guild.id, 'crime_max', config.ECONOMY.CRIME_MAX_REWARD);
             let reward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            // Hacker Interaction: 20% chance to double reward
+            // Hacker Interaction: 30% chance to double reward (Buffed from 20%)
             let hackedMsg = '';
-            if (isHacker && Math.random() < 0.2) {
-                reward *= 2;
+            if (isHacker && Math.random() < 0.30) {
+                reward *= 2.5; // Buffed multiplier from 2.0x to 2.5x
                 hackedMsg = t('crime.hacker_hacked', lang);
             }
 

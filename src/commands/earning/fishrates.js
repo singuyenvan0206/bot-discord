@@ -35,7 +35,7 @@ module.exports = {
 
         // Calculate total luck using centralized logic
         const { calculateFishingLuck } = require('../../utils/fishData');
-        const event = await require('../../utils/eventSystem').getCurrentEvent();
+        const event = await require('../../utils/eventSystem').getCurrentEvent(message.guild.id);
         let buffs = [];
         try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 

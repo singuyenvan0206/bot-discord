@@ -54,21 +54,30 @@ const EVENTS = {
         color: 0xF39C12,
         jobMatch: 'trader',
         businessBonus: 0.5
+    },
+    'police_raid': {
+        id: 'police_raid',
+        icon: '🚔',
+        color: 0x2C3E50,
+        raidChanceMultiplier: 15.0, // 15x higher chance during event
+        penaltyMultiplier: 1.5 // 1.5x higher penalty
     }
 };
 
-async function getCurrentEvent() {
-    const eventId = await db.getGlobalSetting('current_event', 'none');
-    const startTime = await db.getGlobalSetting('event_start_time', '0');
-    const duration = await db.getGlobalSetting('event_duration', '0');
+async function getCurrentEvent(guildId) {
+    if (!guildId) return EVENTS['none'];
+
+    const eventId = await db.getGuildSetting(guildId, 'current_event', 'none');
+    const startTime = await db.getGuildSetting(guildId, 'event_start_time', '0');
+    const duration = await db.getGuildSetting(guildId, 'event_duration', '0');
 
     const event = EVENTS[eventId] || EVENTS['none'];
     const now = Math.floor(Date.now() / 1000);
     const expiresAt = parseInt(startTime) + parseInt(duration);
 
     if (eventId !== 'none' && now > expiresAt) {
-        await rotateEvent();
-        return getCurrentEvent();
+        await rotateEvent(guildId);
+        return getCurrentEvent(guildId);
     }
 
     return {
@@ -78,19 +87,21 @@ async function getCurrentEvent() {
     };
 }
 
-async function rotateEvent() {
+async function rotateEvent(guildId) {
+    if (!guildId) return 'none';
+
     const eventIds = Object.keys(EVENTS).filter(id => id !== 'none');
     const randomEventId = eventIds[Math.floor(Math.random() * eventIds.length)];
 
-    // Duration: 2 to 6 hours
-    const duration = (Math.floor(Math.random() * 5) + 2) * 3600;
+    // Duration: 6 hours
+    const duration = 6 * 3600;
     const now = Math.floor(Date.now() / 1000);
 
-    await db.setGlobalSetting('current_event', randomEventId);
-    await db.setGlobalSetting('event_start_time', now.toString());
-    await db.setGlobalSetting('event_duration', duration.toString());
+    await db.setGuildSetting(guildId, 'current_event', randomEventId);
+    await db.setGuildSetting(guildId, 'event_start_time', now.toString());
+    await db.setGuildSetting(guildId, 'event_duration', duration.toString());
 
-    console.log(`[EventSystem] New event started: ${randomEventId} for ${duration / 3600} hours.`);
+    console.log(`[EventSystem] Guild ${guildId}: New event started: ${randomEventId} for 6 hours.`);
     return randomEventId;
 }
 

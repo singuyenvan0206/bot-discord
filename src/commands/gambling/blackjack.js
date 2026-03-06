@@ -190,6 +190,9 @@ module.exports = {
         if (bet < minBet) return message.reply(t('gamble.min_bet', lang, { min: minBet.toLocaleString() }));
         if (bet) await db.removeBalance(message.guild.id, user.id, bet);
 
+        const { checkForGambleRaid } = require('../../utils/economy');
+        if (await checkForGambleRaid(message, bet)) return;
+
         // Grant Action XP at start
         await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 

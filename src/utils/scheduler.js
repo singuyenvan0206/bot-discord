@@ -14,11 +14,30 @@ async function initScheduler(client) {
         await processRandomEvents(client);
     }, 10800_000); // 3 hours
 
-    // Global Economy Events (Rotate if expired every 15 mins)
+    // Server Economy Events (Rotate if expired every 15 mins)
     const { getCurrentEvent } = require('./eventSystem');
-    await getCurrentEvent(); // Initial check/rotation
+
+    // Initial check for all guilds
+    try {
+        const db = require('../database');
+        const guilds = await db.queryAll('SELECT id FROM guilds');
+        for (const g of guilds) {
+            await getCurrentEvent(g.id).catch(() => { });
+        }
+    } catch (e) {
+        console.error('[Scheduler] Failed initial event check:', e);
+    }
+
     setInterval(async () => {
-        await getCurrentEvent();
+        try {
+            const db = require('../database');
+            const guilds = await db.queryAll('SELECT id FROM guilds');
+            for (const g of guilds) {
+                await getCurrentEvent(g.id).catch(() => { });
+            }
+        } catch (e) {
+            console.error('[Scheduler] Failed periodic event check:', e);
+        }
     }, 900_000); // 15 minutes
 
     // Aquarium Passive Income (Every hour)

@@ -35,6 +35,9 @@ module.exports = {
             if (bet > maxBet) return message.reply(t('common.max_bet_error', lang, { limit: maxBet.toLocaleString() }));
             if (bet < 10) return message.reply(t('common.min_bet_error', lang, { limit: '10' }));
             await db.removeBalance(message.guild.id, user.id, bet);
+
+            const { checkForGambleRaid } = require('../../utils/economy');
+            if (await checkForGambleRaid(message, bet)) return;
         }
 
         // Grant Action XP

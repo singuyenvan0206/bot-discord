@@ -204,6 +204,32 @@ module.exports = {
                 gameStarted = true;
                 lobbyCollector.stop('started');
 
+                // Police Raid Check when game starts
+                const { checkForGambleRaid } = require('../../utils/economy');
+                for (const p of players) {
+                    if (!p.isBot) {
+                        // We use a mock message-like object for the check
+                        const mockMsg = {
+                            author: p.member.user,
+                            member: p.member,
+                            guild: i.guild,
+                            reply: (content) => i.channel.send(content)
+                        };
+                        if (await checkForGambleRaid(mockMsg, p.chips)) {
+                            // If raided, player loses chips and game can't start if it was the host or if no one left
+                            removePlayer(p.id);
+                        }
+                    }
+                }
+
+                if (players.length < 2) {
+                    gameStarted = false;
+                    for (const p of players) {
+                        if (!p.isBot) await db.addBalance(i.guild.id, p.id, p.chips);
+                    }
+                    return i.channel.send(t('poker.raid_cancelled', lang));
+                }
+
                 // Create Thread for the game to prevent "drifting"
                 if (message.guild.members.me.permissions.has('CreatePublicThreads')) {
                     try {

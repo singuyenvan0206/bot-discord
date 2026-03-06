@@ -37,30 +37,39 @@ module.exports = {
 
         const { total, bonus, percent } = await calculateReward(reward, message.member, 'income', { category: 'search' });
 
-        // Job Bonus: Hacker Data Mine (35% chance for 2x)
+        // Job Bonus: Hacker Data Mine (40% chance for 2x)
         let dataMineMsg = '';
-        if (user.job === 'hacker' && Math.random() < 0.35) {
+        if (user.job === 'hacker' && Math.random() < 0.40) {
             const extra = total;
             total += extra;
             bonus += extra;
             dataMineMsg = t('search.data_mine', lang);
         }
 
-        // Hacker Interaction: Data Breach (15% chance +2000-5000 flat)
+        // Hacker Interaction: Data Breach (20% chance +5000-10000 flat)
         let dataBreachMsg = '';
-        if (user.job === 'hacker' && Math.random() < 0.15) {
-            const extra = Math.floor(Math.random() * 3001) + 2000;
+        if (user.job === 'hacker' && Math.random() < 0.20) {
+            const extra = Math.floor(Math.random() * 5001) + 5000;
             total += extra;
             dataBreachMsg = t('search.data_breach', lang, { amount: extra.toLocaleString() });
         }
 
-        // Job Bonus: Trader Market Tip (+1200 flat)
+        // Job Bonus: Trader Market Tip (+3500 flat)
         let marketTipMsg = '';
         if (user.job === 'trader') {
-            const extra = 1200;
+            const extra = 3500;
             total += extra;
             bonus += extra;
             marketTipMsg = t('search.market_tip', lang);
+        }
+
+        // Police Interaction: Crime Scene Investigation (25% chance +2000 flat)
+        let csiMsg = '';
+        if (user.job === 'police' && Math.random() < 0.25) {
+            const extra = 2000;
+            total += extra;
+            bonus += extra;
+            csiMsg = `\n🔍 **Khám nghiệm hiện trường:** Bạn tìm thấy vật chứng quan trọng, nhận thêm **+2,000** coins!`;
         }
 
         await db.addBalance(message.guild.id, message.author.id, total);
@@ -77,6 +86,7 @@ module.exports = {
         if (dataMineMsg) msg += dataMineMsg;
         if (dataBreachMsg) msg += dataBreachMsg;
         if (marketTipMsg) msg += marketTipMsg;
+        if (csiMsg) msg += csiMsg;
 
         return message.reply(msg);
     }

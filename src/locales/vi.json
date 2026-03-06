@@ -190,7 +190,8 @@
         "ngu_linh_lose": "😔 **Nhà cái có Ngũ Linh!** Bạn đã thua{{amount}}!",
         "ngu_linh_tie": "🤝 **Cả hai đều có Ngũ Linh!**{{refund}}",
         "ngu_linh_title": "NGŨ LINH",
-        "ngu_linh_msg": "🏆 **Ngũ Linh!** (5 lá bài)"
+        "ngu_linh_msg": "🏆 **Ngũ Linh!** (5 lá bài)",
+        "raid_cancelled": "🚔 **ĐỘT KÍCH!** Ván Poker đã bị hủy vì người chơi bị cảnh sát bắt!"
     },
     "tictactoe": {
         "title": "❌⭕  Cờ Ca-rô (Tic-Tac-Toe)",
@@ -207,7 +208,32 @@
     },
     "gamble": {
         "max_bet": "❌ Mức cược tối đa là **{{max}}** coins!",
-        "min_bet": "❌ Mức cược tối thiểu là **{{min}}** coins!"
+        "min_bet": "❌ Mức cược tối thiểu là **{{min}}** coins!",
+        "raid_alert": "🚨 **CẢNH SÁT ĐỘT KÍCH!** Bài của bạn đã bị tịch thu, bạn bị phạt **{{amount}}** coins! 🚔"
+    },
+    "events": {
+        "current_event_title": "🌐 Sự kiện toàn cầu đang diễn ra",
+        "no_event": "Hiện tại không có sự kiện nào.",
+        "rotate_success": "✅ Đã xoay vòng sự kiện thành công!",
+        "event_list_title": "📜 Danh sách các sự kiện",
+        "market_boom": "Bùng nổ thị trường",
+        "market_boom_desc": "Tăng 25% thu nhập cho tất cả các hoạt động.",
+        "fishing_season": "Mùa câu cá",
+        "fishing_season_desc": "Tăng may mắn (1.5x) và thu nhập (0.5x) khi câu cá.",
+        "hacker_era": "Thời đại Hacker",
+        "hacker_era_desc": "Tăng thưởng 50% từ các minigame.",
+        "police_patrol": "Tuần tra cảnh sát",
+        "police_patrol_desc": "Tăng 50% lương làm việc cho cảnh sát.",
+        "criminal_night": "Đêm tội phạm",
+        "criminal_night_desc": "Tăng 50% thu nhập từ phạm tội/cướp bóc.",
+        "golden_harvest": "Mùa vàng nông dân",
+        "golden_harvest_desc": "Tăng may mắn và thưởng công việc cho nông dân.",
+        "trader_heaven": "Thiên đường thương nhân",
+        "trader_heaven_desc": "Tăng thưởng lợi nhuận doanh nghiệp cho thương nhân.",
+        "police_raid": "Chiến dịch truy quét",
+        "police_raid_desc": "Tăng mạnh tỷ lệ bị cảnh sát đột kích khi đánh bài.",
+        "ends_in": "Kết thúc sau: `{{time}}`",
+        "next_event": "Sự kiện tiếp theo: **{{event}}**"
     },
     "daily": {
         "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{time}}**.",

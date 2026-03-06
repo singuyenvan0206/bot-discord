@@ -22,7 +22,7 @@ module.exports = {
         // Setup for fishing
         const rod = { id: '413', luck: 3.0 }; // Assume Neptune's Rod for max testing
         const bait = { id: '406', luck: 3.5 }; // Assume Golden Bait for max testing
-        const event = await require('../../utils/eventSystem').getCurrentEvent();
+        const event = await require('../../utils/eventSystem').getCurrentEvent(message.guild.id);
         let buffs = [];
         try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 

@@ -53,7 +53,7 @@ module.exports = {
         const baitName = t(`items.${bait.id}.name`, lang);
 
         // Calculate Total Luck
-        const event = await require('../../utils/eventSystem').getCurrentEvent();
+        const event = await require('../../utils/eventSystem').getCurrentEvent(message.guild.id);
         let buffs = [];
         try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
