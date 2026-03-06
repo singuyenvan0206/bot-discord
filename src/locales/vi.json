@@ -1792,6 +1792,9 @@
         "success_desc": "👮 **{{police}}** đã bắt giữ được tên tội phạm nguy hiểm **{{criminal}}**! Chính phủ đã thưởng cho bạn {{emoji}} **{{amount}}** coins.",
         "prison_label": "Phán quyết",
         "prison_time": "Tù giam trong **{{time}}**. Mọi hoạt động phạm pháp sẽ bị đình chỉ.",
+        "fine_label": "Tiền phạt",
+        "xp_loss_label": "Tổn thất XP",
+        "cooldown": "⏳ Bạn cần thời gian để chuẩn bị cho cuộc vây bắt tiếp theo. Hãy quay lại sau **{{time}}**.",
         "failed": "❌ Tên tội phạm **{{user}}** đã quá xảo quyệt và trốn thoát thành công! Bạn bị trừ một ít kinh nghiệm vì sơ suất."
     },
     "hack": {

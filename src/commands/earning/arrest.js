@@ -8,12 +8,22 @@ module.exports = {
     name: 'arrest',
     aliases: ['batgiu', 'catch'],
     description: 'Bắt giữ tội phạm (Arrest a wanted criminal) - Police Only',
+    cooldown: config.ECONOMY.ARREST_COOLDOWN,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
+        const now = Math.floor(Date.now() / 1000);
 
         if (user.job !== 'police') {
             return message.reply(t('arrest.police_only', lang));
+        }
+
+        const cooldown = config.ECONOMY.ARREST_COOLDOWN;
+        const lastArrest = Number(user.last_arrest || 0);
+
+        if (now - lastArrest < cooldown) {
+            const timeLeft = cooldown - (now - lastArrest);
+            return message.reply(t('arrest.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
         }
 
         const target = message.mentions.users.first();
@@ -80,12 +90,16 @@ module.exports = {
                 )
                 .setTimestamp();
 
+            await db.updateUser(message.guild.id, message.author.id, { last_arrest: now });
+
             return message.reply({ embeds: [embed] });
         } else {
             // Failure: Criminal escapes, Police loses some respect (XP)
             const xpLoss = 20;
             const { deductXp } = require('../../utils/leveling');
             await deductXp(message.author.id, message.guild.id, xpLoss);
+
+            await db.updateUser(message.guild.id, message.author.id, { last_arrest: now });
 
             return message.reply(t('arrest.failed', lang, { user: target.username }));
         }

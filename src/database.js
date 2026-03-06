@@ -220,6 +220,7 @@ async function initSchema() {
     await safeAddColumn('users', 'wanted_level', 'INTEGER DEFAULT 0');
     await safeAddColumn('users', 'skill_data', "TEXT DEFAULT '{}'");
     await safeAddColumn('users', 'aquarium_data', "TEXT DEFAULT '{}'");
+    await safeAddColumn('users', 'last_arrest', 'BIGINT DEFAULT 0');
 
     // ─── Automated Command Renaming Migration ─────────
     try {

@@ -72,6 +72,7 @@ module.exports = {
         SEARCH_COOLDOWN: 600, // 10 minutes
         SEARCH_MIN_REWARD: 500,
         SEARCH_MAX_REWARD: 3000,
+        ARREST_COOLDOWN: 600, // 10 minutes
         ROB_COOLDOWN: 3600, // 1 hour
         ROB_SUCCESS_CHANCE: 0.45,
         MAX_BET: 250000,

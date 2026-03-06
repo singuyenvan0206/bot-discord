@@ -1801,6 +1801,9 @@
         "success_desc": "👮 **{{police}}** has captured the dangerous criminal **{{criminal}}**! The government rewarded you with {{emoji}} **{{amount}}** coins.",
         "prison_label": "Sentence",
         "prison_time": "Imprisoned for **{{time}}**. All illegal activities are suspended.",
+        "fine_label": "Fine",
+        "xp_loss_label": "XP Loss",
+        "cooldown": "⏳ You need time to prepare for the next raid. Try again in **{{time}}**.",
         "failed": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight."
     },
     "hack": {
