@@ -151,14 +151,17 @@
         "bonus_item": " *(Includes +{{amount}} bonus (Capped {{cap}}%): {{percent}}%)*"
     },
     "gamble": {
-        "max_bet": "❌ The maximum bet is **{{max}}** coins!",
-        "min_bet": "❌ The minimum bet is **{{min}}** coins!",
-        "raid_alert": "🚨 **POLICE RAID!** Your game has been confiscated, you've been fined **{{amount}}** coins! 🚔"
+        "max_bet": "❌ Maximum bet is **{{max}}** coins!",
+        "min_bet": "❌ Minimum bet is **{{min}}** coins!",
+        "raid_alert": "🚨 **POLICE RAID!** Your hand has been seized, you have been fined **{{amount}}** coins! 🚔"
     },
     "events": {
         "current_event_title": "🌐 Current Global Event",
         "no_event": "No event active currently.",
         "rotate_success": "✅ Event rotated successfully!",
+        "new_event_title": "📢 ECONOMIC UPDATE",
+        "new_event_announce": "A new economic event has started in this server!",
+        "event_list_title": "📜 Global Events List",
         "event_list_title": "📜 Global Events List",
         "market_boom": "Market Boom",
         "market_boom_desc": "Increases all income by 25%.",

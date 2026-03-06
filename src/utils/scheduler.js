@@ -22,7 +22,7 @@ async function initScheduler(client) {
         const db = require('../database');
         const guilds = await db.queryAll('SELECT id FROM guilds');
         for (const g of guilds) {
-            await getCurrentEvent(g.id).catch(() => { });
+            await getCurrentEvent(g.id, client).catch(() => { });
         }
     } catch (e) {
         console.error('[Scheduler] Failed initial event check:', e);
@@ -33,7 +33,7 @@ async function initScheduler(client) {
             const db = require('../database');
             const guilds = await db.queryAll('SELECT id FROM guilds');
             for (const g of guilds) {
-                await getCurrentEvent(g.id).catch(() => { });
+                await getCurrentEvent(g.id, client).catch(() => { });
             }
         } catch (e) {
             console.error('[Scheduler] Failed periodic event check:', e);

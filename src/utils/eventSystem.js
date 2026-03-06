@@ -64,7 +64,9 @@ const EVENTS = {
     }
 };
 
-async function getCurrentEvent(guildId) {
+const { EmbedBuilder } = require('discord.js');
+
+async function getCurrentEvent(guildId, client = null) {
     if (!guildId) return EVENTS['none'];
 
     const eventId = await db.getGuildSetting(guildId, 'current_event', 'none');
@@ -76,8 +78,8 @@ async function getCurrentEvent(guildId) {
     const expiresAt = parseInt(startTime) + parseInt(duration);
 
     if (eventId !== 'none' && now > expiresAt) {
-        await rotateEvent(guildId);
-        return getCurrentEvent(guildId);
+        await rotateEvent(guildId, client);
+        return getCurrentEvent(guildId, client);
     }
 
     return {
@@ -87,7 +89,7 @@ async function getCurrentEvent(guildId) {
     };
 }
 
-async function rotateEvent(guildId) {
+async function rotateEvent(guildId, client = null) {
     if (!guildId) return 'none';
 
     const eventIds = Object.keys(EVENTS).filter(id => id !== 'none');
@@ -102,6 +104,40 @@ async function rotateEvent(guildId) {
     await db.setGuildSetting(guildId, 'event_duration', duration.toString());
 
     console.log(`[EventSystem] Guild ${guildId}: New event started: ${randomEventId} for 6 hours.`);
+
+    // Announcement Logic
+    if (client) {
+        try {
+            const guild = await client.guilds.fetch(guildId).catch(() => null);
+            if (guild) {
+                const guildData = await db.getGuild(guildId);
+                const channelId = guildData.dist_channel;
+
+                if (channelId) {
+                    const channel = await guild.channels.fetch(channelId).catch(() => null);
+                    if (channel && channel.isTextBased()) {
+                        const { t } = require('./i18n');
+                        const lang = guildData.language || 'vi';
+                        const event = EVENTS[randomEventId];
+
+                        const embed = new EmbedBuilder()
+                            .setTitle(t('event.new_event_title', lang))
+                            .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
+                            .setDescription(`${t('event.new_event_announce', lang)}\n\n${event.icon} **${t('event.name_' + randomEventId, lang)}**\n${t('event.desc_' + randomEventId, lang)}`)
+                            .setColor(event.color)
+                            .addFields({ name: '⏱️ ' + t('event.duration', lang), value: '`6h`', inline: true })
+                            .setTimestamp()
+                            .setFooter({ text: t('event.footer', lang) });
+
+                        await channel.send({ embeds: [embed] }).catch(() => { });
+                    }
+                }
+            }
+        } catch (e) {
+            console.error(`[EventSystem] Failed to send announcement for guild ${guildId}:`, e);
+        }
+    }
+
     return randomEventId;
 }
 

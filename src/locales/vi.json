@@ -1737,6 +1737,8 @@
     "event": {
         "none_desc": "🌐 Hiện tại không có sự kiện kinh tế đặc biệt nào diễn ra.",
         "duration": "Thời gian còn lại",
+        "new_event_title": "📢 BIẾN ĐỘNG KINH TẾ",
+        "new_event_announce": "Một sự kiện kinh tế mới vừa bắt đầu tại máy chủ!",
         "footer": "Sử dụng các lệnh kinh tế để tận dụng sự kiện!",
         "name_market_boom": "Bùng Nổ Thị Trường",
         "desc_market_boom": "🚀 Nền kinh tế thế giới đang phát triển thần tốc! Thu nhập từ **tất cả các nguồn** được tăng thêm **25%**.",
@@ -1751,7 +1753,9 @@
         "name_golden_harvest": "Mùa Vàng Thu Hoạch",
         "desc_golden_harvest": "🌾 Thời tiết thuận lợi cho đồng ruộng! Nông Dân nhận được thêm **40%** lương và tăng nhẹ tỉ lệ câu cá.",
         "name_trader_heaven": "Thiên Đường Thương Nhân",
-        "desc_trader_heaven": "💹 Thị trường chứng khoán xanh sàn! Thương Nhân nhận được thêm **50%** lợi nhuận từ các cơ sở kinh doanh."
+        "desc_trader_heaven": "💹 Thị trường chứng khoán xanh sàn! Thương Nhân nhận được thêm **50%** lợi nhuận từ các cơ sở kinh doanh.",
+        "name_police_raid": "Chiến Dịch Truy Quét",
+        "desc_police_raid": "🚔 Cảnh sát đang thực hiện chiến dịch quét sạch tệ nạn! Tỉ lệ bị đột kích khi đánh bài tăng **15x** và tiền phạt tăng **50%**."
     },
     "museum": {
         "title": "Bảo Tàng Hải Dương",

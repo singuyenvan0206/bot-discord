@@ -15,7 +15,7 @@ module.exports = {
 
         // Admin/Owner can rotate event
         if (args[0] === 'rotate' && (message.author.id === config.OWNER_ID || (message.member && message.member.permissions.has('Administrator')))) {
-            const nextEventId = await rotateEvent(guildId);
+            const nextEventId = await rotateEvent(guildId, message.client);
             return message.reply(t('events.rotate_success', lang, { event: t(`events.${nextEventId}`, lang) }));
         }
 
