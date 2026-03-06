@@ -893,6 +893,9 @@
         "income_bonus": "Income Bonus",
         "gamble_bonus": "Luck Bonus",
         "daily_bonus": "Daily Bonus",
+        "fishing_gear": "Fishing Equipment",
+        "fishing_rod": "Rod",
+        "fishing_bait": "Bait",
         "buff_activated": "\n✨ **Buff activated:** +{{percent}}% {{type}} for **{{duration}}**!"
     },
     "lottery": {

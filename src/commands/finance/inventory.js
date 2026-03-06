@@ -73,6 +73,7 @@ module.exports = {
                 // Global Multipliers (Capped 300% or 600%)
                 const targetMember = message.guild.members.cache.get(target.id) || target;
                 const { getMultiplierBreakdown, getXpMultiplier, getDynamicCap } = require('../../utils/multiplier');
+                const { RODS, BAITS } = require('../../utils/fishData');
 
                 const incData = await getMultiplierBreakdown(targetMember, 'income', message.guild.id);
                 const gamData = await getMultiplierBreakdown(targetMember, 'gamble', message.guild.id);
@@ -94,6 +95,28 @@ module.exports = {
                     value: `**${t('inventory.income_bonus', lang)}:** ${renderBonus(incData)} / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.gamble_bonus', lang)}:** ${renderBonus(gamData)} / ${maxCapPercent.toLocaleString()}%\n**${t('inventory.xp_bonus', lang)}:** +${xpBonus.toLocaleString()}% / 1500%`,
                     inline: true
                 });
+
+                // Fishing Gear (Rod + Baits)
+                let fishingLines = [];
+                const ownedRods = RODS.filter(r => inv[r.id]).map(r => {
+                    const item = SHOP_ITEMS.find(si => String(si.id) === r.id);
+                    return item ? `${item.emoji} ${t(`items.${item.id}.name`, lang)}` : null;
+                }).filter(Boolean);
+                if (ownedRods.length > 0) fishingLines.push(`**${t('inventory.fishing_rod', lang) || 'Cần câu'}:** ${ownedRods.join(', ')}`);
+
+                const ownedBaits = BAITS.filter(b => inv[b.id] > 0).map(b => {
+                    const item = SHOP_ITEMS.find(si => String(si.id) === b.id);
+                    return item ? `${item.emoji} **${inv[b.id].toLocaleString()}**` : null;
+                }).filter(Boolean);
+                if (ownedBaits.length > 0) fishingLines.push(`**${t('inventory.fishing_bait', lang) || 'Mồi câu'}:** ${ownedBaits.join(' | ')}`);
+
+                if (fishingLines.length > 0) {
+                    embed.addFields({
+                        name: `🎣 ${t('inventory.fishing_gear', lang) || 'Trang bị Câu cá'}`,
+                        value: fishingLines.join('\n'),
+                        inline: false
+                    });
+                }
 
                 // Active Buffs — aggregated by type
                 let activeBuffs = [];
