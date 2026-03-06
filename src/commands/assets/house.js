@@ -45,6 +45,8 @@ module.exports = {
             }
 
             await db.removeBalance(message.author.id, tier.price);
+            const { addHouseProfit } = require('../../utils/economy');
+            await addHouseProfit(message, tier.price);
             await db.updateUser(message.author.id, { house_id: tierId });
 
             return message.reply(t('housing.buy_success', lang, {
@@ -105,6 +107,8 @@ module.exports = {
                 }
 
                 await db.removeBalance(message.author.id, totalCost);
+                const { addHouseProfit } = require('../../utils/economy');
+                await addHouseProfit(message, totalCost);
                 await db.updateUser(message.author.id, { house_data: JSON.stringify(newHouseData) });
 
                 return message.reply(t('housing.decorate_all_success', lang, { price: totalCost.toLocaleString() }) || `✅ Bạn đã mua toàn bộ nội thất còn thiếu với giá **${totalCost.toLocaleString()}** coins!`);
@@ -128,6 +132,8 @@ module.exports = {
             }
 
             await db.removeBalance(message.author.id, interior.price);
+            const { addHouseProfit } = require('../../utils/economy');
+            await addHouseProfit(message, interior.price);
             houseData[interiorId] = true;
             await db.updateUser(message.author.id, { house_data: JSON.stringify(houseData) });
 

@@ -226,85 +226,96 @@ async function processHouseDistribution(client) {
     const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
     const { t, getLanguage } = require('./i18n');
 
-    const now = Math.floor(Date.now() / 1000);
-    const interval = config.ECONOMY.HOUSE_DISTRIBUTION_INTERVAL;
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    const targetHours = [0, 6, 12, 18];
+
+    if (!targetHours.includes(currentHour)) return;
+
+    const dateStr = currentTime.toISOString().split('T')[0];
+    const windowKey = `${dateStr}-${currentHour}`;
     const botId = client.user.id;
 
-    const lastDistStr = await db.getGlobalSetting('last_house_distribution', '0');
-    const lastDist = parseInt(lastDistStr);
-
-    if (now - lastDist < interval) return;
-
-    const botUser = await db.getGlobalUser(botId);
-    const balance = botUser.balance || 0;
-
-    if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) return;
-
-    const userCount = await db.getUserCount();
-    if (userCount <= 1) return;
-
-    // Exclude bot from distribution; split only among human users.
-    const humanCount = Math.max(1, userCount - 1);
-    const amountPerUser = Math.floor(balance / humanCount);
-    if (amountPerUser <= 0) return;
-
-    // Distribute balance globally
-    await db.distributeBalanceRandomly(balance, botId);
-    await db.setGlobalSetting('last_house_distribution', now.toString());
-
-    // Announce to all guilds
     for (const guild of client.guilds.cache.values()) {
-        const lang = await getLanguage(null, guild.id);
-        const guildData = await db.getGuild(guild.id);
+        try {
+            const guildId = guild.id;
+            const lastDistKey = await db.getGuildSetting(guildId, 'last_house_distribution_window', '');
 
-        let channel = null;
-        if (guildData.dist_channel) {
-            channel = guild.channels.cache.get(guildData.dist_channel);
-        }
+            if (lastDistKey === windowKey) continue;
 
-        if (!channel) {
-            const botMember = guild.members.me;
-            const textChannels = guild.channels.cache.filter(c =>
-                c.isTextBased() &&
-                c.permissionsFor(botMember)?.has('ViewChannel') &&
-                c.permissionsFor(botMember)?.has('SendMessages')
-            );
+            const balance = await db.getGuildSetting(guildId, 'bot_balance', 0);
+            if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) continue;
 
-            if (guild.systemChannel && guild.systemChannel.permissionsFor(botMember)?.has('SendMessages')) {
-                channel = guild.systemChannel;
-            } else {
-                channel = textChannels.find(c => c.name.includes('chat') || c.name.includes('general')) || textChannels.first();
+            // Get count of human users in this guild
+            const users = await db.getTopUsers(guildId, 1000, 'balance');
+            const humans = users.filter(u => u.id !== botId);
+            const humanCount = humans.length;
+
+            if (humanCount <= 0) continue;
+
+            // Distribute balance only within this guild
+            await db.distributeBalanceRandomly(balance, botId, guildId);
+
+            // Reset bot balance for this guild
+            await db.setGuildSetting(guildId, 'bot_balance', 0);
+            await db.setGuildSetting(guildId, 'last_house_distribution_window', windowKey);
+            await db.setGuildSetting(guildId, 'last_house_distribution', Math.floor(Date.now() / 1000).toString()); // Keep legacy for compatibility
+
+            // Announce to this guild
+            const lang = await getLanguage(null, guildId);
+            const guildData = await db.getGuild(guildId);
+
+            let channel = null;
+            if (guildData.dist_channel) {
+                channel = guild.channels.cache.get(guildData.dist_channel);
             }
-        }
 
-        if (channel && channel.send) {
-            // ─── Channel Blacklist Check ───
-            const guildBlacklistRaw = await db.getGuildSetting(guild.id, 'blacklisted_channels', '[]');
-            let guildBlacklist = [];
-            try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+            if (!channel) {
+                const botMember = guild.members.me;
+                const textChannels = guild.channels.cache.filter(c =>
+                    c.isTextBased() &&
+                    c.permissionsFor(botMember)?.has('ViewChannel') &&
+                    c.permissionsFor(botMember)?.has('SendMessages')
+                );
 
-            if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) continue;
+                if (guild.systemChannel && guild.systemChannel.permissionsFor(botMember)?.has('SendMessages')) {
+                    channel = guild.systemChannel;
+                } else {
+                    channel = textChannels.find(c => c.name.includes('chat') || c.name.includes('general')) || textChannels.first();
+                }
+            }
 
-            const embed = new EmbedBuilder()
-                .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
-                .setDescription(t('economy.distribution_random_desc', lang, {
-                    total: balance.toLocaleString(),
-                    count: humanCount,
-                    emoji: config.EMOJIS.COIN
-                }) || `Bot đã chia ngẫu nhiên **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng may mắn!`)
-                .setColor(config.COLORS.SUCCESS)
-                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 256 }) })
-                .setTimestamp();
+            if (channel && channel.send) {
+                // ─── Channel Blacklist Check ───
+                const guildBlacklistRaw = await db.getGuildSetting(guildId, 'blacklisted_channels', '[]');
+                let guildBlacklist = [];
+                try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
 
-            const checkButton = new ButtonBuilder()
-                .setCustomId('check_dist_reward')
-                .setLabel(t('economy.check_reward_button', lang) || "Xem phần thưởng")
-                .setEmoji('🎁')
-                .setStyle(ButtonStyle.Success);
+                if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) continue;
 
-            const row = new ActionRowBuilder().addComponents(checkButton);
+                const embed = new EmbedBuilder()
+                    .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
+                    .setDescription(t('economy.distribution_random_desc', lang, {
+                        total: balance.toLocaleString(),
+                        count: humanCount,
+                        emoji: config.EMOJIS.COIN
+                    }) || `Bot đã chia ngẫu nhiên **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng may mắn!`)
+                    .setColor(config.COLORS.SUCCESS)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 256 }) })
+                    .setTimestamp();
 
-            channel.send({ embeds: [embed], components: [row] }).catch(() => { });
+                const checkButton = new ButtonBuilder()
+                    .setCustomId('check_dist_reward')
+                    .setLabel(t('economy.check_reward_button', lang) || "Xem phần thưởng")
+                    .setEmoji('🎁')
+                    .setStyle(ButtonStyle.Success);
+
+                const row = new ActionRowBuilder().addComponents(checkButton);
+
+                channel.send({ embeds: [embed], components: [row] }).catch(() => { });
+            }
+        } catch (err) {
+            console.error(`[Timer] Error in per-guild distribution for ${guild.id}:`, err);
         }
     }
 }
@@ -401,4 +412,6 @@ module.exports = {
     finishGiveaway,
     startTimer,
     stopTimer,
+    processHouseDistribution,
+    processLotteryDraw,
 };

@@ -17,6 +17,7 @@ module.exports = {
 
 
         startTimer(client);
+        db.setBotId(client.user.id);
 
 
         client.user.setActivity(`${client.user.username} $help | $rob | $giveaway`, { type: ActivityType.Listening });

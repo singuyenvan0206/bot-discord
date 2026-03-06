@@ -355,11 +355,38 @@ async function getBonusEntries(giveawayId, userId) {
 
 // ─── Global Scope: User / Economy ──────────────────────────────────────────────
 
-// ─── Global Scope: User / Economy ──────────────────────────────────────────────
+let botId = null;
+async function setBotId(id) {
+    botId = String(id);
+}
 
 async function getUser(userId, guildId = null) {
     if (!userId) return null;
     const uId = String(userId);
+
+    // ─── Special Handling for Bot Profile (Per-Server) ───
+    if (guildId && uId === botId) {
+        const balance = await getGuildSetting(guildId, 'bot_balance', 0);
+        const xp = await getGuildSetting(guildId, 'bot_xp', 0);
+        const level = await getGuildSetting(guildId, 'bot_level', 0);
+
+        return {
+            id: uId,
+            balance: Number(balance),
+            xp: Number(xp),
+            level: Number(level),
+            job: 'bot',
+            inventory: '{}',
+            active_buffs: '[]',
+            purchased_roles: '[]',
+            language: 'vi',
+            fish_ledger: '{}',
+            bounty: 0,
+            wanted_level: 0,
+            skill_data: '{}',
+            aquarium_data: '{}'
+        };
+    }
 
     let user = await queryOne('SELECT * FROM users WHERE id = ?', [uId]);
     if (!user) {
@@ -431,17 +458,28 @@ async function updateGlobalUser(userId, updates) {
 }
 
 async function addBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
-    let userId, amount;
+    let guildId, userId, amount;
     if (amountOnly !== undefined) {
+        guildId = guildIdOrUserId;
         userId = userIdOrAmount;
         amount = amountOnly;
     } else {
+        guildId = null;
         userId = guildIdOrUserId;
         amount = userIdOrAmount;
     }
-    amount = parseInt(amount, 10);
-    if (isNaN(amount)) amount = 0;
-    return await addGlobalBalance(userId, amount);
+
+    const uId = String(userId);
+    const amt = parseInt(amount, 10);
+    if (isNaN(amt) || amt === 0) return;
+
+    if (guildId && uId === botId) {
+        const current = await getGuildSetting(guildId, 'bot_balance', 0);
+        await setGuildSetting(guildId, 'bot_balance', Number(current) + amt);
+        return;
+    }
+
+    return await addGlobalBalance(uId, amt);
 }
 
 async function addGlobalBalance(userId, amount) {
@@ -451,13 +489,21 @@ async function addGlobalBalance(userId, amount) {
     await execute('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, uId]);
 }
 
-async function addGlobalXp(userId, amount) {
+async function addGlobalXp(userId, xpAmount, guildId = null) {
     if (!userId) return;
     const uId = String(userId);
-    // Atomic update for XP. We return the NEW values to handle leveling logic in JS safely.
-    // However, since we're using Postgres, we can use RETURNING.
-    const row = await queryOne('UPDATE users SET xp = xp + ? WHERE id = ? RETURNING xp, level', [amount, uId]);
-    return row;
+
+    if (guildId && uId === botId) {
+        const currentXp = await getGuildSetting(guildId, 'bot_xp', 0);
+        const currentLevel = await getGuildSetting(guildId, 'bot_level', 0);
+        const newXp = Number(currentXp) + xpAmount;
+        await setGuildSetting(guildId, 'bot_xp', newXp);
+
+        return { xp: newXp, level: currentLevel };
+    }
+
+    const result = await queryOne('UPDATE users SET xp = xp + ? WHERE id = ? RETURNING xp, level', [xpAmount, uId]);
+    return result;
 }
 
 async function setGlobalLevel(userId, level) {
@@ -467,17 +513,28 @@ async function setGlobalLevel(userId, level) {
 }
 
 async function removeBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
-    let userId, amount;
+    let guildId, userId, amount;
     if (amountOnly !== undefined) {
+        guildId = guildIdOrUserId;
         userId = userIdOrAmount;
         amount = amountOnly;
     } else {
+        guildId = null;
         userId = guildIdOrUserId;
         amount = userIdOrAmount;
     }
-    amount = parseInt(amount, 10);
-    if (isNaN(amount)) amount = 0;
-    return await removeGlobalBalance(userId, amount);
+
+    const uId = String(userId);
+    const amt = parseInt(amount, 10);
+    if (isNaN(amt) || amt === 0) return;
+
+    if (guildId && uId === botId) {
+        const current = await getGuildSetting(guildId, 'bot_balance', 0);
+        await setGuildSetting(guildId, 'bot_balance', Math.max(0, Number(current) - amt));
+        return;
+    }
+
+    return await removeGlobalBalance(uId, amt);
 }
 
 async function removeGlobalBalance(userId, amount) {
@@ -626,42 +683,45 @@ async function getUserCount() {
     return row ? Number(row.count) : 0;
 }
 
-async function distributeBalanceToAll(amount, excludeUserId = null) {
-    if (excludeUserId) {
-        await execute('UPDATE users SET balance = COALESCE(balance, 0) + ? WHERE id != ?', [amount, excludeUserId]);
-        await execute('UPDATE users SET balance = 0 WHERE id = ?', [excludeUserId]);
-    } else {
-        await execute('UPDATE users SET balance = COALESCE(balance, 0) + ?', [amount]);
-    }
-}
+async function distributeBalanceRandomly(totalAmount, excludeUserId = null, guildId = null) {
+    if (totalAmount <= 0) return [];
 
-async function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
     // Fetch both id and balance to calculate wealth-based weights
-    let users = await queryAll('SELECT id, balance FROM users' + (excludeUserId ? ' WHERE id != ?' : ''), excludeUserId ? [excludeUserId] : []);
+    let users = [];
+    if (guildId) {
+        users = await queryAll(`
+            SELECT users.id, users.balance 
+            FROM users 
+            JOIN user_guilds ON users.id = user_guilds.userId 
+            WHERE user_guilds.guildId = $1 ${excludeUserId ? 'AND users.id != $2' : ''}
+        `, excludeUserId ? [guildId, excludeUserId] : [guildId]);
+    } else {
+        users = await queryAll('SELECT id, balance FROM users' + (excludeUserId ? ' WHERE id != $1' : ''), excludeUserId ? [excludeUserId] : []);
+    }
 
     if (users.length === 0) return [];
 
     /**
      * Inverse Wealth Weighting Logic:
      * weight = random(0.5, 1.5) / log10(balance + 100)
-     * This ensures that as balance increases, the weight decreases,
-     * but everyone still has a chance to receive something.
      */
     let weights = users.map(u => {
-        const balance = Math.max(0, u.balance || 0);
-        // Using log10(balance + 100) to ensure weight exists even for 0 balance players
-        // and doesn't drop too sharply at very high balances.
+        const balance = Math.max(0, Number(u.balance) || 0);
         const wealthFactor = Math.log10(balance + 100);
-        const randomFactor = 0.5 + Math.random(); // Random between 0.5 and 1.5
+        const randomFactor = 0.5 + Math.random();
         return randomFactor / wealthFactor;
     });
 
     let totalWeight = weights.reduce((a, b) => a + b, 0);
+    if (totalWeight === 0) totalWeight = 1;
 
     let distributed = 0;
     const results = [];
 
-    await execute('UPDATE users SET last_dist_amount = 0' + (excludeUserId ? ' WHERE id != ?' : ''), excludeUserId ? [excludeUserId] : []);
+    // Clear previous distribution records for involved users
+    for (const user of users) {
+        await execute('UPDATE users SET last_dist_amount = 0 WHERE id = ?', [user.id]);
+    }
 
     for (let i = 0; i < users.length; i++) {
         const user = users[i];
@@ -677,10 +737,6 @@ async function distributeBalanceRandomly(totalAmount, excludeUserId = null) {
             await execute('UPDATE users SET balance = balance + ?, last_dist_amount = ? WHERE id = ?', [amount, amount, user.id]);
             results.push({ userId: user.id, amount });
         }
-    }
-
-    if (excludeUserId) {
-        await execute('UPDATE users SET balance = 0, last_dist_amount = 0 WHERE id = ?', [excludeUserId]);
     }
 
     return results;
@@ -897,7 +953,6 @@ module.exports = {
     getGlobalSetting,
     setGlobalSetting,
     getUserCount,
-    distributeBalanceToAll,
     distributeBalanceRandomly,
     clearAllData,
     resetUser,
@@ -923,5 +978,6 @@ module.exports = {
     getAllGuildRoles,
     getGuildRole,
     getGuildSetting,
-    setGuildSetting
+    setGuildSetting,
+    setBotId
 };

@@ -121,13 +121,13 @@ async function rotateEvent(guildId, client = null) {
                         const event = EVENTS[randomEventId];
 
                         const embed = new EmbedBuilder()
-                            .setTitle(t('event.new_event_title', lang))
+                            .setTitle(t('events.new_event_title', lang))
                             .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
-                            .setDescription(`${t('event.new_event_announce', lang)}\n\n${event.icon} **${t('event.name_' + randomEventId, lang)}**\n${t('event.desc_' + randomEventId, lang)}`)
+                            .setDescription(`${t('events.new_event_announce', lang)}\n\n${event.icon} **${t('events.name_' + randomEventId, lang)}**\n${t('events.desc_' + randomEventId, lang)}`)
                             .setColor(event.color)
-                            .addFields({ name: '⏱️ ' + t('event.duration', lang), value: '`6h`', inline: true })
+                            .addFields({ name: '⏱️ ' + t('events.duration', lang), value: '`6h`', inline: true })
                             .setTimestamp()
-                            .setFooter({ text: t('event.footer', lang) });
+                            .setFooter({ text: t('events.footer', lang) });
 
                         await channel.send({ embeds: [embed] }).catch(() => { });
                     }

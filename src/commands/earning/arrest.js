@@ -53,7 +53,10 @@ module.exports = {
             // 1. Balance Fine (10% of their current balance)
             const criminalBalance = Number(criminal.balance || 0);
             const fine = Math.floor(criminalBalance * 0.10);
-            if (fine > 0) await db.removeBalance(message.guild.id, target.id, fine);
+            if (fine > 0) {
+                await db.removeBalance(message.guild.id, target.id, fine);
+                await addHouseProfit(message, fine);
+            }
 
             // 2. XP Deduction (200 XP)
             const { deductXp } = require('../../utils/leveling');
@@ -66,7 +69,6 @@ module.exports = {
             // 4. Penalty: Prison (Lockdown for 4 hours)
             // Affects: rob, crime, work, daily
             const prisonTime = 3600 * 4; // 4 hours
-            const now = Math.floor(Date.now() / 1000);
             const releaseTime = now + prisonTime;
 
             await db.execute(

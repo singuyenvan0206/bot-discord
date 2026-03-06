@@ -66,26 +66,35 @@ async function addHouseProfit(context, amount) {
 
     const db = require('../database');
     const { calculateLevel } = require('./leveling');
+    const config = require('../config');
+
+    const client = context.client || context.member?.client || (context.guild?.client);
+    if (!client) return;
+
+    const botId = client.user.id;
+
+    // Implementation of Money Burn Mechanism
+    // Only a portion of the profit goes to the Bot Fund for redistribution.
+    // The rest is "burned" (deleted from economy) to fight inflation.
+    const retentionRate = config.ECONOMY.HOUSE_RETENTION_RATE || 0.4;
+    const amountToFund = Math.floor(amount * retentionRate);
 
     // Get current bot stats for this guild
-    const currentBalance = await db.getGuildSetting(guildId, 'bot_balance', 0);
-    const currentXp = await db.getGuildSetting(guildId, 'bot_xp', 0);
-    const currentLevel = await db.getGuildSetting(guildId, 'bot_level', 0);
+    const botUser = await db.getUser(botId, guildId);
 
-    // Update balance
-    const newBalance = currentBalance + amount;
-    await db.setGuildSetting(guildId, 'bot_balance', newBalance);
+    // Update balance (only the retained portion)
+    if (amountToFund > 0) {
+        await db.addBalance(guildId, botId, amountToFund);
+    }
 
-    // Grant XP to bot: 1 XP per 10 profit (min 5, max 50)
+    // Grant XP to bot: Always based on total amount to reflect activity level
     const xpGain = Math.max(5, Math.min(50, Math.floor(amount / 10)));
-    const newXp = currentXp + xpGain;
-    const newLevel = calculateLevel(newXp);
+    const xpResult = await db.addGlobalXp(botId, xpGain, guildId);
 
-    await db.setGuildSetting(guildId, 'bot_xp', newXp);
+    const newLevel = calculateLevel(xpResult.xp);
 
-    if (newLevel > currentLevel) {
+    if (newLevel > botUser.level) {
         await db.setGuildSetting(guildId, 'bot_level', newLevel);
-        // We can add a "Bot Level Up" message here if needed, but the user didn't explicitly ask for it.
     }
 }
 

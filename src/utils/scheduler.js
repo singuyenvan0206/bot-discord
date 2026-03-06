@@ -4,8 +4,11 @@ const bizConfig = require('../config/businesses');
 async function initScheduler(client) {
     // Run business passive income check every hour
     setInterval(async () => {
-        console.log('🕒 Running business passive income scheduler...');
+        console.log('🕒 Running hourly schedulers...');
         await processPassiveIncome(client);
+        const { processHouseDistribution, processLotteryDraw } = require('./timer');
+        await processHouseDistribution(client).catch(console.error);
+        await processLotteryDraw(client).catch(console.error);
     }, 3600_000); // 1 hour
 
     // Run random events check every 3 hours
