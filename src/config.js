@@ -92,7 +92,8 @@ module.exports = {
             teacher: { id: 'teacher', numericId: 6, bonus: 0.25, color: '#95a5a6', icon: '👩‍🏫' }
         },
         LEVELING: {
-            XP_MULTIPLIER: 1, // Lowered for slower progression
+            XP_MULTIPLIER: 1.5, // 50% increase
+            XP_COOLDOWN: 15, // 15 seconds
             MILESTONE_INTERVAL: 20,
             MILESTONE_REWARD_COINS: 50000,
             MILESTONE_REWARD_ITEM_ID: 801 // Common Crate

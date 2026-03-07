@@ -3,6 +3,8 @@ const { t, getLanguage } = require('../../utils/i18n');
 const db = require('../../database');
 const config = require('../../config');
 const { formatDuration } = require('../../utils/time');
+const { addHouseProfit } = require('../../utils/economy');
+const { deductXp } = require('../../utils/leveling');
 
 module.exports = {
     name: 'arrest',
@@ -59,7 +61,6 @@ module.exports = {
             }
 
             // 2. XP Deduction (200 XP)
-            const { deductXp } = require('../../utils/leveling');
             const xpLoss = 200;
             const xpResult = await deductXp(target.id, message.guild.id, xpLoss);
 
@@ -98,7 +99,6 @@ module.exports = {
         } else {
             // Failure: Criminal escapes, Police loses some respect (XP)
             const xpLoss = 20;
-            const { deductXp } = require('../../utils/leveling');
             await deductXp(message.author.id, message.guild.id, xpLoss);
 
             await db.updateUser(message.guild.id, message.author.id, { last_arrest: now });

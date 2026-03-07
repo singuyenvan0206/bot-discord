@@ -39,7 +39,7 @@ async function addXp(memberOrId, amount, guildId = null, bypassCooldown = false)
     if (!bypassCooldown) {
         const now = Date.now();
         const lastXpGain = xpCooldowns.get(userId) || 0;
-        const xpCooldownTime = 60000; // 1 minute
+        const xpCooldownTime = (config.ECONOMY?.LEVELING?.XP_COOLDOWN || 60) * 1000;
 
         if (now - lastXpGain < xpCooldownTime) {
             return { level: 0, leveledUp: false, cooldown: true };
