@@ -30,9 +30,9 @@ const BAITS = [
 //   Carbon(1.8)+Squid(2.0)=3.8  | Titanium(2.3)+Squid(2.0)=4.3 | Neptune(3.0)+Squid(2.0)=5.0
 //   Neptune(3.0)+Golden(3.5)=6.5 (max) | Farmer x1.2 bonus
 const CATCHES = [
-    { key: 'old_boot', emoji: '👢', value: 0, weight: 800, minLuck: 0 },
-    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 800, minLuck: 0 },
-    { key: 'seaweed', emoji: '🌿', value: 2, weight: 1000, minLuck: 0 },
+    { key: 'old_boot', emoji: '👢', value: 0, weight: 600, minLuck: 0 },
+    { key: 'rusty_can', emoji: '🥫', value: 0, weight: 600, minLuck: 0 },
+    { key: 'seaweed', emoji: '🌿', value: 2, weight: 700, minLuck: 0 },
     { key: 'goldfish', emoji: '🐠', value: 15, weight: 600, minLuck: 0 },
     { key: 'bluegill', emoji: '🐟', value: 25, weight: 550, minLuck: 0 },
     { key: 'tilapia', emoji: '🐟', value: 35, weight: 500, minLuck: 0 },
@@ -104,11 +104,11 @@ function getWeightedPool(luck, userJob = null) {
         const luckAboveMin = Math.max(0, luck - c.minLuck);
 
         if (c.value === 0) {
-            // Trash: fades out but stays at healthy floor (40% of base weight)
-            w *= Math.max(0.40, 1 - luck * 0.08);
+            // Trash: fades out more aggressively to floor (25% of base weight)
+            w *= Math.max(0.25, 1 - luck * 0.10);
         } else if (c.value < 500) {
-            // Common fish: suppressed but stays at floor
-            w *= Math.max(0.20, 1 - luck * 0.05);
+            // Common fish: suppressed more aggressively to lower floor
+            w *= Math.max(0.15, 1 - luck * 0.06);
         } else if (c.value < 5000) {
             // Mid-tier: slight boost
             w *= Math.min(5, 1 + luckAboveMin * 0.10);
