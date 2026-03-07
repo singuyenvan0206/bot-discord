@@ -36,11 +36,11 @@ module.exports = {
         await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        let weights = [40, 32, 28, 26, 22, 16, 12];
+        let weights = [150, 110, 90, 70, 45, 32, 22];
 
-        // Trader Interaction: Market Manipulation (Better odds)
+        // Trader Interaction: Market Manipulation (Even better odds)
         if (user.job === 'trader') {
-            weights = [30, 28, 25, 25, 25, 22, 15]; // Even better odds for Trader
+            weights = [110, 100, 90, 80, 60, 45, 35];
         }
 
         const totalWeight = weights.reduce((a, b) => a + b, 0);
@@ -68,8 +68,8 @@ module.exports = {
         const twoMatch = !!twoMatchSymbol;
 
         // Giữ nguyên phần thưởng khổng lồ
-        // Phân cấp phần thưởng hấp dẫn hơn (RTP ~95%)
-        const multiplierMap = { '7️⃣': 185, '💎': 95, '⭐': 52, '🍉': 26, '🍊': 13, '🍋': 9, '🍒': 6 };
+        // Payout overhaul: Frequent small wins (RTP ~100%)
+        const multiplierMap = { '7️⃣': 150, '💎': 80, '⭐': 40, '🍉': 5, '🍊': 3, '🍋': 2, '🍒': 1.5 };
 
         let result, color;
         let payout = 0;
@@ -79,15 +79,15 @@ module.exports = {
             payout = bet ? bet * mult : 0;
             color = r2[0] === '7️⃣' ? 0xFF9900 : config.COLORS.GAMBLE_WIN;
         } else if (twoMatch) {
-            // Giảm độ khó: Phân cấp phần thưởng cho 2 hình khớp (RTP ~95%)
+            // Giảm độ khó: Phân cấp phần thưởng cho 2 hình khớp (Hòa vốn hoặc thắng nhẹ)
             let mult = 0.25;
-            if (twoMatchSymbol === '7️⃣') mult = 1.8;
-            else if (twoMatchSymbol === '💎') mult = 1.7;
-            else if (twoMatchSymbol === '⭐') mult = 1.6;
-            else if (twoMatchSymbol === '🍉') mult = 1.4;
-            else if (twoMatchSymbol === '🍊') mult = 1.2;
-            else if (twoMatchSymbol === '🍋') mult = 1.1;
-            else if (twoMatchSymbol === '🍒') mult = 1.0;
+            if (twoMatchSymbol === '7️⃣') mult = 10;
+            else if (twoMatchSymbol === '💎') mult = 8;
+            else if (twoMatchSymbol === '⭐') mult = 5;
+            else if (twoMatchSymbol === '🍉') mult = 2.5;
+            else if (twoMatchSymbol === '🍊') mult = 1.8;
+            else if (twoMatchSymbol === '🍋') mult = 1.4;
+            else if (twoMatchSymbol === '🍒') mult = 1.2;
 
             if (mult >= 1.2) {
                 result = t('slots.win_small', lang);
