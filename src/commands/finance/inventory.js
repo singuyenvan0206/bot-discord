@@ -98,13 +98,13 @@ module.exports = {
                 let fishingLines = [];
                 const ownedRods = RODS.filter(r => inv[r.id]).map(r => {
                     const item = SHOP_ITEMS.find(si => String(si.id) === r.id);
-                    return item ? `${item.emoji} ${t(`items.${item.id}.name`, lang)}` : null;
+                    return item ? `${t(`items.${item.id}.name`, lang)}` : null;
                 }).filter(Boolean);
                 if (ownedRods.length > 0) fishingLines.push(`**${t('inventory.fishing_rod', lang) || 'Cần câu'}:** ${ownedRods.join(', ')}`);
 
                 const ownedBaits = BAITS.filter(b => inv[b.id] > 0).map(b => {
                     const item = SHOP_ITEMS.find(si => String(si.id) === b.id);
-                    return item ? `${item.emoji} **${inv[b.id].toLocaleString()}**` : null;
+                    return item ? `${t(`items.${item.id}.name`, lang)}: **${inv[b.id].toLocaleString()}**` : null;
                 }).filter(Boolean);
                 if (ownedBaits.length > 0) fishingLines.push(`**${t('inventory.fishing_bait', lang) || 'Mồi câu'}:** ${ownedBaits.join(' | ')}`);
 
