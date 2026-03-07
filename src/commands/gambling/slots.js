@@ -36,11 +36,11 @@ module.exports = {
         await addXp(message.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, message.guild.id);
 
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
-        let weights = [50, 35, 30, 20, 15, 10, 5];
+        let weights = [45, 35, 30, 25, 20, 12, 8];
 
         // Trader Interaction: Market Manipulation (Better odds)
         if (user.job === 'trader') {
-            weights = [40, 30, 30, 25, 20, 12, 8]; // Reduced low symbols, increased high
+            weights = [35, 30, 25, 25, 25, 18, 12]; // Reduced low symbols, increased high
         }
 
         const totalWeight = weights.reduce((a, b) => a + b, 0);
@@ -60,7 +60,12 @@ module.exports = {
 
         // Check middle row (main payline)
         const allMatch = r2[0] === r2[1] && r2[1] === r2[2];
-        const twoMatch = r2[0] === r2[1] || r2[1] === r2[2] || r2[0] === r2[2];
+        let twoMatchSymbol = null;
+        if (!allMatch) {
+            if (r2[0] === r2[1] || r2[0] === r2[2]) twoMatchSymbol = r2[0];
+            else if (r2[1] === r2[2]) twoMatchSymbol = r2[1];
+        }
+        const twoMatch = !!twoMatchSymbol;
 
         // Giữ nguyên phần thưởng khổng lồ
         const multiplierMap = { '7️⃣': 150, '💎': 75, '⭐': 40, '🍉': 20, '🍊': 10, '🍋': 5, '🍒': 3 };
@@ -73,11 +78,22 @@ module.exports = {
             payout = bet ? bet * mult : 0;
             color = r2[0] === '7️⃣' ? 0xFF9900 : config.COLORS.GAMBLE_WIN;
         } else if (twoMatch) {
-            // Giảm độ khó: Hoàn lại 1/4 tiền cược (0.25x) thay vì thua trắng mặt
-            const mult = 0.25;
-            result = t('slots.win_small', lang);
+            // Giảm độ khó: Phân cấp phần thưởng cho 2 hình khớp
+            let mult = 0.25;
+            if (['7️⃣', '💎', '⭐'].includes(twoMatchSymbol)) {
+                mult = 1.2; // Thắng nhỏ (1.2x)
+                result = t('slots.win_small', lang);
+                color = config.COLORS.GAMBLE_WIN;
+            } else if (['🍉', '🍊'].includes(twoMatchSymbol)) {
+                mult = 1.0; // Hòa vốn (1.0x)
+                result = t('slots.win_small', lang);
+                color = 0xAAAAAA; // Màu xám cho hòa vốn
+            } else {
+                mult = 0.6; // Thua nhẹ (0.6x)
+                result = t('slots.win_small', lang);
+                color = config.COLORS.GAMBLE_LOSS;
+            }
             payout = bet ? Math.floor(bet * mult) : 0;
-            color = config.COLORS.GAMBLE_LOSS; // Vẫn tính là màu thua vì lỗ
         } else {
             result = t('slots.lose', lang);
             color = config.COLORS.GAMBLE_LOSS;
