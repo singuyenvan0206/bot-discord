@@ -69,12 +69,12 @@ const CATCHES = [
     { key: 'phoenix_fish', emoji: '🔥', value: 580000, weight: 20, minLuck: 6.4, buff: 616 },
     { key: 'mythical_pearl', emoji: '🔮', value: 880000, weight: 15, minLuck: 6.7 },
     { key: 'kraken', emoji: '🐙', value: 1400000, weight: 10, minLuck: 7.2 },
-    { key: 'megalodon', emoji: '🦈', value: 2800000, weight: 6, minLuck: 6.5 },
-    { key: 'thousand_year_turtle', emoji: '🐢', value: 7000000, weight: 4, minLuck: 6.8 },
-    { key: 'poseidon_trident', emoji: '🔱', value: 14000000, weight: 3, minLuck: 7.2 },
-    { key: 'ocean_dragon', emoji: '🐉', value: 28000000, weight: 1.5, minLuck: 7.5 },
-    { key: 'galaxy_whale', emoji: '🌌', value: 75000000, weight: 1.5, minLuck: 7.8 },
-    { key: 'void_leviathan', emoji: '🌀', value: 280000000, weight: 1.2, minLuck: 8.2 }
+    { key: 'megalodon', emoji: '🦈', value: 2800000, weight: 25, minLuck: 6.5 },
+    { key: 'thousand_year_turtle', emoji: '🐢', value: 7000000, weight: 20, minLuck: 6.8 },
+    { key: 'poseidon_trident', emoji: '🔱', value: 14000000, weight: 18, minLuck: 7.2 },
+    { key: 'ocean_dragon', emoji: '🐉', value: 28000000, weight: 15, minLuck: 7.5 },
+    { key: 'galaxy_whale', emoji: '🌌', value: 75000000, weight: 12, minLuck: 7.8 },
+    { key: 'void_leviathan', emoji: '🌀', value: 280000000, weight: 10, minLuck: 8.2 }
 ];
 
 /**
@@ -117,7 +117,7 @@ function getWeightedPool(luck, userJob = null) {
             w *= Math.min(15, 1 + luckAboveMin * 0.12);
         } else {
             // Rare (25k+): boost, but capped and scaled progressively
-            w *= Math.min(80, 1 + luckAboveMin * 0.18);
+            w *= Math.min(100, 1 + luckAboveMin * 0.35);
         }
 
         return { ...c, weight: w };
