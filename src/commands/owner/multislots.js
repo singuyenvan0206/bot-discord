@@ -1,9 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const config = require('../../config');
-const { t, getLanguage } = require('../../utils/i18n');
 const { calculateReward } = require('../../utils/multiplier');
-const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 
 module.exports = {
@@ -16,7 +14,6 @@ module.exports = {
             return message.reply('❌ This command is restricted to the bot owner.');
         }
 
-        const lang = await getLanguage(message.author.id, message.guild.id);
         const user = await db.getUser(message.author.id, message.guild.id);
 
         // Limits: Max 100
@@ -26,13 +23,13 @@ module.exports = {
         const maxBetLimit = await getMaxBet(message.author.id);
         const betPerSpin = args[1] ? parseAmount(args[1], user.balance, maxBetLimit) : 50;
 
-        if (isNaN(betPerSpin) || betPerSpin <= 0) return message.reply(t('common.invalid_amount', lang));
-        if (betPerSpin < 10) return message.reply(t('gamble.min_bet', lang, { min: '10' }));
-        if (betPerSpin > maxBetLimit) return message.reply(t('gamble.max_bet', lang, { max: maxBetLimit.toLocaleString() }));
+        if (isNaN(betPerSpin) || betPerSpin <= 0) return message.reply('common.invalid_amount');
+        if (betPerSpin < 10) return message.reply('gamble.min_bet', { min: '10' });
+        if (betPerSpin > maxBetLimit) return message.reply('gamble.max_bet', { max: maxBetLimit.toLocaleString() });
 
         const totalBet = count * betPerSpin;
         if (user.balance < totalBet) {
-            return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
+            return message.reply('common.insufficient_funds', { balance: user.balance.toLocaleString() });
         }
 
         // Upfront Deduction

@@ -50,7 +50,9 @@ module.exports = {
         let catchesSummary = {};
         let rareCatches = [];
         let ledger = {};
-        let newBuffs = [];
+        let activeBuffs = [];
+        try { activeBuffs = JSON.parse(user.active_buffs || '[]'); } catch { activeBuffs = []; }
+        let buffsCaughtCount = 0;
         try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
 
         for (let i = 0; i < count; i++) {
@@ -84,8 +86,14 @@ module.exports = {
                 const buffId = caughtItem.buff || mythical.buff;
                 const buffItem = SHOP_ITEMS.find(bi => bi.id === buffId);
                 if (buffItem) {
-                    const expiresAt = Math.floor(Date.now() / 1000) + buffItem.duration;
-                    newBuffs.push({ itemId: buffItem.id, expiresAt });
+                    const now = Math.floor(Date.now() / 1000);
+                    let existing = activeBuffs.find(b => b.itemId === buffItem.id);
+                    if (existing) {
+                        existing.expiresAt = Math.max(existing.expiresAt, now) + buffItem.duration;
+                    } else {
+                        activeBuffs.push({ itemId: buffItem.id, expiresAt: now + buffItem.duration });
+                    }
+                    buffsCaughtCount++;
                 }
             }
 
@@ -102,17 +110,10 @@ module.exports = {
         }
 
         // Save Data
-        if (newBuffs.length > 0) {
-            let existingBuffs = [];
-            try { existingBuffs = JSON.parse(user.active_buffs || '[]'); } catch { existingBuffs = []; }
-            const allBuffs = [...existingBuffs, ...newBuffs];
-            await db.updateUser(message.guild.id, message.author.id, {
-                fish_ledger: JSON.stringify(ledger),
-                active_buffs: JSON.stringify(allBuffs)
-            });
-        } else {
-            await db.updateUser(message.guild.id, message.author.id, { fish_ledger: JSON.stringify(ledger) });
-        }
+        await db.updateUser(message.guild.id, message.author.id, {
+            fish_ledger: JSON.stringify(ledger),
+            active_buffs: JSON.stringify(activeBuffs)
+        });
         await db.addBalance(message.guild.id, message.author.id, totalCoins);
 
         // Build Summary
@@ -135,8 +136,8 @@ module.exports = {
             embed.addFields({ name: '🌟 Rare Catches', value: Array.from(new Set(rareCatches)).join(', '), inline: false });
         }
 
-        if (newBuffs.length > 0) {
-            embed.addFields({ name: '✨ Buffs Granted', value: `\`x${newBuffs.length}\` special status effects applied!`, inline: false });
+        if (buffsCaughtCount > 0) {
+            embed.addFields({ name: '✨ Buffs Granted', value: `\`x${buffsCaughtCount}\` special status effects stacked!`, inline: false });
         }
 
         embed.setFooter({ text: `Ledger updated for ${message.author.username}` });

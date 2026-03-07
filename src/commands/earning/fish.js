@@ -162,10 +162,14 @@ module.exports = {
                 let buffs = [];
                 try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
 
-                let duration = buffItem.duration;
-                const expiresAt = Math.floor(Date.now() / 1000) + duration;
+                const now = Math.floor(Date.now() / 1000);
+                let existing = buffs.find(b => b.itemId === buffItem.id);
+                if (existing) {
+                    existing.expiresAt = Math.max(existing.expiresAt, now) + buffItem.duration;
+                } else {
+                    buffs.push({ itemId: buffItem.id, expiresAt: now + buffItem.duration });
+                }
 
-                buffs.push({ itemId: buffItem.id, expiresAt });
                 await db.updateUser(message.guild.id, message.author.id, { active_buffs: JSON.stringify(buffs) });
 
                 const buffName = t(`items.${buffId}.name`, lang);
