@@ -1857,5 +1857,9 @@
         "empty_desc": "Place some rare fish here to enjoy the view and earn passive income!",
         "fish_list": "Fish in Tank",
         "passive_title": "Passive Income"
+    },
+    "owner": {
+        "ban_success": "✅ Successfully banned user **{{user}}**!",
+        "unban_success": "✅ Successfully unbanned user **{{user}}**!"
     }
 }

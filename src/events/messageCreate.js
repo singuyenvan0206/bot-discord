@@ -67,6 +67,12 @@ module.exports = {
             }
         }
 
+        // Global Ban Check
+        const user = await db.getUser(message.author.id, message.guild.id);
+        if (user.banned && !await db.isOwner(message.author.id)) {
+            return; // Silently ignore banned users or reply with a message
+        }
+
         // const { client } = message;
         const command = client.commands.get(commandName) ||
             client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));

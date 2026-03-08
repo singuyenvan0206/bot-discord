@@ -1853,5 +1853,9 @@
         "empty_desc": "Hãy thả vài con cá quý hiếm vào để ngắm nhìn và kiếm thêm thu nhập nhé!",
         "fish_list": "Danh sách cá trong bể",
         "passive_title": "Thu nhập thụ động"
+    },
+    "owner": {
+        "ban_success": "✅ Đã ban người dùng **{{user}}** thành công!",
+        "unban_success": "✅ Đã bỏ ban cho người dùng **{{user}}**!"
     }
 }

@@ -112,6 +112,7 @@ async function initSchema() {
             active_buffs TEXT DEFAULT '[]',
             purchased_roles TEXT DEFAULT '[]',
             warnings INTEGER DEFAULT 0,
+            banned BOOLEAN DEFAULT FALSE,
             language TEXT DEFAULT NULL,
             server_data TEXT DEFAULT '{}',
             last_dist_amount BIGINT DEFAULT 0,
@@ -221,6 +222,7 @@ async function initSchema() {
     await safeAddColumn('users', 'skill_data', "TEXT DEFAULT '{}'");
     await safeAddColumn('users', 'aquarium_data', "TEXT DEFAULT '{}'");
     await safeAddColumn('users', 'last_arrest', 'BIGINT DEFAULT 0');
+    await safeAddColumn('users', 'banned', 'BOOLEAN DEFAULT FALSE');
 
     // ─── Automated Command Renaming Migration ─────────
     try {
@@ -383,6 +385,7 @@ async function getUser(userId, guildId = null) {
             fish_ledger: '{}',
             bounty: 0,
             wanted_level: 0,
+            banned: false,
             skill_data: '{}',
             aquarium_data: '{}'
         };
@@ -400,6 +403,7 @@ async function getUser(userId, guildId = null) {
                 id: uId, balance: 0, xp: 0, level: 0,
                 last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_freelance: 0, last_beg: 0, last_search: 0, last_dist_amount: 0,
                 job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null,
+                banned: false,
                 fish_ledger: '{}', bounty: 0, wanted_level: 0, skill_data: '{}', aquarium_data: '{}'
             };
         }
