@@ -8,7 +8,9 @@ module.exports = {
     async execute(message, args) {
         if (!args[0]) return message.reply('❌ HD: `!unban <ID/Mention>`');
 
-        const targetId = args[0].replace(/[<@!>]/g, '');
+        const target = message.mentions.users.first();
+        const targetId = target ? target.id : args[0].replace(/[<@!>]/g, '');
+
         const user = await db.getUser(targetId);
 
         if (!user) return message.reply('❌ User not found in database.');

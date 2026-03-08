@@ -941,6 +941,7 @@ module.exports = {
     getUser,
     getGlobalUser,
     updateUser,
+    updateGlobalUser,
     addBalance,
     removeBalance,
     addGlobalXp,
