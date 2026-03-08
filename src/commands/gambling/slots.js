@@ -127,7 +127,8 @@ module.exports = {
 
             await db.addBalance(message.guild.id, user.id, totalPayout);
             if (totalPayout > bet) {
-                result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: (totalPayout - bet).toLocaleString() });
+                const profit = totalPayout - bet;
+                result += t('slots.won_coins', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString(), profit: profit.toLocaleString() });
             } else {
                 result += t('slots.partial_refund', lang, { emoji: config.EMOJIS.COIN, amount: totalPayout.toLocaleString() });
             }
@@ -135,10 +136,15 @@ module.exports = {
             if (bonusAmount > 0) {
                 result += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent, emoji: config.EMOJIS.COIN });
             }
+
+            // Transfer net loss to house profit if any (e.g. partial refund)
+            if (totalPayout < bet) {
+                await addHouseProfit(message, bet - totalPayout);
+            }
         } else if (bet) {
             result += t('slots.lost_coins', lang, { amount: bet.toLocaleString(), emoji: config.EMOJIS.COIN });
             // Transfer lost bet to bot profit
-            await addHouseProfit(message, bet); // If payout is 0, the full bet is lost
+            await addHouseProfit(message, bet);
         }
 
         const slotDisplay = [

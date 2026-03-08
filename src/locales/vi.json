@@ -101,7 +101,7 @@
     },
     "slots": {
         "title": "🎰 Máy Quay Slot",
-        "won_coins": "\n🎉 **Bạn thắng** {{amount}} {{emoji}}!",
+        "won_coins": "\n🎉 **Nhận được** {{amount}} {{emoji}}! (Lợi nhuận: **{{profit}}**)",
         "lost_coins": "\n👔 Bạn thua **{{amount}}** {{emoji}}.",
         "win_jackpot": "💰 **JACKPOT!** Ba hình **{{symbol}}**!",
         "win_small": "✨ **Thắng nhỏ!** Hai hình khớp nhau!",
@@ -1386,17 +1386,21 @@
         "footer_category": "Dùng menu bên dưới để chuyển đổi giữa các danh mục",
         "command_not_found": "Không tìm thấy lệnh **{{name}}**!",
         "categories": {
-            "earning": {
-                "label": "Nghề Nghiệp & Thu Nhập",
-                "description": "Công việc, kỹ năng nghề và hoạt động truy nã"
+            "economy": {
+                "label": "Kinh tế & Việc làm",
+                "description": "Quản lý số dư, thu nhập và sự nghiệp"
             },
-            "finance": {
-                "label": "Tài Chính & Cửa Hàng",
-                "description": "Quản lý số dư, túi đồ và mua sắm"
+            "shop": {
+                "label": "Cửa hàng & Kho đồ",
+                "description": "Mua sắm, sử dụng vật phẩm và quản lý túi đồ"
             },
             "assets": {
                 "label": "Tài Sản Cao Cấp",
                 "description": "Nhà cửa, doanh nghiệp và thùng đồ may mắn"
+            },
+            "fishing": {
+                "label": "Câu cá & Giải trí",
+                "description": "Trải nghiệm câu cá, bảo tàng và các loài sinh vật biển"
             },
             "gambling": {
                 "label": "Trò Chơi Cá Cược",

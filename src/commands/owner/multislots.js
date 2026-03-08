@@ -35,7 +35,6 @@ module.exports = {
 
         // Upfront Deduction
         await db.removeBalance(message.guild.id, user.id, totalBet);
-        await addHouseProfit(message, totalBet);
 
         // Slot Logic Setup
         const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎', '7️⃣'];
@@ -116,6 +115,12 @@ module.exports = {
         if (totalWon > 0) {
             await db.addBalance(message.guild.id, user.id, totalWon);
         }
+
+        // Tracking house profit based on net loss
+        if (totalWon < totalBet) {
+            await addHouseProfit(message, totalBet - totalWon);
+        }
+
         await addXp(message.member, totalXp, message.guild.id);
 
         // Build Summary

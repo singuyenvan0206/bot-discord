@@ -19,9 +19,10 @@ module.exports = {
 
         // 1. Dynamic Command Discovery
         const categories = {
-            earning: { label: t('help.categories.earning.label', lang), description: t('help.categories.earning.description', lang), emoji: '💼', commands: [] },
-            finance: { label: t('help.categories.finance.label', lang), description: t('help.categories.finance.description', lang), emoji: '🏦', commands: [] },
+            economy: { label: t('help.categories.economy.label', lang), description: t('help.categories.economy.description', lang), emoji: '📈', commands: [] },
+            shop: { label: t('help.categories.shop.label', lang), description: t('help.categories.shop.description', lang), emoji: '🛍️', commands: [] },
             assets: { label: t('help.categories.assets.label', lang), description: t('help.categories.assets.description', lang), emoji: '🏙️', commands: [] },
+            fishing: { label: t('help.categories.fishing.label', lang), description: t('help.categories.fishing.description', lang), emoji: '🎣', commands: [] },
             gambling: { label: t('help.categories.gambling.label', lang), description: t('help.categories.gambling.description', lang), emoji: '🎰', commands: [] },
             minigames: { label: t('help.categories.minigames.label', lang), description: t('help.categories.minigames.description', lang), emoji: '🎮', commands: [] },
             social: { label: t('help.categories.social.label', lang), description: t('help.categories.social.description', lang), emoji: '💍', commands: [] },
