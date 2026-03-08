@@ -3,6 +3,7 @@ const db = require('../../database');
 const config = require('../../config');
 const { calculateReward } = require('../../utils/multiplier');
 const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
+const { XP_AMOUNTS, addXp } = require('../../utils/leveling');
 
 module.exports = {
     name: 'multislots',

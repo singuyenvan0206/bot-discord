@@ -41,8 +41,8 @@ module.exports = {
         if (event.id === 'none') {
             embed.setDescription(`**${t('events.no_event', lang)}**`);
         } else {
-            const name = t(`events.${event.id}`, lang);
-            const desc = t(`events.${event.id}_desc`, lang);
+            const name = t(`events.name_${event.id}`, lang);
+            const desc = t(`events.desc_${event.id}`, lang);
 
             let timeStr = '';
             if (event.remaining > 0) {
@@ -64,7 +64,7 @@ module.exports = {
         // Show all possible events as info
         const eventList = Object.values(EVENTS)
             .filter(e => e.id !== 'none')
-            .map(e => `• ${e.icon} **${t(`events.${e.id}`, lang)}**: ${t(`events.${e.id}_desc`, lang)}`)
+            .map(e => `• ${e.icon} **${t(`events.name_${e.id}`, lang)}**: ${t(`events.desc_${e.id}`, lang)}`)
             .join('\n');
 
         embed.addFields({ name: t('events.event_list_title', lang), value: eventList });
