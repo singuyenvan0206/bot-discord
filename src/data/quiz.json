@@ -211,7 +211,7 @@
         "category": "🎬 Movies"
     },
     {
-        "emojis": "🦈🌊😱⛵🩸",
+        "emojis": "🦈🌊🩸🐟🐚",
         "answers": [
             "jaws",
             "shark"
@@ -512,7 +512,7 @@
         "category": "🎵 Songs"
     },
     {
-        "emojis": "🦋✨🎶🌪️🏰",
+        "emojis": "🦋🌻🌼🌿🌸",
         "answers": [
             "butterfly",
             "wings"
@@ -543,7 +543,7 @@
         "category": "🎵 Songs"
     },
     {
-        "emojis": "🍽️🍕🇮🇹🧀🍝",
+        "emojis": "🍕🧀🥤🍕🍕",
         "answers": [
             "pizza"
         ],
@@ -560,7 +560,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍽️🍣🇯🇵🥢🍱",
+        "emojis": "🍣🍱🥢🍣🍣",
         "answers": [
             "sushi"
         ],
@@ -592,7 +592,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍦🍫🍓🍨🥄",
+        "emojis": "🍦🍨🍧🍡🍦",
         "answers": [
             "ice cream",
             "sundae"
@@ -600,7 +600,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🧁🎂🎉🕯️🍰",
+        "emojis": "🍰🧁🎂🥯🍫",
         "answers": [
             "birthday cake",
             "cake",
@@ -609,7 +609,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🥟🇨🇳🥢🍵🎋",
+        "emojis": "🥟🥢🥡🏮🥟",
         "answers": [
             "dumpling",
             "dumplings",
@@ -650,7 +650,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦈🦈🦈🦈🌊",
+        "emojis": "🦈🌊🩸🐟🐚",
         "answers": [
             "shark",
             "great white shark"
@@ -658,21 +658,21 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐧❄️🇦🇶🥚👣",
+        "emojis": "🐧❄️🇦🇶🧊🐧",
         "answers": [
             "penguin"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦁👑🥩🔥",
+        "emojis": "🦁👑🏜️🌅🐆",
         "answers": [
             "lion"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦅🏔️🇺🇸🎣🦅",
+        "emojis": "🦅🏔️🇺🇸🎣🍃",
         "answers": [
             "bald eagle",
             "eagle"
@@ -680,7 +680,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🐙🐙🐙🐙🌊",
+        "emojis": "🐙🌊🐚🦑🦐",
         "answers": [
             "octopus"
         ],
@@ -694,7 +694,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐢🌊🐚🏖️🐢",
+        "emojis": "🐢🌊🐚🏖️🐚",
         "answers": [
             "sea turtle",
             "turtle"
@@ -717,7 +717,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦊❄️🌲🦴🧡",
+        "emojis": "🦊🌲❄️🍂🍁",
         "answers": [
             "fox",
             "arctic fox"
@@ -725,7 +725,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐒🍌🌳🌿🙊",
+        "emojis": "🐒🍌🌴🌳🙊",
         "answers": [
             "monkey",
             "chimpanzee"
@@ -733,14 +733,14 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🐻🍯🌲🏕️",
+        "emojis": "🐻🍯🌲🏔️🐾",
         "answers": [
             "bear"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🐰🥕🕳️🥚",
+        "emojis": "🐰🥕🍀🥚🐇",
         "answers": [
             "rabbit",
             "bunny"
@@ -748,35 +748,35 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🐍🐍🐍🐍",
+        "emojis": "🐍🏜️🌾🍃🦂",
         "answers": [
             "snake"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🐯🔶⬛🐾",
+        "emojis": "🐯🐯🌿🌳🐆",
         "answers": [
             "tiger"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦉🦉🦉🦉",
+        "emojis": "🦉🌙🌲🕯️🦉",
         "answers": [
             "owl"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐨🌳🇦🇺🍃🐨",
+        "emojis": "🐨🌿🌳🇦🇺🍃",
         "answers": [
             "koala"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦘🐾🐾🐾",
+        "emojis": "🦘🇦🇺🏜️👜🦘",
         "answers": [
             "kangaroo"
         ],
@@ -790,14 +790,14 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦒🦒🦒🦒🌿",
+        "emojis": "🦒🍃🦒🌍🌳",
         "answers": [
             "giraffe"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦓🌾🦒🐘 ",
+        "emojis": "🦓🌿🌍🦓🦓",
         "answers": [
             "zebra"
         ],
@@ -820,7 +820,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦚🦚🦚🦚",
+        "emojis": "🦚✨🌳🦚🦚",
         "answers": [
             "peacock"
         ],
@@ -834,7 +834,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦀🌊🐚🏖️",
+        "emojis": "🦀🏖️🌊🐚🦀",
         "answers": [
             "crab"
         ],
@@ -855,21 +855,21 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🐢🐢🐢🐢🌊",
+        "emojis": "🐢🌊🐚🏖️🐚",
         "answers": [
             "turtle"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐸🍃🌊🦗",
+        "emojis": "🐸🌿💦🌾🍃",
         "answers": [
             "frog"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐝🍯🌼🌳",
+        "emojis": "🐝🍯🌻🌼🌸",
         "answers": [
             "bee"
         ],
@@ -883,14 +883,14 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🕷️🕷️🕷️🕷️",
+        "emojis": "🕷️🕸️🏚️🕸️🕷️",
         "answers": [
             "spider"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦂🏜️🏜️🦂",
+        "emojis": "🦂🏜️🌵🦂🦂",
         "answers": [
             "scorpion"
         ],
@@ -904,21 +904,21 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦌🌲🦌🍄",
+        "emojis": "🦌🌲🍄🍂🌿",
         "answers": [
             "deer"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦅🦅🦅🦅",
+        "emojis": "🦅🏔️🇺🇸🎣🍃",
         "answers": [
             "eagle"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🐫🐾🐾🐾",
+        "emojis": "🐫🏜️🌵🐪🐫",
         "answers": [
             "camel"
         ],
@@ -1047,7 +1047,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏀🏆🇺🇸⛹️‍♂️👟",
+        "emojis": "🏀🥅⛹️‍♂️👟⛹️‍♀️",
         "answers": [
             "nba",
             "basketball"
@@ -1055,7 +1055,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🎾🏟️🍓🥛🇬🇧",
+        "emojis": "🎾🏸👟🏟️🎾",
         "answers": [
             "wimbledon",
             "tennis"
@@ -1079,7 +1079,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🥊🥊👊🥊🥊",
+        "emojis": "🥊👊🤼‍♂️🥊🥊",
         "answers": [
             "boxing"
         ],
@@ -1125,7 +1125,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏀⛹️‍♂️🏀🏟️🏆",
+        "emojis": "🏀🥅⛹️‍♂️👟⛹️‍♀️",
         "answers": [
             "basketball"
         ],
@@ -1141,14 +1141,14 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "⚾🏟️🧢🍿🌭",
+        "emojis": "⚾🧢🏟️🧤⚾",
         "answers": [
             "baseball"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🥎🎾🏸🏓🏸",
+        "emojis": "🎾🏸👟🏟️🎾",
         "answers": [
             "tennis"
         ],
@@ -1162,7 +1162,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "⛳🏌️‍♂️🏌️‍♀️🏌️🟢",
+        "emojis": "🏌️‍♂️⛳🌳⛳🏌️‍♀️",
         "answers": [
             "golf"
         ],
@@ -1177,7 +1177,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🥋🥋👊🥋🥋",
+        "emojis": "🥋👊🥋🥋🥋",
         "answers": [
             "karate",
             "judo"
@@ -1185,7 +1185,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏊‍♂️🏊‍♀️💧🏊💧",
+        "emojis": "🏊‍♂️💦🏊‍♀️🩱🚿",
         "answers": [
             "swimming"
         ],
@@ -1236,14 +1236,14 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🛶🌊🛶🛶🛶",
+        "emojis": "🛶🌊🚣‍♂️🚣‍♀️🛶",
         "answers": [
             "rowing"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏹🎯🏹🏹🏹",
+        "emojis": "🏹🎯🍎🏹🎯",
         "answers": [
             "archery"
         ],
@@ -2406,7 +2406,7 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🦠😷💉🧬📉",
+        "emojis": "🦠💻☠️🦠🦠",
         "answers": [
             "pandemic",
             "covid",
@@ -2498,7 +2498,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍩☕🍫🚔🥯",
+        "emojis": "🍩☕🥐🥯🍩",
         "answers": [
             "donut",
             "doughnut"
@@ -2513,7 +2513,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🧇🍓🍯🍴🧇",
+        "emojis": "🧇🧇🫐🥞🧇",
         "answers": [
             "waffle",
             "waffles"
@@ -4007,7 +4007,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🐾🐱 yarn 🐟🏠",
+        "emojis": "🐱🧶🐟🏡🐈",
         "answers": [
             "cat"
         ],
@@ -4140,7 +4140,7 @@
         "category": "🎵 Songs"
     },
     {
-        "emojis": "🎸🎸🎸🎶🎸",
+        "emojis": "🎸🎶🎤🎹🥁",
         "answers": [
             "guitar"
         ],
@@ -4425,7 +4425,7 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🏛️🏛️🏛️🏛️🏛️",
+        "emojis": "🏛️🏺📜🍂🎭",
         "answers": [
             "ancient greece"
         ],
@@ -4467,49 +4467,49 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🍏🥕🥕🥕🥕",
+        "emojis": "🥕🌿🥗🛒🐰",
         "answers": [
             "carrot"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍏🥦🥦🥦🥦",
+        "emojis": "🥦🌿🥗🥣🥦",
         "answers": [
             "broccoli"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍏🍅🍅🍅🍅",
+        "emojis": "🍅🌿🥗🍕🥫",
         "answers": [
             "tomato"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍏🌽🌽🌽🌽",
+        "emojis": "🌽🌿🔥🍿🌽",
         "answers": [
             "corn"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍏🥔🥔🥔🥔",
+        "emojis": "🥔🌿🍟🥣🥔",
         "answers": [
             "potato"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍏🧅🧅🧅🧅",
+        "emojis": "🧅🌿🔪🥣🧅",
         "answers": [
             "onion"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍏🧄🧄🧄🧄",
+        "emojis": "🧄🌿🧄🧂🧄",
         "answers": [
             "garlic"
         ],
@@ -4538,14 +4538,14 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍽️🍔🍔🍔🍺",
+        "emojis": "🍔🍟🥤🍔🍔",
         "answers": [
             "hamburger"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍽️🌭🌭🌭🍟",
+        "emojis": "🌭🌭🥤🌭🌭",
         "answers": [
             "hot dog"
         ],
@@ -4804,14 +4804,14 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🐾🦢🦢🦢🦢",
+        "emojis": "🦢🌊🦢🌿🦢",
         "answers": [
             "swan"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐾🦜🦜🦜🦜",
+        "emojis": "🦜🌴🍍🦜🦜",
         "answers": [
             "parrot"
         ],
@@ -4938,7 +4938,7 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "📺🐶🔍👻🚐",
+        "emojis": "🐶🔍🚐🐶🐶",
         "answers": [
             "scooby-doo",
             "scooby doo"
@@ -5271,7 +5271,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🥊🥊🏆🥊",
+        "emojis": "🥊👑👊🥊🥊",
         "answers": [
             "muhammad ali"
         ],
@@ -5349,7 +5349,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🔊🔊🔊🎵",
+        "emojis": "🔊🎵📢🔊🔊",
         "answers": [
             "speaker",
             "loa"
@@ -5357,28 +5357,28 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🔌🔌🔌⚡",
+        "emojis": "🔌⚡🔋🔌🔌",
         "answers": [
             "charger"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "💾💾💾💾",
+        "emojis": "💾💾💿📼💿",
         "answers": [
             "floppy disk"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "🛸🎮🎮🎮",
+        "emojis": "🛸🎮🕹️🛸🎮",
         "answers": [
             "joystick"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "📡📡📡🌐",
+        "emojis": "📡🌐📶📡📡",
         "answers": [
             "router",
             "wi-fi",
@@ -5394,7 +5394,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "📟📟📟📟",
+        "emojis": "📟🔋📠📟📟",
         "answers": [
             "pager"
         ],
@@ -5409,7 +5409,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🔍🔍🔍🌐",
+        "emojis": "🔍🌐💻🔍🔍",
         "answers": [
             "google search"
         ],
@@ -5423,7 +5423,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "📧📧📧📧",
+        "emojis": "📧📫📬📧📧",
         "answers": [
             "gmail",
             "email"
@@ -5439,7 +5439,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🤖🤖🤖🚀",
+        "emojis": "🤖🚀💻🤖🤖",
         "answers": [
             "ai",
             "artificial intelligence"
@@ -5455,14 +5455,14 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🔐🔐🔐💻",
+        "emojis": "🔐📱💻⌨️🔐",
         "answers": [
             "password"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "💾🔌💾🔌",
+        "emojis": "💾🔌⚡💾🔌",
         "answers": [
             "usb",
             "usb drive"
@@ -5477,7 +5477,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "📦📦📦📱",
+        "emojis": "📦📱📲📦📱",
         "answers": [
             "app",
             "application"
@@ -5485,14 +5485,14 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🦠🦠🦠💻",
+        "emojis": "🦠💻☠️🦠🦠",
         "answers": [
             "virus"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "🧱🧱🧱💻",
+        "emojis": "🧱💻🔥🧱🧱",
         "answers": [
             "firewall"
         ],
@@ -5592,7 +5592,7 @@
         "category": "🌍 Countries"
     },
     {
-        "emojis": "🍟🍔🍔🍟",
+        "emojis": "🍔🍟🥤🍔🍔",
         "answers": [
             "burger",
             "hamburger"
@@ -5600,14 +5600,14 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🦐🦐🦐🌊",
+        "emojis": "🦐🌊🍤🦐🦐",
         "answers": [
             "shrimp"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🐟🐟🐟🌊",
+        "emojis": "🐟🌊🐚🐠🐡",
         "answers": [
             "fish"
         ],
@@ -5621,35 +5621,35 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🧇🧇🧇🫐",
+        "emojis": "🧇🧇🫐🥞🧇",
         "answers": [
             "waffles"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🥖🥖🥖🥖",
+        "emojis": "🥖🥖🥐🍞🥖",
         "answers": [
             "baguette"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍞🍞🍞🍞",
+        "emojis": "🍞🥐🥞🥯🍞",
         "answers": [
             "bread"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🥯🥯🥯🥯",
+        "emojis": "🥯🥯🥯🧇🥐",
         "answers": [
             "bagel"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍪🍪🍪🍪",
+        "emojis": "🍪🥛🍫🍪🍪",
         "answers": [
             "cookie",
             "cookies"
@@ -5657,28 +5657,28 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍰🍰🍰🍰",
+        "emojis": "🍰🧁🎂🥯🍫",
         "answers": [
             "cake"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🧁🧁🧁🧁",
+        "emojis": "🧁🧁🎂🥛🧁",
         "answers": [
             "cupcake"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🥧🥧🥧🥧",
+        "emojis": "🥧🍴🥣🥧🥧",
         "answers": [
             "pie"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍮🍮🍮🍮",
+        "emojis": "🍮🥄🍦🍮🍮",
         "answers": [
             "pudding"
         ],
@@ -5692,7 +5692,7 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "🐶🐶🐶🔍",
+        "emojis": "🐶🔍🚐🐶🐶",
         "answers": [
             "scooby doo"
         ],
@@ -5713,7 +5713,7 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "🐰🥕🥕🥕",
+        "emojis": "🐰🥕🥕🥕🥕",
         "answers": [
             "bugs bunny"
         ],
@@ -5727,14 +5727,14 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "🐒🍌🍌🍌",
+        "emojis": "🐒🍌🐵🐒🐒",
         "answers": [
             "curious george"
         ],
         "category": "📺 Anime"
     },
     {
-        "emojis": "🐻🍯🍯🍯",
+        "emojis": "🐻🍯🐝🐻🐻",
         "answers": [
             "winnie the pooh"
         ],
@@ -5776,7 +5776,7 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "🐕🍝🐕🍝",
+        "emojis": "🐕🍝🐾🐕🐕",
         "answers": [
             "lady and the tramp"
         ],
@@ -5797,7 +5797,7 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "🦊🏹🏹🏹",
+        "emojis": "🦊🏹🎯🦊🏹",
         "answers": [
             "robin hood"
         ],
@@ -5825,7 +5825,7 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "🐶🐶🐶🐶",
+        "emojis": "🐶🐾🐕🐩🐶",
         "answers": [
             "101 dalmatians"
         ],
@@ -5861,7 +5861,7 @@
         "category": "📺 Anime"
     },
     {
-        "emojis": "🥊🥊🥊🥊",
+        "emojis": "🥊👊🤼‍♂️🏆🥊",
         "answers": [
             "hajime no ippo"
         ],
@@ -5882,7 +5882,7 @@
         "category": "🌍 Countries"
     },
     {
-        "emojis": "🎨🎨🎨📱",
+        "emojis": "🎨🎨✨📱🎨",
         "answers": [
             "canva"
         ],
@@ -5910,21 +5910,21 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "💬💬💬🟣",
+        "emojis": "💬🟣💼💬💬",
         "answers": [
             "slack"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "🎥🎥🎥🔵",
+        "emojis": "🎥🔵💻🎥🎥",
         "answers": [
             "zoom"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "📞📞📞🟢",
+        "emojis": "📞🟢📱📞📞",
         "answers": [
             "whatsapp"
         ],
@@ -5938,14 +5938,14 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🎬🎬🎬🍿",
+        "emojis": "🎬🍿🏰🎬🎬",
         "answers": [
             "disney+"
         ],
         "category": "💻 Technology"
     },
     {
-        "emojis": "🍿🎬🎬🍿",
+        "emojis": "🍿🎬🎭🍿🍿",
         "answers": [
             "hbo max"
         ],
@@ -6032,14 +6032,14 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🔴🔴🔴🍎",
+        "emojis": "🔴🍎🩸🔴🔴",
         "answers": [
             "red"
         ],
         "category": "🔬 Science"
     },
     {
-        "emojis": "🔵🔵🔵🌊",
+        "emojis": "🔵🌊💎🔵🔵",
         "answers": [
             "blue"
         ],
@@ -6053,7 +6053,7 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🟢🟢🟢🌿",
+        "emojis": "🟢🌿🍀🟢🟢",
         "answers": [
             "green"
         ],
@@ -6067,7 +6067,7 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "⚫⚫⚫🌑",
+        "emojis": "⚫🌑💣⚫⚫",
         "answers": [
             "black"
         ],
@@ -6081,7 +6081,7 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🌍🌍🌍🌍",
+        "emojis": "🌍🌕🌌🪐✨",
         "answers": [
             "earth"
         ],
@@ -6201,7 +6201,7 @@
         "category": "🛋️ Objects"
     },
     {
-        "emojis": "🔦🔦🌑🔦",
+        "emojis": "🔦🌑🔋🔦🔦",
         "answers": [
             "flashlight"
         ],
@@ -6311,7 +6311,7 @@
         "category": "🌍 Countries"
     },
     {
-        "emojis": "🍽️🥯🧀🥓",
+        "emojis": "🥯🥯🥯🧇🥐",
         "answers": [
             "bagel"
         ],
@@ -6761,7 +6761,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍩🍫☕🧁🍰",
+        "emojis": "🍩☕🥐🥯🍩",
         "answers": [
             "donut",
             "doughnut",
@@ -6832,14 +6832,14 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦜🌴🎨🦚🌈",
+        "emojis": "🦜🌴🍍🦜🦜",
         "answers": [
             "parrot"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦋🌸🌿🏵️✨",
+        "emojis": "🦋🌻🌼🌿🌸",
         "answers": [
             "butterfly"
         ],
@@ -6854,7 +6854,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐧❄️🐣🏔️🌊",
+        "emojis": "🐧❄️🇦🇶🧊🐧",
         "answers": [
             "penguin"
         ],
@@ -6878,7 +6878,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐕‍🦺🦮🐾💙🏠",
+        "emojis": "🐶🦴🎾🏡🐕",
         "answers": [
             "dog",
             "labrador",
@@ -6887,7 +6887,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐈🐾😴🎀🌙",
+        "emojis": "🐱🧶🐟🏡🐈",
         "answers": [
             "cat"
         ],
@@ -6911,7 +6911,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦅🌊🐟✌️🏞️",
+        "emojis": "🦅🏔️🇺🇸🎣🍃",
         "answers": [
             "osprey",
             "hawk",
@@ -7007,7 +7007,7 @@
         "category": "🌍 Countries"
     },
     {
-        "emojis": "🏊🤽🌊🏆🥅",
+        "emojis": "🏊‍♂️💦🏊‍♀️🩱🚿",
         "answers": [
             "water polo",
             "swimming",
@@ -7016,7 +7016,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🥊🩲🔔🏟️🤕",
+        "emojis": "🥊👊🤼‍♂️🥊🥊",
         "answers": [
             "boxing",
             "mma",
@@ -7041,7 +7041,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🎯🪃🏹🎳⛳",
+        "emojis": "🏹🎯🍎🏹🎯",
         "answers": [
             "darts",
             "archery",
@@ -7051,7 +7051,7 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🤼‍♂️🏟️🤸💪🤛",
+        "emojis": "🥋👊🥋🥋🥋",
         "answers": [
             "wrestling",
             "judo",
@@ -7220,7 +7220,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "💬📱🔒🔑🕊️",
+        "emojis": "📞🟢📱📞📞",
         "answers": [
             "whatsapp",
             "signal",
@@ -7246,7 +7246,7 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🎨✏️🖌️🌈💻",
+        "emojis": "🎨🎨✨📱🎨",
         "answers": [
             "adobe",
             "photoshop",
@@ -7498,7 +7498,7 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "🌍🌎🌏🔄🌊",
+        "emojis": "🌍🌕🌌🪐✨",
         "answers": [
             "earth",
             "world",
@@ -7507,7 +7507,7 @@
         "category": "🔬 Science"
     },
     {
-        "emojis": "☠️🧪🧬🔬💊",
+        "emojis": "🦠💻☠️🦠🦠",
         "answers": [
             "plague",
             "virus",
@@ -7887,7 +7887,7 @@
         "category": "🎬 Movies"
     },
     {
-        "emojis": "🏹🍎🎯🌲🏰",
+        "emojis": "🦊🏹🎯🦊🏹",
         "answers": [
             "robin hood"
         ],
@@ -8082,49 +8082,49 @@
         "category": "💻 Technology"
     },
     {
-        "emojis": "🦒🌿🦒🦒🌍",
+        "emojis": "🦒🍃🦒🌍🌳",
         "answers": [
             "giraffe"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦓🦓🦓🦓🦓",
+        "emojis": "🦓🌿🌍🦓🦓",
         "answers": [
             "zebra"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐘🐘🐘🐘🐘",
+        "emojis": "🐘🌿💦🌍🐘",
         "answers": [
             "elephant"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐨🐨🐨🐨🐨",
+        "emojis": "🐨🌿🌳🇦🇺🍃",
         "answers": [
             "koala"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦘🦘🦘🦘🦘",
+        "emojis": "🦘🇦🇺🏜️👜🦘",
         "answers": [
             "kangaroo"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦌🦌🦌🦌🦌",
+        "emojis": "🦌🌲🍄🍂🌿",
         "answers": [
             "deer"
         ],
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🐝🐝🐝🐝🐝",
+        "emojis": "🐝🍯🌻🌼🌸",
         "answers": [
             "bee",
             "honey bee"
@@ -8132,7 +8132,7 @@
         "category": "🐾 Animals"
     },
     {
-        "emojis": "🦋🦋🦋🦋🦋",
+        "emojis": "🦋🌻🌼🌿🌸",
         "answers": [
             "butterfly"
         ],
@@ -8147,63 +8147,63 @@
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏀🥅🏀🏀🏀",
+        "emojis": "🏀🥅⛹️‍♂️👟⛹️‍♀️",
         "answers": [
             "basketball"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🎾🎾🎾🎾🎾",
+        "emojis": "🎾🏸👟🏟️🎾",
         "answers": [
             "tennis"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "⚾⚾⚾⚾⚾",
+        "emojis": "⚾🧢🏟️🧤⚾",
         "answers": [
             "baseball"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏐🏐🏐🏐🏐",
+        "emojis": "🏐🏖️🏐🏐🏐",
         "answers": [
             "volleyball"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏌️‍♂️🏌️‍♂️🏌️‍♂️🏌️‍♂️🏌️‍♂️",
+        "emojis": "🏌️‍♂️⛳🌳⛳🏌️‍♀️",
         "answers": [
             "golf"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🏊‍♂️🏊‍♂️🏊‍♂️🏊‍♂️🏊‍♂️",
+        "emojis": "🏊‍♂️💦🏊‍♀️🩱🚿",
         "answers": [
             "swimming"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🥊🥊🥊🥊🥊",
+        "emojis": "🥊👊🤼‍♂️🥊🥊",
         "answers": [
             "boxing"
         ],
         "category": "⚽ Sports"
     },
     {
-        "emojis": "🍕🍕🍕🍕🍕",
+        "emojis": "🍕🧀🥤🍕🍕",
         "answers": [
             "pizza"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍔🍔🍔🍔🍔",
+        "emojis": "🍔🍟🥤🍔🍔",
         "answers": [
             "hamburger",
             "burger"
@@ -8211,7 +8211,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🌭🌭🌭🌭🌭",
+        "emojis": "🌭🌭🥤🌭🌭",
         "answers": [
             "hotdog",
             "hot dog"
@@ -8219,7 +8219,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍟🍟🍟🍟🍟",
+        "emojis": "🍟🍔🥤🍟🍟",
         "answers": [
             "french fries",
             "fries"
@@ -8227,21 +8227,21 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍦🍦🍦🍦🍦",
+        "emojis": "🍦🍨🍧🍡🍦",
         "answers": [
             "ice cream"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍣🍣🍣🍣🍣",
+        "emojis": "🍣🍱🥢🍣🍣",
         "answers": [
             "sushi"
         ],
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🥟🥟🥟🥟🥟",
+        "emojis": "🥟🥢🥡🏮🥟",
         "answers": [
             "dumpling",
             "dumplings"
@@ -8249,7 +8249,7 @@
         "category": "🍽️ Food & Drinks"
     },
     {
-        "emojis": "🍩🍩🍩🍩🍩",
+        "emojis": "🍩☕🥐🥯🍩",
         "answers": [
             "donut",
             "doughnut"
