@@ -1812,7 +1812,7 @@
     "arrest": {
         "police_only": "❌ Only users with the **Police** job can perform arrests!",
         "invalid_target": "❌ You must mention a valid user to arrest.",
-        "no_bounty": "❌ This user is not wanted or has no bounty on their head.",
+        "no_bounty": "❌ **{{user}}** is not wanted or has no bounty on their head.",
         "title_success": "SUCCESSFUL ARREST",
         "success_desc": "👮 **{{police}}** has captured the dangerous criminal **{{criminal}}**! The government rewarded you with {{emoji}} **{{amount}}** coins.",
         "prison_label": "Sentence",
