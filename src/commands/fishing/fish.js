@@ -214,7 +214,7 @@ module.exports = {
             if (bonusAmount > 0) {
                 embed.addFields({
                     name: t('fish.item_bonus', lang, { amount: bonusAmount.toLocaleString(), emoji: config.EMOJIS.COIN }),
-                    value: t('fish.bonus_percent', lang, { percent: percent, cap: cap })
+                    value: t('fish.bonus_percent', lang, { amount: bonusAmount.toLocaleString(), percent: percent, cap: cap })
                 });
             }
 
