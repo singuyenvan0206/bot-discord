@@ -1882,7 +1882,7 @@
             "searching": "🔍 Đang thiết kế lệnh truy nã cho **{{user}}**...",
             "not_found": "❌ Không thể tạo lệnh truy nã lúc này. Vui lòng thử lại sau!",
             "title": "📜 LỆNH TRUY NÃ: {{user}}",
-            "description": "💰 Tiền thưởng: **{{bounty}}** {{emoji}}\n\n*Truy nã gắt gao trên toàn cõi server!*"
+            "description": "📦 Mức độ: {{stars}}\n💰 Tiền thưởng: **{{bounty}}** {{emoji}}\n⏰ Hết hạn: {{expires}}\n\n*Truy nã gắt gao trên toàn cõi server!*"
         }
     }
 }

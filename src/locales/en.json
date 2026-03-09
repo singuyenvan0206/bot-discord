@@ -1875,5 +1875,13 @@
         "provide_target": "❌ Please provide ID, ping or \"all\".",
         "ban_success": "✅ Successfully banned user **{{user}}**!",
         "unban_success": "✅ Successfully unbanned user **{{user}}**!"
+    },
+    "social": {
+        "wanted": {
+            "searching": "🔍 Designing wanted poster for **{{user}}**...",
+            "not_found": "❌ Could not generate wanted poster at this time. Please try again later!",
+            "title": "📜 WANTED: {{user}}",
+            "description": "📦 Wanted Level: {{stars}}\n💰 Bounty: **{{bounty}}** {{emoji}}\n⏰ Expires: {{expires}}\n\n*Wanted dead or alive across the server!*"
+        }
     }
 }

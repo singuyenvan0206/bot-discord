@@ -106,5 +106,21 @@ module.exports = {
         }
     },
     BLACKLISTED_CHANNELS: ['842400189830529035'],
-    OWNER_ID: '765577989663883364'
+    OWNER_ID: '765577989663883364',
+    WANTED: {
+        DURATIONS: {
+            1: 900,      // 15 minutes
+            2: 1800,     // 30 minutes
+            3: 3600,     // 1 hour
+            4: 10800,    // 3 hours
+            5: 21600     // 6 hours
+        },
+        BOUNTY_THRESHOLDS: [
+            { stars: 5, min: 10000000 }, // 10M
+            { stars: 4, min: 5000000 },  // 5M
+            { stars: 3, min: 2500000 },  // 2.5M
+            { stars: 2, min: 1000000 },  // 1M
+            { stars: 1, min: 0 }
+        ]
+    }
 };

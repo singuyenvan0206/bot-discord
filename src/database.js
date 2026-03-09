@@ -223,6 +223,7 @@ async function initSchema() {
     await safeAddColumn('users', 'aquarium_data', "TEXT DEFAULT '{}'");
     await safeAddColumn('users', 'last_arrest', 'BIGINT DEFAULT 0');
     await safeAddColumn('users', 'banned', 'BOOLEAN DEFAULT FALSE');
+    await safeAddColumn('users', 'wanted_expires_at', 'BIGINT DEFAULT 0');
 
     // ─── Automated Command Renaming Migration ─────────
     try {
