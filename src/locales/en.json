@@ -44,7 +44,8 @@
         "tax": "Tax",
         "profit": "Net Profit",
         "permanent": "Permanent",
-        "duration": "Duration"
+        "duration": "Duration",
+        "anti_spam_timeout": "⚠️ **Anti-Spam!** You have been muted for **{{duration}}** (Violation #{{count}})."
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",

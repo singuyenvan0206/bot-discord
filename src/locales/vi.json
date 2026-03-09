@@ -44,7 +44,8 @@
         "cap_reached": " (Đã đạt giới hạn tối đa!)",
         "profit": "Lợi nhuận ròng",
         "permanent": "Vĩnh viễn",
-        "duration": "Thời hạn"
+        "duration": "Thời hạn",
+        "anti_spam_timeout": "⚠️ **Anti-Spam!** Bạn đã bị tắt tiếng trong **{{duration}}** (Vi phạm lần #{{count}})."
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",

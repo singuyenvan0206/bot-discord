@@ -21,11 +21,11 @@ module.exports = {
             const tempCommand = client.commands.get(tempCommandName) ||
                 client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
 
-            const isOwner = await db.isOwner(message.author.id);
+            const isBotOwner = await db.isOwner(message.author.id);
             const isAdminCmd = tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly || tempCommand.skipXp);
 
             // Skip Chat XP if it's an owner trying to run a command (even with typos) or if it's an admin/owner/skipped command
-            if (isOwner || isAdminCmd) {
+            if (isBotOwner || isAdminCmd) {
                 shouldSkipChatXp = true;
             }
         }
@@ -81,12 +81,56 @@ module.exports = {
 
         const lang = await getLanguage(message.author.id, message.guild?.id);
 
-        if (command.ownerOnly && !await db.isOwner(message.author.id)) {
+        // ─── Anti-Spam (Command Flooding) ───
+        const isBotOwner = await db.isOwner(message.author.id);
+        const isServerOwner = message.author.id === message.guild.ownerId;
+
+        if (!isBotOwner && !isServerOwner) {
+            if (!client.spamTrack.has(message.author.id)) {
+                client.spamTrack.set(message.author.id, []);
+            }
+
+            const timestamps = client.spamTrack.get(message.author.id);
+            const nowTime = Date.now();
+            const { LIMIT, WINDOW, PUNISHMENTS } = config.ANTI_SPAM;
+            const windowMs = WINDOW * 1000;
+
+            // Remove expired timestamps
+            const validTimestamps = timestamps.filter(ts => nowTime - ts < windowMs);
+            validTimestamps.push(nowTime);
+            client.spamTrack.set(message.author.id, validTimestamps);
+
+            if (validTimestamps.length > LIMIT) {
+                try {
+                    const user = await db.getUser(message.author.id, message.guild.id);
+                    const violations = (user.spam_violations || 0) + 1;
+
+                    // Determine duration (cap at last punishment)
+                    const durationIdx = Math.min(violations - 1, PUNISHMENTS.length - 1);
+                    const durationSeconds = PUNISHMENTS[durationIdx];
+
+                    // Apply timeout
+                    await message.member.timeout(durationSeconds * 1000, `Anti-spam: Command flooding (Violation #${violations})`);
+
+                    // Increment violations in DB
+                    await db.updateUser(message.author.id, { spam_violations: violations });
+
+                    client.spamTrack.set(message.author.id, []); // Reset local track after timeout
+
+                    return message.reply(t('common.anti_spam_timeout', lang, {
+                        duration: formatDuration(durationSeconds, lang),
+                        count: violations
+                    })).catch(() => { });
+                } catch (err) {
+                    console.error('[Anti-Spam] Failed to process progressive punishment:', err);
+                }
+            }
+        }
+
+        if (command.ownerOnly && !isBotOwner) {
             return message.reply(t('common.no_permission', lang));
         }
 
-        const isServerOwner = message.author.id === message.guild.ownerId;
-        const isBotOwner = await db.isOwner(message.author.id);
         const isAdmin = message.member.permissions.has('Administrator');
 
         if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
@@ -104,9 +148,8 @@ module.exports = {
 
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-            const isOwner = await db.isOwner(message.author.id);
 
-            if (now < expirationTime && !isOwner) {
+            if (now < expirationTime && !isBotOwner) {
                 const timeLeft = (expirationTime - now) / 1000;
                 return message.reply(t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }));
             }
