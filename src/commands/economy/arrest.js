@@ -12,6 +12,9 @@ module.exports = {
     description: 'Bắt giữ tội phạm (Arrest a wanted criminal)',
     cooldown: config.ECONOMY.ARREST_COOLDOWN,
     async execute(message, args) {
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
+        const now = Math.floor(Date.now() / 1000);
 
         const cooldown = config.ECONOMY.ARREST_COOLDOWN;
         const lastArrest = Number(user.last_arrest || 0);
