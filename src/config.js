@@ -127,7 +127,7 @@ module.exports = {
         MIN_REWARD: 50000 // Minimum coins to place a manual bounty
     },
     ANTI_SPAM: {
-        LIMIT: 15,          // Number of commands
+        LIMIT: 10,          // Number of commands
         WINDOW: 10,         // Time window in seconds
         PUNISHMENTS: [600, 1800, 3600] // Durations in seconds: 10m, 30m, 60m
     }
