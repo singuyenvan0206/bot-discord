@@ -7,7 +7,9 @@ module.exports = {
     name: 'wanted',
     aliases: ['truyna', 'wnt', 'wantedlist', 'bountyboard', 'ds-truyna'],
     description: 'Xem danh sách truy nã hoặc lệnh truy nã cá nhân (Most wanted list or individual poster)',
+    detailDescription: 'Xem bảng xếp hạng Top 10 tội phạm bị truy nã gắt gao nhất hoặc xem lệnh truy nã chi tiết của một người (bao gồm tiền thưởng, số sao và thời gian hết hạn).',
     usage: '[@user]',
+    examples: ['', '@user'],
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
 

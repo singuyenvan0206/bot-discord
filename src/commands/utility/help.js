@@ -121,7 +121,8 @@ module.exports = {
                 embed.addFields({ name: t('help.subcommands_title', lang), value: subs, inline: false });
             }
 
-            embed.addFields({ name: `🔍 ${t('help.guide_title', lang)}`, value: guide.startsWith('help.guides') ? t('help.no_guide', lang) : guide, inline: false });
+            const commandDetail = command.detailDescription || (t(`help.guides.${command.name}`, lang).startsWith('help.guides') ? t('help.no_guide', lang) : t(`help.guides.${command.name}`, lang));
+            embed.addFields({ name: `🔍 ${t('help.guide_title', lang)}`, value: commandDetail.replace(/\$/g, prefix), inline: false });
 
             if (command.examples) {
                 embed.addFields({ name: t('help.examples_title', lang), value: command.examples.map(ex => `\`${prefix}${command.name} ${ex}\``).join('\n'), inline: false });

@@ -9,7 +9,9 @@ module.exports = {
     name: 'bounty',
     aliases: ['treothuong', 'bt'],
     description: 'Treo thưởng truy nã cho một người (Place a bounty on someone)',
+    detailDescription: 'Cho phép bạn dùng tiền của mình để treo thưởng lên đầu người khác. Hỗ trợ đơn vị k, m, b và có thể tùy chỉnh thời hạn truy nã (ví dụ: 1h, 30m, 1d). Nếu không nhập thời hạn, hệ thống sẽ tự động tính toán dựa trên số tiền.',
     usage: '<@user> <amount> [duration]',
+    examples: ['@user 50k', '@user 1m 2h', 'all 1h'],
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
 
