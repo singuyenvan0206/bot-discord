@@ -1876,5 +1876,13 @@
         "provide_target": "❌ Vui lòng nhập ID, ping hoặc \"all\".",
         "ban_success": "✅ Đã ban người dùng **{{user}}** thành công!",
         "unban_success": "✅ Đã bỏ ban cho người dùng **{{user}}**!"
+    },
+    "social": {
+        "wanted": {
+            "searching": "🔍 Đang thiết kế lệnh truy nã cho **{{user}}**...",
+            "not_found": "❌ Không thể tạo lệnh truy nã lúc này. Vui lòng thử lại sau!",
+            "title": "📜 LỆNH TRUY NÃ: {{user}}",
+            "description": "💰 Tiền thưởng: **{{bounty}}** {{emoji}}\n\n*Truy nã gắt gao trên toàn cõi server!*"
+        }
     }
 }
