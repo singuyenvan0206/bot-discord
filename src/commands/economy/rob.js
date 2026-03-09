@@ -30,10 +30,6 @@ module.exports = {
             return message.reply(t('rob.invalid_user', lang));
         }
 
-        if (target.id === config.OWNER_ID) {
-            return message.reply(t('rob.target_owner', lang));
-        }
-
         const victim = await db.getUser(target.id, message.guild.id);
         if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
         if ((user.balance || 0) < 100) return message.reply(t('rob.no_money_self', lang));
@@ -52,11 +48,9 @@ module.exports = {
         const hasVictimRobShield = await isProtectedFromRob(message.guild.id, target.id); // Shield of Protection (501)
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;
-        if (isCriminal) baseSuccessChance += 0.10;
 
-
-        if (isVictimPolice || hasVictimRobShield) {
-            baseSuccessChance /= 1.5;
+        if (target.id === config.OWNER_ID) {
+            baseSuccessChance = 0.10; // Owner is 10%
         }
 
         const isSuccess = Math.random() < baseSuccessChance;
