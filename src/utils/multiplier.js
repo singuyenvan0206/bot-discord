@@ -2,7 +2,7 @@ const db = require('../database');
 const SHOP_ITEMS = require('./shopItems');
 const housingConfig = require('../config/housing');
 
-const LEGENDARY_BUFF_IDS = [601, 602, 603, 604, 605, 606];
+const LEGENDARY_BUFF_IDS = [601, 602, 603, 604, 605, 606, 607, 608];
 
 const getJobMilestoneBonus = (user, type, options = {}) => {
     const points = Number(user.milestone_count || 0);
