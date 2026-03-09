@@ -913,6 +913,44 @@ async function transferUserBusiness(fromUserId, toUserId, businessId) {
     await execute('UPDATE user_businesses SET user_id = ? WHERE user_id = ? AND business_id = ?', [toUserId, fromUserId, businessId]);
 }
 
+// ─── Bulk Updates ───────────────────────────────────────────────
+
+async function addAllBalance(amount) {
+    await execute('UPDATE users SET balance = balance + ?', [amount]);
+}
+
+async function removeAllBalance(amount) {
+    await execute('UPDATE users SET balance = GREATEST(0, balance - ?)', [amount]);
+}
+
+async function addAllLevel(amount) {
+    const config = require('./config');
+    const milestoneInterval = config.ECONOMY?.LEVELING?.MILESTONE_INTERVAL || 20;
+
+    // SQL logic:
+    // 1. New Level = level + amount
+    // 2. New XP = (New Level / 0.1)^2
+    // 3. New Milestone Count = floor(New Level / interval)
+    await execute(`
+        UPDATE users 
+        SET level = level + ?,
+            xp = CAST(POWER((level + ?) / 0.1, 2) AS BIGINT),
+            milestone_count = FLOOR((level + ?) / ?)
+    `, [amount, amount, amount, milestoneInterval]);
+}
+
+async function removeAllLevel(amount) {
+    const config = require('./config');
+    const milestoneInterval = config.ECONOMY?.LEVELING?.MILESTONE_INTERVAL || 20;
+
+    await execute(`
+        UPDATE users 
+        SET level = GREATEST(0, level - ?),
+            xp = CAST(POWER(GREATEST(0, level - ?) / 0.1, 2) AS BIGINT),
+            milestone_count = FLOOR(GREATEST(0, level - ?) / ?)
+    `, [amount, amount, amount, milestoneInterval]);
+}
+
 module.exports = {
     getDb,
     saveDb,
@@ -984,5 +1022,9 @@ module.exports = {
     getGuildRole,
     getGuildSetting,
     setGuildSetting,
-    setBotId
+    setBotId,
+    addAllBalance,
+    removeAllBalance,
+    addAllLevel,
+    removeAllLevel
 };

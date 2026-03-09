@@ -8,9 +8,20 @@ module.exports = {
     aliases: ['rmm', 'rm'],
     description: 'Trừ tiền của người dùng (Remove money from user)',
     ownerOnly: true,
-    usage: '<@user> <amount>',
+    usage: '<@user|all> <amount>',
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
+
+        if (!args[0]) return message.reply(t('common.error', lang));
+
+        // Check for "all"
+        if (args[0].toLowerCase() === 'all') {
+            const amount = parseAmount(args[1]);
+            if (isNaN(amount) || amount <= 0) return message.reply(t('common.invalid_amount', lang));
+
+            await db.removeAllBalance(amount);
+            return message.reply(t('owner.removemoney_all_success', lang, { amount: amount.toLocaleString(), emoji: config.EMOJIS.COIN }));
+        }
 
         // Collect all mentioned users
         let targets = Array.from(message.mentions.users.values());
@@ -34,6 +45,6 @@ module.exports = {
         }
 
         const userList = targets.map(u => `**${u.username}**`).join(', ');
-        return message.reply(`✅ Đã trừ **${amount.toLocaleString()}** ${config.EMOJIS.COIN} của: ${userList}.`);
+        return message.reply(t('owner.removemoney_success', lang, { amount: amount.toLocaleString(), emoji: config.EMOJIS.COIN, users: userList }));
     }
 };

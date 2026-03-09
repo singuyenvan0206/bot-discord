@@ -19,7 +19,7 @@
         "unknown_id": "ID không xác định",
         "effect": "hiệu ứng",
         "none": "Không có",
-        "bonus_capped": "\n-# *(Gồm 🎁 Thưởng ({{percent}}%): +{{amount}} coins)*",
+        "bonus_capped": "\n-# *(✨ +{{amount}} coins ({{percent}}%))*",
         "hacked_msg": " (Hacked!)",
         "escaped_msg": "Đã tẩu thoát! (Phạt: {{amount}})",
         "armed_msg": " (Có vũ trang!)",
@@ -1864,6 +1864,16 @@
         "passive_title": "Thu nhập thụ động"
     },
     "owner": {
+        "addlevel_success": "✅ Đã cộng thêm **{{amount}}** cấp độ cho {{users}}.",
+        "addlevel_all_success": "✅ Đã cộng thêm **{{amount}}** cấp độ cho **TẤT CẢ** người dùng trong hệ thống (Global).",
+        "removelevel_success": "✅ Đã trừ **{{amount}}** cấp độ của {{users}}.",
+        "removelevel_all_success": "✅ Đã trừ **{{amount}}** cấp độ của **TẤT CẢ** người dùng trong hệ thống (Global).",
+        "addmoney_all_success": "✅ Đã thêm **{{amount}}** {{emoji}} cho **TẤT CẢ** người dùng trong hệ thống (Global).",
+        "removemoney_all_success": "✅ Đã trừ **{{amount}}** {{emoji}} của **TẤT CẢ** người dùng trong hệ thống (Global).",
+        "addmoney_success": "✅ Đã thêm **{{amount}}** {{emoji}} cho: {{users}}.",
+        "removemoney_success": "✅ Đã trừ **{{amount}}** {{emoji}} của: {{users}}.",
+        "invalid_level": "❌ Vui lòng nhập số level hợp lệ.",
+        "provide_target": "❌ Vui lòng nhập ID, ping hoặc \"all\".",
         "ban_success": "✅ Đã ban người dùng **{{user}}** thành công!",
         "unban_success": "✅ Đã bỏ ban cho người dùng **{{user}}**!"
     }

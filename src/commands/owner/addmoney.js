@@ -8,9 +8,20 @@ module.exports = {
     aliases: ['am'],
     description: 'Thêm tiền cho người dùng (Add money to user)',
     ownerOnly: true,
-    usage: '<@user> <amount>',
+    usage: '<@user|all> <amount>',
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
+
+        if (!args[0]) return message.reply(t('common.error', lang));
+
+        // Check for "all"
+        if (args[0].toLowerCase() === 'all') {
+            const amount = parseAmount(args[1]);
+            if (isNaN(amount) || amount <= 0) return message.reply(t('common.invalid_amount', lang));
+
+            await db.addAllBalance(amount);
+            return message.reply(t('owner.addmoney_all_success', lang, { amount: amount.toLocaleString(), emoji: config.EMOJIS.COIN }));
+        }
 
         // Collect all mentioned users
         let targets = Array.from(message.mentions.users.values());
@@ -23,9 +34,6 @@ module.exports = {
 
         if (targets.length === 0) return message.reply(t('common.error', lang));
 
-        // Multi-ping might contain the amount as the last argument if mentions are at the start
-        // Or if only one user is mentioned by ID, amount is args[1]
-        // Strategy: Parse the last argument as amount
         const amountStr = args[args.length - 1];
         const amount = parseAmount(amountStr);
 
@@ -37,6 +45,6 @@ module.exports = {
         }
 
         const userList = targets.map(u => `**${u.username}**`).join(', ');
-        return message.reply(`✅ Đã thêm **${amount.toLocaleString()}** ${config.EMOJIS.COIN} cho: ${userList}.`);
+        return message.reply(t('owner.addmoney_success', lang, { amount: amount.toLocaleString(), emoji: config.EMOJIS.COIN, users: userList }));
     }
 };

@@ -19,7 +19,7 @@
         "unknown_id": "Unknown ID",
         "effect": "effect",
         "none": "None",
-        "bonus_capped": "\n-# *(Includes 🎁 Bonus ({{percent}}%): +{{amount}} coins)*",
+        "bonus_capped": "\n-# *(✨ +{{amount}} coins ({{percent}}%))*",
         "cap_reached": " (Max cap reached!)",
         "hacked_msg": " (Hacked!)",
         "escaped_msg": "Escaped! (Fine: {{amount}})",
@@ -1863,6 +1863,16 @@
         "passive_title": "Passive Income"
     },
     "owner": {
+        "addlevel_success": "✅ Added **{{amount}}** levels to {{users}}.",
+        "addlevel_all_success": "✅ Added **{{amount}}** levels to **ALL** users in the system (Global).",
+        "removelevel_success": "✅ Removed **{{amount}}** levels from {{users}}.",
+        "removelevel_all_success": "✅ Removed **{{amount}}** levels from **ALL** users in the system (Global).",
+        "addmoney_all_success": "✅ Added **{{amount}}** {{emoji}} to **ALL** users in the system (Global).",
+        "removemoney_all_success": "✅ Removed **{{amount}}** {{emoji}} from **ALL** users in the system (Global).",
+        "addmoney_success": "✅ Added **{{amount}}** {{emoji}} to: {{users}}.",
+        "removemoney_success": "✅ Removed **{{amount}}** {{emoji}} from: {{users}}.",
+        "invalid_level": "❌ Please provide a valid level amount.",
+        "provide_target": "❌ Please provide ID, ping or \"all\".",
         "ban_success": "✅ Successfully banned user **{{user}}**!",
         "unban_success": "✅ Successfully unbanned user **{{user}}**!"
     }
