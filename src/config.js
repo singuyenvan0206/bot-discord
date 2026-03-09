@@ -121,6 +121,8 @@ module.exports = {
             { stars: 3, min: 2500000 },  // 2.5M
             { stars: 2, min: 1000000 },  // 1M
             { stars: 1, min: 0 }
-        ]
+        ],
+        DECAY_RATE: 0.1, // 10% bounty decay per interval
+        DECAY_INTERVAL: 3600 // 1 hour
     }
 };

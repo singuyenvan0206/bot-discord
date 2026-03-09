@@ -42,7 +42,8 @@
         "choices": "Lựa chọn",
         "tax": "Thuế",
         "cap_reached": " (Đã đạt giới hạn tối đa!)",
-        "profit": "Lợi nhuận ròng"
+        "profit": "Lợi nhuận ròng",
+        "permanent": "Vĩnh viễn"
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -1800,10 +1801,14 @@
         "fish_info": "📦 Giá trị: **{{value}}** {{emoji}}"
     },
     "wanted": {
-        "title": "Danh Sách Truy Nã Chính Phủ",
-        "description": "Những đối tượng nguy hiểm nhất đang lẩn trốn. Cảnh sát hãy thực hiện nhiệm vụ!",
-        "none": "✅ Hiện tại không có đối tượng nào bị truy nã. Thành phố thật yên bình!",
-        "footer": "Gõ $arrest <mention> để bắt giữ (Chỉ dành cho Cảnh Sát)"
+        "board_title": "Bảng Truy Nã",
+        "board_desc": "Những tên tội phạm nguy hiểm nhất đang lẩn trốn!",
+        "board_none": "Hiện tại không có tội phạm nào bị truy nã.",
+        "board_footer": "Tiền thưởng sẽ giảm dần sau mỗi giờ. Cảnh sát có thể dùng $arrest để bắt giữ.",
+        "searching": "🔍 Đang thiết kế lệnh truy nã cho **{{user}}**...",
+        "not_found": "❌ Người này hiện không có tiền thưởng hoặc lệnh truy nã.",
+        "poster_title": "📜 LỆNH TRUY NÃ: {{user}}",
+        "poster_desc": "📦 Mức độ: {{stars}}\n💰 Tiền thưởng: **{{bounty}}** {{emoji}}\n⏰ Hết hạn: {{expires}}\n\n*Truy nã gắt gao trên toàn cõi server!*"
     },
     "arrest": {
         "police_only": "❌ Chỉ những người có nghề **Cảnh Sát** mới có thể thực hiện bắt giữ!",
@@ -1876,13 +1881,5 @@
         "provide_target": "❌ Vui lòng nhập ID, ping hoặc \"all\".",
         "ban_success": "✅ Đã ban người dùng **{{user}}** thành công!",
         "unban_success": "✅ Đã bỏ ban cho người dùng **{{user}}**!"
-    },
-    "social": {
-        "wanted": {
-            "searching": "🔍 Đang thiết kế lệnh truy nã cho **{{user}}**...",
-            "not_found": "❌ Không thể tạo lệnh truy nã lúc này. Vui lòng thử lại sau!",
-            "title": "📜 LỆNH TRUY NÃ: {{user}}",
-            "description": "📦 Mức độ: {{stars}}\n💰 Tiền thưởng: **{{bounty}}** {{emoji}}\n⏰ Hết hạn: {{expires}}\n\n*Truy nã gắt gao trên toàn cõi server!*"
-        }
     }
 }

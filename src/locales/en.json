@@ -42,7 +42,8 @@
         "user_not_found": "User not found.",
         "choices": "Choices",
         "tax": "Tax",
-        "profit": "Net Profit"
+        "profit": "Net Profit",
+        "permanent": "Permanent"
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -1799,10 +1800,14 @@
         "fish_info": "📦 Value: **{{value}}** {{emoji}}"
     },
     "wanted": {
-        "title": "Government Most Wanted",
-        "description": "The most dangerous individuals currently at large. Police, do your duty!",
-        "none": "✅ No one is currently wanted. The city is peaceful!",
-        "footer": "Type $arrest <mention> to catch a criminal (Police Only)"
+        "board_title": "Bounty Board",
+        "board_desc": "The most dangerous criminals currently on the run!",
+        "board_none": "No active bounties at the moment.",
+        "board_footer": "Bounties decay periodically. Police can use $arrest to claim rewards.",
+        "searching": "🔍 Designing wanted poster for **{{user}}**...",
+        "not_found": "❌ Target has no active bounty or wanted level.",
+        "poster_title": "📜 WANTED: {{user}}",
+        "poster_desc": "📦 Wanted Level: {{stars}}\n💰 Bounty: **{{bounty}}** {{emoji}}\n⏰ Expires: {{expires}}\n\n*Wanted dead or alive across the server!*"
     },
     "arrest": {
         "police_only": "❌ Only users with the **Police** job can perform arrests!",
@@ -1875,13 +1880,5 @@
         "provide_target": "❌ Please provide ID, ping or \"all\".",
         "ban_success": "✅ Successfully banned user **{{user}}**!",
         "unban_success": "✅ Successfully unbanned user **{{user}}**!"
-    },
-    "social": {
-        "wanted": {
-            "searching": "🔍 Designing wanted poster for **{{user}}**...",
-            "not_found": "❌ Could not generate wanted poster at this time. Please try again later!",
-            "title": "📜 WANTED: {{user}}",
-            "description": "📦 Wanted Level: {{stars}}\n💰 Bounty: **{{bounty}}** {{emoji}}\n⏰ Expires: {{expires}}\n\n*Wanted dead or alive across the server!*"
-        }
     }
 }

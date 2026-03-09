@@ -65,7 +65,7 @@ module.exports = {
             const xpResult = await deductXp(target.id, message.guild.id, xpLoss);
 
             // 3. Reset Criminal Status
-            await db.execute('UPDATE users SET bounty = 0, wanted_level = 0 WHERE id = ?', [target.id]);
+            await db.execute('UPDATE users SET bounty = 0, wanted_level = 0, wanted_expires_at = 0 WHERE id = ?', [target.id]);
 
             // 4. Penalty: Prison (Lockdown for 4 hours)
             // Affects: rob, crime, work, daily

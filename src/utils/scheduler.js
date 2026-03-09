@@ -9,6 +9,7 @@ async function initScheduler(client) {
         const { processHouseDistribution, processLotteryDraw } = require('./timer');
         await processHouseDistribution(client).catch(console.error);
         await processLotteryDraw(client).catch(console.error);
+        await processWantedDecay(client).catch(console.error);
     }, 3600_000); // 1 hour
 
     // Run random events check every 3 hours
@@ -129,6 +130,36 @@ async function processRandomEvents(client) {
                 } catch (e) { }
             }
         }
+    }
+}
+
+async function processWantedDecay(client) {
+    const config = require('../config');
+    const now = Math.floor(Date.now() / 1000);
+    const decayRate = config.WANTED.DECAY_RATE || 0.1;
+
+    // Decay bounty for all users with a bounty
+    // Also reduce wanted_level if bounty drops below thresholds
+    const users = await db.queryAll('SELECT id, bounty, wanted_level, wanted_expires_at FROM users WHERE bounty > 0');
+
+    for (const u of users) {
+        // If expired, clear completely
+        if (u.wanted_expires_at > 0 && now > u.wanted_expires_at) {
+            await db.execute('UPDATE users SET bounty = 0, wanted_level = 0, wanted_expires_at = 0 WHERE id = ?', [u.id]);
+            continue;
+        }
+
+        // Periodic decay
+        const newBounty = Math.max(0, Math.floor(u.bounty * (1 - decayRate)));
+
+        // Recalculate stars based on new bounty
+        let newStars = 0;
+        if (newBounty > 0) {
+            const threshold = config.WANTED.BOUNTY_THRESHOLDS.find(t => newBounty >= t.min);
+            newStars = threshold ? threshold.stars : 1;
+        }
+
+        await db.execute('UPDATE users SET bounty = ?, wanted_level = ? WHERE id = ?', [newBounty, newStars, u.id]);
     }
 }
 

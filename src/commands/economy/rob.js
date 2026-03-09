@@ -99,7 +99,14 @@ module.exports = {
 
             // Increase Bounty & Wanted Level
             const bountyGain = Math.floor(victimLoss * 0.5);
-            await db.execute('UPDATE users SET bounty = bounty + ?, wanted_level = LEAST(5, wanted_level + 1) WHERE id = ?', [bountyGain, message.author.id]);
+            const newStars = Math.min(5, (user.wanted_level || 0) + 1);
+            const duration = config.WANTED.DURATIONS[newStars] || 3600;
+            const expiresAt = Math.floor(Date.now() / 1000) + duration;
+
+            await db.execute(
+                'UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ? WHERE id = ?',
+                [bountyGain, newStars, expiresAt, message.author.id]
+            );
             msg += `\n${t('rob.wanted_alert', lang, { amount: bountyGain.toLocaleString() })}`;
 
             return message.reply(msg);
