@@ -21,32 +21,30 @@ async function generateWantedPoster(avatarUrl, name, bounty) {
 
         // 1. Process Avatar
         // Resize avatar to fit the frame in the 640x640 template
-        const avatarWidth = 360;
-        const avatarHeight = 260;
+        const avatarWidth = 380;
+        const avatarHeight = 280;
         avatar.cover(avatarWidth, avatarHeight);
 
         // Apply a slight sepia/old paper filter to the avatar
         avatar.sepia().brightness(-0.1).contrast(0.1);
 
         // 2. Composite Avatar onto Template
-        // Centering horizontally, and placing vertically within the frame
+        // Centering horizontally, and placing vertically within the ornate frame
         const avatarX = (template.getWidth() - avatarWidth) / 2;
-        const avatarY = 175;
+        const avatarY = 180; // Lowered to fit inside the inner frame
         template.composite(avatar, avatarX, avatarY);
 
         // 3. Add Name and Bounty Text
         const titleFont = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
-        const bountyFont = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
+        const bountyFont = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK); // Bolder bounty
 
-        // Center name below the frame
+        // Position name to the right of the "NAME:" label
         const nameUpper = name.toUpperCase();
-        const nameWidth = Jimp.measureText(titleFont, nameUpper);
-        template.print(titleFont, (template.getWidth() - nameWidth) / 2, 500, nameUpper);
+        template.print(titleFont, 190, 510, nameUpper);
 
-        // Add bounty amount at the very bottom
-        const bountyText = `B ${Number(bounty).toLocaleString()}-`;
-        const bountyWidth = Jimp.measureText(bountyFont, bountyText);
-        template.print(bountyFont, (template.getWidth() - bountyWidth) / 2, 565, bountyText);
+        // Position bounty to the right of the "BERRY:" label
+        const bountyText = `${Number(bounty).toLocaleString()}-`;
+        template.print(bountyFont, 190, 590, bountyText);
 
         return await template.getBufferAsync(Jimp.MIME_PNG);
     } catch (error) {
