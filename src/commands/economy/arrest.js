@@ -9,16 +9,9 @@ const { deductXp } = require('../../utils/leveling');
 module.exports = {
     name: 'arrest',
     aliases: ['batgiu', 'catch'],
-    description: 'Bắt giữ tội phạm (Arrest a wanted criminal) - Police Only',
+    description: 'Bắt giữ tội phạm (Arrest a wanted criminal)',
     cooldown: config.ECONOMY.ARREST_COOLDOWN,
     async execute(message, args) {
-        const lang = await getLanguage(message.author.id, message.guild?.id);
-        const user = await db.getUser(message.author.id, message.guild.id);
-        const now = Math.floor(Date.now() / 1000);
-
-        if (user.job !== 'police') {
-            return message.reply(t('arrest.police_only', lang));
-        }
 
         const cooldown = config.ECONOMY.ARREST_COOLDOWN;
         const lastArrest = Number(user.last_arrest || 0);
@@ -40,6 +33,11 @@ module.exports = {
             return message.reply(t('arrest.no_bounty', lang, { user: target.username }));
         }
 
+        const placers = JSON.parse(criminal.bounty_placers || '[]');
+        if (placers.includes(message.author.id)) {
+            return message.reply(t('arrest.cannot_arrest_own_bounty', lang));
+        }
+
         // Success chance based on level difference and wanted level
         // Base 40% + (Police Level / 20) - (Wanted Level * 0.05)
         let successChance = 0.4 + (user.level * 0.005) - ((criminal.wanted_level || 1) * 0.05);
@@ -48,8 +46,11 @@ module.exports = {
         const isSuccess = Math.random() < successChance;
 
         if (isSuccess) {
-            // Reward: Bounty from "Government Fund"
-            await db.addBalance(message.guild.id, message.author.id, bounty);
+            // Reward: 100% if police, 50% if others
+            const rewardPercent = user.job === 'police' ? 1.0 : 0.5;
+            const reward = Math.floor(bounty * rewardPercent);
+
+            await db.addBalance(message.guild.id, message.author.id, reward);
 
             // Penalty for Criminal:
             // 1. Balance Fine (10% of their current balance)
@@ -65,7 +66,7 @@ module.exports = {
             const xpResult = await deductXp(target.id, message.guild.id, xpLoss);
 
             // 3. Reset Criminal Status
-            await db.execute('UPDATE users SET bounty = 0, wanted_level = 0, wanted_expires_at = 0 WHERE id = ?', [target.id]);
+            await db.execute('UPDATE users SET bounty = 0, wanted_level = 0, wanted_expires_at = 0, bounty_placers = ? WHERE id = ?', ["[]", target.id]);
 
             // 4. Penalty: Prison (Lockdown for 4 hours)
             // Affects: rob, crime, work, daily
@@ -73,8 +74,8 @@ module.exports = {
             const releaseTime = now + prisonTime;
 
             await db.execute(
-                'UPDATE users SET last_rob = ?, last_crime = ?, last_work = ?, last_daily = ? WHERE id = ?',
-                [releaseTime, releaseTime, releaseTime, releaseTime, target.id]
+                'UPDATE users SET last_rob = ?, last_crime = ?, last_work = ?, last_daily = ?, prison_until = ? WHERE id = ?',
+                [releaseTime, releaseTime, releaseTime, releaseTime, releaseTime, target.id]
             );
 
             const embed = new EmbedBuilder()
@@ -83,7 +84,7 @@ module.exports = {
                 .setDescription(t('arrest.success_desc', lang, {
                     police: message.author.username,
                     criminal: target.username,
-                    amount: bounty.toLocaleString(),
+                    amount: reward.toLocaleString(),
                     emoji: config.EMOJIS.COIN
                 }))
                 .addFields(

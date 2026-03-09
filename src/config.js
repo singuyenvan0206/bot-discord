@@ -72,7 +72,7 @@ module.exports = {
         SEARCH_COOLDOWN: 600, // 10 minutes
         SEARCH_MIN_REWARD: 500,
         SEARCH_MAX_REWARD: 3000,
-        ARREST_COOLDOWN: 600, // 10 minutes
+        ARREST_COOLDOWN: 1200, // 20 minutes
         ROB_COOLDOWN: 3600, // 1 hour
         ROB_SUCCESS_CHANCE: 0.45,
         MAX_BET: 250000,
@@ -108,6 +108,7 @@ module.exports = {
     BLACKLISTED_CHANNELS: ['842400189830529035'],
     OWNER_ID: '765577989663883364',
     WANTED: {
+        FEE_PERCENT: 0.1, // 10% fee
         DURATIONS: {
             1: 900,      // 15 minutes
             2: 1800,     // 30 minutes

@@ -1818,13 +1818,14 @@
         "police_only": "❌ Only users with the **Police** job can perform arrests!",
         "invalid_target": "❌ You must mention a valid user to arrest.",
         "no_bounty": "❌ **{{user}}** is not wanted or has no bounty on their head.",
-        "title_success": "SUCCESSFUL ARREST",
-        "success_desc": "👮 **{{police}}** has captured the dangerous criminal **{{criminal}}**! The government rewarded you with {{emoji}} **{{amount}}** coins.",
+        "title_success": "ARREST SUCCESSFUL",
+        "success_desc": "👮 **{{police}}** successfully arrested the criminal **{{criminal}}** and received a reward of {{emoji}} **{{amount}}** coins!",
         "prison_label": "Sentence",
         "prison_time": "Imprisoned for **{{time}}**. All illegal activities are suspended.",
         "fine_label": "Fine",
         "xp_loss_label": "XP Loss",
         "cooldown": "⏳ You need time to prepare for the next raid. Try again in **{{time}}**.",
+        "cannot_arrest_own_bounty": "❌ You cannot arrest a target you placed a bounty on!",
         "failed": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight."
     },
     "bounty": {
@@ -1833,8 +1834,9 @@
         "invalid_amount": "❌ Minimum bounty amount is **{{min}}** coins!",
         "invalid_duration": "❌ Invalid duration format! Use e.g., `1h`, `30m`, `1d` (Min 5m).",
         "title_success": "BOUNTY PLACED",
-        "success_desc": "🎯 **{{user}}** has placed a bounty of {{emoji}} **{{amount}}** on **{{target}}**'s head!\n\nCurrent Status: {{stars}}",
-        "expires_in": "Bounty expires {{time}}"
+        "success_desc": "🎯 **{{user}}** has placed a bounty of {{emoji}} **{{amount}}** on **{{target}}**'s head! (Fee: **{{fee}}**)\n\nCurrent Status: {{stars}}",
+        "expires_in": "Bounty expires {{time}}",
+        "target_in_prison": "❌ **{{target}}** is currently serving time in prison! You can only place a bounty after they are released (**{{time}}**)."
     },
     "hack": {
         "hacker_only": "❌ Only **Hackers** have the skills to perform digital exploitation!",

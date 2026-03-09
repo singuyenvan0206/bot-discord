@@ -225,6 +225,8 @@ async function initSchema() {
     await safeAddColumn('users', 'banned', 'BOOLEAN DEFAULT FALSE');
     await safeAddColumn('users', 'wanted_expires_at', 'BIGINT DEFAULT 0');
     await safeAddColumn('users', 'spam_violations', 'INTEGER DEFAULT 0');
+    await safeAddColumn('users', 'prison_until', 'BIGINT DEFAULT 0');
+    await safeAddColumn('users', 'bounty_placers', "TEXT DEFAULT '[]'");
 
     // ─── Automated Command Renaming Migration ─────────
     try {

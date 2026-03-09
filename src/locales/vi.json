@@ -1820,12 +1820,13 @@
         "invalid_target": "❌ Bạn cần tag một người dùng hợp lệ để bắt giữ.",
         "no_bounty": "❌ **{{user}}** không bị truy nã hoặc không có tiền thưởng trên đầu.",
         "title_success": "BẮT GIỮ THÀNH CÔNG",
-        "success_desc": "👮 **{{police}}** đã bắt giữ được tên tội phạm nguy hiểm **{{criminal}}**! Chính phủ đã thưởng cho bạn {{emoji}} **{{amount}}** coins.",
+        "success_desc": "👮 **{{police}}** đã bắt giữ được tên tội phạm **{{criminal}}** và nhận được phần thưởng {{emoji}} **{{amount}}**!",
         "prison_label": "Phán quyết",
         "prison_time": "Tù giam trong **{{time}}**. Mọi hoạt động phạm pháp sẽ bị đình chỉ.",
         "fine_label": "Tiền phạt",
         "xp_loss_label": "Tổn thất XP",
         "cooldown": "⏳ Bạn cần thời gian để chuẩn bị cho cuộc vây bắt tiếp theo. Hãy quay lại sau **{{time}}**.",
+        "cannot_arrest_own_bounty": "❌ Bạn không thể bắt người mà chính bạn đã treo thưởng!",
         "failed": "❌ Tên tội phạm **{{user}}** đã quá xảo quyệt và trốn thoát thành công! Bạn bị trừ một ít kinh nghiệm vì sơ suất."
     },
     "bounty": {
@@ -1834,8 +1835,9 @@
         "invalid_amount": "❌ Số tiền treo thưởng tối thiểu là **{{min}}** coins!",
         "invalid_duration": "❌ Định dạng thời gian không hợp lệ! Dùng vd: `1h`, `30m`, `1d` (Tối thiểu 5p).",
         "title_success": "ĐÃ TREO THƯỞNG",
-        "success_desc": "🎯 **{{user}}** đã treo thưởng {{emoji}} **{{amount}}** lên đầu của **{{target}}**!\n\nTrạng thái hiện tại: {{stars}}",
-        "expires_in": "Lệnh truy nã sẽ hết hạn {{time}}"
+        "success_desc": "🎯 **{{user}}** đã treo thưởng {{emoji}} **{{amount}}** lên đầu của **{{target}}**! (Phí: **{{fee}}**)\n\nTrạng thái hiện tại: {{stars}}",
+        "expires_in": "Lệnh truy nã sẽ hết hạn {{time}}",
+        "target_in_prison": "❌ **{{target}}** đang bị giam giữ trong tù! Bạn chỉ có thể treo thưởng sau khi người này được thả (**{{time}}**)."
     },
     "hack": {
         "hacker_only": "❌ Chỉ **Hacker** mới có đủ kỹ năng để thực hiện việc này!",

@@ -1,9 +1,10 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { t, getLanguage } = require('../../utils/i18n');
 const db = require('../../database');
 const config = require('../../config');
 const { parseAmount } = require('../../utils/economy');
 const { parseDuration, formatDuration } = require('../../utils/time');
+const { generateWantedPoster } = require('../../utils/imageGenerator');
 
 module.exports = {
     name: 'bounty',
@@ -18,6 +19,16 @@ module.exports = {
         const target = message.mentions.users.first();
         if (!target || target.id === message.author.id || target.bot) {
             return message.reply(t('bounty.invalid_target', lang));
+        }
+
+        const victimData = await db.getUser(target.id, message.guild.id);
+        const now = Math.floor(Date.now() / 1000);
+        if (Number(victimData.prison_until || 0) > now) {
+            const timeLeft = Number(victimData.prison_until) - now;
+            return message.reply(t('bounty.target_in_prison', lang, {
+                target: target.username,
+                time: formatDuration(timeLeft, lang)
+            }));
         }
 
         const amountInput = args[1];
@@ -47,11 +58,23 @@ module.exports = {
             }
         }
 
-        // Deduct from sender
-        await db.removeBalance(message.guild.id, message.author.id, amount);
+        // Deduct from sender with 10% fee
+        const feePercent = config.WANTED.FEE_PERCENT || 0.1;
+        const fee = Math.floor(amount * feePercent);
+        const totalDeduction = amount + fee;
 
-        // Update target's bounty
-        const victimData = await db.getUser(target.id, message.guild.id);
+        if (Number(user.balance || 0) < totalDeduction) {
+            return message.reply(t('common.insufficient_funds', lang, { balance: Number(user.balance || 0).toLocaleString() }));
+        }
+
+        await db.removeBalance(message.guild.id, message.author.id, totalDeduction);
+
+        // Update target's bounty and placers
+        const placers = JSON.parse(victimData.bounty_placers || '[]');
+        if (!placers.includes(message.author.id)) {
+            placers.push(message.author.id);
+        }
+
         const currentBounty = Number(victimData.bounty || 0);
         const newBounty = currentBounty + amount;
 
@@ -72,8 +95,8 @@ module.exports = {
         const newExpiresAt = Math.floor(Date.now() / 1000) + duration;
 
         await db.execute(
-            'UPDATE users SET bounty = ?, wanted_level = ?, wanted_expires_at = ? WHERE id = ?',
-            [newBounty, newStars, newExpiresAt, target.id]
+            'UPDATE users SET bounty = ?, wanted_level = ?, wanted_expires_at = ?, bounty_placers = ? WHERE id = ?',
+            [newBounty, newStars, newExpiresAt, JSON.stringify(placers), target.id]
         );
 
         const embed = new EmbedBuilder()
@@ -83,6 +106,7 @@ module.exports = {
                 user: message.author.username,
                 target: target.username,
                 amount: amount.toLocaleString(),
+                fee: fee.toLocaleString(),
                 emoji: config.EMOJIS.COIN,
                 stars: '⭐'.repeat(newStars)
             }))
@@ -91,8 +115,18 @@ module.exports = {
                 value: formatDuration(duration, lang) + ` (${t('bounty.expires_in', lang, { time: `<t:${newExpiresAt}:R>` })})`,
                 inline: false
             })
+            .setImage('attachment://wanted.png')
             .setTimestamp();
 
-        return message.reply({ embeds: [embed] });
+        try {
+            const avatarUrl = target.displayAvatarURL({ extension: 'png', size: 512 });
+            const imageBuffer = await generateWantedPoster(avatarUrl, target.username, newBounty);
+            const attachment = new AttachmentBuilder(imageBuffer, { name: 'wanted.png' });
+
+            return message.reply({ embeds: [embed], files: [attachment] });
+        } catch (error) {
+            console.error('Failed to generate wanted poster:', error);
+            return message.reply({ embeds: [embed] });
+        }
     }
 };
