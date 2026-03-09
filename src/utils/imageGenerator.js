@@ -20,32 +20,33 @@ async function generateWantedPoster(avatarUrl, name, bounty) {
         ]);
 
         // 1. Process Avatar
-        // Resize avatar to fit the frame (approximate coordinates for the template I generated)
-        // Template frame is roughly in the middle. Let's aim for a good fit.
-        // We'll resize avatar to ~560x420 or similar based on typical OP poster ratios.
-        avatar.resize(600, 450);
-        // Apply a slight sepia/old paper filter to the avatar to match the poster
+        // Resize avatar to fit the frame in the 640x640 template
+        const avatarWidth = 360;
+        const avatarHeight = 260;
+        avatar.cover(avatarWidth, avatarHeight);
+
+        // Apply a slight sepia/old paper filter to the avatar
         avatar.sepia().brightness(-0.1).contrast(0.1);
 
         // 2. Composite Avatar onto Template
-        // Positioning: x=100, y=250 (Adjusted based on standard OP poster layout)
-        // These coords are guesses for the generated template, might need slight tuning.
-        template.composite(avatar, 135, 275);
+        // Centering horizontally, and placing vertically within the frame
+        const avatarX = (template.getWidth() - avatarWidth) / 2;
+        const avatarY = 175;
+        template.composite(avatar, avatarX, avatarY);
 
         // 3. Add Name and Bounty Text
-        // We'll use Jimp's built-in fonts for simplicity, or load a custom one if needed.
-        const titleFont = await Jimp.loadFont(Jimp.FONT_SANS_64_BLACK);
-        const bountyFont = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+        const titleFont = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+        const bountyFont = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
 
-        // Center name at the bottom
+        // Center name below the frame
         const nameUpper = name.toUpperCase();
         const nameWidth = Jimp.measureText(titleFont, nameUpper);
-        template.print(titleFont, (template.getWidth() - nameWidth) / 2, 820, nameUpper);
+        template.print(titleFont, (template.getWidth() - nameWidth) / 2, 500, nameUpper);
 
         // Add bounty amount at the very bottom
         const bountyText = `B ${Number(bounty).toLocaleString()}-`;
         const bountyWidth = Jimp.measureText(bountyFont, bountyText);
-        template.print(bountyFont, (template.getWidth() - bountyWidth) / 2, 920, bountyText);
+        template.print(bountyFont, (template.getWidth() - bountyWidth) / 2, 565, bountyText);
 
         return await template.getBufferAsync(Jimp.MIME_PNG);
     } catch (error) {
