@@ -1508,7 +1508,7 @@
             "shutdown": "[Owner] Tắt tiến trình bot một cách an toàn.",
             "resetdatabase": "[Owner] Xóa TOÀN BỘ dữ liệu hệ thống. CỰC KỲ NGUY HIỂM. KHÔNG THỂ HOÀN TÁC.",
             "update": "[Owner] Kéo mã nguồn Git mới nhất và tải lại toàn bộ lệnh bot.",
-            "event": "Xem các sự kiện kinh tế đang diễn ra trên toàn cầu.",
+            "events": "Xem các sự kiện kinh tế đang diễn ra trên toàn cầu.",
             "museum": "Trưng bày bộ sưu tập cá hiếm và nhận phần thưởng hoàn thành.",
             "wanted": "Danh sách những kẻ bị truy nã gắt gao nhất server.",
             "arrest": "Bắt giữ tội phạm bị truy nã để nhận thưởng bounty (Cảnh Sát).",
@@ -1608,7 +1608,8 @@
             "fishrates": "🌟 **Mô tả:** Phân tích tỉ lệ câu cá tại khu vực hiện tại. Tỉ lệ này thay đổi dựa trên Cần câu, Mồi và Buff may mắn bạn đang có.\n\n🕹️ **Cách dùng:** `$fishrates` (Tốt nhất nên dùng lệnh này trước khi quyết định thả câu xịn!)",
             "support": "🌟 **Mô tả:** Nhận sự hỗ trợ trực tiếp từ đội ngũ phát triển.\n\n🕹️ **Nội dung:** Lệnh sẽ cung cấp link discord máy chủ hỗ trợ. Đây là nơi bạn có thể báo lỗi, đóng góp ý tưởng hoặc yêu cầu giải quyết các vấn đề tài khoản.",
             "blacklistchannel": "🌟 **Mô tả:** Công cụ quản trị kênh dành cho Admin.\n\n🕹️ **Cách dùng:** `$blacklistchannel <#channel>` để bật/tắt (Toggle) trạng thái chặn của một kênh.\n\n⚠️ **Lưu ý:** Bot sẽ hoàn toàn phớt lờ các lệnh được gõ trong kênh bị blacklist (trừ lệnh admin).",
-            "setwcchannel": "🌟 **Mô tả:** Thiết lập hệ thống chào mừng/tạm biệt tự động.\n\n🕹️ **Cách dùng:** `$setwcchannel <#channel>`\n\n✨ **Tính năng:** Khi có người tham gia, Bot sẽ gửi một tin nhắn chào mừng kèm Badge và luật lệ server. Khi có người rời đi, Bot cũng sẽ thông báo để mọi người được biết."
+            "setwcchannel": "🌟 **Mô tả:** Thiết lập hệ thống chào mừng/tạm biệt tự động.\n\n🕹️ **Cách dùng:** `$setwcchannel <#channel>`\n\n✨ **Tính năng:** Khi có người tham gia, Bot sẽ gửi một tin nhắn chào mừng kèm Badge và luật lệ server. Khi có người rời đi, Bot cũng sẽ thông báo để mọi người được biết.",
+            "events": "🌟 **Mô tả:** Theo dõi hơi thở của nền kinh tế toàn cầu! Các sự kiện sẽ thay đổi định kỳ, mang lại các hiệu ứng đặc biệt.\n\n🕹️ **Cơ chế:**\n- **X2 Tiền Thưởng:** Nhân đôi số coins nhận được từ `$work`, `$daily`...\n- **Tăng May Mắn:** Tăng tỷ lệ bắt cá hiếm hoặc thắng cược.\n- **Giảm Cooldown:** Giảm thời gian chờ giữa các lệnh.\n\n📊 **Thông tin Bot:** Hiển thị số dư quỹ dự trữ và cấp độ của Bot tại server hiện tại.\n\n👑 **Admin:** Có thể dùng `$events rotate` để đổi sự kiện ngay lập tức."
         }
     },
     "iteminfo": {

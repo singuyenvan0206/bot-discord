@@ -1511,7 +1511,7 @@
             "shutdown": "[Owner] Safely terminate the bot process.",
             "resetdatabase": "[Owner] Wipe ALL system data. EXTREMELY DANGEROUS. IRREVERSIBLE.",
             "update": "[Owner] Pull latest Git source code and hot-reload all commands.",
-            "event": "View active global economic events and their effects.",
+            "events": "View active global economic events and their effects.",
             "museum": "Display rare fish collections and claim completion rewards.",
             "wanted": "View the server's most wanted criminals and their bounties.",
             "arrest": "Apprehend wanted criminals to claim government bounties (Police).",
@@ -1611,7 +1611,8 @@
             "blacklistchannel": "🌟 **Description:** A channel management tool for administrators.\n\n🕹️ **Usage:** `$blacklistchannel <#channel>` to toggle the restricted status.\n\n⚠️ **Note:** The bot will ignore all non-admin commands in blacklisted channels to keep your server organized.",
             "setwcchannel": "🌟 **Description:** Automate server hospitality with entry and exit logs.\n\n🕹️ **Usage:** `$setwcchannel <#channel>`\n\n✨ **Features:** Displays a welcome message with server badges for new members and a friendly farewell notification when someone leaves.",
             "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`",
-            "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`"
+            "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`",
+            "events": "🌟 **Description:** Monitor the pulse of the global economy! Events rotate periodically, providing special effects and bonuses.\n\n🕹️ **Mechanics:**\n- **2x Rewards:** Double coins from `$work`, `$daily`, etc.\n- **Luck Boost:** Increased chance for rare fish or winning bets.\n- **Reduced Cooldowns:** Quicker access to your favorite commands.\n\n📊 **Bot Info:** View the server's reserve fund and the Bot's local level.\n\n👑 **Admin:** Use `$events rotate` to force a new event immediately."
         }
     },
     "iteminfo": {

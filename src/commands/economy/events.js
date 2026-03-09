@@ -8,6 +8,9 @@ module.exports = {
     name: 'events',
     aliases: ['event', 'ev'],
     description: 'Xem sự kiện và thông tin bot (View server events and bot info)',
+    detailDescription: 'Xem sự kiện kinh tế đang diễn ra trên toàn cầu (vđ: X2 Tiền, Tăng may mắn câu cá). Ngoài ra lệnh này còn hiển thị thông tin về Quỹ dự trữ và Cấp độ của Bot trong server hiện tại.',
+    usage: '[rotate]',
+    examples: ['', 'rotate'],
     cooldown: 5,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
