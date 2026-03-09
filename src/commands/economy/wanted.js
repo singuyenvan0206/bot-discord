@@ -5,7 +5,7 @@ const config = require('../../config');
 
 module.exports = {
     name: 'wanted',
-    aliases: ['truyna', 'bounty', 'wnt', 'wantedlist', 'bountyboard', 'ds-truyna'],
+    aliases: ['truyna', 'wnt', 'wantedlist', 'bountyboard', 'ds-truyna'],
     description: 'Xem danh sách truy nã hoặc lệnh truy nã cá nhân (Most wanted list or individual poster)',
     usage: '[@user]',
     async execute(message, args) {

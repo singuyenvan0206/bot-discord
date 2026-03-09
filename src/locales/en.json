@@ -43,7 +43,8 @@
         "choices": "Choices",
         "tax": "Tax",
         "profit": "Net Profit",
-        "permanent": "Permanent"
+        "permanent": "Permanent",
+        "duration": "Duration"
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -1821,6 +1822,15 @@
         "xp_loss_label": "XP Loss",
         "cooldown": "⏳ You need time to prepare for the next raid. Try again in **{{time}}**.",
         "failed": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight."
+    },
+    "bounty": {
+        "invalid_target": "❌ You must mention a valid user to place a bounty on (cannot be yourself or a bot).",
+        "missing_amount": "❌ Please specify an amount (e.g., 50k, 1m).",
+        "invalid_amount": "❌ Minimum bounty amount is **{{min}}** coins!",
+        "invalid_duration": "❌ Invalid duration format! Use e.g., `1h`, `30m`, `1d` (Min 5m).",
+        "title_success": "BOUNTY PLACED",
+        "success_desc": "🎯 **{{user}}** has placed a bounty of {{emoji}} **{{amount}}** on **{{target}}**'s head!\n\nCurrent Status: {{stars}}",
+        "expires_in": "Bounty expires {{time}}"
     },
     "hack": {
         "hacker_only": "❌ Only **Hackers** have the skills to perform digital exploitation!",

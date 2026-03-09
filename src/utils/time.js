@@ -36,4 +36,30 @@ function formatDuration(seconds, lang = 'vi') {
     return parts.join(' ');
 }
 
-module.exports = { formatDuration };
+/**
+ * Parses a duration string (e.g., 1h, 30m, 1d) into seconds.
+ * @param {string} input - The input string.
+ * @returns {number|null} - The duration in seconds, or null if invalid.
+ */
+function parseDuration(input) {
+    if (!input || typeof input !== 'string') return null;
+
+    const regex = /^(\d+)([smhd])$/i;
+    const match = input.toLowerCase().trim().match(regex);
+
+    if (!match) return null;
+
+    const value = parseInt(match[1]);
+    const unit = match[2];
+
+    const multipliers = {
+        's': 1,
+        'm': 60,
+        'h': 3600,
+        'd': 86400
+    };
+
+    return value * multipliers[unit];
+}
+
+module.exports = { formatDuration, parseDuration };

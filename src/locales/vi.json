@@ -43,7 +43,8 @@
         "tax": "Thuế",
         "cap_reached": " (Đã đạt giới hạn tối đa!)",
         "profit": "Lợi nhuận ròng",
-        "permanent": "Vĩnh viễn"
+        "permanent": "Vĩnh viễn",
+        "duration": "Thời hạn"
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -1822,6 +1823,15 @@
         "xp_loss_label": "Tổn thất XP",
         "cooldown": "⏳ Bạn cần thời gian để chuẩn bị cho cuộc vây bắt tiếp theo. Hãy quay lại sau **{{time}}**.",
         "failed": "❌ Tên tội phạm **{{user}}** đã quá xảo quyệt và trốn thoát thành công! Bạn bị trừ một ít kinh nghiệm vì sơ suất."
+    },
+    "bounty": {
+        "invalid_target": "❌ Bạn phải tag một người dùng hợp lệ để treo thưởng (không phải bản thân hoặc bot).",
+        "missing_amount": "❌ Vui lòng nhập số tiền treo thưởng (vd: 50k, 1m).",
+        "invalid_amount": "❌ Số tiền treo thưởng tối thiểu là **{{min}}** coins!",
+        "invalid_duration": "❌ Định dạng thời gian không hợp lệ! Dùng vd: `1h`, `30m`, `1d` (Tối thiểu 5p).",
+        "title_success": "ĐÃ TREO THƯỞNG",
+        "success_desc": "🎯 **{{user}}** đã treo thưởng {{emoji}} **{{amount}}** lên đầu của **{{target}}**!\n\nTrạng thái hiện tại: {{stars}}",
+        "expires_in": "Lệnh truy nã sẽ hết hạn {{time}}"
     },
     "hack": {
         "hacker_only": "❌ Chỉ **Hacker** mới có đủ kỹ năng để thực hiện việc này!",
