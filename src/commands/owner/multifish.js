@@ -1,8 +1,9 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
 const { CATCHES, getWeightedPool, calculateFishingLuck } = require('../../utils/fishData');
-const { calculateReward } = require('../../utils/multiplier');
 const { t } = require('../../utils/i18n');
+const { calculateReward, getXpMultiplier } = require('../../utils/multiplier');
+const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 const config = require('../../config');
 const path = require('path');
 
@@ -46,6 +47,10 @@ module.exports = {
             'treasure_chest': { buff: 618 }
         };
 
+        const xpMin = XP_AMOUNTS.COMMAND_SUCCESS.min;
+        const xpMax = XP_AMOUNTS.COMMAND_SUCCESS.max;
+        const xpMulti = await getXpMultiplier(message.member, message.guild.id);
+
         let totalCoins = 0;
         let catchesSummary = {};
         let rareCatches = [];
@@ -53,9 +58,13 @@ module.exports = {
         let activeBuffs = [];
         try { activeBuffs = JSON.parse(user.active_buffs || '[]'); } catch { activeBuffs = []; }
         let buffsCaughtCount = 0;
+        let totalXP = 0;
         try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
 
         for (let i = 0; i < count; i++) {
+            // XP Gain
+            const baseXP = Math.floor(Math.random() * (xpMax - xpMin + 1)) + xpMin;
+            totalXP += Math.floor(baseXP * xpMulti);
             let random = Math.random() * totalWeight;
             let caughtItem = pool[0];
 
@@ -115,6 +124,7 @@ module.exports = {
             active_buffs: JSON.stringify(activeBuffs)
         });
         await db.addBalance(message.guild.id, message.author.id, totalCoins);
+        await addXp(message.member, totalXP, message.guild.id, true); // Bypass cooldown for multi-catch
 
         // Build Summary
         const topCatches = Object.entries(catchesSummary)
@@ -128,6 +138,7 @@ module.exports = {
             .setColor(config.COLORS.SUCCESS)
             .addFields(
                 { name: '💰 Total Earnings', value: `\`${totalCoins.toLocaleString()}\` ${config.EMOJIS.COIN}`, inline: true },
+                { name: '✨ XP Gained', value: `\`+${totalXP.toLocaleString()}\` XP`, inline: true },
                 { name: '✨ Luck Used', value: `\`${totalLuck.toFixed(2)}x\``, inline: true },
                 { name: '📊 Top Catches', value: topCatches || 'None', inline: false }
             );

@@ -1,13 +1,17 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const path = require('path');
 const db = require('../../database');
-const { getLevelMultiplier } = require('../../utils/leveling');
-const { getUserMultiplier, getTotalIncomeMultiplier, hasActiveItem } = require('../../utils/multiplier');
+const { getLevelMultiplier, addXp, XP_AMOUNTS } = require('../../utils/leveling');
+const {
+    getUserMultiplier,
+    getTotalIncomeMultiplier,
+    hasActiveItem,
+    calculateReward
+} = require('../../utils/multiplier');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const SHOP_ITEMS = require('../../utils/shopItems');
-const { calculateReward } = require('../../utils/multiplier');
 const { RODS, BAITS, CATCHES, getWeightedPool } = require('../../utils/fishData');
 
 
@@ -188,7 +192,11 @@ module.exports = {
                 trophyMsg = t('fish.trophy_catch', lang);
             }
 
-            const { total: totalValue, bonus: bonusAmount, percent } = await calculateReward(baseValue, message.member, 'income');
+            const { total: totalValue, bonus: bonusAmount, percent, cap } = await calculateReward(baseValue, message.member, 'income', { category: 'fish' });
+
+            // Add XP Gain
+            const baseXP = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
+            const xpResult = await addXp(message.member, baseXP, message.guild.id);
 
             await db.addBalance(message.guild.id, message.author.id, totalValue);
 
@@ -199,10 +207,14 @@ module.exports = {
             // Update income field to show total
             embed.spliceFields(1, 1, { name: t('fish.income', lang), value: `${config.EMOJIS.COIN} **+${totalValue.toLocaleString()}**`, inline: true });
 
+            if (xpResult && xpResult.level > 0) {
+                embed.addFields({ name: '✨ XP', value: `+${baseXP.toLocaleString()}`, inline: true });
+            }
+
             if (bonusAmount > 0) {
                 embed.addFields({
                     name: t('fish.item_bonus', lang, { amount: bonusAmount.toLocaleString(), emoji: config.EMOJIS.COIN }),
-                    value: t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: percent.toLocaleString() })
+                    value: t('fish.bonus_percent', lang, { percent: percent, cap: cap })
                 });
             }
 

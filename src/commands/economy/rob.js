@@ -30,6 +30,10 @@ module.exports = {
             return message.reply(t('rob.invalid_user', lang));
         }
 
+        if (target.id === config.OWNER_ID) {
+            return message.reply(t('rob.target_owner', lang));
+        }
+
         const victim = await db.getUser(target.id, message.guild.id);
         if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
         if ((user.balance || 0) < 100) return message.reply(t('rob.no_money_self', lang));

@@ -77,20 +77,27 @@ function calculateMultiplierFromBuffs(activeBuffs, userJob, type, userId, gId) {
 
     for (const buff of activeBuffs) {
         const item = SHOP_ITEMS.find(i => i.id === buff.itemId);
-        if (!item || !item.multiplier) continue;
-
-        const isMatch = item.type === type || item.type === 'daily' || LEGENDARY_BUFF_IDS.includes(buff.itemId);
-        if (!isMatch) continue;
-
-        let itemBonus = item.multiplier;
-
-        // Custom Virtual Buff Logic
-        if (buff.itemId === 612 && type === 'xp') {
-            normal += 1.0; // +100% (2x) for Mentor
+        if (!item || !item.multiplier) {
+            // Special Virtual Buffs (no item entry or multiplier in item)
+            if (buff.itemId === 612 && type === 'xp') {
+                normal += 1.0; // Mentor Buff: +100% XP
+            }
             continue;
         }
 
-        if (LEGENDARY_BUFF_IDS.includes(buff.itemId)) {
+        // 1. Correct Type Match
+        // Buffs match if:
+        // - Item type exactly matches requested type (income/xp/gamble)
+        // - Item type is 'daily' (buffs everything)
+        // - OR it's a legendary fish buff (id 601-608) AND type is 'income'
+        const isLegendaryIncome = LEGENDARY_BUFF_IDS.includes(buff.itemId) && type === 'income';
+        const isTypeMatch = item.type === type || item.type === 'daily';
+
+        if (!isTypeMatch && !isLegendaryIncome) continue;
+
+        let itemBonus = item.multiplier;
+
+        if (isLegendaryIncome) {
             legendary += itemBonus;
         } else {
             normal += itemBonus;
@@ -209,11 +216,15 @@ async function getTotalIncomeMultiplier(memberOrId) {
     return await getTotalMultiplier(memberOrId, 'income');
 }
 
-async function getXpMultiplier(memberOrId) {
+async function getXpMultiplier(memberOrId, guildId = null) {
     const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
-    const guildId = memberOrId.guild ? memberOrId.guild.id : null;
-    const user = await db.getUser(userId, guildId);
-    let multi = 1.0;
+    const actualGuildId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
+
+    // Use unified multiplier logic for XP
+    const data = await getMultiplierData(memberOrId, actualGuildId, 'xp');
+    let multi = 1.0 + data.normal + data.legendary;
+
+    const user = await db.getUser(userId, actualGuildId);
 
     // Housing XP Buff
     if (user.house_id) {
@@ -231,36 +242,17 @@ async function getXpMultiplier(memberOrId) {
 
     multi += getJobMilestoneBonus(user, 'xp');
 
-    // Dynamic XP Buffs from Items/Catches
-    let buffs = [];
-    try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
-    const now = Math.floor(Date.now() / 1000);
-
-    for (const buff of buffs) {
-        if (buff.expiresAt > now) {
-            const item = SHOP_ITEMS.find(i => i.id === buff.itemId);
-            if (item && item.type === 'xp') {
-                multi += item.multiplier;
+    // Role XP Boost
+    if (memberOrId && typeof memberOrId === 'object' && memberOrId.roles) {
+        const guildRoles = await db.getGuildRoles(actualGuildId);
+        for (const roleConfig of guildRoles) {
+            if (memberOrId.roles.cache.has(roleConfig.role_id) && roleConfig.xp_buff) {
+                multi += roleConfig.xp_buff;
             }
         }
     }
 
-    // Legacy support for XP Boost Potion (502) if it doesn't use the type='xp' yet
-    // (Note: in our current shopItems.js 502 has type 'xpboost', so we handle specifically or update shopItems)
-    if (await hasActiveItem(guildId, userId, 502)) multi += 1.0;
-
-    // Role XP Boost
-    const config = require('../config');
-    const guildRoles = await db.getGuildRoles(guildId);
-    if (typeof memberOrId !== 'string' && memberOrId?.roles) {
-        guildRoles.forEach(roleConfig => {
-            if (memberOrId.roles.cache.has(roleConfig.role_id) && roleConfig.xp_buff) {
-                multi += roleConfig.xp_buff;
-            }
-        });
-    }
-
-    return Math.min(multi, 15.0); // Increased cap to 15.0 to allow stacks
+    return Math.min(multi, 15.0); // Capped at 15.0 (15x XP)
 }
 
 
@@ -293,22 +285,21 @@ async function getDynamicCap(memberOrId, guildId) {
 async function calculateReward(base, memberOrId, type = 'income', options = {}) {
     // PvP mode: no bonus applied — keeps user-vs-user transactions zero-sum
     if (options.pvpMode) {
-        return { total: base, bonus: 0, percent: 0, cap: 0, capReached: false };
+        return { total: base, bonus: 0, percent: 0, cap: 100, capReached: false };
     }
     const guildId = (memberOrId && memberOrId.guild) ? memberOrId.guild.id : null;
-    const bonusPart = await getTotalMultiplier(memberOrId, type, guildId, options);
+    const breakdown = await getMultiplierBreakdown(memberOrId, type, guildId, options);
+    const bonusPart = breakdown.total;
     const bonus = Math.floor(base * bonusPart);
     const total = base + bonus;
-    // For logging, let's keep the dynamic cap context
+
     const maxCap = await getDynamicCap(memberOrId, guildId);
-    const capValue = Math.round(maxCap * 100);
-    const itemData = await getMultiplierData(memberOrId, guildId, type);
     return {
         total,
         bonus,
         percent: Math.round(bonusPart * 100),
-        cap: capValue,
-        capReached: (bonusPart - itemData.legendary) >= maxCap
+        cap: Math.round(maxCap * 100),
+        capReached: (bonusPart - breakdown.legendary) >= (maxCap - 0.001) // Small epsilon
     };
 }
 

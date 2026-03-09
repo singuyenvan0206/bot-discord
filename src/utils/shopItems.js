@@ -51,7 +51,7 @@ module.exports = [
     // GROUP 500 — other (special utility items)
     // ==========================================
     { id: 501, name: 'Shield of Protection', price: 5000, multiplier: 0, duration: 86400, type: 'robshield', emoji: '🛡️' },
-    { id: 502, name: 'XP Boost Potion', price: 100000, multiplier: 0, duration: 86400, type: 'xpboost', emoji: '🧪' },
+    { id: 502, name: 'XP Boost Potion', price: 100000, multiplier: 1.0, duration: 86400, type: 'xp', emoji: '🧪' },
     { id: 503, name: 'Career Change Voucher', price: 2000000, multiplier: 0, type: 'other', emoji: '🎫' },
 
     // ==========================================
@@ -68,7 +68,7 @@ module.exports = [
     { id: 615, name: "Dragonfish's Wisdom", price: 0, multiplier: 0.20, duration: 3600, type: 'xp', unbuyable: true, emoji: '🐉' },
     { id: 616, name: "Phoenix's Rebirth", price: 0, multiplier: 0.25, duration: 3600, type: 'xp', unbuyable: true, emoji: '🔥' },
     { id: 617, name: "Angler's Insight", price: 0, multiplier: 0.15, duration: 1800, type: 'xp', unbuyable: true, emoji: '🏮' },
-    { id: 618, name: "Treasure's Luck", price: 0, multiplier: 0.10, duration: 1800, type: 'xp', unbuyable: true, emoji: '💰' },
+    { id: 618, name: "Treasure's Wealth", price: 0, multiplier: 0.15, duration: 1800, type: 'income', unbuyable: true, emoji: '💰' },
 
     // ==========================================
     // GROUP 700 — social (marriage items)
