@@ -22,13 +22,84 @@ module.exports = {
             }
         }
 
-        // 1. Button Interactions (Giveaways)
-        if (interaction.isButton() && interaction.customId === BUTTON_ID) {
-            return handleButtonEntry(interaction);
+        const user = await db.getUser(interaction.user.id, interaction.guildId);
+        const nowSeconds = Math.floor(Date.now() / 1000);
+        let prisonUntil = Number(user.prison_until || 0);
+
+        // Natural Prison Release Cleanup
+        if (prisonUntil > 0 && nowSeconds >= prisonUntil) {
+            await db.execute(
+                `UPDATE users SET 
+                prison_until = 0, 
+                bounty = 0, 
+                wanted_level = 0, 
+                wanted_expires_at = 0, 
+                bounty_placers = '[]'
+                WHERE id = ?`,
+                [interaction.user.id]
+            );
+            prisonUntil = 0; // Update local variable to allow interaction
         }
 
-        // 2. Slash Commands
-        if (interaction.isChatInputCommand()) {
+        const isInPrison = nowSeconds < prisonUntil && !await db.isOwner(interaction.user.id);
+
+        // 1. Button Interactions
+        if (interaction.isButton()) {
+            // General Prison Check for Buttons
+            if (isInPrison) {
+                // Allow bail and check reward
+                const allowedButtonIds = ['bail', 'check_dist_reward'];
+                const isAllowed = allowedButtonIds.some(id => interaction.customId.includes(id));
+                if (!isAllowed) {
+                    const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
+                    return interaction.reply({
+                        content: t('common.user_in_prison_global', lang, { time: timeLeft }),
+                        flags: [64]
+                    });
+                }
+            }
+
+            if (interaction.customId === BUTTON_ID) {
+                return handleButtonEntry(interaction);
+            }
+            if (interaction.customId === 'check_dist_reward') {
+                const amount = user ? (user.last_dist_amount || 0) : 0;
+
+                if (amount <= 0) {
+                    return interaction.reply({
+                        content: t('economy.no_reward_msg', lang) || "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc phần thưởng đã hết hạn.",
+                        flags: [64]
+                    });
+                }
+
+                return interaction.reply({
+                    content: t('economy.ephemeral_reward_msg', lang, {
+                        amount: amount.toLocaleString(),
+                        emoji: config.EMOJIS.COIN
+                    }) || `Bạn đã nhận được **${amount.toLocaleString()}** ${config.EMOJIS.COIN} từ đợt chia thưởng vừa rồi! 🎉`,
+                    flags: [64]
+                });
+            }
+        }
+
+        // 2. String Select Menu Interactions
+        else if (interaction.isStringSelectMenu()) {
+            // General Prison Check for Select Menus
+            if (isInPrison) {
+                // Allow rank menu for profile browsing
+                if (!interaction.customId.startsWith('rank_')) {
+                    const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
+                    return interaction.reply({
+                        content: t('common.user_in_prison_global', lang, { time: timeLeft }),
+                        flags: [64]
+                    });
+                }
+            }
+            // All rank_ interactions are handled by the inline collector in rank.js
+        }
+
+        // 3. Slash Commands
+        else if (interaction.isChatInputCommand()) {
             const commandName = interaction.commandName;
 
             // Check if bot is "shut down"
@@ -40,12 +111,8 @@ module.exports = {
             const command = client.commands.get(commandName);
             if (!command) return;
 
-            // Prison Lockdown check
-            const user = await db.getUser(interaction.user.id, interaction.guildId);
-            const nowSeconds = Math.floor(Date.now() / 1000);
-            const prisonUntil = Number(user.prison_until || 0);
-
-            if (nowSeconds < prisonUntil && !await db.isOwner(interaction.user.id)) {
+            // Prison Lockdown check for Slash Commands
+            if (isInPrison) {
                 if (!config.PRISON.BLOCK_EXCEPTIONS.includes(commandName)) {
                     const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
                     return interaction.reply({
@@ -267,35 +334,6 @@ module.exports = {
                     }
                 }
             }
-        }
-
-        // 3. Button Interactions
-        else if (interaction.isButton()) {
-            if (interaction.customId === 'check_dist_reward') {
-                const user = await db.getUser(interaction.user.id);
-                const amount = user ? (user.last_dist_amount || 0) : 0;
-
-                if (amount <= 0) {
-                    return interaction.reply({
-                        content: t('economy.no_reward_msg', lang) || "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc phần thưởng đã hết hạn.",
-                        flags: [64]
-                    });
-                }
-
-                return interaction.reply({
-                    content: t('economy.ephemeral_reward_msg', lang, {
-                        amount: amount.toLocaleString(),
-                        emoji: config.EMOJIS.COIN
-                    }) || `Bạn đã nhận được **${amount.toLocaleString()}** ${config.EMOJIS.COIN} từ đợt chia thưởng vừa rồi! 🎉`,
-                    flags: [64]
-                });
-            }
-            // All rank_ interactions are handled by the inline collector in rank.js
-        }
-
-        // 4. Select Menu Interactions
-        else if (interaction.isStringSelectMenu()) {
-            // All rank_ interactions are handled by the inline collector in rank.js
         }
     },
 };

@@ -77,16 +77,32 @@ module.exports = {
         const nowSeconds = Math.floor(Date.now() / 1000);
         const prisonUntil = Number(user.prison_until || 0);
 
-        // Prison Lockdown check
-        if (nowSeconds < prisonUntil && !await db.isOwner(message.author.id)) {
-            if (!config.PRISON.BLOCK_EXCEPTIONS.includes(commandName)) {
-                const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
-                return message.reply(t('common.user_in_prison_global', lang, { time: timeLeft }));
-            }
+        // Natural Prison Release Cleanup
+        if (prisonUntil > 0 && nowSeconds >= prisonUntil) {
+            await db.execute(
+                `UPDATE users SET 
+                prison_until = 0, 
+                bounty = 0, 
+                wanted_level = 0, 
+                wanted_expires_at = 0, 
+                bounty_placers = '[]'
+                WHERE id = ?`,
+                [message.author.id]
+            );
         }
 
         const command = client.commands.get(commandName) ||
             client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+        // Prison Lockdown check
+        if (nowSeconds < prisonUntil && !await db.isOwner(message.author.id)) {
+            // If command exists, check its primary name. If it doesn't exist, it will be handled (ignored) below.
+            const checkName = command ? command.name : commandName;
+            if (!config.PRISON.BLOCK_EXCEPTIONS.includes(checkName)) {
+                const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
+                return message.reply(t('common.user_in_prison_global', lang, { time: timeLeft }));
+            }
+        }
 
         if (!command) return;
 

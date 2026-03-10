@@ -69,10 +69,7 @@ module.exports = {
             const xpLoss = 200;
             const xpResult = await deductXp(target.id, message.guild.id, xpLoss);
 
-            // 3. Reset Criminal Status
-            await db.execute('UPDATE users SET bounty = 0, wanted_level = 0, wanted_expires_at = 0, bounty_placers = ? WHERE id = ?', ["[]", target.id]);
-
-            // 4. Penalty: Prison (Lockdown scaled by Stars)
+            // 3. Penalty: Prison (Lockdown scaled by Stars)
             const prisonTime = config.PRISON.BASE_TIME + (stars * config.PRISON.STARS_MULTIPLIER);
             const releaseTime = now + prisonTime;
 
