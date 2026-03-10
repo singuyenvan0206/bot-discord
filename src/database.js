@@ -538,7 +538,7 @@ async function removeBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
 
     if (guildId && uId === botId) {
         const current = await getGuildSetting(guildId, 'bot_balance', 0);
-        await setGuildSetting(guildId, 'bot_balance', Math.max(0, Number(current) - amt));
+        await setGuildSetting(guildId, 'bot_balance', Number(current) - amt);
         return;
     }
 
@@ -546,7 +546,7 @@ async function removeBalance(guildIdOrUserId, userIdOrAmount, amountOnly) {
 }
 
 async function removeGlobalBalance(userId, amount) {
-    await execute('UPDATE users SET balance = GREATEST(0, balance - ?) WHERE id = ?', [amount, userId]);
+    await execute('UPDATE users SET balance = balance - ? WHERE id = ?', [amount, userId]);
 }
 
 async function getTopUsers(guildId, limit = 100, type = 'balance', filter = null) {

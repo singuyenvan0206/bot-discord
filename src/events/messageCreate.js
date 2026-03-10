@@ -95,7 +95,7 @@ module.exports = {
             client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
         // Prison Lockdown check
-        if (nowSeconds < prisonUntil && !await db.isOwner(message.author.id)) {
+        if (nowSeconds < prisonUntil) {
             // If command exists, check its primary name. If it doesn't exist, it will be handled (ignored) below.
             const checkName = command ? command.name : commandName;
             if (!config.PRISON.BLOCK_EXCEPTIONS.includes(checkName)) {

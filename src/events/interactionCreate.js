@@ -41,7 +41,7 @@ module.exports = {
             prisonUntil = 0; // Update local variable to allow interaction
         }
 
-        const isInPrison = nowSeconds < prisonUntil && !await db.isOwner(interaction.user.id);
+        const isInPrison = nowSeconds < prisonUntil;
 
         // 1. Button Interactions
         if (interaction.isButton()) {
