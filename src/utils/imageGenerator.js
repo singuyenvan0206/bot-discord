@@ -10,9 +10,10 @@ registerFont(fontPath, { family: 'WantedFont' });
  * @param {string} avatarUrl - Đường dẫn đến ảnh đại diện
  * @param {string} name - Tên nhân vật
  * @param {number|string} bounty - Số tiền thưởng
+ * @param {boolean} isCaptured - Trạng thái đã bị bắt hay chưa
  * @returns {Promise<Buffer>} - Trả về buffer ảnh PNG
  */
-async function generateWantedPoster(avatarUrl, name, bounty) {
+async function generateWantedPoster(avatarUrl, name, bounty, isCaptured = false) {
     try {
         const templatePath = path.resolve(__dirname, '..', 'assets', 'wanted_template.png');
 
@@ -146,6 +147,35 @@ async function generateWantedPoster(avatarUrl, name, bounty) {
             ctx.fillRect(x, y, size, size);
         }
         ctx.restore();
+
+        // 7. Vẽ dấu mộc "CAPTURED" nếu đã bị bắt
+        if (isCaptured) {
+            ctx.save();
+            // Cấu hình dấu mộc
+            const stampText = "CAPTURED";
+            ctx.font = 'bold 80px "WantedFont", sans-serif';
+            ctx.fillStyle = 'rgba(180, 0, 0, 0.7)'; // Màu đỏ dấu mộc
+            ctx.strokeStyle = 'rgba(120, 0, 0, 0.8)';
+            ctx.lineWidth = 4;
+
+            // Di chuyển và xoay
+            ctx.translate(320, 300); // Giữa vùng avatar
+            ctx.rotate(-Math.PI / 6); // Xoay ngược chiều kim đồng hồ 30 độ
+
+            // Vẽ chữ
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Vẽ viền khung dấu mộc
+            const metrics = ctx.measureText(stampText);
+            const padding = 20;
+            ctx.strokeRect(-metrics.width / 2 - padding, -40 - padding / 2, metrics.width + padding * 2, 80 + padding);
+
+            ctx.fillText(stampText, 0, 0);
+            ctx.strokeText(stampText, 0, 0);
+
+            ctx.restore();
+        }
 
         return canvas.toBuffer('image/png');
     } catch (error) {

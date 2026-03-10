@@ -30,10 +30,13 @@ module.exports = {
                 return message.reply(t('wanted.not_found', lang, { user: target.username }));
             }
 
+            const now = Math.floor(Date.now() / 1000);
+            const isCaptured = Number(userData.prison_until || 0) > now;
+
             const wantedAttachment = await (async () => {
                 try {
                     const avatarUrl = target.displayAvatarURL({ extension: 'png', size: 512 });
-                    const imageBuffer = await generateWantedPoster(avatarUrl, target.username, bounty);
+                    const imageBuffer = await generateWantedPoster(avatarUrl, target.username, bounty, isCaptured);
                     return new AttachmentBuilder(imageBuffer, { name: 'wanted.png' });
                 } catch (err) {
                     console.error('Failed to generate individual wanted poster:', err);
@@ -50,6 +53,8 @@ module.exports = {
                     bounty: bounty.toLocaleString(),
                     emoji: config.EMOJIS.COIN,
                     stars: starString,
+                    status_label: t('wanted.status_label', lang),
+                    status: isCaptured ? t('wanted.status_captured', lang) : t('wanted.status_at_large', lang),
                     expires: timeString
                 }))
                 .setColor(config.COLORS.ERROR)
@@ -65,7 +70,7 @@ module.exports = {
         }
 
         // CASE: Bounty Board (Top 10)
-        const topWanted = await db.queryAll('SELECT id, bounty, wanted_level FROM users WHERE bounty > 0 OR wanted_level > 0 ORDER BY bounty DESC, wanted_level DESC LIMIT 10');
+        const topWanted = await db.queryAll('SELECT id, bounty, wanted_level, prison_until FROM users WHERE bounty > 0 OR wanted_level > 0 ORDER BY bounty DESC, wanted_level DESC LIMIT 10');
 
         if (topWanted.length === 0) {
             return message.reply(t('wanted.board_none', lang));
@@ -83,8 +88,11 @@ module.exports = {
             const userRef = await message.client.users.fetch(row.id).catch(() => ({ username: 'Unknown' }));
             const stars = '⭐'.repeat(row.wanted_level || 1);
 
+            const isCaptured = Number(row.prison_until || 0) > Math.floor(Date.now() / 1000);
+            const statusSuffix = isCaptured ? ` [${t('wanted.status_captured', lang)}]` : '';
+
             boardEmbed.addFields({
-                name: `${i + 1}. ${userRef.username} ${stars}`,
+                name: `${i + 1}. ${userRef.username} ${stars}${statusSuffix}`,
                 value: `${config.EMOJIS.COIN} **${Number(row.bounty).toLocaleString()}**`,
                 inline: false
             });

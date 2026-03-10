@@ -1827,7 +1827,10 @@
         "searching": "🔍 Đang thiết kế lệnh truy nã cho **{{user}}**...",
         "not_found": "❌ Người này hiện không có tiền thưởng hoặc lệnh truy nã.",
         "poster_title": "📜 LỆNH TRUY NÃ: {{user}}",
-        "poster_desc": "📦 Mức độ: {{stars}}\n💰 Tiền thưởng: **{{bounty}}** {{emoji}}\n⏰ Hết hạn: {{expires}}\n\n*Truy nã gắt gao trên toàn cõi server!*"
+        "poster_desc": "📦 Mức độ: {{stars}}\n💰 Tiền thưởng: **{{bounty}}** {{emoji}}\n⚖️ {{status_label}}: {{status}}\n⏰ Hết hạn: {{expires}}\n\n*Truy nã gắt gao trên toàn cõi server!*",
+        "status_label": "Trạng thái",
+        "status_at_large": "⚠️ Đang lẩn trốn (At Large)",
+        "status_captured": "⛓️ Đã bị bắt (Captured)"
     },
     "arrest": {
         "police_only": "❌ Chỉ những người có nghề **Cảnh Sát** mới có thể thực hiện bắt giữ!",

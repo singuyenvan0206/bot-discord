@@ -1826,7 +1826,10 @@
         "searching": "🔍 Designing wanted poster for **{{user}}**...",
         "not_found": "❌ Target has no active bounty or wanted level.",
         "poster_title": "📜 WANTED: {{user}}",
-        "poster_desc": "📦 Wanted Level: {{stars}}\n💰 Bounty: **{{bounty}}** {{emoji}}\n⏰ Expires: {{expires}}\n\n*Wanted dead or alive across the server!*"
+        "poster_desc": "📦 Wanted Level: {{stars}}\n💰 Bounty: **{{bounty}}** {{emoji}}\n⚖️ {{status_label}}: {{status}}\n⏰ Expires: {{expires}}\n\n*Wanted dead or alive across the server!*",
+        "status_label": "Status",
+        "status_at_large": "⚠️ At Large",
+        "status_captured": "⛓️ Captured"
     },
     "arrest": {
         "police_only": "❌ Only users with the **Police** job can perform arrests!",
