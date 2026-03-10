@@ -47,14 +47,16 @@ module.exports = {
         if (interaction.isButton()) {
             // General Prison Check for Buttons
             if (isInPrison) {
-                // Allow bail and check reward
-                const allowedButtonIds = ['bail', 'check_dist_reward'];
-                const isAllowed = allowedButtonIds.some(id => interaction.customId.includes(id));
-                if (!isAllowed) {
-                    const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
+                // Allow specific system-critical or info-related buttons/menus
+                const exceptions = config.PRISON.BLOCK_EXCEPTIONS || [];
+                const isAllowedPrefix = exceptions.some(cmd => interaction.customId.startsWith(`${cmd}_`));
+                const isPagination = ['prev', 'next'].includes(interaction.customId);
+                const isManualBail = interaction.customId.includes('bail') || interaction.customId.includes('check_dist_reward');
+
+                if (!isAllowedPrefix && !isPagination && !isManualBail) {
                     return interaction.reply({
-                        content: t('common.user_in_prison_global', lang, { time: timeLeft }),
-                        flags: [64]
+                        content: t('prison.lockdown_interaction', lang, { time: formatDuration(prisonUntil - nowSeconds, lang) }),
+                        ephemeral: true
                     });
                 }
             }

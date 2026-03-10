@@ -140,13 +140,20 @@ async function processWantedDecay(client) {
 
     // Decay bounty for all users with a bounty
     // Also reduce wanted_level if bounty drops below thresholds
-    const users = await db.queryAll('SELECT id, bounty, wanted_level, wanted_expires_at FROM users WHERE bounty > 0');
+    const users = await db.queryAll('SELECT id, bounty, wanted_level, wanted_expires_at, prison_until FROM users WHERE bounty > 0');
 
     for (const u of users) {
         let newBounty = Number(u.bounty);
         let newStars = Number(u.wanted_level);
 
         const expiresAt = Number(u.wanted_expires_at || 0);
+        const prisonUntil = Number(u.prison_until || 0);
+
+        if (prisonUntil > now) {
+            // Locked in prison! bounty doesn't decay or expire
+            continue;
+        }
+
         if (expiresAt > 0 && now > expiresAt) {
             // Bounty expired! Clear completely
             newBounty = 0;

@@ -36,6 +36,11 @@ module.exports = {
         }
 
         const victim = await db.getUser(target.id, message.guild.id);
+
+        if (Number(victim.prison_until || 0) > now) {
+            return message.reply(t('rob.target_in_prison', lang, { user: target.username }));
+        }
+
         if ((victim.balance || 0) <= 0) return message.reply(t('rob.no_money', lang, { user: target.username }));
         if ((user.balance || 0) < 100) return message.reply(t('rob.no_money_self', lang));
 

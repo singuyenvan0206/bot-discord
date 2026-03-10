@@ -30,6 +30,11 @@ module.exports = {
         }
 
         const criminal = await db.getUser(target.id, message.guild.id);
+
+        if (Number(criminal.prison_until || 0) > now) {
+            return message.reply(t('arrest.target_already_in_prison', lang, { user: target.username }));
+        }
+
         const bounty = Number(criminal.bounty || 0);
         const stars = Number(criminal.wanted_level || 0);
 
