@@ -237,6 +237,9 @@ npm run wc
 
 - [Node.js](https://nodejs.org/) **v18.0.0** or higher
 - A [Discord Bot Token](https://discord.com/developers/applications)
+- **System Dependencies** (for `node-canvas`):
+  - **Ubuntu/Debian**: `sudo apt update && sudo apt install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev`
+  - **Amazon Linux / RHEL**: `sudo yum install gcc-c++ cairo-devel pango-devel libjpeg-turbo-devel giflib-devel`
 
 ### Installation
 

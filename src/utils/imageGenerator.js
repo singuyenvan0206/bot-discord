@@ -1,97 +1,118 @@
-const Jimp = require('jimp');
+const { createCanvas, loadImage, registerFont } = require('canvas');
 const path = require('path');
 
+// Đăng ký font mới (Sử dụng đường dẫn tuyệt đối cho canvas)
+const fontPath = path.resolve(__dirname, '..', 'assets', 'WantedFont.ttf');
+registerFont(fontPath, { family: 'WantedFont' });
+
 /**
- * Tạo Wanted Poster One Piece với tính năng tự động căn chỉnh và co giãn chữ.
- * @param {string} avatarUrl - Đường dẫn đến ảnh đại diện (file local hoặc URL)
+ * Tạo Wanted Poster One Piece với Canvas để hỗ trợ font serif (.ttf) chuyên nghiệp.
+ * @param {string} avatarUrl - Đường dẫn đến ảnh đại diện
  * @param {string} name - Tên nhân vật
  * @param {number|string} bounty - Số tiền thưởng
  * @returns {Promise<Buffer>} - Trả về buffer ảnh PNG
  */
 async function generateWantedPoster(avatarUrl, name, bounty) {
     try {
-        // 1. Định nghĩa đường dẫn và thông số kỹ thuật (Dựa trên template 640x640)
-        const templatePath = path.join(__dirname, '../assets/wanted_template.png');
+        const templatePath = path.resolve(__dirname, '..', 'assets', 'wanted_template.png');
 
-        // --- Thông số căn chỉnh (CỰC KỲ QUAN TRỌNG) ---
+        // --- Thông số căn chỉnh (Dựa trên template 640x640 và điều chỉnh của user) ---
         const config = {
-            // Khung ảnh đại diện (phần màu trắng bên trong khung gỗ)
-            avatar: { x: 70, y: 112, width: 500, height: 356 },
-
-            // Cột bắt đầu cho text (sau chữ NAME: và BERRY:)
-            textLeftX: 195,
-
-            // Vị trí Y (độ cao) cho Tên và Tiền (nằm sát TRÊN dòng kẻ)
-            nameY: 508,   // Dòng 1
-            bountyY: 588, // Dòng 2
-
-            // Chiều rộng tối đa của vùng ghi chữ (để không bị tràn)
-            maxTextWidth: 320,
-
-            // Các Font chữ
-            fontPath: Jimp.FONT_SANS_32_BLACK
+            avatar: { x: 166, y: 187, width: 315, height: 215 },
+            name: { x: 285, y: 475, maxWidth: 280, fontSize: 40 }, // Y được điều chỉnh cho canvas
+            bounty: { x: 360, y: 533, maxWidth: 180, fontSize: 32 }
         };
 
-        // 2. Tải các tài nguyên ảnh (Template, Avatar)
-        const [template, avatar, font] = await Promise.all([
-            Jimp.read(templatePath),
-            // Thử tải avatar, nếu lỗi thì tạo ảnh đen
-            Jimp.read(avatarUrl).catch(() => new Jimp(500, 500, 0x000000ff)),
-            Jimp.loadFont(config.fontPath)
-        ]);
+        // 1. Tải tài nguyên (Sử dụng Buffer cho local file để tránh lỗi fopen trên Windows)
+        const fs = require('fs');
+        const https = require('https');
 
-        // 3. Xử lý ảnh đại diện (Resize & Filter)
-        // Resize để lấp đầy khung nhưng giữ tỷ lệ, sau đó cắt phần thừa
-        avatar.cover(config.avatar.width, config.avatar.height);
+        const fetchBuffer = (url) => new Promise((resolve, reject) => {
+            https.get(url, (res) => {
+                if (res.statusCode !== 200) {
+                    reject(new Error(`Failed to fetch: ${res.statusCode}`));
+                    return;
+                }
+                const chunks = [];
+                res.on('data', (chunk) => chunks.push(chunk));
+                res.on('end', () => resolve(Buffer.concat(chunks)));
+                res.on('error', reject);
+            }).on('error', reject);
+        });
 
-        // Áp dụng filter (màu nâu đỏ/cổ điển) để khớp với poster cũ
-        avatar.sepia();
-        avatar.brightness(-0.05); // Giảm sáng một chút cho cũ kỹ
-        avatar.contrast(0.1);     // Tăng độ tương phản
+        const template = await loadImage(fs.readFileSync(templatePath));
+        let avatar = null;
 
-        // 4. Ghép ảnh đại diện vào Template
-        template.composite(avatar, config.avatar.x, config.avatar.y);
+        if (avatarUrl) {
+            try {
+                if (avatarUrl.startsWith('http')) {
+                    const buffer = await fetchBuffer(avatarUrl);
+                    avatar = await loadImage(buffer);
+                } else {
+                    const avatarPath = path.resolve(avatarUrl);
+                    if (fs.existsSync(avatarPath)) {
+                        avatar = await loadImage(fs.readFileSync(avatarPath));
+                    }
+                }
+            } catch (err) {
+                console.error('Lỗi tải avatar:', err.message);
+            }
+        }
 
-        // 5. Xử lý và Viết chữ (NAME & BOUNTY)
+        // 2. Tạo canvas
+        const canvas = createCanvas(640, 640);
+        const ctx = canvas.getContext('2d');
+
+        // 3. Vẽ Template nền
+        ctx.drawImage(template, 0, 0, 640, 640);
+
+        // 4. Vẽ Avatar với hiệu ứng cuộn (Blend mode để "remove background" của avatar)
+        if (avatar) {
+            console.log('Đang vẽ avatar:', avatarUrl);
+            ctx.save();
+
+            // Sử dụng hiệu ứng hòa trộn Multiply để avatar như in trên giấy
+            // Điều này hiệu quả nhất để "xóa nền" trắng hoặc sáng của ảnh đại diện
+            ctx.globalCompositeOperation = 'multiply';
+            ctx.globalAlpha = 0.95;
+
+            ctx.drawImage(avatar, config.avatar.x, config.avatar.y, config.avatar.width, config.avatar.height);
+            ctx.restore();
+        } else {
+            console.warn('Không có avatar để vẽ!');
+        }
+
+        // 5. Viết chữ (NAME & BOUNTY)
         const nameUpper = name.toUpperCase();
         const bountyFormatted = `${Number(bounty).toLocaleString()}-`;
 
-        // --- HÀM TRỢ GIÚP: Tự động co giãn chữ ---
-        async function printAutoScaledText(image, fontObj, x, y, text, maxWidth) {
-            let currentFont = fontObj;
-            let currentFontSize = 32;
+        // --- Cài đặt font ---
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'left';
 
-            let textWidth = Jimp.measureText(currentFont, text);
-
-            // Vòng lặp thu nhỏ font nếu chữ quá dài
-            while (textWidth > maxWidth && currentFontSize > 12) {
-                currentFontSize -= 4;
-
-                if (currentFontSize <= 24 && currentFontSize > 16) {
-                    currentFont = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
-                } else if (currentFontSize <= 16) {
-                    currentFont = await Jimp.loadFont(Jimp.FONT_SANS_12_BLACK);
-                }
-
-                textWidth = Jimp.measureText(currentFont, text);
-            }
-
-            image.print(currentFont, x, y, text);
+        // Viết Tên
+        ctx.font = `bold ${config.name.fontSize}px "WantedFont", serif`;
+        let currentNameSize = config.name.fontSize;
+        while (ctx.measureText(nameUpper).width > config.name.maxWidth && currentNameSize > 12) {
+            currentNameSize -= 2;
+            ctx.font = `bold ${currentNameSize}px "WantedFont", serif`;
         }
+        ctx.fillText(nameUpper, config.name.x, config.name.y);
 
-        // --- Ghi tên ---
-        await printAutoScaledText(template, font, config.textLeftX, config.nameY, nameUpper, config.maxTextWidth);
+        // Viết Bounty
+        ctx.font = `bold ${config.bounty.fontSize}px "WantedFont", serif`;
+        let currentBountySize = config.bounty.fontSize;
+        while (ctx.measureText(bountyFormatted).width > config.bounty.maxWidth && currentBountySize > 12) {
+            currentBountySize -= 2;
+            ctx.font = `bold ${currentBountySize}px "WantedFont", serif`;
+        }
+        ctx.fillText(bountyFormatted, config.bounty.x, config.bounty.y);
 
-        // --- Ghi số tiền ---
-        await printAutoScaledText(template, font, config.textLeftX, config.bountyY, bountyFormatted, config.maxTextWidth);
-
-        // 6. Trả về Buffer thay vì lưu ra file
-        return await template.getBufferAsync(Jimp.MIME_PNG);
+        return canvas.toBuffer('image/png');
     } catch (error) {
-        console.error('Lỗi khi tạo poster:', error);
+        console.error('Lỗi khi tạo poster (Canvas):', error);
         throw error;
     }
 }
 
-// Xuất hàm để sử dụng trong bounty.js
 module.exports = { generateWantedPoster };
