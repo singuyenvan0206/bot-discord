@@ -46,7 +46,8 @@
         "permanent": "Vĩnh viễn",
         "duration": "Thời hạn",
         "anti_spam_timeout": "⚠️ **Anti-Spam!** Bạn đã bị tắt tiếng trong **{{duration}}** (Vi phạm lần #{{count}}).",
-        "user_in_prison": "❌ Bạn hiện đang bị giam giữ! Bạn sẽ được ra tù vào **{{time}}**."
+        "user_in_prison": "❌ Bạn hiện đang bị giam giữ! Bạn sẽ được ra tù vào **{{time}}**.",
+        "user_in_prison_global": "⛓️ **Lệnh giam giữ:** Bạn đang ở trong tù và không thể thực hiện hành động này! Bạn sẽ được tự do sau **{{time}}**. Bạn có thể dùng `$bail` để nộp phạt ra tù sớm."
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -151,6 +152,12 @@
             "odd": "Số Lẻ",
             "even": "Số Chẵn"
         }
+    },
+    "bail": {
+        "usage": "⚖️ **Đóng tiền bảo lãnh:**\nBạn có thể nộp phạt **{{cost}}** coins để ra tù ngay lập tức (Thời gian còn lại: **{{time}}**).\nDùng `{{prefix}}bail confirm` để xác nhận.",
+        "not_in_prison": "❌ Bạn hiện không ở trong tù!",
+        "insufficient_funds": "❌ Bạn không có đủ tiền để nộp bảo lãnh! Cần: **{{cost}}**, bạn có: **{{balance}}**",
+        "success": "🔓 **Tự do!** Bạn đã nộp **{{cost}}** coins tiền bảo lãnh và được ra tù ngay lập tức. Hãy hoàn lương nhé!"
     },
     "rps": {
         "title": "✂️  Kéo Búa Bao",

@@ -131,5 +131,9 @@ module.exports = {
         LIMIT: 10,          // Number of commands
         WINDOW: 10,         // Time window in seconds
         PUNISHMENTS: [600, 1800, 3600] // Durations in seconds: 10m, 30m, 60m
+    },
+    PRISON: {
+        BAIL_COST_PER_MINUTE: 5000,
+        BLOCK_EXCEPTIONS: ['bail', 'me', 'profile', 'balance', 'help', 'inventory', 'lvl', 'rank', 'leaderboard']
     }
 };

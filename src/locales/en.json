@@ -45,7 +45,9 @@
         "profit": "Net Profit",
         "permanent": "Permanent",
         "duration": "Duration",
-        "anti_spam_timeout": "⚠️ **Anti-Spam!** You have been muted for **{{duration}}** (Violation #{{count}})."
+        "anti_spam_timeout": "⚠️ **Anti-Spam!** You have been muted for **{{duration}}** (Violation #{{count}}).",
+        "user_in_prison": "❌ You are currently in prison! You will be released at **{{time}}**.",
+        "user_in_prison_global": "⛓️ **Prison Lockdown:** You are currently in prison and cannot perform this action! You will be free in **{{time}}**. You can use `$bail` to pay a fine and get out early."
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -1308,6 +1310,12 @@
             "odd": "Odd Number",
             "even": "Even Number"
         }
+    },
+    "bail": {
+        "usage": "⚖️ **Pay Bail:**\nYou can pay a fine of **{{cost}}** coins to be released immediately (Remaining time: **{{time}}**).\nUse `{{prefix}}bail confirm` to confirm.",
+        "not_in_prison": "❌ You are not currently in prison!",
+        "insufficient_funds": "❌ You don't have enough coins for bail! Required: **{{cost}}**, you have: **{{balance}}**",
+        "success": "🔓 **Freedom!** You paid **{{cost}}** coins for bail and have been released immediately. Don't commit crimes again!"
     },
     "rps": {
         "title": "✂️  Rock Paper Scissors",

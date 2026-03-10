@@ -40,6 +40,21 @@ module.exports = {
             const command = client.commands.get(commandName);
             if (!command) return;
 
+            // Prison Lockdown check
+            const user = await db.getUser(interaction.user.id, interaction.guildId);
+            const nowSeconds = Math.floor(Date.now() / 1000);
+            const prisonUntil = Number(user.prison_until || 0);
+
+            if (nowSeconds < prisonUntil && !await db.isOwner(interaction.user.id)) {
+                if (!config.PRISON.BLOCK_EXCEPTIONS.includes(commandName)) {
+                    const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
+                    return interaction.reply({
+                        content: t('common.user_in_prison_global', lang, { time: timeLeft }),
+                        flags: [64]
+                    });
+                }
+            }
+
             let args = [];
             if (commandName === 'giveaway') {
                 const sub = interaction.options.getSubcommand();

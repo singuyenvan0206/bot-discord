@@ -73,6 +73,17 @@ module.exports = {
             return; // Silently ignore banned users or reply with a message
         }
 
+        const nowSeconds = Math.floor(Date.now() / 1000);
+        const prisonUntil = Number(user.prison_until || 0);
+
+        // Prison Lockdown check
+        if (nowSeconds < prisonUntil && !await db.isOwner(message.author.id)) {
+            if (!config.PRISON.BLOCK_EXCEPTIONS.includes(commandName)) {
+                const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
+                return message.reply(t('common.user_in_prison_global', lang, { time: timeLeft }));
+            }
+        }
+
         // const { client } = message;
         const command = client.commands.get(commandName) ||
             client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
@@ -138,6 +149,8 @@ module.exports = {
         }
 
         // Cooldown handling
+        // const nowMillis = Date.now(); // We already have 'now' in seconds above, let's use Date.now() for consistency with cooldowns
+        const nowMillis = Date.now();
         if (!client.cooldowns.has(command.name)) {
             client.cooldowns.set(command.name, new Collection());
         }
@@ -149,7 +162,7 @@ module.exports = {
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
-            if (now < expirationTime && !isBotOwner) {
+            if (nowMillis < expirationTime && !isBotOwner) {
                 const timeLeft = (expirationTime - now) / 1000;
                 return message.reply(t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }));
             }
