@@ -135,7 +135,7 @@ module.exports = {
 
             await db.updateUser(message.guild.id, message.author.id, {
                 prison_until: now + jailTime,
-                last_rob: now + jailTime, // Sync cooldown with prison
+                last_rob: now, // Cooldown starts NOW
                 bounty: penalty,
                 wanted_level: newStars,
                 wanted_expires_at: now + jailTime,
@@ -143,7 +143,7 @@ module.exports = {
             });
 
             if (timestamps) {
-                timestamps.set(message.author.id, (now + jailTime) * 1000);
+                timestamps.set(message.author.id, now * 1000);
             }
 
             // Penalty applied - last_rob already updated above

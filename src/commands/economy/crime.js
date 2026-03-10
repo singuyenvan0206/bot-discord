@@ -120,7 +120,7 @@ module.exports = {
 
             await db.updateUser(message.guild.id, message.author.id, {
                 prison_until: now + jailTime,
-                last_crime: now + jailTime, // Also keep cooldown in sync
+                last_crime: now, // Also keep cooldown in sync
                 bounty: fine,
                 wanted_level: newStars,
                 wanted_expires_at: now + jailTime,
@@ -129,7 +129,7 @@ module.exports = {
 
             // Update memory cooldown
             if (timestamps) {
-                timestamps.set(message.author.id, (now + jailTime) * 1000);
+                timestamps.set(message.author.id, now * 1000);
             }
 
             // Transfer fine to a random Police in the guild

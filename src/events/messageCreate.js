@@ -58,11 +58,12 @@ module.exports = {
         const commandName = (args.shift() || '').toLowerCase();
         if (!commandName) return;
 
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+
         // Check if bot is "shut down" (persisted in DB)
         const isStopped = await db.getGlobalSetting('bot_is_stopped') === 'true';
         if (isStopped && commandName !== 'startup' && commandName !== 'boot') {
             if (!await db.isOwner(message.author.id)) {
-                const lang = await getLanguage(message.author.id, message.guild?.id);
                 return message.reply(t('common.bot_shut_down', lang)).catch(() => { });
             }
         }
@@ -84,13 +85,10 @@ module.exports = {
             }
         }
 
-        // const { client } = message;
         const command = client.commands.get(commandName) ||
             client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
         if (!command) return;
-
-        const lang = await getLanguage(message.author.id, message.guild?.id);
 
         // ─── Anti-Spam (Command Flooding) ───
         const isBotOwner = await db.isOwner(message.author.id);
