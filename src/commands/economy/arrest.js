@@ -31,8 +31,9 @@ module.exports = {
 
         const criminal = await db.getUser(target.id, message.guild.id);
         const bounty = Number(criminal.bounty || 0);
+        const stars = Number(criminal.wanted_level || 0);
 
-        if (bounty <= 0) {
+        if (bounty <= 0 && stars <= 0) {
             return message.reply(t('arrest.no_bounty', lang, { user: target.username }));
         }
 

@@ -19,6 +19,11 @@ module.exports = {
 
         const cooldown = await db.getGuildSetting(message.guild.id, 'crime_cooldown', config.ECONOMY.CRIME_COOLDOWN);
         const lastCrime = Number(user.last_crime || 0);
+        const prisonUntil = Number(user.prison_until || 0);
+
+        if (now < prisonUntil) {
+            return message.reply(t('crime.user_in_prison', lang, { time: formatDuration(prisonUntil - now, lang) }));
+        }
 
         if (now - lastCrime < cooldown) {
             const timeLeft = cooldown - (now - lastCrime);
@@ -77,10 +82,14 @@ module.exports = {
             const bountyGain = Math.floor(total * 0.3);
             const newStars = Math.min(5, (user.wanted_level || 0) + 1);
             const duration = config.WANTED.DURATIONS[newStars] || 3600;
-            const expiresAt = Math.floor(Date.now() / 1000) + duration;
+            const expiresAt = now + duration;
+
+            // Phase 2: Reset placers if the previous bounty had expired
+            const hadExpired = now > (user.wanted_expires_at || 0);
+            const placersQuery = hadExpired ? ', bounty_placers = "[]"' : '';
 
             await db.execute(
-                'UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ? WHERE id = ?',
+                `UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ?${placersQuery} WHERE id = ?`,
                 [bountyGain, newStars, expiresAt, message.author.id]
             );
             msg += `\n${t('crime.wanted_alert', lang, { amount: bountyGain.toLocaleString() })}`;

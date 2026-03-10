@@ -143,24 +143,23 @@ async function processWantedDecay(client) {
     const users = await db.queryAll('SELECT id, bounty, wanted_level, wanted_expires_at FROM users WHERE bounty > 0');
 
     for (const u of users) {
-        // If expired, clear completely
-        if (u.wanted_expires_at > 0 && now > u.wanted_expires_at) {
-            await db.execute('UPDATE users SET bounty = 0, wanted_level = 0, wanted_expires_at = 0 WHERE id = ?', [u.id]);
-            continue;
-        }
-
         // Periodic decay
         const newBounty = Math.max(0, Math.floor(u.bounty * (1 - decayRate)));
 
         // Recalculate stars based on new bounty
+        // If bounty is 0, stars must be 0
         let newStars = 0;
         if (newBounty > 0) {
             const threshold = config.WANTED.BOUNTY_THRESHOLDS.find(t => newBounty >= t.min);
             newStars = threshold ? threshold.stars : 1;
         }
 
-        await db.execute('UPDATE users SET bounty = ?, wanted_level = ? WHERE id = ?', [newBounty, newStars, u.id]);
+        // Only update if something changed
+        if (newBounty !== Number(u.bounty) || newStars !== Number(u.wanted_level)) {
+            const placersQuery = newBounty === 0 ? ', bounty_placers = "[]"' : '';
+            await db.execute(`UPDATE users SET bounty = ?, wanted_level = ?${placersQuery} WHERE id = ?`, [newBounty, newStars, u.id]);
+        }
     }
 }
 
-module.exports = { initScheduler };
+module.exports = { initScheduler, processWantedDecay };

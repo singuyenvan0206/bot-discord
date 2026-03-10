@@ -51,7 +51,7 @@ module.exports = {
         }
 
         // CASE: Bounty Board (Top 10)
-        const topWanted = await db.queryAll('SELECT id, bounty, wanted_level FROM users WHERE bounty > 0 ORDER BY bounty DESC LIMIT 10');
+        const topWanted = await db.queryAll('SELECT id, bounty, wanted_level FROM users WHERE bounty > 0 OR wanted_level > 0 ORDER BY bounty DESC, wanted_level DESC LIMIT 10');
 
         if (topWanted.length === 0) {
             return message.reply(t('wanted.board_none', lang));

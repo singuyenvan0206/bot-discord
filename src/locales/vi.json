@@ -45,7 +45,8 @@
         "profit": "Lợi nhuận ròng",
         "permanent": "Vĩnh viễn",
         "duration": "Thời hạn",
-        "anti_spam_timeout": "⚠️ **Anti-Spam!** Bạn đã bị tắt tiếng trong **{{duration}}** (Vi phạm lần #{{count}})."
+        "anti_spam_timeout": "⚠️ **Anti-Spam!** Bạn đã bị tắt tiếng trong **{{duration}}** (Vi phạm lần #{{count}}).",
+        "user_in_prison": "❌ Bạn hiện đang bị giam giữ! Bạn sẽ được ra tù vào **{{time}}**."
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -318,6 +319,7 @@
         "criminal_escaped": "\n🥷 **Tội phạm:** Bạn đã trốn thoát thành công nhưng bị phạt {{amount}} coins!",
         "teacher_penalty": "Vì vi phạm đạo đức nghề nghiệp, bạn đã bị giáng xuống Cấp độ **{{level}}**! 📉",
         "failure_xp": "🚔 Phi vụ thất bại! Bạn bị phạt **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}",
+        "user_in_prison": "❌ Bạn đang bị giam! Đừng hòng thực hiện phi vụ nào lúc này. ⛓️ Thời gian ra tù: **{{time}}**.",
         "wanted_alert": "🚨 **Cảnh báo truy nã:** Tiền thưởng của bạn đã tăng thêm `{{amount}}` coins!"
     },
     "beg": {
@@ -382,6 +384,7 @@
         "shield_broken": "\n💥 **KHIÊN ĐÃ VỠ!** Khiên Bảo Vệ của {{user}} đã bị vỡ sau đợt cướp này!",
         "teacher_penalty": "Thật là một tấm gương xấu! Bạn đã bị giáng xuống Cấp độ **{{level}}** do hành vi này. 📉",
         "failure_xp": "🚔 Bạn bị {{user}} phát hiện! Phải bồi thường **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}",
+        "user_in_prison": "❌ Bạn đang ở trong tù! Làm sao mà đi cướp được? ⛓️ Bạn sẽ được thả vào **{{time}}**.",
         "wanted_alert": "🚨 **Cảnh báo truy nã:** Tiền thưởng của bạn đã tăng thêm `{{amount}}` coins!"
     },
     "leveling": {

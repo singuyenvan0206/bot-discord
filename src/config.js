@@ -110,11 +110,11 @@ module.exports = {
     WANTED: {
         FEE_PERCENT: 0.1, // 10% fee
         DURATIONS: {
-            1: 900,      // 15 minutes
-            2: 1800,     // 30 minutes
-            3: 3600,     // 1 hour
-            4: 10800,    // 3 hours
-            5: 21600     // 6 hours
+            1: 3600,     // 1 hour
+            2: 7200,     // 2 hours
+            3: 21600,    // 6 hours
+            4: 43200,    // 12 hours
+            5: 86400     // 24 hours
         },
         BOUNTY_THRESHOLDS: [
             { stars: 5, min: 10000000 }, // 10M

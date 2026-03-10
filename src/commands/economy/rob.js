@@ -17,6 +17,11 @@ module.exports = {
         const now = Math.floor(Date.now() / 1000);
         const cooldown = await db.getGuildSetting(message.guild.id, 'rob_cooldown', config.ECONOMY.ROB_COOLDOWN);
         const lastRob = Number(user.last_rob || 0);
+        const prisonUntil = Number(user.prison_until || 0);
+
+        if (now < prisonUntil) {
+            return message.reply(t('rob.user_in_prison', lang, { time: formatDuration(prisonUntil - now, lang) }));
+        }
 
         const isAlreadyOnCooldown = (now - lastRob < cooldown);
 
@@ -95,10 +100,14 @@ module.exports = {
             const bountyGain = Math.floor(victimLoss * 0.5);
             const newStars = Math.min(5, (user.wanted_level || 0) + 1);
             const duration = config.WANTED.DURATIONS[newStars] || 3600;
-            const expiresAt = Math.floor(Date.now() / 1000) + duration;
+            const expiresAt = now + duration;
+
+            // Phase 2: Reset placers if the previous bounty had expired
+            const hadExpired = now > (user.wanted_expires_at || 0);
+            const placersQuery = hadExpired ? ', bounty_placers = "[]"' : '';
 
             await db.execute(
-                'UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ? WHERE id = ?',
+                `UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ?${placersQuery} WHERE id = ?`,
                 [bountyGain, newStars, expiresAt, message.author.id]
             );
             msg += `\n${t('rob.wanted_alert', lang, { amount: bountyGain.toLocaleString() })}`;
@@ -109,14 +118,20 @@ module.exports = {
             let penalty = (user.level * 500) + Math.floor((user.balance || 0) * 0.05);
             const xpLoss = 50;
 
-            // Interaction: Counter-Rob (Penalty doubled if robbing police)
+            // Interactions: Prison Time & Counter-Rob
+            let jailTime = 0;
             if (isVictimPolice) {
                 penalty *= 2;
+                jailTime = 1800; // 30 mins in prison for robbing police
             }
 
             const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, penalty);
             await db.addBalance(message.guild.id, target.id, penalty);
+
+            if (jailTime > 0) {
+                await db.updateUser(message.guild.id, message.author.id, { prison_until: now + jailTime });
+            }
 
             // Penalty applied - last_rob already updated above
 
