@@ -119,7 +119,7 @@ module.exports = {
             const xpLoss = 50;
 
             // Interactions: Prison Time & Counter-Rob
-            let jailTime = 0;
+            let jailTime = 300; // Minimum 5 minutes for any failed robbery
             if (isVictimPolice) {
                 penalty *= 2;
                 jailTime = 1800; // 30 mins in prison for robbing police
@@ -129,8 +129,21 @@ module.exports = {
             await db.removeBalance(message.guild.id, message.author.id, penalty);
             await db.addBalance(message.guild.id, target.id, penalty);
 
-            if (jailTime > 0) {
-                await db.updateUser(message.guild.id, message.author.id, { prison_until: now + jailTime });
+            // Calculate stars based on penalty
+            const threshold = config.WANTED.BOUNTY_THRESHOLDS.find(t => penalty >= t.min);
+            const newStars = threshold ? threshold.stars : 1;
+
+            await db.updateUser(message.guild.id, message.author.id, {
+                prison_until: now + jailTime,
+                last_rob: now + jailTime, // Sync cooldown with prison
+                bounty: penalty,
+                wanted_level: newStars,
+                wanted_expires_at: now + jailTime,
+                bounty_placers: '[]'
+            });
+
+            if (timestamps) {
+                timestamps.set(message.author.id, (now + jailTime) * 1000);
             }
 
             // Penalty applied - last_rob already updated above

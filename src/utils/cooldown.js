@@ -23,4 +23,25 @@ function startCooldown(client, commandName, userId) {
     setTimeout(() => timestamps.delete(userId), cooldownAmount);
 }
 
-module.exports = { startCooldown };
+/**
+ * Resets all cooldowns for a specific user across all commands.
+ * @param {import('discord.js').Client} client 
+ * @param {string} userId 
+ */
+function resetCooldowns(client, userId) {
+    if (!client.cooldowns) return;
+
+    // Clear individual command cooldowns
+    for (const [commandName, timestamps] of client.cooldowns) {
+        if (timestamps.has(userId)) {
+            timestamps.delete(userId);
+        }
+    }
+
+    // Clear anti-spam tracking
+    if (client.spamTrack && client.spamTrack.has(userId)) {
+        client.spamTrack.set(userId, []);
+    }
+}
+
+module.exports = { startCooldown, resetCooldowns };

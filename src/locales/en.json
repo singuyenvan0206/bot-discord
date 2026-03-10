@@ -160,6 +160,15 @@
         "min_bet": "❌ Minimum bet is **{{min}}** coins!",
         "raid_alert": "🚨 **POLICE RAID!** Your hand has been seized, you have been fined **{{amount}}** coins! 🚔"
     },
+    "bail": {
+        "usage": "⚖️ **Pay Bail:**\nUsage: `{{prefix}}bail @user` to check cost or `{{prefix}}bail @user confirm` to pay for them.\nPrisoners cannot bail themselves out!",
+        "not_in_prison": "❌ That user is not currently in prison!",
+        "insufficient_funds": "❌ You don't have enough coins to bail them out! Need: **{{cost}}**, you have: **{{balance}}**",
+        "success": "🔓 **Free!** {{payer}} paid **{{cost}}** coins for bail and **{{prisoner}}** was released immediately. Stay clean!",
+        "most_wanted_denial": "❌ **Bail Denied!** This user is one of the most wanted criminals (5 stars). Their freedom cannot be bought right now!",
+        "usage_detailed": "⚖️ **Bail Fee Breakdown for {{user}}:**\n• Time penalty: **{{time_cost}}**\n• Bounty penalty (20%): **{{bounty_cost}}**\n• **Total: {{total}} coins**\n\nRemaining time: **{{time}}**\nUse `{{prefix}}bail @{{user}} confirm` to confirm payment.",
+        "self_bail_denied": "❌ **Self-Bail Prohibited!** You cannot bail yourself out. You need a friend to pay for your release!"
+    },
     "events": {
         "current_event_title": "🌐 Current Global Event",
         "no_event": "No event active currently.",
@@ -1311,12 +1320,6 @@
             "even": "Even Number"
         }
     },
-    "bail": {
-        "usage": "⚖️ **Pay Bail:**\nYou can pay a fine of **{{cost}}** coins to be released immediately (Remaining time: **{{time}}**).\nUse `{{prefix}}bail confirm` to confirm.",
-        "not_in_prison": "❌ You are not currently in prison!",
-        "insufficient_funds": "❌ You don't have enough coins for bail! Required: **{{cost}}**, you have: **{{balance}}**",
-        "success": "🔓 **Freedom!** You paid **{{cost}}** coins for bail and have been released immediately. Don't commit crimes again!"
-    },
     "rps": {
         "title": "✂️  Rock Paper Scissors",
         "choose": "Choose your weapon!",
@@ -1836,7 +1839,10 @@
         "xp_loss_label": "XP Loss",
         "cooldown": "⏳ You need time to prepare for the next raid. Try again in **{{time}}**.",
         "cannot_arrest_own_bounty": "❌ You cannot arrest a target you placed a bounty on!",
-        "failed": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight."
+        "failed": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight.",
+        "fight_back": "👊 **Resistance!** The criminal **{{criminal}}** violently resisted arrest!",
+        "robbed_during_struggle": "They robbed **{{amount}}** {{emoji}} from you during the struggle!",
+        "injured": "You were injured and need time to recover! Next cooldown: **{{time}}**"
     },
     "bounty": {
         "invalid_target": "❌ You must mention a valid user to place a bounty on (cannot be yourself or a bot).",
@@ -1845,6 +1851,7 @@
         "invalid_duration": "❌ Invalid duration format! Use e.g., `1h`, `30m`, `1d` (Min 5m).",
         "title_success": "BOUNTY PLACED",
         "success_desc": "🎯 **{{user}}** has placed a bounty of {{emoji}} **{{amount}}** on **{{target}}**'s head! (Fee: **{{fee}}**)\n\nCurrent Status: {{stars}}",
+        "anonymous": "Anonymous",
         "expires_in": "Bounty expires {{time}}",
         "target_in_prison": "❌ **{{target}}** is currently serving time in prison! You can only place a bounty after they are released (**{{time}}**)."
     },

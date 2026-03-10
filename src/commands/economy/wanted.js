@@ -1,7 +1,8 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { t, getLanguage } = require('../../utils/i18n');
 const db = require('../../database');
 const config = require('../../config');
+const { generateWantedPoster } = require('../../utils/imageGenerator');
 
 module.exports = {
     name: 'wanted',
@@ -29,8 +30,16 @@ module.exports = {
                 return message.reply(t('wanted.not_found', lang, { user: target.username }));
             }
 
-            const avatarUrl = target.displayAvatarURL({ extension: 'png', size: 512 });
-            const wantedUrl = `https://some-random-api.com/canvas/overlay/wanted?avatar=${encodeURIComponent(avatarUrl)}`;
+            const wantedAttachment = await (async () => {
+                try {
+                    const avatarUrl = target.displayAvatarURL({ extension: 'png', size: 512 });
+                    const imageBuffer = await generateWantedPoster(avatarUrl, target.username, bounty);
+                    return new AttachmentBuilder(imageBuffer, { name: 'wanted.png' });
+                } catch (err) {
+                    console.error('Failed to generate individual wanted poster:', err);
+                    return null;
+                }
+            })();
 
             const starString = '⭐'.repeat(stars || 1);
             const timeString = expiresAt > 0 ? `<t:${expiresAt}:R>` : t('common.permanent', lang);
@@ -43,11 +52,16 @@ module.exports = {
                     stars: starString,
                     expires: timeString
                 }))
-                .setImage(wantedUrl)
                 .setColor(config.COLORS.ERROR)
                 .setTimestamp();
 
-            return message.reply({ embeds: [embed] });
+            const response = { embeds: [embed] };
+            if (wantedAttachment) {
+                embed.setImage('attachment://wanted.png');
+                response.files = [wantedAttachment];
+            }
+
+            return message.reply(response);
         }
 
         // CASE: Bounty Board (Top 10)

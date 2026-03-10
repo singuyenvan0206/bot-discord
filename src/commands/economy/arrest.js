@@ -72,9 +72,8 @@ module.exports = {
             // 3. Reset Criminal Status
             await db.execute('UPDATE users SET bounty = 0, wanted_level = 0, wanted_expires_at = 0, bounty_placers = ? WHERE id = ?', ["[]", target.id]);
 
-            // 4. Penalty: Prison (Lockdown for 4 hours)
-            // Affects: rob, crime, work, daily
-            const prisonTime = 3600 * 4; // 4 hours
+            // 4. Penalty: Prison (Lockdown scaled by Stars)
+            const prisonTime = config.PRISON.BASE_TIME + (stars * config.PRISON.STARS_MULTIPLIER);
             const releaseTime = now + prisonTime;
 
             await db.execute(
@@ -102,13 +101,39 @@ module.exports = {
 
             return message.reply({ embeds: [embed] });
         } else {
-            // Failure: Criminal escapes, Police loses some respect (XP)
-            const xpLoss = 20;
-            await deductXp(message.author.id, message.guild.id, xpLoss);
+            // Failure: Criminal escapes or fights back
+            const resistanceChance = config.ECONOMY.ARREST_RESISTANCE_BASE + (stars * 0.1);
+            const isFightBack = Math.random() < resistanceChance;
 
-            await db.updateUser(message.guild.id, message.author.id, { last_arrest: now });
+            if (isFightBack) {
+                // Criminal fights back: Police gets injured (longer cooldown)
+                const injuryCooldown = now + config.ECONOMY.ARREST_INJURY_COOLDOWN;
+                await db.updateUser(message.guild.id, message.author.id, { last_arrest: injuryCooldown });
 
-            return message.reply(t('arrest.failed', lang, { user: target.username }));
+                let struggleMsg = t('arrest.fight_back', lang, { criminal: target.username });
+
+                // Potential robbery if criminal is higher level
+                if (criminal.level > user.level && Math.random() > 0.5) {
+                    const stolen = Math.floor(Math.random() * (user.balance * 0.05));
+                    if (stolen > 0) {
+                        await db.removeBalance(message.guild.id, message.author.id, stolen);
+                        await db.addBalance(message.guild.id, target.id, stolen);
+                        struggleMsg += `\n🤜 ${t('arrest.robbed_during_struggle', lang, { amount: stolen.toLocaleString(), emoji: config.EMOJIS.COIN })}`;
+                    }
+                }
+
+                return message.reply({
+                    content: struggleMsg + `\n⚠️ ${t('arrest.injured', lang, { time: formatDuration(config.ECONOMY.ARREST_INJURY_COOLDOWN, lang) })}`,
+                    allowedMentions: { repliedUser: true }
+                });
+            } else {
+                // Normal failure: Criminal just escapes
+                const xpLoss = 20;
+                await deductXp(message.author.id, message.guild.id, xpLoss);
+                await db.updateUser(message.guild.id, message.author.id, { last_arrest: now });
+
+                return message.reply(t('arrest.failed', lang, { user: target.username }));
+            }
         }
     }
 };

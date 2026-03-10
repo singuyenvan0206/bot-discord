@@ -77,6 +77,8 @@ module.exports = {
         ROB_SUCCESS_CHANCE: 0.45,
         MAX_BET: 250000,
         TRANSFER_TAX: 0.05, // 10% tax on transfers
+        ARREST_RESISTANCE_BASE: 0.25, // 25% base chance to fight back on failure
+        ARREST_INJURY_COOLDOWN: 7200, // 2 hours if injured
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins
         HOUSE_RETENTION_RATE: 0.4, // Only 40% of profit goes to Bot Fund, 60% is burned
         DEFAULT_COOLDOWN: 3,
@@ -109,6 +111,7 @@ module.exports = {
     OWNER_ID: '765577989663883364',
     WANTED: {
         FEE_PERCENT: 0.1, // 10% fee
+        ANONYMOUS_FEE_MULTIPLIER: 2, // 2x fee for anonymous bounties
         DURATIONS: {
             1: 3600,     // 1 hour
             2: 7200,     // 2 hours
@@ -134,6 +137,10 @@ module.exports = {
     },
     PRISON: {
         BAIL_COST_PER_MINUTE: 5000,
+        BAIL_BOUNTY_PERCENT: 0.2, // 20% of bounty added to bail
+        BASE_TIME: 3600, // 1 hour base
+        STARS_MULTIPLIER: 3600 * 2, // 2 hours per star
+        MAX_BAIL_STARS: 4, // Cannot bail at 5 stars (Most Wanted)
         BLOCK_EXCEPTIONS: ['bail', 'me', 'profile', 'balance', 'help', 'inventory', 'lvl', 'rank', 'leaderboard']
     }
 };

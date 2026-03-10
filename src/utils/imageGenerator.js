@@ -68,26 +68,52 @@ async function generateWantedPoster(avatarUrl, name, bounty) {
 
         // 4. Vẽ Avatar với hiệu ứng cuộn (Blend mode để "remove background" của avatar)
         if (avatar) {
-            console.log('Đang vẽ avatar:', avatarUrl);
             ctx.save();
 
-            // Sử dụng hiệu ứng hòa trộn Multiply để avatar như in trên giấy
-            // Điều này hiệu quả nhất để "xóa nền" trắng hoặc sáng của ảnh đại diện
-            ctx.globalCompositeOperation = 'multiply';
-            ctx.globalAlpha = 0.95;
+            // --- Hiệu ứng In Ấn Thực Tế ---
+            // 4a. Tạo temp canvas để xử lý ảnh (Grayscale/Sepia)
+            const tempCanvas = createCanvas(config.avatar.width, config.avatar.height);
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(avatar, 0, 0, config.avatar.width, config.avatar.height);
 
-            ctx.drawImage(avatar, config.avatar.x, config.avatar.y, config.avatar.width, config.avatar.height);
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+
+                // Grayscale (Luminosity)
+                const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                // Áp dụng Sepia nhẹ để hợp với giấy cũ
+                data[i] = Math.min(255, gray + 40); // R
+                data[i + 1] = Math.min(255, gray + 20); // G
+                data[i + 2] = Math.min(255, gray);      // B
+
+                // Thêm nhiễu hạt (Grain) ngẫu nhiên
+                const noise = (Math.random() - 0.5) * 30;
+                data[i] = Math.max(0, Math.min(255, data[i] + noise));
+                data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
+                data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
+            }
+            tempCtx.putImageData(imageData, 0, 0);
+
+            // 4b. Vẽ temp canvas lên main poster
+            ctx.globalCompositeOperation = 'multiply';
+            ctx.globalAlpha = 0.92;
+            ctx.drawImage(tempCanvas, config.avatar.x, config.avatar.y);
+
             ctx.restore();
-        } else {
-            console.warn('Không có avatar để vẽ!');
         }
 
         // 5. Viết chữ (NAME & BOUNTY)
         const nameUpper = name.toUpperCase();
         const bountyFormatted = `${Number(bounty).toLocaleString()}-`;
 
-        // --- Cài đặt font ---
-        ctx.fillStyle = 'black';
+        // --- Cài đặt font với hiệu ứng Mực Cũ ---
+        ctx.fillStyle = 'rgba(26, 17, 8, 0.95)'; // Màu mực nâu đen (off-black)
         ctx.textAlign = 'left';
 
         // Viết Tên
@@ -107,6 +133,19 @@ async function generateWantedPoster(avatarUrl, name, bounty) {
             ctx.font = `bold ${currentBountySize}px "WantedFont", serif`;
         }
         ctx.fillText(bountyFormatted, config.bounty.x, config.bounty.y);
+
+        // 6. Phủ lớp Grain mỏng toàn bộ poster để đồng bộ
+        ctx.save();
+        ctx.globalCompositeOperation = 'overlay';
+        ctx.globalAlpha = 0.05;
+        for (let i = 0; i < 5000; i++) {
+            const x = Math.random() * 640;
+            const y = Math.random() * 640;
+            const size = Math.random() * 2;
+            ctx.fillStyle = Math.random() > 0.5 ? 'white' : 'black';
+            ctx.fillRect(x, y, size, size);
+        }
+        ctx.restore();
 
         return canvas.toBuffer('image/png');
     } catch (error) {

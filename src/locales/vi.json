@@ -154,10 +154,13 @@
         }
     },
     "bail": {
-        "usage": "⚖️ **Đóng tiền bảo lãnh:**\nBạn có thể nộp phạt **{{cost}}** coins để ra tù ngay lập tức (Thời gian còn lại: **{{time}}**).\nDùng `{{prefix}}bail confirm` để xác nhận.",
-        "not_in_prison": "❌ Bạn hiện không ở trong tù!",
-        "insufficient_funds": "❌ Bạn không có đủ tiền để nộp bảo lãnh! Cần: **{{cost}}**, bạn có: **{{balance}}**",
-        "success": "🔓 **Tự do!** Bạn đã nộp **{{cost}}** coins tiền bảo lãnh và được ra tù ngay lập tức. Hãy hoàn lương nhé!"
+        "usage": "⚖️ **Đóng tiền bảo lãnh:**\nCách dùng: `{{prefix}}bail @nguoi_dung` để xem phí hoặc `{{prefix}}bail @nguoi_dung confirm` để bảo lãnh cho họ.\nNgười trong tù không thể tự bảo lãnh cho chính mình!",
+        "not_in_prison": "❌ Người này hiện không ở trong tù!",
+        "insufficient_funds": "❌ Bạn không có đủ tiền để nộp bảo lãnh cho họ! Cần: **{{cost}}**, bạn có: **{{balance}}**",
+        "success": "🔓 **Tự do!** {{payer}} đã nộp **{{cost}}** coins tiền bảo lãnh để đưa **{{prisoner}}** ra tù ngay lập tức. Hãy hoàn lương nhé!",
+        "most_wanted_denial": "❌ **Từ chối bảo lãnh!** Đây là một trong những tên tội phạm nguy hiểm nhất (5 sao). Không thể dùng tiền để mua chuộc tự do lúc này!",
+        "usage_detailed": "⚖️ **Chi tiết phí bảo lãnh cho {{user}}:**\n• Phí thời gian: **{{time_cost}}**\n• Phí tiền thưởng (20%): **{{bounty_cost}}**\n• **Tổng cộng: {{total}} coins**\n\nThời gian còn lại: **{{time}}**\nDùng `{{prefix}}bail @{{user}} confirm` để xác nhận nộp phạt.",
+        "self_bail_denied": "❌ **Không thể tự bảo lãnh!** Bạn không thể tự dùng tiền của mình để ra tù. Bạn cần một người khác nộp tiền bảo lãnh cho bạn!"
     },
     "rps": {
         "title": "✂️  Kéo Búa Bao",
@@ -1837,7 +1840,10 @@
         "xp_loss_label": "Tổn thất XP",
         "cooldown": "⏳ Bạn cần thời gian để chuẩn bị cho cuộc vây bắt tiếp theo. Hãy quay lại sau **{{time}}**.",
         "cannot_arrest_own_bounty": "❌ Bạn không thể bắt người mà chính bạn đã treo thưởng!",
-        "failed": "❌ Tên tội phạm **{{user}}** đã quá xảo quyệt và trốn thoát thành công! Bạn bị trừ một ít kinh nghiệm vì sơ suất."
+        "failed": "❌ Tên tội phạm **{{user}}** đã quá xảo quyệt và trốn thoát thành công! Bạn bị trừ một ít kinh nghiệm vì sơ suất.",
+        "fight_back": "👊 **Chống trả!** Tên tội phạm **{{criminal}}** đã hung hãn chống trả quyết liệt!",
+        "robbed_during_struggle": "Nó đã cướp mất **{{amount}}** {{emoji}} của bạn trong lúc hỗn loạn!",
+        "injured": "Bạn bị thương và cần thời gian hồi phục! Cooldown tiếp theo: **{{time}}**"
     },
     "bounty": {
         "invalid_target": "❌ Bạn phải tag một người dùng hợp lệ để treo thưởng (không phải bản thân hoặc bot).",
@@ -1846,6 +1852,7 @@
         "invalid_duration": "❌ Định dạng thời gian không hợp lệ! Dùng vd: `1h`, `30m`, `1d` (Tối thiểu 5p).",
         "title_success": "ĐÃ TREO THƯỞNG",
         "success_desc": "🎯 **{{user}}** đã treo thưởng {{emoji}} **{{amount}}** lên đầu của **{{target}}**! (Phí: **{{fee}}**)\n\nTrạng thái hiện tại: {{stars}}",
+        "anonymous": "Ẩn danh",
         "expires_in": "Lệnh truy nã sẽ hết hạn {{time}}",
         "target_in_prison": "❌ **{{target}}** đang bị giam giữ trong tù! Bạn chỉ có thể treo thưởng sau khi người này được thả (**{{time}}**)."
     },

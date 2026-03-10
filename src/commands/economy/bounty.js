@@ -58,8 +58,13 @@ module.exports = {
             }
         }
 
-        // Deduct from sender with 10% fee
-        const feePercent = config.WANTED.FEE_PERCENT || 0.1;
+        // Handle Anonymous flag
+        const isAnonymous = args.some(arg => arg?.toLowerCase() === 'anon' || arg?.toLowerCase() === 'anonymous');
+
+        // Deduct from sender with 10% fee (2x if anonymous)
+        let feePercent = config.WANTED.FEE_PERCENT || 0.1;
+        if (isAnonymous) feePercent *= (config.WANTED.ANONYMOUS_FEE_MULTIPLIER || 2);
+
         const fee = Math.floor(amount * feePercent);
         const totalDeduction = amount + fee;
 
@@ -71,7 +76,7 @@ module.exports = {
 
         // Update target's bounty and placers
         const placers = JSON.parse(victimData.bounty_placers || '[]');
-        if (!placers.includes(message.author.id)) {
+        if (!isAnonymous && !placers.includes(message.author.id)) {
             placers.push(message.author.id);
         }
 
@@ -103,7 +108,7 @@ module.exports = {
             .setTitle(`🎯 ${t('bounty.title_success', lang)}`)
             .setColor(config.COLORS.SUCCESS)
             .setDescription(t('bounty.success_desc', lang, {
-                user: message.author.username,
+                user: isAnonymous ? t('bounty.anonymous', lang) : message.author.username,
                 target: target.username,
                 amount: amount.toLocaleString(),
                 fee: fee.toLocaleString(),

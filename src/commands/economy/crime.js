@@ -111,14 +111,25 @@ module.exports = {
             const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, fine);
 
-            // Cooldown Penalty: Jail Time (2x cooldown for next time)
-            const jailCooldown = config.ECONOMY.CRIME_COOLDOWN;
-            await db.updateUser(message.guild.id, message.author.id, { last_crime: now + jailCooldown });
+            // Cooldown Penalty: Jail Time (Actual Prison Time)
+            const jailTime = 600; // 10 minutes in prison for failing a crime
 
-            // Update memory cooldown to match jail time
+            // Calculate stars based on fine
+            const threshold = config.WANTED.BOUNTY_THRESHOLDS.find(t => fine >= t.min);
+            const newStars = threshold ? threshold.stars : 1;
+
+            await db.updateUser(message.guild.id, message.author.id, {
+                prison_until: now + jailTime,
+                last_crime: now + jailTime, // Also keep cooldown in sync
+                bounty: fine,
+                wanted_level: newStars,
+                wanted_expires_at: now + jailTime,
+                bounty_placers: '[]'
+            });
+
+            // Update memory cooldown
             if (timestamps) {
-                timestamps.set(message.author.id, (now + jailCooldown) * 1000);
-                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+                timestamps.set(message.author.id, (now + jailTime) * 1000);
             }
 
             // Transfer fine to a random Police in the guild
