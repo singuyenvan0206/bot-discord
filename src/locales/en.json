@@ -1,6 +1,7 @@
 {
     "common": {
-        "teacher_tutoring_simple": "\n👨‍🏫 **Tutoring:** You received +50% coins and +10 XP bonus!",
+        "event": "Event",
+        "invalid_channel": "❌ Invalid channel!",
         "error": "An error occurred while executing this command! ❌",
         "insufficient_funds": "❌ You don't have enough money! Balance: **{{balance}}**",
         "invalid_amount": "❌ Invalid amount.",
@@ -139,7 +140,8 @@
         "ngu_linh_lose": "😔 **Dealer has Five Card Charlie!** You lost{{amount}}!",
         "ngu_linh_tie": "🤝 **Both have Five Card Charlie!**{{refund}}",
         "ngu_linh_title": "FIVE CARD CHARLIE",
-        "ngu_linh_msg": "🏆 **Five Card Charlie!**"
+        "ngu_linh_msg": "🏆 **Five Card Charlie!**",
+        "raid_cancelled": "🚔 **RAIDED!** The Blackjack game was cancelled because players were caught by police!"
     },
     "tictactoe": {
         "title": "❌⭕  Tic-Tac-Toe",
@@ -272,16 +274,17 @@
         "success": "💰 You successfully **{{action}}** and walked away with **{{amount}}** coins! {{emoji}}",
         "failure": "🚔 Heist failed! You were caught by the police and fined **{{amount}}** coins.",
         "actions": [
-            "stole a neighbor's bicycle",
-            "robbed a jewelry store",
-            "hacked a bank account",
-            "trafficked contraband",
-            "pickpocketed a tourist",
-            "manipulated the stock market"
+            "stealing a neighbor's bike",
+            "robbing a jewelry store",
+            "hacking a bank account",
+            "smuggling contraband",
+            "pickpocketing tourists",
+            "manipulating the stock market"
         ],
         "hacker_hacked": "\n💻 **Hacker:** You bypassed the security, reward doubled!",
         "criminal_escaped": "\n🥷 **Criminal:** You escaped successfully but were fined {{amount}} coins!",
-        "teacher_penalty": "Due to professional misconduct, you have been demoted to Level **{{level}}**! 📉",
+        "teacher_penalty": "Because of professional misconduct, you've been demoted to Level **{{level}}**! 📉",
+        "user_in_prison": "❌ You are currently in prison! You cannot perform any crimes. ⛓️ Release time: **{{time}}**.",
         "failure_xp": "🚔 Heist failed! You were fined **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}",
         "wanted_alert": "🚨 **Wanted Alert:** Your bounty increased by `{{amount}}` coins!"
     },
@@ -327,7 +330,6 @@
             "park bench",
             "old pocket",
             "sofa cushions",
-            "closet corner",
             "parking lot",
             "sewer"
         ],
@@ -354,9 +356,11 @@
         "teacher_penalty": "What a terrible role model! You have been demoted to Level **{{level}}**! 📉",
         "failure_xp": "🚔 You were caught by {{user}}! You must pay **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}",
         "target_in_prison": "❌ **{{user}}** is in prison! You cannot rob someone who is incarcerated.",
+        "user_in_prison": "❌ You are currently in prison! How can you rob anyone? ⛓️ Release time: **{{time}}**.",
         "wanted_alert": "🚨 **Wanted Alert:** Your bounty increased by `{{amount}}` coins!"
     },
     "job": {
+        "teacher_tutoring_simple": "\n👨‍🏫 **Tutoring:** You received +50% coins and +10 XP bonus!",
         "list_title": "💼 Career Center",
         "list_desc": "Select a career to gain permanent passive buffs and unique abilities. You can only have one career at a time.",
         "tip_detail": "Use `{{prefix}}job set <id>` to choose a career.",
@@ -799,8 +803,13 @@
         },
         "608": {
             "name": "🌀 Void's Blessing",
-            "desc": "Power from the abyss (+75% All Rewards | 4 hours)",
-            "details": "A gift from the deepest trench. The Void Leviathan grants you the power to manipulate fate and fortune."
+            "desc": "Power from the void entity (+75% Multiplier | 4 hours)",
+            "details": "A gift from the deepest trenches. The Void Beast grants you the power to manipulate fate and fortune."
+        },
+        "612": {
+            "name": "🎓 Guidance Privilege",
+            "desc": "Knowledge from a Teacher (+100% XP | 1 hour)",
+            "details": "Receive dedicated guidance from a real Teacher, helping you absorb knowledge twice as fast as usual."
         },
         "615": {
             "name": "🐲 Dragonfish's Wisdom",
@@ -1278,7 +1287,8 @@
             "high_card": "High Card"
         },
         "view_cards_hint": "💡 You can view your cards anytime using the button below!",
-        "current_hand_label": "Current Hand"
+        "current_hand_label": "Current Hand",
+        "raid_cancelled": "🚔 **RAIDED!** The Poker game was cancelled because players were caught by police!"
     },
     "emojiquiz": {
         "title": "🧩  Emoji Quiz",
@@ -1352,8 +1362,9 @@
         "refund": "\n🤝 **Bet has been refunded.**",
         "result_title": "Rock Paper Scissors Result",
         "user_chose": "You chose",
-        "bot_chose": "I chose",
-        "timeout_refund": "❌ Time's up! Bet has been refunded."
+        "bot_chose": "Bot chose",
+        "timeout_refund": "❌ Time's up! Bet has been refunded.",
+        "raid_cancelled": "🚔 **RAIDED!** The Rock Paper Scissors game was cancelled because players were caught by police!"
     },
     "language": {
         "title": "Language Settings",
@@ -1493,7 +1504,6 @@
             "beg": "Beg for spare change from random strangers. Low risk, low reward.",
             "crime": "Pull off risky illegal heists. 40% success rate, high coin & XP reward.",
             "rob": "Attempt to steal a portion of another user's wallet. Can backfire badly!",
-            "user_in_prison": "❌ You are in prison! You cannot commit crimes right now. ⛓️ Release in: **{{time}}**.",
             "search": "Scavenge random locations around town for dropped coins.",
             "freelance": "Take on freelance 'side-job' projects for moderate income. 60% success rate.",
             "fish": "Cast your line! Use rods & bait from the shop for rare & legendary fish.",
@@ -1640,7 +1650,7 @@
             "fishrates": "🌟 **Description:** Real-time analysis of your fishing potential in the current location. These rates factor in your Rod, Bait, and any active Luck buffs.\n\n🕹️ **Usage:** `$fishrates` (Pro tip: Check your rates before using expensive bait!)",
             "support": "🌟 **Description:** Connect with the developers for direct assistance.\n\n🕹️ **Details:** This command provides an invite link to the official support server where you can report bugs, request features, or get help with account issues.",
             "blacklistchannel": "🌟 **Description:** A channel management tool for administrators.\n\n🕹️ **Usage:** `$blacklistchannel <#channel>` to toggle the restricted status.\n\n⚠️ **Note:** The bot will ignore all non-admin commands in blacklisted channels to keep your server organized.",
-            "setwcchannel": "🌟 **Description:** Automate server hospitality with entry and exit logs.\n\n🕹️ **Usage:** `$setwcchannel <#channel>`\n\n✨ **Features:** Displays a welcome message with server badges for new members and a friendly farewell notification when someone leaves.",
+            "setwcchannel": "🌟 **Description:** Configure automated welcome and leave announcements for the server (Admin Only).\n\n🕹️ **Usage:** `$setwcchannel <#channel>`\n\n✨ **Features:** Displays a welcome message with server badges for new members and a friendly farewell notification when someone leaves.",
             "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`",
             "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`",
             "events": "🌟 **Description:** Monitor the pulse of the global economy! Events rotate periodically, providing special effects and bonuses.\n\n🕹️ **Mechanics:**\n- **2x Rewards:** Double coins from `$work`, `$daily`, etc.\n- **Luck Boost:** Increased chance for rare fish or winning bets.\n- **Reduced Cooldowns:** Quicker access to your favorite commands.\n\n📊 **Bot Info:** View the server's reserve fund and the Bot's local level.\n\n👑 **Admin:** Use `$events rotate` to force a new event immediately."
@@ -1793,6 +1803,8 @@
     "event": {
         "none_desc": "🌐 There are no special economic events active at the moment.",
         "duration": "Remaining Time",
+        "new_event_title": "📢 ECONOMIC VOLATILITY",
+        "new_event_announce": "A new economic event has just started on the server!",
         "footer": "Use economy commands to take advantage of the event!",
         "name_market_boom": "Market Boom",
         "desc_market_boom": "🚀 The global economy is sky-rocketing! Income from **all sources** is increased by **25%**.",
@@ -1807,7 +1819,9 @@
         "name_golden_harvest": "Golden Harvest",
         "desc_golden_harvest": "🌾 Weather is perfect for the fields! Farmers receive **40%** more salary and a slight luck boost in fishing.",
         "name_trader_heaven": "Trader's Heaven",
-        "desc_trader_heaven": "💹 The stock market is booming! Traders receive **50%** more profit from businesses."
+        "desc_trader_heaven": "💹 The stock market is booming! Traders receive **50%** more profit from businesses.",
+        "name_police_raid": "Police Raid Campaign",
+        "desc_police_raid": "🚔 Police are conducting a massive raid on illegal activities! Dice/Gambling raid rates increased by **15x** and fines by **50%**."
     },
     "museum": {
         "title": "Ocean Museum",
@@ -1951,5 +1965,9 @@
     },
     "prison": {
         "lockdown_interaction": "⛓️ **Prison Lockdown:** You are currently in prison and cannot interact with these games/actions! You will be released in **{{time}}**."
+    },
+    "admin": {
+        "blacklist_added": "✅ Successfully added user **{{user}}** to the blacklist!",
+        "blacklist_removed": "✅ Successfully removed user **{{user}}** from the blacklist!"
     }
 }

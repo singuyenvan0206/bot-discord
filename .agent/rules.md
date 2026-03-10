@@ -4,6 +4,7 @@ Dưới đây là các quy tắc và phong cách làm việc mà Agent (Antigrav
 
 ## 1. Kiểm tra chất lượng (Quality Assurance)
 - **Luôn double-check**: Sau khi hoàn thành bất kỳ chức năng hoặc thay đổi nào, Agent phải thực hiện kiểm tra lại toàn bộ logic, các trường hợp biên (edge cases) và đảm bảo không có lỗi phát sinh ngoài ý muốn.
+- **Kiểm tra Locale**: Luôn đảm bảo tất cả các chuỗi thông báo mới hoặc thay đổi đều được cập nhật đầy đủ và đồng nhất trong cả hai file ngôn ngữ: `vi.json` (Tiếng Việt) và `en.json` (Tiếng Anh).
 
 ## 2. Ngôn ngữ giao tiếp
 - **Tiếng Việt**: Ưu tiên phản hồi và giải thích cho người dùng bằng tiếng Việt.

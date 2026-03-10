@@ -1,7 +1,8 @@
 {
     "common": {
         "error": "❌ Có lỗi xảy ra. Vui lòng thử lại sau!",
-        "teacher_tutoring_simple": "\n👨‍🏫 **Gia sư:** Bạn nhận được thêm +50% tiền và +10 XP!",
+        "event": "Sự kiện",
+        "invalid_channel": "❌ Kênh không hợp lệ!",
         "insufficient_funds": "❌ Bạn không đủ tiền! Số dư: **{{balance}}**",
         "invalid_amount": "❌ Số tiền không hợp lệ.",
         "cooldown": "Lệnh **{{command}}** đang trong thời gian chờ. Vui lòng quay lại sau **{{time}}**! ⏱️",
@@ -92,7 +93,8 @@
         "turn_footer": "Lượt của: {{user}} ({{symbol}})",
         "end_footer": "Kết thúc ván đấu",
         "timeout": "⌛ Ván đấu đã hết thời gian!",
-        "challenge_timeout": "⌛ Thời gian thách đấu đã hết."
+        "challenge_timeout": "⌛ Thời gian thách đấu đã hết.",
+        "raid_cancelled": "🚔 **BỊ ĐỘT KÍCH!** Ván đấu Bốn Hàng đã bị hủy vì người chơi bị cảnh sát bắt quả tang!"
     },
     "memory": {
         "title": "🧠 Trò Chơi Trí Nhớ",
@@ -150,6 +152,7 @@
         "label_7": "Số 7",
         "balance_footer": "Số dư: {{balance}} coins",
         "insufficient_bet": "❌ Bạn không còn đủ tiền cược!",
+        "user_in_prison": "❌ Bạn đang ở trong tù! Bạn sẽ được ra tù vào **{{time}}**.",
         "result_title": "🎲  Kết Quả Đổ Xúc Xắc",
         "prediction": "Dự đoán",
         "win_msg": "\n🎉 **Bạn thắng** {{amount}} {{emoji}}! (x{{multiplier}})",
@@ -185,10 +188,11 @@
         "won_coins": "\n🎉 **Bạn thắng** {{amount}} {{emoji}}!",
         "lost_coins": "\n👔 Bạn thua **{{amount}}** {{emoji}}.",
         "refund": "\n🤝 **Tiền cược đã được hoàn trả.**",
-        "result_title": "Kết Quả Kéo Búa Bao",
+        "result_title": "Kết quả Oẳn Tù Tì",
         "user_chose": "Bạn chọn",
-        "bot_chose": "Tôi chọn",
-        "timeout_refund": "❌ Đã quá thời gian! Tiền cược đã được hoàn trả."
+        "bot_chose": "Bot chọn",
+        "timeout_refund": "❌ Hết thời gian! Tiền cược đã được hoàn trả.",
+        "raid_cancelled": "🚔 **BỊ ĐỘT KÍCH!** Ván đấu Oẳn Tù Tì đã bị hủy vì người chơi bị cảnh sát bắt quả tang!"
     },
     "blackjack": {
         "title": "🃏  Xì Dách (Blackjack)",
@@ -414,6 +418,7 @@
         "milestone_reached": "Điểm Mốc Cột Mốc Vĩnh Viễn"
     },
     "job": {
+        "teacher_tutoring_simple": "\n👨‍🏫 **Gia sư:** Bạn nhận được thêm +50% tiền và +10 XP!",
         "list_title": "💼 Trung Tâm Sự Nghiệp",
         "list_desc": "Chọn một nghề nghiệp để nhận các hiệu ứng hỗ trợ thụ động vĩnh viễn và kỹ năng đặc biệt. Bạn chỉ có thể theo đuổi một nghề duy nhất tại một thời điểm.",
         "tip_detail": "Dùng `{{prefix}}job set <id>` để chọn nghề nghiệp.",
@@ -538,8 +543,9 @@
         "upgrade_all_max": "❌ Tất cả doanh nghiệp của bạn đã đạt cấp tối đa hoặc bạn chưa sở hữu gì!",
         "upgrade_all_funds": "❌ Bạn cần **{{price}}** coins để nâng cấp đồng loạt tất cả doanh nghiệp!",
         "upgrade_all_success": "✅ Bạn đã nâng cấp thành công tổng cộng {{count}} lần cho các doanh nghiệp với chi phí **{{price}}** coins!",
-        "harvest_success": "💰 Bạn đã thu hoạch **{{amount}}** coins từ các doanh nghiệp của mình!",
-        "event_title": "📢 Sự kiện Kinh doanh!",
+        "harvest_success": "💰 Bạn đã thu hoạch được **{{amount}}** coins từ các doanh nghiệp của mình!",
+        "event_notification": "⚠️ **Sự kiện doanh nghiệp:** {{event}} xảy ra với {{business}}. Bạn đã mất **{{amount}}** coins cho chi phí bảo trì/thuế.",
+        "event_title": "📢 Sự kiện doanh nghiệp!",
         "info_count": "Sở hữu: {{count}} doanh nghiệp",
         "passive_income_title": "📈 Tổng thu nhập thụ động",
         "passive_income": "📈 **Tổng thu nhập thụ động:** {{amount}} coins/giờ",
@@ -779,21 +785,24 @@
             "details": "Được chế tác từ tre già phơi khô, mang lại sự dẻo dai và cảm giác kéo chân thực."
         },
         "409": {
-            "name": "🎣 Cần Sợi Thủy Tinh",
-            "desc": "Bền bỉ và linh hoạt. (May mắn: 1.1x)"
+            "name": "🎣 Cần Câu Sợi Thủy Tinh Chuyên Nghiệp",
+            "desc": "Công nghệ hiện đại (May mắn: 1.1x)",
+            "details": "Vật liệu tiên tiến giúp tăng độ nhạy và cung cấp tỷ lệ sức mạnh trên trọng lượng vượt trội."
         },
         "410": {
-            "name": "🎣 Cần Thép",
-            "desc": "Nặng và đáng tin cậy. (May mắn: 1.4x)",
-            "details": "Được gia cố bằng thép công nghiệp để chịu được những cú đớp mạnh hơn."
+            "name": "🎣 Cần Câu Hợp Kim Thép",
+            "desc": "Chắc chắn và mạnh mẽ (May mắn: 1.4x)",
+            "details": "Được gia cố bằng thép không gỉ, sẵn sàng thách thức những cú đớp nặng nhất dưới đại dương."
         },
         "411": {
-            "name": "🎣 Cần Carbon",
-            "desc": "Đẳng cấp hàng đầu. (May mắn: 1.8x)"
+            "name": "🎣 Cần Câu Siêu Carbon",
+            "desc": "Nhẹ và đàn hồi (May mắn: 1.8x)",
+            "details": "Sự lựa chọn của các cần thủ chuyên nghiệp, tối ưu hóa khả năng kiểm soát và tốc độ phản ứng."
         },
         "412": {
-            "name": "🎣 Cần Titanium",
-            "desc": "Sức mạnh tuyệt đối. (May mắn: 2.3x)"
+            "name": "🎣 Cần Câu Titanium Chiến Thuật",
+            "desc": "Vật liệu cấp quân sự (May mắn: 2.3x)",
+            "details": "Độ bền vĩnh cửu và cực nhẹ, giúp bạn chinh phục những vùng nước hiểm trở nhất."
         },
         "413": {
             "name": "🔱 Cần Neptune",
@@ -1293,7 +1302,7 @@
         "status_ready": "✅",
         "status_not_ready": "⏳",
         "joining": "- {{name}} *(Đang mua vào...)*",
-        "private_hand_dm": "� Bài của bạn tại {{channel}}:\n**{{cards}}**",
+        "private_hand_dm": " Bài của bạn tại {{channel}}:\n**{{cards}}**",
         "not_your_turn": "❌ Không phải lượt của bạn! Lượt của: **{{name}}**",
         "raise_modal_title": "Tố Thêm (Raise)",
         "raise_amount_label": "Tổng tiền cược mới (Tối thiểu {{min}})",
@@ -1334,7 +1343,8 @@
             "high_card": "Mậu Thầu"
         },
         "view_cards_hint": "💡 Bạn có thể xem lại bài của mình bất cứ lúc nào bằng nút bên dưới!",
-        "current_hand_label": "Bộ Bài Hiện Tại"
+        "current_hand_label": "Bộ Bài Hiện Tại",
+        "raid_cancelled": "🚔 **BỊ ĐỘT KÍCH!** Ván đấu Poker đã bị hủy vì người chơi bị cảnh sát bắt quả tang!"
     },
     "emojiquiz": {
         "title": "🧩  Emoji Quiz",
@@ -1491,8 +1501,8 @@
             "daily": "Nhận quà coins miễn phí mỗi ngày. Duy trì chuỗi ngày để nhận thêm!",
             "beg": "Đi xin tiền người qua đường. Rủi ro thấp, phần thưởng nhỏ.",
             "crime": "Thực hiện phi vụ bất hợp pháp: tỉ lệ thắng 40%, lợi nhuận và XP cực cao.",
-            "rob": "Cướp một phần tiền ví của người dùng khác. Có thể bị phản đòn!",
-            "search": "Lục lọi các địa điểm ngẫu nhiên để tìm coins rơi trên đường phố.",
+            "rob": "Cố gắng lấy trộm một phần tiền trong ví của người khác. Có thể bị phản tác dụng!",
+            "search": "Lùng sục các địa điểm ngẫu nhiên quanh thị trấn để tìm tiền rơi.",
             "freelance": "Nhận 'việc làm thêm' (Freelance) để kiếm thu nhập khá. Tỉ lệ thành công 60%.",
             "fish": "Thả câu! Dùng cần và mồi từ shop để câu cá hiếm và cá huyền thoại.",
             "job": "Hệ thống sự nghiệp chuyên sâu (Cấp độ 20+). Mỗi nghề có đặc quyền riêng.",
@@ -1735,7 +1745,7 @@
         "self": "❌ Anh định tự cưới chính mình à? Đáng yêu đấy nhưng Bot không cho phép đâu nha! 🤭",
         "bot": "❌ Em xinh đẹp thế này nhưng em là của chung, em không cưới riêng ai đâu nhé! 💅✨",
         "already_married_self": "❌ Anh đã có bến đỗ rồi, đừng có mà 'bắt cá hai tay' nhé! 💍",
-        "already_married_target": "❌ Người ấy đã là 'hoa có chủ' rồi, anh đừng có làm người thứ ba nha! 💔",
+        "already_married_target": "❌ Người ấy đã là 'hoa có chủ' rồi, anh đừng có làm người thứ ba nha!💔",
         "proposal_title": "💕 LỜI CẦU HÔN NGỌT NGÀO 💕",
         "proposal_desc": "**{{target}}** ơi, **{{user}}** đang quỳ xuống với một chiếc **{{ring}}** trên tay và muốn hỏi bạn một câu...\n\n> \"Bạn có đồng ý cùng mình đi đến cuối con đường này không?\" 💍",
         "accept_label": "Em đồng ý! 👰",
@@ -1953,5 +1963,9 @@
     },
     "prison": {
         "lockdown_interaction": "⛓️ **Lệnh giam giữ:** Bạn đang ở trong tù và không thể tương tác với các trò chơi/hành động này! Bạn sẽ được tự do sau **{{time}}**."
+    },
+    "admin": {
+        "blacklist_added": "✅ Đã thêm người dùng **{{user}}** vào danh sách đen thành công!",
+        "blacklist_removed": "✅ Đã xóa người dùng **{{user}}** khỏi danh sách đen thành công!"
     }
 }
