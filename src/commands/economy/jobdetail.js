@@ -28,19 +28,23 @@ module.exports = {
         const rawPerks = t(`job.info_${actualJobId}`, lang).split('\n');
         // Clean up perks: remove titles and empty lines, ensure bullet points
         const perks = rawPerks
-            .filter(p => p.trim() && !p.includes('**'))
-            .map(p => p.trim().startsWith('•') ? p.trim() : `• ${p.trim()}`)
+            .filter(p => p.trim() && !p.startsWith('✨')) // Remove "Special Perks" title
+            .map(p => {
+                let text = p.trim();
+                if (text.startsWith('•')) return text;
+                return `• ${text.replace(/^\*\*.*?\*\*:\s*/, '')}`; // Remove "Category:" bold prefixes if present
+            })
             .join('\n');
 
         // Accurate Statistics
-        const jobBonusMult = job.bonus || 1;
-        const bonusVal = Math.round((jobBonusMult - 1) * 100);
-        const salaryBonus = bonusVal >= 0 ? `+${bonusVal}%` : `${bonusVal}%`;
+        const jobBonusMult = job.bonus || 0;
+        const salaryBonus = `+${Math.round(jobBonusMult * 100)}%`;
 
-        // Luck / XP Bonus
+        // Luck / XP Bonus / Chief Special
         let secondaryBonus = t('common.none', lang);
         if (job.luck) secondaryBonus = t('job.luck_bonus', lang, { val: job.luck });
         if (actualJobId === 'teacher') secondaryBonus = t('job.xp_bonus', lang, { val: '2.0' });
+        if (actualJobId === 'police_chief') secondaryBonus = '🚔 Approved Bounties';
 
         // Calculate Salary Range based on work.js config
         const minBase = config.ECONOMY.WORK_MIN || 1000;
