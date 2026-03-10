@@ -408,6 +408,7 @@
         "list_desc": "Chọn một nghề nghiệp để nhận các hiệu ứng hỗ trợ thụ động vĩnh viễn và kỹ năng đặc biệt. Bạn chỉ có thể theo đuổi một nghề duy nhất tại một thời điểm.",
         "tip_detail": "Dùng `{{prefix}}job set <id>` để chọn nghề nghiệp.",
         "set_success": "✅ Chúc mừng! Bạn hiện đã là một **{{job}}**.",
+        "error_no_permission_chief": "❌ Chỉ **Bot Owner** hoặc **Server Owner** mới có thể đảm nhận chức vụ **Cảnh Sát Trưởng**!",
         "set_error_level": "❌ Bạn cần Cấp độ **{{level}}** để nhận nghề này!",
         "set_error_invalid": "❌ Nghề nghiệp không hợp lệ. Dùng `$job list` để xem danh sách.",
         "already_has": "❌ Bạn đã đang làm nghề này rồi!",

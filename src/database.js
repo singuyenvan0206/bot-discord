@@ -1000,6 +1000,7 @@ module.exports = {
     addBonusEntry,
     getBonusEntries,
     getUser,
+    getUserJob,
     getGlobalUser,
     updateUser,
     updateGlobalUser,

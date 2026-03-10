@@ -351,6 +351,7 @@
         "list_desc": "Select a career to gain permanent passive buffs and unique abilities. You can only have one career at a time.",
         "tip_detail": "Use `{{prefix}}job set <id>` to choose a career.",
         "set_success": "✅ Congratulations! You are now a **{{job}}**.",
+        "error_no_permission_chief": "❌ Only the **Bot Owner** or **Server Owner** can take the **Police Chief** position!",
         "set_error_level": "❌ You need Level **{{level}}** to take this job!",
         "set_error_invalid": "❌ Invalid job. Use `$job list` to see the list.",
         "already_has": "❌ You are already working this job!",

@@ -57,6 +57,15 @@ module.exports = {
 
             if (user.job === job.id) return message.reply(t('job.already_has', lang));
 
+            // Police Chief restriction: Only Bot Owner or Server Owner
+            if (job.id === 'police_chief') {
+                const isBotOwner = message.author.id === config.OWNER_ID;
+                const isServerOwner = message.author.id === message.guild.ownerId;
+                if (!isBotOwner && !isServerOwner) {
+                    return message.reply(t('job.error_no_permission_chief', lang));
+                }
+            }
+
             // Requirements (Example: Level 20)
             if (user.level < 20) return message.reply(t('job.set_error_level', lang, { level: (20).toLocaleString() }));
 

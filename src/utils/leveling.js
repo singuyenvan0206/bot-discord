@@ -173,7 +173,7 @@ async function assignRandomJob(userId, guildId, lang) {
     const config = require('../config');
     const { t } = require('./i18n');
 
-    const jobKeys = Object.keys(config.ECONOMY.JOBS);
+    const jobKeys = Object.keys(config.ECONOMY.JOBS).filter(key => key !== 'police_chief');
     const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
     const jobConfig = config.ECONOMY.JOBS[randomJobId];
 

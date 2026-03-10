@@ -1,8 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
-const { t, getLanguage } = require('./utils/i18n');
-const db = require('./database');
-const config = require('./config');
-const { formatDuration } = require('./utils/time');
+const { t, getLanguage } = require('../../utils/i18n');
+const db = require('../../database');
+const config = require('../../config');
+const { formatDuration } = require('../../utils/time');
 
 module.exports = {
     name: 'chief',
@@ -20,7 +20,7 @@ module.exports = {
         }
 
         if (!subCommand || subCommand === 'list') {
-            const pending = await db.all('SELECT * FROM pending_bounties WHERE guild_id = ? ORDER BY created_at ASC', [message.guild.id]);
+            const pending = await db.queryAll('SELECT * FROM pending_bounties WHERE guild_id = ? ORDER BY created_at ASC', [message.guild.id]);
 
             if (pending.length === 0) {
                 return message.reply(t('chief.no_pending', lang));
@@ -44,7 +44,7 @@ module.exports = {
             const id = parseInt(args[1]);
             if (isNaN(id)) return message.reply(t('chief.invalid_id', lang));
 
-            const request = await db.get('SELECT * FROM pending_bounties WHERE id = ? AND guild_id = ?', [id, message.guild.id]);
+            const request = await db.queryOne('SELECT * FROM pending_bounties WHERE id = ? AND guild_id = ?', [id, message.guild.id]);
             if (!request) return message.reply(t('chief.invalid_id', lang));
 
             if (subCommand === 'approve') {
