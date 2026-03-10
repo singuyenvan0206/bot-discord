@@ -74,64 +74,15 @@ module.exports = {
 
         await db.removeBalance(message.guild.id, message.author.id, totalDeduction);
 
-        // Update target's bounty and placers
-        const placers = JSON.parse(victimData.bounty_placers || '[]');
-        if (!isAnonymous && !placers.includes(message.author.id)) {
-            placers.push(message.author.id);
-        }
-
-        const currentBounty = Number(victimData.bounty || 0);
-        const newBounty = currentBounty + amount;
-
-        // Calculate stars
-        let newStars = 1;
-        for (const threshold of config.WANTED.BOUNTY_THRESHOLDS) {
-            if (newBounty >= threshold.min) {
-                newStars = Math.max(newStars, threshold.stars);
-            }
-        }
-
-        // Calculate expiration
-        if (!duration) {
-            // Default: based on stars if not provided
-            duration = config.WANTED.DURATIONS[newStars] || 3600;
-        }
-
-        const newExpiresAt = Math.floor(Date.now() / 1000) + duration;
-
+        // Save to pending_bounties instead of updating users directly
         await db.execute(
-            'UPDATE users SET bounty = ?, wanted_level = ?, wanted_expires_at = ?, bounty_placers = ? WHERE id = ?',
-            [newBounty, newStars, newExpiresAt, JSON.stringify(placers), target.id]
+            'INSERT INTO pending_bounties (guild_id, sender_id, target_id, amount, fee, duration, is_anonymous, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [message.guild.id, message.author.id, target.id, amount, fee, duration, isAnonymous ? 1 : 0, Math.floor(Date.now() / 1000)]
         );
 
-        const embed = new EmbedBuilder()
-            .setTitle(`🎯 ${t('bounty.title_success', lang)}`)
-            .setColor(config.COLORS.SUCCESS)
-            .setDescription(t('bounty.success_desc', lang, {
-                user: isAnonymous ? t('bounty.anonymous', lang) : message.author.username,
-                target: target.username,
-                amount: amount.toLocaleString(),
-                fee: fee.toLocaleString(),
-                emoji: config.EMOJIS.COIN,
-                stars: '⭐'.repeat(newStars)
-            }))
-            .addFields({
-                name: '⏰ ' + t('common.duration', lang),
-                value: formatDuration(duration, lang) + ` (${t('bounty.expires_in', lang, { time: `<t:${newExpiresAt}:R>` })})`,
-                inline: false
-            })
-            .setImage('attachment://wanted.png')
-            .setTimestamp();
-
-        try {
-            const avatarUrl = target.displayAvatarURL({ extension: 'png', size: 512 });
-            const imageBuffer = await generateWantedPoster(avatarUrl, target.username, newBounty);
-            const attachment = new AttachmentBuilder(imageBuffer, { name: 'wanted.png' });
-
-            return message.reply({ embeds: [embed], files: [attachment] });
-        } catch (error) {
-            console.error('Failed to generate wanted poster:', error);
-            return message.reply({ embeds: [embed] });
-        }
+        return message.reply(t('bounty.pending_approval', lang, {
+            amount: amount.toLocaleString(),
+            emoji: config.EMOJIS.COIN
+        }));
     }
 };

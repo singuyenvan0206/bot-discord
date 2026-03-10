@@ -378,6 +378,8 @@
         "none": "None",
         "name_police": "👮 Police",
         "info_police": "✨ **Police Perks:**\n• **Salary**: +15% bonus to basic work income.\n• **Patrol**: Receive an extra 100-200 coins when using `search` command.\n• **Enforcement**: Significantly higher success rate catching criminals.",
+        "name_police_chief": "🚔 Police Chief",
+        "info_police_chief": "✨ **Police Chief Perks:**\n• **Authority**: Approve or deny bounty requests in the server.\n• **Salary**: +50% bonus to basic work income.\n• **Patrol**: Receive an extra 200-500 coins when using `search` command.",
         "name_criminal": "👤 Criminal",
         "desc_criminal": "A skilled outlaw living by wit and daring.",
         "info_criminal": "• **Heist**: +20% income from illegal activities.\n• **Master Thief**: +15% success rate when attempting to `rob` others.\n• **Evasion**: Reduce jail time by 25% if caught by authorities.",
@@ -1858,7 +1860,21 @@
         "success_desc": "🎯 **{{user}}** has placed a bounty of {{emoji}} **{{amount}}** on **{{target}}**'s head! (Fee: **{{fee}}**)\n\nCurrent Status: {{stars}}",
         "anonymous": "Anonymous",
         "expires_in": "Bounty expires {{time}}",
-        "target_in_prison": "❌ **{{target}}** is currently serving time in prison! You can only place a bounty after they are released (**{{time}}**)."
+        "target_in_prison": "❌ **{{target}}** is currently serving time in prison! You can only place a bounty after they are released (**{{time}}**).",
+        "pending_approval": "⏳ **Request Sent!** Your bounty request has been sent to the **Police Chief** for approval. **{{amount}}** coins have been put on hold.",
+        "insufficient_balance": "❌ You don't have enough coins to place this bounty! Need: **{{amount}}** coins."
+    },
+    "chief": {
+        "title": "🚔 Bounty Approval System",
+        "police_chief_only": "❌ Only the **Police Chief** can use this command!",
+        "no_pending": "There are no pending bounty requests to approve.",
+        "approve_success": "✅ Approved bounty request for **{{target}}**! The bounty is now active.",
+        "deny_success": "❌ Denied bounty request for **{{target}}**. The sender has been refunded.",
+        "invalid_id": "❌ Invalid request ID or it has already been processed.",
+        "list_footer": "Use `{{prefix}}chief approve <id>` or `{{prefix}}chief deny <id>`",
+        "denied_notify": "❌ Your bounty request for **{{target}}** has been denied by the **Police Chief**. You have been refunded **{{amount}}** coins.",
+        "approved_notify": "✅ Your bounty request for **{{target}}** for **{{amount}}** coins has been approved!",
+        "pending_item": "**ID: {{id}}** | Target: **{{target}}** | Amount: **{{amount}}** | Fee: **{{fee}}**"
     },
     "hack": {
         "hacker_only": "❌ Only **Hackers** have the skills to perform digital exploitation!",

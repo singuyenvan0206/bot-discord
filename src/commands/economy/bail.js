@@ -91,13 +91,9 @@ module.exports = {
                 bounty = 0, 
                 wanted_level = 0, 
                 wanted_expires_at = 0, 
-                bounty_placers = '[]',
-                last_rob = ?, 
-                last_crime = ?, 
-                last_work = ?, 
-                last_daily = ?
+                bounty_placers = '[]'
                 WHERE id = ?`,
-                [now, now, now, now, prisonerId]
+                [prisonerId]
             );
 
             // Reset internal cooldowns and spam tracking for the prisoner

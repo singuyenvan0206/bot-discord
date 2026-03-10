@@ -91,7 +91,8 @@ module.exports = {
             farmer: { id: 'farmer', numericId: 3, bonus: 0.1, color: '#f1c40f', icon: '👨‍🌾', luck: 1.5 },
             hacker: { id: 'hacker', numericId: 4, bonus: 0.30, color: '#27ae60', icon: '👨‍💻' },
             trader: { id: 'trader', numericId: 5, bonus: 0.45, color: '#f39c12', icon: '📈' },
-            teacher: { id: 'teacher', numericId: 6, bonus: 0.25, color: '#95a5a6', icon: '👩‍🏫' }
+            teacher: { id: 'teacher', numericId: 6, bonus: 0.25, color: '#95a5a6', icon: '👩‍🏫' },
+            police_chief: { id: 'police_chief', numericId: 7, bonus: 0.50, color: '#2980b1', icon: '👨‍✈️' }
         },
         LEVELING: {
             XP_MULTIPLIER: 1.5, // 50% increase
@@ -131,7 +132,7 @@ module.exports = {
         MIN_REWARD: 50000 // Minimum coins to place a manual bounty
     },
     ANTI_SPAM: {
-        LIMIT: 10,          // Number of commands
+        LIMIT: 7,          // Number of commands
         WINDOW: 10,         // Time window in seconds
         PUNISHMENTS: [600, 1800, 3600] // Durations in seconds: 10m, 30m, 60m
     },

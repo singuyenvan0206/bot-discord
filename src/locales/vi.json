@@ -435,6 +435,8 @@
         "none": "Không có",
         "name_police": "👮 Cảnh Sát",
         "info_police": "✨ **Đặc quyền Cảnh Sát:**\n• **Lương thưởng**: +15% thu nhập công việc cơ bản.\n• **Tuần tra**: Nhận thêm 100-200 coins khi dùng lệnh `search`.\n• **Thực thi pháp luật**: Tăng mạnh tỷ lệ bắt trộm thành công.",
+        "name_police_chief": "🚔 Cảnh Sát Trưởng",
+        "info_police_chief": "✨ **Đặc quyền Cảnh Sát Trưởng:**\n• **Quyền lực**: Phê duyệt hoặc từ chối các lệnh truy nã trong server.\n• **Lương thưởng**: +50% thu nhập công việc cơ bản.\n• **Tuần tra**: Nhận thêm 200-500 coins khi dùng lệnh `search`.",
         "name_criminal": "👤 Tội Phạm",
         "desc_criminal": "Kẻ ngoài vòng pháp luật sống bằng bản lĩnh và sự liều lĩnh.",
         "info_criminal": "• **Phi vụ**: +20% thu nhập từ công việc bất hợp pháp.\n• **Bậc thầy trộm**: +15% tỷ lệ thành công khi thực hiện `rob`.\n• **Lẩn trốn**: Giảm 25% thời gian ngồi tù nếu bị bắt.",
@@ -1859,7 +1861,21 @@
         "success_desc": "🎯 **{{user}}** đã treo thưởng {{emoji}} **{{amount}}** lên đầu của **{{target}}**! (Phí: **{{fee}}**)\n\nTrạng thái hiện tại: {{stars}}",
         "anonymous": "Ẩn danh",
         "expires_in": "Lệnh truy nã sẽ hết hạn {{time}}",
-        "target_in_prison": "❌ **{{target}}** đang bị giam giữ trong tù! Bạn chỉ có thể treo thưởng sau khi người này được thả (**{{time}}**)."
+        "target_in_prison": "❌ **{{target}}** đang bị giam giữ trong tù! Bạn chỉ có thể treo thưởng sau khi người này được thả (**{{time}}**).",
+        "pending_approval": "⏳ **Yêu cầu đã gửi!** Lệnh truy nã của bạn đã được gửi đến **Cảnh Sát Trưởng** để phê duyệt. Số tiền **{{amount}}** coins đã được tạm giữ.",
+        "insufficient_balance": "❌ Bạn không đủ tiền để treo thưởng! Cần: **{{amount}}** coins."
+    },
+    "chief": {
+        "title": "🚔 Hệ Thống Phê Duyệt Truy Nã",
+        "police_chief_only": "❌ Chỉ **Cảnh Sát Trưởng** mới có quyền sử dụng lệnh này!",
+        "no_pending": "Hiện tại không có yêu cầu truy nã nào đang chờ phê duyệt.",
+        "approve_success": "✅ Đã phê duyệt lệnh truy nã đối với **{{target}}**! Bounty hiện đã có hiệu lực.",
+        "deny_success": "❌ Đã từ chối lệnh truy nã đối với **{{target}}**. Người gửi đã được hoàn tiền.",
+        "invalid_id": "❌ ID yêu cầu không hợp lệ hoặc đã được xử lý.",
+        "list_footer": "Dùng `{{prefix}}chief approve <id>` hoặc `{{prefix}}chief deny <id>`",
+        "denied_notify": "❌ Lệnh truy nã của bạn đối với **{{target}}** đã bị **Cảnh Sát Trưởng** từ chối. Bạn đã được hoàn trả **{{amount}}** coins.",
+        "approved_notify": "✅ Lệnh truy nã của bạn đối với **{{target}}** trị giá **{{amount}}** coins đã được phê duyệt!",
+        "pending_item": "**ID: {{id}}** | Mục tiêu: **{{target}}** | Tiền: **{{amount}}** | Phí: **{{fee}}**"
     },
     "hack": {
         "hacker_only": "❌ Chỉ **Hacker** mới có đủ kỹ năng để thực hiện việc này!",

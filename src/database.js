@@ -204,6 +204,20 @@ async function initSchema() {
         )
     `);
 
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS pending_bounties (
+            id SERIAL PRIMARY KEY,
+            guild_id TEXT NOT NULL,
+            sender_id TEXT NOT NULL,
+            target_id TEXT NOT NULL,
+            amount BIGINT NOT NULL,
+            fee BIGINT NOT NULL,
+            duration BIGINT NOT NULL,
+            is_anonymous BOOLEAN NOT NULL DEFAULT FALSE,
+            created_at BIGINT NOT NULL DEFAULT (extract(epoch from now()))
+        )
+    `);
+
     // Indexes
     await pool.query('CREATE INDEX IF NOT EXISTS idx_giveaways_guild ON giveaways(guild_id)');
     await pool.query('CREATE INDEX IF NOT EXISTS idx_giveaways_message ON giveaways(message_id)');
@@ -423,6 +437,11 @@ async function getUser(userId, guildId = null) {
     user.level = Number(user.level || 0);
 
     return user;
+}
+
+async function getUserJob(userId, guildId = null) {
+    const user = await getUser(userId, guildId);
+    return user ? user.job : null;
 }
 
 async function getGlobalUser(userId) {
