@@ -140,7 +140,7 @@ module.exports = {
         BAIL_BOUNTY_PERCENT: 0.2, // 20% of bounty added to bail
         BASE_TIME: 3600, // 1 hour base
         STARS_MULTIPLIER: 3600 * 2, // 2 hours per star
-        MAX_BAIL_STARS: 4, // Cannot bail at 5 stars (Most Wanted)
+        MAX_BAIL_STARS: 5, // Doubled fee for 5 stars, denial if above 5 (if possible)
         BLOCK_EXCEPTIONS: ['bail', 'me', 'profile', 'balance', 'help', 'inventory', 'lvl', 'rank', 'leaderboard']
     }
 };

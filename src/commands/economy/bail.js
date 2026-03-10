@@ -26,7 +26,12 @@ module.exports = {
                 const remainingMinutes = Math.max(1, Math.ceil((prisonUntil - now) / 60));
                 const timeCost = remainingMinutes * config.PRISON.BAIL_COST_PER_MINUTE;
                 const bountyCost = Math.floor(Number(user.bounty || 0) * config.PRISON.BAIL_BOUNTY_PERCENT);
-                const bailCost = timeCost + bountyCost;
+                let bailCost = timeCost + bountyCost;
+
+                const stars = Number(user.wanted_level || 0);
+                if (stars >= 5) {
+                    bailCost *= 2;
+                }
 
                 return message.reply(`⚠️ **${t('bail.self_bail_denied', lang)}**\n\n${t('bail.usage_detailed', lang, {
                     user: message.author.username,
@@ -55,14 +60,18 @@ module.exports = {
         }
 
         const stars = Number(targetData.wanted_level || 0);
-        if (stars >= config.PRISON.MAX_BAIL_STARS && config.PRISON.MAX_BAIL_STARS > 0) {
+        if (stars > config.PRISON.MAX_BAIL_STARS && config.PRISON.MAX_BAIL_STARS > 0) {
             return message.reply(t('bail.most_wanted_denial', lang));
         }
 
         const remainingMinutes = Math.max(1, Math.ceil((prisonUntil - now) / 60));
         const timeCost = remainingMinutes * config.PRISON.BAIL_COST_PER_MINUTE;
         const bountyCost = Math.floor(Number(targetData.bounty || 0) * config.PRISON.BAIL_BOUNTY_PERCENT);
-        const bailCost = timeCost + bountyCost;
+        let bailCost = timeCost + bountyCost;
+
+        if (stars >= 5) {
+            bailCost *= 2;
+        }
 
         if (args.includes('confirm')) {
             const payerData = await db.getUser(payerId, guildId);
