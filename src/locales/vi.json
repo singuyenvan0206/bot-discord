@@ -394,6 +394,7 @@
         "shield_broken": "\n💥 **KHIÊN ĐÃ VỠ!** Khiên Bảo Vệ của {{user}} đã bị vỡ sau đợt cướp này!",
         "teacher_penalty": "Thật là một tấm gương xấu! Bạn đã bị giáng xuống Cấp độ **{{level}}** do hành vi này. 📉",
         "failure_xp": "🚔 Bạn bị {{user}} phát hiện! Phải bồi thường **{{amount}}** coins và mất **{{xp}}** XP.{{jail}}",
+        "target_in_prison": "❌ **{{user}}** đang ở trong tù! Bạn không thể cướp người đang bị giam giữ.",
         "user_in_prison": "❌ Bạn đang ở trong tù! Làm sao mà đi cướp được? ⛓️ Bạn sẽ được thả vào **{{time}}**.",
         "wanted_alert": "🚨 **Cảnh báo truy nã:** Tiền thưởng của bạn đã tăng thêm `{{amount}}` coins!"
     },
@@ -1839,6 +1840,7 @@
         "fine_label": "Tiền phạt",
         "xp_loss_label": "Tổn thất XP",
         "cooldown": "⏳ Bạn cần thời gian để chuẩn bị cho cuộc vây bắt tiếp theo. Hãy quay lại sau **{{time}}**.",
+        "target_already_in_prison": "❌ **{{user}}** đã bị bắt và đang ở trong tù rồi!",
         "cannot_arrest_own_bounty": "❌ Bạn không thể bắt người mà chính bạn đã treo thưởng!",
         "failed": "❌ Tên tội phạm **{{user}}** đã quá xảo quyệt và trốn thoát thành công! Bạn bị trừ một ít kinh nghiệm vì sơ suất.",
         "fight_back": "👊 **Chống trả!** Tên tội phạm **{{criminal}}** đã hung hãn chống trả quyết liệt!",
@@ -1914,5 +1916,8 @@
         "provide_target": "❌ Vui lòng nhập ID, ping hoặc \"all\".",
         "ban_success": "✅ Đã ban người dùng **{{user}}** thành công!",
         "unban_success": "✅ Đã bỏ ban cho người dùng **{{user}}**!"
+    },
+    "prison": {
+        "lockdown_interaction": "⛓️ **Lệnh giam giữ:** Bạn đang ở trong tù và không thể tương tác với các trò chơi/hành động này! Bạn sẽ được tự do sau **{{time}}**."
     }
 }

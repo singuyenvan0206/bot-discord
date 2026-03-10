@@ -109,7 +109,7 @@ module.exports = {
 
             // Phase 2: Reset placers if the previous bounty had expired
             const hadExpired = now > (user.wanted_expires_at || 0);
-            const placersQuery = hadExpired ? ', bounty_placers = "[]"' : '';
+            const placersQuery = hadExpired ? ", bounty_placers = '[]'" : '';
 
             await db.execute(
                 `UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ?${placersQuery} WHERE id = ?`,

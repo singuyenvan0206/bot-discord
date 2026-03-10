@@ -343,6 +343,7 @@
         "shield_broken": "\n💥 **SHIELD BROKEN!** {{user}}'s Shield of Protection shattered after this robbery attempt!",
         "teacher_penalty": "What a terrible role model! You have been demoted to Level **{{level}}**! 📉",
         "failure_xp": "🚔 You were caught by {{user}}! You must pay **{{amount}}** coins and lost **{{xp}}** XP.{{jail}}",
+        "target_in_prison": "❌ **{{user}}** is in prison! You cannot rob someone who is incarcerated.",
         "wanted_alert": "🚨 **Wanted Alert:** Your bounty increased by `{{amount}}` coins!"
     },
     "job": {
@@ -1838,6 +1839,7 @@
         "fine_label": "Fine",
         "xp_loss_label": "XP Loss",
         "cooldown": "⏳ You need time to prepare for the next raid. Try again in **{{time}}**.",
+        "target_already_in_prison": "❌ **{{user}}** is already arrested and in prison!",
         "cannot_arrest_own_bounty": "❌ You cannot arrest a target you placed a bounty on!",
         "failed": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight.",
         "fight_back": "👊 **Resistance!** The criminal **{{criminal}}** violently resisted arrest!",
@@ -1913,5 +1915,8 @@
         "provide_target": "❌ Please provide ID, ping or \"all\".",
         "ban_success": "✅ Successfully banned user **{{user}}**!",
         "unban_success": "✅ Successfully unbanned user **{{user}}**!"
+    },
+    "prison": {
+        "lockdown_interaction": "⛓️ **Prison Lockdown:** You are currently in prison and cannot interact with these games/actions! You will be released in **{{time}}**."
     }
 }
