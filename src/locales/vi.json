@@ -4,7 +4,7 @@
         "teacher_tutoring_simple": "\n👨‍🏫 **Gia sư:** Bạn nhận được thêm +50% tiền và +10 XP!",
         "insufficient_funds": "❌ Bạn không đủ tiền! Số dư: **{{balance}}**",
         "invalid_amount": "❌ Số tiền không hợp lệ.",
-        "cooldown": "Vui lòng đợi **{{time}}** để tiếp tục sử dụng lệnh này! ⏱️",
+        "cooldown": "Lệnh **{{command}}** đang trong thời gian chờ. Vui lòng quay lại sau **{{time}}**! ⏱️",
         "bot_shut_down": "⚠️ **Hệ thống đang tạm nghỉ!** Bot hiện đang được tắt để bảo trì hoặc theo lệnh của Owner. Vui lòng quay lại sau nhé! 🔌💤",
         "success": "✅ Thành công!",
         "max_bet_error": "❌ Mức cược tối đa là **{{limit}}** coins!",
@@ -47,7 +47,17 @@
         "duration": "Thời hạn",
         "anti_spam_timeout": "⚠️ **Anti-Spam!** Bạn đã bị tắt tiếng trong **{{duration}}** (Vi phạm lần #{{count}}).",
         "user_in_prison": "❌ Bạn hiện đang bị giam giữ! Bạn sẽ được ra tù vào **{{time}}**.",
-        "user_in_prison_global": "⛓️ **Lệnh giam giữ:** Bạn đang ở trong tù và không thể thực hiện hành động này! Bạn sẽ được tự do sau **{{time}}**. Bạn có thể dùng `$bail` để nộp phạt ra tù sớm."
+        "user_in_prison_global": "⛓️ **Lệnh giam giữ:** Bạn đang ở trong tù và không thể thực hiện hành động này! Bạn sẽ được tự do sau **{{time}}**. Bạn có thể dùng `$bail` để nộp phạt ra tù sớm.",
+        "time": {
+            "day": "ngày",
+            "days": "ngày",
+            "hour": "giờ",
+            "hours": "giờ",
+            "minute": "phút",
+            "minutes": "phút",
+            "second": "giây",
+            "seconds": "giây"
+        }
     },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
@@ -254,13 +264,13 @@
         "desc_police_raid": "Tăng mạnh tỷ lệ bị cảnh sát đột kích khi đánh bài."
     },
     "daily": {
-        "cooldown": "❌ Bạn có thể nhận thưởng hàng ngày sau **{{time}}**.",
+        "cooldown": "❌ Bạn đã nhận quà hôm nay rồi. Hãy quay lại nhận quà tiếp theo sau **{{time}}**.",
         "success": "✅ Bạn đã nhận phần thưởng hàng ngày là **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped {{cap}}%): {{percent}}%)*"
     },
     "work": {
-        "cooldown": "❌ Bạn cần nghỉ ngơi! Hãy quay lại làm việc sau **{{time}}**.",
+        "cooldown": "❌ Bạn đang kiệt sức! Hãy nghỉ ngơi và quay lại làm việc sau **{{time}}**.",
         "success": "💼 Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped {{cap}}%): {{percent}}%)*",
@@ -314,7 +324,7 @@
         "overtime": "\n👮 **Làm thêm giờ!** Cảnh sát nhận được tiền bồi dưỡng **+500** coins!"
     },
     "crime": {
-        "cooldown": "❌ Bạn đang bị cảnh sát theo dõi! Hãy đợi **{{time}}**.",
+        "cooldown": "❌ Cảnh sát đang tuần tra khu vực này rất gắt gao. Hãy ẩn mình trong **{{time}}**.",
         "success": "💰 Bạn đã **{{action}}** thành công và cuỗm được **{{amount}}** coins! {{emoji}}",
         "failure": "🚔 Phi vụ thất bại! Bạn bị cảnh sát bắt và phải nộp phạt **{{amount}}** coins. ",
         "actions": [
@@ -333,7 +343,7 @@
         "wanted_alert": "🚨 **Cảnh báo truy nã:** Tiền thưởng của bạn đã tăng thêm `{{amount}}` coins!"
     },
     "beg": {
-        "cooldown": "❌ Bạn đã xin quá nhiều rồi! Hãy quay lại sau **{{time}}**.",
+        "cooldown": "❌ Đừng làm phiền mọi người quá nhiều! Thử lại sau **{{time}}**.",
         "success": "💰 **{{person}}** đã tặng bạn **{{amount}}** coins! {{emoji}}",
         "failure": "😢 Bạn đứng xin cả buổi nhưng chẳng ai thèm cho xu nào.",
         "persons": [
@@ -359,7 +369,7 @@
         "level_bonus": "\n-# *(Gồm ⭐ +{{amount}} thưởng cấp độ (Capped 250%): {{percent}}%)*"
     },
     "search": {
-        "cooldown": "❌ Bạn đã tìm khắp nơi rồi! Hãy nghỉ ngơi **{{time}}** trước khi tìm tiếp.",
+        "cooldown": "❌ Khu vực này đã được lục soát kỹ. Hãy tìm ở nơi khác sau **{{time}}**.",
         "success": "🔍 Bạn lục lọi trong **{{location}}** và tìm thấy **{{amount}}** coins! {{emoji}}",
         "locations": [
             "thùng rác",
@@ -378,7 +388,7 @@
         "data_breach": "\n💻 **Rò rỉ dữ liệu!** Hacker xâm nhập hệ thống thành công, nhận thêm **+{{amount}}** coins!"
     },
     "rob": {
-        "cooldown": "❌ Bạn đang bị cảnh sát truy nã! Hãy lẩn trốn trong **{{time}}**.",
+        "cooldown": "❌ Bạn cần thời gian để lên kế hoạch cho phi vụ tiếp theo. Thử lại sau **{{time}}**.",
         "success": "🥷 Bạn đã lẻn vào và trộm được **{{amount}}** coins từ {{user}}! {{emoji}}",
         "failure": "🚔 Bạn bị {{user}} phát hiện và bắt quả tang! Bạn phải bồi thường **{{amount}}** coins cho họ.",
         "no_money": "❌ {{user}} nghèo đến mức chẳng có một xu nào để bạn trộm cả!",
@@ -556,7 +566,7 @@
         "error_internal": "❌ Có lỗi xảy ra khi mở rương. Vui lòng liên hệ admin."
     },
     "freelance": {
-        "cooldown": "❌ Bạn cần nghỉ ngơi sau dự án! Quay lại sau **{{time}}**.",
+        "cooldown": "❌ Dự án cũ vẫn đang được xử lý. Bạn có thể nhận dự án mới sau **{{time}}**.",
         "success": "💻 Bạn đã hoàn thành **{{action}}** thành công và nhận được **{{amount}}** coins từ khách hàng! {{emoji}}",
         "failure": "📂 Dự án gặp trục trặc! Bạn bị khách hàng bùng tiền hoặc phải đền bù hợp đồng tốn **{{amount}}** coins.",
         "actions": [

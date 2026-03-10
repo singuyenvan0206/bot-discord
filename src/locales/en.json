@@ -4,7 +4,7 @@
         "error": "An error occurred while executing this command! ❌",
         "insufficient_funds": "❌ You don't have enough money! Balance: **{{balance}}**",
         "invalid_amount": "❌ Invalid amount.",
-        "cooldown": "Please wait **{{time}}** before using this command again! ⏱️",
+        "cooldown": "Command **{{command}}** is on cooldown. Please try again in **{{time}}**! ⏱️",
         "bot_shut_down": "⚠️ **System is offline!** The bot is currently shut down for maintenance or by Owner command. Please come back later! 🔌💤",
         "success": "✅ Success!",
         "max_bet_error": "❌ The maximum bet is **{{limit}}** coins!",
@@ -47,7 +47,17 @@
         "duration": "Duration",
         "anti_spam_timeout": "⚠️ **Anti-Spam!** You have been muted for **{{duration}}** (Violation #{{count}}).",
         "user_in_prison": "❌ You are currently in prison! You will be released at **{{time}}**.",
-        "user_in_prison_global": "⛓️ **Prison Lockdown:** You are currently in prison and cannot perform this action! You will be free in **{{time}}**. You can use `$bail` to pay a fine and get out early."
+        "user_in_prison_global": "⛓️ **Prison Lockdown:** You are currently in prison and cannot perform this action! You will be free in **{{time}}**. You can use `$bail` to pay a fine and get out early.",
+        "time": {
+            "day": "day",
+            "days": "days",
+            "hour": "hour",
+            "hours": "hours",
+            "minute": "minute",
+            "minutes": "minutes",
+            "second": "second",
+            "seconds": "seconds"
+        }
     },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
@@ -198,13 +208,13 @@
         "desc_police_raid": "Significantly increased chance of police raids during gambling."
     },
     "daily": {
-        "cooldown": "❌ You can claim your daily reward in **{{time}}**.",
+        "cooldown": "❌ You've already claimed your reward today. Come back in **{{time}}**.",
         "success": "✅ You received your daily reward of **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped {{cap}}%): {{percent}}%)*"
     },
     "work": {
-        "cooldown": "❌ You need to rest! Come back to work in **{{time}}**.",
+        "cooldown": "❌ You are exhausted! Take a break and try working again in **{{time}}**.",
         "success": "💼 You worked as a **{{job}}** and earned **{{amount}}** coins! {{emoji}}",
         "bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%): {{percent}}%)*",
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped {{cap}}%): {{percent}}%)*",
@@ -258,7 +268,7 @@
         "overtime": "\n👮 **Overtime!** Officer received a **+500** coins bonus!"
     },
     "crime": {
-        "cooldown": "❌ You are being watched by the police! Wait **{{time}}** before your next heist.",
+        "cooldown": "❌ The police are patrolling this area heavily. Lay low for **{{time}}** before your next heist.",
         "success": "💰 You successfully **{{action}}** and walked away with **{{amount}}** coins! {{emoji}}",
         "failure": "🚔 Heist failed! You were caught by the police and fined **{{amount}}** coins.",
         "actions": [
@@ -281,7 +291,7 @@
         "milestone_reached": "Permanent Milestone Buff"
     },
     "beg": {
-        "cooldown": "❌ You've begged too much! Come back in **{{time}}**.",
+        "cooldown": "❌ Don't bother people too much! Try again in **{{time}}**.",
         "success": "💰 **{{person}}** gave you **{{amount}}** coins! {{emoji}}",
         "failure": "😢 You begged all day but nobody gave you anything.",
         "persons": [
@@ -307,7 +317,7 @@
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*"
     },
     "search": {
-        "cooldown": "❌ You've searched everywhere! Rest for **{{time}}** before searching again.",
+        "cooldown": "❌ This area has been thoroughly searched. Try elsewhere in **{{time}}**.",
         "success": "🔍 You searched the **{{location}}** and found **{{amount}}** coins! {{emoji}}",
         "locations": [
             "trash can",
@@ -327,7 +337,7 @@
         "data_breach": "\n💻 **Data Breach!** Hacker successfully breached the system, received **+{{amount}}** extra coins!"
     },
     "rob": {
-        "cooldown": "❌ You are wanted by the police! Hide for another **{{time}}**.",
+        "cooldown": "❌ You need time to plan your next heist. Try again in **{{time}}**.",
         "success": "🥷 You sneaked in and stole **{{amount}}** coins from {{user}}! {{emoji}}",
         "failure": "🚔 {{user}} caught you red-handed! You had to pay them **{{amount}}** coins as compensation.",
         "no_money": "❌ {{user}} is so poor they don't have a single coin to steal!",
@@ -500,7 +510,7 @@
         "error_internal": "❌ An error occurred while opening the crate. Please contact an admin."
     },
     "freelance": {
-        "cooldown": "❌ You need to rest after the project! Come back in **{{time}}**.",
+        "cooldown": "❌ The previous project is still being processed. New projects available in **{{time}}**.",
         "success": "💻 You successfully finished **{{action}}** and received **{{amount}}** coins from your client! {{emoji}}",
         "failure": "📂 Project failed! The client didn't pay or you had to refund **{{amount}}** coins for contract breach.",
         "actions": [

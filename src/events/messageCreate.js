@@ -178,7 +178,10 @@ module.exports = {
 
             if (nowMillis < expirationTime && !isBotOwner) {
                 const timeLeft = (expirationTime - now) / 1000;
-                return message.reply(t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }));
+                return message.reply(t('common.cooldown', lang, {
+                    command: command.name,
+                    time: formatDuration(Math.ceil(timeLeft), lang)
+                }));
             }
         }
 

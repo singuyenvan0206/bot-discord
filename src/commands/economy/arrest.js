@@ -79,8 +79,8 @@ module.exports = {
             const releaseTime = now + prisonTime;
 
             await db.execute(
-                'UPDATE users SET last_rob = ?, last_crime = ?, last_work = ?, last_daily = ?, prison_until = ? WHERE id = ?',
-                [now, now, now, now, releaseTime, target.id]
+                'UPDATE users SET prison_until = ? WHERE id = ?',
+                [releaseTime, target.id]
             );
 
             const embed = new EmbedBuilder()
