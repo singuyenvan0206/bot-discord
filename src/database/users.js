@@ -52,7 +52,19 @@ async function getUser(userId, guildId = null) {
         }
 
         if (guildId) {
+            const config = require('../config');
             await execute('INSERT INTO user_guilds (userId, guildId) VALUES (?, ?) ON CONFLICT DO NOTHING', [uId, guildId]);
+            
+            if (config.ECONOMY?.PER_SERVER_STATS) {
+                const serverStats = await queryOne('SELECT balance, xp, level, inventory FROM user_guilds WHERE userId = ? AND guildId = ?', [uId, guildId]);
+                if (serverStats) {
+                    user.balance = Number(serverStats.balance || 0);
+                    user.xp = Number(serverStats.xp || 0);
+                    user.level = Number(serverStats.level || 0);
+                    user.inventory = serverStats.inventory || '{}';
+                    user.is_server_data = true;
+                }
+            }
         }
 
         user.balance = Number(user.balance || 0);
@@ -80,10 +92,11 @@ async function getGlobalUser(userId) {
     return await getUser(userId);
 }
 
-async function updateGlobalUser(userId, updates) {
+async function updateGlobalUser(userId, updates, guildId = null) {
     try {
         if (!userId) return;
         const uId = String(userId);
+        const config = require('../config');
         const fields = [];
         const values = [];
         let i = 1;
@@ -100,18 +113,71 @@ async function updateGlobalUser(userId, updates) {
 
         if (fields.length === 0) return;
         values.push(uId);
-        await pool.query(`UPDATE users SET ${fields.join(', ')} WHERE id = $${i}`, values);
+
+        if (guildId && config.ECONOMY?.PER_SERVER_STATS) {
+            // Check if column exists in user_guilds or if it's a JSON field
+            const allowedServerFields = ['balance', 'xp', 'level', 'inventory'];
+            const actualUpdates = {};
+            let hasServerField = false;
+
+            Object.keys(updates).forEach(key => {
+                if (allowedServerFields.includes(key)) {
+                    hasServerField = true;
+                }
+            });
+
+            if (hasServerField) {
+                // For simplicity, we only update specific per-server fields in user_guilds
+                // Other fields remain global in the 'users' table
+                const serverFields = [];
+                const serverValues = [];
+                let si = 1;
+                Object.entries(updates).forEach(([key, value]) => {
+                    if (allowedServerFields.includes(key)) {
+                        serverFields.push(`${key} = $${si++}`);
+                        serverValues.push(value);
+                    }
+                });
+                if (serverFields.length > 0) {
+                    serverValues.push(uId, guildId);
+                    await pool.query(`UPDATE user_guilds SET ${serverFields.join(', ')} WHERE userId = $${si++} AND guildId = $${si}`, serverValues);
+                }
+            }
+            
+            // Still update the rest in the global 'users' table if needed
+            const globalFields = [];
+            const globalValues = [];
+            let gi = 1;
+            Object.entries(updates).forEach(([key, value]) => {
+                if (!allowedServerFields.includes(key)) {
+                    globalFields.push(`${key} = $${gi++}`);
+                    globalValues.push(value);
+                }
+            });
+            if (globalFields.length > 0) {
+                globalValues.push(uId);
+                await pool.query(`UPDATE users SET ${globalFields.join(', ')} WHERE id = $${gi}`, globalValues);
+            }
+        } else {
+            await pool.query(`UPDATE users SET ${fields.join(', ')} WHERE id = $${i}`, values);
+        }
     } catch (error) {
         console.error(`Error in updateGlobalUser for user ${userId}:`, error);
         throw error;
     }
 }
 
-async function addGlobalBalance(userId, amount) {
+async function addGlobalBalance(userId, amount, guildId = null) {
     try {
         if (!userId) return;
         const uId = String(userId);
-        await execute('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, uId]);
+        const config = require('../config');
+
+        if (guildId && config.ECONOMY?.PER_SERVER_STATS) {
+            await execute('UPDATE user_guilds SET balance = balance + ? WHERE userId = ? AND guildId = ?', [amount, uId, guildId]);
+        } else {
+            await execute('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, uId]);
+        }
     } catch (error) {
         console.error(`Error in addGlobalBalance for user ${userId}:`, error);
         throw error;
@@ -122,6 +188,7 @@ async function addGlobalXp(userId, xpAmount, guildId = null) {
     try {
         if (!userId) return;
         const uId = String(userId);
+        const config = require('../config');
 
         if (guildId && uId === botId) {
             const currentXp = await getGuildSetting(guildId, 'bot_xp', 0);
@@ -129,6 +196,11 @@ async function addGlobalXp(userId, xpAmount, guildId = null) {
             const newXp = Number(currentXp) + xpAmount;
             await setGuildSetting(guildId, 'bot_xp', newXp);
             return { xp: newXp, level: currentLevel };
+        }
+
+        if (guildId && config.ECONOMY?.PER_SERVER_STATS) {
+            const result = await queryOne('UPDATE user_guilds SET xp = xp + ? WHERE userId = ? AND guildId = ? RETURNING xp, level', [xpAmount, uId, guildId]);
+            return result;
         }
 
         const result = await queryOne('UPDATE users SET xp = xp + ? WHERE id = ? RETURNING xp, level', [xpAmount, uId]);
@@ -139,20 +211,31 @@ async function addGlobalXp(userId, xpAmount, guildId = null) {
     }
 }
 
-async function setGlobalLevel(userId, level) {
+async function setGlobalLevel(userId, level, guildId = null) {
     try {
         if (!userId) return;
         const uId = String(userId);
-        await execute('UPDATE users SET level = ? WHERE id = ?', [level, uId]);
+        const config = require('../config');
+
+        if (guildId && config.ECONOMY?.PER_SERVER_STATS) {
+            await execute('UPDATE user_guilds SET level = ? WHERE userId = ? AND guildId = ?', [level, uId, guildId]);
+        } else {
+            await execute('UPDATE users SET level = ? WHERE id = ?', [level, uId]);
+        }
     } catch (error) {
         console.error(`Error in setGlobalLevel for user ${userId}:`, error);
         throw error;
     }
 }
 
-async function removeGlobalBalance(userId, amount) {
+async function removeGlobalBalance(userId, amount, guildId = null) {
     try {
-        await execute('UPDATE users SET balance = balance - ? WHERE id = ?', [amount, userId]);
+        const config = require('../config');
+        if (guildId && config.ECONOMY?.PER_SERVER_STATS) {
+            await execute('UPDATE user_guilds SET balance = balance - ? WHERE userId = ? AND guildId = ?', [amount, userId, guildId]);
+        } else {
+            await execute('UPDATE users SET balance = balance - ? WHERE id = ?', [amount, userId]);
+        }
     } catch (error) {
         console.error(`Error in removeGlobalBalance for user ${userId}:`, error);
         throw error;
@@ -319,7 +402,7 @@ async function addBalance(guildId, userId, amount) {
             userId = guildId;
         }
         if (!userId) return;
-        return await addGlobalBalance(userId, amount);
+        return await addGlobalBalance(userId, amount, guildId);
     } catch (error) {
         console.error(`Error in addBalance for user ${userId}:`, error);
         throw error;
@@ -373,7 +456,7 @@ async function removeBalance(guildId, userId, amount) {
             userId = guildId;
         }
         if (!userId) return;
-        return await removeGlobalBalance(userId, amount);
+        return await removeGlobalBalance(userId, amount, guildId);
     } catch (error) {
         console.error(`Error in removeBalance for user ${userId}:`, error);
         throw error;
@@ -387,7 +470,7 @@ async function updateUser(guildId, userId, updates) {
             userId = guildId;
         }
         if (!userId) return;
-        return await updateGlobalUser(userId, updates);
+        return await updateGlobalUser(userId, updates, guildId);
     } catch (error) {
         console.error(`Error in updateUser for user ${userId}:`, error);
         throw error;

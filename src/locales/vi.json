@@ -60,6 +60,17 @@
             "seconds": "giây"
         }
     },
+    "talk": {
+        "no_vc": "❌ Bạn phải ở trong một kênh voice để sử dụng lệnh này!",
+        "no_text": "❌ Vui lòng nhập nội dung cần nói!",
+        "too_long": "❌ Nội dung quá dài (tối đa 200 ký tự)!",
+        "joining": "🎙️ Đang kết nối tới kênh voice...",
+        "speaking": "🗣️ Đang phát âm thanh...",
+        "error": "❌ Có lỗi xảy ra khi phát âm thanh."
+    },
+    "say": {
+        "no_text": "❌ Vui lòng nhập nội dung muốn bot nói!"
+    },
     "economy": {
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
         "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%))*",

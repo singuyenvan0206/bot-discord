@@ -174,6 +174,12 @@ async function initSchema() {
     await safeAddColumn('users', 'last_harvest', 'BIGINT DEFAULT 0');
     await safeAddColumn('users', 'last_hack', 'BIGINT DEFAULT 0');
 
+    // User Guilds Migrations (Per-server data)
+    await safeAddColumn('user_guilds', 'balance', 'BIGINT NOT NULL DEFAULT 0');
+    await safeAddColumn('user_guilds', 'xp', 'BIGINT NOT NULL DEFAULT 0');
+    await safeAddColumn('user_guilds', 'level', 'INTEGER NOT NULL DEFAULT 0');
+    await safeAddColumn('user_guilds', 'inventory', "TEXT DEFAULT '{}'");
+
     // Guild Migrations
     await safeAddColumn('guilds', 'wordchain_channel', 'TEXT DEFAULT NULL');
 }

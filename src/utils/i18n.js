@@ -6,11 +6,19 @@ const locales = {};
 const localesPath = path.join(__dirname, '..', 'locales');
 
 // Load all locale files
-const files = fs.readdirSync(localesPath).filter(f => f.endsWith('.json'));
-for (const file of files) {
-    const lang = file.split('.')[0];
-    locales[lang] = require(path.join(localesPath, file));
+function loadLocales() {
+    const files = fs.readdirSync(localesPath).filter(f => f.endsWith('.json'));
+    for (const file of files) {
+        const lang = file.split('.')[0];
+        try {
+            const content = fs.readFileSync(path.join(localesPath, file), 'utf8');
+            locales[lang] = JSON.parse(content);
+        } catch (error) {
+            console.error(`Error loading locale ${file}:`, error);
+        }
+    }
 }
+loadLocales();
 
 /**
  * Internal helper to get a single translation.

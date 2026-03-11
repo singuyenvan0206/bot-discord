@@ -58,7 +58,7 @@ async function addXp(memberOrId, amount, guildId = null, bypassCooldown = false)
         const finalAmount = Math.floor(amount * xpBoost * (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * guildXpMulti);
 
         // Atomic update for XP. Returns {xp, level} from the row (RETURNING clause)
-        const userState = await db.addGlobalXp(userId, finalAmount);
+        const userState = await db.addGlobalXp(userId, finalAmount, gId);
         if (!userState) return { level: 0, leveledUp: false };
 
         const currentXp = Number(userState.xp);
@@ -70,7 +70,7 @@ async function addXp(memberOrId, amount, guildId = null, bypassCooldown = false)
 
         if (leveledUp) {
             // Atomic update of the level field only if it changed
-            await db.setGlobalLevel(userId, newLevel);
+            await db.setGlobalLevel(userId, newLevel, gId);
 
             // Base bonus
             bonus = newLevel * 100;
@@ -205,7 +205,57 @@ async function assignRandomJob(userId, guildId, lang) {
 // checkAndSendMilestone has been merged centrally directly into addXp.
 /**
  * Gửi thông báo thăng cấp cơ bản.
+ * 
+ * @param {object} message - Discord message object
+ * @param {object} result - Result from addXp
+ * @param {string} lang - Language code
  */
+async function sendLevelUpMessage(message, result, lang) {
+    try {
+        const config = require('../config');
+        if (config.ECONOMY?.LEVELING?.SHOW_LEVEL_UP_MESSAGES === false) return;
+
+        const { EmbedBuilder } = require('discord.js');
+        const { t } = require('./i18n');
+
+        const embed = new EmbedBuilder()
+            .setTitle(t('leveling.title', lang) || "🎉 Thăng Cấp!")
+            .setDescription(t('leveling.message', lang, { 
+                user: message.author.username, 
+                level: result.level 
+            }) || `Chúc mừng **${message.author.username}** đã đạt cấp độ **${result.level}**!`)
+            .setColor(config.COLORS.SUCCESS)
+            .setThumbnail(message.author.displayAvatarURL({ dynamic: true }));
+
+        if (result.bonus > 0) {
+            embed.addFields({ 
+                name: t('leveling.reward', lang) || "Phần thưởng", 
+                value: `💰 **+${result.bonus.toLocaleString()}** coins` 
+            });
+        }
+
+        if (result.reachedMilestone) {
+            embed.addFields({ 
+                name: "✨ Milestone!", 
+                value: t('leveling.milestone_reached', lang, { level: result.milestoneLevel }) || `Bạn đã đạt mốc quan trọng cấp **${result.milestoneLevel}**!` 
+            });
+        }
+
+        if (result.assignedJob) {
+            embed.addFields({ 
+                name: "💼 Nghề Nghiệp", 
+                value: t('job.milestone_assigned', lang, { 
+                    job: result.assignedJob.name,
+                    icon: result.assignedJob.config.icon
+                }) || `Bạn đã được phân công nghề **${result.assignedJob.name}**!` 
+            });
+        }
+
+        return await message.channel.send({ embeds: [embed] });
+    } catch (error) {
+        console.error('Error in sendLevelUpMessage:', error);
+    }
+}
 
 /**
  * Giảm cấp độ của người dùng.
@@ -251,14 +301,14 @@ async function deductLevel(userId, guildId, levels = 1) {
 async function deductXp(userId, guildId, amount) {
     try {
         // Atomic update with negative amount
-        const userState = await db.addGlobalXp(userId, -amount);
+        const userState = await db.addGlobalXp(userId, -amount, guildId);
         if (!userState) return { deducted: 0 };
 
         const newXp = Math.max(0, Number(userState.xp));
         const newLevel = calculateLevel(newXp);
 
         // Update level to match the new XP (atomic set)
-        await db.setGlobalLevel(userId, newLevel);
+        await db.setGlobalLevel(userId, newLevel, guildId);
 
         return {
             newXp,
@@ -280,5 +330,6 @@ module.exports = {
 
     deductLevel,
     deductXp,
+    sendLevelUpMessage,
     XP_AMOUNTS
 };

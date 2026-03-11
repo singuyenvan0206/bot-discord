@@ -40,6 +40,7 @@ module.exports = {
         DICTIONARY: 'https://api.dictionaryapi.dev/api/v2/entries/en/'
     },
     ECONOMY: {
+        PER_SERVER_STATS: false, // Set to true to separate data per server
         WORDCHAIN_REWARD: 150,
         SCRAMBLE_REWARD: 2000,
         HANGMAN_REWARD: 2000,
@@ -95,6 +96,7 @@ module.exports = {
             police_chief: { id: 'police_chief', numericId: 7, bonus: 0.50, color: '#2980b1', icon: '👨‍✈️' }
         },
         LEVELING: {
+            SHOW_LEVEL_UP_MESSAGES: false, // Set to true to enable level-up notifications
             XP_MULTIPLIER: 1.5, // 50% increase
             XP_COOLDOWN: 15, // 15 seconds
             MILESTONE_INTERVAL: 20,
@@ -139,8 +141,8 @@ module.exports = {
     PRISON: {
         BAIL_COST_PER_MINUTE: 5000,
         BAIL_BOUNTY_PERCENT: 0.2, // 20% of bounty added to bail
-        BASE_TIME: 3600, // 1 hour base
-        STARS_MULTIPLIER: 3600 * 2, // 2 hours per star
+        BASE_TIME: 1800, // 30 minutes base
+        STARS_MULTIPLIER: 1800, // 30 minutes per star
         MAX_BAIL_STARS: 5, // Doubled fee for 5 stars, denial if above 5 (if possible)
         BLOCK_EXCEPTIONS: ['bail', 'me', 'profile', 'balance', 'help', 'inventory', 'lvl', 'rank', 'leaderboard']
     }

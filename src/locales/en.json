@@ -60,6 +60,17 @@
             "seconds": "seconds"
         }
     },
+    "talk": {
+        "no_vc": "❌ You must be in a voice channel to use this command!",
+        "no_text": "❌ Please provide text to say!",
+        "too_long": "❌ Text is too long (max 200 characters)!",
+        "joining": "🎙️ Joining voice channel...",
+        "speaking": "🗣️ Speaking...",
+        "error": "❌ An error occurred while playing audio."
+    },
+    "say": {
+        "no_text": "❌ Please provide text for the bot to say!"
+    },
     "economy": {
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
         "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%))*",
