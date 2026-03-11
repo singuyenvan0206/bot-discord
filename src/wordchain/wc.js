@@ -51,9 +51,46 @@ function saveDictCache() {
     }
 }
 
+// Local dictionaries
+const VN_DICT_FILE = path.join(__dirname, 'vietnamese_words.txt');
+const EN_DICT_FILE = path.join(__dirname, 'english_words.txt');
+let localDictionary = new Set();
+
+function loadLocalDictionaries() {
+    try {
+        if (fs.existsSync(VN_DICT_FILE)) {
+            const content = fs.readFileSync(VN_DICT_FILE, 'utf-8');
+            content.split(/\r?\n/).forEach(word => {
+                const cleaned = word.trim().toLowerCase();
+                if (cleaned) localDictionary.add(cleaned);
+            });
+            console.log(`📚 Loaded ${localDictionary.size} Vietnamese words`);
+        }
+        if (fs.existsSync(EN_DICT_FILE)) {
+            const content = fs.readFileSync(EN_DICT_FILE, 'utf-8');
+            content.split(/\r?\n/).forEach(word => {
+                const cleaned = word.trim().toLowerCase();
+                if (cleaned) localDictionary.add(cleaned);
+            });
+            console.log(`📚 Total dictionary size: ${localDictionary.size} words`);
+        }
+    } catch (e) {
+        console.error('⚠️ Failed to load local dictionaries:', e.message);
+    }
+}
+
+loadLocalDictionaries();
+
 const isValidWord = async (word) => {
+    // 1. Check persistent cache (previous API results or overrides)
     if (dictCache.has(word)) return dictCache.get(word);
 
+    // 2. Check local dictionary (instant)
+    if (localDictionary.has(word)) {
+        return true;
+    }
+
+    // 3. Fallback to API if not in local dictionary (only for rare words)
     try {
         const response = await fetch(`${config.API_URLS.DICTIONARY}${encodeURIComponent(word)}`);
         const isValid = response.status === 200;
@@ -63,8 +100,38 @@ const isValidWord = async (word) => {
 
         return isValid;
     } catch (e) {
-        return true;
+        return false;
     }
+};
+
+/**
+ * Basic sync validation for words
+ */
+function validateWordBasic(word, lastChar, usedWords, pendingValidation, lang) {
+    if (usedWords.has(word) || pendingValidation.has(word)) {
+        return { valid: false, silent: true };
+    }
+
+    if (word.charAt(0) !== lastChar) {
+        return { valid: false, reason: t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() }) };
+    }
+    
+    if (word.length < 2) {
+        return { valid: false, reason: t('wordchain.too_short', lang) };
+    }
+    
+    if (!/^[a-zàáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]+$/.test(word)) {
+        return { valid: false, reason: t('wordchain.invalid_chars', lang) };
+    }
+
+    return { valid: true };
+}
+
+module.exports = {
+    isValidWord,
+    validateWordBasic,
+    loadLocalDictionaries,
+    localDictionary
 };
 
 client.once(Events.ClientReady, () => {
@@ -109,7 +176,7 @@ client.on('messageCreate', async (message) => {
 
         // 3. Passive Mode: If in WC channel and NOT a command, handle as word
         if (isWcChannel && !content.startsWith(prefix) && !activeGames.has(message.channel.id)) {
-            if (/^[a-z]{3,}$/.test(content)) {
+            if (/^[a-zàáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]{2,}$/.test(content)) {
                 return startGame(message, lang, true);
             }
         }
@@ -148,10 +215,14 @@ async function startGame(message, lang, passive = false) {
 
         activeGames.set(message.channel.id, collector);
 
+        // Track words currently being validated to prevent race conditions
+        const pendingValidation = new Set();
+
         collector.on('collect', async m => {
             try {
                 const word = m.content.toLowerCase().trim();
 
+                // 1. Basic command/bot checks
                 if (word.startsWith(prefix) && word !== `${prefix}stop`) return;
 
                 if (word === `${prefix}stop`) {
@@ -162,34 +233,42 @@ async function startGame(message, lang, passive = false) {
                     return;
                 }
 
+                // 2. Game logic validation (Sync)
                 if (m.author.id === lastPlayerId) {
                     return m.react(config.EMOJIS.WAITING).catch(() => { });
                 }
 
-                let invalidReason = null;
-                if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
-                else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
-                else if (word.length < 2) invalidReason = t('wordchain.too_short', lang);
-                else if (!/^[a-z]+$/.test(word)) invalidReason = t('wordchain.invalid_chars', lang);
+                // Check for double submission or already used (Atomic check for race condition)
+                const validation = validateWordBasic(word, lastChar, usedWords, pendingValidation, lang);
+                
+                if (!validation.valid) {
+                    if (validation.silent) return;
 
-                if (invalidReason) {
                     await m.react(config.EMOJIS.ERROR).catch(() => { });
-                    const warn = await message.channel.send(`⚠️ ${m.author}, ${invalidReason}`);
+                    const warn = await message.channel.send(`⚠️ ${m.author}, ${validation.reason}`);
                     setTimeout(() => warn.delete().catch(() => { }), 3000);
                     return;
                 }
 
+                // 3. Mark as pending and validate (Async)
+                pendingValidation.add(word);
                 const waitReaction = await m.react(config.EMOJIS.WAITING).catch(() => null);
+                
                 const valid = await isValidWord(word);
 
                 if (waitReaction) {
                     waitReaction.users.remove(client.user.id).catch(() => { });
                 }
 
-                if (!valid) return m.react(config.EMOJIS.ERROR).catch(() => { });
+                if (!valid) {
+                    pendingValidation.delete(word);
+                    return m.react(config.EMOJIS.ERROR).catch(() => { });
+                }
 
-                // Accept word
+                // 4. Accept word (Only if valid and was still pending)
                 usedWords.add(word);
+                pendingValidation.delete(word);
+                
                 lastChar = word.slice(-1);
                 lastPlayerId = m.author.id;
 
@@ -240,9 +319,16 @@ async function startGame(message, lang, passive = false) {
 }
 
 async function startBot() {
-    await db.getDb();
-    console.log('💾 Database initialized for Word Chain Standalone (LINKED)');
-    client.login(TOKEN);
+    try {
+        await db.getDb();
+        console.log('💾 Database initialized (Word Chain)');
+        await client.login(TOKEN);
+    } catch (error) {
+        console.error('❌ Failed to start Word Chain bot:', error);
+        process.exit(1);
+    }
 }
 
-startBot();
+if (require.main === module) {
+    startBot();
+}
