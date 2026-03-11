@@ -12,8 +12,9 @@ function formatCurrency(amount, emoji = EMOJIS.COIN) {
 /**
  * Formats a reward message including bonus details.
  */
-function formatRewardMessage(mainKey, lang, { total, bonus, percent, emoji = EMOJIS.COIN }) {
-    let msg = t(mainKey, lang, { amount: total.toLocaleString(), emoji });
+function formatRewardMessage(mainKey, lang, options) {
+    const { total, bonus, percent, emoji = EMOJIS.COIN } = options;
+    let msg = t(mainKey, lang, { ...options, amount: total.toLocaleString(), emoji });
 
     if (bonus > 0) {
         msg += `\n✨ **Bonus:** +${percent}% (${bonus.toLocaleString()} ${emoji})`;
