@@ -4,6 +4,7 @@ const { getLanguage, t } = require('../../utils/i18n');
 
 module.exports = {
     name: 'setwcchannel',
+    aliases: ['swc'],
     description: 'Set the dedicated channel for Word Chain game.',
     adminOnly: true,
     async execute(message, args) {

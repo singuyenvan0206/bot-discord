@@ -143,8 +143,7 @@ async function startGame(message, lang, passive = false) {
         await message.channel.send({ embeds: [embed] });
 
         const collector = message.channel.createMessageCollector({
-            filter: m => !m.author.bot,
-            time: 300_000
+            filter: m => !m.author.bot
         });
 
         activeGames.set(message.channel.id, collector);
@@ -193,7 +192,6 @@ async function startGame(message, lang, passive = false) {
                 usedWords.add(word);
                 lastChar = word.slice(-1);
                 lastPlayerId = m.author.id;
-                collector.resetTimer();
 
                 const baseReward = config.ECONOMY.WORDCHAIN_REWARD || 150;
                 let { total: totalReward } = await calculateReward(baseReward, m.member, 'income', { category: 'minigame' });
