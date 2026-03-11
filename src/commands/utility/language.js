@@ -34,7 +34,7 @@ module.exports = {
         let choice = args[0].toLowerCase();
 
         if (choice === 'reset' || choice === 'default') {
-            await db.updateUser(message.author.id, { language: null });
+            await db.updateUser(null, message.author.id, { language: null });
             const newLang = await getLanguage(message.author.id, guildId);
             return message.reply(`✅ ${t('language.reset_success', newLang)}`);
         }
@@ -62,7 +62,7 @@ module.exports = {
             return message.reply(`✅ ${t('language.set_success', choice, { lang: langName })}`);
         }
 
-        await db.updateUser(message.author.id, { language: choice });
+        await db.updateUser(null, message.author.id, { language: choice });
         const langName = choice === 'vi' ? 'Tiếng Việt' : 'English';
         return message.reply(`✅ ${t('language.set_success', choice, { lang: langName })}`);
     }

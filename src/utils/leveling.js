@@ -31,78 +31,83 @@ const xpCooldowns = new Map();
  * @returns {object} - Object chứa thông tin cấp độ hiện tại và việc có thăng cấp hay không { level, leveledUp }
  */
 async function addXp(memberOrId, amount, guildId = null, bypassCooldown = false) {
-    const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
-    const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
-    const config = require('../config');
+    try {
+        const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
+        const gId = guildId || (memberOrId.guild ? memberOrId.guild.id : null);
+        const config = require('../config');
 
-    // ─── Anti-Spam Check ───
-    if (!bypassCooldown) {
-        const now = Date.now();
-        const lastXpGain = xpCooldowns.get(userId) || 0;
-        const xpCooldownTime = (config.ECONOMY?.LEVELING?.XP_COOLDOWN || 60) * 1000;
+        // ─── Anti-Spam Check ───
+        if (!bypassCooldown) {
+            const now = Date.now();
+            const lastXpGain = xpCooldowns.get(userId) || 0;
+            const xpCooldownTime = (config.ECONOMY?.LEVELING?.XP_COOLDOWN || 60) * 1000;
 
-        if (now - lastXpGain < xpCooldownTime) {
-            return { level: 0, leveledUp: false, cooldown: true };
-        }
-        xpCooldowns.set(userId, now);
-    }
-
-    const user = await db.getUser(userId, gId);
-
-    // Apply global and user-specific XP multipliers
-    const { getXpMultiplier } = require('./multiplier');
-    const xpBoost = await getXpMultiplier(memberOrId);
-    const guildXpMulti = gId ? await db.getGuildSetting(gId, 'xp_multiplier', 1.0) : 1.0;
-
-    const finalAmount = Math.floor(amount * xpBoost * (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * guildXpMulti);
-
-    // Atomic update for XP. Returns {xp, level} from the row (RETURNING clause)
-    const userState = await db.addGlobalXp(userId, finalAmount);
-    if (!userState) return { level: 0, leveledUp: false };
-
-    const currentXp = Number(userState.xp);
-    const oldLevel = Number(userState.level);
-    const newLevel = calculateLevel(currentXp);
-
-    const leveledUp = newLevel > oldLevel;
-    let bonus = 0;
-
-    if (leveledUp) {
-        // Atomic update of the level field only if it changed
-        await db.setGlobalLevel(userId, newLevel);
-
-        // Base bonus
-        bonus = newLevel * 100;
-
-        // Milestone Reward (Every X levels)
-        const milestone = config.ECONOMY?.LEVELING?.MILESTONE_INTERVAL || 20;
-        const reachedMilestone = Math.floor(newLevel / milestone) > Math.floor(oldLevel / milestone);
-
-        if (reachedMilestone) {
-            // Increment permanent milestone points
-            await db.execute('UPDATE users SET milestone_count = milestone_count + 1 WHERE id = ?', [userId]);
-
-            userState.reachedMilestone = true;
-            userState.milestoneLevel = Math.floor(newLevel / milestone) * milestone;
+            if (now - lastXpGain < xpCooldownTime) {
+                return { level: 0, leveledUp: false, cooldown: true };
+            }
+            xpCooldowns.set(userId, now);
         }
 
-        await db.addBalance(gId, userId, bonus);
-    }
+        const user = await db.getUser(userId, gId);
 
-    let assignedJob = null;
-    if (oldLevel < 20 && newLevel >= 20) {
-        assignedJob = await assignJobIfEligible(memberOrId, gId, newLevel);
-    }
+        // Apply global and user-specific XP multipliers
+        const { getXpMultiplier } = require('./multiplier');
+        const xpBoost = await getXpMultiplier(memberOrId);
+        const guildXpMulti = gId ? await db.getGuildSetting(gId, 'xp_multiplier', 1.0) : 1.0;
 
-    return {
-        level: newLevel,
-        leveledUp: leveledUp,
-        reachedLevel20: !!assignedJob,
-        assignedJob: assignedJob,
-        bonus: bonus,
-        reachedMilestone: !!userState.reachedMilestone,
-        milestoneLevel: userState.milestoneLevel || 0
-    };
+        const finalAmount = Math.floor(amount * xpBoost * (config.ECONOMY?.LEVELING?.XP_MULTIPLIER || 1.0) * guildXpMulti);
+
+        // Atomic update for XP. Returns {xp, level} from the row (RETURNING clause)
+        const userState = await db.addGlobalXp(userId, finalAmount);
+        if (!userState) return { level: 0, leveledUp: false };
+
+        const currentXp = Number(userState.xp);
+        const oldLevel = Number(userState.level);
+        const newLevel = calculateLevel(currentXp);
+
+        const leveledUp = newLevel > oldLevel;
+        let bonus = 0;
+
+        if (leveledUp) {
+            // Atomic update of the level field only if it changed
+            await db.setGlobalLevel(userId, newLevel);
+
+            // Base bonus
+            bonus = newLevel * 100;
+
+            // Milestone Reward (Every X levels)
+            const milestone = config.ECONOMY?.LEVELING?.MILESTONE_INTERVAL || 20;
+            const reachedMilestone = Math.floor(newLevel / milestone) > Math.floor(oldLevel / milestone);
+
+            if (reachedMilestone) {
+                // Increment permanent milestone points
+                await db.execute('UPDATE users SET milestone_count = milestone_count + 1 WHERE id = ?', [userId]);
+
+                userState.reachedMilestone = true;
+                userState.milestoneLevel = Math.floor(newLevel / milestone) * milestone;
+            }
+
+            await db.addBalance(gId, userId, bonus);
+        }
+
+        let assignedJob = null;
+        if (oldLevel < 20 && newLevel >= 20) {
+            assignedJob = await assignJobIfEligible(memberOrId, gId, newLevel);
+        }
+
+        return {
+            level: newLevel,
+            leveledUp: leveledUp,
+            reachedLevel20: !!assignedJob,
+            assignedJob: assignedJob,
+            bonus: bonus,
+            reachedMilestone: !!userState.reachedMilestone,
+            milestoneLevel: userState.milestoneLevel || 0
+        };
+    } catch (error) {
+        console.error(`Error in addXp for user ${typeof memberOrId === 'string' ? memberOrId : memberOrId.id}:`, error);
+        throw error;
+    }
 }
 
 /**
@@ -114,43 +119,48 @@ async function addXp(memberOrId, amount, guildId = null, bypassCooldown = false)
  * @returns {boolean} - Whether a milestone was reached/job assigned
  */
 async function assignJobIfEligible(memberOrId, guildId, level) {
-    const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
-    const user = await db.getUser(userId, guildId);
+    try {
+        const userId = typeof memberOrId === 'string' ? memberOrId : memberOrId.id;
+        const user = await db.getUser(userId, guildId);
 
-    // Reaching level 20 (or higher if they somehow missed it/have no job)
-    const reachedLevel20 = level >= 20 && !user.job;
+        // Reaching level 20 (or higher if they somehow missed it/have no job)
+        const reachedLevel20 = level >= 20 && !user.job;
 
-    if (reachedLevel20) {
-        const { getLanguage, t } = require('./i18n');
-        const lang = await getLanguage(userId, guildId);
-        const job = await assignRandomJob(userId, guildId, lang);
+        if (reachedLevel20) {
+            const { getLanguage, t } = require('./i18n');
+            const lang = await getLanguage(userId, guildId);
+            const job = await assignRandomJob(userId, guildId, lang);
 
-        // Try to send DM if we have a member/user object
-        if (typeof memberOrId === 'object' && typeof memberOrId.send === 'function') {
-            const config = require('../config');
-            const { EmbedBuilder } = require('discord.js');
-            const embed = new EmbedBuilder()
-                .setTitle(t('job.milestone_title', lang))
-                .setDescription(t('job.milestone_desc', lang))
-                .addFields({
-                    name: t('job.name_field', lang) || "Nghề nghiệp",
-                    value: t('job.milestone_assigned', lang, {
-                        job: job.name,
-                        icon: job.config.icon,
-                        fact: job.fact,
-                        prefix: config.PREFIX
+            // Try to send DM if we have a member/user object
+            if (typeof memberOrId === 'object' && typeof memberOrId.send === 'function') {
+                const config = require('../config');
+                const { EmbedBuilder } = require('discord.js');
+                const embed = new EmbedBuilder()
+                    .setTitle(t('job.milestone_title', lang))
+                    .setDescription(t('job.milestone_desc', lang))
+                    .addFields({
+                        name: t('job.name_field', lang) || "Nghề nghiệp",
+                        value: t('job.milestone_assigned', lang, {
+                            job: job.name,
+                            icon: job.config.icon,
+                            fact: job.fact,
+                            prefix: config.PREFIX
+                        })
                     })
-                })
-                .setColor(job.config.color || '#f1c40f')
-                .setTimestamp();
+                    .setColor(job.config.color || '#f1c40f')
+                    .setTimestamp();
 
-            memberOrId.send({ embeds: [embed] }).catch(() => {
-                console.log(`[Job Milestone] Failed to send DM to ${userId}`);
-            });
+                memberOrId.send({ embeds: [embed] }).catch(() => {
+                    console.log(`[Job Milestone] Failed to send DM to ${userId}`);
+                });
+            }
+            return job;
         }
-        return job;
+        return null;
+    } catch (error) {
+        console.error(`Error in assignJobIfEligible for user ${typeof memberOrId === 'string' ? memberOrId : memberOrId.id}:`, error);
+        throw error;
     }
-    return null;
 }
 /**
  * Trả về hệ số nhân (multiplier) dựa trên cấp độ hiện tại.
@@ -170,21 +180,26 @@ function getLevelMultiplier(level) {
  * Assigns a random job to a user.
  */
 async function assignRandomJob(userId, guildId, lang) {
-    const config = require('../config');
-    const { t } = require('./i18n');
+    try {
+        const config = require('../config');
+        const { t } = require('./i18n');
 
-    const jobKeys = Object.keys(config.ECONOMY.JOBS).filter(key => key !== 'police_chief');
-    const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
-    const jobConfig = config.ECONOMY.JOBS[randomJobId];
+        const jobKeys = Object.keys(config.ECONOMY.JOBS).filter(key => key !== 'police_chief');
+        const randomJobId = jobKeys[Math.floor(Math.random() * jobKeys.length)];
+        const jobConfig = config.ECONOMY.JOBS[randomJobId];
 
-    await db.updateUser(guildId, userId, { job: randomJobId });
+        await db.updateUser(guildId, userId, { job: randomJobId });
 
-    return {
-        id: randomJobId,
-        config: jobConfig,
-        name: t(`job.name_${randomJobId}`, lang) || randomJobId,
-        fact: t(`job.fact_${randomJobId}`, lang) || "..."
-    };
+        return {
+            id: randomJobId,
+            config: jobConfig,
+            name: t(`job.name_${randomJobId}`, lang) || randomJobId,
+            fact: t(`job.fact_${randomJobId}`, lang) || "..."
+        };
+    } catch (error) {
+        console.error(`Error in assignRandomJob for user ${userId}:`, error);
+        throw error;
+    }
 }
 
 // checkAndSendMilestone has been merged centrally directly into addXp.
@@ -201,23 +216,28 @@ async function assignRandomJob(userId, guildId, lang) {
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
 async function deductLevel(userId, guildId, levels = 1) {
-    const user = await db.getUser(userId, guildId);
-    const oldLevel = Number(user.level || 0);
-    const newLevel = Math.max(0, oldLevel - levels);
+    try {
+        const user = await db.getUser(userId, guildId);
+        const oldLevel = Number(user.level || 0);
+        const newLevel = Math.max(0, oldLevel - levels);
 
-    // Tính toán lại XP tối thiểu cho cấp độ mới
-    // XP = (Level / 0.1)^2
-    const newXp = Math.floor(Math.pow(newLevel / 0.1, 2));
+        // Tính toán lại XP tối thiểu cho cấp độ mới
+        // XP = (Level / 0.1)^2
+        const newXp = Math.floor(Math.pow(newLevel / 0.1, 2));
 
-    await db.updateUser(guildId, userId, {
-        xp: newXp,
-        level: newLevel
-    });
+        await db.updateUser(guildId, userId, {
+            xp: newXp,
+            level: newLevel
+        });
 
-    return {
-        oldLevel,
-        newLevel
-    };
+        return {
+            oldLevel,
+            newLevel
+        };
+    } catch (error) {
+        console.error(`Error in deductLevel for user ${userId}:`, error);
+        throw error;
+    }
 }
 
 /**
@@ -229,21 +249,26 @@ async function deductLevel(userId, guildId, levels = 1) {
  * @returns {object} - Object chứa thông tin cấp độ cũ và mới
  */
 async function deductXp(userId, guildId, amount) {
-    // Atomic update with negative amount
-    const userState = await db.addGlobalXp(userId, -amount);
-    if (!userState) return { deducted: 0 };
+    try {
+        // Atomic update with negative amount
+        const userState = await db.addGlobalXp(userId, -amount);
+        if (!userState) return { deducted: 0 };
 
-    const newXp = Math.max(0, Number(userState.xp));
-    const newLevel = calculateLevel(newXp);
+        const newXp = Math.max(0, Number(userState.xp));
+        const newLevel = calculateLevel(newXp);
 
-    // Update level to match the new XP (atomic set)
-    await db.setGlobalLevel(userId, newLevel);
+        // Update level to match the new XP (atomic set)
+        await db.setGlobalLevel(userId, newLevel);
 
-    return {
-        newXp,
-        newLevel,
-        deducted: amount // This is the requested amount
-    };
+        return {
+            newXp,
+            newLevel,
+            deducted: amount // This is the requested amount
+        };
+    } catch (error) {
+        console.error(`Error in deductXp for user ${userId}:`, error);
+        throw error;
+    }
 }
 
 module.exports = {
