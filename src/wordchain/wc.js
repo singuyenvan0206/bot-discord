@@ -169,7 +169,7 @@ async function startGame(message, lang, passive = false) {
                 let invalidReason = null;
                 if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
                 else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
-                else if (word.length < 3) invalidReason = t('wordchain.too_short', lang);
+                else if (word.length < 2) invalidReason = t('wordchain.too_short', lang);
                 else if (!/^[a-z]+$/.test(word)) invalidReason = t('wordchain.invalid_chars', lang);
 
                 if (invalidReason) {
