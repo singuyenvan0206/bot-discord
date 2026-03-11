@@ -1,18 +1,17 @@
 const { pool, execute, queryAll, queryOne } = require('./pool');
 const { getGuildSetting, setGuildSetting } = require('./guilds');
 
-let botId = null;
-
 async function setBotId(id) {
-    botId = String(id);
+    global.botId = String(id);
 }
 
 async function getUser(userId, guildId = null) {
     try {
         if (!userId) return null;
         const uId = String(userId);
+        const effectiveBotId = global.botId;
 
-        if (guildId && uId === botId) {
+        if (guildId && uId === effectiveBotId) {
             const balance = await getGuildSetting(guildId, 'bot_balance', 0);
             const xp = await getGuildSetting(guildId, 'bot_xp', 0);
             const level = await getGuildSetting(guildId, 'bot_level', 0);
@@ -172,9 +171,11 @@ async function addGlobalBalance(userId, amount, guildId = null) {
         if (!userId) return;
         const uId = String(userId);
         const config = require('../config');
+        const effectiveBotId = global.botId;
 
         // IF this is the bot and we have a guildId, redirect to guild_settings
-        if (guildId && uId === botId) {
+        if (guildId && uId === effectiveBotId) {
+            const { getGuildSetting, setGuildSetting } = require('./guilds');
             const currentBalance = await getGuildSetting(guildId, 'bot_balance', 0);
             await setGuildSetting(guildId, 'bot_balance', Number(currentBalance) + amount);
             return;
@@ -196,8 +197,10 @@ async function addGlobalXp(userId, xpAmount, guildId = null) {
         if (!userId) return;
         const uId = String(userId);
         const config = require('../config');
+        const effectiveBotId = global.botId;
 
-        if (guildId && uId === botId) {
+        if (guildId && uId === effectiveBotId) {
+            const { getGuildSetting, setGuildSetting } = require('./guilds');
             const currentXp = await getGuildSetting(guildId, 'bot_xp', 0);
             const currentLevel = await getGuildSetting(guildId, 'bot_level', 0);
             const newXp = Number(currentXp) + xpAmount;
@@ -239,9 +242,11 @@ async function removeGlobalBalance(userId, amount, guildId = null) {
     try {
         const uId = String(userId);
         const config = require('../config');
+        const effectiveBotId = global.botId;
 
         // IF this is the bot and we have a guildId, redirect to guild_settings
-        if (guildId && uId === botId) {
+        if (guildId && uId === effectiveBotId) {
+            const { getGuildSetting, setGuildSetting } = require('./guilds');
             const currentBalance = await getGuildSetting(guildId, 'bot_balance', 0);
             await setGuildSetting(guildId, 'bot_balance', Math.max(0, Number(currentBalance) - amount));
             return;
