@@ -11,6 +11,7 @@ module.exports = {
     usage: '<text>',
     category: 'utility',
     skipXp: true,
+    bypassBlacklist: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const text = args.join(' ');

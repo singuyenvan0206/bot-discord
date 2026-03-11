@@ -41,7 +41,9 @@ module.exports = {
 
             const isBlacklisted = config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id);
             if (isBlacklisted) {
-                if (!await db.isOwner(message.author.id)) return;
+                const isBotOwner = await db.isOwner(message.author.id);
+                const canBypass = isBotOwner || (isCommand && tempCommand && tempCommand.bypassBlacklist);
+                if (!canBypass) return;
             }
 
             if (!shouldSkipChatXp) {
