@@ -81,7 +81,7 @@ module.exports = {
         ARREST_RESISTANCE_BASE: 0.25, // 25% base chance to fight back on failure
         ARREST_INJURY_COOLDOWN: 7200, // 2 hours if injured
         HOUSE_DISTRIBUTION_MIN_POOL: 1000, // Only distribute if bot has > 1000 coins
-        HOUSE_RETENTION_RATE: 0.4, // Only 40% of profit goes to Bot Fund, 60% is burned
+        HOUSE_RETENTION_RATE: 0.9, // Only 40% of profit goes to Bot Fund, 60% is burned
         DEFAULT_COOLDOWN: 3,
         MIN_BET: 50,
         GAMBLE_RAID_BASE_CHANCE: 0.005, // 0.5% base chance per bet
