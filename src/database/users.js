@@ -173,6 +173,13 @@ async function addGlobalBalance(userId, amount, guildId = null) {
         const uId = String(userId);
         const config = require('../config');
 
+        // IF this is the bot and we have a guildId, redirect to guild_settings
+        if (guildId && uId === botId) {
+            const currentBalance = await getGuildSetting(guildId, 'bot_balance', 0);
+            await setGuildSetting(guildId, 'bot_balance', Number(currentBalance) + amount);
+            return;
+        }
+
         if (guildId && config.ECONOMY?.PER_SERVER_STATS) {
             await execute('UPDATE user_guilds SET balance = balance + ? WHERE userId = ? AND guildId = ?', [amount, uId, guildId]);
         } else {
@@ -230,11 +237,20 @@ async function setGlobalLevel(userId, level, guildId = null) {
 
 async function removeGlobalBalance(userId, amount, guildId = null) {
     try {
+        const uId = String(userId);
         const config = require('../config');
+
+        // IF this is the bot and we have a guildId, redirect to guild_settings
+        if (guildId && uId === botId) {
+            const currentBalance = await getGuildSetting(guildId, 'bot_balance', 0);
+            await setGuildSetting(guildId, 'bot_balance', Math.max(0, Number(currentBalance) - amount));
+            return;
+        }
+
         if (guildId && config.ECONOMY?.PER_SERVER_STATS) {
-            await execute('UPDATE user_guilds SET balance = balance - ? WHERE userId = ? AND guildId = ?', [amount, userId, guildId]);
+            await execute('UPDATE user_guilds SET balance = balance - ? WHERE userId = ? AND guildId = ?', [amount, uId, guildId]);
         } else {
-            await execute('UPDATE users SET balance = balance - ? WHERE id = ?', [amount, userId]);
+            await execute('UPDATE users SET balance = balance - ? WHERE id = ?', [amount, uId]);
         }
     } catch (error) {
         console.error(`Error in removeGlobalBalance for user ${userId}:`, error);

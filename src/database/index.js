@@ -22,14 +22,25 @@ module.exports = {
     // Cross-module complex logic
     distributeBalanceRandomly: async (totalAmount, excludeUserId = null, guildId = null) => {
         if (totalAmount <= 0) return [];
+        const config = require('../config');
+        const perServer = config.ECONOMY?.PER_SERVER_STATS;
+
         let targets = [];
         if (guildId) {
-            targets = await pool.queryAll(`
-                SELECT users.id, users.balance 
-                FROM users 
-                JOIN user_guilds ON users.id = user_guilds.userId 
-                WHERE user_guilds.guildId = $1 ${excludeUserId ? 'AND users.id != $2' : ''}
-            `, excludeUserId ? [guildId, excludeUserId] : [guildId]);
+            if (perServer) {
+                targets = await pool.queryAll(`
+                    SELECT user_guilds.userId as id, user_guilds.balance 
+                    FROM user_guilds 
+                    WHERE user_guilds.guildId = $1 ${excludeUserId ? 'AND user_guilds.userId != $2' : ''}
+                `, excludeUserId ? [guildId, excludeUserId] : [guildId]);
+            } else {
+                targets = await pool.queryAll(`
+                    SELECT users.id, users.balance 
+                    FROM users 
+                    JOIN user_guilds ON users.id = user_guilds.userId 
+                    WHERE user_guilds.guildId = $1 ${excludeUserId ? 'AND users.id != $2' : ''}
+                `, excludeUserId ? [guildId, excludeUserId] : [guildId]);
+            }
         } else {
             targets = await pool.queryAll('SELECT id, balance FROM users' + (excludeUserId ? ' WHERE id != $1' : ''), excludeUserId ? [excludeUserId] : []);
         }
@@ -63,7 +74,17 @@ module.exports = {
                 distributed += amount;
             }
             if (amount > 0) {
-                await pool.execute('UPDATE users SET balance = balance + ?, last_dist_amount = ? WHERE id = ?', [amount, amount, user.id]);
+                if (guildId && perServer) {
+                    await pool.execute('UPDATE user_guilds SET balance = balance + ? WHERE userId = ? AND guildId = ?', [amount, user.id, guildId]);
+                } else {
+                    await pool.execute('UPDATE users SET balance = balance + ?, last_dist_amount = ? WHERE id = ?', [amount, amount, user.id]);
+                }
+                // Always record last_dist_amount in users table for global tracking if needed, or just users
+                if (!(guildId && perServer)) {
+                    // already updated above
+                } else {
+                    await pool.execute('UPDATE users SET last_dist_amount = ? WHERE id = ?', [amount, user.id]);
+                }
                 results.push({ userId: user.id, amount });
             }
         }
