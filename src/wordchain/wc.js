@@ -75,6 +75,16 @@ client.on('messageCreate', async (message) => {
     try {
         if (message.author.bot || !message.guild) return;
 
+        // Blacklist Check
+        const rawBlacklist = await db.getGuildSetting(message.guild.id, 'blacklisted_channels', '[]');
+        let guildBlacklist = [];
+        try { guildBlacklist = JSON.parse(rawBlacklist); } catch (e) { guildBlacklist = []; }
+
+        const isOwner = config.OWNER_ID === message.author.id;
+        if ((config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id)) && !isOwner) {
+            return;
+        }
+
         const lang = await getLanguage(message.author.id, message.guild.id);
         const guildRow = await db.getGuild(message.guild.id);
         const prefix = guildRow?.prefix || config.PREFIX;

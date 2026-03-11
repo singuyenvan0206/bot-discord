@@ -1185,7 +1185,8 @@
         "channel_reset": "✅ Word Chain channel restriction removed. `$wordchain` now works in any channel.",
         "channel_invalid": "❌ Please mention a valid text channel. (e.g. `$setwcchannel #wordchain`)",
         "channel_usage": "📌 No dedicated Word Chain channel is set.\n\n🛠️ Use: `{{prefix}}setwcchannel <#channel>` to set one.\n🔓 Use `{{prefix}}setwcchannel reset` to remove restrictions.",
-        "channel_current": "📌 Current Word Chain channel: {{channel}}\n\n🔓 Use `$setwcchannel reset` to remove restrictions."
+        "channel_current": "📌 Current Word Chain channel: {{channel}}\n\n🔓 Use `$setwcchannel reset` to remove restrictions.",
+        "config_success": "✅ {{channel}} has been set as the dedicated Word Chain channel for this server!"
     },
     "hangman": {
         "title": "😵  Hangman",
@@ -1566,7 +1567,7 @@
             "fishrates": "Analyze your current fishing luck and catch rates based on equipment.",
             "support": "Get the official support server link to report issues or suggest features.",
             "blacklistchannel": "Disable bot commands in a specific channel (Admin Only).",
-            "setwcchannel": "Configure automated welcome and leave announcements for the server (Admin Only)."
+            "setwcchannel": "Set the dedicated channel for the Word Chain game (Admin Only)."
         },
         "guides": {
             "trivia": "🌟 **Description:** Challenge your knowledge with a huge question bank covering Science, History, Entertainment, and more!\n\n🕹️ **How to Play:**\n1. Use the command to receive a multiple-choice question.\n2. You have **15 seconds** to analyze and answer.\n3. Click the button (A, B, C, D) corresponding to the correct answer.\n\n✨ **Teacher Perk:** **Tutoring** — Correct answers grant a **+50% coin bonus** and extra XP for you!\n\n💰 **Rewards:** Correct answers earn coins instantly. If no one answers, the coins remain in the bank!",
@@ -1650,7 +1651,7 @@
             "fishrates": "🌟 **Description:** Real-time analysis of your fishing potential in the current location. These rates factor in your Rod, Bait, and any active Luck buffs.\n\n🕹️ **Usage:** `$fishrates` (Pro tip: Check your rates before using expensive bait!)",
             "support": "🌟 **Description:** Connect with the developers for direct assistance.\n\n🕹️ **Details:** This command provides an invite link to the official support server where you can report bugs, request features, or get help with account issues.",
             "blacklistchannel": "🌟 **Description:** A channel management tool for administrators.\n\n🕹️ **Usage:** `$blacklistchannel <#channel>` to toggle the restricted status.\n\n⚠️ **Note:** The bot will ignore all non-admin commands in blacklisted channels to keep your server organized.",
-            "setwcchannel": "🌟 **Description:** Configure automated welcome and leave announcements for the server (Admin Only).\n\n🕹️ **Usage:** `$setwcchannel <#channel>`\n\n✨ **Features:** Displays a welcome message with server badges for new members and a friendly farewell notification when someone leaves.",
+            "setwcchannel": "🌟 **Description:** Designate a specific text channel as the exclusive area for Word Chain. This keeps other chat channels organized and free from game spam.\n\n🕹️ **Usage:**\n- `$setwcchannel <#channel>`: Set the game channel.\n- `$setwcchannel reset`: Remove the restriction and allow playing anywhere.\n\n💡 **Tip:** It's best to create a dedicated bot or game channel for this!",
             "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`",
             "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`",
             "events": "🌟 **Description:** Monitor the pulse of the global economy! Events rotate periodically, providing special effects and bonuses.\n\n🕹️ **Mechanics:**\n- **2x Rewards:** Double coins from `$work`, `$daily`, etc.\n- **Luck Boost:** Increased chance for rare fish or winning bets.\n- **Reduced Cooldowns:** Quicker access to your favorite commands.\n\n📊 **Bot Info:** View the server's reserve fund and the Bot's local level.\n\n👑 **Admin:** Use `$events rotate` to force a new event immediately."

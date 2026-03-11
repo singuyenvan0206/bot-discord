@@ -1236,6 +1236,7 @@
         "channel_invalid": "❌ Vui lòng mention một kênh văn bản hợp lệ. (ví dụ: `$setwcchannel #wordchain`)",
         "channel_usage": "📌 Hiện chưa có kênh Nối Chữ riêng.\n\n🛠️ Dùng lệnh: `{{prefix}}setwcchannel <#kênh>` để thiết lập.\n🔓 Dùng `{{prefix}}setwcchannel reset` để xóa giới hạn.",
         "channel_current": "📌 Kênh Nối Chữ hiện tại: {{channel}}\n\n🔓 Dùng `$setwcchannel reset` để xóa giới hạn.",
+        "config_success": "✅ Đã thiết lập {{channel}} là kênh Nối Chữ chuyên biệt cho server này!",
         "start_desc": "Trò chơi bắt đầu! Từ đầu tiên phải bắt đầu bằng chữ **{{char}}**.\n\n*(Lưu ý: Hiện tại chỉ hỗ trợ từ tiếng Anh)*\n\nGõ một từ để tham gia!",
         "stop_footer": "Gõ {{prefix}}stop để kết thúc trò chơi",
         "stopped_by": "Trò chơi đã bị dừng bởi Quản lý {{user}}!",
@@ -1569,7 +1570,7 @@
             "fishrates": "Xem tỉ lệ xuất hiện của các loài cá tại khu vực hiện tại dựa trên trang bị.",
             "support": "Lấy link tham gia máy chủ hỗ trợ của Bot để báo cáo lỗi hoặc góp ý.",
             "blacklistchannel": "Chặn bot phản hồi các lệnh tại một kênh cụ thể (Admin).",
-            "setwcchannel": "Cài đặt kênh thông báo khi có thành viên mới tham gia hoặc rời khỏi server (Admin)."
+            "setwcchannel": "Thiết lập kênh chuyên biệt cho trò chơi Nối Chữ (Admin)."
         },
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
@@ -1655,7 +1656,7 @@
             "fishrates": "🌟 **Mô tả:** Phân tích tỉ lệ câu cá tại khu vực hiện tại. Tỉ lệ này thay đổi dựa trên Cần câu, Mồi và Buff may mắn bạn đang có.\n\n🕹️ **Cách dùng:** `$fishrates` (Tốt nhất nên dùng lệnh này trước khi quyết định thả câu xịn!)",
             "support": "🌟 **Mô tả:** Nhận sự hỗ trợ trực tiếp từ đội ngũ phát triển.\n\n🕹️ **Nội dung:** Lệnh sẽ cung cấp link discord máy chủ hỗ trợ. Đây là nơi bạn có thể báo lỗi, đóng góp ý tưởng hoặc yêu cầu giải quyết các vấn đề tài khoản.",
             "blacklistchannel": "🌟 **Mô tả:** Công cụ quản trị kênh dành cho Admin.\n\n🕹️ **Cách dùng:** `$blacklistchannel <#channel>` để bật/tắt (Toggle) trạng thái chặn của một kênh.\n\n⚠️ **Lưu ý:** Bot sẽ hoàn toàn phớt lờ các lệnh được gõ trong kênh bị blacklist (trừ lệnh admin).",
-            "setwcchannel": "🌟 **Mô tả:** Thiết lập hệ thống chào mừng/tạm biệt tự động.\n\n🕹️ **Cách dùng:** `$setwcchannel <#channel>`\n\n✨ **Tính năng:** Khi có người tham gia, Bot sẽ gửi một tin nhắn chào mừng kèm Badge và luật lệ server. Khi có người rời đi, Bot cũng sẽ thông báo để mọi người được biết.",
+            "setwcchannel": "🌟 **Mô tả:** Thiết lập một kênh văn bản làm khu vực chơi Nối Chữ chuyên biệt. Điều này giúp giữ cho các kênh chat khác không bị trôi tin nhắn bởi trò chơi.\n\n🕹️ **Cách dùng:**\n- `$setwcchannel <#kênh>`: Chỉ định kênh chơi game.\n- `$setwcchannel reset`: Xóa bỏ giới hạn kênh, cho phép chơi ở bất kỳ đâu.\n\n💡 **Mẹo:** Nên chọn một kênh riêng tư hoặc kênh dành cho bot để tránh làm phiền mọi người!",
             "events": "🌟 **Mô tả:** Theo dõi hơi thở của nền kinh tế toàn cầu! Các sự kiện sẽ thay đổi định kỳ, mang lại các hiệu ứng đặc biệt.\n\n🕹️ **Cơ chế:**\n- **X2 Tiền Thưởng:** Nhân đôi số coins nhận được từ `$work`, `$daily`...\n- **Tăng May Mắn:** Tăng tỷ lệ bắt cá hiếm hoặc thắng cược.\n- **Giảm Cooldown:** Giảm thời gian chờ giữa các lệnh.\n\n📊 **Thông tin Bot:** Hiển thị số dư quỹ dự trữ và cấp độ của Bot tại server hiện tại.\n\n👑 **Admin:** Có thể dùng `$events rotate` để đổi sự kiện ngay lập tức."
         }
     },
