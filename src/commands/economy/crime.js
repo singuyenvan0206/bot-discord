@@ -14,9 +14,10 @@ module.exports = {
     cooldown: config.ECONOMY.CRIME_COOLDOWN,
     manualCooldown: true, // Handle memory cooldown sync manually 
     async execute(message, args) {
-        const lang = await getLanguage(message.author.id, message.guild?.id);
-        const user = await db.getUser(message.author.id, message.guild.id);
-        const now = Math.floor(Date.now() / 1000);
+        try {
+            const lang = await getLanguage(message.author.id, message.guild?.id);
+            const user = await db.getUser(message.author.id, message.guild.id);
+            const now = Math.floor(Date.now() / 1000);
 
         const isCriminal = user.job === 'criminal';
         const isHacker = user.job === 'hacker';
@@ -53,7 +54,7 @@ module.exports = {
             const expiresAt = now + duration;
 
             const hadExpired = now > (user.wanted_expires_at || 0);
-            const placersQuery = hadExpired ? ', bounty_placers = "[]"' : '';
+            const placersQuery = hadExpired ? ", bounty_placers = '[]'" : '';
 
             await db.execute(
                 `UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ?${placersQuery} WHERE id = ?`,
@@ -120,5 +121,11 @@ module.exports = {
 
             return message.reply(finalMsg);
         }
+    } catch (error) {
+        console.error('Error in crime command:', error);
+        const { t } = require('../../utils/i18n');
+        const lang = await getLanguage(message.author.id, message.guild?.id);
+        return message.reply(`❌ ${t('common.error', lang)}`);
+    }
     }
 };
