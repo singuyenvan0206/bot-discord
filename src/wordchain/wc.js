@@ -1,6 +1,7 @@
-process.env.DB_NAME = 'src/wordchain/wordchain.db';
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, Events } = require('discord.js');
+const fs = require('fs');
+const path = require('path');
 const db = require('../database');
 const config = require('../config');
 const { t, getLanguage } = require('../utils/i18n');
@@ -10,7 +11,7 @@ const { isManager } = require('../utils/permissions');
 // Validate Environment
 const TOKEN = process.env.WORDCHAIN_TOKEN || process.env.DISCORD_TOKEN;
 if (!TOKEN) {
-    console.error('❌ Missing DISCORD_TOKEN or WORDCHAIN_TOKEN in .env file');
+    console.error('❌ Missing DISCORD_TOKEN in .env file');
     process.exit(1);
 }
 
@@ -19,19 +20,13 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers,
     ],
     partials: [Partials.Message, Partials.Channel, Partials.User],
 });
 
-// Module-level Map: channelId → collector (game runs independently per channel)
+// Module-level Map: channelId → collector
 const activeGames = new Map();
-
-client.once(Events.ClientReady, () => {
-    console.log(`✅ Word Chain Standalone Bot is ready as ${client.user.tag}`);
-});
-
-const fs = require('fs');
-const path = require('path');
 
 // Dictionary cache logic
 const CACHE_FILE = path.join(__dirname, 'wordCache.json');
@@ -56,7 +51,6 @@ function saveDictCache() {
     }
 }
 
-// Helper: validate word via dictionary API
 const isValidWord = async (word) => {
     if (dictCache.has(word)) return dictCache.get(word);
 
@@ -69,30 +63,56 @@ const isValidWord = async (word) => {
 
         return isValid;
     } catch (e) {
-        console.warn('⚠️ Dictionary API error, skipping validation:', e.message);
-        return true; // Allow if API is down
+        return true;
     }
 };
 
+client.once(Events.ClientReady, () => {
+    console.log(`✅ Word Chain Standalone Bot (LINKED) is ready as ${client.user.tag}`);
+});
+
 client.on('messageCreate', async (message) => {
-    if (message.author.bot || !message.guild) return;
+    try {
+        if (message.author.bot || !message.guild) return;
 
-    const lang = await getLanguage(message.author.id, message.guild.id);
-    const prefix = config.PREFIX;
-    const content = message.content.toLowerCase().trim();
-
-    // Command Check: $wordchain or $wc
-    if (content.startsWith(`${prefix}wordchain`) || content.startsWith(`${prefix}wc`)) {
-        // Channel Lock: check if wordchain is restricted to a specific channel
+        const lang = await getLanguage(message.author.id, message.guild.id);
         const guildRow = await db.getGuild(message.guild.id);
+        const prefix = guildRow?.prefix || config.PREFIX;
+        const content = message.content.toLowerCase().trim();
+
+        // 1. Get Guild Settings
         const wcChannelId = guildRow?.wordchain_channel;
-        if (wcChannelId && message.channel.id !== wcChannelId) {
-            return message.reply(t('wordchain.wrong_channel', lang, { channel: `<#${wcChannelId}>` }));
+        const isWcChannel = wcChannelId && message.channel.id === wcChannelId;
+
+        // 2. Start Game Command
+        if (content === `${prefix}wordchain` || content === `${prefix}wc`) {
+            if (wcChannelId && !isWcChannel) {
+                return message.reply(t('wordchain.wrong_channel', lang, { channel: `<#${wcChannelId}>` }));
+            }
+
+            if (activeGames.has(message.channel.id)) {
+                return message.reply(t('wordchain.already_running', lang, { prefix }));
+            }
+
+            return startGame(message, lang);
         }
 
-        if (activeGames.has(message.channel.id)) {
-            return message.reply(t('wordchain.already_running', lang, { prefix }));
+        // 3. Passive Mode: If in WC channel and NOT a command, handle as word
+        if (isWcChannel && !content.startsWith(prefix) && !activeGames.has(message.channel.id)) {
+            if (/^[a-z]{3,}$/.test(content)) {
+                return startGame(message, lang, true);
+            }
         }
+    } catch (error) {
+        console.error(`[WC Bot] Fatal error in messageCreate:`, error);
+    }
+});
+
+async function startGame(message, lang, passive = false) {
+    try {
+        const guildRow = await db.getGuild(message.guild.id);
+        const prefix = guildRow?.prefix || config.PREFIX;
+        const { client } = message;
 
         // Game state
         const usedWords = new Set();
@@ -106,94 +126,115 @@ client.on('messageCreate', async (message) => {
             .setColor(config.COLORS.INFO)
             .setFooter({ text: t('wordchain.stop_footer', lang, { prefix }) });
 
+        if (passive) {
+            embed.setAuthor({ name: "Word Chain Auto-Start" });
+        }
+
         await message.channel.send({ embeds: [embed] });
 
         const collector = message.channel.createMessageCollector({
             filter: m => !m.author.bot,
+            time: 300_000
         });
 
         activeGames.set(message.channel.id, collector);
 
         collector.on('collect', async m => {
-            const word = m.content.toLowerCase().trim();
+            try {
+                const word = m.content.toLowerCase().trim();
 
-            if (word.startsWith(prefix) && word !== `${prefix}stop`) return;
+                if (word.startsWith(prefix) && word !== `${prefix}stop`) return;
 
-            if (word === `${prefix}stop`) {
-                if (await isManager(m.member)) {
-                    collector.stop('stopped');
-                    return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author.username })}**`);
+                if (word === `${prefix}stop`) {
+                    if (await isManager(m.member)) {
+                        collector.stop('stopped');
+                        return message.channel.send(`🛑 **${t('wordchain.stopped_by', lang, { user: m.author.username })}**`);
+                    }
+                    return;
                 }
-                return;
+
+                if (m.author.id === lastPlayerId) {
+                    return m.react(config.EMOJIS.WAITING).catch(() => { });
+                }
+
+                let invalidReason = null;
+                if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
+                else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
+                else if (word.length < 3) invalidReason = t('wordchain.too_short', lang);
+                else if (!/^[a-z]+$/.test(word)) invalidReason = t('wordchain.invalid_chars', lang);
+
+                if (invalidReason) {
+                    await m.react(config.EMOJIS.ERROR).catch(() => { });
+                    const warn = await message.channel.send(`⚠️ ${m.author}, ${invalidReason}`);
+                    setTimeout(() => warn.delete().catch(() => { }), 3000);
+                    return;
+                }
+
+                const waitReaction = await m.react(config.EMOJIS.WAITING).catch(() => null);
+                const valid = await isValidWord(word);
+
+                if (waitReaction) {
+                    waitReaction.users.remove(client.user.id).catch(() => { });
+                }
+
+                if (!valid) return m.react(config.EMOJIS.ERROR).catch(() => { });
+
+                // Accept word
+                usedWords.add(word);
+                lastChar = word.slice(-1);
+                lastPlayerId = m.author.id;
+                collector.resetTimer();
+
+                const baseReward = config.ECONOMY.WORDCHAIN_REWARD || 150;
+                let { total: totalReward } = await calculateReward(baseReward, m.member, 'income', { category: 'minigame' });
+
+                await db.addBalance(m.guild.id, m.author.id, totalReward);
+                playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
+
+                const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../utils/leveling');
+                const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.MESSAGE.max - XP_AMOUNTS.MESSAGE.min + 1)) + XP_AMOUNTS.MESSAGE.min;
+                const xpResult = await addXp(m.member, xpAmount, m.guild.id);
+                if (xpResult.leveledUp) {
+                    sendLevelUpMessage(m, xpResult, lang).catch(() => { });
+                }
+
+                await m.react(config.EMOJIS.SUCCESS).catch(() => { });
+            } catch (err) {
+                console.error('[Word Chain Error]:', err);
             }
-
-            if (m.author.id === lastPlayerId) {
-                return m.react(config.EMOJIS.WAITING).catch(() => { });
-            }
-
-            let invalidReason = null;
-            if (usedWords.has(word)) invalidReason = t('wordchain.already_used', lang);
-            else if (word.charAt(0) !== lastChar) invalidReason = t('wordchain.wrong_start', lang, { char: lastChar.toUpperCase() });
-            else if (word.length < 3) invalidReason = t('wordchain.too_short', lang);
-            else if (!/^[a-z]+$/.test(word)) invalidReason = t('wordchain.invalid_chars', lang);
-
-            if (invalidReason) {
-                await m.react(config.EMOJIS.ERROR).catch(() => { });
-                const warn = await message.channel.send(`⚠️ ${m.author}, ${invalidReason}`);
-                setTimeout(() => warn.delete().catch(() => { }), 3000);
-                return;
-            }
-
-            const waitReaction = await m.react(config.EMOJIS.WAITING).catch(() => null);
-            const valid = await isValidWord(word);
-
-            if (waitReaction) {
-                waitReaction.users.remove(client.user.id).catch(() => { });
-            }
-
-            if (!valid) return m.react(config.EMOJIS.ERROR).catch(() => { });
-
-            // Accept word
-            usedWords.add(word);
-            lastChar = word.slice(-1);
-            lastPlayerId = m.author.id;
-
-            const baseReward = config.ECONOMY.WORDCHAIN_REWARD || 5;
-            let { total: totalReward } = await calculateReward(baseReward, m.member, 'income');
-
-            await db.addBalance(m.author.id, totalReward);
-            playerScores.set(m.author.id, (playerScores.get(m.author.id) || 0) + totalReward);
-
-            // Grant XP for valid word
-            const { addXp, XP_AMOUNTS } = require('../utils/leveling');
-            const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.MESSAGE.max - XP_AMOUNTS.MESSAGE.min + 1)) + XP_AMOUNTS.MESSAGE.min;
-            await addXp(m.member, xpAmount);
-
-            await m.react(config.EMOJIS.SUCCESS).catch(() => { });
         });
 
         collector.on('end', (_, reason) => {
-            activeGames.delete(message.channel.id);
+            try {
+                activeGames.delete(message.channel.id);
+                if (reason === 'stopped') return;
 
-            const scoreboard = [...playerScores.entries()]
-                .sort((a, b) => b[1] - a[1])
-                .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} **${coins.toLocaleString()}**`)
-                .join('\n') || t('wordchain.no_participants', lang);
+                const scoreboard = [...playerScores.entries()]
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([id, coins], i) => `**${i + 1}.** <@${id}> — ${config.EMOJIS.COIN} **${coins.toLocaleString()}**`)
+                    .join('\n') || t('wordchain.no_participants', lang);
 
-            const endEmbed = new EmbedBuilder()
-                .setTitle(t('wordchain.end_title', lang))
-                .setDescription(`**${t('wordchain.total_words', lang)}:** ${usedWords.size}\n\n${scoreboard}`)
-                .setColor(config.COLORS.ERROR);
+                const endEmbed = new EmbedBuilder()
+                    .setTitle(t('wordchain.end_title', lang))
+                    .setDescription(`**${t('wordchain.total_words', lang)}:** ${usedWords.size}\n\n${scoreboard}`)
+                    .setColor(config.COLORS.ERROR);
 
-            message.channel.send({ embeds: [endEmbed] });
+                if (reason === 'time') endEmbed.setTitle(`⌛ ${t('wordchain.timeout', lang)}`);
+
+                message.channel.send({ embeds: [endEmbed] });
+            } catch (err) {
+                console.error('[WC Bot] End Event Error:', err);
+            }
         });
+    } catch (error) {
+        console.error(`[WC Bot] Error in startGame:`, error);
     }
-});
+}
 
-const start = async () => {
+async function startBot() {
     await db.getDb();
-    console.log('💾 Database initialized');
+    console.log('💾 Database initialized for Word Chain Standalone (LINKED)');
     client.login(TOKEN);
-};
+}
 
-start();
+startBot();

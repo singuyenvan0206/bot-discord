@@ -43,21 +43,19 @@ module.exports = {
 
         const isInPrison = nowSeconds < prisonUntil;
 
+        const { checkPrisonGuard, checkPersistentCooldown } = require('../utils/guards');
+
         // 1. Button Interactions
         if (interaction.isButton()) {
             // General Prison Check for Buttons
-            if (isInPrison) {
-                // Allow specific system-critical or info-related buttons/menus
-                const exceptions = config.PRISON.BLOCK_EXCEPTIONS || [];
-                const isAllowedPrefix = exceptions.some(cmd => interaction.customId.startsWith(`${cmd}_`));
+            const prisonGuard = await checkPrisonGuard(interaction.user.id, interaction.guildId, lang);
+            if (prisonGuard.inPrison) {
+                // Allow specific exceptions for buttons
                 const isPagination = ['prev', 'next'].includes(interaction.customId);
                 const isManualBail = interaction.customId.includes('bail') || interaction.customId.includes('check_dist_reward');
 
-                if (!isAllowedPrefix && !isPagination && !isManualBail) {
-                    return interaction.reply({
-                        content: t('prison.lockdown_interaction', lang, { time: formatDuration(prisonUntil - nowSeconds, lang) }),
-                        ephemeral: true
-                    });
+                if (!isPagination && !isManualBail) {
+                    return interaction.reply({ content: prisonGuard.msg, ephemeral: true });
                 }
             }
 
@@ -113,15 +111,15 @@ module.exports = {
             const command = client.commands.get(commandName);
             if (!command) return;
 
-            // Prison Lockdown check for Slash Commands
-            if (isInPrison) {
-                if (!config.PRISON.BLOCK_EXCEPTIONS.includes(commandName)) {
-                    const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
-                    return interaction.reply({
-                        content: t('common.user_in_prison_global', lang, { time: timeLeft }),
-                        flags: [64]
-                    });
-                }
+            // Guards
+            const prisonGuard = await checkPrisonGuard(interaction.user.id, interaction.guildId, lang, commandName);
+            if (prisonGuard.inPrison) {
+                return interaction.reply({ content: prisonGuard.msg, flags: [64] });
+            }
+
+            const persistentCooldown = await checkPersistentCooldown(interaction.user.id, interaction.guildId, lang, commandName);
+            if (persistentCooldown.onCooldown) {
+                return interaction.reply({ content: persistentCooldown.msg, flags: [64] });
             }
 
             let args = [];

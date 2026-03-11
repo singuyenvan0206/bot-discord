@@ -1,52 +1,36 @@
 const db = require('../../database');
 const { deductLevel, deductXp } = require('../../utils/leveling');
-const { calculateReward, hasActiveItem, removeActiveBuff } = require('../../utils/multiplier');
+const { calculateReward } = require('../../utils/multiplier');
 const { addHouseProfit } = require('../../utils/economy');
 const { t, getLanguage } = require('../../utils/i18n');
-const { formatDuration } = require('../../utils/time');
 const config = require('../../config');
+const { formatRewardMessage } = require('../../utils/formatter');
+const { handleCrimeJobInteractions } = require('../../utils/jobInteractions');
 
 module.exports = {
     name: 'crime',
     aliases: ['cr'],
     description: 'Thực hiện các phi vụ bất hợp pháp (Commit illegal heists for fast cash)',
     cooldown: config.ECONOMY.CRIME_COOLDOWN,
-    manualCooldown: true,
+    manualCooldown: true, // Handle memory cooldown sync manually 
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const user = await db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
 
-        const cooldown = await db.getGuildSetting(message.guild.id, 'crime_cooldown', config.ECONOMY.CRIME_COOLDOWN);
-        const lastCrime = Number(user.last_crime || 0);
-        const prisonUntil = Number(user.prison_until || 0);
-
-        if (now < prisonUntil) {
-            return message.reply(t('crime.user_in_prison', lang, { time: formatDuration(prisonUntil - now, lang) }));
-        }
-
-        if (now - lastCrime < cooldown) {
-            const timeLeft = cooldown - (now - lastCrime);
-            return message.reply(t('crime.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
-        }
-
         const isCriminal = user.job === 'criminal';
         const isHacker = user.job === 'hacker';
         let successRate = await db.getGuildSetting(message.guild.id, 'crime_rate', config.ECONOMY.CRIME_SUCCESS_RATE);
-        successRate += (isCriminal ? 0.20 : 0); // Buffed criminal bonus from 0.1 to 0.2
-
-        // Hacker Synergy: +25% success rate bonus (Buffed from 0.15)
+        successRate += (isCriminal ? 0.20 : 0);
         if (isHacker) successRate += 0.25;
 
         const isSuccess = Math.random() < successRate;
         const actions = t('crime.actions', lang);
         const action = actions[Math.floor(Math.random() * actions.length)];
 
-        // Valid attempt - Set Cooldowns
+        // Sync memory cooldown for valid attempt
         const timestamps = message.client.cooldowns.get('crime');
-        const cooldownAmount = (this.cooldown || config.ECONOMY.CRIME_COOLDOWN) * 1000;
-        timestamps.set(message.author.id, now * 1000); // Set start time to now
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         await db.updateUser(message.guild.id, message.author.id, { last_crime: now });
 
@@ -55,36 +39,19 @@ module.exports = {
             const maxReward = await db.getGuildSetting(message.guild.id, 'crime_max', config.ECONOMY.CRIME_MAX_REWARD);
             let reward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            // Hacker Interaction: 30% chance to double reward (Buffed from 20%)
-            let hackedMsg = '';
-            if (isHacker && Math.random() < 0.30) {
-                reward *= 2.5; // Buffed multiplier from 2.0x to 2.5x
-                hackedMsg = t('crime.hacker_hacked', lang);
-            }
+            let rewardData = await calculateReward(reward, message.member, 'income', { category: 'crime' });
+            const hackedMsg = handleCrimeJobInteractions(user, lang, rewardData);
 
-            const { total, bonus, percent } = await calculateReward(reward, message.member, 'income', { category: 'crime' });
+            await db.addBalance(message.guild.id, message.author.id, rewardData.total);
 
-            await db.addBalance(message.guild.id, message.author.id, total);
-
-            let msg = t('crime.success', lang, {
-                action,
-                amount: total.toLocaleString(),
-                emoji: config.EMOJIS.COIN
-            });
-
-            if (bonus > 0) {
-                msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
-            }
-
-            if (hackedMsg) msg += hackedMsg;
+            let msg = formatRewardMessage('crime.success', lang, { ...rewardData, action }) + hackedMsg;
 
             // Update Wanted Status
-            const bountyGain = Math.floor(total * 0.3);
+            const bountyGain = Math.floor(rewardData.total * 0.3);
             const newStars = Math.min(5, (user.wanted_level || 0) + 1);
             const duration = config.WANTED.DURATIONS[newStars] || 3600;
             const expiresAt = now + duration;
 
-            // Phase 2: Reset placers if the previous bounty had expired
             const hadExpired = now > (user.wanted_expires_at || 0);
             const placersQuery = hadExpired ? ', bounty_placers = "[]"' : '';
 
@@ -96,47 +63,35 @@ module.exports = {
 
             return message.reply(msg);
         } else {
-            // New Scaled Penalty: (level * 500) + (5% of balance)
             let fine = (user.level * 500) + Math.floor((user.balance || 0) * 0.05);
             const xpLoss = 50;
 
-            // Criminal Interaction: 50% escape chance — reduces fine by 80%
             let escapeMsg = '';
             if (isCriminal && Math.random() < 0.5) {
                 fine = Math.floor(fine * 0.2);
                 escapeMsg = t('crime.criminal_escaped', lang, { amount: fine.toLocaleString() });
             }
 
-            // XP Penalty & Fine
             const xpResult = await deductXp(message.author.id, message.guild.id, xpLoss);
             await db.removeBalance(message.guild.id, message.author.id, fine);
 
-            // Cooldown Penalty: Jail Time (Actual Prison Time)
-            const jailTime = 600; // 10 minutes in prison for failing a crime
-
-            // Calculate stars based on fine
+            const jailTime = 600;
             const threshold = config.WANTED.BOUNTY_THRESHOLDS.find(t => fine >= t.min);
             const newStars = threshold ? threshold.stars : 1;
 
             await db.updateUser(message.guild.id, message.author.id, {
                 prison_until: now + jailTime,
-                last_crime: now, // Also keep cooldown in sync
+                last_crime: now,
                 bounty: fine,
                 wanted_level: newStars,
                 wanted_expires_at: now + jailTime,
                 bounty_placers: '[]'
             });
 
-            // Update memory cooldown
-            if (timestamps) {
-                timestamps.set(message.author.id, now * 1000);
-            }
+            // Sync memory cooldown for jail time
+            if (timestamps) timestamps.set(message.author.id, Date.now());
 
-            // Transfer fine to a random Police in the guild
-            const excludeIds = [message.client.user.id];
-            if (user.job === 'police') excludeIds.push(message.author.id);
-
-            const randomPoliceId = await db.getRandomUserByJob('police', excludeIds);
+            const randomPoliceId = await db.getRandomUserByJob('police', [message.client.user.id, message.author.id]);
             const policeUser = randomPoliceId ? message.guild?.members?.cache.get(randomPoliceId) : null;
             if (randomPoliceId) {
                 await db.addBalance(message.guild.id, randomPoliceId, fine);
@@ -144,7 +99,6 @@ module.exports = {
                 await addHouseProfit(message, fine);
             }
 
-            // Base failure message
             let baseFailMsg = t('crime.failure_xp', lang, {
                 amount: fine.toLocaleString(),
                 xp: xpResult.deducted.toLocaleString(),

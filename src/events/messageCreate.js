@@ -1,4 +1,5 @@
 const { Events, Collection } = require('discord.js');
+const fs = require('fs');
 const config = require('../config');
 const db = require('../database');
 const { getLanguage, t } = require('../utils/i18n');
@@ -8,212 +9,223 @@ const { formatDuration } = require('../utils/time');
 module.exports = {
     name: Events.MessageCreate,
     async execute(message) {
-        if (message.author.bot || !message.guild) return;
+        try {
+            if (message.author.bot || !message.guild) return;
 
-        // ─── EXP System (Chatting) ───
-        const { client } = message;
-        const isCommand = message.content.startsWith(config.PREFIX);
-        let shouldSkipChatXp = false;
+            const guildRow = await db.getGuild(message.guild.id);
 
-        if (isCommand) {
-            const tempArgs = message.content.slice(config.PREFIX.length).trim().split(/ +/);
-            const tempCommandName = (tempArgs.shift() || '').toLowerCase();
-            const tempCommand = client.commands.get(tempCommandName) ||
-                client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
+            const { client } = message;
+            const prefix = guildRow?.prefix || config.PREFIX;
+            const isCommand = message.content.startsWith(prefix);
+            let shouldSkipChatXp = false;
 
-            const isBotOwner = await db.isOwner(message.author.id);
-            const isAdminCmd = tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly || tempCommand.skipXp);
+            if (isCommand) {
+                const tempArgs = message.content.slice(prefix.length).trim().split(/ +/);
+                const tempCommandName = (tempArgs.shift() || '').toLowerCase();
+                const tempCommand = client.commands.get(tempCommandName) ||
+                    client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
 
-            // Skip Chat XP if it's an owner trying to run a command (even with typos) or if it's an admin/owner/skipped command
-            if (isBotOwner || isAdminCmd) {
-                shouldSkipChatXp = true;
+                const isBotOwner = await db.isOwner(message.author.id);
+                const isAdminCmd = tempCommand && (tempCommand.ownerOnly || tempCommand.adminOnly || tempCommand.skipXp);
+
+                // Skip Chat XP if it's an owner trying to run a command (even with typos) or if it's an admin/owner/skipped command
+                if (isBotOwner || isAdminCmd) {
+                    shouldSkipChatXp = true;
+                }
             }
-        }
 
-        // ─── Channel Blacklist Check ───
-        const guildBlacklistRaw = await db.getGuildSetting(message.guild.id, 'blacklisted_channels', '[]');
-        let guildBlacklist = [];
-        try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+            // ─── Channel Blacklist Check ───
+            const guildBlacklistRaw = await db.getGuildSetting(message.guild.id, 'blacklisted_channels', '[]');
+            let guildBlacklist = [];
+            try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
 
-        if (config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id)) {
-            if (!await db.isOwner(message.author.id)) return;
-        }
-
-        if (!shouldSkipChatXp) {
-            const { MESSAGE } = XP_AMOUNTS;
-            const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
-
-            const result = await addXp(message.member, xpAmount);
-            if (result.leveledUp) {
-                const { sendLevelUpMessage } = require('../utils/leveling');
-                const lang = await getLanguage(message.author.id, message.guild?.id);
-                sendLevelUpMessage(message, result, lang).catch(() => { });
+            const isBlacklisted = config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id);
+            if (isBlacklisted) {
+                if (!await db.isOwner(message.author.id)) return;
             }
-        }
 
-        // ─── Command Handling ───
-        if (!message.content.startsWith(config.PREFIX)) return;
+            if (!shouldSkipChatXp) {
+                const { MESSAGE } = XP_AMOUNTS;
+                const xpAmount = Math.floor(Math.random() * (MESSAGE.max - MESSAGE.min + 1)) + MESSAGE.min;
 
-        const args = message.content.slice(config.PREFIX.length).trim().split(/ +/);
-        const commandName = (args.shift() || '').toLowerCase();
-        if (!commandName) return;
-
-        const lang = await getLanguage(message.author.id, message.guild?.id);
-
-        // Check if bot is "shut down" (persisted in DB)
-        const isStopped = await db.getGlobalSetting('bot_is_stopped') === 'true';
-        if (isStopped && commandName !== 'startup' && commandName !== 'boot') {
-            if (!await db.isOwner(message.author.id)) {
-                return message.reply(t('common.bot_shut_down', lang)).catch(() => { });
+                const result = await addXp(message.member, xpAmount);
+                if (result.leveledUp) {
+                    const { sendLevelUpMessage } = require('../utils/leveling');
+                    const lang = await getLanguage(message.author.id, message.guild?.id);
+                    sendLevelUpMessage(message, result, lang).catch(() => { });
+                }
             }
-        }
 
-        // Global Ban Check
-        const user = await db.getUser(message.author.id, message.guild.id);
-        if (user.banned && !await db.isOwner(message.author.id)) {
-            return; // Silently ignore banned users or reply with a message
-        }
+            // ─── Command Handling ───
+            if (!message.content.startsWith(prefix)) return;
 
-        const nowSeconds = Math.floor(Date.now() / 1000);
-        const prisonUntil = Number(user.prison_until || 0);
+            const args = message.content.slice(prefix.length).trim().split(/ +/);
+            const commandName = (args.shift() || '').toLowerCase();
+            if (!commandName) return;
 
-        // Natural Prison Release Cleanup
-        if (prisonUntil > 0 && nowSeconds >= prisonUntil) {
-            await db.execute(
-                `UPDATE users SET 
+            const lang = await getLanguage(message.author.id, message.guild?.id);
+
+            // Check if bot is "shut down" (persisted in DB)
+            const isStopped = await db.getGlobalSetting('bot_is_stopped') === 'true';
+            if (isStopped && commandName !== 'startup' && commandName !== 'boot') {
+                if (!await db.isOwner(message.author.id)) {
+                    return message.reply(t('common.bot_shut_down', lang)).catch(() => { });
+                }
+            }
+
+            // Global Ban Check
+            const user = await db.getUser(message.author.id, message.guild.id);
+            if (user.banned && !await db.isOwner(message.author.id)) {
+                return; // Silently ignore banned users or reply with a message
+            }
+
+            const nowSeconds = Math.floor(Date.now() / 1000);
+            const prisonUntil = Number(user.prison_until || 0);
+
+            // Natural Prison Release Cleanup
+            if (prisonUntil > 0 && nowSeconds >= prisonUntil) {
+                await db.execute(
+                    `UPDATE users SET 
                 prison_until = 0, 
                 bounty = 0, 
                 wanted_level = 0, 
                 wanted_expires_at = 0, 
                 bounty_placers = '[]'
                 WHERE id = ?`,
-                [message.author.id]
-            );
-        }
-
-        const command = client.commands.get(commandName) ||
-            client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-
-        // Prison Lockdown check
-        if (nowSeconds < prisonUntil) {
-            // If command exists, check its primary name. If it doesn't exist, it will be handled (ignored) below.
-            const checkName = command ? command.name : commandName;
-            if (!config.PRISON.BLOCK_EXCEPTIONS.includes(checkName)) {
-                const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
-                return message.reply(t('common.user_in_prison_global', lang, { time: timeLeft }));
-            }
-        }
-
-        if (!command) return;
-
-        // ─── Anti-Spam (Command Flooding) ───
-        const isBotOwner = await db.isOwner(message.author.id);
-        const isServerOwner = message.author.id === message.guild.ownerId;
-
-        if (!isBotOwner && !isServerOwner) {
-            if (!client.spamTrack.has(message.author.id)) {
-                client.spamTrack.set(message.author.id, []);
+                    [message.author.id]
+                );
             }
 
-            const timestamps = client.spamTrack.get(message.author.id);
-            const nowTime = Date.now();
-            const { LIMIT, WINDOW, PUNISHMENTS } = config.ANTI_SPAM;
-            const windowMs = WINDOW * 1000;
+            const command = client.commands.get(commandName) ||
+                client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-            // Remove expired timestamps
-            const validTimestamps = timestamps.filter(ts => nowTime - ts < windowMs);
-            validTimestamps.push(nowTime);
-            client.spamTrack.set(message.author.id, validTimestamps);
+            const { checkPrisonGuard } = require('../utils/guards');
+            const prisonGuard = await checkPrisonGuard(message.author.id, message.guild.id, lang, command ? command.name : commandName);
+            if (prisonGuard.inPrison) {
+                return message.reply(prisonGuard.msg);
+            }
 
-            if (validTimestamps.length > LIMIT) {
-                try {
-                    const user = await db.getUser(message.author.id, message.guild.id);
-                    const violations = (user.spam_violations || 0) + 1;
+            if (!command) return;
 
-                    // Determine duration (cap at last punishment)
-                    const durationIdx = Math.min(violations - 1, PUNISHMENTS.length - 1);
-                    const durationSeconds = PUNISHMENTS[durationIdx];
+            // ─── Anti-Spam (Command Flooding) ───
+            const isBotOwner = await db.isOwner(message.author.id);
+            const isServerOwner = message.author.id === message.guild.ownerId;
 
-                    // Apply timeout
-                    await message.member.timeout(durationSeconds * 1000, `Anti-spam: Command flooding (Violation #${violations})`);
+            if (!isBotOwner && !isServerOwner) {
+                if (!client.spamTrack.has(message.author.id)) {
+                    client.spamTrack.set(message.author.id, []);
+                }
 
-                    // Increment violations in DB
-                    await db.updateUser(message.author.id, { spam_violations: violations });
+                const timestamps = client.spamTrack.get(message.author.id);
+                const nowTime = Date.now();
+                const { LIMIT, WINDOW, PUNISHMENTS } = config.ANTI_SPAM;
+                const windowMs = WINDOW * 1000;
 
-                    client.spamTrack.set(message.author.id, []); // Reset local track after timeout
+                // Remove expired timestamps
+                const validTimestamps = timestamps.filter(ts => nowTime - ts < windowMs);
+                validTimestamps.push(nowTime);
+                client.spamTrack.set(message.author.id, validTimestamps);
 
-                    return message.reply(t('common.anti_spam_timeout', lang, {
-                        duration: formatDuration(durationSeconds, lang),
-                        count: violations
-                    })).catch(() => { });
-                } catch (err) {
-                    console.error('[Anti-Spam] Failed to process progressive punishment:', err);
+                if (validTimestamps.length > LIMIT) {
+                    try {
+                        const user = await db.getUser(message.author.id, message.guild.id);
+                        const violations = (user.spam_violations || 0) + 1;
+
+                        // Determine duration (cap at last punishment)
+                        const durationIdx = Math.min(violations - 1, PUNISHMENTS.length - 1);
+                        const durationSeconds = PUNISHMENTS[durationIdx];
+
+                        // Apply timeout
+                        await message.member.timeout(durationSeconds * 1000, `Anti-spam: Command flooding (Violation #${violations})`);
+
+                        // Increment violations in DB
+                        await db.updateUser(message.author.id, { spam_violations: violations });
+
+                        client.spamTrack.set(message.author.id, []); // Reset local track after timeout
+
+                        return message.reply(t('common.anti_spam_timeout', lang, {
+                            duration: formatDuration(durationSeconds, lang),
+                            count: violations
+                        })).catch(() => { });
+                    } catch (err) {
+                        console.error('[Anti-Spam] Failed to process progressive punishment:', err);
+                    }
                 }
             }
-        }
 
-        if (command.ownerOnly && !isBotOwner) {
-            return message.reply(t('common.no_permission', lang));
-        }
-
-        const isAdmin = message.member.permissions.has('Administrator');
-
-        if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
-            return message.reply(t('common.no_permission', lang));
-        }
-
-        // Cooldown handling
-        // const nowMillis = Date.now(); // We already have 'now' in seconds above, let's use Date.now() for consistency with cooldowns
-        const nowMillis = Date.now();
-        if (!client.cooldowns.has(command.name)) {
-            client.cooldowns.set(command.name, new Collection());
-        }
-
-        const now = Date.now();
-        const timestamps = client.cooldowns.get(command.name);
-        const cooldownAmount = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
-
-        if (timestamps.has(message.author.id)) {
-            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
-            if (nowMillis < expirationTime && !isBotOwner) {
-                const timeLeft = (expirationTime - now) / 1000;
-                return message.reply(t('common.cooldown', lang, {
-                    command: command.name,
-                    time: formatDuration(Math.ceil(timeLeft), lang)
-                }));
+            if (command.ownerOnly && !isBotOwner) {
+                return message.reply(t('common.no_permission', lang));
             }
-        }
 
-        if (!command.manualCooldown) {
-            timestamps.set(message.author.id, now);
-            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-        }
+            const isAdmin = message.member.permissions.has('Administrator');
 
-        try {
-            await command.execute(message, args);
-            // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
-            if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
-                const result = await addXp(message.member, xpAmount);
-                if (result.leveledUp) {
-                    const { sendLevelUpMessage } = require('../utils/leveling');
-                    sendLevelUpMessage(message, result, lang).catch(() => { });
+            if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
+                return message.reply(t('common.no_permission', lang));
+            }
+
+            // Cooldown handling
+            // const nowMillis = Date.now(); // We already have 'now' in seconds above, let's use Date.now() for consistency with cooldowns
+            const nowMillis = Date.now();
+            if (!client.cooldowns.has(command.name)) {
+                client.cooldowns.set(command.name, new Collection());
+            }
+
+            const now = Date.now();
+            const timestamps = client.cooldowns.get(command.name);
+            const cooldownAmount = (command.cooldown || config.ECONOMY.DEFAULT_COOLDOWN) * 1000;
+
+            if (timestamps.has(message.author.id)) {
+                const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+                if (nowMillis < expirationTime && !isBotOwner) {
+                    const timeLeft = (expirationTime - now) / 1000;
+                    return message.reply(t('common.cooldown', lang, {
+                        command: command.name,
+                        time: formatDuration(Math.ceil(timeLeft), lang)
+                    }));
+                }
+            }
+
+            if (!command.manualCooldown) {
+                timestamps.set(message.author.id, now);
+                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            }
+
+            // Persistent Cooldowns
+            const { checkPersistentCooldown } = require('../utils/guards');
+            const persistentCooldown = await checkPersistentCooldown(message.author.id, message.guild.id, lang, command.name);
+            if (persistentCooldown.onCooldown) {
+                return message.reply(persistentCooldown.msg);
+            }
+
+            try {
+                await command.execute(message, args);
+                // Grant Command Success XP (Skip for admin/owner/utility commands to prevent imbalance)
+                if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
+                    const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_SUCCESS.max - XP_AMOUNTS.COMMAND_SUCCESS.min + 1)) + XP_AMOUNTS.COMMAND_SUCCESS.min;
+                    const result = await addXp(message.member, xpAmount);
+                    if (result.leveledUp) {
+                        const { sendLevelUpMessage } = require('../utils/leveling');
+                        sendLevelUpMessage(message, result, lang).catch(() => { });
+                    }
+                }
+            } catch (error) {
+                console.error(`[Command] Error executing !${commandName}:`, error);
+                message.reply(t('common.error', lang)).catch(() => { });
+
+                // Grant Command Failure XP (Skip for admin/owner/utility commands)
+                if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
+                    const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
+                    const result = await addXp(message.member, xpAmount);
+                    if (result.leveledUp) {
+                        const { sendLevelUpMessage } = require('../utils/leveling');
+                        sendLevelUpMessage(message, result, lang).catch(() => { });
+                    }
                 }
             }
         } catch (error) {
-            console.error(`[Command] Error executing !${commandName}:`, error);
-            message.reply(t('common.error', lang)).catch(() => { });
-
-            // Grant Command Failure XP (Skip for admin/owner/utility commands)
-            if (!command.ownerOnly && !command.adminOnly && !command.skipXp) {
-                const xpAmount = Math.floor(Math.random() * (XP_AMOUNTS.COMMAND_FAILURE.max - XP_AMOUNTS.COMMAND_FAILURE.min + 1)) + XP_AMOUNTS.COMMAND_FAILURE.min;
-                const result = await addXp(message.member, xpAmount);
-                if (result.leveledUp) {
-                    const { sendLevelUpMessage } = require('../utils/leveling');
-                    sendLevelUpMessage(message, result, lang).catch(() => { });
-                }
-            }
+            console.error(`[Command] Fatal error in messageCreate:`, error);
+            fs.appendFileSync('wc_debug.log', `[MainBot] Fatal Error: ${error.message}\n`);
         }
     },
 };

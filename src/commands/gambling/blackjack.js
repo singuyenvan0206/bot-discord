@@ -7,36 +7,16 @@ const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy'
 const { getUserMultiplier, calculateReward } = require('../../utils/multiplier');
 const { addXp, XP_AMOUNTS, sendLevelUpMessage } = require('../../utils/leveling');
 
-const CARD_SUITS = config.CARDS.SUITS;
-const CARD_VALUES = config.CARDS.VALUES;
-
-function drawCard() {
-    const suit = CARD_SUITS[Math.floor(Math.random() * CARD_SUITS.length)];
-    const value = CARD_VALUES[Math.floor(Math.random() * CARD_VALUES.length)];
-    return { suit, value, display: `${value}${suit}` };
-}
-
-function handValue(hand) {
-    let total = 0, aces = 0;
-    for (const card of hand) {
-        if (card.value === 'A') { total += 11; aces++; }
-        else if (['K', 'Q', 'J'].includes(card.value)) total += 10;
-        else total += parseInt(card.value);
-    }
-    while (total > 21 && aces > 0) { total -= 10; aces--; }
-    return total;
-}
-
-function handString(hand) { return hand.map(c => `\`${c.display}\``).join(' '); }
+const { drawCard, handValue, handString, dealerWillHit } = require('../../utils/blackjackLogic');
 
 async function finishBlackjack(i, playerHand, dealerHand, uid, buildEmbed, bet, lang) {
     const playerVal = handValue(playerHand);
     const playerIsNatural = playerHand.length === 2 && playerVal === 21;
     const playerIsNguLinh = playerHand.length === 5 && playerVal <= 21;
 
-    // Dealer draws up to 17 regardless of player's hand value (unless player has natural or player busted)
-    if (!playerIsNatural && playerVal <= 21) {
-        while (handValue(dealerHand) < 17) {
+    const playerBusted = playerVal > 21;
+    if (!playerIsNatural && !playerBusted) {
+        while (dealerWillHit(dealerHand, playerVal, playerBusted)) {
             if (dealerHand.length >= 5) break;
             dealerHand.push(drawCard());
         }

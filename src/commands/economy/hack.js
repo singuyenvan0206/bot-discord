@@ -16,17 +16,11 @@ module.exports = {
             return message.reply(t('hack.hacker_only', lang));
         }
 
-        let skillData = {};
-        try { skillData = JSON.parse(user.skill_data || '{}'); } catch { skillData = {}; }
+        // Sync memory cooldown
+        const timestamps = message.client.cooldowns.get('hack');
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = 3600; // 1 hour cooldown
-        const lastHack = skillData.last_hack || 0;
-
-        if (now - lastHack < cooldown) {
-            const timeLeft = cooldown - (now - lastHack);
-            return message.reply(t('hack.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
-        }
 
         // Logic choice
         if (!args[0]) {
@@ -35,9 +29,7 @@ module.exports = {
 
         const sub = args[0].toLowerCase();
 
-        // Update Cooldown early to prevent spam
-        skillData.last_hack = now;
-        await db.updateUser(message.guild.id, message.author.id, { skill_data: JSON.stringify(skillData) });
+        await db.updateUser(message.guild.id, message.author.id, { last_hack: now });
 
         if (sub === 'coins' || sub === 'tien') {
             // Attempt to hack a bank/server for digital coins

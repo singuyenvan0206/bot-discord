@@ -17,17 +17,11 @@ module.exports = {
             return message.reply(t('market.trader_only', lang));
         }
 
-        let skillData = {};
-        try { skillData = JSON.parse(user.skill_data || '{}'); } catch { skillData = {}; }
+        // Sync memory cooldown
+        const timestamps = message.client.cooldowns.get('market');
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = 3600 * 2; // 2 hour cooldown
-        const lastMarket = skillData.last_market || 0;
-
-        if (now - lastMarket < cooldown) {
-            const timeLeft = cooldown - (now - lastMarket);
-            return message.reply(t('market.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
-        }
 
         // Logic choice
         if (!args[0]) {
@@ -65,9 +59,8 @@ module.exports = {
             try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
             buffs.push({ itemId: 611, expiresAt: now + duration, discount: 0.3 }); // Virtual item 611
 
-            skillData.last_market = now;
             await db.updateUser(message.guild.id, message.author.id, {
-                skill_data: JSON.stringify(skillData),
+                last_market: now,
                 active_buffs: JSON.stringify(buffs)
             });
 

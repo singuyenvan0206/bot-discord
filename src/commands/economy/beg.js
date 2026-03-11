@@ -1,8 +1,8 @@
 const db = require('../../database');
-const { getLevelMultiplier } = require('../../utils/leveling');
-const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward, hasActiveItem } = require('../../utils/multiplier');
+const { calculateReward } = require('../../utils/multiplier');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const { formatRewardMessage } = require('../../utils/formatter');
 
 module.exports = {
     name: 'beg',
@@ -14,44 +14,22 @@ module.exports = {
         const user = await db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
 
-        const cooldown = await db.getGuildSetting(message.guild.id, 'beg_cooldown', config.ECONOMY.BEG_COOLDOWN);
-        const lastBeg = Number(user.last_beg || 0);
-
-        if (now - lastBeg < cooldown) {
-            const timeLeft = cooldown - (now - lastBeg);
-            const { formatDuration } = require('../../utils/time');
-            return message.reply(t('beg.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
-        }
-
         await db.updateUser(message.guild.id, message.author.id, { last_beg: now });
 
         const successRate = await db.getGuildSetting(message.guild.id, 'beg_rate', config.ECONOMY.BEG_SUCCESS_RATE);
+        const persons = t('beg.persons', lang);
+        const person = persons[Math.floor(Math.random() * persons.length)];
+
         if (Math.random() < successRate) {
             const minReward = await db.getGuildSetting(message.guild.id, 'beg_min', config.ECONOMY.BEG_MIN_REWARD);
             const maxReward = await db.getGuildSetting(message.guild.id, 'beg_max', config.ECONOMY.BEG_MAX_REWARD);
             const baseReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
 
-            const { total, bonus, percent } = await calculateReward(baseReward, message.member, 'daily');
+            const rewardData = await calculateReward(baseReward, message.member, 'income');
+            await db.addBalance(message.guild.id, message.author.id, rewardData.total);
 
-            await db.addBalance(message.guild.id, message.author.id, total);
-
-            const persons = t('beg.persons', lang);
-            const person = persons[Math.floor(Math.random() * persons.length)];
-
-            let msg = t('beg.success', lang, {
-                person: person,
-                amount: total.toLocaleString(),
-                emoji: config.EMOJIS.COIN
-            });
-
-            if (bonus > 0) {
-                msg += t('common.bonus_capped', lang, { amount: bonus.toLocaleString(), percent });
-            }
-
-            return message.reply(msg);
+            return message.reply(formatRewardMessage('beg.success', lang, { ...rewardData, person }));
         } else {
-            const persons = t('beg.persons', lang);
-            const person = persons[Math.floor(Math.random() * persons.length)];
             const failMsgs = t('beg.fail_messages', lang);
             const failMsg = failMsgs[Math.floor(Math.random() * failMsgs.length)];
 

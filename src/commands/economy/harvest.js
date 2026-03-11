@@ -17,23 +17,16 @@ module.exports = {
             return message.reply(t('harvest.farmer_only', lang));
         }
 
-        let skillData = {};
-        try { skillData = JSON.parse(user.skill_data || '{}'); } catch { skillData = {}; }
+        // Sync memory cooldown
+        const timestamps = message.client.cooldowns.get('harvest');
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = 3600 * 2; // 2 hour cooldown
-        const lastHarvest = skillData.last_harvest || 0;
-
-        if (now - lastHarvest < cooldown) {
-            const timeLeft = cooldown - (now - lastHarvest);
-            return message.reply(t('harvest.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
-        }
 
         // Potential Rewards: 70% Coins, 30% Random Common/Rare Fish
         const isFish = Math.random() < 0.3;
 
-        skillData.last_harvest = now;
-        await db.updateUser(message.guild.id, message.author.id, { skill_data: JSON.stringify(skillData) });
+        await db.updateUser(message.guild.id, message.author.id, { last_harvest: now });
 
         if (isFish) {
             const validFish = CATCHES.filter(f => f.value > 0 && f.value < 50000); // Common to Rare

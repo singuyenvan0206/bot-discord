@@ -261,13 +261,12 @@
                 "Inventor",
                 "Billionaire",
                 "Group Chairman",
-                "President",
-                "Hollywood Superstar",
-                "Space Explorer"
+                "President"
             ]
         },
         "bumper_crop": "\n🌾 **Bumper Crop!** Your harvest was exceptionally bountiful this season! Reward multiplied by **1.5x**!",
-        "overtime": "\n👮 **Overtime!** Officer received a **+500** coins bonus!"
+        "overtime": "\n👮 **Overtime:** You worked extra hours patrolling the city, receiving an additional **+2,500** coins!",
+        "lesson_plan": "\n📚 **Lesson Plan:** You prepared the lesson thoroughly, receiving an additional **+15%** salary!"
     },
     "crime": {
         "cooldown": "❌ The police are patrolling this area heavily. Lay low for **{{time}}** before your next heist.",
@@ -335,8 +334,9 @@
         ],
         "level_bonus": "\n-# *(Includes ⭐ +{{amount}} level bonus (Capped 250%): {{percent}}%)*",
         "data_mine": "\n💻 **Data Mine!** Hacker found valuable data, income doubled ×**2**!",
-        "market_tip": "\n📈 **Market Tip!** Trader leveraged insider info, extra **+50** coins!",
-        "data_breach": "\n💻 **Data Breach!** Hacker successfully breached the system, received **+{{amount}}** extra coins!"
+        "market_tip": "\n📈 **Market Tip!** Trader leveraged insider info, extra **+3,500** coins!",
+        "data_breach": "\n💻 **Data Breach!** Hacker successfully breached the system, received **+{{amount}}** extra coins!",
+        "csi_investigation": "\n🔍 **Crime Scene Investigation:** You found valuable evidence, receiving an additional **+2,000** coins!"
     },
     "rob": {
         "cooldown": "❌ You need time to plan your next heist. Try again in **{{time}}**.",
@@ -1862,22 +1862,26 @@
         "status_captured": "⛓️ Captured"
     },
     "arrest": {
-        "police_only": "❌ Only users with the **Police** job can perform arrests!",
-        "invalid_target": "❌ You must mention a valid user to arrest.",
+        "title": "🚔 Arrest Warrant",
+        "desc": "Officer **{{officer}}** is executing an arrest warrant for the criminal **{{criminal}}**!",
+        "footer": "Justice is served!",
+        "cooldown": "⏳ You need time to prepare for the next raid. Try again in **{{time}}**.",
+        "no_permission": "❌ Only users with the **Police** job can perform arrests!",
+        "invalid_criminal": "❌ You must mention a valid user to arrest.",
         "no_bounty": "❌ **{{user}}** is not wanted or has no bounty on their head.",
         "title_success": "ARREST SUCCESSFUL",
-        "success_desc": "👮 **{{police}}** successfully arrested the criminal **{{criminal}}** and received a reward of {{emoji}} **{{amount}}** coins!",
+        "success": "👮 **{{police}}** successfully arrested the criminal **{{criminal}}** and received a reward of {{emoji}} **{{amount}}** coins!",
         "prison_label": "Sentence",
         "prison_time": "Imprisoned for **{{time}}**. All illegal activities are suspended.",
         "fine_label": "Fine",
         "xp_loss_label": "XP Loss",
-        "cooldown": "⏳ You need time to prepare for the next raid. Try again in **{{time}}**.",
         "target_already_in_prison": "❌ **{{user}}** is already arrested and in prison!",
         "cannot_arrest_own_bounty": "❌ You cannot arrest a target you placed a bounty on!",
-        "failed": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight.",
+        "failure": "❌ The criminal **{{user}}** was too cunning and managed to escape! You lost some XP for the oversight.",
         "fight_back": "👊 **Resistance!** The criminal **{{criminal}}** violently resisted arrest!",
         "robbed_during_struggle": "They robbed **{{amount}}** {{emoji}} from you during the struggle!",
-        "injured": "You were injured and need time to recover! Next cooldown: **{{time}}**"
+        "injured": "You were injured and need to recover! Next cooldown: **{{time}}**",
+        "self_arrest": "❌ Are you trying to handcuff yourself? Don't be silly!"
     },
     "bounty": {
         "invalid_target": "❌ You must mention a valid user to place a bounty on (cannot be yourself or a bot).",
@@ -1905,6 +1909,7 @@
         "pending_item": "**ID: {{id}}** | Target: **{{target}}** | Amount: **{{amount}}** | Fee: **{{fee}}**"
     },
     "hack": {
+        "title": "👨‍💻 System Intrusion",
         "hacker_only": "❌ Only **Hackers** have the skills to perform digital exploitation!",
         "cooldown": "⏳ Target systems are on high alert. Wait **{{time}}** before hacking again.",
         "usage": "💻 Usage: `$hack coins` (Digital theft) or `$hack luck` (Satellite manipulation).",
@@ -1915,6 +1920,7 @@
         "invalid_sub": "❌ Invalid choice. Use `coins` or `luck`."
     },
     "market": {
+        "title": "📉 Market Analysis",
         "trader_only": "❌ Only **Traders** can access the black market deals!",
         "cooldown": "⏳ The market is currently closed. Come back in **{{time}}**.",
         "usage": "💹 Usage: `$market deal` to find discounted shop items.",
@@ -1924,12 +1930,14 @@
         "invalid_sub": "❌ Invalid choice. Use `deal`."
     },
     "mentor": {
+        "title": "👨‍🏫 Mentoring Session",
         "teacher_only": "❌ Only **Teachers** can mentor others!",
         "invalid_target": "❌ Mention a user to mentor (cannot be yourself or a bot).",
         "cooldown": "⏳ You need to rest after a lecture. Come back in **{{time}}**.",
         "success": "📚 You mentored **{{user}}**! They will receive 2x XP boost for the next 60 minutes."
     },
     "harvest": {
+        "title": "👨‍🌾 Crop Harvesting",
         "farmer_only": "❌ Only **Farmers** can harvest crops!",
         "cooldown": "⏳ The soil is recovering. Come back in **{{time}}**.",
         "success_fish": "🌾 You checked your farm traps and found a {{emoji}} **{{name}}**!",

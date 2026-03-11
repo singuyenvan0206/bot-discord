@@ -16,13 +16,9 @@ module.exports = {
         const user = await db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
 
-        const cooldown = config.ECONOMY.ARREST_COOLDOWN;
-        const lastArrest = Number(user.last_arrest || 0);
-
-        if (now - lastArrest < cooldown) {
-            const timeLeft = cooldown - (now - lastArrest);
-            return message.reply(t('arrest.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
-        }
+        // Sync memory cooldown
+        const timestamps = message.client.cooldowns.get('arrest');
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         const target = message.mentions.users.first();
         if (!target || target.id === message.author.id || target.bot) {

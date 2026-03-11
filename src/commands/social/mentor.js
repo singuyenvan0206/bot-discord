@@ -21,17 +21,11 @@ module.exports = {
             return message.reply(t('mentor.invalid_target', lang));
         }
 
-        let skillData = {};
-        try { skillData = JSON.parse(user.skill_data || '{}'); } catch { skillData = {}; }
+        // Sync memory cooldown
+        const timestamps = message.client.cooldowns.get('mentor');
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         const now = Math.floor(Date.now() / 1000);
-        const cooldown = 3600 * 4; // 4 hour cooldown
-        const lastMentor = skillData.last_mentor || 0;
-
-        if (now - lastMentor < cooldown) {
-            const timeLeft = cooldown - (now - lastMentor);
-            return message.reply(t('mentor.cooldown', lang, { time: formatDuration(timeLeft, lang) }));
-        }
 
         // Grant XP Boost to target
         const targetUser = await db.getUser(target.id, message.guild.id);
@@ -47,8 +41,7 @@ module.exports = {
         const { addXp } = require('../../utils/leveling');
         await addXp(message.author.id, message.guild.id, 100);
 
-        skillData.last_mentor = now;
-        await db.updateUser(message.guild.id, message.author.id, { skill_data: JSON.stringify(skillData) });
+        await db.updateUser(message.guild.id, message.author.id, { last_mentor: now });
 
         return message.reply(t('mentor.success', lang, { user: target.username }));
     }
