@@ -231,6 +231,14 @@ async function addBalance(guildId, userId, amount) {
     return await addGlobalBalance(userId, amount);
 }
 
+async function addItem(guildId, userId, itemId, count = 1) {
+    return await addGlobalItem(userId, itemId, count);
+}
+
+async function removeItem(guildId, userId, itemId, count = 1) {
+    return await removeGlobalItem(userId, itemId, count);
+}
+
 async function removeBalance(guildId, userId, amount) {
     return await removeGlobalBalance(userId, amount);
 }
@@ -248,10 +256,12 @@ module.exports = {
     updateUser,
     addGlobalBalance,
     addBalance,
+    addItem,
     addGlobalXp,
     setGlobalLevel,
     removeGlobalBalance,
     removeBalance,
+    removeItem,
     getTopUsers,
     addGlobalItem,
     removeGlobalItem,

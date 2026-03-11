@@ -191,49 +191,6 @@ async function assignRandomJob(userId, guildId, lang) {
 /**
  * Gửi thông báo thăng cấp cơ bản.
  */
-async function sendLevelUpMessage(message, result, lang) {
-    const { level, bonus, reachedMilestone, milestoneLevel } = result;
-    const { EmbedBuilder } = require('discord.js');
-    const { t } = require('./i18n');
-    const config = require('../config');
-    const shopItems = require('./shopItems');
-
-    // ─── Channel Blacklist Check ───
-    const guildBlacklistRaw = await db.getGuildSetting(message.guild.id, 'blacklisted_channels', '[]');
-    let guildBlacklist = [];
-    try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
-
-    if (config.BLACKLISTED_CHANNELS.includes(message.channel.id) || guildBlacklist.includes(message.channel.id)) return;
-
-    let description = t('leveling.levelup_desc', lang, {
-        level: level,
-        bonus: bonus.toLocaleString(),
-        emoji: config.EMOJIS.COIN
-    }) || `Chúc mừng! Bạn đã đạt cấp độ **${level.toLocaleString()}** và nhận được **${bonus.toLocaleString()}** ${config.EMOJIS.COIN}!`;
-
-    if (reachedMilestone) {
-        const user = await db.getUser(message.author.id, message.guild.id);
-        const points = user.milestone_count;
-        const job = user.job || 'default';
-
-        let perkVal = points * 10; // Default 10%
-        if (job === 'teacher' || job === 'farmer') perkVal = (points * 0.1).toFixed(1);
-
-        description += `\n\n⭐ **${t('leveling.milestone_reached', lang)} (Cấp ${milestoneLevel})!**`;
-        description += `\n${t(`job.perk_desc_${job}`, lang, { points, val: perkVal })}`;
-    }
-
-    const embed = new EmbedBuilder()
-        .setTitle(t('leveling.levelup_title', lang) || '🎉 Thăng cấp!')
-        .setDescription(description)
-        .setColor(config.COLORS.SUCCESS)
-        .setTimestamp();
-
-    await message.channel.send({
-        content: `<@${message.author.id}>`,
-        embeds: [embed]
-    }).catch(() => { });
-}
 
 /**
  * Giảm cấp độ của người dùng.
@@ -295,7 +252,7 @@ module.exports = {
     assignJobIfEligible,
     getLevelMultiplier,
     assignRandomJob,
-    sendLevelUpMessage,
+
     deductLevel,
     deductXp,
     XP_AMOUNTS
