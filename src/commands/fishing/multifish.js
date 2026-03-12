@@ -100,7 +100,6 @@ module.exports = {
 
         const xpMin = XP_AMOUNTS.COMMAND_SUCCESS.min;
         const xpMax = XP_AMOUNTS.COMMAND_SUCCESS.max;
-        const xpMulti = await getXpMultiplier(message.member, message.guild.id);
 
         let totalCoins = 0;
         let catchesSummary = {};
@@ -114,7 +113,7 @@ module.exports = {
 
         for (let i = 0; i < count; i++) {
             const baseXP = Math.floor(Math.random() * (xpMax - xpMin + 1)) + xpMin;
-            totalXP += Math.floor(baseXP * xpMulti);
+            totalXP += baseXP;
             let random = Math.random() * totalWeight;
             let caughtItem = pool[0];
 
