@@ -75,7 +75,7 @@
         "item_bonus": "\n-# *(Gồm 🎁 +{{amount}} thưởng item: {{percent}}%)*",
         "item_bonus_short": "\n-# *(Gồm 🎁 +{{amount}} thưởng item (Capped {{cap}}%))*",
         "distribution_title": "💰 Quỹ Phúc Lợi Cộng Đồng",
-        "distribution_random_desc": "Bot đã chia ngẫu nhiên **{{total}}** coins cho **{{count}}** người dùng may mắn! Mỗi người nhận được một vận may khác nhau. {{emoji}}",
+        "distribution_random_desc": "Bot đã mở quỹ **{{total}}** coins! Hãy nhấn nút bên dưới để nhận phần thưởng ngẫu nhiên. {{emoji}}",
         "reward_list": "Danh sách nhận thưởng",
         "private_distribution_msg": "Bạn vừa được nhận **{{amount}}** {{emoji}} từ Quỹ Phúc Lợi Cộng Đồng! 🎉",
         "check_reward_button": "🎁 Xem phần thưởng",
@@ -85,7 +85,15 @@
         "setdistchannel_success": "✅ Đã đặt kênh thông báo chia tiền là {{channel}}!",
         "setdistchannel_reset": "✅ Đã xóa kênh thông báo mặc định. Bot sẽ tự động tìm kênh phù hợp.",
         "setdistchannel_invalid": "❌ Vui lòng chỉ định một kênh văn bản hợp lệ!",
-        "setdistchannel_desc": "Cài đặt kênh mặc định để gửi thông báo chia tiền tự động."
+        "setdistchannel_desc": "Cài đặt kênh mặc định để gửi thông báo chia tiền tự động.",
+        "dist_claim_button": "💰 Nhận thưởng ngay!",
+        "dist_claim_success": "🎉 Chúc mừng! Bạn đã nhận được **{{amount}}** {{emoji}} từ Quỹ Phúc Lợi!",
+        "dist_already_claimed": "❌ Bạn đã nhận thưởng từ đợt này rồi!",
+        "dist_expired": "⌛ Đợt chia thưởng này đã kết thúc hoặc đã phát hết!",
+        "dist_status": "📊 Tình trạng: Còn lại **{{remaining}}** / **{{total}}** {{emoji}}",
+        "dist_ping_msg": "🔔 {{role}} ơi! Quỹ Phúc Lợi Cộng Đồng đã mở, hãy nhanh tay nhận thưởng nào! 💰",
+        "dist_ended_title": "🛑 Quỹ Phúc Lợi Đã Đóng",
+        "dist_ended_desc": "Đợt chia thưởng đã kết thúc. Tổng cộng đã phát **{{claimed}}** {{emoji}} cho **{{count}}** người may mắn! ❤️"
     },
     "role": {
         "no_role_configured": "⚠️ Bot chưa được thiết lập role bắt buộc trên server này. Vui lòng liên hệ Admin để dùng `$setstartrole`.",
@@ -94,7 +102,8 @@
         "missing_role_error": "❌ Bạn cần có role bắt buộc để sử dụng bot! Vui lòng dùng lệnh `{{prefix}}start` để bắt đầu.",
         "setstartrole_usage": "Sử dụng: `{{prefix}}setstartrole <@role|role_id|none>`",
         "setstartrole_success": "✅ Đã thiết lập role bắt buộc là **{{role}}**. Chỉ những người có role này mới dùng được bot.",
-        "setstartrole_reset": "✅ Đã xóa role bắt buộc. Bây giờ ai cũng có thể dùng bot."
+        "setstartrole_reset": "✅ Đã xóa role bắt buộc. Bây giờ ai cũng có thể dùng bot.",
+        "role_permission_error": "❌ Bot không có quyền 'Quản lý Role' (Manage Roles) để thực hiện hành động này."
     },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",

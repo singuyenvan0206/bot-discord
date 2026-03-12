@@ -37,7 +37,7 @@ module.exports = {
             return message.reply(t('role.start_success', lang, { user: message.author.username, role: role.name }));
         } catch (error) {
             console.error('[Start Command] Error:', error);
-            return message.reply(t('common.error', lang) + " (Bot lacks 'Manage Roles' permission?)");
+            return message.reply(t('role.role_permission_error', lang));
         }
     }
 };

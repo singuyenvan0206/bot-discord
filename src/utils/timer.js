@@ -238,12 +238,52 @@ async function processHouseDistribution(client) {
     for (const guild of client.guilds.cache.values()) {
         try {
             const guildId = guild.id;
+            const lang = await getLanguage(null, guildId);
+            const guildData = await db.getGuild(guildId);
+            const botMember = guild.members.me;
+
+            // ─── Cleanup Expired Distributions ───
+            const activeDistRaw = await db.getGuildSetting(guildId, 'active_house_dist', null);
+            if (activeDistRaw) {
+                let distData;
+                try { distData = JSON.parse(activeDistRaw); } catch (e) { distData = null; }
+
+                if (distData && nowTimestamp > distData.endsAt) {
+                    console.log(`[Timer] Cleaning up expired distribution for guild ${guildId}`);
+                    
+                    // Final update of the message
+                    if (distData.channelId && distData.messageId) {
+                        const channel = guild.channels.cache.get(distData.channelId);
+                        if (channel) {
+                            const message = await channel.messages.fetch(distData.messageId).catch(() => null);
+                            if (message) {
+                                const claimedAmount = distData.pool - distData.remaining;
+                                const embed = new EmbedBuilder()
+                                    .setTitle(t('economy.dist_ended_title', lang) || "🛑 Quỹ Phúc Lợi Đã Đóng")
+                                    .setDescription(t('economy.dist_ended_desc', lang, {
+                                        claimed: claimedAmount.toLocaleString(),
+                                        count: distData.claimed.length,
+                                        emoji: config.EMOJIS.COIN
+                                    }) || `Đợt chia thưởng đã kết thúc. Tổng cộng đã phát **${claimedAmount.toLocaleString()}** coins cho **${distData.claimed.length}** người may mắn! ❤️`)
+                                    .setColor(config.COLORS.ERROR)
+                                    .setTimestamp();
+                                await message.edit({ embeds: [embed], components: [] }).catch(() => { });
+                            }
+                        }
+                    }
+                    await db.setGuildSetting(guildId, 'active_house_dist', null);
+                    // Don't continue, we might trigger a new one if it's a target hour
+                } else if (distData) {
+                    // Distribution is active, update status on embed if it's been a while (or every tick)
+                    // We'll update the interaction handler directly for more responsiveness, but here's a fallback
+                    continue; // Skip triggering a new one if one is active
+                }
+            }
+
             const lastDistKey = await db.getGuildSetting(guildId, 'last_house_distribution_window', '');
             const lastDistTime = parseInt(await db.getGuildSetting(guildId, 'last_house_distribution', '0'));
 
             // Check if we should distribute:
-            // 1. It's one of the target hours AND we haven't done this window yet
-            // OR 2. It's been more than 6.5 hours since last distribution (safety if bot was offline during target hours)
             const isTargetHour = targetHours.includes(currentHour) && lastDistKey !== windowKey;
             const isOverdue = (nowTimestamp - lastDistTime) > 23400; // 6.5 hours in seconds
 
@@ -251,98 +291,94 @@ async function processHouseDistribution(client) {
 
             const balance = await db.getGuildSetting(guildId, 'bot_balance', 0);
             if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) {
-                // Log only if it's a target hour to avoid spam, or if balance is significant but below threshold
                 if (isTargetHour && balance > 0) {
                     console.log(`[Timer] Skipping distribution for guild ${guildId}: Balance ${balance} < ${config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL}`);
                 }
                 continue;
             }
 
-            // Get count of human users in this guild
-            const users = await db.getTopUsers(guildId, 1000, 'balance');
-            const humans = users.filter(u => u.id !== botId);
-            const humanCount = humans.length;
+            console.log(`[Timer] Starting interactive house distribution for guild ${guildId}: Amount ${balance}`);
 
-            if (humanCount <= 0) {
-                console.log(`[Timer] Skipping distribution for guild ${guildId}: No human users found.`);
-                continue;
-            }
-
-            console.log(`[Timer] Starting house distribution for guild ${guildId}: Amount ${balance}, Humans ${humanCount}`);
-
-            // Distribute balance only within this guild
-            const distributionResults = await db.distributeBalanceRandomly(balance, botId, guildId);
-
-            if (distributionResults.length === 0) {
-                console.log(`[Timer] Distribution failed for guild ${guildId}: distributeBalanceRandomly returned empty.`);
-                continue;
-            }
-
-            // Reset bot balance for this guild
-            await db.setGuildSetting(guildId, 'bot_balance', 0);
-            await db.setGuildSetting(guildId, 'last_house_distribution_window', windowKey);
-            await db.setGuildSetting(guildId, 'last_house_distribution', nowTimestamp.toString());
-
-            // Announce to this guild
-            const lang = await getLanguage(null, guildId);
-            const guildData = await db.getGuild(guildId);
-
+            // ─── Find Channel ───
             let channel = null;
-            if (guildData.dist_channel) {
-                channel = guild.channels.cache.get(guildData.dist_channel);
-            }
+            if (guildData.dist_channel) channel = guild.channels.cache.get(guildData.dist_channel);
 
             if (!channel) {
-                const botMember = guild.members.me;
                 const textChannels = guild.channels.cache.filter(c =>
                     c.isTextBased() &&
-                    c.permissionsFor(botMember)?.has('ViewChannel') &&
-                    c.permissionsFor(botMember)?.has('SendMessages')
+                    c.permissionsFor(botMember)?.has(['ViewChannel', 'SendMessages', 'EmbedLinks'])
                 );
 
-                if (guild.systemChannel && guild.systemChannel.permissionsFor(botMember)?.has('SendMessages')) {
+                if (guild.systemChannel && guild.systemChannel.permissionsFor(botMember)?.has(['SendMessages', 'EmbedLinks'])) {
                     channel = guild.systemChannel;
                 } else {
                     channel = textChannels.find(c => c.name.includes('bot') || c.name.includes('chat') || c.name.includes('general')) || textChannels.first();
                 }
             }
 
-            if (channel && channel.send) {
-                // ─── Channel Blacklist Check ───
-                const guildBlacklistRaw = await db.getGuildSetting(guildId, 'blacklisted_channels', '[]');
-                let guildBlacklist = [];
-                try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
-
-                if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) {
-                    console.log(`[Timer] Distribution channel ${channel.id} is blacklisted for guild ${guildId}.`);
-                    continue;
-                }
-
-                const embed = new EmbedBuilder()
-                    .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
-                    .setDescription(t('economy.distribution_random_desc', lang, {
-                        total: balance.toLocaleString(),
-                        count: humanCount,
-                        emoji: config.EMOJIS.COIN
-                    }) || `Bot đã chia ngẫu nhiên **${balance.toLocaleString()}** coins cho **${humanCount}** người dùng may mắn!`)
-                    .setColor(config.COLORS.SUCCESS)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 256 }) })
-                    .setTimestamp();
-
-                const checkButton = new ButtonBuilder()
-                    .setCustomId('check_dist_reward')
-                    .setLabel(t('economy.check_reward_button', lang) || "Xem phần thưởng")
-                    .setEmoji('🎁')
-                    .setStyle(ButtonStyle.Success);
-
-                const row = new ActionRowBuilder().addComponents(checkButton);
-
-                channel.send({ embeds: [embed], components: [row] }).catch(err => {
-                    console.error(`[Timer] Failed to send distribution message in guild ${guildId}:`, err);
-                });
-            } else {
-                console.log(`[Timer] No suitable channel found for distribution announcement in guild ${guildId}.`);
+            if (!channel) {
+                console.log(`[Timer] No suitable channel found for distribution in guild ${guildId}.`);
+                continue;
             }
+
+            // ─── Channel Blacklist Check ───
+            const guildBlacklistRaw = await db.getGuildSetting(guildId, 'blacklisted_channels', '[]');
+            let guildBlacklist = [];
+            try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
+            if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) continue;
+
+            // ─── Prepare Distribution Event ───
+            const startRoleId = await db.getGuildSetting(guildId, 'start_role', null);
+            const endsAt = nowTimestamp + 1800; // 30 minutes in seconds
+
+            const embed = new EmbedBuilder()
+                .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
+                .setDescription(t('economy.distribution_random_desc', lang, {
+                    total: balance.toLocaleString(),
+                    emoji: config.EMOJIS.COIN
+                }) || `Bot đã mở quỹ **${balance.toLocaleString()}** coins! Hãy nhấn nút bên dưới để nhận phần thưởng ngẫu nhiên.`)
+                .addFields({ 
+                    name: t('economy.dist_status', lang, { remaining: balance.toLocaleString(), total: balance.toLocaleString(), emoji: config.EMOJIS.COIN }), 
+                    value: `⌛ ${t('common.next_expiry', lang, { time: t('common.duration_minutes', lang, { minutes: 30 }) })}` 
+                })
+                .setColor(config.COLORS.SUCCESS)
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL({ dynamic: true, size: 256 }) })
+                .setTimestamp();
+
+            const claimButton = new ButtonBuilder()
+                .setCustomId('claim_house_dist')
+                .setLabel(t('economy.dist_claim_button', lang) || "💰 Nhận thưởng ngay!")
+                .setEmoji('🎁')
+                .setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder().addComponents(claimButton);
+
+            const pingMsg = startRoleId 
+                ? t('economy.dist_ping_msg', lang, { role: `<@&${startRoleId}>` }) 
+                : null;
+
+            const sentMessage = await channel.send({ content: pingMsg, embeds: [embed], components: [row] }).catch(err => {
+                console.error(`[Timer] Failed to send distribution message in guild ${guildId}:`, err);
+                return null;
+            });
+
+            if (sentMessage) {
+                const distData = {
+                    pool: balance,
+                    remaining: balance,
+                    endsAt: endsAt,
+                    claimed: [],
+                    channelId: channel.id,
+                    messageId: sentMessage.id,
+                    roleId: startRoleId
+                };
+
+                await db.setGuildSetting(guildId, 'active_house_dist', JSON.stringify(distData));
+                await db.setGuildSetting(guildId, 'bot_balance', 0); // Money is now in the pool
+                await db.setGuildSetting(guildId, 'last_house_distribution_window', windowKey);
+                await db.setGuildSetting(guildId, 'last_house_distribution', nowTimestamp.toString());
+            }
+
         } catch (err) {
             console.error(`[Timer] Error in per-guild distribution for ${guild.id}:`, err);
         }

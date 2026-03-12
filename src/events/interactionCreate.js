@@ -59,6 +59,84 @@ module.exports = {
                 }
             }
 
+            if (interaction.customId === 'claim_house_dist') {
+                const guildId = interaction.guildId;
+                const activeDistRaw = await db.getGuildSetting(guildId, 'active_house_dist', null);
+                if (!activeDistRaw) {
+                    return interaction.reply({ content: t('economy.dist_expired', lang), flags: [64] });
+                }
+
+                let distData;
+                try { distData = JSON.parse(activeDistRaw); } catch (e) { distData = null; }
+                if (!distData) return;
+
+                const now = Math.floor(Date.now() / 1000);
+                if (now > distData.endsAt || distData.remaining <= 0) {
+                    return interaction.reply({ content: t('economy.dist_expired', lang), flags: [64] });
+                }
+
+                // Check Role Requirement (Dynamic check against current guild setting)
+                const currentStartRole = await db.getGuildSetting(guildId, 'start_role', null);
+                if (currentStartRole && !interaction.member.roles.cache.has(currentStartRole)) {
+                    return interaction.reply({ content: t('role.missing_role_error', lang, { prefix: config.PREFIX }), flags: [64] });
+                }
+
+                // Check Already Claimed
+                if (distData.claimed.includes(interaction.user.id)) {
+                    return interaction.reply({ content: t('economy.dist_already_claimed', lang), flags: [64] });
+                }
+
+                // ─── Calculate Reward ───
+                // Each claim gets roughly 1/20th of the initial pool, with some randomness
+                const baseReward = distData.pool / 20;
+                let reward = Math.floor(baseReward * (0.5 + Math.random()));
+                
+                // Safety: Can't claim more than remaining, and ensure it's at least 1
+                reward = Math.max(1, Math.min(distData.remaining, reward));
+                
+                // If it's the last bit of money, just give it all
+                if (distData.remaining < baseReward) reward = distData.remaining;
+
+                // ─── Update State ───
+                distData.remaining -= reward;
+                distData.claimed.push(interaction.user.id);
+
+                await db.addBalance(guildId, interaction.user.id, reward);
+                await db.setGuildSetting(guildId, 'active_house_dist', JSON.stringify(distData));
+
+                // ─── Acknowledge and Update Message ───
+                await interaction.reply({ 
+                    content: t('economy.dist_claim_success', lang, { amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN }), 
+                    flags: [64] 
+                });
+
+                // Update the original message embed to show remaining balance
+                const { EmbedBuilder } = require('discord.js');
+                const oldEmbed = interaction.message.embeds[0];
+                if (oldEmbed) {
+                    const newEmbed = EmbedBuilder.from(oldEmbed)
+                        .setFields({ 
+                            name: t('economy.dist_status', lang, { 
+                                remaining: distData.remaining.toLocaleString(), 
+                                total: distData.pool.toLocaleString(), 
+                                emoji: config.EMOJIS.COIN 
+                            }), 
+                            value: oldEmbed.fields[0].value 
+                        });
+                    
+                    // If pool is empty, remove buttons and update title
+                    const components = distData.remaining <= 0 ? [] : interaction.message.components;
+                    if (distData.remaining <= 0) {
+                        newEmbed.setTitle(t('economy.dist_ended_title', lang) || "🛑 Quỹ Phúc Lợi Đã Đóng")
+                                .setColor(config.COLORS.ERROR);
+                    }
+
+                    await interaction.message.edit({ embeds: [newEmbed], components }).catch(() => { });
+                }
+
+                return;
+            }
+
             if (interaction.customId === BUTTON_ID) {
                 return handleButtonEntry(interaction);
             }

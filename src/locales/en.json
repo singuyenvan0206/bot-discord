@@ -75,7 +75,7 @@
         "item_bonus": "\n-# *(Includes 🎁 +{{amount}} item bonus: {{percent}}%)*",
         "item_bonus_short": "\n-# *(Includes 🎁 +{{amount}} item bonus (Capped {{cap}}%))*",
         "distribution_title": "💰 Community Welfare Fund",
-        "distribution_random_desc": "The bot has randomly distributed **{{total}}** coins to **{{count}}** lucky users! Everyone received a different amount of fortune. {{emoji}}",
+        "distribution_random_desc": "The bot has opened a fund of **{{total}}** coins! Click the button below to claim a random reward. {{emoji}}",
         "reward_list": "Rewards List",
         "private_distribution_msg": "You just received **{{amount}}** {{emoji}} from the Community Welfare Fund! 🎉",
         "check_reward_button": "🎁 Check Reward",
@@ -84,7 +84,15 @@
         "setdistchannel_usage": "Usage: `{{prefix}}setdistchannel [#channel]`",
         "setdistchannel_success": "✅ Distribution announcement channel has been set to {{channel}}!",
         "setdistchannel_invalid": "❌ Please specify a valid text channel!",
-        "setdistchannel_desc": "Set the default channel for automatic distribution announcements."
+        "setdistchannel_desc": "Set the default channel for automatic distribution announcements.",
+        "dist_claim_button": "💰 Claim Now!",
+        "dist_claim_success": "🎉 Congratulations! You received **{{amount}}** {{emoji}} from the Community Fund!",
+        "dist_already_claimed": "❌ You've already claimed from this distribution!",
+        "dist_expired": "⌛ This distribution has ended or is fully claimed!",
+        "dist_status": "📊 Status: **{{remaining}}** / **{{total}}** {{emoji}} remaining",
+        "dist_ping_msg": "🔔 {{role}}! The Community Fund is open, come and claim your reward! 💰",
+        "dist_ended_title": "🛑 Community Fund Closed",
+        "dist_ended_desc": "This distribution round has ended. A total of **{{claimed}}** {{emoji}} was distributed to **{{count}}** lucky users! ❤️"
     },
     "role": {
         "no_role_configured": "⚠️ The required role has not been configured for this server. Please contact an Admin to use `$setstartrole`.",
@@ -93,7 +101,8 @@
         "missing_role_error": "❌ You need the required role to use the bot! Please use `{{prefix}}start` to begin.",
         "setstartrole_usage": "Usage: `{{prefix}}setstartrole <@role|role_id|none>`",
         "setstartrole_success": "✅ Successfully set the required role to **{{role}}**. Only users with this role can use the bot.",
-        "setstartrole_reset": "✅ Removed the required role. Everyone can now use the bot."
+        "setstartrole_reset": "✅ Removed the required role. Everyone can now use the bot.",
+        "role_permission_error": "❌ Bot lacks 'Manage Roles' permission to perform this action."
     },
     "connect4": {
         "title": "🔴 Connect 4 🟡",
