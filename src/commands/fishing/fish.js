@@ -207,8 +207,8 @@ module.exports = {
             // Update income field to show total
             embed.spliceFields(1, 1, { name: t('fish.income', lang), value: `${config.EMOJIS.COIN} **+${totalValue.toLocaleString()}**`, inline: true });
 
-            if (xpResult && xpResult.level > 0) {
-                embed.addFields({ name: '✨ XP', value: `+${baseXP.toLocaleString()}`, inline: true });
+            if (xpResult && (xpResult.level > 0 || xpResult.addedXp > 0)) {
+                embed.addFields({ name: '✨ XP', value: `+${(xpResult.addedXp || baseXP).toLocaleString()}`, inline: true });
             }
 
             if (bonusAmount > 0) {

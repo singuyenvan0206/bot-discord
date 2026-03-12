@@ -97,6 +97,7 @@ async function addXp(memberOrId, amount, guildId = null, bypassCooldown = false)
 
         return {
             level: newLevel,
+            addedXp: finalAmount,
             leveledUp: leveledUp,
             reachedLevel20: !!assignedJob,
             assignedJob: assignedJob,

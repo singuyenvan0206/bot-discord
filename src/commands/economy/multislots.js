@@ -130,7 +130,8 @@ module.exports = {
             await addHouseProfit(message, totalBet - totalWon).catch(() => {});
         }
 
-        await addXp(message.member, totalXp, message.guild.id);
+        const xpResult = await addXp(message.member, totalXp, message.guild.id);
+        const finalDisplayedXP = xpResult.addedXp || totalXp;
 
         const netProfit = totalWon - totalBet;
         const winRate = ((stats.jackpots + stats.smallWins) / count * 100).toFixed(1);
@@ -152,7 +153,7 @@ module.exports = {
             )
             .addFields(
                 { name: '🌟 Cú hích lớn nhất', value: bestWin.mult > 0 ? `${bestWin.symbol} **x${bestWin.mult}** (\`${bestWin.amount.toLocaleString()}\` ${config.EMOJIS.COIN})` : 'None', inline: true },
-                { name: '✨ XP Nhận được', value: `\`+${totalXp.toLocaleString()}\` XP`, inline: true }
+                { name: '✨ XP Nhận được', value: `\`+${finalDisplayedXP.toLocaleString()}\` XP`, inline: true }
             );
 
         if (totalBonus > 0) {

@@ -171,7 +171,8 @@ module.exports = {
             active_buffs: JSON.stringify(activeBuffs)
         });
         await db.addBalance(message.guild.id, message.author.id, totalCoins);
-        await addXp(message.member, totalXP, message.guild.id, true);
+        const xpResult = await addXp(message.member, totalXP, message.guild.id, true);
+        const finalDisplayedXP = xpResult.addedXp || totalXP;
 
         const topCatches = Object.entries(catchesSummary)
             .sort((a, b) => b[1].count - a[1].count)
@@ -185,7 +186,7 @@ module.exports = {
             .setColor(config.COLORS.SUCCESS)
             .addFields(
                 { name: '💰 Tổng thu nhập', value: `\`${totalCoins.toLocaleString()}\` ${config.EMOJIS.COIN}`, inline: true },
-                { name: '✨ XP Nhận được', value: `\`+${totalXP.toLocaleString()}\` XP`, inline: true },
+                { name: '✨ XP Nhận được', value: `\`+${finalDisplayedXP.toLocaleString()}\` XP`, inline: true },
                 { name: '✨ May mắn', value: `\`${totalLuck.toFixed(2)}x\``, inline: true },
                 { name: '📊 Chiến lợi phẩm chính', value: topCatches || 'None', inline: false }
             );
