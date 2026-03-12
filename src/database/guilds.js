@@ -39,6 +39,8 @@ async function getGuildSetting(guildId, key, defaultValue = null) {
             const val = row.value;
             if (val === 'true') return true;
             if (val === 'false') return false;
+            // Avoid converting long numeric strings (like Discord IDs) to numbers to prevent precision loss
+            if (/^\d+$/.test(val) && val.length > 15) return val;
             if (!isNaN(val) && val.trim() !== '') return Number(val);
             return val;
         }
