@@ -50,7 +50,7 @@ module.exports = {
                 if (item) totalMarketValue += (item.price * count);
             }
             const burned = totalMarketValue - totalEarned;
-            if (burned > 0) await addHouseProfit(message, burned);
+            // Removed: if (burned > 0) await addHouseProfit(message, burned); // Bot fund restriction
 
             return message.reply(t('sell.all_success', lang, { count: totalItemsCount, price: totalEarned.toLocaleString(), emoji: config.EMOJIS.COIN }));
         }
@@ -109,7 +109,7 @@ module.exports = {
         await db.addBalance(message.guild.id, message.author.id, sellPrice);
 
         const burned = (item.price * quantity) - sellPrice;
-        if (burned > 0) await addHouseProfit(message, burned);
+        // Removed: if (burned > 0) await addHouseProfit(message, burned); // Bot fund restriction
 
         return message.reply(t('sell.success', lang, {
             quantity,

@@ -28,7 +28,7 @@ module.exports = {
         await db.addBalance(message.guild.id, targetUser.id, finalAmount);
 
         if (tax > 0) {
-            await addHouseProfit(message, tax);
+            // Removed: await addHouseProfit(message, tax); // Bot fund restriction
         }
 
         let msg = t('transfer.success', lang, { amount: finalAmount.toLocaleString(), user: targetUser.toString() });

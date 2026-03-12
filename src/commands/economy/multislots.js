@@ -127,7 +127,7 @@ module.exports = {
         }
 
         if (totalWon < totalBet) {
-            await addHouseProfit(message, totalBet - totalWon).catch(() => {});
+            // Removed: await addHouseProfit(message, totalBet - totalWon).catch(() => {}); // Excluded from bot fund
         }
 
         const xpResult = await addXp(message.member, totalXp, message.guild.id);

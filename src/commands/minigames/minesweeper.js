@@ -233,7 +233,7 @@ module.exports = {
                                 ? t('minesweeper.shield_used', lang, { amount: loseAmount.toLocaleString() })
                                 : t('minesweeper.bet_lost', lang, { amount: loseAmount.toLocaleString() })))
                         .setColor(0xE74C3C);
-                    if (bet) await addHouseProfit(message, loseAmount);
+                    // Removed: if (bet) await addHouseProfit(message, loseAmount); // Bot fund restriction
                     await i.update({ embeds: [loseEmbed], components: renderComponents(true, false) });
                 } else {
                     // Check Win

@@ -109,7 +109,7 @@ module.exports = {
         }
 
         await db.removeBalance(message.guild.id, message.author.id, totalCost);
-        await addHouseProfit(message, totalCost);
+        // Removed: await addHouseProfit(message, totalCost); // Bot fund restriction
 
         for (const purchase of itemsToBuy) {
             await db.addItem(message.guild.id, message.author.id, purchase.item.id, purchase.quantity);

@@ -97,7 +97,7 @@ module.exports = {
             if (randomPoliceId) {
                 await db.addBalance(message.guild.id, randomPoliceId, fine);
             } else {
-                await addHouseProfit(message, fine);
+                // Removed: await addHouseProfit(message, fine); // Bot fund restriction
             }
 
             let baseFailMsg = t('crime.failure_xp', lang, {

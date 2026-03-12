@@ -194,7 +194,7 @@ module.exports = {
                             resultText += t('common.bonus_capped', lang, { amount: bonusAmount.toLocaleString(), percent: (percent || 0).toLocaleString(), cap: (cap || 0).toLocaleString() });
                         }
                     } else {
-                        await addHouseProfit(i, baseReward);
+                        // Removed: await addHouseProfit(i, baseReward); // Bot fund restriction
 
                         // Grant Win XP to Bot
                         const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;

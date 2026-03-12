@@ -40,8 +40,8 @@ module.exports = {
                 }
 
                 await db.removeBalance(message.author.id, totalCost);
-                const { addHouseProfit } = require('../../utils/economy');
-                await addHouseProfit(message, totalCost);
+                // Removed: const { addHouseProfit } = require('../../utils/economy');
+                // Removed: await addHouseProfit(message, totalCost);
                 for (const [id, type] of Object.entries(bizConfig.TYPES)) {
                     if (!userBizs.some(b => b.business_id === id)) {
                         await db.addUserBusiness(message.author.id, id);
@@ -74,8 +74,8 @@ module.exports = {
             }
 
             await db.removeBalance(message.author.id, type.base_price);
-            const { addHouseProfit } = require('../../utils/economy');
-            await addHouseProfit(message, type.base_price);
+            // Removed: const { addHouseProfit } = require('../../utils/economy');
+            // Removed: await addHouseProfit(message, type.base_price);
             await db.addUserBusiness(message.author.id, typeId);
 
             return message.reply(t('business.buy_success', lang, { name: type.name[lang], income: type.base_income.toLocaleString() }));
@@ -348,8 +348,8 @@ module.exports = {
                 }
 
                 await db.removeBalance(message.author.id, totalCost);
-                const { addHouseProfit } = require('../../utils/economy');
-                await addHouseProfit(message, totalCost);
+                // Removed: const { addHouseProfit } = require('../../utils/economy');
+                // Removed: await addHouseProfit(message, totalCost);
                 for (const b of businessesToUpgrade) {
                     await db.updateUserBusiness(message.author.id, b.id, { level: b.newLevel });
                 }
@@ -388,8 +388,8 @@ module.exports = {
             }
 
             await db.removeBalance(message.author.id, upgradeCost);
-            const { addHouseProfit } = require('../../utils/economy');
-            await addHouseProfit(message, upgradeCost);
+            // Removed: const { addHouseProfit } = require('../../utils/economy');
+            // Removed: await addHouseProfit(message, upgradeCost);
             await db.updateUserBusiness(message.author.id, bizId, { level: biz.level + upgradeable });
 
             return message.reply(t('business.upgrade_success', lang, { level: biz.level + upgradeable, added: upgradeable }));
@@ -420,8 +420,8 @@ module.exports = {
                 }
 
                 await db.removeBalance(message.author.id, totalCost);
-                const { addHouseProfit } = require('../../utils/economy');
-                await addHouseProfit(message, totalCost);
+                // Removed: const { addHouseProfit } = require('../../utils/economy');
+                // Removed: await addHouseProfit(message, totalCost);
                 for (const b of userBizs) {
                     const currentExpires = b.manager_expires_at || 0;
                     const newExpiresAt = Math.max(now, currentExpires) + (hours * 3600);
@@ -448,8 +448,8 @@ module.exports = {
             }
 
             await db.removeBalance(message.author.id, totalCost);
-            const { addHouseProfit } = require('../../utils/economy');
-            await addHouseProfit(message, totalCost);
+            // Removed: const { addHouseProfit } = require('../../utils/economy');
+            // Removed: await addHouseProfit(message, totalCost);
             const currentExpires = biz.manager_expires_at || 0;
             const newExpiresAt = Math.max(now, currentExpires) + (hours * 3600);
             await db.updateUserBusiness(message.author.id, bizId, { manager_expires_at: newExpiresAt });
