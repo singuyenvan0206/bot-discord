@@ -87,6 +87,15 @@
         "setdistchannel_invalid": "❌ Vui lòng chỉ định một kênh văn bản hợp lệ!",
         "setdistchannel_desc": "Cài đặt kênh mặc định để gửi thông báo chia tiền tự động."
     },
+    "role": {
+        "no_role_configured": "⚠️ Bot chưa được thiết lập role bắt buộc trên server này. Vui lòng liên hệ Admin để dùng `$setstartrole`.",
+        "role_not_found": "❌ Không tìm thấy role tương ứng. Có thể nó đã bị xóa?",
+        "start_success": "✅ Chúc mừng **{{user}}**! Bạn đã được cấp role **{{role}}** và có thể bắt đầu sử dụng bot! 🎉",
+        "missing_role_error": "❌ Bạn cần có role bắt buộc để sử dụng bot! Vui lòng dùng lệnh `{{prefix}}start` để bắt đầu.",
+        "setstartrole_usage": "Sử dụng: `{{prefix}}setstartrole <@role|role_id|none>`",
+        "setstartrole_success": "✅ Đã thiết lập role bắt buộc là **{{role}}**. Chỉ những người có role này mới dùng được bot.",
+        "setstartrole_reset": "✅ Đã xóa role bắt buộc. Bây giờ ai cũng có thể dùng bot."
+    },
     "connect4": {
         "title": "🔴 Bốn Hàng (Connect 4) 🟡",
         "challenge_title": "🔴 Thách Đấu Bốn Hàng (Connect 4) 🟡",
