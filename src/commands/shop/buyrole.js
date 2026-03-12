@@ -11,56 +11,60 @@ module.exports = {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const guildRoles = await db.getGuildRoles(message.guild.id);
 
-        // Use guild roles if they exist
-        const roles = guildRoles;
-
-        if (!roles || roles.length === 0) {
+        if (!guildRoles || guildRoles.length === 0) {
             return message.reply(t('roleshop.no_roles', lang));
         }
-        const embed = new EmbedBuilder()
-            .setTitle(t('roleshop.title', lang))
-            .setDescription(t('roleshop.desc', lang))
-            .setColor(config.COLORS.INFO);
 
-        const row = new ActionRowBuilder();
+        const createShopUI = (member) => {
+            const embed = new EmbedBuilder()
+                .setTitle(t('roleshop.title', lang))
+                .setDescription(t('roleshop.desc', lang))
+                .setColor(config.COLORS.INFO);
 
-        roles.forEach(role => {
-            const isOwned = message.member.roles.cache.has(role.id || role.role_id);
-            const status = isOwned ? `[${t('shop.owned', lang)}]` : `**${Number(role.price).toLocaleString()}** ${config.EMOJIS.COIN}`;
+            const row = new ActionRowBuilder();
 
-            let buffText = '';
-            const inc = role.income_buff || role.income_buff_pct || 0;
-            const xp = role.xp_buff || role.xp_buff_pct || 0;
-            if (inc > 0) buffText += `\n╰ ✨ +${Math.round(inc * 100).toLocaleString()}% ${t('effects.income', lang)}`;
-            if (xp > 0) buffText += `\n╰ ⚡ +${Math.round(xp * 100).toLocaleString()}% ${t('effects.xpboost', lang)}`;
+            guildRoles.forEach(role => {
+                const isOwned = member.roles.cache.has(role.id || role.role_id);
+                const status = isOwned ? `[${t('shop.owned', lang)}]` : `**${Number(role.price).toLocaleString()}** ${config.EMOJIS.COIN}`;
 
-            embed.addFields({
-                name: `${role.name} ${status}`,
-                value: buffText || t('common.none', lang),
-                inline: true
+                let buffText = '';
+                const inc = role.income_buff || role.income_buff_pct || 0;
+                const xp = role.xp_buff || role.xp_buff_pct || 0;
+                if (inc > 0) buffText += `\n╰ ✨ +${Math.round(inc * 100).toLocaleString()}% ${t('effects.income', lang)}`;
+                if (xp > 0) buffText += `\n╰ ⚡ +${Math.round(xp * 100).toLocaleString()}% ${t('effects.xpboost', lang)}`;
+
+                embed.addFields({
+                    name: `${role.name} ${status}`,
+                    value: buffText || t('common.none', lang),
+                    inline: true
+                });
+
+                const button = new ButtonBuilder()
+                    .setCustomId(`buy_role_${role.id || role.role_id}`)
+                    .setLabel(role.name)
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(isOwned);
+                row.addComponents(button);
             });
 
-            const button = new ButtonBuilder()
-                .setCustomId(`buy_role_${role.id || role.role_id}`)
-                .setLabel(role.name)
-                .setStyle(ButtonStyle.Primary)
-                .setDisabled(isOwned);
-            row.addComponents(button);
-        });
+            return { embeds: [embed], components: [row] };
+        };
 
-        const reply = await message.reply({ embeds: [embed], components: [row] });
+        const reply = await message.reply(createShopUI(message.member));
 
         const collector = reply.createMessageComponentCollector({
             componentType: ComponentType.Button,
-            time: 60000,
+            time: 120000, // Increased to 2 mins for multiple buys
             filter: i => i.user.id === message.author.id
         });
 
         collector.on('collect', async i => {
             const roleId = i.customId.replace('buy_role_', '');
-            const selectedRole = roles.find(r => (r.id || r.role_id) === roleId);
+            const selectedRole = guildRoles.find(r => (r.id || r.role_id) === roleId);
 
-            if (!selectedRole) return;
+            if (!selectedRole) {
+                return i.deferUpdate();
+            }
 
             const user = await db.getUser(i.user.id, message.guild.id);
             if (user.balance < selectedRole.price) {
@@ -70,8 +74,10 @@ module.exports = {
                 });
             }
 
-            const member = await message.guild.members.fetch(message.author.id).catch(() => null);
-            if (!member) return i.reply({ content: t('common.user_not_found', lang), flags: [MessageFlags.Ephemeral] });
+            const member = await message.guild.members.fetch(i.user.id).catch(() => null);
+            if (!member) {
+                return i.reply({ content: t('common.user_not_found', lang), flags: [MessageFlags.Ephemeral] });
+            }
 
             if (member.roles.cache.has(roleId)) {
                 return i.reply({
@@ -89,14 +95,7 @@ module.exports = {
             }
 
             const botMember = await message.guild.members.fetch(message.client.user.id);
-            if (!botMember.permissions.has('ManageRoles')) {
-                return i.reply({
-                    content: t('roleshop.error', lang),
-                    flags: [MessageFlags.Ephemeral]
-                });
-            }
-
-            if (role.position >= botMember.roles.highest.position) {
+            if (!botMember.permissions.has('ManageRoles') || role.position >= botMember.roles.highest.position) {
                 return i.reply({
                     content: t('roleshop.error', lang),
                     flags: [MessageFlags.Ephemeral]
@@ -107,22 +106,24 @@ module.exports = {
                 await member.roles.add(role);
                 await db.removeBalance(message.guild.id, message.author.id, selectedRole.price);
 
-                // Save to DB for per-guild buffs
                 const currentRoles = JSON.parse(user.purchased_roles || '[]');
                 if (!currentRoles.includes(roleId)) {
                     currentRoles.push(roleId);
                     await db.updateUser(message.guild.id, message.author.id, { purchased_roles: JSON.stringify(currentRoles) });
                 }
 
-                await i.update({
+                // Success notification as ephemeral to avoid cluttering or changing the main shopping view
+                await i.reply({
                     content: t('roleshop.buy_success', lang, { role: role.name, price: selectedRole.price.toLocaleString() }),
-                    embeds: [],
-                    components: []
+                    flags: [MessageFlags.Ephemeral]
                 });
+
+                // Refresh the main UI
+                const updatedUI = createShopUI(member);
+                await reply.edit(updatedUI).catch(() => {});
             } catch (err) {
                 console.error(err);
-                let errMsg = t('roleshop.error', lang);
-                await i.reply({ content: errMsg, flags: [MessageFlags.Ephemeral] });
+                await i.reply({ content: t('roleshop.error', lang), flags: [MessageFlags.Ephemeral] });
             }
         });
 
