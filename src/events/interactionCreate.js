@@ -45,6 +45,21 @@ module.exports = {
 
         const { checkPrisonGuard, checkPersistentCooldown } = require('../utils/guards');
 
+        // ─── Global Role Requirement Check ───
+        const startRole = await db.getGuildSetting(interaction.guildId, 'start_role', null);
+        if (startRole && !interaction.member.roles.cache.has(startRole)) {
+            const isBotOwner = await db.isOwner(interaction.user.id);
+            // Allow claim_house_dist because it has its own detailed check and might be the first thing a user sees
+            const isExempt = ['claim_house_dist', 'check_dist_reward'].includes(interaction.customId);
+            
+            if (!isExempt && !isBotOwner) {
+                return interaction.reply({ 
+                    content: t('role.missing_role_error', lang, { prefix: config.PREFIX }), 
+                    ephemeral: true 
+                }).catch(() => { });
+            }
+        }
+
         // 1. Button Interactions
         if (interaction.isButton()) {
             // General Prison Check for Buttons

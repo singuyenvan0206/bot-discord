@@ -101,6 +101,15 @@ module.exports = {
             const command = client.commands.get(commandName) ||
                 client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
+            // ─── Role Requirement Check ───
+            const startRole = await db.getGuildSetting(message.guild.id, 'start_role', null);
+            if (startRole && !message.member.roles.cache.has(startRole)) {
+                const isExempt = command && ['start', 'setstartrole', 'help'].includes(command.name);
+                if (!isExempt && !await db.isOwner(message.author.id)) {
+                    return message.reply(t('role.missing_role_error', lang, { prefix })).catch(() => { });
+                }
+            }
+
             const { checkPrisonGuard } = require('../utils/guards');
             const prisonGuard = await checkPrisonGuard(message.author.id, message.guild.id, lang, command ? command.name : commandName);
             if (prisonGuard.inPrison) {
@@ -108,15 +117,6 @@ module.exports = {
             }
 
             if (!command) return;
-
-            // ─── Role Requirement Check ───
-            const startRole = await db.getGuildSetting(message.guild.id, 'start_role', null);
-            if (startRole && !message.member.roles.cache.has(startRole)) {
-                const isExempt = ['start', 'setstartrole', 'help'].includes(command.name);
-                if (!isExempt && !await db.isOwner(message.author.id)) {
-                    return message.reply(t('role.missing_role_error', lang, { prefix })).catch(() => { });
-                }
-            }
 
             // ─── Anti-Spam (Command Flooding) ───
             const isBotOwner = await db.isOwner(message.author.id);
