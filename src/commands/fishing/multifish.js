@@ -43,8 +43,15 @@ module.exports = {
             return message.reply(t('fish.bait_needed', lang, { prefix: config.PREFIX }));
         }
 
-        const maxCount = 20; // public limit
-        const requestedCount = Math.max(1, parseInt(args[0]) || 1);
+        const maxCount = 100; // Increased to 100 as requested
+        let requestedCount;
+        
+        if (args[0]?.toLowerCase() === 'all') {
+            requestedCount = inventory[bait.id] || 0;
+        } else {
+            requestedCount = Math.max(1, parseInt(args[0]) || 1);
+        }
+
         const count = Math.min(maxCount, requestedCount, inventory[bait.id] || 0);
 
         if (count < 1) {

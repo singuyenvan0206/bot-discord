@@ -15,18 +15,33 @@ module.exports = {
         const lang = await getLanguage(message.author.id, message.guild.id);
         const user = await db.getUser(message.author.id, message.guild.id);
 
-        const maxCount = 50;
-        const count = Math.min(maxCount, Math.max(1, parseInt(args[0]) || 1));
+        const maxCount = 100; // Increased to 100 as requested
+        let requestedCount;
+        if (args[0]?.toLowerCase() === 'all') {
+            requestedCount = maxCount;
+        } else {
+            requestedCount = Math.max(1, parseInt(args[0]) || 1);
+        }
+        const count = Math.min(maxCount, requestedCount);
 
         const maxBetLimit = await getMaxBet(message.author.id);
-        const betPerSpin = args[1] ? parseAmount(args[1], user.balance, maxBetLimit) : 50;
+        let betPerSpin;
+        
+        if (args[1]?.toLowerCase() === 'all') {
+            betPerSpin = maxBetLimit;
+        } else {
+            betPerSpin = args[1] ? parseAmount(args[1], user.balance, maxBetLimit) : 50;
+        }
 
         if (isNaN(betPerSpin) || betPerSpin <= 0) return message.reply(t('common.invalid_amount', lang));
         if (betPerSpin < 10) return message.reply(t('gamble.min_bet', lang, { min: '10' }));
         if (betPerSpin > maxBetLimit) return message.reply(t('gamble.max_bet', lang, { max: maxBetLimit.toLocaleString() }));
 
-        const totalBet = count * betPerSpin;
+        let totalBet = count * betPerSpin;
         if (user.balance < totalBet) {
+            // If they used 'all all', we should try to fit the count to their balance if possible, 
+            // but the user specifically asked for 'all' to be 100. 
+            // Let's just return the insufficient funds error as per standard behavior.
             return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
         }
 
