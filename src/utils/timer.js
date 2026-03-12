@@ -229,8 +229,7 @@ async function processHouseDistribution(client) {
     const currentTime = new Date();
     const currentHour = currentTime.getHours();
     const targetHours = [0, 6, 12, 18];
-
-    if (!targetHours.includes(currentHour)) return;
+    const nowTimestamp = Math.floor(Date.now() / 1000);
 
     const dateStr = currentTime.toISOString().split('T')[0];
     const windowKey = `${dateStr}-${currentHour}`;
@@ -240,26 +239,49 @@ async function processHouseDistribution(client) {
         try {
             const guildId = guild.id;
             const lastDistKey = await db.getGuildSetting(guildId, 'last_house_distribution_window', '');
+            const lastDistTime = parseInt(await db.getGuildSetting(guildId, 'last_house_distribution', '0'));
 
-            if (lastDistKey === windowKey) continue;
+            // Check if we should distribute:
+            // 1. It's one of the target hours AND we haven't done this window yet
+            // OR 2. It's been more than 6.5 hours since last distribution (safety if bot was offline during target hours)
+            const isTargetHour = targetHours.includes(currentHour) && lastDistKey !== windowKey;
+            const isOverdue = (nowTimestamp - lastDistTime) > 23400; // 6.5 hours in seconds
+
+            if (!isTargetHour && !isOverdue) continue;
 
             const balance = await db.getGuildSetting(guildId, 'bot_balance', 0);
-            if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) continue;
+            if (balance < config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL) {
+                // Log only if it's a target hour to avoid spam, or if balance is significant but below threshold
+                if (isTargetHour && balance > 0) {
+                    console.log(`[Timer] Skipping distribution for guild ${guildId}: Balance ${balance} < ${config.ECONOMY.HOUSE_DISTRIBUTION_MIN_POOL}`);
+                }
+                continue;
+            }
 
             // Get count of human users in this guild
             const users = await db.getTopUsers(guildId, 1000, 'balance');
             const humans = users.filter(u => u.id !== botId);
             const humanCount = humans.length;
 
-            if (humanCount <= 0) continue;
+            if (humanCount <= 0) {
+                console.log(`[Timer] Skipping distribution for guild ${guildId}: No human users found.`);
+                continue;
+            }
+
+            console.log(`[Timer] Starting house distribution for guild ${guildId}: Amount ${balance}, Humans ${humanCount}`);
 
             // Distribute balance only within this guild
-            await db.distributeBalanceRandomly(balance, botId, guildId);
+            const distributionResults = await db.distributeBalanceRandomly(balance, botId, guildId);
+
+            if (distributionResults.length === 0) {
+                console.log(`[Timer] Distribution failed for guild ${guildId}: distributeBalanceRandomly returned empty.`);
+                continue;
+            }
 
             // Reset bot balance for this guild
             await db.setGuildSetting(guildId, 'bot_balance', 0);
             await db.setGuildSetting(guildId, 'last_house_distribution_window', windowKey);
-            await db.setGuildSetting(guildId, 'last_house_distribution', Math.floor(Date.now() / 1000).toString()); // Keep legacy for compatibility
+            await db.setGuildSetting(guildId, 'last_house_distribution', nowTimestamp.toString());
 
             // Announce to this guild
             const lang = await getLanguage(null, guildId);
@@ -281,7 +303,7 @@ async function processHouseDistribution(client) {
                 if (guild.systemChannel && guild.systemChannel.permissionsFor(botMember)?.has('SendMessages')) {
                     channel = guild.systemChannel;
                 } else {
-                    channel = textChannels.find(c => c.name.includes('chat') || c.name.includes('general')) || textChannels.first();
+                    channel = textChannels.find(c => c.name.includes('bot') || c.name.includes('chat') || c.name.includes('general')) || textChannels.first();
                 }
             }
 
@@ -291,7 +313,10 @@ async function processHouseDistribution(client) {
                 let guildBlacklist = [];
                 try { guildBlacklist = JSON.parse(guildBlacklistRaw); } catch (e) { guildBlacklist = []; }
 
-                if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) continue;
+                if (config.BLACKLISTED_CHANNELS.includes(channel.id) || guildBlacklist.includes(channel.id)) {
+                    console.log(`[Timer] Distribution channel ${channel.id} is blacklisted for guild ${guildId}.`);
+                    continue;
+                }
 
                 const embed = new EmbedBuilder()
                     .setTitle(t('economy.distribution_title', lang) || "💰 Quỹ Phúc Lợi Cộng Đồng")
@@ -312,7 +337,11 @@ async function processHouseDistribution(client) {
 
                 const row = new ActionRowBuilder().addComponents(checkButton);
 
-                channel.send({ embeds: [embed], components: [row] }).catch(() => { });
+                channel.send({ embeds: [embed], components: [row] }).catch(err => {
+                    console.error(`[Timer] Failed to send distribution message in guild ${guildId}:`, err);
+                });
+            } else {
+                console.log(`[Timer] No suitable channel found for distribution announcement in guild ${guildId}.`);
             }
         } catch (err) {
             console.error(`[Timer] Error in per-guild distribution for ${guild.id}:`, err);
