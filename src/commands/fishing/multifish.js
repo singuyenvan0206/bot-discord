@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const db = require('../../database');
-const { CATCHES, getWeightedPool, calculateFishingLuck } = require('../../utils/fishData');
-const { t } = require('../../utils/i18n');
+const { CATCHES, getWeightedPool, calculateFishingLuck, RODS, BAITS } = require('../../utils/fishData');
+const { t, getLanguage } = require('../../utils/i18n');
 const { calculateReward, getXpMultiplier } = require('../../utils/multiplier');
 const { addXp, XP_AMOUNTS } = require('../../utils/leveling');
 const config = require('../../config');
@@ -10,19 +10,63 @@ const path = require('path');
 module.exports = {
     name: 'multifish',
     aliases: ['mf'],
-    description: 'Perform multiple fishing attempts (Owner Only)',
+    description: 'Thực hiện câu cá nhiều lần (Perform multiple fishing attempts)',
+    cooldown: 3600,
     async execute(message, args) {
-        if (message.author.id !== config.OWNER_ID) {
-            return message.reply('❌ This command is restricted to the bot owner.');
+        const lang = await getLanguage(message.author.id, message.guild.id);
+        const user = await db.getUser(message.author.id, message.guild.id);
+        const inventory = JSON.parse(user.inventory || '{}');
+
+        // 1. Check for Rod (Use Best)
+        let rod = null;
+        for (const r of RODS) {
+            if (inventory[r.id]) {
+                rod = r;
+                break;
+            }
         }
 
-        const count = Math.min(100, Math.max(1, parseInt(args[0]) || 1));
-        const user = await db.getUser(message.author.id, message.guild.id);
-        const lang = 'vi'; // Default to vi for owner summary if not specified, or use getLanguage
+        if (!rod) {
+            return message.reply(t('fish.rod_needed', lang, { prefix: config.PREFIX }));
+        }
+
+        // 2. Check for Bait (Use Best)
+        let bait = null;
+        for (const b of BAITS) {
+            if (inventory[b.id] && inventory[b.id] > 0) {
+                bait = b;
+                break;
+            }
+        }
+
+        if (!bait) {
+            return message.reply(t('fish.bait_needed', lang, { prefix: config.PREFIX }));
+        }
+
+        const maxCount = 20; // public limit
+        const requestedCount = Math.max(1, parseInt(args[0]) || 1);
+        const count = Math.min(maxCount, requestedCount, inventory[bait.id] || 0);
+
+        if (count < 1) {
+            return message.reply(t('common.insufficient_items', lang, { item: t(`items.${bait.id}.name`, lang) }));
+        }
+
+        if (requestedCount > count && inventory[bait.id] < requestedCount) {
+             message.reply({ content: `⚠️ Bạn chỉ có ${inventory[bait.id]} mồi, bot sẽ thực hiện ${inventory[bait.id]} lần câu.`, ephemeral: true }).catch(() => {});
+        }
+
+        // 3. Consume Bait (with Farmer chance)
+        let baitsToConsume = 0;
+        for (let i = 0; i < count; i++) {
+            if (user.job === 'farmer' && Math.random() < 0.10) continue;
+            baitsToConsume++;
+        }
+
+        if (baitsToConsume > 0) {
+            await db.removeItem(message.guild.id, message.author.id, bait.id, baitsToConsume);
+        }
 
         // Setup for fishing
-        const rod = { id: '413', luck: 3.0 }; // Assume Neptune's Rod for max testing
-        const bait = { id: '406', luck: 3.5 }; // Assume Golden Bait for max testing
         const event = await require('../../utils/eventSystem').getCurrentEvent(message.guild.id);
         let buffs = [];
         try { buffs = JSON.parse(user.active_buffs || '[]'); } catch { buffs = []; }
@@ -62,7 +106,6 @@ module.exports = {
         try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
 
         for (let i = 0; i < count; i++) {
-            // XP Gain
             const baseXP = Math.floor(Math.random() * (xpMax - xpMin + 1)) + xpMin;
             totalXP += Math.floor(baseXP * xpMulti);
             let random = Math.random() * totalWeight;
@@ -76,20 +119,17 @@ module.exports = {
                 }
             }
 
-            // Record catch
             if (!catchesSummary[caughtItem.key]) {
                 catchesSummary[caughtItem.key] = { count: 0, emoji: caughtItem.emoji, value: caughtItem.value };
             }
             catchesSummary[caughtItem.key].count++;
 
-            // Update Ledger
             if (!ledger[caughtItem.key]) {
                 ledger[caughtItem.key] = { count: 0, firstCaught: Math.floor(Date.now() / 1000) };
             }
             ledger[caughtItem.key].count++;
             ledger[caughtItem.key].lastCaught = Math.floor(Date.now() / 1000);
 
-            // Handle Buffs
             const mythical = mythicalItems[caughtItem.key];
             if (mythical || caughtItem.buff) {
                 const buffId = caughtItem.buff || mythical.buff;
@@ -106,52 +146,56 @@ module.exports = {
                 }
             }
 
-            // Calculate Reward
             if (caughtItem.value > 0) {
-                const { total } = await calculateReward(caughtItem.value, message.member, 'income');
+                let baseValue = caughtItem.value;
+                if (user.job === 'farmer' && (inventory['409'] || inventory['411'] || inventory['412'] || inventory['413']) && Math.random() < 0.10) {
+                    baseValue *= 1.5;
+                }
+                const { total } = await calculateReward(baseValue, message.member, 'income', { category: 'fish' });
                 totalCoins += total;
 
-                // Highlight Rares (Value > 1M)
                 if (caughtItem.value >= 1000000) {
                     rareCatches.push(`${caughtItem.emoji} **${caughtItem.key}**`);
                 }
             }
         }
 
-        // Save Data
         await db.updateUser(message.guild.id, message.author.id, {
             fish_ledger: JSON.stringify(ledger),
             active_buffs: JSON.stringify(activeBuffs)
         });
         await db.addBalance(message.guild.id, message.author.id, totalCoins);
-        await addXp(message.member, totalXP, message.guild.id, true); // Bypass cooldown for multi-catch
+        await addXp(message.member, totalXP, message.guild.id, true);
 
-        // Build Summary
         const topCatches = Object.entries(catchesSummary)
             .sort((a, b) => b[1].count - a[1].count)
             .slice(0, 10)
-            .map(([key, data]) => `${data.emoji} \`x${data.count}\` **${key}**`)
+            .map(([key, data]) => `${data.emoji} \`x${data.count}\` **${t(`fish.items.${key}`, lang)}**`)
             .join('\n');
 
         const embed = new EmbedBuilder()
-            .setTitle(`🎣 Multi-Fishing Results (x${count})`)
+            .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() })
+            .setTitle(`🎣 Kết quả Câu cá x${count}`)
             .setColor(config.COLORS.SUCCESS)
             .addFields(
-                { name: '💰 Total Earnings', value: `\`${totalCoins.toLocaleString()}\` ${config.EMOJIS.COIN}`, inline: true },
-                { name: '✨ XP Gained', value: `\`+${totalXP.toLocaleString()}\` XP`, inline: true },
-                { name: '✨ Luck Used', value: `\`${totalLuck.toFixed(2)}x\``, inline: true },
-                { name: '📊 Top Catches', value: topCatches || 'None', inline: false }
+                { name: '💰 Tổng thu nhập', value: `\`${totalCoins.toLocaleString()}\` ${config.EMOJIS.COIN}`, inline: true },
+                { name: '✨ XP Nhận được', value: `\`+${totalXP.toLocaleString()}\` XP`, inline: true },
+                { name: '✨ May mắn', value: `\`${totalLuck.toFixed(2)}x\``, inline: true },
+                { name: '📊 Chiến lợi phẩm chính', value: topCatches || 'None', inline: false }
             );
 
         if (rareCatches.length > 0) {
-            embed.addFields({ name: '🌟 Rare Catches', value: Array.from(new Set(rareCatches)).join(', '), inline: false });
+            embed.addFields({ name: '🌟 Hàng hiếm', value: Array.from(new Set(rareCatches)).join(', '), inline: false });
         }
 
         if (buffsCaughtCount > 0) {
-            embed.addFields({ name: '✨ Buffs Granted', value: `\`x${buffsCaughtCount}\` special status effects stacked!`, inline: false });
+            embed.addFields({ name: '✨ Hiệu ứng nhận được', value: `\`x${buffsCaughtCount}\` hiệu ứng đặc biệt đã được cộng dồn!`, inline: false });
         }
 
-        embed.setFooter({ text: `Ledger updated for ${message.author.username}` });
+        const savedBaits = count - baitsToConsume;
+        if (savedBaits > 0) {
+            embed.setFooter({ text: `Tiết kiệm được ${savedBaits} mồi nhờ kỹ năng Nông dân!` });
+        }
 
         return message.reply({ embeds: [embed] });
     }

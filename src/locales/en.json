@@ -41,6 +41,7 @@
         "item_broken": "\n💥 **Item Broken:** Your {{item}} was broken or confiscated!",
         "no_permission": "❌ You do not have permission to perform this action!",
         "user_not_found": "User not found.",
+        "insufficient_items": "❌ You don't have enough **{{item}}**!",
         "choices": "Choices",
         "tax": "Tax",
         "profit": "Net Profit",

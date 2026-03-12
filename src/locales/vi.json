@@ -40,6 +40,7 @@
         "item_broken": "\n💥 **Vật phẩm bị hỏng:** {{item}} của bạn đã bị hỏng hoặc bị cảnh sát tịch thu!",
         "no_permission": "❌ Bạn không có quyền thực hiện hành động này!",
         "user_not_found": "Không tìm thấy người dùng.",
+        "insufficient_items": "❌ Bạn không có đủ **{{item}}**!",
         "choices": "Lựa chọn",
         "tax": "Thuế",
         "cap_reached": " (Đã đạt giới hạn tối đa!)",

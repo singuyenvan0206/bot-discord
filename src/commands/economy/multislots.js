@@ -4,33 +4,30 @@ const config = require('../../config');
 const { calculateReward } = require('../../utils/multiplier');
 const { parseAmount, addHouseProfit, getMaxBet } = require('../../utils/economy');
 const { XP_AMOUNTS, addXp } = require('../../utils/leveling');
+const { t, getLanguage } = require('../../utils/i18n');
 
 module.exports = {
     name: 'multislots',
     aliases: ['mslots', 'msl'],
-    description: 'Quay hũ nhiều lần (Multi-Slot Machine)',
-    cooldown: 10,
+    description: 'Quay hũ nhiều lần liên tiếp (Multi-Slot Machine)',
+    cooldown: 3600,
     async execute(message, args) {
-        if (message.author.id !== config.OWNER_ID) {
-            return message.reply('❌ This command is restricted to the bot owner.');
-        }
-
+        const lang = await getLanguage(message.author.id, message.guild.id);
         const user = await db.getUser(message.author.id, message.guild.id);
 
-        // Limits: Max 100
-        const maxCount = 100;
+        const maxCount = 50;
         const count = Math.min(maxCount, Math.max(1, parseInt(args[0]) || 1));
 
         const maxBetLimit = await getMaxBet(message.author.id);
         const betPerSpin = args[1] ? parseAmount(args[1], user.balance, maxBetLimit) : 50;
 
-        if (isNaN(betPerSpin) || betPerSpin <= 0) return message.reply('common.invalid_amount');
-        if (betPerSpin < 10) return message.reply('gamble.min_bet', { min: '10' });
-        if (betPerSpin > maxBetLimit) return message.reply('gamble.max_bet', { max: maxBetLimit.toLocaleString() });
+        if (isNaN(betPerSpin) || betPerSpin <= 0) return message.reply(t('common.invalid_amount', lang));
+        if (betPerSpin < 10) return message.reply(t('gamble.min_bet', lang, { min: '10' }));
+        if (betPerSpin > maxBetLimit) return message.reply(t('gamble.max_bet', lang, { max: maxBetLimit.toLocaleString() }));
 
         const totalBet = count * betPerSpin;
         if (user.balance < totalBet) {
-            return message.reply('common.insufficient_funds', { balance: user.balance.toLocaleString() });
+            return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
         }
 
         // Upfront Deduction
@@ -60,7 +57,6 @@ module.exports = {
         let totalXp = 0;
 
         for (let i = 0; i < count; i++) {
-            // Roll symbols
             const r2 = [weightedRandom(), weightedRandom(), weightedRandom()];
 
             const allMatch = r2[0] === r2[1] && r2[1] === r2[2];
@@ -111,44 +107,41 @@ module.exports = {
             totalXp += actionXp;
         }
 
-        // Save Results
         if (totalWon > 0) {
             await db.addBalance(message.guild.id, user.id, totalWon);
         }
 
-        // Tracking house profit based on net loss
         if (totalWon < totalBet) {
-            await addHouseProfit(message, totalBet - totalWon);
+            await addHouseProfit(message, totalBet - totalWon).catch(() => {});
         }
 
         await addXp(message.member, totalXp, message.guild.id);
 
-        // Build Summary
         const netProfit = totalWon - totalBet;
         const winRate = ((stats.jackpots + stats.smallWins) / count * 100).toFixed(1);
 
         const embed = new EmbedBuilder()
-            .setTitle(`🎰 Multi-Slots Results (x${count})`)
+            .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() })
+            .setTitle(`🎰 Kết quả Quay hũ x${count}`)
             .setColor(netProfit >= 0 ? config.COLORS.SUCCESS : config.COLORS.ERROR)
             .setDescription(
-                `**User:** <@${message.author.id}>\n` +
-                `**Bet per spin:** \`${betPerSpin.toLocaleString()}\` ${config.EMOJIS.COIN}\n` +
-                `**Total Bet:** \`${totalBet.toLocaleString()}\` ${config.EMOJIS.COIN}\n` +
-                `**Total Won:** \`${totalWon.toLocaleString()}\` ${config.EMOJIS.COIN}\n` +
-                `**Net Profit:** \`${netProfit.toLocaleString()}\` ${config.EMOJIS.COIN}\n\n` +
-                `📊 **Stats:**\n` +
-                `└ Jackpots: \`x${stats.jackpots}\`\n` +
-                `└ Small Wins: \`x${stats.smallWins}\`\n` +
-                `└ Losses: \`x${stats.losses}\` \n` +
-                `└ Win Rate: \`${winRate}%\``
+                `**Mức cược:** \`${betPerSpin.toLocaleString()}\` ${config.EMOJIS.COIN}\n` +
+                `**Tổng cược:** \`${totalBet.toLocaleString()}\` ${config.EMOJIS.COIN}\n` +
+                `**Tổng thắng:** \`${totalWon.toLocaleString()}\` ${config.EMOJIS.COIN}\n` +
+                `**Lợi nhuận:** \`${netProfit.toLocaleString()}\` ${config.EMOJIS.COIN}\n\n` +
+                `📊 **Thống kê:**\n` +
+                `└ Jackpots: \`x${stats.jackpots}\` 🎉\n` +
+                `└ Thắng nhỏ: \`x${stats.smallWins}\` ✨\n` +
+                `└ Thất bại: \`x${stats.losses}\` 💀\n` +
+                `└ Tỉ lệ thắng: \`${winRate}%\``
             )
             .addFields(
-                { name: '🌟 Best Hit', value: bestWin.mult > 0 ? `${bestWin.symbol} **x${bestWin.mult}** (\`${bestWin.amount.toLocaleString()}\` ${config.EMOJIS.COIN})` : 'None', inline: true },
-                { name: '✨ XP Earned', value: `\`+${totalXp.toLocaleString()}\` XP`, inline: true }
+                { name: '🌟 Cú hích lớn nhất', value: bestWin.mult > 0 ? `${bestWin.symbol} **x${bestWin.mult}** (\`${bestWin.amount.toLocaleString()}\` ${config.EMOJIS.COIN})` : 'None', inline: true },
+                { name: '✨ XP Nhận được', value: `\`+${totalXp.toLocaleString()}\` XP`, inline: true }
             );
 
         if (totalBonus > 0) {
-            embed.setFooter({ text: `Included +${totalBonus.toLocaleString()} bonus coins from multipliers.` });
+            embed.setFooter({ text: `Đã bao gồm +${totalBonus.toLocaleString()} xu thưởng từ các vật phẩm hỗ trợ.` });
         }
 
         return message.reply({ embeds: [embed] });
