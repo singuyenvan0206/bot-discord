@@ -3,6 +3,7 @@ const { getGuildSetting, setGuildSetting } = require('./guilds');
 
 async function setBotId(id) {
     global.botId = String(id);
+    console.log(`[Database] Bot ID registered: ${global.botId}`);
 }
 
 async function getUser(userId, guildId = null) {

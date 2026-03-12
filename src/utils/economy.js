@@ -84,8 +84,16 @@ async function addHouseProfit(context, amount) {
 
     // Update balance (only the retained portion)
     if (amountToFund > 0) {
-        await db.addBalance(guildId, botId, amountToFund);
-        console.log(`[Economy] Added house profit for guild ${guildId}: Total ${amount}, Fund ${amountToFund} (retained ${retentionRate * 100}%)`);
+        try {
+            const { getGuildSetting, setGuildSetting } = require('../database/guilds');
+            const currentBalance = await getGuildSetting(guildId, 'bot_balance', 0);
+            await setGuildSetting(guildId, 'bot_balance', Number(currentBalance) + amountToFund);
+            console.log(`[Economy] Added house profit for guild ${guildId}: Total ${amount}, Fund ${amountToFund} (retained ${retentionRate * 100}%)`);
+        } catch (dbErr) {
+            console.error(`[Economy] Failed to add house profit to guild settings for ${guildId}:`, dbErr);
+            // Fallback to generic addBalance which might use users table if botId not set
+            await db.addBalance(guildId, botId, amountToFund);
+        }
     } else if (amount > 0) {
         console.log(`[Economy] House profit for guild ${guildId}: Total ${amount}, Fund 0 (retained 0%)`);
     }
