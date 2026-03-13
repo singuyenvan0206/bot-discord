@@ -216,6 +216,11 @@
         "usage_detailed": "⚖️ **Bail Fee Breakdown for {{user}}:**\n• Time penalty: **{{time_cost}}**\n• Bounty penalty (20%): **{{bounty_cost}}**\n• **Total: {{total}} coins**\n\nRemaining time: **{{time}}**\nUse `{{prefix}}bail @{{user}} confirm` to confirm payment.",
         "self_bail_denied": "❌ **Self-Bail Prohibited!** You cannot bail yourself out. You need a friend to pay for your release!"
     },
+    "pardon": {
+        "title": "Pardon Decree",
+        "success_desc": "🕊️ Police Chief **{{chief}}** has issued a pardon for **{{target}}**! All bounties totaling **{{amount}}** coins have been cleared.",
+        "no_bounty": "❌ User **{{user}}** does not have an active bounty to pardon."
+    },
     "events": {
         "current_event_title": "🌐 Current Global Event",
         "no_event": "No event active currently.",
