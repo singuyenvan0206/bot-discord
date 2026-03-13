@@ -353,9 +353,14 @@ async function processHouseDistribution(client) {
 
             const row = new ActionRowBuilder().addComponents(claimButton);
 
-            const pingMsg = startRoleId 
-                ? t('economy.dist_ping_msg', lang, { role: `<@&${startRoleId}>` }) 
-                : null;
+            let pingMsg = null;
+            if (startRoleId) {
+                pingMsg = t('economy.dist_ping_msg', lang, { role: `<@&${startRoleId}>` });
+                // Robust fallback if translation is missing or returns the key itself
+                if (!pingMsg || pingMsg === 'economy.dist_ping_msg') {
+                    pingMsg = `🔔 <@&${startRoleId}> ơi! Quỹ Phúc Lợi Cộng Đồng đã mở, hãy nhanh tay nhận thưởng nào! 💰`;
+                }
+            }
 
             const sentMessage = await channel.send({ content: pingMsg, embeds: [embed], components: [row] }).catch(err => {
                 console.error(`[Timer] Failed to send distribution message in guild ${guildId}:`, err);
