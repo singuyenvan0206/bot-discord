@@ -211,6 +211,11 @@
         "usage_detailed": "⚖️ **Chi tiết phí bảo lãnh cho {{user}}:**\n• Phí thời gian: **{{time_cost}}**\n• Phí tiền thưởng (20%): **{{bounty_cost}}**\n• **Tổng cộng: {{total}} coins**\n\nThời gian còn lại: **{{time}}**\nDùng `{{prefix}}bail @{{user}} confirm` để xác nhận nộp phạt.",
         "self_bail_denied": "❌ **Không thể tự bảo lãnh!** Bạn không thể tự dùng tiền của mình để ra tù. Bạn cần một người khác nộp tiền bảo lãnh cho bạn!"
     },
+    "pardon": {
+        "title": "Lệnh Ân Xá",
+        "success_desc": "🕊️ Cảnh sát trưởng **{{chief}}** đã ban lệnh ân xá cho **{{target}}**! Toàn bộ tiền thưởng truy nã (**{{amount}}** coins) đã được xóa bỏ.",
+        "no_bounty": "❌ Người dùng **{{user}}** hiện không có lệnh truy nã nào để ân xá."
+    },
     "rps": {
         "title": "✂️  Kéo Búa Bao",
         "choose": "Hãy chọn vũ khí của bạn!",
