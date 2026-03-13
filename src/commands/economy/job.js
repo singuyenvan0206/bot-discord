@@ -56,6 +56,18 @@ module.exports = {
             if (!job) return message.reply(t('job.set_error_invalid', lang));
 
             if (user.job === job.id) return message.reply(t('job.already_has', lang));
+            
+            // Job Change Requirement: Needs "Career Change Voucher" (503) if already has a job.
+            if (user.job && user.job !== 'none') {
+                let inv = {};
+                try { inv = JSON.parse(user.inventory || '{}'); } catch { inv = {}; }
+                const voucherId = '503';
+                if (!inv[voucherId] || inv[voucherId] <= 0) {
+                    return message.reply(t('common.insufficient_items', lang, { item: t('items.503.name', lang) }));
+                }
+                // Consume the voucher
+                await db.removeItem(message.guild.id, message.author.id, voucherId, 1);
+            }
 
             // Police Chief restriction: Only Bot Owner or Server Owner
             if (job.id === 'police_chief') {

@@ -330,14 +330,19 @@ async function isOwner(userId) {
 
 async function getRandomUserByJob(jobId, excludeIds = []) {
     try {
-        let query = 'SELECT id FROM users WHERE job = $1';
-        const params = [jobId];
+        const jobs = Array.isArray(jobId) ? jobId : [jobId];
+        let i = 1;
+        const jobPlaceholders = jobs.map(() => `$${i++}`).join(', ');
+        
+        let query = `SELECT id FROM users WHERE job IN (${jobPlaceholders})`;
+        const params = [...jobs];
+
         if (excludeIds.length > 0) {
-            let i = 2;
-            const placeholders = excludeIds.map(() => `$${i++}`).join(', ');
-            query += ` AND id NOT IN (${placeholders})`;
+            const excludePlaceholders = excludeIds.map(() => `$${i++}`).join(', ');
+            query += ` AND id NOT IN (${excludePlaceholders})`;
             params.push(...excludeIds);
         }
+        
         const { rows } = await pool.query(query, params);
         if (!rows || rows.length === 0) return null;
         return rows[Math.floor(Math.random() * rows.length)].id;

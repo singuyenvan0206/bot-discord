@@ -16,7 +16,7 @@ function handleWorkJobInteractions(user, lang, rewardData) {
     }
 
     // Police Interaction: Overtime (40% chance +2500 flat)
-    if (user.job === 'police' && Math.random() < 0.40) {
+    if ((user.job === 'police' || user.job === 'police_chief') && Math.random() < 0.40) {
         const extra = 2500;
         rewardData.total += extra;
         rewardData.bonus += extra;
@@ -97,7 +97,7 @@ function handleSearchJobInteractions(user, lang, rewardData) {
     }
 
     // Police Interaction: Crime Scene Investigation (25% chance +2000 flat)
-    if (user.job === 'police' && Math.random() < 0.25) {
+    if ((user.job === 'police' || user.job === 'police_chief') && Math.random() < 0.25) {
         const extra = 2000;
         rewardData.total += extra;
         rewardData.bonus += extra;

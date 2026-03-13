@@ -17,7 +17,7 @@ const getJobMilestoneBonus = (user, type, options = {}) => {
     }
 
     if (type === 'income') {
-        if (job === 'police' && (category === 'work' || category === 'search')) return points * 0.1;
+        if ((job === 'police' || job === 'police_chief') && (category === 'work' || category === 'search')) return points * 0.1;
         if (job === 'criminal' && (category === 'crime' || category === 'rob')) return points * 0.1;
         if (job === 'hacker' && category === 'minigame') return points * 0.25; // Buffed from 0.1
         if (job === 'trader' && category === 'business') return points * 0.20; // Buffed from 0.1

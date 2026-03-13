@@ -51,8 +51,8 @@ module.exports = {
         const isSuccess = Math.random() < successChance;
 
         if (isSuccess) {
-            // Reward: 100% if police, 50% if others
-            const rewardPercent = user.job === 'police' ? 1.0 : 0.5;
+            // Reward: 100% if police/police_chief, 50% if others
+            const rewardPercent = (user.job === 'police' || user.job === 'police_chief') ? 1.0 : 0.5;
             const reward = Math.floor(bounty * rewardPercent);
 
             await db.addBalance(message.guild.id, message.author.id, reward);

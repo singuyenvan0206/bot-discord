@@ -38,7 +38,7 @@ module.exports = {
         await db.updateUser(message.guild.id, message.author.id, { last_rob: now });
 
         const isCriminal = user.job === 'criminal';
-        const isVictimPolice = victim.job === 'police';
+        const isVictimPolice = victim.job === 'police' || victim.job === 'police_chief';
         const hasVictimRobShield = await isProtectedFromRob(message.guild.id, target.id);
 
         let baseSuccessChance = config.ECONOMY.ROB_SUCCESS_CHANCE;

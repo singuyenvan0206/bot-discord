@@ -92,7 +92,7 @@ module.exports = {
             // Sync memory cooldown for jail time
             if (timestamps) timestamps.set(message.author.id, Date.now());
 
-            const randomPoliceId = await db.getRandomUserByJob('police', [message.client.user.id, message.author.id]);
+            const randomPoliceId = await db.getRandomUserByJob(['police', 'police_chief'], [message.client.user.id, message.author.id]);
             const policeUser = randomPoliceId ? message.guild?.members?.cache.get(randomPoliceId) : null;
             if (randomPoliceId) {
                 await db.addBalance(message.guild.id, randomPoliceId, fine);

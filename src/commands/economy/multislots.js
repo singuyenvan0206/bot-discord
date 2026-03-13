@@ -11,6 +11,7 @@ module.exports = {
     aliases: ['mslots', 'msl'],
     description: 'Quay hũ nhiều lần liên tiếp (Multi-Slot Machine)',
     cooldown: 1800,
+    manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
         const user = await db.getUser(message.author.id, message.guild.id);
@@ -44,6 +45,10 @@ module.exports = {
             // Let's just return the insufficient funds error as per standard behavior.
             return message.reply(t('common.insufficient_funds', lang, { balance: user.balance.toLocaleString() }));
         }
+
+        // Sync memory cooldown after successful balance check
+        const timestamps = message.client.cooldowns.get('multislots');
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         // Upfront Deduction
         await db.removeBalance(message.guild.id, user.id, totalBet);
