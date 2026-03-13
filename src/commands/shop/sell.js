@@ -78,11 +78,14 @@ module.exports = {
             }
         }
 
-        const item = SHOP_ITEMS.find(i =>
-            String(i.id) === itemQuery ||
-            (i.numeric_id && String(i.numeric_id) === itemQuery) ||
-            i.name.toLowerCase().includes(itemQuery)
-        );
+        const item = SHOP_ITEMS.find(i => {
+            const localizedName = t(`items.${i.id}.name`, lang).toLowerCase();
+            return String(i.id) === itemQuery ||
+                (i.numeric_id && String(i.numeric_id) === itemQuery) ||
+                i.name.toLowerCase().includes(itemQuery) ||
+                localizedName.includes(itemQuery);
+        });
+
 
         if (!item) return message.reply(t('sell.not_found', lang, { prefix: config.PREFIX }));
 

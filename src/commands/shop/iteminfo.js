@@ -17,11 +17,14 @@ module.exports = {
         }
 
         // Try to find by numerical ID, then by partial name (internal name)
-        const item = SHOP_ITEMS.find(i =>
-            String(i.id) === query ||
-            (i.numeric_id && String(i.numeric_id) === query) ||
-            i.name.toLowerCase().includes(query)
-        );
+        const item = SHOP_ITEMS.find(i => {
+            const localizedName = t(`items.${i.id}.name`, lang).toLowerCase();
+            return String(i.id) === query ||
+                (i.numeric_id && String(i.numeric_id) === query) ||
+                i.name.toLowerCase().includes(query) ||
+                localizedName.includes(query);
+        });
+
 
         if (!item) {
             return message.reply(t('iteminfo.not_found', lang, { prefix: config.PREFIX }));
