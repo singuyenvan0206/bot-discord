@@ -46,8 +46,10 @@ async function getUser(userId, guildId = null) {
                     last_daily: 0, last_work: 0, last_rob: 0, last_crime: 0, last_freelance: 0, last_beg: 0, last_search: 0, last_dist_amount: 0,
                     job: null, inventory: '{}', active_buffs: '[]', purchased_roles: '[]', language: null,
                     banned: false,
-                    fish_ledger: '{}', bounty: 0, wanted_level: 0, skill_data: '{}', aquarium_data: '{}'
+                    fish_ledger: '{}', bounty: 0, wanted_level: 0, skill_data: '{}', aquarium_data: '{}',
+                    daily_streak: 0
                 };
+
             }
         }
 

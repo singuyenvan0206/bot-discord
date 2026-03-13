@@ -93,7 +93,13 @@
         "dist_status": "📊 Status: **{{remaining}}** / **{{total}}** {{emoji}} remaining",
         "dist_ping_msg": "🔔 {{role}}! The Community Fund is open, come and claim your reward! 💰",
         "dist_ended_title": "🛑 Community Fund Closed",
-        "dist_ended_desc": "This distribution round has ended. A total of **{{claimed}}** {{emoji}} was distributed to **{{count}}** lucky users! ❤️"
+        "dist_ended_desc": "This distribution round has ended. A total of **{{claimed}}** {{emoji}} was distributed to **{{count}}** lucky users! ❤️",
+        "daily": {
+            "success": "✅ You received your daily reward: **{{amount}}** {{emoji}}!"
+        },
+        "work": {
+            "success": "✅ You worked as a **{{job}}** and earned **{{amount}}** {{emoji}}!"
+        }
     },
     "role": {
         "no_role_configured": "⚠️ The required role has not been configured for this server. Please contact an Admin to use `$setstartrole`.",

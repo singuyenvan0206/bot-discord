@@ -61,7 +61,8 @@ async function initSchema() {
             wanted_level INTEGER DEFAULT 0,
             wanted_expires_at BIGINT DEFAULT 0,
             bounty_placers TEXT DEFAULT '[]',
-            spam_violations INTEGER DEFAULT 0
+            spam_violations INTEGER DEFAULT 0,
+            daily_streak INTEGER NOT NULL DEFAULT 0
         )
     `);
 
@@ -173,6 +174,7 @@ async function initSchema() {
     await safeAddColumn('users', 'last_market', 'BIGINT DEFAULT 0');
     await safeAddColumn('users', 'last_harvest', 'BIGINT DEFAULT 0');
     await safeAddColumn('users', 'last_hack', 'BIGINT DEFAULT 0');
+    await safeAddColumn('users', 'daily_streak', 'INTEGER DEFAULT 0');
 
     // User Guilds Migrations (Per-server data)
     await safeAddColumn('user_guilds', 'balance', 'BIGINT NOT NULL DEFAULT 0');

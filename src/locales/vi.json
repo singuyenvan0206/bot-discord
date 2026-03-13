@@ -94,7 +94,13 @@
         "dist_status": "📊 Tình trạng: Còn lại **{{remaining}}** / **{{total}}** {{emoji}}",
         "dist_ping_msg": "🔔 {{role}} ơi! Quỹ Phúc Lợi Cộng Đồng đã mở, hãy nhanh tay nhận thưởng nào! 💰",
         "dist_ended_title": "🛑 Quỹ Phúc Lợi Đã Đóng",
-        "dist_ended_desc": "Đợt chia thưởng đã kết thúc. Tổng cộng đã phát **{{claimed}}** {{emoji}} cho **{{count}}** người may mắn! ❤️"
+        "dist_ended_desc": "Đợt chia thưởng đã kết thúc. Tổng cộng đã phát **{{claimed}}** {{emoji}} cho **{{count}}** người may mắn! ❤️",
+        "daily": {
+            "success": "✅ Bạn đã nhận được quà hàng ngày: **{{amount}}** {{emoji}}!"
+        },
+        "work": {
+            "success": "✅ Bạn đã làm việc như một **{{job}}** và kiếm được **{{amount}}** {{emoji}}!"
+        }
     },
     "role": {
         "no_role_configured": "⚠️ Bot chưa được thiết lập role bắt buộc trên server này. Vui lòng liên hệ Admin để dùng `$setstartrole`.",
