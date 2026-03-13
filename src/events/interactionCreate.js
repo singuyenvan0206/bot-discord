@@ -380,7 +380,7 @@ module.exports = {
 
             if (timestamps.has(interaction.user.id)) {
                 const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
-                if (now < expirationTime && !await db.isOwner(interaction.user.id)) {
+                if (now < expirationTime) {
                     const timeLeft = (expirationTime - now) / 1000;
                     return interaction.reply({
                         content: t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }),

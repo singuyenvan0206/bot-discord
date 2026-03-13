@@ -10,7 +10,7 @@ module.exports = {
     name: 'multislots',
     aliases: ['mslots', 'msl'],
     description: 'Quay hũ nhiều lần liên tiếp (Multi-Slot Machine)',
-    cooldown: 3600,
+    cooldown: 1800,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
         const user = await db.getUser(message.author.id, message.guild.id);

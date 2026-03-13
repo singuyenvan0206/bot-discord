@@ -188,7 +188,7 @@ module.exports = {
             if (timestamps.has(message.author.id)) {
                 const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
-                if (nowMillis < expirationTime && !isBotOwner) {
+                if (nowMillis < expirationTime) {
                     const timeLeft = (expirationTime - now) / 1000;
                     return message.reply(t('common.cooldown', lang, {
                         command: command.name,

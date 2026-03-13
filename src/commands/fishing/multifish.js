@@ -11,7 +11,7 @@ module.exports = {
     name: 'multifish',
     aliases: ['mf'],
     description: 'Thực hiện câu cá nhiều lần (Perform multiple fishing attempts)',
-    cooldown: 3600,
+    cooldown: 1800,
     manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
