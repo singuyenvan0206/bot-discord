@@ -114,11 +114,10 @@ module.exports = {
                 } else {
                     totalWon += payout;
                 }
-                const winXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_WIN.max - XP_AMOUNTS.GAME_WIN.min + 1)) + XP_AMOUNTS.GAME_WIN.min;
+                const winXp = Math.floor(Math.random() * (10 - 5 + 1)) + 5; // 10% of XP_AMOUNTS.GAME_WIN
                 totalXp += winXp;
             }
-
-            const actionXp = Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min;
+            const actionXp = (Math.random() * (1.5 - 0.5)) + 0.5; // 10% of XP_AMOUNTS.GAME_ACTION
             totalXp += actionXp;
         }
 
@@ -130,7 +129,7 @@ module.exports = {
             // Removed: await addHouseProfit(message, totalBet - totalWon).catch(() => {}); // Excluded from bot fund
         }
 
-        const xpResult = await addXp(message.member, totalXp, message.guild.id);
+        const xpResult = await addXp(message.member, Math.floor(totalXp), message.guild.id);
         const finalDisplayedXP = xpResult.addedXp || totalXp;
 
         const netProfit = totalWon - totalBet;

@@ -117,7 +117,7 @@ module.exports = {
         try { ledger = JSON.parse(user.fish_ledger || '{}'); } catch { ledger = {}; }
 
         for (let i = 0; i < count; i++) {
-            const baseXP = Math.floor(Math.random() * (xpMax - xpMin + 1)) + xpMin;
+            const baseXP = (Math.random() * (5 - 2.5)) + 2.5; // 10% of original (25-50)
             totalXP += baseXP;
             let random = Math.random() * totalWeight;
             let caughtItem = pool[0];
@@ -176,7 +176,7 @@ module.exports = {
             active_buffs: JSON.stringify(activeBuffs)
         });
         await db.addBalance(message.guild.id, message.author.id, totalCoins);
-        const xpResult = await addXp(message.member, totalXP, message.guild.id, true);
+        const xpResult = await addXp(message.member, Math.floor(totalXP), message.guild.id, true);
         const finalDisplayedXP = xpResult.addedXp || totalXP;
 
         const topCatches = Object.entries(catchesSummary)
