@@ -16,7 +16,9 @@ module.exports = {
         const user = await db.getUser(message.author.id, message.guild.id);
         const now = Math.floor(Date.now() / 1000);
 
-        const target = message.mentions.users.first();
+        const target = message.mentions.users.first()
+            || (args[0] ? await message.client.users.fetch(args[0]).catch(() => null) : null);
+
         if (!target || target.id === message.author.id || target.bot) {
             return message.reply(t('rob.invalid_user', lang));
         }

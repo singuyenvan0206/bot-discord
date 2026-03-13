@@ -12,6 +12,7 @@ module.exports = {
     aliases: ['mf'],
     description: 'Thực hiện câu cá nhiều lần (Perform multiple fishing attempts)',
     cooldown: 3600,
+    manualCooldown: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild.id);
         const user = await db.getUser(message.author.id, message.guild.id);
@@ -61,6 +62,10 @@ module.exports = {
         if (requestedCount > count && inventory[bait.id] < requestedCount) {
              message.reply({ content: `⚠️ Bạn chỉ có ${inventory[bait.id]} mồi, bot sẽ thực hiện ${inventory[bait.id]} lần câu.`, ephemeral: true }).catch(() => {});
         }
+
+        // Set cooldown manually after checks passed
+        const timestamps = message.client.cooldowns.get('multifish');
+        if (timestamps) timestamps.set(message.author.id, Date.now());
 
         // 3. Consume Bait (with Farmer chance)
         let baitsToConsume = 0;
