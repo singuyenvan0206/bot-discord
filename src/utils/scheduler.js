@@ -173,7 +173,7 @@ async function processWantedDecay(client) {
 
         // Only update if something changed
         if (newBounty !== Number(u.bounty) || newStars !== Number(u.wanted_level)) {
-            const placersQuery = newBounty === 0 ? ', bounty_placers = "[]", wanted_expires_at = 0' : '';
+            const placersQuery = newBounty === 0 ? ", bounty_placers = '[]', wanted_expires_at = 0" : '';
             await db.execute(`UPDATE users SET bounty = ?, wanted_level = ?${placersQuery} WHERE id = ?`, [newBounty, newStars, u.id]);
         }
     }
