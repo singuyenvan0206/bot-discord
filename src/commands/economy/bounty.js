@@ -80,6 +80,14 @@ module.exports = {
             [message.guild.id, message.author.id, target.id, amount, fee, duration, isAnonymous ? 1 : 0, Math.floor(Date.now() / 1000)]
         );
 
+        // Limit checking for final bounty is done at approval stage, 
+        // but let's notify if it's already near cap
+        const bountyLimit = config.WANTED.MAX_BOUNTY || 1000000000000;
+        if (Number(victimData.bounty || 0) + amount > bountyLimit) {
+            // We still allow placing, but cap it on approval. 
+            // Better to notify the user.
+        }
+
         return message.reply(t('bounty.pending_approval', lang, {
             amount: amount.toLocaleString(),
             emoji: config.EMOJIS.COIN

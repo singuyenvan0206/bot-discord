@@ -80,10 +80,13 @@ module.exports = {
             const threshold = config.WANTED.BOUNTY_THRESHOLDS.find(t => fine >= t.min);
             const newStars = threshold ? threshold.stars : 1;
 
+            const currentBounty = Number(user.bounty || 0);
+            const newBounty = Math.min(config.WANTED.MAX_BOUNTY || 1000000000000, currentBounty + fine);
+
             await db.updateUser(message.guild.id, message.author.id, {
                 prison_until: now + jailTime,
                 last_crime: now,
-                bounty: fine,
+                bounty: newBounty,
                 wanted_level: newStars,
                 wanted_expires_at: now + jailTime,
                 bounty_placers: '[]'

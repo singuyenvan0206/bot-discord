@@ -50,7 +50,8 @@ module.exports = {
             if (subCommand === 'approve') {
                 const targetData = await db.getUser(request.target_id, message.guild.id);
                 const currentBounty = Number(targetData.bounty || 0);
-                const newBounty = currentBounty + request.amount;
+                const bountyLimit = config.WANTED.MAX_BOUNTY || 1000000000000;
+                const newBounty = Math.min(bountyLimit, currentBounty + request.amount);
 
                 // Calculate stars
                 let newStars = 1;

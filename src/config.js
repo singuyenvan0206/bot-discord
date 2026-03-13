@@ -134,7 +134,8 @@ module.exports = {
         ],
         DECAY_RATE: 0.1, // 10% bounty decay per interval
         DECAY_INTERVAL: 3600, // 1 hour
-        MIN_REWARD: 50000 // Minimum coins to place a manual bounty
+        MIN_REWARD: 50000, // Minimum coins to place a manual bounty
+        MAX_BOUNTY: 1000000000000 // 1 Trillion cap to prevent extreme inflation
     },
     ANTI_SPAM: {
         LIMIT: 7,          // Number of commands

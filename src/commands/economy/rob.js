@@ -76,9 +76,13 @@ module.exports = {
             const hadExpired = now > (user.wanted_expires_at || 0);
             const placersQuery = hadExpired ? ", bounty_placers = '[]'" : '';
 
+            const currentBounty = Number(user.bounty || 0);
+            const bountyLimit = config.WANTED.MAX_BOUNTY || 1000000000000;
+            const newBounty = Math.min(bountyLimit, currentBounty + bountyGain);
+
             await db.execute(
-                `UPDATE users SET bounty = bounty + ?, wanted_level = ?, wanted_expires_at = ?${placersQuery} WHERE id = ?`,
-                [bountyGain, newStars, expiresAt, message.author.id]
+                `UPDATE users SET bounty = ?, wanted_level = ?, wanted_expires_at = ?${placersQuery} WHERE id = ?`,
+                [newBounty, newStars, expiresAt, message.author.id]
             );
             msg += `\n${t('rob.wanted_alert', lang, { amount: bountyGain.toLocaleString() })}`;
 
@@ -99,10 +103,14 @@ module.exports = {
             const threshold = config.WANTED.BOUNTY_THRESHOLDS.find(t => penalty >= t.min);
             const newStars = threshold ? threshold.stars : 1;
 
+            const currentBounty = Number(user.bounty || 0);
+            const bountyLimit = config.WANTED.MAX_BOUNTY || 1000000000000;
+            const newBounty = Math.min(bountyLimit, currentBounty + penalty);
+
             await db.updateUser(message.guild.id, message.author.id, {
                 prison_until: now + jailTime,
                 last_rob: now,
-                bounty: penalty,
+                bounty: newBounty,
                 wanted_level: newStars,
                 wanted_expires_at: now + jailTime,
                 bounty_placers: '[]'
