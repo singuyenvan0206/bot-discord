@@ -32,7 +32,10 @@ const client = new Client({
         Partials.User,
         Partials.Channel,
     ],
-    allowedMentions: { repliedUser: false },
+    allowedMentions: { 
+        parse: [], // Disable all pings (users, roles, everyone) by default
+        repliedUser: false 
+    },
 });
 
 // ─── Collections ──────────────────────────────────────────────────

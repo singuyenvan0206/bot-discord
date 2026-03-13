@@ -362,7 +362,12 @@ async function processHouseDistribution(client) {
                 }
             }
 
-            const sentMessage = await channel.send({ content: pingMsg, embeds: [embed], components: [row] }).catch(err => {
+            const sentMessage = await channel.send({ 
+                content: pingMsg, 
+                embeds: [embed], 
+                components: [row],
+                allowedMentions: { roles: startRoleId ? [startRoleId] : [] }
+            }).catch(err => {
                 console.error(`[Timer] Failed to send distribution message in guild ${guildId}:`, err);
                 return null;
             });
