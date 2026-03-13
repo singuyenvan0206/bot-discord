@@ -160,7 +160,16 @@ async function initSchema() {
 
     // ─── Migrations (Safe column additions) ───
     const safeAddColumn = async (table, column, definition) => {
-        try { await pool.query(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`); } catch { }
+        try {
+            await pool.query(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+            console.log(`[Database] Migration: Added column ${column} to ${table}`);
+        } catch (error) {
+            if (error.code === '42701') {
+                // Column already exists, ignore
+            } else {
+                console.error(`[Database] Migration Error (${table}.${column}):`, error.message);
+            }
+        }
     };
 
     await safeAddColumn('users', 'prison_until', 'BIGINT DEFAULT 0');
