@@ -1,8 +1,13 @@
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, entersState, StreamType } = require('@discordjs/voice');
 const googleTTS = require('google-tts-api');
+const https = require('https');
+const ffmpeg = require('ffmpeg-static');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
 const path = require('path');
+
+// Set FFMPEG path for Windows compatibility
+process.env.FFMPEG_PATH = ffmpeg;
 
 module.exports = {
     name: 'talk',
@@ -58,13 +63,26 @@ module.exports = {
             }
 
             const player = createAudioPlayer();
-            const resource = createAudioResource(ttsUrl, {
-                inputType: StreamType.Arbitrary,
-                inlineVolume: true
+            
+            // Log player state changes for debugging
+            player.on('stateChange', (oldState, newState) => {
+                console.log(`[Talk Command] Player transitioned from ${oldState.status} to ${newState.status}`);
             });
 
-            player.play(resource);
-            connection.subscribe(player);
+            // Fetch TTS audio as a stream
+            https.get(ttsUrl, (res) => {
+                const resource = createAudioResource(res, {
+                    inputType: StreamType.Arbitrary,
+                    inlineVolume: true
+                });
+
+                player.play(resource);
+                connection.subscribe(player);
+                console.log('[Talk Command] Playing TTS stream...');
+            }).on('error', (err) => {
+                console.error('[Talk Command] HTTPS Stream Error:', err);
+                message.reply('❌ Lỗi khi tải âm thanh từ Google!');
+            });
 
             // Auto-delete user message
             message.delete().catch(() => { });
@@ -75,20 +93,22 @@ module.exports = {
             });
 
             player.on(AudioPlayerStatus.Idle, () => {
+                console.log('[Talk Command] Player is idle');
                 setTimeout(() => {
-                    if (connection.state.status !== VoiceConnectionStatus.Destroyed) {
+                    if (connection.state.status !== VoiceConnectionStatus.Destroyed && player.state.status === AudioPlayerStatus.Idle) {
                         connection.destroy();
                     }
                 }, 30000); // Wait 30s before leaving if idle
             });
 
             player.on('error', error => {
-                console.error('Error playing TTS:', error);
-                message.reply(t('talk.error', lang));
+                console.error('[Talk Command] Audio Player Error:', error);
+                message.reply('❌ Lỗi khi phát âm thanh: ' + error.message);
                 connection.destroy();
             });
 
             connection.on(VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
+                console.log(`[Talk Command] Connection disconnected, state: ${newState.status}`);
                 try {
                     await Promise.race([
                         entersState(connection, VoiceConnectionStatus.Signalling, 5000),
