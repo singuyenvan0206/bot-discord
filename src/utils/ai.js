@@ -40,7 +40,7 @@ async function generateAIResponse(prompt, personality = 'default', userStats = {
           content: prompt
         }
       ],
-      model: 'llama-3.3-70b-versatile',
+      model: 'deepseek-r1-distill-llama-70b',
     });
 
     let content = chatCompletion.choices[0]?.message?.content || 'Tôi không biết trả lời sao nữa...';
