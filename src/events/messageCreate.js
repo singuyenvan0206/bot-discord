@@ -2,6 +2,7 @@ const { Events, Collection } = require('discord.js');
 const fs = require('fs');
 const config = require('../config');
 const db = require('../database');
+const { generateAIResponse } = require('../utils/ai');
 const { getLanguage, t } = require('../utils/i18n');
 const { addXp, XP_AMOUNTS } = require('../utils/leveling');
 const { formatDuration } = require('../utils/time');
@@ -18,6 +19,36 @@ module.exports = {
             const prefix = guildRow?.prefix || config.PREFIX;
             const isCommand = message.content.startsWith(prefix);
             let shouldSkipChatXp = false;
+
+            // --- REPUTATION SYSTEM (Memory) ---
+            const lowerContent = message.content.toLowerCase();
+            const toxicWords = ['ngu', 'cút', 'đm', 'vãi', 'óc', 'tồi'];
+            const helpfulWords = ['cảm ơn', 'thanks', 'giúp', 'hữu ích', 'tuyệt'];
+
+            const userStats = await db.getUser(message.author.id, message.guild.id);
+            
+            if (toxicWords.some(word => lowerContent.includes(word))) {
+                await db.updateUser(message.author.id, { toxic_score: (userStats.toxic_score || 0) + 1 });
+            } else if (helpfulWords.some(word => lowerContent.includes(word))) {
+                await db.updateUser(message.author.id, { helpful_score: (userStats.helpful_score || 0) + 1 });
+            }
+
+            // --- SMART AI DETECTION (Tag bot hoặc Chat tự nhiên hoặc Kênh AI) ---
+            const isMentioned = message.mentions.has(client.user) && !message.mentions.everyone;
+            const isAiChannel = guildRow?.ai_channel === message.channel.id;
+            
+            if (isAiChannel || isMentioned || (isCommand && !client.commands.has(message.content.slice(prefix.length).trim().split(/ +/)[0]))) {
+                const prompt = (isMentioned || isAiChannel)
+                    ? message.content.replace(`<@${client.user.id}>`, '').replace(`<@!${client.user.id}>`, '').trim()
+                    : message.content.slice(prefix.length).trim();
+
+                if (prompt.length > 0) {
+                    await message.channel.sendTyping();
+                    const personality = guildRow?.personality || 'default';
+                    const aiReply = await generateAIResponse(prompt, personality, userStats);
+                    return message.reply(aiReply);
+                }
+            }
 
             if (isCommand) {
                 const tempArgs = message.content.slice(prefix.length).trim().split(/ +/);

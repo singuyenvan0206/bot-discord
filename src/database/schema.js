@@ -184,6 +184,8 @@ async function initSchema() {
     await safeAddColumn('users', 'last_harvest', 'BIGINT DEFAULT 0');
     await safeAddColumn('users', 'last_hack', 'BIGINT DEFAULT 0');
     await safeAddColumn('users', 'daily_streak', 'INTEGER DEFAULT 0');
+    await safeAddColumn('users', 'toxic_score', 'INTEGER DEFAULT 0');
+    await safeAddColumn('users', 'helpful_score', 'INTEGER DEFAULT 0');
 
     // User Guilds Migrations (Per-server data)
     await safeAddColumn('user_guilds', 'balance', 'BIGINT NOT NULL DEFAULT 0');
@@ -193,6 +195,8 @@ async function initSchema() {
 
     // Guild Migrations
     await safeAddColumn('guilds', 'wordchain_channel', 'TEXT DEFAULT NULL');
+    await safeAddColumn('guilds', 'personality', "TEXT DEFAULT 'default'");
+    await safeAddColumn('guilds', 'ai_channel', 'TEXT DEFAULT NULL');
 }
 
 module.exports = { initSchema };
