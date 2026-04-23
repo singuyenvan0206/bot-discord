@@ -90,8 +90,12 @@ const db = require('./database');
 const { initScheduler } = require('./utils/scheduler');
 
 async function startBot() {
-    await db.getDb();
-    console.log('💾 Database initialized (Pre-login)');
+    try {
+        await db.initSchema();
+        console.log('💾 Database schema initialized and migrations applied');
+    } catch (err) {
+        console.error('❌ Failed to initialize database schema:', err);
+    }
     initScheduler(client);
     client.login(TOKEN);
 }
