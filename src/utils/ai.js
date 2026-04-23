@@ -43,7 +43,12 @@ async function generateAIResponse(prompt, personality = 'default', userStats = {
       model: 'llama-3.3-70b-versatile',
     });
 
-    return chatCompletion.choices[0]?.message?.content || 'Tôi không biết trả lời sao nữa...';
+    let content = chatCompletion.choices[0]?.message?.content || 'Tôi không biết trả lời sao nữa...';
+    
+    // Loại bỏ phần suy nghĩ (thought) của DeepSeek R1 để tin nhắn gọn hơn trên Discord
+    content = content.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+
+    return content;
   } catch (error) {
     console.error('Groq AI Error (Bot Project):', error);
     return 'Hệ thống AI đang bận, thử lại sau nhé!';

@@ -1,4 +1,4 @@
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, entersState } = require('@discordjs/voice');
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, entersState, StreamType } = require('@discordjs/voice');
 const googleTTS = require('google-tts-api');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -48,8 +48,20 @@ module.exports = {
                 adapterCreator: message.guild.voiceAdapterCreator,
             });
 
+            // Wait for the connection to be ready before playing
+            try {
+                await entersState(connection, VoiceConnectionStatus.Ready, 20_000);
+            } catch (error) {
+                console.error('Voice Connection Error:', error);
+                connection.destroy();
+                return message.reply('❌ Không thể kết nối tới kênh voice (Connection timeout)');
+            }
+
             const player = createAudioPlayer();
-            const resource = createAudioResource(ttsUrl);
+            const resource = createAudioResource(ttsUrl, {
+                inputType: StreamType.Arbitrary,
+                inlineVolume: true
+            });
 
             player.play(resource);
             connection.subscribe(player);
