@@ -33,7 +33,7 @@ module.exports = {
                 console.error('[Update] Failed to save DB before restart:', saveErr);
             }
 
-            exec('pm2 restart simsimi-bot', async (pm2Error) => {
+            exec('pm2 restart index', async (pm2Error) => {
                 if (pm2Error) {
                     console.error('PM2 restart error:', pm2Error);
                     await msg.edit(`⚠️ **Git Pull Success, but PM2 restart failed.**\nFalling back to hot-reload...\nError: \`${pm2Error.message}\``);
