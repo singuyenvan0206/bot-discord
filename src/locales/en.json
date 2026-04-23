@@ -1607,7 +1607,13 @@
             "fishrates": "Analyze your current fishing luck and catch rates based on equipment.",
             "support": "Get the official support server link to report issues or suggest features.",
             "blacklistchannel": "Disable bot commands in a specific channel (Admin Only).",
-            "setwcchannel": "Set the dedicated channel for the Word Chain game (Admin Only)."
+            "setwcchannel": "Set the dedicated channel for the Word Chain game (Admin Only).",
+            "setaichannel": "Set a dedicated AI chat channel (No bot tag or prefix required).",
+            "personality": "Change the Bot's personality (Default, Tsundere, Toxic Gamer, etc.).",
+            "setstartrole": "Set a mandatory role that users must have to use the bot.",
+            "say": "Make the bot repeat a specific message.",
+            "talk": "Make the bot speak in a voice channel (TTS).",
+            "start": "Initial command to receive the mandatory role (if configured)."
         },
         "guides": {
             "trivia": "🌟 **Description:** Challenge your knowledge with a huge question bank covering Science, History, Entertainment, and more!\n\n🕹️ **How to Play:**\n1. Use the command to receive a multiple-choice question.\n2. You have **15 seconds** to analyze and answer.\n3. Click the button (A, B, C, D) corresponding to the correct answer.\n\n✨ **Teacher Perk:** **Tutoring** — Correct answers grant a **+50% coin bonus** and extra XP for you!\n\n💰 **Rewards:** Correct answers earn coins instantly. If no one answers, the coins remain in the bank!",
@@ -1692,8 +1698,10 @@
             "support": "🌟 **Description:** Connect with the developers for direct assistance.\n\n🕹️ **Details:** This command provides an invite link to the official support server where you can report bugs, request features, or get help with account issues.",
             "blacklistchannel": "🌟 **Description:** A channel management tool for administrators.\n\n🕹️ **Usage:** `$blacklistchannel <#channel>` to toggle the restricted status.\n\n⚠️ **Note:** The bot will ignore all non-admin commands in blacklisted channels to keep your server organized.",
             "setwcchannel": "🌟 **Description:** Designate a specific text channel as the exclusive area for Word Chain. This keeps other chat channels organized and free from game spam.\n\n🕹️ **Usage:**\n- `$setwcchannel <#channel>`: Set the game channel.\n- `$setwcchannel reset`: Remove the restriction and allow playing anywhere.\n\n💡 **Tip:** It's best to create a dedicated bot or game channel for this!",
-            "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`",
-            "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`",
+            "setaichannel": "🌟 **Description:** Transform a specific channel into a dedicated AI chat room.\n\n🕹️ **Usage:**\n- `{{prefix}}setaichannel #channel`: Designate a chat channel.\n- `{{prefix}}setaichannel current`: Set the current channel.\n- `{{prefix}}setaichannel none`: Disable this feature.\n\n💡 **Tip:** In an AI channel, you can chat naturally without using any prefix or tagging the bot!",
+            "personality": "🌟 **Description:** Change how the Bot responds and behaves.\n\n🕹️ **Usage:**\n- `{{prefix}}personality <personality_name>`\n\n🎭 **Personalities:**\n• `default`: Friendly and standard.\n• `tsundere`: Hard to please, moody.\n• `toxic_gamer`: Sarcastic, mildly toxic.\n• `helpful_assistant`: Dedicated and polite.\n• `philosopher`: Deep and philosophical.",
+            "resetdatabase": "🌟 **Description:** Completely wipe all system data including users, money, inventory, levels, and giveaways. This is an extremely dangerous action and cannot be undone. (Owner Only)\n\n🕹️ **Usage:**\n`$resetdatabase confirm YES`!",
+            "update": "🌟 **Description:** Pull the latest source code from the Git repository and hot-reload all bot commands without restarting. (Owner Only)\n\n🕹️ **Usage:**\n`$update`!",
             "events": "🌟 **Description:** Monitor the pulse of the global economy! Events rotate periodically, providing special effects and bonuses.\n\n🕹️ **Mechanics:**\n- **2x Rewards:** Double coins from `$work`, `$daily`, etc.\n- **Luck Boost:** Increased chance for rare fish or winning bets.\n- **Reduced Cooldowns:** Quicker access to your favorite commands.\n\n📊 **Bot Info:** View the server's reserve fund and the Bot's local level.\n\n👑 **Admin:** Use `$events rotate` to force a new event immediately."
         }
     },

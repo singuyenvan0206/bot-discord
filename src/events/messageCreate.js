@@ -37,10 +37,24 @@ module.exports = {
             const isMentioned = message.mentions.has(client.user) && !message.mentions.everyone;
             const isAiChannel = guildRow?.ai_channel === message.channel.id;
             
-            if (isAiChannel || isMentioned || (isCommand && !client.commands.has(message.content.slice(prefix.length).trim().split(/ +/)[0]))) {
-                const prompt = (isMentioned || isAiChannel)
-                    ? message.content.replace(`<@${client.user.id}>`, '').replace(`<@!${client.user.id}>`, '').trim()
-                    : message.content.slice(prefix.length).trim();
+            // Check if it's a valid command first to prioritize commands over AI
+            const args_temp = message.content.slice(prefix.length).trim().split(/ +/);
+            const commandName_temp = (args_temp.shift() || '').toLowerCase();
+            const commandExists = isCommand && (client.commands.has(commandName_temp) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName_temp)));
+
+            // AI handles if: 
+            // 1. Bot is Mentioned (Works everywhere)
+            // 2. Message is in the dedicated AI Channel (And is not a valid command)
+            const isAiInteraction = isMentioned || (isAiChannel && !commandExists);
+
+            if (isAiInteraction) {
+                // Strip bot mention if it exists
+                let prompt = message.content.replace(`<@${client.user.id}>`, '').replace(`<@!${client.user.id}>`, '').trim();
+                
+                // If in AI channel and still has prefix (but not a command), strip the prefix for a cleaner AI prompt
+                if (isAiChannel && prompt.startsWith(prefix)) {
+                    prompt = prompt.slice(prefix.length).trim();
+                }
 
                 if (prompt.length > 0) {
                     await message.channel.sendTyping();

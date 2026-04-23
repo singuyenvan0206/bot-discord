@@ -1611,7 +1611,13 @@
             "fishrates": "Xem tỉ lệ xuất hiện của các loài cá tại khu vực hiện tại dựa trên trang bị.",
             "support": "Lấy link tham gia máy chủ hỗ trợ của Bot để báo cáo lỗi hoặc góp ý.",
             "blacklistchannel": "Chặn bot phản hồi các lệnh tại một kênh cụ thể (Admin).",
-            "setwcchannel": "Thiết lập kênh chuyên biệt cho trò chơi Nối Chữ (Admin)."
+            "setwcchannel": "Thiết lập kênh chuyên biệt cho trò chơi Nối Chữ (Admin).",
+            "setaichannel": "Thiết lập kênh chat AI tự động (Không cần tag bot hay prefix).",
+            "personality": "Thay đổi tính cách của Bot (Mặc định, Tsundere, Toxic Gamer, v.v.).",
+            "setstartrole": "Thiết lập Role bắt buộc người dùng phải có để sử dụng bot.",
+            "say": "Yêu cầu bot nói lại một tin nhắn bất kỳ.",
+            "talk": "Yêu cầu bot nói nội dung trong kênh thoại (TTS).",
+            "start": "Lệnh bắt đầu để nhận Role mặc định (nếu được thiết lập)."
         },
         "guides": {
             "trivia": "🌟 **Mô tả:** Thử thách kiến thức của bạn với kho câu hỏi khổng lồ bao gồm Khoa học, Lịch sử, Giải trí và nhiều lĩnh vực khác!\n\n🕹️ **Cách chơi:**\n1. Sử dụng lệnh để nhận một câu hỏi trắc nghiệm.\n2. Bạn có **15 giây** để phân tích và lựa chọn đáp án.\n3. Nhấn vào nút (A, B, C, D) tương ứng với câu trả lời đúng.\n\n💰 **Phần thưởng:** Trả lời đúng sẽ nhận ngay coins vào ví. Nếu không ai trả lời đúng, số tiền sẽ được giữ lại cho lần sau!",
@@ -1698,6 +1704,8 @@
             "support": "🌟 **Mô tả:** Nhận sự hỗ trợ trực tiếp từ đội ngũ phát triển.\n\n🕹️ **Nội dung:** Lệnh sẽ cung cấp link discord máy chủ hỗ trợ. Đây là nơi bạn có thể báo lỗi, đóng góp ý tưởng hoặc yêu cầu giải quyết các vấn đề tài khoản.",
             "blacklistchannel": "🌟 **Mô tả:** Công cụ quản trị kênh dành cho Admin.\n\n🕹️ **Cách dùng:** `$blacklistchannel <#channel>` để bật/tắt (Toggle) trạng thái chặn của một kênh.\n\n⚠️ **Lưu ý:** Bot sẽ hoàn toàn phớt lờ các lệnh được gõ trong kênh bị blacklist (trừ lệnh admin).",
             "setwcchannel": "🌟 **Mô tả:** Thiết lập một kênh văn bản làm khu vực chơi Nối Chữ chuyên biệt. Điều này giúp giữ cho các kênh chat khác không bị trôi tin nhắn bởi trò chơi.\n\n🕹️ **Cách dùng:**\n- `$setwcchannel <#kênh>`: Chỉ định kênh chơi game.\n- `$setwcchannel reset`: Xóa bỏ giới hạn kênh, cho phép chơi ở bất kỳ đâu.\n\n💡 **Mẹo:** Nên chọn một kênh riêng tư hoặc kênh dành cho bot để tránh làm phiền mọi người!",
+            "setaichannel": "🌟 **Mô tả:** Biến một kênh cụ thể thành phòng chat AI chuyên dụng.\n\n🕹️ **Cách dùng:**\n- `{{prefix}}setaichannel #kênh`: Chỉ định kênh chat.\n- `{{prefix}}setaichannel current`: Đặt kênh hiện tại.\n- `{{prefix}}setaichannel none`: Tắt tính năng này.\n\n💡 **Mẹo:** Trong kênh AI, bạn có thể chat tự nhiên mà không cần dùng bất kỳ prefix nào!",
+            "personality": "🌟 **Mô tả:** Thay đổi cách Bot phản hồi và hành xử.\n\n🕹️ **Cách dùng:**\n- `{{prefix}}personality <tên_nhân_cách>`\n\n🎭 **Các nhân cách:**\n• `default`: Thân thiện.\n• `tsundere`: Khó chiều, nắng mưa.\n• `toxic_gamer`: Cà khịa, toxic nhẹ.\n• `helpful_assistant`: Tận tâm.\n• `philosopher`: Triết lý sâu sắc.",
             "events": "🌟 **Mô tả:** Theo dõi hơi thở của nền kinh tế toàn cầu! Các sự kiện sẽ thay đổi định kỳ, mang lại các hiệu ứng đặc biệt.\n\n🕹️ **Cơ chế:**\n- **X2 Tiền Thưởng:** Nhân đôi số coins nhận được từ `$work`, `$daily`...\n- **Tăng May Mắn:** Tăng tỷ lệ bắt cá hiếm hoặc thắng cược.\n- **Giảm Cooldown:** Giảm thời gian chờ giữa các lệnh.\n\n📊 **Thông tin Bot:** Hiển thị số dư quỹ dự trữ và cấp độ của Bot tại server hiện tại.\n\n👑 **Admin:** Có thể dùng `$events rotate` để đổi sự kiện ngay lập tức."
         }
     },
