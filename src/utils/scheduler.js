@@ -53,7 +53,7 @@ async function initScheduler(client) {
 
 async function processAquariumIncome(client) {
     const { CATCHES } = require('./fishData');
-    const users = await db.queryAll('SELECT id, aquarium_data FROM users WHERE aquarium_data != "{}"');
+    const users = await db.queryAll("SELECT id, aquarium_data FROM users WHERE aquarium_data != '{}'");
 
     for (const u of users) {
         let aquarium = {};
