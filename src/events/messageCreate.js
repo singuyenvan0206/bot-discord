@@ -43,9 +43,10 @@ module.exports = {
             const commandExists = isCommand && (client.commands.has(commandName_temp) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName_temp)));
 
             // AI handles if: 
-            // 1. Bot is Mentioned (Works everywhere)
-            // 2. Message is in the dedicated AI Channel (And is not a valid command)
-            const isAiInteraction = isMentioned || (isAiChannel && !commandExists);
+            // 1. AI is enabled for the guild
+            // 2. Bot is Mentioned (Works everywhere) OR Message is in dedicated AI Channel (And not a valid command)
+            const aiEnabled = guildRow?.ai_enabled !== false; // Default to true if null/undefined
+            const isAiInteraction = aiEnabled && (isMentioned || (isAiChannel && !commandExists));
 
             if (isAiInteraction) {
                 // Strip bot mention if it exists

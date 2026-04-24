@@ -80,7 +80,8 @@ async function initSchema() {
             language TEXT DEFAULT 'vi',
             prefix TEXT,
             dist_channel TEXT,
-            json_data TEXT DEFAULT '{}'
+            json_data TEXT DEFAULT '{}',
+            ai_enabled BOOLEAN DEFAULT TRUE
         )
     `);
 
@@ -197,6 +198,7 @@ async function initSchema() {
     await safeAddColumn('guilds', 'wordchain_channel', 'TEXT DEFAULT NULL');
     await safeAddColumn('guilds', 'personality', "TEXT DEFAULT 'default'");
     await safeAddColumn('guilds', 'ai_channel', 'TEXT DEFAULT NULL');
+    await safeAddColumn('guilds', 'ai_enabled', 'BOOLEAN DEFAULT TRUE');
 }
 
 module.exports = { initSchema };

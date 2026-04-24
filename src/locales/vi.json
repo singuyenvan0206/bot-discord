@@ -1614,6 +1614,7 @@
             "setwcchannel": "Thiết lập kênh chuyên biệt cho trò chơi Nối Chữ (Admin).",
             "setaichannel": "Thiết lập kênh chat AI tự động (Không cần tag bot hay prefix).",
             "personality": "Thay đổi tính cách của Bot (Mặc định, Tsundere, Toxic Gamer, v.v.).",
+            "aiswitch": "Bật hoặc tắt hoàn toàn chức năng chat AI của bot.",
             "setstartrole": "Thiết lập Role bắt buộc người dùng phải có để sử dụng bot.",
             "say": "Yêu cầu bot nói lại một tin nhắn bất kỳ.",
             "talk": "Yêu cầu bot nói nội dung trong kênh thoại (TTS).",
