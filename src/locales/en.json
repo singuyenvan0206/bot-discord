@@ -67,6 +67,7 @@
         "too_long": "❌ Text is too long (max 200 characters)!",
         "joining": "🎙️ Joining voice channel...",
         "speaking": "🗣️ Speaking...",
+        "say_with_name": "{{name}} says {{text}}",
         "error": "❌ An error occurred while playing audio."
     },
     "say": {
