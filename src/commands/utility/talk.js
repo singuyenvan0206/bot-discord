@@ -94,11 +94,6 @@ module.exports = {
 
             player.on(AudioPlayerStatus.Idle, () => {
                 console.log('[Talk Command] Player is idle');
-                setTimeout(() => {
-                    if (connection.state.status !== VoiceConnectionStatus.Destroyed && player.state.status === AudioPlayerStatus.Idle) {
-                        connection.destroy();
-                    }
-                }, 30000); // Wait 30s before leaving if idle
             });
 
             player.on('error', error => {
