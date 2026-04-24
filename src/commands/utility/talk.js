@@ -44,7 +44,7 @@ async function processQueue(guildId) {
             slow: false,
             host: 'https://translate.google.com',
         });
-
+                                                                                                                                                                                        
         // Use FFmpeg to increase speed with atempo filter
         https.get(ttsUrl, (res) => {
             const ffmpegProcess = spawn(FFMPEG_BIN, [
@@ -92,15 +92,18 @@ module.exports = {
     bypassBlacklist: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
-        const text = args.join(' ');
-
+        const originalText = args.join(' ');
+        
         if (!message.member.voice.channel) {
             return message.reply(t('talk.no_vc', lang));
         }
 
-        if (!text) {
+        if (!originalText) {
             return message.reply(t('talk.no_text', lang));
         }
+
+        const senderName = message.member?.displayName || message.author.username;
+        const text = t('talk.say_with_name', lang, { name: senderName, text: originalText });
 
         if (text.length > 1000) {
             return message.reply('❌ Câu nói quá dài (tối đa 1000 ký tự)!');

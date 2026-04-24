@@ -67,6 +67,7 @@
         "too_long": "❌ Nội dung quá dài (tối đa 200 ký tự)!",
         "joining": "🎙️ Đang kết nối tới kênh voice...",
         "speaking": "🗣️ Đang phát âm thanh...",
+        "say_with_name": "{{name}} nói {{text}}",
         "error": "❌ Có lỗi xảy ra khi phát âm thanh."
     },
     "say": {
