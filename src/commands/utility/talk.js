@@ -1,4 +1,4 @@
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, entersState, StreamType } = require('@discordjs/voice');
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, entersState, StreamType, getVoiceConnection } = require('@discordjs/voice');
 const googleTTS = require('google-tts-api');
 const https = require('https');
 const ffmpeg = require('ffmpeg-static');
@@ -102,6 +102,8 @@ module.exports = {
                 connection.destroy();
             });
 
+            // Cleanup existing listeners before adding a new one to prevent memory leaks and duplicate logic
+            connection.removeAllListeners(VoiceConnectionStatus.Disconnected);
             connection.on(VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
                 console.log(`[Talk Command] Connection disconnected, state: ${newState.status}`);
                 try {
@@ -110,7 +112,9 @@ module.exports = {
                         entersState(connection, VoiceConnectionStatus.Connecting, 5000),
                     ]);
                 } catch (e) {
-                    connection.destroy();
+                    if (connection.state.status !== VoiceConnectionStatus.Destroyed) {
+                        connection.destroy();
+                    }
                 }
             });
 
