@@ -40,7 +40,7 @@ async function generateAIResponse(prompt, personality = 'default', userStats = {
           content: prompt
         }
       ],
-      model: 'openai/gpt-oss-20b',
+      model: 'llama-3.3-70b-versatile',
     });
 
     let content = chatCompletion.choices[0]?.message?.content || 'Tôi không biết trả lời sao nữa...';
