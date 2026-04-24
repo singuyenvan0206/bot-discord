@@ -29,8 +29,18 @@ async function processQueue(guildId) {
     const { text, lang, message } = queue.messages.shift();
 
     try {
+        // Detect language: Default to user/guild lang, but override if Japanese characters are detected
+        let ttsLang = lang;
+        const isJapanese = /[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(text);
+        
+        if (isJapanese) {
+            ttsLang = 'ja';
+        } else if (ttsLang !== 'vi' && ttsLang !== 'ja') {
+            ttsLang = 'en';
+        }
+
         const ttsUrl = googleTTS.getAudioUrl(text, {
-            lang: lang === 'vi' ? 'vi' : 'en',
+            lang: ttsLang,
             slow: false,
             host: 'https://translate.google.com',
         });
@@ -92,9 +102,32 @@ module.exports = {
             return message.reply(t('talk.no_text', lang));
         }
 
-        if (text.length > 200) {
-            return message.reply(t('talk.too_long', lang));
+        if (text.length > 1000) {
+            return message.reply('❌ Câu nói quá dài (tối đa 1000 ký tự)!');
         }
+
+        // Helper to split text into 200-character chunks
+        const splitText = (str, maxLength = 200) => {
+            const chunks = [];
+            let current = str;
+            while (current.length > 0) {
+                if (current.length <= maxLength) {
+                    chunks.push(current);
+                    break;
+                }
+                let chunk = current.substring(0, maxLength);
+                let lastSpace = chunk.lastIndexOf(' ');
+                // If there's a space in the last 20% of the chunk, split there
+                if (lastSpace > maxLength * 0.8) {
+                    chunk = current.substring(0, lastSpace);
+                }
+                chunks.push(chunk.trim());
+                current = current.substring(chunk.length).trim();
+            }
+            return chunks;
+        };
+
+        const textChunks = splitText(text);
 
         const voiceChannel = message.member.voice.channel;
         const permissions = voiceChannel.permissionsFor(message.client.user);
@@ -135,8 +168,10 @@ module.exports = {
 
             const queue = queues.get(message.guild.id);
             
-            // Add message to queue
-            queue.messages.push({ text, lang, message });
+            // Add each chunk to the queue
+            textChunks.forEach(chunk => {
+                queue.messages.push({ text: chunk, lang, message });
+            });
 
             // Ensure connection
             let connection = getVoiceConnection(message.guild.id);
