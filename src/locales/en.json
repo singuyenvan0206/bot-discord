@@ -1610,6 +1610,7 @@
             "setwcchannel": "Set the dedicated channel for the Word Chain game (Admin Only).",
             "setaichannel": "Set a dedicated AI chat channel (No bot tag or prefix required).",
             "personality": "Change the Bot's personality (Default, Tsundere, Toxic Gamer, etc.).",
+            "aiswitch": "Enable or disable all AI chat functionality for the bot.",
             "setstartrole": "Set a mandatory role that users must have to use the bot.",
             "say": "Make the bot repeat a specific message.",
             "talk": "Make the bot speak in a voice channel (TTS).",
