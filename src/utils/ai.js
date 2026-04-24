@@ -40,7 +40,11 @@ async function generateAIResponse(prompt, personality = 'default', userStats = {
           content: prompt
         }
       ],
+<<<<<<< HEAD
       model: 'deepseek-r1-distill-llama-70b',
+=======
+      model: 'openai/gpt-oss-20b',
+>>>>>>> 942dc848678c4212bfba4b52d47b9cbaadb2127e
     });
 
     let content = chatCompletion.choices[0]?.message?.content || 'Tôi không biết trả lời sao nữa...';
