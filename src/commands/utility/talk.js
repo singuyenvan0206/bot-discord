@@ -102,8 +102,7 @@ module.exports = {
             return message.reply(t('talk.no_text', lang));
         }
 
-        const senderName = message.member?.displayName || message.author.username;
-        const text = t('talk.say_with_name', lang, { name: senderName, text: originalText });
+        const text = originalText;
 
         if (text.length > 1000) {
             return message.reply('❌ Câu nói quá dài (tối đa 1000 ký tự)!');
