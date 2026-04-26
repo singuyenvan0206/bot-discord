@@ -14,6 +14,15 @@ const FFMPEG_BIN = process.env.FFMPEG_PATH || 'ffmpeg';
 // Global map to store queues for each guild
 const queues = new Map();
 
+// Google TTS Hosts for rotation to avoid rate limits
+const TTS_HOSTS = [
+    'https://translate.google.com',
+    'https://translate.google.com.vn',
+    'https://translate.google.com.hk',
+    'https://translate.google.co.jp'
+];
+let currentHostIndex = 0;
+
 /**
  * Process the next item in the queue for a specific guild
  * @param {string} guildId 
@@ -39,10 +48,14 @@ async function processQueue(guildId) {
             ttsLang = 'en';
         }
 
+        // Select host from rotation
+        const host = TTS_HOSTS[currentHostIndex];
+        currentHostIndex = (currentHostIndex + 1) % TTS_HOSTS.length;
+
         const ttsUrl = googleTTS.getAudioUrl(text, {
             lang: ttsLang,
             slow: false,
-            host: 'https://translate.google.com',
+            host: host,
         });
                                                                                                                                                                                         
         // Use FFmpeg to increase speed with atempo filter
@@ -189,19 +202,31 @@ module.exports = {
                     connection.subscribe(queue.player);
                     
                     // Connection event listeners
-                    connection.on(VoiceConnectionStatus.Disconnected, async () => {
-                        try {
-                            await Promise.race([
-                                entersState(connection, VoiceConnectionStatus.Signalling, 5000),
-                                entersState(connection, VoiceConnectionStatus.Connecting, 5000),
-                            ]);
-                        } catch (e) {
-                            if (connection.state.status !== VoiceConnectionStatus.Destroyed) {
-                                connection.destroy();
-                                queues.delete(message.guild.id);
+                    if (connection.listenerCount(VoiceConnectionStatus.Disconnected) === 0) {
+                        connection.on(VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
+                            try {
+                                // Wait for a potential reconnection (e.g. moved channel)
+                                await Promise.race([
+                                    entersState(connection, VoiceConnectionStatus.Signalling, 5000),
+                                    entersState(connection, VoiceConnectionStatus.Connecting, 5000),
+                                ]);
+                                console.log(`[Talk Command] Guild ${message.guild.id}: Reconnected successfully.`);
+                            } catch (e) {
+                                // If it didn't reconnect within 5 seconds, it's likely a real disconnect or kick
+                                if (connection.state.status !== VoiceConnectionStatus.Destroyed) {
+                                    console.log(`[Talk Command] Guild ${message.guild.id}: Disconnected permanently, destroying.`);
+                                    connection.destroy();
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
+                    if (connection.listenerCount(VoiceConnectionStatus.Destroyed) === 0) {
+                        connection.on(VoiceConnectionStatus.Destroyed, () => {
+                            console.log(`[Talk Command] Guild ${message.guild.id}: Connection destroyed, cleaning up queue.`);
+                            queues.delete(message.guild.id);
+                        });
+                    }
                 } catch (error) {
                     console.error('Voice Connection Error:', error);
                     connection.destroy();
