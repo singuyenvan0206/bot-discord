@@ -187,6 +187,7 @@ async function initSchema() {
     await safeAddColumn('users', 'daily_streak', 'INTEGER DEFAULT 0');
     await safeAddColumn('users', 'toxic_score', 'INTEGER DEFAULT 0');
     await safeAddColumn('users', 'helpful_score', 'INTEGER DEFAULT 0');
+    await safeAddColumn('users', 'voice_type', "TEXT DEFAULT 'default'");
 
     // User Guilds Migrations (Per-server data)
     await safeAddColumn('user_guilds', 'balance', 'BIGINT NOT NULL DEFAULT 0');
