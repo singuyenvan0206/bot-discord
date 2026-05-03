@@ -26,7 +26,7 @@ async function processQueue(guildId) {
     }
 
     queue.isPlaying = true;
-    const { text, lang, message, voiceType } = queue.messages.shift();
+    const { text, lang, message, baseVoice, effect } = queue.messages.shift();
 
     try {
         // Detect language: Default to user/guild lang, but override if Japanese characters are detected
@@ -44,11 +44,11 @@ async function processQueue(guildId) {
         if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
         if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
 
-        if (ttsLang === 'vi' && voiceType === 'male') {
+        if (ttsLang === 'vi' && baseVoice === 'male') {
             edgeVoice = 'vi-VN-NamMinhNeural';
-        } else if (ttsLang === 'en' && voiceType === 'male') {
+        } else if (ttsLang === 'en' && baseVoice === 'male') {
             edgeVoice = 'en-US-GuyNeural';
-        } else if (ttsLang === 'ja' && voiceType === 'male') {
+        } else if (ttsLang === 'ja' && baseVoice === 'male') {
             edgeVoice = 'ja-JP-KeitaNeural';
         }
 
@@ -59,10 +59,8 @@ async function processQueue(guildId) {
         // FFmpeg filter setup
         let audioFilter = 'atempo=1.0'; // Default normal speed
         
-        switch (voiceType) {
-            case 'male':
-            case 'female':
-            case 'default':
+        switch (effect) {
+            case 'none':
                 audioFilter = 'atempo=1.0';
                 break;
             case 'kid':
@@ -129,28 +127,29 @@ module.exports = {
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const userDb = await db.getUser(message.author.id);
-        let voiceType = userDb?.voice_type || 'default';
+        const savedVoice = userDb?.voice_type || 'default';
+        const savedEffect = userDb?.voice_effect || 'none';
+        
+        let baseVoice = savedVoice === 'default' ? 'female' : savedVoice;
+        let effect = savedEffect;
+
         let textArgs = [...args];
         
-        const voiceTypes = {
-            '-m': 'male',
-            '-nam': 'male',
-            '-f': 'female',
-            '-nu': 'female',
-            '-k': 'kid',
-            '-kid': 'kid',
-            '-r': 'robot',
-            '-robot': 'robot',
-            '-s': 'slow',
-            '-slow': 'slow',
-            '-fast': 'fast',
-            '-g': 'ghost',
-            '-ghost': 'ghost'
-        };
+        const baseVoiceFlags = { '-m': 'male', '-nam': 'male', '-f': 'female', '-nu': 'female' };
+        const effectFlags = { '-k': 'kid', '-kid': 'kid', '-r': 'robot', '-robot': 'robot', '-s': 'slow', '-slow': 'slow', '-fast': 'fast', '-g': 'ghost', '-ghost': 'ghost' };
 
-        if (textArgs.length > 0 && voiceTypes[textArgs[0].toLowerCase()]) {
-            voiceType = voiceTypes[textArgs[0].toLowerCase()];
-            textArgs.shift();
+        // Parse multiple flags (e.g. -m -g)
+        while (textArgs.length > 0) {
+            const token = textArgs[0].toLowerCase();
+            if (baseVoiceFlags[token]) {
+                baseVoice = baseVoiceFlags[token];
+                textArgs.shift();
+            } else if (effectFlags[token]) {
+                effect = effectFlags[token];
+                textArgs.shift();
+            } else {
+                break;
+            }
         }
 
         const originalText = textArgs.join(' ');
@@ -233,7 +232,7 @@ module.exports = {
             
             // Add each chunk to the queue
             textChunks.forEach(chunk => {
-                queue.messages.push({ text: chunk, lang, message, voiceType });
+                queue.messages.push({ text: chunk, lang, message, baseVoice, effect });
             });
 
             // Ensure connection
