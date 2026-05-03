@@ -33,7 +33,8 @@ async function getUser(userId, guildId = null) {
                 banned: false,
                 skill_data: '{}',
                 aquarium_data: '{}',
-                voice_type: 'default'
+                voice_type: 'default',
+                voice_effect: 'none'
             };
         }
 
@@ -49,7 +50,8 @@ async function getUser(userId, guildId = null) {
                     banned: false,
                     fish_ledger: '{}', bounty: 0, wanted_level: 0, skill_data: '{}', aquarium_data: '{}',
                     daily_streak: 0,
-                    voice_type: 'default'
+                    voice_type: 'default',
+                    voice_effect: 'none'
                 };
 
             }
