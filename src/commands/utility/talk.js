@@ -1,10 +1,10 @@
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, entersState, StreamType, getVoiceConnection } = require('@discordjs/voice');
-const googleTTS = require('google-tts-api');
-const https = require('https');
+const { MsEdgeTTS, OUTPUT_FORMAT } = require('msedge-tts');
 const ffmpeg = require('ffmpeg-static');
 const { spawn } = require('child_process');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
+const db = require('../../database');
 const path = require('path');
 
 // Set FFMPEG path for Windows compatibility
@@ -13,15 +13,6 @@ const FFMPEG_BIN = process.env.FFMPEG_PATH || 'ffmpeg';
 
 // Global map to store queues for each guild
 const queues = new Map();
-
-// Google TTS Hosts for rotation to avoid rate limits
-const TTS_HOSTS = [
-    'https://translate.google.com',
-    'https://translate.google.com.vn',
-    'https://translate.google.com.hk',
-    'https://translate.google.co.jp'
-];
-let currentHostIndex = 0;
 
 /**
  * Process the next item in the queue for a specific guild
@@ -35,7 +26,7 @@ async function processQueue(guildId) {
     }
 
     queue.isPlaying = true;
-    const { text, lang, message } = queue.messages.shift();
+    const { text, lang, message, voiceType } = queue.messages.shift();
 
     try {
         // Detect language: Default to user/guild lang, but override if Japanese characters are detected
@@ -48,45 +39,77 @@ async function processQueue(guildId) {
             ttsLang = 'en';
         }
 
-        // Select host from rotation
-        const host = TTS_HOSTS[currentHostIndex];
-        currentHostIndex = (currentHostIndex + 1) % TTS_HOSTS.length;
+        // Use Edge TTS for natural voices
+        let edgeVoice = 'vi-VN-HoaiMyNeural';
+        if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
+        if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
 
-        const ttsUrl = googleTTS.getAudioUrl(text, {
-            lang: ttsLang,
-            slow: false,
-            host: host,
-        });
-                                                                                                                                                                                        
-        // Use FFmpeg to increase speed with atempo filter
-        https.get(ttsUrl, (res) => {
-            const ffmpegProcess = spawn(FFMPEG_BIN, [
-                '-i', 'pipe:0',
-                '-af', 'atempo=1.2', // Increase speed by 20%
-                '-f', 'mp3',
-                'pipe:1'
-            ]);
+        if (ttsLang === 'vi' && voiceType === 'male') {
+            edgeVoice = 'vi-VN-NamMinhNeural';
+        } else if (ttsLang === 'en' && voiceType === 'male') {
+            edgeVoice = 'en-US-GuyNeural';
+        } else if (ttsLang === 'ja' && voiceType === 'male') {
+            edgeVoice = 'ja-JP-KeitaNeural';
+        }
 
-            // Pipe Google TTS response to FFmpeg stdin
-            res.pipe(ffmpegProcess.stdin);
+        const tts = new MsEdgeTTS();
+        await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+        const ttsStream = tts.toStream(text);
 
-            ffmpegProcess.on('error', err => {
-                console.error(`[Talk Command] Guild ${guildId} FFmpeg Error:`, err);
-            });
+        // FFmpeg filter setup
+        let audioFilter = 'atempo=1.0'; // Default normal speed
+        
+        switch (voiceType) {
+            case 'male':
+            case 'female':
+            case 'default':
+                audioFilter = 'atempo=1.0';
+                break;
+            case 'kid':
+                audioFilter = 'asetrate=44100*1.3,aresample=44100,atempo=0.92';
+                break;
+            case 'robot':
+                audioFilter = 'atempo=1.0,apulsator=mode=sine:hz=30';
+                break;
+            case 'slow':
+                audioFilter = 'atempo=0.75';
+                break;
+            case 'fast':
+                audioFilter = 'atempo=1.35';
+                break;
+            case 'ghost':
+                audioFilter = 'atempo=1.0,aecho=0.8:0.9:500:0.3';
+                break;
+        }
 
-            const resource = createAudioResource(ffmpegProcess.stdout, {
-                inputType: StreamType.Arbitrary,
-                inlineVolume: true
-            });
+        const ffmpegProcess = spawn(FFMPEG_BIN, [
+            '-i', 'pipe:0',
+            '-af', audioFilter,
+            '-f', 'mp3',
+            'pipe:1'
+        ]);
 
-            queue.player.play(resource);
-            console.log(`[Talk Command] Guild ${guildId}: Speaking (1.2x speed) "${text}"`);
-        }).on('error', (err) => {
-            console.error(`[Talk Command] Guild ${guildId} HTTPS Stream Error:`, err);
-            message.reply('❌ Lỗi khi tải âm thanh từ Google!');
+        // Pipe Edge TTS response to FFmpeg stdin
+        ttsStream.pipe(ffmpegProcess.stdin);
+
+        ttsStream.on('error', (err) => {
+            console.error(`[Talk Command] Guild ${guildId} Edge TTS Stream Error:`, err);
+            message.reply('❌ Lỗi khi tải âm thanh từ máy chủ Microsoft!');
             queue.isPlaying = false;
             processQueue(guildId);
         });
+
+        ffmpegProcess.on('error', err => {
+            console.error(`[Talk Command] Guild ${guildId} FFmpeg Error:`, err);
+        });
+
+        const resource = createAudioResource(ffmpegProcess.stdout, {
+            inputType: StreamType.Arbitrary,
+            inlineVolume: true
+        });
+
+        queue.player.play(resource);
+        console.log(`[Talk Command] Guild ${guildId}: Speaking [${edgeVoice}] "${text}"`);
 
     } catch (error) {
         console.error(`[Talk Command] Guild ${guildId} Processing Error:`, error);
@@ -105,7 +128,32 @@ module.exports = {
     bypassBlacklist: true,
     async execute(message, args) {
         const lang = await getLanguage(message.author.id, message.guild?.id);
-        const originalText = args.join(' ');
+        const userDb = await db.getUser(message.author.id);
+        let voiceType = userDb?.voice_type || 'default';
+        let textArgs = [...args];
+        
+        const voiceTypes = {
+            '-m': 'male',
+            '-nam': 'male',
+            '-f': 'female',
+            '-nu': 'female',
+            '-k': 'kid',
+            '-kid': 'kid',
+            '-r': 'robot',
+            '-robot': 'robot',
+            '-s': 'slow',
+            '-slow': 'slow',
+            '-fast': 'fast',
+            '-g': 'ghost',
+            '-ghost': 'ghost'
+        };
+
+        if (textArgs.length > 0 && voiceTypes[textArgs[0].toLowerCase()]) {
+            voiceType = voiceTypes[textArgs[0].toLowerCase()];
+            textArgs.shift();
+        }
+
+        const originalText = textArgs.join(' ');
         
         if (!message.member.voice.channel) {
             return message.reply(t('talk.no_vc', lang));
@@ -185,7 +233,7 @@ module.exports = {
             
             // Add each chunk to the queue
             textChunks.forEach(chunk => {
-                queue.messages.push({ text: chunk, lang, message });
+                queue.messages.push({ text: chunk, lang, message, voiceType });
             });
 
             // Ensure connection
