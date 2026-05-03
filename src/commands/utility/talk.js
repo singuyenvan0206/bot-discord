@@ -54,7 +54,7 @@ async function processQueue(guildId) {
 
         const tts = new MsEdgeTTS();
         await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-        const ttsStream = tts.toStream(text);
+        const { audioStream: ttsStream } = tts.toStream(text);
 
         // FFmpeg filter setup
         let audioFilter = 'atempo=1.0'; // Default normal speed
