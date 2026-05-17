@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
@@ -89,7 +89,7 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== message.author.id) {
-                return i.reply({ content: t('trivia.not_your_turn', lang), ephemeral: true });
+                return i.reply({ content: t('trivia.not_your_turn', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             if (answered.has(i.user.id)) return;

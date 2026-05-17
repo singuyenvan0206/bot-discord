@@ -23,7 +23,7 @@ module.exports = {
             // Fetch all purchasable roles BEFORE clearing data
             const allRoles = await db.getAllGuildRoles();
 
-            db.clearAllData();
+            await db.clearAllData();
             message.client.cooldowns.clear();
 
             // Try to remove roles from members in each guild

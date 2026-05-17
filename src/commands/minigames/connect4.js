@@ -1,5 +1,5 @@
 
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
@@ -158,16 +158,16 @@ module.exports = {
                 const isP1 = i.user.id === p1Id;
                 const isP2 = i.user.id === p2Id;
 
-                if (!isP1 && !isP2) return i.reply({ content: t('connect4.not_participant', lang), ephemeral: true });
+                if (!isP1 && !isP2) return i.reply({ content: t('connect4.not_participant', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
 
                 if ((turn === P1 && !isP1) || (turn === P2 && !isP2)) {
-                    return i.reply({ content: t('tictactoe.not_your_turn', lang), ephemeral: true });
+                    return i.reply({ content: t('tictactoe.not_your_turn', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
                 }
 
                 const col = parseInt(i.customId.split('_')[1]);
 
                 const success = dropToken(col, turn);
-                if (!success) return i.reply({ content: t('connect4.column_full', lang), ephemeral: true });
+                if (!success) return i.reply({ content: t('connect4.column_full', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
 
                 // Grant Action XP for the move
                 await addXp(i.member, Math.floor(Math.random() * (XP_AMOUNTS.GAME_ACTION.max - XP_AMOUNTS.GAME_ACTION.min + 1)) + XP_AMOUNTS.GAME_ACTION.min, i.guild.id);

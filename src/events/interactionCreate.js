@@ -1,4 +1,4 @@
-const { Events, Collection, StringSelectMenuBuilder, ActionRowBuilder } = require('discord.js');
+const { Events, Collection, StringSelectMenuBuilder, ActionRowBuilder, MessageFlags } = require('discord.js');
 const db = require('../database');
 const { getLanguage, t } = require('../utils/i18n');
 const config = require('../config');
@@ -55,7 +55,7 @@ module.exports = {
             if (!isExempt && !isBotOwner) {
                 return interaction.reply({ 
                     content: t('role.missing_role_error', lang, { prefix: config.PREFIX }), 
-                    ephemeral: true 
+                    flags: [MessageFlags.Ephemeral] 
                 }).catch(() => { });
             }
         }
@@ -70,7 +70,7 @@ module.exports = {
                 const isManualBail = interaction.customId.includes('bail') || interaction.customId.includes('check_dist_reward');
 
                 if (!isPagination && !isManualBail) {
-                    return interaction.reply({ content: prisonGuard.msg, ephemeral: true });
+                    return interaction.reply({ content: prisonGuard.msg, flags: [MessageFlags.Ephemeral] }).catch(() => { });
                 }
             }
 
@@ -78,7 +78,7 @@ module.exports = {
                 const guildId = interaction.guildId;
                 const activeDistRaw = await db.getGuildSetting(guildId, 'active_house_dist', null);
                 if (!activeDistRaw) {
-                    return interaction.reply({ content: t('economy.dist_expired', lang), flags: [64] });
+                    return interaction.reply({ content: t('economy.dist_expired', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
                 }
 
                 let distData;
@@ -87,18 +87,18 @@ module.exports = {
 
                 const now = Math.floor(Date.now() / 1000);
                 if (now > distData.endsAt || distData.remaining <= 0) {
-                    return interaction.reply({ content: t('economy.dist_expired', lang), flags: [64] });
+                    return interaction.reply({ content: t('economy.dist_expired', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
                 }
 
                 // Check Role Requirement (Dynamic check against current guild setting)
                 const currentStartRole = await db.getGuildSetting(guildId, 'start_role', null);
                 if (currentStartRole && !interaction.member.roles.cache.has(currentStartRole)) {
-                    return interaction.reply({ content: t('role.missing_role_error', lang, { prefix: config.PREFIX }), flags: [64] });
+                    return interaction.reply({ content: t('role.missing_role_error', lang, { prefix: config.PREFIX }), flags: [MessageFlags.Ephemeral] }).catch(() => { });
                 }
 
                 // Check Already Claimed
                 if (distData.claimed.includes(interaction.user.id)) {
-                    return interaction.reply({ content: t('economy.dist_already_claimed', lang), flags: [64] });
+                    return interaction.reply({ content: t('economy.dist_already_claimed', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
                 }
 
                 // ─── Calculate Reward ───
@@ -122,8 +122,8 @@ module.exports = {
                 // ─── Acknowledge and Update Message ───
                 await interaction.reply({ 
                     content: t('economy.dist_claim_success', lang, { amount: reward.toLocaleString(), emoji: config.EMOJIS.COIN }), 
-                    flags: [64] 
-                });
+                    flags: [MessageFlags.Ephemeral] 
+                }).catch(() => { });
 
                 // Update the original message embed to show remaining balance
                 const { EmbedBuilder } = require('discord.js');
@@ -161,8 +161,8 @@ module.exports = {
                 if (amount <= 0) {
                     return interaction.reply({
                         content: t('economy.no_reward_msg', lang) || "❌ Bạn không nhận được phần thưởng nào trong đợt này hoặc phần thưởng đã hết hạn.",
-                        flags: [64]
-                    });
+                        flags: [MessageFlags.Ephemeral]
+                    }).catch(() => { });
                 }
 
                 return interaction.reply({
@@ -170,8 +170,8 @@ module.exports = {
                         amount: amount.toLocaleString(),
                         emoji: config.EMOJIS.COIN
                     }) || `Bạn đã nhận được **${amount.toLocaleString()}** ${config.EMOJIS.COIN} từ đợt chia thưởng vừa rồi! 🎉`,
-                    flags: [64]
-                });
+                    flags: [MessageFlags.Ephemeral]
+                }).catch(() => { });
             }
         }
 
@@ -184,8 +184,8 @@ module.exports = {
                     const timeLeft = formatDuration(prisonUntil - nowSeconds, lang);
                     return interaction.reply({
                         content: t('common.user_in_prison_global', lang, { time: timeLeft }),
-                        flags: [64]
-                    });
+                        flags: [MessageFlags.Ephemeral]
+                    }).catch(() => { });
                 }
             }
             // All rank_ interactions are handled by the inline collector in rank.js
@@ -198,7 +198,7 @@ module.exports = {
             // Check if bot is "shut down"
             const isStopped = await db.getGlobalSetting('bot_is_stopped') === 'true';
             if (isStopped && commandName !== 'startup' && commandName !== 'boot' && !await db.isOwner(interaction.user.id)) {
-                return interaction.reply({ content: t('common.bot_shut_down', lang), flags: [64] });
+                return interaction.reply({ content: t('common.bot_shut_down', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             const command = client.commands.get(commandName);
@@ -207,12 +207,12 @@ module.exports = {
             // Guards
             const prisonGuard = await checkPrisonGuard(interaction.user.id, interaction.guildId, lang, commandName);
             if (prisonGuard.inPrison) {
-                return interaction.reply({ content: prisonGuard.msg, flags: [64] });
+                return interaction.reply({ content: prisonGuard.msg, flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             const persistentCooldown = await checkPersistentCooldown(interaction.user.id, interaction.guildId, lang, commandName);
             if (persistentCooldown.onCooldown) {
-                return interaction.reply({ content: persistentCooldown.msg, flags: [64] });
+                return interaction.reply({ content: persistentCooldown.msg, flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             let args = [];
@@ -358,7 +358,7 @@ module.exports = {
             };
             // Permission handling
             if (command.ownerOnly && !await db.isOwner(interaction.user.id)) {
-                return interaction.reply({ content: t('common.no_permission', lang), flags: [64] });
+                return interaction.reply({ content: t('common.no_permission', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             const isServerOwner = interaction.user.id === interaction.guild.ownerId;
@@ -366,7 +366,7 @@ module.exports = {
             const isAdmin = interaction.member.permissions.has('Administrator');
 
             if (command.adminOnly && !isServerOwner && !isBotOwner && !isAdmin) {
-                return interaction.reply({ content: t('common.no_permission', lang), flags: [64] });
+                return interaction.reply({ content: t('common.no_permission', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             // Cooldowns
@@ -384,8 +384,8 @@ module.exports = {
                     const timeLeft = (expirationTime - now) / 1000;
                     return interaction.reply({
                         content: t('common.cooldown', lang, { time: formatDuration(Math.ceil(timeLeft), lang) }),
-                        flags: [64] // MessageFlags.Ephemeral
-                    });
+                        flags: [MessageFlags.Ephemeral]
+                    }).catch(() => { });
                 }
             }
 

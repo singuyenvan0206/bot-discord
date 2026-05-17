@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { t, getLanguage } = require('../../utils/i18n');
@@ -202,7 +202,7 @@ module.exports = {
                 else gameState.flagged.add(idx);
                 await i.update({ components: renderComponents() });
             } else {
-                if (gameState.flagged.has(idx)) return i.reply({ content: t('minesweeper.unflag_first', lang), ephemeral: true });
+                if (gameState.flagged.has(idx)) return i.reply({ content: t('minesweeper.unflag_first', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
 
                 const result = reveal(idx);
 

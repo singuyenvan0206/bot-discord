@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../database');
 const { startCooldown } = require('../../utils/cooldown');
 const { getUserMultiplier, getTotalIncomeMultiplier, calculateReward } = require('../../utils/multiplier');
@@ -71,7 +71,7 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (isProcessing) return i.reply({ content: t('memory.wait', lang), ephemeral: true });
+            if (isProcessing) return i.reply({ content: t('memory.wait', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
 
             const idx = parseInt(i.customId.split('_')[1]);
             const cell = grid[idx];
