@@ -31,7 +31,7 @@ module.exports = {
     }
 
     try {
-      await db.execute('UPDATE guilds SET ai_enabled = ? WHERE id = ?', [newState ? 1 : 0, message.guild.id]);
+      await db.execute('UPDATE guilds SET ai_enabled = ? WHERE id = ?', [newState, message.guild.id]);
       
       const embed = new EmbedBuilder()
         .setTitle('🤖 AI System Updated')

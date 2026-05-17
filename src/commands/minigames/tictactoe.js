@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const { startCooldown } = require('../../utils/cooldown');
 const { calculateReward } = require('../../utils/multiplier');
 const db = require('../../database');
@@ -138,11 +138,11 @@ module.exports = {
 
         collector.on('collect', async (i) => {
             if ((currentTurn === 'X' && i.user.id !== playerX.id) || (currentTurn === 'O' && i.user.id !== playerO.id)) {
-                return i.reply({ content: t('tictactoe.not_your_turn', lang), ephemeral: true });
+                return i.reply({ content: t('tictactoe.not_your_turn', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             const idx = parseInt(i.customId.split('_')[1]);
-            if (board[idx] !== null) return i.reply({ content: t('tictactoe.already_taken', lang), ephemeral: true });
+            if (board[idx] !== null) return i.reply({ content: t('tictactoe.already_taken', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
 
             board[idx] = currentTurn;
 

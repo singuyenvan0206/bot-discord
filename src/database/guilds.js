@@ -109,6 +109,15 @@ async function getGuildRole(guildId, roleId) {
     }
 }
 
+async function getAllGuildRoles() {
+    try {
+        return await queryAll('SELECT * FROM guild_roles');
+    } catch (error) {
+        console.error(`Error in getAllGuildRoles:`, error);
+        throw error;
+    }
+}
+
 module.exports = {
     getGuild,
     updateGuild,
@@ -117,5 +126,6 @@ module.exports = {
     addGuildRole,
     removeGuildRole,
     getGuildRoles,
-    getGuildRole
+    getGuildRole,
+    getAllGuildRoles
 };

@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../database');
 const { t, getLanguage } = require('../../utils/i18n');
 const config = require('../../config');
@@ -85,7 +85,7 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== target.id) {
-                return i.reply({ content: t('marry.not_target', lang), ephemeral: true });
+                return i.reply({ content: t('marry.not_target', lang), flags: [MessageFlags.Ephemeral] }).catch(() => { });
             }
 
             if (i.customId === 'accept_marry') {
