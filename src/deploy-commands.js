@@ -1,6 +1,6 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
-const { REST, Routes, SlashCommandBuilder } = require('discord.js');
+const { REST, Routes, SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 const TOKEN = process.env.DISCORD_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -398,6 +398,93 @@ const commands = [
     new SlashCommandBuilder()
         .setName('support')
         .setDescription('Ủng hộ (Support developer)'),
+    new SlashCommandBuilder()
+        .setName('emoji')
+        .setDescription('Manage custom emojis in this server')
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageExpressions)
+        .setDMPermission(false)
+        .addSubcommand(sub =>
+            sub.setName('add')
+                .setDescription('Add a new emoji to the server')
+                .addStringOption(opt =>
+                    opt.setName('name')
+                        .setDescription('Name for the new emoji')
+                        .setRequired(true)
+                )
+                .addStringOption(opt =>
+                    opt.setName('url')
+                        .setDescription('Direct URL to the image (PNG/JPEG/GIF/WebP)')
+                        .setRequired(false)
+                )
+                .addAttachmentOption(opt =>
+                    opt.setName('file')
+                        .setDescription('Upload an image file directly')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('delete')
+                .setDescription('Delete an emoji from this server')
+                .addStringOption(opt =>
+                    opt.setName('emoji')
+                        .setDescription('The emoji to delete (name, ID, or custom emoji symbol)')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('rename')
+                .setDescription('Rename an emoji in this server')
+                .addStringOption(opt =>
+                    opt.setName('emoji')
+                        .setDescription('The emoji to rename')
+                        .setRequired(true)
+                )
+                .addStringOption(opt =>
+                    opt.setName('new_name')
+                        .setDescription('Alphanumeric new name (2-32 chars)')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('list')
+                .setDescription('List all emojis in the server')
+        )
+        .addSubcommand(sub =>
+            sub.setName('info')
+                .setDescription('Get details about a specific emoji')
+                .addStringOption(opt =>
+                    opt.setName('emoji')
+                        .setDescription('The emoji (or external emoji format) to inspect')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('steal')
+                .setDescription('Steal an emoji from another server')
+                .addStringOption(opt =>
+                    opt.setName('emoji_or_message')
+                        .setDescription('Custom emoji <:name:id> or a message URL containing the emoji')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('restrict')
+                .setDescription('Restrict emoji usage to a specific role')
+                .addStringOption(opt =>
+                    opt.setName('emoji')
+                        .setDescription('The emoji to restrict')
+                        .setRequired(true)
+                )
+                .addRoleOption(opt =>
+                    opt.setName('role')
+                        .setDescription('The role allowed to use this emoji (leave empty to clear restrictions)')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('help')
+                .setDescription('Display the list of available commands and instructions')
+        ),
 ].map(cmd => cmd.toJSON());
 
 // ─── Register Commands ───────────────────────────────────────────
