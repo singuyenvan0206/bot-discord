@@ -34,8 +34,13 @@ function resolveEmoji(guild, query) {
 
 // Helper: Download image and return buffer
 async function downloadImage(url) {
+  let targetUrl = url;
+  if (targetUrl.includes('//localhost')) {
+    targetUrl = targetUrl.replace('//localhost', '//127.0.0.1');
+  }
+
   try {
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const response = await axios.get(targetUrl, { responseType: 'arraybuffer' });
     const buffer = Buffer.from(response.data, 'binary');
     const contentType = response.headers['content-type'];
     
