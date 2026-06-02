@@ -32,6 +32,20 @@ function resolveEmoji(guild, query) {
   return null;
 }
 
+// Helper: Parse a custom emoji string to a CDN URL
+function parseEmojiSource(query) {
+  if (!query) return null;
+  const customEmojiMatch = query.match(/<(a)?:(\w+):(\d+)>/);
+  if (!customEmojiMatch) return null;
+
+  const animated = !!customEmojiMatch[1];
+  const name = customEmojiMatch[2];
+  const id = customEmojiMatch[3];
+  const url = `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
+
+  return { url, name, animated };
+}
+
 // Helper: Download image and return buffer
 async function downloadImage(url) {
   let targetUrl = url;
@@ -64,12 +78,14 @@ async function downloadImage(url) {
 // -------------------------------------------------------------
 
 // 1. ADD EMOJI
-async function handleAdd(guild, name, url) {
+async function handleAdd(guild, name, urlOrEmoji) {
   if (!name || !/^\w{2,32}$/.test(name)) {
     throw new Error('Emoji name must be alphanumeric (underscores allowed) and between 2 and 32 characters.');
   }
 
-  const { buffer } = await downloadImage(url);
+  const parsedEmoji = parseEmojiSource(urlOrEmoji);
+  const targetUrl = parsedEmoji ? parsedEmoji.url : urlOrEmoji;
+  const { buffer } = await downloadImage(targetUrl);
   const emoji = await guild.emojis.create({ attachment: buffer, name });
   
   return new EmbedBuilder()
@@ -422,21 +438,21 @@ module.exports = {
 
       if (subcommand === 'add') {
         const name = args[1];
-        let url = args[2];
+        let source = args[2];
         const attachment = message.attachments ? message.attachments.first() : null;
 
-        if (!url && attachment) {
-          url = attachment.url;
+        if (!source && attachment) {
+          source = attachment.url;
         }
 
         if (!name) {
-          throw new Error(`Usage: \`${prefix}emoji add <name> [url]\` (or upload an attachment and type \`${prefix}emoji add <name>\`)`);
+          throw new Error(`Usage: \`${prefix}emoji add <name> <emoji_or_url>\` (or upload an attachment and type \`${prefix}emoji add <name>\`)`);
         }
-        if (!url) {
-          throw new Error('You must provide an image URL or upload an attachment.');
+        if (!source) {
+          throw new Error('You must provide a custom emoji, image URL, or upload an attachment.');
         }
 
-        embed = await handleAdd(guild, name, url);
+        embed = await handleAdd(guild, name, source);
       }
       else if (subcommand === 'delete') {
         const emojiQuery = args[1];
@@ -510,3 +526,4 @@ module.exports = {
     }
   }
 };
+
