@@ -58,7 +58,7 @@ module.exports = {
 
         if (isSuggestChannel) {
             const member = await guild.members.fetch(user.id).catch(() => null);
-            if (member && member.permissions.has(PermissionFlagsBits.ManageExpressions)) {
+            if (member && member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
                 const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
                 const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
 

@@ -561,7 +561,7 @@ module.exports = {
     // Subcommands that require ManageExpressions permission
     const adminSubcommands = ['add', 'delete', 'rename', 'steal', 'restrict', 'config'];
     if (adminSubcommands.includes(subcommand)) {
-      if (!message.member.permissions.has(PermissionFlagsBits.ManageExpressions)) {
+      if (!message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
         const errEmbed = new EmbedBuilder()
           .setColor(COLOR_ERROR)
           .setTitle('❌ Permission Denied')
