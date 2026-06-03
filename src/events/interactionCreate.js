@@ -194,8 +194,21 @@ module.exports = {
                 await interaction.deferReply({ ephemeral: true }).catch(() => {});
                 
                 const emojiId = parseInt(interaction.values[0]);
-                const slackmojis = require('../data/slackmojis.json');
-                const emojiObj = slackmojis.find(e => e.id === emojiId);
+                let slackmojis = require('../data/slackmojis.json');
+                let emojiObj = slackmojis.find(e => e.id === emojiId);
+
+                if (!emojiObj) {
+                    try {
+                        const axios = require('axios');
+                        const response = await axios.get('https://slackmojis.com/emojis.json', { timeout: 3000 });
+                        if (response.data && Array.isArray(response.data)) {
+                            emojiObj = response.data.find(e => e.id === emojiId);
+                        }
+                    } catch (err) {
+                        console.warn('Failed to fetch live slackmojis during select interaction:', err.message);
+                    }
+                }
+                
                 if (!emojiObj) {
                     return interaction.followUp({ content: '❌ Không tìm thấy thông tin emoji này.', ephemeral: true }).catch(() => {});
                 }
@@ -306,6 +319,13 @@ module.exports = {
                     args.push(approve || '');
                     args.push(reject || '');
                 } else if (sub === 'search') {
+                    args.push(interaction.options.getString('query'));
+                } else if (sub === 'inactive' || sub === 'prune') {
+                    const minUses = interaction.options.getInteger('min_uses');
+                    const inactiveDays = interaction.options.getInteger('inactive_days');
+                    args.push(minUses !== null ? String(minUses) : '5');
+                    args.push(inactiveDays !== null ? String(inactiveDays) : '30');
+                } else if (sub === 'websearch') {
                     args.push(interaction.options.getString('query'));
                 }
             } else if (commandName === 'job') {

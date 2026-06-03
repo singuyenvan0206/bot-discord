@@ -159,6 +159,16 @@ async function initSchema() {
         )
     `);
 
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS emoji_stats (
+            guild_id TEXT NOT NULL,
+            emoji_id TEXT NOT NULL,
+            use_count INTEGER NOT NULL DEFAULT 0,
+            last_used_at BIGINT NOT NULL DEFAULT 0,
+            PRIMARY KEY (guild_id, emoji_id)
+        )
+    `);
+
     // ─── Migrations (Safe column additions) ───
     const safeAddColumn = async (table, column, definition) => {
         try {

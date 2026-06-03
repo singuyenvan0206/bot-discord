@@ -13,6 +13,18 @@ module.exports = {
         try {
             if (message.author.bot || !message.guild) return;
 
+            // --- EMOJI USAGE TRACKING ---
+            const customEmojiRegex = /<a?:\w+:(\d+)>/g;
+            let match;
+            const seenEmojis = new Set();
+            while ((match = customEmojiRegex.exec(message.content)) !== null) {
+                const emojiId = match[1];
+                if (message.guild.emojis.cache.has(emojiId) && !seenEmojis.has(emojiId)) {
+                    seenEmojis.add(emojiId);
+                    db.incrementEmojiUsage(message.guild.id, emojiId).catch(() => {});
+                }
+            }
+
             const guildRow = await db.getGuild(message.guild.id);
             const { client } = message;
             const prefix = guildRow?.prefix || config.PREFIX;

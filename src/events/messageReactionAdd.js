@@ -51,6 +51,13 @@ module.exports = {
         const guild = reaction.message.guild;
         if (!guild) return;
 
+        // --- EMOJI USAGE TRACKING ---
+        if (reaction.emoji.id) {
+            if (guild.emojis.cache.has(reaction.emoji.id)) {
+                db.incrementEmojiUsage(guild.id, reaction.emoji.id).catch(() => {});
+            }
+        }
+
         // --- EMOJI SUGGESTION REACTION HANDLER ---
         const suggestChannelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
         const isSuggestChannel = reaction.message.channelId === suggestChannelId || 

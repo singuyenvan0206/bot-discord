@@ -132,6 +132,9 @@ async function handleDelete(guild, emojiQuery) {
   const wasAnimated = emoji.animated;
   
   await emoji.delete();
+  
+  const db = require('../../database');
+  await db.clearEmojiStats(guild.id, id).catch(() => {});
 
   return new EmbedBuilder()
     .setColor(COLOR_SUCCESS)
@@ -505,6 +508,191 @@ async function createEmojiFromUrl(guild, name, url) {
   return await guild.emojis.create({ attachment: buffer, name });
 }
 
+// 12. INACTIVE EMOJIS
+async function handleInactive(guild, minUses = 5, inactiveDays = 30) {
+  const db = require('../../database');
+  const emojis = await guild.emojis.fetch();
+  const stats = await db.getEmojiStats(guild.id);
+  const statsMap = new Map(stats.map(s => [s.emoji_id, s]));
+
+  const inactiveList = [];
+  const now = Date.now();
+  const thresholdMs = inactiveDays * 24 * 60 * 60 * 1000;
+
+  for (const [id, emoji] of emojis) {
+    const stat = statsMap.get(id);
+    const useCount = stat ? stat.use_count : 0;
+    const lastUsed = stat ? Number(stat.last_used_at) : 0;
+
+    let isInactive = false;
+    if (useCount === 0) {
+      isInactive = true;
+    } else if (useCount <= minUses) {
+      if (inactiveDays > 0) {
+        if (now - lastUsed >= thresholdMs) {
+          isInactive = true;
+        }
+      } else {
+        isInactive = true;
+      }
+    }
+
+    if (isInactive) {
+      inactiveList.push({
+        emoji,
+        useCount,
+        lastUsed
+      });
+    }
+  }
+
+  // Sort by usage count (lowest first), then last used (oldest first)
+  inactiveList.sort((a, b) => {
+    if (a.useCount !== b.useCount) return a.useCount - b.useCount;
+    return a.lastUsed - b.lastUsed;
+  });
+
+  if (inactiveList.length === 0) {
+    return new EmbedBuilder()
+      .setColor(COLOR_SUCCESS)
+      .setTitle('📊 Inactive Emojis')
+      .setDescription('Chúc mừng! Không tìm thấy emoji nào lười hoạt động hoặc ít được sử dụng.');
+  }
+
+  const listText = inactiveList.slice(0, 15).map((item, idx) => {
+    const lastUsedStr = item.lastUsed > 0 ? `<t:${Math.floor(item.lastUsed / 1000)}:R>` : '*Chưa bao giờ dùng*';
+    return `${idx + 1}. ${item.emoji} \`:${item.emoji.name}:\`\n   • **Lượt dùng:** \`${item.useCount}\` | **Dùng cuối:** ${lastUsedStr}`;
+  }).join('\n');
+
+  const totalCount = inactiveList.length;
+
+  return new EmbedBuilder()
+    .setColor(COLOR_INFO)
+    .setTitle(`📊 Danh sách Emoji ít dùng (${totalCount} Emojis)`)
+    .setDescription(`Dưới đây là các emoji có dưới **${minUses} lượt dùng** hoặc không hoạt động trong **${inactiveDays} ngày** qua:\n\n${listText}\n\n${totalCount > 15 ? `*...và còn ${totalCount - 15} emoji khác.*` : ''}\n\n*Admin có thể sử dụng lệnh \`/emoji prune\` hoặc \`$emoji prune\` để dọn dẹp các emoji này.*`);
+}
+
+// 13. PRUNE INACTIVE EMOJIS
+async function handlePrune(guild, minUses = 5, inactiveDays = 30) {
+  const db = require('../../database');
+  const emojis = await guild.emojis.fetch();
+  const stats = await db.getEmojiStats(guild.id);
+  const statsMap = new Map(stats.map(s => [s.emoji_id, s]));
+
+  const pruneList = [];
+  const now = Date.now();
+  const thresholdMs = inactiveDays * 24 * 60 * 60 * 1000;
+
+  for (const [id, emoji] of emojis) {
+    const stat = statsMap.get(id);
+    const useCount = stat ? stat.use_count : 0;
+    const lastUsed = stat ? Number(stat.last_used_at) : 0;
+
+    let isInactive = false;
+    if (useCount === 0) {
+      isInactive = true;
+    } else if (useCount <= minUses) {
+      if (inactiveDays > 0) {
+        if (now - lastUsed >= thresholdMs) {
+          isInactive = true;
+        }
+      } else {
+        isInactive = true;
+      }
+    }
+
+    if (isInactive) {
+      pruneList.push(emoji);
+    }
+  }
+
+  if (pruneList.length === 0) {
+    return new EmbedBuilder()
+      .setColor(COLOR_SUCCESS)
+      .setTitle('🗑️ Prune Emojis')
+      .setDescription('Không tìm thấy emoji nào cần dọn dẹp.');
+  }
+
+  const prunedCount = pruneList.length;
+  const names = [];
+  for (const emoji of pruneList) {
+    names.push(`\`:${emoji.name}:\``);
+    await emoji.delete().catch(() => {});
+    await db.clearEmojiStats(guild.id, emoji.id).catch(() => {});
+  }
+
+  const truncate = (arr, limit = 20) => {
+    if (arr.length > limit) {
+      return arr.slice(0, limit).join(', ') + `... và ${arr.length - limit} emoji khác`;
+    }
+    return arr.join(', ');
+  };
+
+  return new EmbedBuilder()
+    .setColor(COLOR_SUCCESS)
+    .setTitle('🗑️ Đã Dọn Dẹp Emoji Thành Công')
+    .setDescription(`Đã xóa thành công **${prunedCount}** emoji ít sử dụng khỏi server.`)
+    .addFields({ name: 'Danh sách đã xóa', value: truncate(names) });
+}
+
+// 14. DYNAMIC WEB SEARCH EMOJIS
+async function handleWebSearch(guild, query, prefix) {
+  if (!query) {
+    throw new Error('Please provide a search query.');
+  }
+
+  let slackmojis = [];
+  try {
+    const response = await axios.get('https://slackmojis.com/emojis.json', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      },
+      timeout: 4000
+    });
+    if (response.data && Array.isArray(response.data)) {
+      slackmojis = response.data;
+    }
+  } catch (err) {
+    console.warn('Live web fetch failed, using offline cache fallback:', err.message);
+    slackmojis = require('../../data/slackmojis.json');
+  }
+
+  const matches = slackmojis.filter(e => e.name.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
+
+  if (matches.length === 0) {
+    return new EmbedBuilder()
+      .setColor(COLOR_ERROR)
+      .setTitle('🔍 Kết quả tìm kiếm Emoji trên Web')
+      .setDescription(`Không tìm thấy emoji nào phù hợp với từ khóa \`${query}\` trên Slackmojis.`);
+  }
+
+  const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+  const selectMenu = new StringSelectMenuBuilder()
+    .setCustomId('emoji_search_select')
+    .setPlaceholder('Chọn một emoji để thêm hoặc đề xuất...')
+    .addOptions(
+      matches.map(e => ({
+        label: `:${e.name.slice(0, 20)}:`,
+        value: String(e.id),
+        description: `Category: ${e.category?.name || 'General'}`,
+      }))
+    );
+
+  const row = new ActionRowBuilder().addComponents(selectMenu);
+
+  const listText = matches.map((e, idx) => `${idx + 1}. **${e.name}** (${e.category?.name || 'General'})`).join('\n');
+
+  return {
+    embeds: [
+      new EmbedBuilder()
+        .setColor(COLOR_INFO)
+        .setTitle(`🔍 Kết quả tìm kiếm Web cho: ${query}`)
+        .setDescription(`Tìm thấy **${matches.length}** kết quả trực tuyến phù hợp:\n\n${listText}\n\n*Hãy chọn emoji từ menu bên dưới để tải về.*`)
+    ],
+    components: [row]
+  };
+}
+
 // 8. HELP GUIDE
 function handleHelp(prefix) {
   return new EmbedBuilder()
@@ -553,6 +741,21 @@ function handleHelp(prefix) {
         inline: false
       },
       {
+        name: '📊 Inactive Emojis',
+        value: `* **Slash:** \`/emoji inactive [min_uses] [inactive_days]\`\n* **Prefix:** \`${prefix}emoji inactive [min_uses] [inactive_days]\`\n* **Shortcut:** \`${prefix}inactiveemoji\``,
+        inline: false
+      },
+      {
+        name: '🗑️ Prune Emojis (Admin Only)',
+        value: `* **Slash:** \`/emoji prune [min_uses] [inactive_days]\`\n* **Prefix:** \`${prefix}emoji prune [min_uses] [inactive_days]\`\n* **Shortcut:** \`${prefix}pruneemoji\``,
+        inline: false
+      },
+      {
+        name: '🔍 Web Search Emojis',
+        value: `* **Slash:** \`/emoji websearch query: <query>\`\n* **Prefix:** \`${prefix}emoji websearch <query>\`\n* **Shortcut:** \`${prefix}websearchemoji\``,
+        inline: false
+      },
+      {
         name: '⚙️ Config Suggestions (Admin)',
         value: `* **Slash:** \`/emoji config [channel] [approve] [reject]\`\n* **Prefix:** \`${prefix}emoji config channel <#channel/clear>\` or \`approve <emoji>\` or \`reject <emoji>\``,
         inline: false
@@ -563,13 +766,16 @@ function handleHelp(prefix) {
 
 module.exports = {
   name: 'emoji',
-  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji', 'suggestemoji', 'configemoji', 'searchemoji'],
+  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji', 'suggestemoji', 'configemoji', 'searchemoji', 'inactiveemoji', 'pruneemoji', 'websearchemoji'],
   description: 'Quản lý emoji của server (Manage guild emojis)',
   parseEmojiInputToUrl,
   downloadImage,
   createEmojiFromUrl,
   handleSuggest,
   handleConfig,
+  handleInactive,
+  handlePrune,
+  handleWebSearch,
   async execute(message, args) {
     const db = require('../../database');
     const config = require('../../config');
@@ -608,13 +814,19 @@ module.exports = {
       args = ['config', ...args];
     } else if (invokedCommand === 'searchemoji') {
       args = ['search', ...args];
+    } else if (invokedCommand === 'inactiveemoji') {
+      args = ['inactive', ...args];
+    } else if (invokedCommand === 'pruneemoji') {
+      args = ['prune', ...args];
+    } else if (invokedCommand === 'websearchemoji') {
+      args = ['websearch', ...args];
     }
 
     const subcommand = args[0]?.toLowerCase();
     const guild = message.guild;
 
     // Subcommands that require ManageExpressions permission
-    const adminSubcommands = ['add', 'delete', 'rename', 'steal', 'restrict', 'config'];
+    const adminSubcommands = ['add', 'delete', 'rename', 'steal', 'restrict', 'config', 'prune'];
     if (adminSubcommands.includes(subcommand)) {
       if (!message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
         const errEmbed = new EmbedBuilder()
@@ -760,6 +972,24 @@ module.exports = {
           throw new Error(`Usage: \`${prefix}emoji search <pepe_cat_logo_etc>\``);
         }
         const searchResult = await handleSearch(guild, query, prefix);
+        return message.reply(searchResult);
+      }
+      else if (subcommand === 'inactive') {
+        const minUses = args[1] ? parseInt(args[1]) : 5;
+        const inactiveDays = args[2] ? parseInt(args[2]) : 30;
+        embed = await handleInactive(guild, minUses, inactiveDays);
+      }
+      else if (subcommand === 'prune') {
+        const minUses = args[1] ? parseInt(args[1]) : 5;
+        const inactiveDays = args[2] ? parseInt(args[2]) : 30;
+        embed = await handlePrune(guild, minUses, inactiveDays);
+      }
+      else if (subcommand === 'websearch') {
+        const query = args[1];
+        if (!query) {
+          throw new Error(`Usage: \`${prefix}emoji websearch <query>\``);
+        }
+        const searchResult = await handleWebSearch(guild, query, prefix);
         return message.reply(searchResult);
       }
       else {

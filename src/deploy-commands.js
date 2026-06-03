@@ -520,7 +520,44 @@ const commands = [
         )
         .addSubcommand(sub =>
             sub.setName('search')
-                .setDescription('Search the web for cool emojis to add')
+                .setDescription('Search the local emoji mirror catalog')
+                .addStringOption(opt =>
+                    opt.setName('query')
+                        .setDescription('Search query (e.g. pepe, cat, logo)')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('inactive')
+                .setDescription('Show a list of inactive or underutilized emojis')
+                .addIntegerOption(opt =>
+                    opt.setName('min_uses')
+                        .setDescription('Minimum usage count threshold (default: 5)')
+                        .setRequired(false)
+                )
+                .addIntegerOption(opt =>
+                    opt.setName('inactive_days')
+                        .setDescription('Number of days inactive threshold (default: 30)')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('prune')
+                .setDescription('Delete inactive or underutilized emojis (Admin only)')
+                .addIntegerOption(opt =>
+                    opt.setName('min_uses')
+                        .setDescription('Minimum usage count threshold (default: 5)')
+                        .setRequired(false)
+                )
+                .addIntegerOption(opt =>
+                    opt.setName('inactive_days')
+                        .setDescription('Number of days inactive threshold (default: 30)')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('websearch')
+                .setDescription('Search the web dynamically for new emojis to add')
                 .addStringOption(opt =>
                     opt.setName('query')
                         .setDescription('Search query (e.g. pepe, cat, logo)')

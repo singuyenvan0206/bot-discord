@@ -5,6 +5,7 @@ const guilds = require('./guilds');
 const giveaways = require('./giveaways');
 const marriages = require('./marriages');
 const economy = require('./economy');
+const emojis = require('./emojis');
 
 module.exports = {
     ...pool,
@@ -14,6 +15,7 @@ module.exports = {
     ...giveaways,
     ...marriages,
     ...economy,
+    ...emojis,
 
     // Re-export specific common aliases if needed
     getDb: async () => pool.pool,
