@@ -401,7 +401,6 @@ const commands = [
     new SlashCommandBuilder()
         .setName('emoji')
         .setDescription('Manage custom emojis in this server')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageExpressions)
         .setDMPermission(false)
         .addSubcommand(sub =>
             sub.setName('add')
@@ -478,6 +477,44 @@ const commands = [
                 .addRoleOption(opt =>
                     opt.setName('role')
                         .setDescription('The role allowed to use this emoji (leave empty to clear restrictions)')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('suggest')
+                .setDescription('Suggest a new emoji to the server')
+                .addStringOption(opt =>
+                    opt.setName('name')
+                        .setDescription('Name for the suggested emoji')
+                        .setRequired(true)
+                )
+                .addStringOption(opt =>
+                    opt.setName('url')
+                        .setDescription('Direct URL or emoji to suggest')
+                        .setRequired(false)
+                )
+                .addAttachmentOption(opt =>
+                    opt.setName('file')
+                        .setDescription('Upload an image file directly')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('config')
+                .setDescription('Configure emoji suggestion settings (Admin only)')
+                .addChannelOption(opt =>
+                    opt.setName('channel')
+                        .setDescription('Channel to post suggestions in')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('approve')
+                        .setDescription('Reaction emoji for approval (e.g. ✅)')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('reject')
+                        .setDescription('Reaction emoji for rejection (e.g. ❌)')
                         .setRequired(false)
                 )
         )

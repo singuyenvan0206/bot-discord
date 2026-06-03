@@ -14,9 +14,94 @@ module.exports = {
             if (message.author.bot || !message.guild) return;
 
             const guildRow = await db.getGuild(message.guild.id);
-
             const { client } = message;
             const prefix = guildRow?.prefix || config.PREFIX;
+
+            // --- EMOJI SUGGESTION CHANNEL LISTENER ---
+            const suggestChannelId = await db.getGuildSetting(message.guild.id, 'emoji_suggest_channel');
+            const isSuggestChannel = message.channel.id === suggestChannelId || 
+                (!suggestChannelId && (message.channel.name.toLowerCase().includes('đề-xuất-emoji') || message.channel.name.toLowerCase().includes('de-xuat-emoji')));
+
+            if (isSuggestChannel && !message.content.startsWith(prefix)) {
+                const attachment = message.attachments ? message.attachments.first() : null;
+                const hasUrl = /https?:\/\/\S+/i.test(message.content);
+                const hasCustomEmoji = /<a?:\w+:\d+>/.test(message.content);
+                
+                const codePoints = [...message.content].map(char => char.codePointAt(0).toString(16));
+                const hasUnicodeEmoji = codePoints.some(cp => {
+                    const val = parseInt(cp, 16);
+                    return val >= 128 || cp === '20e3';
+                });
+
+                if (attachment || hasUrl || hasCustomEmoji || hasUnicodeEmoji) {
+                    let sourceUrl = '';
+                    let targetName = '';
+
+                    if (attachment) {
+                        sourceUrl = attachment.url;
+                        targetName = attachment.name.replace(/\.[^/.]+$/, '').replace(/[^\w]/g, '_').toLowerCase();
+                    } else if (hasCustomEmoji) {
+                        const match = message.content.match(/<(a)?:(\w+):(\d+)>/);
+                        if (match) {
+                            const animated = !!match[1];
+                            const id = match[3];
+                            sourceUrl = `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
+                            targetName = match[2];
+                        }
+                    } else if (hasUnicodeEmoji) {
+                        const chars = [...message.content];
+                        for (const char of chars) {
+                            const cp = char.codePointAt(0);
+                            if (cp >= 128) {
+                                const hex = cp.toString(16);
+                                sourceUrl = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${hex}.png`;
+                                targetName = `emoji_${hex}`;
+                                break;
+                            }
+                        }
+                    } else if (hasUrl) {
+                        const match = message.content.match(/(https?:\/\/\S+)/i);
+                        if (match) {
+                            sourceUrl = match[1];
+                            targetName = 'custom_emoji';
+                        }
+                    }
+
+                    const cleanWord = message.content.replace(/<a?:\w+:\d+>/g, '').replace(/https?:\/\/\S+/gi, '').replace(/[^\w\s]/g, '').trim().split(/\s+/)[0];
+                    if (cleanWord && cleanWord.length >= 2 && cleanWord.length <= 32) {
+                        targetName = cleanWord.replace(/[^\w]/g, '_').toLowerCase();
+                    }
+
+                    if (!targetName || !/^\w{2,32}$/.test(targetName)) {
+                        targetName = `emoji_${Date.now().toString().slice(-6)}`;
+                    }
+
+                    if (sourceUrl) {
+                        const { EmbedBuilder } = require('discord.js');
+                        const approveEmoji = await db.getGuildSetting(message.guild.id, 'emoji_approve_reaction', '✅');
+                        const rejectEmoji = await db.getGuildSetting(message.guild.id, 'emoji_reject_reaction', '❌');
+
+                        const embed = new EmbedBuilder()
+                            .setColor(0x5865F2)
+                            .setTitle('💡 Đề Xuất Emoji Mới')
+                            .setDescription(`Một emoji mới đã được đề xuất và đang chờ duyệt.\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
+                            .addFields(
+                                { name: 'Tên Đề Xuất', value: `\`:${targetName}:\``, inline: true },
+                                { name: 'Người Đề Xuất', value: `${message.author}`, inline: true }
+                            )
+                            .setImage(sourceUrl)
+                            .setFooter({ text: `Source: ${sourceUrl} | Name: ${targetName}` });
+
+                        await message.delete().catch(() => {});
+
+                        const suggestMsg = await message.channel.send({ embeds: [embed] });
+                        await suggestMsg.react('👍').catch(() => {});
+                        await suggestMsg.react('👎').catch(() => {});
+                        return;
+                    }
+                }
+            }
+
             const isCommand = message.content.startsWith(prefix);
             let shouldSkipChatXp = false;
 
