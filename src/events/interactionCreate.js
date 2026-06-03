@@ -189,6 +189,50 @@ module.exports = {
                 }
             }
             // All rank_ interactions are handled by the inline collector in rank.js
+            
+            if (interaction.customId === 'emoji_search_select') {
+                await interaction.deferReply({ ephemeral: true }).catch(() => {});
+                
+                const emojiId = parseInt(interaction.values[0]);
+                const slackmojis = require('../data/slackmojis.json');
+                const emojiObj = slackmojis.find(e => e.id === emojiId);
+                if (!emojiObj) {
+                    return interaction.followUp({ content: '❌ Không tìm thấy thông tin emoji này.', ephemeral: true }).catch(() => {});
+                }
+
+                const guild = interaction.guild;
+                const member = interaction.member;
+
+                const { PermissionFlagsBits } = require('discord.js');
+                const isAdmin = member.permissions.has(PermissionFlagsBits.ManageGuildExpressions);
+                const emojiCommand = require('../commands/utility/emoji');
+
+                if (isAdmin) {
+                    try {
+                        const newEmoji = await emojiCommand.createEmojiFromUrl(guild, emojiObj.name, emojiObj.image_url);
+                        const { EmbedBuilder } = require('discord.js');
+                        const successEmbed = new EmbedBuilder()
+                            .setColor(0x57F287) // COLOR_SUCCESS
+                            .setTitle('✅ Đã Thêm Emoji')
+                            .setDescription(`Đã thêm thành công emoji tùy chỉnh mới: ${newEmoji}`)
+                            .addFields(
+                                { name: 'Tên Emoji', value: `\`:${emojiObj.name}:\``, inline: true },
+                                { name: 'Nguồn', value: 'Slackmojis', inline: true }
+                            );
+                        await interaction.followUp({ embeds: [successEmbed], ephemeral: true }).catch(() => {});
+                    } catch (err) {
+                        await interaction.followUp({ content: `❌ Thất bại khi thêm emoji trực tiếp: ${err.message}`, ephemeral: true }).catch(() => {});
+                    }
+                } else {
+                    try {
+                        const embed = await emojiCommand.handleSuggest(guild, emojiObj.name, emojiObj.image_url, interaction.user);
+                        await interaction.followUp({ embeds: [embed], ephemeral: true }).catch(() => {});
+                    } catch (err) {
+                        await interaction.followUp({ content: `❌ Thất bại khi gửi đề xuất emoji: ${err.message}`, ephemeral: true }).catch(() => {});
+                    }
+                }
+                return;
+            }
         }
 
         // 3. Slash Commands
@@ -261,6 +305,8 @@ module.exports = {
                     args.push(channel ? `<#${channel.id}>` : '');
                     args.push(approve || '');
                     args.push(reject || '');
+                } else if (sub === 'search') {
+                    args.push(interaction.options.getString('query'));
                 }
             } else if (commandName === 'job') {
                 const sub = interaction.options.getSubcommand();

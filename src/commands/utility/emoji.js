@@ -457,6 +457,54 @@ async function handleConfig(guild, channelQuery, approveQuery, rejectQuery) {
     .setDescription(description);
 }
 
+// 11. SEARCH EMOJIS
+async function handleSearch(guild, query, prefix) {
+  if (!query) {
+    throw new Error('Please provide a search query.');
+  }
+
+  const slackmojis = require('../../data/slackmojis.json');
+  const matches = slackmojis.filter(e => e.name.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
+
+  if (matches.length === 0) {
+    return new EmbedBuilder()
+      .setColor(COLOR_ERROR)
+      .setTitle('🔍 Kết quả tìm kiếm Emoji')
+      .setDescription(`Không tìm thấy emoji nào phù hợp với từ khóa \`${query}\`.`);
+  }
+
+  const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+  const selectMenu = new StringSelectMenuBuilder()
+    .setCustomId('emoji_search_select')
+    .setPlaceholder('Chọn một emoji để thêm hoặc đề xuất...')
+    .addOptions(
+      matches.map(e => ({
+        label: `:${e.name}:`,
+        value: String(e.id),
+        description: `Category: ${e.category?.name || 'General'}`,
+      }))
+    );
+
+  const row = new ActionRowBuilder().addComponents(selectMenu);
+
+  const listText = matches.map((e, idx) => `${idx + 1}. **${e.name}** (${e.category?.name || 'General'})`).join('\n');
+
+  return {
+    embeds: [
+      new EmbedBuilder()
+        .setColor(COLOR_INFO)
+        .setTitle(`🔍 Kết quả tìm kiếm cho: ${query}`)
+        .setDescription(`Tìm thấy **${matches.length}** kết quả phù hợp:\n\n${listText}\n\n*Hãy chọn emoji từ menu bên dưới để tải về.*`)
+    ],
+    components: [row]
+  };
+}
+
+async function createEmojiFromUrl(guild, name, url) {
+  const { buffer } = await downloadImage(url);
+  return await guild.emojis.create({ attachment: buffer, name });
+}
+
 // 8. HELP GUIDE
 function handleHelp(prefix) {
   return new EmbedBuilder()
@@ -515,8 +563,13 @@ function handleHelp(prefix) {
 
 module.exports = {
   name: 'emoji',
-  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji', 'suggestemoji', 'configemoji'],
+  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji', 'suggestemoji', 'configemoji', 'searchemoji'],
   description: 'Quản lý emoji của server (Manage guild emojis)',
+  parseEmojiInputToUrl,
+  downloadImage,
+  createEmojiFromUrl,
+  handleSuggest,
+  handleConfig,
   async execute(message, args) {
     const db = require('../../database');
     const config = require('../../config');
@@ -553,6 +606,8 @@ module.exports = {
       args = ['suggest', ...args];
     } else if (invokedCommand === 'configemoji') {
       args = ['config', ...args];
+    } else if (invokedCommand === 'searchemoji') {
+      args = ['search', ...args];
     }
 
     const subcommand = args[0]?.toLowerCase();
@@ -698,6 +753,14 @@ module.exports = {
         }
 
         embed = await handleConfig(guild, channelQuery, approveQuery, rejectQuery);
+      }
+      else if (subcommand === 'search') {
+        const query = args[1];
+        if (!query) {
+          throw new Error(`Usage: \`${prefix}emoji search <pepe_cat_logo_etc>\``);
+        }
+        const searchResult = await handleSearch(guild, query, prefix);
+        return message.reply(searchResult);
       }
       else {
         throw new Error(`Unknown subcommand \`${subcommand}\`. Type \`${prefix}emoji\` for help.`);

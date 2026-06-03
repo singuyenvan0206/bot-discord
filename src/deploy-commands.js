@@ -519,6 +519,15 @@ const commands = [
                 )
         )
         .addSubcommand(sub =>
+            sub.setName('search')
+                .setDescription('Search the web for cool emojis to add')
+                .addStringOption(opt =>
+                    opt.setName('query')
+                        .setDescription('Search query (e.g. pepe, cat, logo)')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
             sub.setName('help')
                 .setDescription('Display the list of available commands and instructions')
         ),
