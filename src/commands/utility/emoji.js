@@ -481,11 +481,14 @@ async function handleSearch(guild, query, prefix) {
     .setCustomId('emoji_search_select')
     .setPlaceholder('Chọn một emoji để thêm hoặc đề xuất...')
     .addOptions(
-      matches.map(e => ({
-        label: `:${e.name}:`,
-        value: String(e.id),
-        description: `Category: ${e.category?.name || 'General'}`,
-      }))
+      matches.map(e => {
+        const relativePath = e.image_url.replace('https://emojis.slackmojis.com/emojis/images/', '').split('?')[0];
+        return {
+          label: `:${e.name.slice(0, 20)}:`,
+          value: `${e.name.slice(0, 32)}|${relativePath}`,
+          description: `Category: ${e.category?.name || 'General'}`,
+        };
+      })
     );
 
   const row = new ActionRowBuilder().addComponents(selectMenu);
@@ -641,23 +644,36 @@ async function handleWebSearch(guild, query, prefix) {
     throw new Error('Please provide a search query.');
   }
 
-  let slackmojis = [];
+  let matches = [];
   try {
-    const response = await axios.get('https://slackmojis.com/emojis.json', {
+    const response = await axios.get(`https://slackmojis.com/emojis/search?query=${encodeURIComponent(query)}`, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       },
-      timeout: 4000
+      timeout: 5000
     });
-    if (response.data && Array.isArray(response.data)) {
-      slackmojis = response.data;
+    
+    // Parse response HTML with regex to extract custom emojis
+    const regex = /data-emoji-id="(\d+)"[^]*?src="([^"]+)"[^]*?class='name'[^]*?>\s*:([^:]+):/g;
+    let match;
+    while ((match = regex.exec(response.data)) !== null) {
+      matches.push({
+        id: parseInt(match[1]),
+        image_url: match[2],
+        name: match[3].trim()
+      });
     }
   } catch (err) {
-    console.warn('Live web fetch failed, using offline cache fallback:', err.message);
-    slackmojis = require('../../data/slackmojis.json');
+    console.warn('Live web search query failed, using offline cache fallback:', err.message);
   }
 
-  const matches = slackmojis.filter(e => e.name.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
+  // Fallback to local slackmojis.json if live query failed or returned no results
+  if (matches.length === 0) {
+    const slackmojis = require('../../data/slackmojis.json');
+    matches = slackmojis.filter(e => e.name.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
+  } else {
+    matches = matches.slice(0, 25);
+  }
 
   if (matches.length === 0) {
     return new EmbedBuilder()
@@ -671,16 +687,19 @@ async function handleWebSearch(guild, query, prefix) {
     .setCustomId('emoji_search_select')
     .setPlaceholder('Chọn một emoji để thêm hoặc đề xuất...')
     .addOptions(
-      matches.map(e => ({
-        label: `:${e.name.slice(0, 20)}:`,
-        value: String(e.id),
-        description: `Category: ${e.category?.name || 'General'}`,
-      }))
+      matches.map(e => {
+        const relativePath = e.image_url.replace('https://emojis.slackmojis.com/emojis/images/', '').split('?')[0];
+        return {
+          label: `:${e.name.slice(0, 20)}:`,
+          value: `${e.name.slice(0, 32)}|${relativePath}`,
+          description: `Slackmojis (ID: ${e.id})`,
+        };
+      })
     );
 
   const row = new ActionRowBuilder().addComponents(selectMenu);
 
-  const listText = matches.map((e, idx) => `${idx + 1}. **${e.name}** (${e.category?.name || 'General'})`).join('\n');
+  const listText = matches.map((e, idx) => `${idx + 1}. **${e.name}** (ID: ${e.id})`).join('\n');
 
   return {
     embeds: [

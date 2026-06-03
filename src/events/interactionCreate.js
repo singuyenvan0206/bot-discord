@@ -193,25 +193,14 @@ module.exports = {
             if (interaction.customId === 'emoji_search_select') {
                 await interaction.deferReply({ ephemeral: true }).catch(() => {});
                 
-                const emojiId = parseInt(interaction.values[0]);
-                let slackmojis = require('../data/slackmojis.json');
-                let emojiObj = slackmojis.find(e => e.id === emojiId);
-
-                if (!emojiObj) {
-                    try {
-                        const axios = require('axios');
-                        const response = await axios.get('https://slackmojis.com/emojis.json', { timeout: 3000 });
-                        if (response.data && Array.isArray(response.data)) {
-                            emojiObj = response.data.find(e => e.id === emojiId);
-                        }
-                    } catch (err) {
-                        console.warn('Failed to fetch live slackmojis during select interaction:', err.message);
-                    }
+                const parts = interaction.values[0].split('|');
+                if (parts.length < 2) {
+                    return interaction.followUp({ content: '❌ Định dạng dữ liệu không hợp lệ.', ephemeral: true }).catch(() => {});
                 }
                 
-                if (!emojiObj) {
-                    return interaction.followUp({ content: '❌ Không tìm thấy thông tin emoji này.', ephemeral: true }).catch(() => {});
-                }
+                const emojiName = parts[0];
+                const relativePath = parts[1];
+                const imageUrl = `https://emojis.slackmojis.com/emojis/images/${relativePath}`;
 
                 const guild = interaction.guild;
                 const member = interaction.member;
@@ -222,14 +211,14 @@ module.exports = {
 
                 if (isAdmin) {
                     try {
-                        const newEmoji = await emojiCommand.createEmojiFromUrl(guild, emojiObj.name, emojiObj.image_url);
+                        const newEmoji = await emojiCommand.createEmojiFromUrl(guild, emojiName, imageUrl);
                         const { EmbedBuilder } = require('discord.js');
                         const successEmbed = new EmbedBuilder()
                             .setColor(0x57F287) // COLOR_SUCCESS
                             .setTitle('✅ Đã Thêm Emoji')
                             .setDescription(`Đã thêm thành công emoji tùy chỉnh mới: ${newEmoji}`)
                             .addFields(
-                                { name: 'Tên Emoji', value: `\`:${emojiObj.name}:\``, inline: true },
+                                { name: 'Tên Emoji', value: `\`:${emojiName}:\``, inline: true },
                                 { name: 'Nguồn', value: 'Slackmojis', inline: true }
                             );
                         await interaction.followUp({ embeds: [successEmbed], ephemeral: true }).catch(() => {});
@@ -238,7 +227,7 @@ module.exports = {
                     }
                 } else {
                     try {
-                        const embed = await emojiCommand.handleSuggest(guild, emojiObj.name, emojiObj.image_url, interaction.user);
+                        const embed = await emojiCommand.handleSuggest(guild, emojiName, imageUrl, interaction.user);
                         await interaction.followUp({ embeds: [embed], ephemeral: true }).catch(() => {});
                     } catch (err) {
                         await interaction.followUp({ content: `❌ Thất bại khi gửi đề xuất emoji: ${err.message}`, ephemeral: true }).catch(() => {});
