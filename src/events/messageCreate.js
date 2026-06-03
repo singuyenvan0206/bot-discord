@@ -150,10 +150,11 @@ module.exports = {
                 }
             }
 
+            let tempCommand = null;
             if (isCommand) {
                 const tempArgs = message.content.slice(prefix.length).trim().split(/ +/);
                 const tempCommandName = (tempArgs.shift() || '').toLowerCase();
-                const tempCommand = client.commands.get(tempCommandName) ||
+                tempCommand = client.commands.get(tempCommandName) ||
                     client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(tempCommandName));
 
                 const isBotOwner = await db.isOwner(message.author.id);
