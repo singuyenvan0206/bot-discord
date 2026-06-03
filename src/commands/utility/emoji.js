@@ -32,23 +32,41 @@ function resolveEmoji(guild, query) {
   return null;
 }
 
-// Helper: Parse a custom emoji string to a CDN URL
-function parseEmojiSource(query) {
+// Helper: Convert Unicode emoji, custom emoji, or URL to a valid image URL
+function parseEmojiInputToUrl(query) {
   if (!query) return null;
+
+  // 1. If it's a HTTP/HTTPS URL, return it
+  if (/^https?:\/\//i.test(query)) {
+    return query;
+  }
+
+  // 2. If it's a custom Discord emoji <:name:id> or <a:name:id>
   const customEmojiMatch = query.match(/<(a)?:(\w+):(\d+)>/);
-  if (!customEmojiMatch) return null;
+  if (customEmojiMatch) {
+    const animated = !!customEmojiMatch[1];
+    const id = customEmojiMatch[3];
+    return `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
+  }
 
-  const animated = !!customEmojiMatch[1];
-  const name = customEmojiMatch[2];
-  const id = customEmojiMatch[3];
-  const url = `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
+  // 3. If it is a Unicode emoji
+  const codePoints = [...query].map(char => char.codePointAt(0).toString(16));
+  if (codePoints.length > 0) {
+    const firstCodePoint = parseInt(codePoints[0], 16);
+    if (firstCodePoint >= 128 || codePoints.includes('20e3')) {
+      const hasKeycap = codePoints.includes('20e3');
+      const filtered = hasKeycap ? codePoints : codePoints.filter(cp => cp !== 'fe0f');
+      const hex = filtered.join('-');
+      return `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${hex}.png`;
+    }
+  }
 
-  return { url, name, animated };
+  return query;
 }
 
 // Helper: Download image and return buffer
 async function downloadImage(url) {
-  let targetUrl = url;
+  let targetUrl = parseEmojiInputToUrl(url) || url;
   if (targetUrl.includes('//localhost')) {
     targetUrl = targetUrl.replace('//localhost', '//127.0.0.1');
   }
@@ -83,8 +101,7 @@ async function handleAdd(guild, name, urlOrEmoji) {
     throw new Error('Emoji name must be alphanumeric (underscores allowed) and between 2 and 32 characters.');
   }
 
-  const parsedEmoji = parseEmojiSource(urlOrEmoji);
-  const targetUrl = parsedEmoji ? parsedEmoji.url : urlOrEmoji;
+  const targetUrl = parseEmojiInputToUrl(urlOrEmoji) || urlOrEmoji;
   const { buffer } = await downloadImage(targetUrl);
   const emoji = await guild.emojis.create({ attachment: buffer, name });
   
@@ -327,6 +344,119 @@ async function handleRestrict(guild, emojiQuery, role) {
     .setThumbnail(emoji.url);
 }
 
+// Helper: Resolve emoji suggestion channel
+async function getSuggestChannel(guild) {
+  const db = require('../../database');
+  const channelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
+  if (channelId) {
+    const channel = guild.channels.cache.get(channelId);
+    if (channel) return channel;
+  }
+
+  // Fallback to name match
+  const fallback = guild.channels.cache.find(
+    c => c.name.toLowerCase().includes('đề-xuất-emoji') || c.name.toLowerCase().includes('de-xuat-emoji')
+  );
+  return fallback || null;
+}
+
+// 9. SUGGEST EMOJI
+async function handleSuggest(guild, name, url, author) {
+  if (!name || !/^\w{2,32}$/.test(name)) {
+    throw new Error('Emoji name must be alphanumeric (underscores allowed) and between 2 and 32 characters.');
+  }
+
+  const parsedUrl = parseEmojiInputToUrl(url);
+  if (!parsedUrl) {
+    throw new Error('Invalid emoji or image source provided.');
+  }
+
+  const channel = await getSuggestChannel(guild);
+  if (!channel) {
+    throw new Error('Emoji suggestion channel is not configured, and no channel named `đề-xuất-emoji` was found in this server.');
+  }
+
+  const db = require('../../database');
+  const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+  const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+
+  const embed = new EmbedBuilder()
+    .setColor(COLOR_INFO)
+    .setTitle('💡 Đề Xuất Emoji Mới')
+    .setDescription(`Một emoji mới đã được đề xuất và đang chờ duyệt.\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
+    .addFields(
+      { name: 'Tên Đề Xuất', value: `\`:${name}:\``, inline: true },
+      { name: 'Người Đề Xuất', value: `${author}`, inline: true }
+    )
+    .setImage(parsedUrl)
+    .setFooter({ text: `Source: ${parsedUrl} | Name: ${name}` });
+
+  const suggestMsg = await channel.send({ embeds: [embed] });
+  await suggestMsg.react('👍').catch(() => {});
+  await suggestMsg.react('👎').catch(() => {});
+
+  return new EmbedBuilder()
+    .setColor(COLOR_SUCCESS)
+    .setTitle('✅ Đã Gửi Đề Xuất')
+    .setDescription(`Đề xuất emoji của bạn đã được gửi thành công đến kênh ${channel}!`);
+}
+
+// 10. CONFIG SUGGESTIONS
+async function handleConfig(guild, channelQuery, approveQuery, rejectQuery) {
+  const db = require('../../database');
+  let description = '';
+
+  if (channelQuery) {
+    if (channelQuery.toLowerCase() === 'clear') {
+      await db.setGuildSetting(guild.id, 'emoji_suggest_channel', null);
+      description += `• Kênh đề xuất: *Đã xóa cấu hình* (Sẽ tự động tìm kênh có tên chứa \`đề-xuất-emoji\`)\n`;
+    } else {
+      let channelId = '';
+      const channelMatch = channelQuery.match(/^<#(\d+)>$/);
+      if (channelMatch) {
+        channelId = channelMatch[1];
+      } else if (/^\d+$/.test(channelQuery)) {
+        channelId = channelQuery;
+      } else {
+        const channel = guild.channels.cache.find(c => c.name.toLowerCase() === channelQuery.toLowerCase());
+        if (channel) channelId = channel.id;
+      }
+
+      if (!channelId || !guild.channels.cache.has(channelId)) {
+        throw new Error(`Could not find channel matching \`${channelQuery}\` in this server.`);
+      }
+
+      await db.setGuildSetting(guild.id, 'emoji_suggest_channel', channelId);
+      description += `• Kênh đề xuất: <#${channelId}>\n`;
+    }
+  }
+
+  if (approveQuery) {
+    await db.setGuildSetting(guild.id, 'emoji_approve_reaction', approveQuery);
+    description += `• Biểu cảm duyệt: ${approveQuery}\n`;
+  }
+
+  if (rejectQuery) {
+    await db.setGuildSetting(guild.id, 'emoji_reject_reaction', rejectQuery);
+    description += `• Biểu cảm từ chối: ${rejectQuery}\n`;
+  }
+
+  if (!description) {
+    const channelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
+    const approve = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+    const reject = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+    
+    description = `• Kênh đề xuất: ${channelId ? `<#${channelId}>` : '*Chưa cấu hình (mặc định tìm theo tên)*'}\n` +
+                  `• Biểu cảm duyệt: ${approve}\n` +
+                  `• Biểu cảm từ chối: ${reject}\n`;
+  }
+
+  return new EmbedBuilder()
+    .setColor(COLOR_SUCCESS)
+    .setTitle('⚙️ Cấu Hình Đề Xuất Emoji')
+    .setDescription(description);
+}
+
 // 8. HELP GUIDE
 function handleHelp(prefix) {
   return new EmbedBuilder()
@@ -368,14 +498,24 @@ function handleHelp(prefix) {
         name: '🔒 Restrict Emoji (Role Lock)',
         value: `* **Slash:** \`/emoji restrict emoji: <emoji> [role]\`\n* **Prefix:** \`${prefix}emoji restrict <emoji> [@role]\` (leave role blank to clear)\n* **Shortcut:** \`${prefix}restrictemoji <emoji> [@role]\``,
         inline: false
+      },
+      {
+        name: '💡 Suggest Emoji',
+        value: `* **Slash:** \`/emoji suggest name: <name> [url/emoji] [file]\`\n* **Prefix:** \`${prefix}emoji suggest <name> [url/emoji]\`\n* **Shortcut:** \`${prefix}suggestemoji <name>\``,
+        inline: false
+      },
+      {
+        name: '⚙️ Config Suggestions (Admin)',
+        value: `* **Slash:** \`/emoji config [channel] [approve] [reject]\`\n* **Prefix:** \`${prefix}emoji config channel <#channel/clear>\` or \`approve <emoji>\` or \`reject <emoji>\``,
+        inline: false
       }
     )
-    .setFooter({ text: 'Note: Users need the "Manage Expressions" (or Manage Emojis and Stickers) permission to manage emojis.' });
+    .setFooter({ text: 'Note: Users need the "Manage Expressions" (or Manage Emojis and Stickers) permission to manage server emojis directly.' });
 }
 
 module.exports = {
   name: 'emoji',
-  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji'],
+  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji', 'suggestemoji', 'configemoji'],
   description: 'Quản lý emoji của server (Manage guild emojis)',
   async execute(message, args) {
     const db = require('../../database');
@@ -409,18 +549,25 @@ module.exports = {
       args = ['steal', ...args];
     } else if (invokedCommand === 'restrictemoji') {
       args = ['restrict', ...args];
+    } else if (invokedCommand === 'suggestemoji') {
+      args = ['suggest', ...args];
+    } else if (invokedCommand === 'configemoji') {
+      args = ['config', ...args];
     }
 
     const subcommand = args[0]?.toLowerCase();
     const guild = message.guild;
 
-    // Permission Check: Requires MANAGE_EMOJIS_AND_STICKERS / MANAGE_EXPRESSIONS
-    if (!message.member.permissions.has(PermissionFlagsBits.ManageExpressions)) {
-      const errEmbed = new EmbedBuilder()
-        .setColor(COLOR_ERROR)
-        .setTitle('❌ Permission Denied')
-        .setDescription('You need the `Manage Expressions` (or `Manage Emojis and Stickers`) permission to use this command.');
-      return message.reply({ embeds: [errEmbed] });
+    // Subcommands that require ManageExpressions permission
+    const adminSubcommands = ['add', 'delete', 'rename', 'steal', 'restrict', 'config'];
+    if (adminSubcommands.includes(subcommand)) {
+      if (!message.member.permissions.has(PermissionFlagsBits.ManageExpressions)) {
+        const errEmbed = new EmbedBuilder()
+          .setColor(COLOR_ERROR)
+          .setTitle('❌ Permission Denied')
+          .setDescription('You need the `Manage Expressions` (or `Manage Emojis and Stickers`) permission to use this command.');
+        return message.reply({ embeds: [errEmbed] });
+      }
     }
 
     if (!subcommand || subcommand === 'help') {
@@ -511,6 +658,46 @@ module.exports = {
         }
 
         embed = await handleRestrict(guild, emojiQuery, role);
+      }
+      else if (subcommand === 'suggest') {
+        const name = args[1];
+        let url = args[2];
+        const attachment = message.attachments ? message.attachments.first() : null;
+
+        if (!url && attachment) {
+          url = attachment.url;
+        }
+
+        if (!name) {
+          throw new Error(`Usage: \`${prefix}emoji suggest <name> [url/emoji]\` (or upload an attachment and type \`${prefix}emoji suggest <name>\`)`);
+        }
+        if (!url) {
+          throw new Error('You must provide a URL, custom emoji, Unicode emoji, or upload an image attachment.');
+        }
+
+        embed = await handleSuggest(guild, name, url, message.author);
+      }
+      else if (subcommand === 'config') {
+        let channelQuery = null;
+        let approveQuery = null;
+        let rejectQuery = null;
+
+        if (args[1] && ['channel', 'approve', 'reject'].includes(args[1].toLowerCase())) {
+          const key = args[1].toLowerCase();
+          const value = args[2];
+          if (!value) {
+            throw new Error(`Usage: \`${prefix}emoji config channel <#channel/clear>\` or \`approve <emoji>\` or \`reject <emoji>\``);
+          }
+          if (key === 'channel') channelQuery = value;
+          else if (key === 'approve') approveQuery = value;
+          else if (key === 'reject') rejectQuery = value;
+        } else {
+          channelQuery = args[1] || null;
+          approveQuery = args[2] || null;
+          rejectQuery = args[3] || null;
+        }
+
+        embed = await handleConfig(guild, channelQuery, approveQuery, rejectQuery);
       }
       else {
         throw new Error(`Unknown subcommand \`${subcommand}\`. Type \`${prefix}emoji\` for help.`);

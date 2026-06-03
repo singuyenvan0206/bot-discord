@@ -249,6 +249,18 @@ module.exports = {
                     if (role) {
                         args.push(`<@&${role.id}>`);
                     }
+                } else if (sub === 'suggest') {
+                    args.push(interaction.options.getString('name'));
+                    const url = interaction.options.getString('url');
+                    const file = interaction.options.getAttachment('file');
+                    args.push(url || (file ? file.url : ''));
+                } else if (sub === 'config') {
+                    const channel = interaction.options.getChannel('channel');
+                    const approve = interaction.options.getString('approve');
+                    const reject = interaction.options.getString('reject');
+                    args.push(channel ? `<#${channel.id}>` : '');
+                    args.push(approve || '');
+                    args.push(reject || '');
                 }
             } else if (commandName === 'job') {
                 const sub = interaction.options.getSubcommand();
