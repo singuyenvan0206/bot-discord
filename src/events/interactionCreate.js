@@ -74,6 +74,82 @@ module.exports = {
                 }
             }
 
+            if (interaction.customId.startsWith('emoji_preview_add|')) {
+                await interaction.deferUpdate().catch(() => {});
+                
+                const parts = interaction.customId.split('|');
+                const emojiName = parts[1];
+                const relativePath = parts[2];
+                const imageUrl = `https://emojis.slackmojis.com/emojis/images/${relativePath}`;
+
+                const guild = interaction.guild;
+                const member = interaction.member;
+
+                const { PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+                const isAdmin = member.permissions.has(PermissionFlagsBits.ManageGuildExpressions);
+                
+                if (!isAdmin) {
+                    return interaction.followUp({ content: '❌ Bạn không có quyền `Manage Expressions` để thêm emoji trực tiếp.', ephemeral: true }).catch(() => {});
+                }
+
+                try {
+                    const emojiCommand = require('../commands/utility/emoji');
+                    const newEmoji = await emojiCommand.createEmojiFromUrl(guild, emojiName, imageUrl);
+                    const successEmbed = new EmbedBuilder()
+                        .setColor(0x57F287) // COLOR_SUCCESS
+                        .setTitle('✅ Đã Thêm Emoji Thành Công')
+                        .setDescription(`Đã thêm emoji tùy chỉnh mới: ${newEmoji}`)
+                        .addFields(
+                            { name: 'Tên Emoji', value: `\`:${emojiName}:\``, inline: true },
+                            { name: 'Nguồn', value: 'Slackmojis', inline: true }
+                        )
+                        .setThumbnail(imageUrl);
+                    
+                    await interaction.editReply({ embeds: [successEmbed], components: [] }).catch(() => {});
+                } catch (err) {
+                    await interaction.followUp({ content: `❌ Thất bại khi thêm emoji trực tiếp: ${err.message}`, ephemeral: true }).catch(() => {});
+                }
+                return;
+            }
+
+            if (interaction.customId.startsWith('emoji_preview_suggest|')) {
+                await interaction.deferUpdate().catch(() => {});
+                
+                const parts = interaction.customId.split('|');
+                const emojiName = parts[1];
+                const relativePath = parts[2];
+                const imageUrl = `https://emojis.slackmojis.com/emojis/images/${relativePath}`;
+
+                const guild = interaction.guild;
+
+                try {
+                    const emojiCommand = require('../commands/utility/emoji');
+                    await emojiCommand.handleSuggest(guild, emojiName, imageUrl, interaction.user);
+                    
+                    const { EmbedBuilder } = require('discord.js');
+                    const successEmbed = new EmbedBuilder()
+                        .setColor(0x57F287) // COLOR_SUCCESS
+                        .setTitle('💡 Đề Xuất Thành Công')
+                        .setDescription(`Đã gửi đề xuất emoji **:${emojiName}:** vào kênh bình chọn thành công!`);
+
+                    await interaction.editReply({ embeds: [successEmbed], components: [] }).catch(() => {});
+                } catch (err) {
+                    await interaction.followUp({ content: `❌ Thất bại khi gửi đề xuất emoji: ${err.message}`, ephemeral: true }).catch(() => {});
+                }
+                return;
+            }
+
+            if (interaction.customId === 'emoji_preview_cancel') {
+                await interaction.deferUpdate().catch(() => {});
+                const { EmbedBuilder } = require('discord.js');
+                const cancelEmbed = new EmbedBuilder()
+                    .setColor(0xED4245) // COLOR_ERROR
+                    .setTitle('❌ Đã Hủy Bỏ')
+                    .setDescription('Đã hủy bỏ thao tác xem trước emoji.');
+                await interaction.editReply({ embeds: [cancelEmbed], components: [] }).catch(() => {});
+                return;
+            }
+
             if (interaction.customId === 'claim_house_dist') {
                 const guildId = interaction.guildId;
                 const activeDistRaw = await db.getGuildSetting(guildId, 'active_house_dist', null);
@@ -205,34 +281,49 @@ module.exports = {
                 const guild = interaction.guild;
                 const member = interaction.member;
 
-                const { PermissionFlagsBits } = require('discord.js');
+                const { PermissionFlagsBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
                 const isAdmin = member.permissions.has(PermissionFlagsBits.ManageGuildExpressions);
-                const emojiCommand = require('../commands/utility/emoji');
+
+                const embed = new EmbedBuilder()
+                    .setColor(0x5865F2) // Blurple
+                    .setTitle(`🔍 Xem Trước Emoji: :${emojiName}:`)
+                    .setDescription('Bạn có muốn thêm emoji này vào server không? Chọn một thao tác dưới đây.')
+                    .addFields(
+                        { name: 'Tên Đề Xuất', value: `\`:${emojiName}:\``, inline: true },
+                        { name: 'Nguồn', value: 'Slackmojis', inline: true }
+                    )
+                    .setImage(imageUrl);
+
+                const row = new ActionRowBuilder();
 
                 if (isAdmin) {
-                    try {
-                        const newEmoji = await emojiCommand.createEmojiFromUrl(guild, emojiName, imageUrl);
-                        const { EmbedBuilder } = require('discord.js');
-                        const successEmbed = new EmbedBuilder()
-                            .setColor(0x57F287) // COLOR_SUCCESS
-                            .setTitle('✅ Đã Thêm Emoji')
-                            .setDescription(`Đã thêm thành công emoji tùy chỉnh mới: ${newEmoji}`)
-                            .addFields(
-                                { name: 'Tên Emoji', value: `\`:${emojiName}:\``, inline: true },
-                                { name: 'Nguồn', value: 'Slackmojis', inline: true }
-                            );
-                        await interaction.followUp({ embeds: [successEmbed], ephemeral: true }).catch(() => {});
-                    } catch (err) {
-                        await interaction.followUp({ content: `❌ Thất bại khi thêm emoji trực tiếp: ${err.message}`, ephemeral: true }).catch(() => {});
-                    }
+                    row.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`emoji_preview_add|${emojiName}|${relativePath}`)
+                            .setLabel('Thêm Trực Tiếp (Admin)')
+                            .setStyle(ButtonStyle.Success),
+                        new ButtonBuilder()
+                            .setCustomId(`emoji_preview_suggest|${emojiName}|${relativePath}`)
+                            .setLabel('Đề Xuất Bình Chọn')
+                            .setStyle(ButtonStyle.Primary)
+                    );
                 } else {
-                    try {
-                        const embed = await emojiCommand.handleSuggest(guild, emojiName, imageUrl, interaction.user);
-                        await interaction.followUp({ embeds: [embed], ephemeral: true }).catch(() => {});
-                    } catch (err) {
-                        await interaction.followUp({ content: `❌ Thất bại khi gửi đề xuất emoji: ${err.message}`, ephemeral: true }).catch(() => {});
-                    }
+                    row.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`emoji_preview_suggest|${emojiName}|${relativePath}`)
+                            .setLabel('Đề Xuất Bình Chọn')
+                            .setStyle(ButtonStyle.Primary)
+                    );
                 }
+
+                row.addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('emoji_preview_cancel')
+                        .setLabel('Hủy')
+                        .setStyle(ButtonStyle.Danger)
+                );
+
+                await interaction.followUp({ embeds: [embed], components: [row], ephemeral: true }).catch(() => {});
                 return;
             }
         }
