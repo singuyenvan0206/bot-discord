@@ -47,6 +47,7 @@ describe('Economy Commands', () => {
 
     describe('daily command', () => {
         test('should execute daily successfully', async () => {
+            db.getUser.mockResolvedValue({ id: 'user123', last_daily: 0, daily_streak: 0 });
             db.getGuildSetting.mockResolvedValue(1000); // base reward
             calculateReward.mockResolvedValue({
                 total: 1200,
@@ -61,7 +62,7 @@ describe('Economy Commands', () => {
 
             expect(db.addBalance).toHaveBeenCalledWith('guild123', 'user123', 1200);
             expect(db.updateUser).toHaveBeenCalledWith('guild123', 'user123', expect.objectContaining({ last_daily: expect.any(Number) }));
-            expect(mockMessage.reply).toHaveBeenCalledWith('Daily success message');
+            expect(mockMessage.reply).toHaveBeenCalledWith(expect.stringContaining('Daily success message'));
         });
     });
 

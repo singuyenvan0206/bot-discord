@@ -405,7 +405,7 @@ async function handleSuggest(guild, name, url, author) {
 }
 
 // 10. CONFIG SUGGESTIONS
-async function handleConfig(guild, channelQuery, approveQuery, rejectQuery) {
+async function handleConfig(guild, channelQuery, approveQuery, rejectQuery, autoSuggestQuery, autoPruneQuery) {
   const db = require('../../database');
   let description = '';
 
@@ -444,14 +444,30 @@ async function handleConfig(guild, channelQuery, approveQuery, rejectQuery) {
     description += `• Biểu cảm từ chối: ${rejectQuery}\n`;
   }
 
+  if (autoSuggestQuery) {
+    const val = autoSuggestQuery.toLowerCase() === 'true' ? 'true' : 'false';
+    await db.setGuildSetting(guild.id, 'emoji_auto_suggest', val);
+    description += `• Gợi ý tự động: ${val === 'true' ? '✅ Bật' : '❌ Tắt'}\n`;
+  }
+
+  if (autoPruneQuery) {
+    const val = autoPruneQuery.toLowerCase() === 'true' ? 'true' : 'false';
+    await db.setGuildSetting(guild.id, 'emoji_auto_prune', val);
+    description += `• Dọn dẹp tự động: ${val === 'true' ? '✅ Bật' : '❌ Tắt'}\n`;
+  }
+
   if (!description) {
     const channelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
     const approve = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
     const reject = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+    const autoSuggest = await db.getGuildSetting(guild.id, 'emoji_auto_suggest', 'false');
+    const autoPrune = await db.getGuildSetting(guild.id, 'emoji_auto_prune', 'false');
     
     description = `• Kênh đề xuất: ${channelId ? `<#${channelId}>` : '*Chưa cấu hình (mặc định tìm theo tên)*'}\n` +
                   `• Biểu cảm duyệt: ${approve}\n` +
-                  `• Biểu cảm từ chối: ${reject}\n`;
+                  `• Biểu cảm từ chối: ${reject}\n` +
+                  `• Gợi ý tự động (auto_suggest): ${autoSuggest === 'true' ? '✅ Bật' : '❌ Tắt'}\n` +
+                  `• Dọn dẹp tự động (auto_prune): ${autoPrune === 'true' ? '✅ Bật' : '❌ Tắt'}\n`;
   }
 
   return new EmbedBuilder()
@@ -967,23 +983,29 @@ module.exports = {
         let channelQuery = null;
         let approveQuery = null;
         let rejectQuery = null;
+        let autoSuggestQuery = null;
+        let autoPruneQuery = null;
 
-        if (args[1] && ['channel', 'approve', 'reject'].includes(args[1].toLowerCase())) {
+        if (args[1] && ['channel', 'approve', 'reject', 'auto_suggest', 'auto_prune'].includes(args[1].toLowerCase())) {
           const key = args[1].toLowerCase();
           const value = args[2];
           if (!value) {
-            throw new Error(`Usage: \`${prefix}emoji config channel <#channel/clear>\` or \`approve <emoji>\` or \`reject <emoji>\``);
+            throw new Error(`Usage: \`${prefix}emoji config channel <#channel/clear>\` or \`approve <emoji>\` or \`reject <emoji>\` or \`auto_suggest <true/false>\` or \`auto_prune <true/false>\``);
           }
           if (key === 'channel') channelQuery = value;
           else if (key === 'approve') approveQuery = value;
           else if (key === 'reject') rejectQuery = value;
+          else if (key === 'auto_suggest') autoSuggestQuery = value;
+          else if (key === 'auto_prune') autoPruneQuery = value;
         } else {
           channelQuery = args[1] || null;
           approveQuery = args[2] || null;
           rejectQuery = args[3] || null;
+          autoSuggestQuery = args[4] || null;
+          autoPruneQuery = args[5] || null;
         }
 
-        embed = await handleConfig(guild, channelQuery, approveQuery, rejectQuery);
+        embed = await handleConfig(guild, channelQuery, approveQuery, rejectQuery, autoSuggestQuery, autoPruneQuery);
       }
       else if (subcommand === 'search') {
         const query = args[1];

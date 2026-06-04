@@ -304,9 +304,13 @@ module.exports = {
                     const channel = interaction.options.getChannel('channel');
                     const approve = interaction.options.getString('approve');
                     const reject = interaction.options.getString('reject');
+                    const autoSuggest = interaction.options.getString('auto_suggest');
+                    const autoPrune = interaction.options.getString('auto_prune');
                     args.push(channel ? `<#${channel.id}>` : '');
                     args.push(approve || '');
                     args.push(reject || '');
+                    args.push(autoSuggest || '');
+                    args.push(autoPrune || '');
                 } else if (sub === 'search') {
                     args.push(interaction.options.getString('query'));
                 } else if (sub === 'inactive' || sub === 'prune') {

@@ -517,6 +517,18 @@ const commands = [
                         .setDescription('Reaction emoji for rejection (e.g. ❌)')
                         .setRequired(false)
                 )
+                .addStringOption(opt =>
+                    opt.setName('auto_suggest')
+                        .setDescription('Enable or disable daily trending suggestions')
+                        .setRequired(false)
+                        .addChoices({ name: 'Enable (True)', value: 'true' }, { name: 'Disable (False)', value: 'false' })
+                )
+                .addStringOption(opt =>
+                    opt.setName('auto_prune')
+                        .setDescription('Enable or disable automatic pruning of unused emojis')
+                        .setRequired(false)
+                        .addChoices({ name: 'Enable (True)', value: 'true' }, { name: 'Disable (False)', value: 'false' })
+                )
         )
         .addSubcommand(sub =>
             sub.setName('search')

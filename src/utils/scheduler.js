@@ -49,6 +49,13 @@ async function initScheduler(client) {
         console.log('🐠 Processing Aquarium passive income...');
         await processAquariumIncome(client);
     }, 3600_000);
+
+    // Auto Emoji Maintenance (Every 24 hours)
+    setInterval(async () => {
+        console.log('💡 Running automated emoji maintenance...');
+        await processAutoPrune(client).catch(console.error);
+        await processAutoSuggest(client).catch(console.error);
+    }, 86400_000);
 }
 
 async function processAquariumIncome(client) {
@@ -179,4 +186,153 @@ async function processWantedDecay(client) {
     }
 }
 
-module.exports = { initScheduler, processWantedDecay };
+async function getGuildSuggestChannel(guild) {
+    const channelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
+    if (channelId) {
+        const channel = guild.channels.cache.get(channelId) || await guild.channels.fetch(channelId).catch(() => null);
+        if (channel) return channel;
+    }
+    return guild.channels.cache.find(
+        c => c.name.toLowerCase().includes('đề-xuất-emoji') || c.name.toLowerCase().includes('de-xuat-emoji')
+    ) || null;
+}
+
+async function processAutoPrune(client) {
+    console.log('[Scheduler] Running Auto Prune check for all guilds...');
+    const guilds = await db.queryAll('SELECT id FROM guilds');
+    for (const g of guilds) {
+        const autoPrune = await db.getGuildSetting(g.id, 'emoji_auto_prune') === 'true';
+        if (!autoPrune) continue;
+
+        const guild = client.guilds.cache.get(g.id) || await client.guilds.fetch(g.id).catch(() => null);
+        if (!guild) continue;
+
+        try {
+            const emojis = await guild.emojis.fetch();
+            const stats = await db.getEmojiStats(guild.id);
+            const statsMap = new Map(stats.map(s => [s.emoji_id, s]));
+
+            const pruneList = [];
+            const minUses = 5;
+            const inactiveDays = 30;
+            const now = Date.now();
+            const thresholdMs = inactiveDays * 24 * 60 * 60 * 1000;
+
+            for (const [id, emoji] of emojis) {
+                const stat = statsMap.get(id);
+                const useCount = stat ? stat.use_count : 0;
+                const lastUsed = stat ? Number(stat.last_used_at) : 0;
+
+                let isInactive = false;
+                if (useCount === 0) {
+                    isInactive = true;
+                } else if (useCount <= minUses) {
+                    if (now - lastUsed >= thresholdMs) {
+                        isInactive = true;
+                    }
+                }
+
+                if (isInactive) {
+                    pruneList.push(emoji);
+                }
+            }
+
+            if (pruneList.length > 0) {
+                const names = [];
+                for (const emoji of pruneList) {
+                    names.push(`\`:${emoji.name}:\``);
+                    await emoji.delete().catch(() => {});
+                    await db.clearEmojiStats(guild.id, emoji.id).catch(() => {});
+                }
+
+                const channel = await getGuildSuggestChannel(guild);
+                if (channel) {
+                    const { EmbedBuilder } = require('discord.js');
+                    const truncate = (arr, limit = 20) => arr.length > limit ? arr.slice(0, limit).join(', ') + `... và ${arr.length - limit} emoji khác` : arr.join(', ');
+                    const pruneEmbed = new EmbedBuilder()
+                        .setColor(0xED4245) // Discord Red
+                        .setTitle('🗑️ Tự Động Dọn Dẹp Emoji')
+                        .setDescription(`Hệ thống đã tự động xóa **${pruneList.length}** emoji ít sử dụng (dưới 5 lượt dùng hoặc không dùng trong 30 ngày) để giải phóng dung lượng.`)
+                        .addFields({ name: 'Emoji đã xóa', value: truncate(names) });
+                    await channel.send({ embeds: [pruneEmbed] }).catch(() => {});
+                }
+            }
+        } catch (err) {
+            console.error(`[Scheduler] Auto Prune failed for guild ${g.id}:`, err);
+        }
+    }
+}
+
+async function processAutoSuggest(client) {
+    console.log('[Scheduler] Running Auto Suggest check for all guilds...');
+    const axios = require('axios');
+    let slackmojis = [];
+    try {
+        const response = await axios.get('https://slackmojis.com/emojis.json', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            },
+            timeout: 5000
+        });
+        if (response.data && Array.isArray(response.data)) {
+            slackmojis = response.data;
+        }
+    } catch (err) {
+        console.warn('[Scheduler] Live auto-suggest fetch failed, using offline fallback:', err.message);
+        try {
+            slackmojis = require('../data/slackmojis.json');
+        } catch (e) {
+            console.error('[Scheduler] Offline fallback load failed:', e);
+            return;
+        }
+    }
+
+    if (slackmojis.length === 0) return;
+
+    const guilds = await db.queryAll('SELECT id FROM guilds');
+    for (const g of guilds) {
+        const autoSuggest = await db.getGuildSetting(g.id, 'emoji_auto_suggest') === 'true';
+        if (!autoSuggest) continue;
+
+        const guild = client.guilds.cache.get(g.id) || await client.guilds.fetch(g.id).catch(() => null);
+        if (!guild) continue;
+
+        const channel = await getGuildSuggestChannel(guild);
+        if (!channel) continue;
+
+        try {
+            const currentEmojis = await guild.emojis.fetch();
+            const currentNames = new Set(currentEmojis.map(e => e.name.toLowerCase()));
+
+            // Lọc bỏ những emoji đã trùng tên trong server
+            const candidates = slackmojis.filter(e => !currentNames.has(e.name.toLowerCase()));
+            if (candidates.length === 0) continue;
+
+            // Chọn ngẫu nhiên 1 emoji hot
+            const target = candidates[Math.floor(Math.random() * candidates.length)];
+            
+            const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+            const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+
+            const { EmbedBuilder } = require('discord.js');
+            const embed = new EmbedBuilder()
+                .setColor(0x5865F2)
+                .setTitle('💡 Gợi Ý Emoji Tự Động')
+                .setDescription(`Mình tìm thấy emoji này rất đẹp trên mạng! Các bạn có muốn thêm nó vào server không?\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
+                .addFields(
+                    { name: 'Tên Đề Xuất', value: `\`:${target.name}:\``, inline: true },
+                    { name: 'Nguồn', value: 'Slackmojis Trending', inline: true }
+                )
+                .setImage(target.image_url)
+                .setFooter({ text: `Source: ${target.image_url} | Name: ${target.name}` });
+
+            const suggestMsg = await channel.send({ embeds: [embed] });
+            await suggestMsg.react('👍').catch(() => {});
+            await suggestMsg.react('👎').catch(() => {});
+        } catch (err) {
+            console.error(`[Scheduler] Auto Suggest failed for guild ${g.id}:`, err);
+        }
+    }
+}
+
+module.exports = { initScheduler, processWantedDecay, processAutoPrune, processAutoSuggest };
