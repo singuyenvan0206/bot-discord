@@ -306,11 +306,15 @@ module.exports = {
                     const reject = interaction.options.getString('reject');
                     const autoSuggest = interaction.options.getString('auto_suggest');
                     const autoPrune = interaction.options.getString('auto_prune');
+                    const pruneMinUses = interaction.options.getInteger('prune_min_uses');
+                    const pruneInactiveDays = interaction.options.getInteger('prune_inactive_days');
                     args.push(channel ? `<#${channel.id}>` : '');
                     args.push(approve || '');
                     args.push(reject || '');
                     args.push(autoSuggest || '');
                     args.push(autoPrune || '');
+                    args.push(pruneMinUses !== null ? String(pruneMinUses) : '');
+                    args.push(pruneInactiveDays !== null ? String(pruneInactiveDays) : '');
                 } else if (sub === 'search') {
                     args.push(interaction.options.getString('query'));
                 } else if (sub === 'inactive' || sub === 'prune') {

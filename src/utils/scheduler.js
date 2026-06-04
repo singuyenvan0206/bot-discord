@@ -213,8 +213,12 @@ async function processAutoPrune(client) {
             const statsMap = new Map(stats.map(s => [s.emoji_id, s]));
 
             const pruneList = [];
-            const minUses = 5;
-            const inactiveDays = 30;
+            
+            const minUsesVal = await db.getGuildSetting(guild.id, 'emoji_prune_min_uses', '5');
+            const inactiveDaysVal = await db.getGuildSetting(guild.id, 'emoji_prune_inactive_days', '30');
+            const minUses = parseInt(minUsesVal) || 5;
+            const inactiveDays = parseInt(inactiveDaysVal) || 30;
+            
             const now = Date.now();
             const thresholdMs = inactiveDays * 24 * 60 * 60 * 1000;
 

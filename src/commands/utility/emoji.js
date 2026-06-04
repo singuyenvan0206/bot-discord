@@ -405,7 +405,7 @@ async function handleSuggest(guild, name, url, author) {
 }
 
 // 10. CONFIG SUGGESTIONS
-async function handleConfig(guild, channelQuery, approveQuery, rejectQuery, autoSuggestQuery, autoPruneQuery) {
+async function handleConfig(guild, channelQuery, approveQuery, rejectQuery, autoSuggestQuery, autoPruneQuery, pruneMinUsesQuery, pruneInactiveDaysQuery) {
   const db = require('../../database');
   let description = '';
 
@@ -456,18 +456,40 @@ async function handleConfig(guild, channelQuery, approveQuery, rejectQuery, auto
     description += `• Dọn dẹp tự động: ${val === 'true' ? '✅ Bật' : '❌ Tắt'}\n`;
   }
 
+  if (pruneMinUsesQuery) {
+    const minUsesInt = parseInt(pruneMinUsesQuery);
+    if (isNaN(minUsesInt) || minUsesInt < 0) {
+        throw new Error('Số lượt dùng tối thiểu (prune_min_uses) phải là một số nguyên dương.');
+    }
+    await db.setGuildSetting(guild.id, 'emoji_prune_min_uses', String(minUsesInt));
+    description += `• Lượt dùng tối thiểu để dọn dẹp: \`${minUsesInt}\` lượt\n`;
+  }
+
+  if (pruneInactiveDaysQuery) {
+    const inactiveDaysInt = parseInt(pruneInactiveDaysQuery);
+    if (isNaN(inactiveDaysInt) || inactiveDaysInt < 0) {
+        throw new Error('Số ngày không hoạt động (prune_inactive_days) phải là một số nguyên dương.');
+    }
+    await db.setGuildSetting(guild.id, 'emoji_prune_inactive_days', String(inactiveDaysInt));
+    description += `• Số ngày không hoạt động để dọn dẹp: \`${inactiveDaysInt}\` ngày\n`;
+  }
+
   if (!description) {
     const channelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
     const approve = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
     const reject = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
     const autoSuggest = await db.getGuildSetting(guild.id, 'emoji_auto_suggest', 'false');
     const autoPrune = await db.getGuildSetting(guild.id, 'emoji_auto_prune', 'false');
+    const minUses = await db.getGuildSetting(guild.id, 'emoji_prune_min_uses', '5');
+    const inactiveDays = await db.getGuildSetting(guild.id, 'emoji_prune_inactive_days', '30');
     
     description = `• Kênh đề xuất: ${channelId ? `<#${channelId}>` : '*Chưa cấu hình (mặc định tìm theo tên)*'}\n` +
                   `• Biểu cảm duyệt: ${approve}\n` +
                   `• Biểu cảm từ chối: ${reject}\n` +
                   `• Gợi ý tự động (auto_suggest): ${autoSuggest === 'true' ? '✅ Bật' : '❌ Tắt'}\n` +
-                  `• Dọn dẹp tự động (auto_prune): ${autoPrune === 'true' ? '✅ Bật' : '❌ Tắt'}\n`;
+                  `• Dọn dẹp tự động (auto_prune): ${autoPrune === 'true' ? '✅ Bật' : '❌ Tắt'}\n` +
+                  `• Lượt dùng tối thiểu để dọn dẹp (prune_min_uses): \`${minUses}\` lượt\n` +
+                  `• Số ngày không hoạt động để dọn dẹp (prune_inactive_days): \`${inactiveDays}\` ngày\n`;
   }
 
   return new EmbedBuilder()
@@ -528,8 +550,16 @@ async function createEmojiFromUrl(guild, name, url) {
 }
 
 // 12. INACTIVE EMOJIS
-async function handleInactive(guild, minUses = 5, inactiveDays = 30) {
+async function handleInactive(guild, minUses = null, inactiveDays = null) {
   const db = require('../../database');
+  if (minUses === null || minUses === undefined) {
+    const dbMin = await db.getGuildSetting(guild.id, 'emoji_prune_min_uses', '5');
+    minUses = parseInt(dbMin) || 5;
+  }
+  if (inactiveDays === null || inactiveDays === undefined) {
+    const dbInactive = await db.getGuildSetting(guild.id, 'emoji_prune_inactive_days', '30');
+    inactiveDays = parseInt(dbInactive) || 30;
+  }
   const emojis = await guild.emojis.fetch();
   const stats = await db.getEmojiStats(guild.id);
   const statsMap = new Map(stats.map(s => [s.emoji_id, s]));
@@ -599,8 +629,16 @@ async function handleInactive(guild, minUses = 5, inactiveDays = 30) {
 }
 
 // 13. PRUNE INACTIVE EMOJIS
-async function handlePrune(guild, minUses = 5, inactiveDays = 30) {
+async function handlePrune(guild, minUses = null, inactiveDays = null) {
   const db = require('../../database');
+  if (minUses === null || minUses === undefined) {
+    const dbMin = await db.getGuildSetting(guild.id, 'emoji_prune_min_uses', '5');
+    minUses = parseInt(dbMin) || 5;
+  }
+  if (inactiveDays === null || inactiveDays === undefined) {
+    const dbInactive = await db.getGuildSetting(guild.id, 'emoji_prune_inactive_days', '30');
+    inactiveDays = parseInt(dbInactive) || 30;
+  }
   const emojis = await guild.emojis.fetch();
   const stats = await db.getEmojiStats(guild.id);
   const statsMap = new Map(stats.map(s => [s.emoji_id, s]));
@@ -1001,27 +1039,34 @@ module.exports = {
         let rejectQuery = null;
         let autoSuggestQuery = null;
         let autoPruneQuery = null;
+        let pruneMinUsesQuery = null;
+        let pruneInactiveDaysQuery = null;
 
-        if (args[1] && ['channel', 'approve', 'reject', 'auto_suggest', 'auto_prune'].includes(args[1].toLowerCase())) {
+        const configKeys = ['channel', 'approve', 'reject', 'auto_suggest', 'auto_prune', 'prune_min_uses', 'prune_inactive_days'];
+        if (args[1] && configKeys.includes(args[1].toLowerCase())) {
           const key = args[1].toLowerCase();
           const value = args[2];
           if (!value) {
-            throw new Error(`Usage: \`${prefix}emoji config channel <#channel/clear>\` or \`approve <emoji>\` or \`reject <emoji>\` or \`auto_suggest <true/false>\` or \`auto_prune <true/false>\``);
+            throw new Error(`Usage: \`${prefix}emoji config <key> <value>\` (Available keys: ${configKeys.join(', ')})`);
           }
           if (key === 'channel') channelQuery = value;
           else if (key === 'approve') approveQuery = value;
           else if (key === 'reject') rejectQuery = value;
           else if (key === 'auto_suggest') autoSuggestQuery = value;
           else if (key === 'auto_prune') autoPruneQuery = value;
+          else if (key === 'prune_min_uses') pruneMinUsesQuery = value;
+          else if (key === 'prune_inactive_days') pruneInactiveDaysQuery = value;
         } else {
           channelQuery = args[1] || null;
           approveQuery = args[2] || null;
           rejectQuery = args[3] || null;
           autoSuggestQuery = args[4] || null;
           autoPruneQuery = args[5] || null;
+          pruneMinUsesQuery = args[6] || null;
+          pruneInactiveDaysQuery = args[7] || null;
         }
 
-        embed = await handleConfig(guild, channelQuery, approveQuery, rejectQuery, autoSuggestQuery, autoPruneQuery);
+        embed = await handleConfig(guild, channelQuery, approveQuery, rejectQuery, autoSuggestQuery, autoPruneQuery, pruneMinUsesQuery, pruneInactiveDaysQuery);
       }
       else if (subcommand === 'search') {
         const query = args[1];
@@ -1032,13 +1077,13 @@ module.exports = {
         return message.reply(searchResult);
       }
       else if (subcommand === 'inactive') {
-        const minUses = args[1] ? parseInt(args[1]) : 5;
-        const inactiveDays = args[2] ? parseInt(args[2]) : 30;
+        const minUses = args[1] ? parseInt(args[1]) : null;
+        const inactiveDays = args[2] ? parseInt(args[2]) : null;
         embed = await handleInactive(guild, minUses, inactiveDays);
       }
       else if (subcommand === 'prune') {
-        const minUses = args[1] ? parseInt(args[1]) : 5;
-        const inactiveDays = args[2] ? parseInt(args[2]) : 30;
+        const minUses = args[1] ? parseInt(args[1]) : null;
+        const inactiveDays = args[2] ? parseInt(args[2]) : null;
         embed = await handlePrune(guild, minUses, inactiveDays);
       }
       else if (subcommand === 'websearch') {

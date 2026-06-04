@@ -529,6 +529,18 @@ const commands = [
                         .setRequired(false)
                         .addChoices({ name: 'Enable (True)', value: 'true' }, { name: 'Disable (False)', value: 'false' })
                 )
+                .addIntegerOption(opt =>
+                    opt.setName('prune_min_uses')
+                        .setDescription('Minimum usage count threshold under which emojis are pruned (default: 5)')
+                        .setRequired(false)
+                        .setMinValue(0)
+                )
+                .addIntegerOption(opt =>
+                    opt.setName('prune_inactive_days')
+                        .setDescription('Number of days inactive threshold under which emojis are pruned (default: 30)')
+                        .setRequired(false)
+                        .setMinValue(0)
+                )
         )
         .addSubcommand(sub =>
             sub.setName('search')
