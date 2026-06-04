@@ -366,26 +366,8 @@ module.exports = {
             } else if (commandName === 'emoji') {
                 const sub = interaction.options.getSubcommand();
                 args.push(sub);
-                if (sub === 'add') {
-                    args.push(interaction.options.getString('name'));
-                    const url = interaction.options.getString('url');
-                    const file = interaction.options.getAttachment('file');
-                    args.push(url || (file ? file.url : ''));
-                } else if (sub === 'delete') {
-                    args.push(interaction.options.getString('emoji'));
-                } else if (sub === 'rename') {
-                    args.push(interaction.options.getString('emoji'));
-                    args.push(interaction.options.getString('new_name'));
-                } else if (sub === 'info') {
-                    args.push(interaction.options.getString('emoji'));
-                } else if (sub === 'steal') {
+                if (sub === 'steal') {
                     args.push(interaction.options.getString('emoji_or_message'));
-                } else if (sub === 'restrict') {
-                    args.push(interaction.options.getString('emoji'));
-                    const role = interaction.options.getRole('role');
-                    if (role) {
-                        args.push(`<@&${role.id}>`);
-                    }
                 } else if (sub === 'suggest') {
                     args.push(interaction.options.getString('name'));
                     const url = interaction.options.getString('url');

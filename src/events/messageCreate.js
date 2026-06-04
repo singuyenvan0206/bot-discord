@@ -39,11 +39,8 @@ module.exports = {
                 const hasUrl = /https?:\/\/\S+/i.test(message.content);
                 const hasCustomEmoji = /<a?:\w+:\d+>/.test(message.content);
                 
-                const codePoints = [...message.content].map(char => char.codePointAt(0).toString(16));
-                const hasUnicodeEmoji = codePoints.some(cp => {
-                    const val = parseInt(cp, 16);
-                    return val >= 128 || cp === '20e3';
-                });
+                const emojiRegex = /\p{Extended_Pictographic}/u;
+                const hasUnicodeEmoji = emojiRegex.test(message.content);
 
                 if (attachment || hasUrl || hasCustomEmoji || hasUnicodeEmoji) {
                     let sourceUrl = '';
@@ -61,15 +58,15 @@ module.exports = {
                             targetName = match[2];
                         }
                     } else if (hasUnicodeEmoji) {
-                        const chars = [...message.content];
-                        for (const char of chars) {
-                            const cp = char.codePointAt(0);
-                            if (cp >= 128) {
-                                const hex = cp.toString(16);
-                                sourceUrl = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${hex}.png`;
-                                targetName = `emoji_${hex}`;
-                                break;
-                            }
+                        const match = message.content.match(/\p{Extended_Pictographic}/u);
+                        if (match) {
+                            const emoji = match[0];
+                            const codePoints = [...emoji].map(char => char.codePointAt(0).toString(16));
+                            const hasKeycap = codePoints.includes('20e3');
+                            const filtered = hasKeycap ? codePoints : codePoints.filter(cp => cp !== 'fe0f');
+                            const hex = filtered.join('-');
+                            sourceUrl = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${hex}.png`;
+                            targetName = `emoji_${hex}`;
                         }
                     } else if (hasUrl) {
                         const match = message.content.match(/(https?:\/\/\S+)/i);
@@ -107,8 +104,8 @@ module.exports = {
                         await message.delete().catch(() => {});
 
                         const suggestMsg = await message.channel.send({ embeds: [embed] });
-                        await suggestMsg.react('👍').catch(() => {});
-                        await suggestMsg.react('👎').catch(() => {});
+                        await suggestMsg.react(approveEmoji).catch(() => {});
+                        await suggestMsg.react(rejectEmoji).catch(() => {});
                         return;
                     }
                 }
