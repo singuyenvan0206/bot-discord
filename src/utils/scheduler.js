@@ -221,13 +221,24 @@ async function processAutoPrune(client) {
             for (const [id, emoji] of emojis) {
                 const stat = statsMap.get(id);
                 const useCount = stat ? stat.use_count : 0;
-                const lastUsed = stat ? Number(stat.last_used_at) : 0;
+                const lastUsed = stat ? Number(stat.last_used_at) : now;
 
+                if (!stat) {
+                    // Seed the database with initial tracking stats to prevent instant pruning
+                    db.execute(`
+                        INSERT INTO emoji_stats (guild_id, emoji_id, use_count, last_used_at)
+                        VALUES (?, ?, 0, ?)
+                        ON CONFLICT(guild_id, emoji_id) DO NOTHING
+                    `, [guild.id, id, now]).catch(() => {});
+                }
+
+                const emojiAgeMs = now - emoji.createdTimestamp;
+                const trackerAgeMs = now - lastUsed;
+                
                 let isInactive = false;
-                if (useCount === 0) {
-                    isInactive = true;
-                } else if (useCount <= minUses) {
-                    if (now - lastUsed >= thresholdMs) {
+                // Only prune if both the emoji itself and its tracking window are older than the inactive days threshold
+                if (emojiAgeMs >= thresholdMs && trackerAgeMs >= thresholdMs) {
+                    if (useCount <= minUses) {
                         isInactive = true;
                     }
                 }
@@ -263,10 +274,8 @@ async function processAutoPrune(client) {
     }
 }
 
-async function processAutoSuggest(client) {
-    console.log('[Scheduler] Running Auto Suggest check for all guilds...');
+async function fetchSlackmojisList() {
     const axios = require('axios');
-    let slackmojis = [];
     try {
         const response = await axios.get('https://slackmojis.com/emojis.json', {
             headers: {
@@ -275,18 +284,67 @@ async function processAutoSuggest(client) {
             timeout: 5000
         });
         if (response.data && Array.isArray(response.data)) {
-            slackmojis = response.data;
+            return response.data;
         }
     } catch (err) {
         console.warn('[Scheduler] Live auto-suggest fetch failed, using offline fallback:', err.message);
-        try {
-            slackmojis = require('../data/slackmojis.json');
-        } catch (e) {
-            console.error('[Scheduler] Offline fallback load failed:', e);
-            return;
-        }
+    }
+    try {
+        return require('../data/slackmojis.json');
+    } catch (e) {
+        console.error('[Scheduler] Offline fallback load failed:', e);
+        return [];
+    }
+}
+
+async function runAutoSuggestForGuild(guild, slackmojis) {
+    if (!slackmojis || slackmojis.length === 0) {
+        slackmojis = await fetchSlackmojisList();
+    }
+    if (slackmojis.length === 0) return null;
+
+    const channel = await getGuildSuggestChannel(guild);
+    if (!channel) {
+        throw new Error('Không tìm thấy kênh đề xuất emoji trong server này.');
     }
 
+    const currentEmojis = await guild.emojis.fetch();
+    const currentNames = new Set(currentEmojis.map(e => e.name.toLowerCase()));
+
+    // Lọc bỏ những emoji đã trùng tên trong server
+    const candidates = slackmojis.filter(e => !currentNames.has(e.name.toLowerCase()));
+    if (candidates.length === 0) {
+        throw new Error('Tất cả emoji thịnh hành hiện tại đều đã tồn tại trên server.');
+    }
+
+    // Chọn ngẫu nhiên 1 emoji hot
+    const target = candidates[Math.floor(Math.random() * candidates.length)];
+    
+    const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+    const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+
+    const { EmbedBuilder } = require('discord.js');
+    const embed = new EmbedBuilder()
+        .setColor(0x5865F2)
+        .setTitle('💡 Gợi Ý Emoji Tự Động')
+        .setDescription(`Mình tìm thấy emoji này rất đẹp trên mạng! Các bạn có muốn thêm nó vào server không?\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
+        .addFields(
+            { name: 'Tên Đề Xuất', value: `\`:${target.name}:\``, inline: true },
+            { name: 'Nguồn', value: 'Slackmojis Trending', inline: true }
+        )
+        .setImage(target.image_url)
+        .setFooter({ text: `Source: ${target.image_url} | Name: ${target.name}` });
+
+    const suggestMsg = await channel.send({ embeds: [embed] });
+    await suggestMsg.react('👍').catch(() => {});
+    await suggestMsg.react('👎').catch(() => {});
+
+    return target;
+}
+
+async function processAutoSuggest(client) {
+    console.log('[Scheduler] Running Auto Suggest check for all guilds...');
+    const slackmojis = await fetchSlackmojisList();
     if (slackmojis.length === 0) return;
 
     const guilds = await db.queryAll('SELECT id FROM guilds');
@@ -297,42 +355,12 @@ async function processAutoSuggest(client) {
         const guild = client.guilds.cache.get(g.id) || await client.guilds.fetch(g.id).catch(() => null);
         if (!guild) continue;
 
-        const channel = await getGuildSuggestChannel(guild);
-        if (!channel) continue;
-
         try {
-            const currentEmojis = await guild.emojis.fetch();
-            const currentNames = new Set(currentEmojis.map(e => e.name.toLowerCase()));
-
-            // Lọc bỏ những emoji đã trùng tên trong server
-            const candidates = slackmojis.filter(e => !currentNames.has(e.name.toLowerCase()));
-            if (candidates.length === 0) continue;
-
-            // Chọn ngẫu nhiên 1 emoji hot
-            const target = candidates[Math.floor(Math.random() * candidates.length)];
-            
-            const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
-            const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
-
-            const { EmbedBuilder } = require('discord.js');
-            const embed = new EmbedBuilder()
-                .setColor(0x5865F2)
-                .setTitle('💡 Gợi Ý Emoji Tự Động')
-                .setDescription(`Mình tìm thấy emoji này rất đẹp trên mạng! Các bạn có muốn thêm nó vào server không?\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
-                .addFields(
-                    { name: 'Tên Đề Xuất', value: `\`:${target.name}:\``, inline: true },
-                    { name: 'Nguồn', value: 'Slackmojis Trending', inline: true }
-                )
-                .setImage(target.image_url)
-                .setFooter({ text: `Source: ${target.image_url} | Name: ${target.name}` });
-
-            const suggestMsg = await channel.send({ embeds: [embed] });
-            await suggestMsg.react('👍').catch(() => {});
-            await suggestMsg.react('👎').catch(() => {});
+            await runAutoSuggestForGuild(guild, slackmojis);
         } catch (err) {
-            console.error(`[Scheduler] Auto Suggest failed for guild ${g.id}:`, err);
+            console.error(`[Scheduler] Auto Suggest failed for guild ${g.id}:`, err.message);
         }
     }
 }
 
-module.exports = { initScheduler, processWantedDecay, processAutoPrune, processAutoSuggest };
+module.exports = { initScheduler, processWantedDecay, processAutoPrune, processAutoSuggest, runAutoSuggestForGuild };

@@ -577,6 +577,10 @@ const commands = [
                 )
         )
         .addSubcommand(sub =>
+            sub.setName('autosuggest')
+                .setDescription('Trigger a random daily emoji suggestion post immediately (Admin only)')
+        )
+        .addSubcommand(sub =>
             sub.setName('help')
                 .setDescription('Display the list of available commands and instructions')
         ),

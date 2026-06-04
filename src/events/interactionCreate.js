@@ -320,6 +320,8 @@ module.exports = {
                     args.push(inactiveDays !== null ? String(inactiveDays) : '30');
                 } else if (sub === 'websearch') {
                     args.push(interaction.options.getString('query'));
+                } else if (sub === 'autosuggest') {
+                    // No additional arguments
                 }
             } else if (commandName === 'job') {
                 const sub = interaction.options.getSubcommand();

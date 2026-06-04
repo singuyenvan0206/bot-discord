@@ -541,17 +541,24 @@ async function handleInactive(guild, minUses = 5, inactiveDays = 30) {
   for (const [id, emoji] of emojis) {
     const stat = statsMap.get(id);
     const useCount = stat ? stat.use_count : 0;
-    const lastUsed = stat ? Number(stat.last_used_at) : 0;
+    const lastUsed = stat ? Number(stat.last_used_at) : now;
+
+    if (!stat) {
+      // Seed the database with initial tracking stats to prevent instant listing as inactive
+      db.execute(`
+        INSERT INTO emoji_stats (guild_id, emoji_id, use_count, last_used_at)
+        VALUES (?, ?, 0, ?)
+        ON CONFLICT(guild_id, emoji_id) DO NOTHING
+      `, [guild.id, id, now]).catch(() => {});
+    }
+
+    const emojiAgeMs = now - emoji.createdTimestamp;
+    const trackerAgeMs = now - lastUsed;
 
     let isInactive = false;
-    if (useCount === 0) {
-      isInactive = true;
-    } else if (useCount <= minUses) {
-      if (inactiveDays > 0) {
-        if (now - lastUsed >= thresholdMs) {
-          isInactive = true;
-        }
-      } else {
+    // Only flag as inactive if both the emoji age and tracking duration are older than threshold
+    if (emojiAgeMs >= thresholdMs && trackerAgeMs >= thresholdMs) {
+      if (useCount <= minUses) {
         isInactive = true;
       }
     }
@@ -605,17 +612,24 @@ async function handlePrune(guild, minUses = 5, inactiveDays = 30) {
   for (const [id, emoji] of emojis) {
     const stat = statsMap.get(id);
     const useCount = stat ? stat.use_count : 0;
-    const lastUsed = stat ? Number(stat.last_used_at) : 0;
+    const lastUsed = stat ? Number(stat.last_used_at) : now;
+
+    if (!stat) {
+      // Seed the database with initial tracking stats to prevent instant pruning
+      db.execute(`
+        INSERT INTO emoji_stats (guild_id, emoji_id, use_count, last_used_at)
+        VALUES (?, ?, 0, ?)
+        ON CONFLICT(guild_id, emoji_id) DO NOTHING
+      `, [guild.id, id, now]).catch(() => {});
+    }
+
+    const emojiAgeMs = now - emoji.createdTimestamp;
+    const trackerAgeMs = now - lastUsed;
 
     let isInactive = false;
-    if (useCount === 0) {
-      isInactive = true;
-    } else if (useCount <= minUses) {
-      if (inactiveDays > 0) {
-        if (now - lastUsed >= thresholdMs) {
-          isInactive = true;
-        }
-      } else {
+    // Only prune if both the emoji age and tracking duration are older than threshold
+    if (emojiAgeMs >= thresholdMs && trackerAgeMs >= thresholdMs) {
+      if (useCount <= minUses) {
         isInactive = true;
       }
     }
@@ -801,7 +815,7 @@ function handleHelp(prefix) {
 
 module.exports = {
   name: 'emoji',
-  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji', 'suggestemoji', 'configemoji', 'searchemoji', 'inactiveemoji', 'pruneemoji', 'websearchemoji'],
+  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji', 'suggestemoji', 'configemoji', 'searchemoji', 'inactiveemoji', 'pruneemoji', 'websearchemoji', 'autosuggestemoji'],
   description: 'Quản lý emoji của server (Manage guild emojis)',
   parseEmojiInputToUrl,
   downloadImage,
@@ -855,13 +869,15 @@ module.exports = {
       args = ['prune', ...args];
     } else if (invokedCommand === 'websearchemoji') {
       args = ['websearch', ...args];
+    } else if (invokedCommand === 'autosuggestemoji') {
+      args = ['autosuggest', ...args];
     }
 
     const subcommand = args[0]?.toLowerCase();
     const guild = message.guild;
 
     // Subcommands that require ManageExpressions permission
-    const adminSubcommands = ['add', 'delete', 'rename', 'steal', 'restrict', 'config', 'prune'];
+    const adminSubcommands = ['add', 'delete', 'rename', 'steal', 'restrict', 'config', 'prune', 'autosuggest'];
     if (adminSubcommands.includes(subcommand)) {
       if (!message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
         const errEmbed = new EmbedBuilder()
@@ -1032,6 +1048,17 @@ module.exports = {
         }
         const searchResult = await handleWebSearch(guild, query, prefix);
         return message.reply(searchResult);
+      }
+      else if (subcommand === 'autosuggest') {
+        const { runAutoSuggestForGuild } = require('../../utils/scheduler');
+        const target = await runAutoSuggestForGuild(guild);
+        if (!target) {
+          throw new Error('Không thể lấy hoặc tạo đề xuất emoji tự động lúc này.');
+        }
+        embed = new EmbedBuilder()
+          .setColor(COLOR_SUCCESS)
+          .setTitle('💡 Gợi Ý Tự Động Được Kích Hoạt')
+          .setDescription(`Đã lấy ngẫu nhiên và gửi đề xuất emoji **:${target.name}:** vào kênh bình chọn thành công!`);
       }
       else {
         throw new Error(`Unknown subcommand \`${subcommand}\`. Type \`${prefix}emoji\` for help.`);
