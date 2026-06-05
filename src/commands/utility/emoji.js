@@ -173,7 +173,7 @@ async function handleSteal(guild, emojiOrMsgUrl, customName = null) {
     .setThumbnail(newEmoji.url);
 }
 
-async function handleStealSuggestion(guild, emojiOrMsgUrl, author, customName = null) {
+async function handleStealSuggestion(guild, emojiOrMsgUrl, author, currentChannel, customName = null) {
   const { url: targetUrl, name: sourceName } = await resolveStealTarget(guild, emojiOrMsgUrl);
   const channel = await getSuggestChannel(guild);
   if (!channel) {
@@ -184,6 +184,7 @@ async function handleStealSuggestion(guild, emojiOrMsgUrl, author, customName = 
   const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
   const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
   const name = customName || sourceName || 'stolen_emoji';
+  const isSameChannel = currentChannel?.id === channel.id;
 
   const embed = new EmbedBuilder()
     .setColor(COLOR_INFO)
@@ -196,14 +197,18 @@ async function handleStealSuggestion(guild, emojiOrMsgUrl, author, customName = 
     .setImage(targetUrl)
     .setFooter({ text: `Suggested by ${author.tag || author.username}` });
 
-  const suggestMsg = await channel.send({ embeds: [embed] });
-  await suggestMsg.react(approveEmoji).catch(() => {});
-  await suggestMsg.react(rejectEmoji).catch(() => {});
+  if (!isSameChannel) {
+    const suggestMsg = await channel.send({ embeds: [embed] });
+    await suggestMsg.react(approveEmoji).catch(() => {});
+    await suggestMsg.react(rejectEmoji).catch(() => {});
+  }
 
   return new EmbedBuilder()
     .setColor(COLOR_SUCCESS)
     .setTitle('✅ Đã Gửi Đề Xuất Emoji')
-    .setDescription(`Bạn chưa có quyền quản lý emoji, nên đề xuất đã được gửi đến kênh ${channel}.`)
+    .setDescription(isSameChannel
+      ? 'Bạn chưa có quyền quản lý emoji. Đề xuất đã được ghi nhận trong kênh hiện tại.'
+      : `Bạn chưa có quyền quản lý emoji, nên đề xuất đã được gửi đến kênh ${channel}.`)
     .addFields(
       { name: 'Tên Emoji', value: `\`:${name}:\``, inline: true },
       { name: 'Kênh Đề Xuất', value: `${channel}`, inline: true }
@@ -671,7 +676,7 @@ module.exports = {
         if (message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
           embed = await handleSteal(guild, query, customName);
         } else {
-          embed = await handleStealSuggestion(guild, query, message.author, customName);
+          embed = await handleStealSuggestion(guild, query, message.author, message.channel, customName);
         }
       }
       else if (subcommand === 'suggest') {
