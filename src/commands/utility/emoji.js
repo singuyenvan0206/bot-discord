@@ -48,6 +48,53 @@ function parseEmojiSource(query) {
   return { url, name, animated };
 }
 
+// Helper: Resolve emoji or message URL into a target image source
+async function resolveStealTarget(guild, emojiOrMsgUrl) {
+  if (!emojiOrMsgUrl) {
+    throw new Error('Invalid format. Please supply a custom emoji (e.g., `<:name:id>`) or a Discord message link.');
+  }
+
+  const msgUrlMatch = emojiOrMsgUrl.match(/channels\/(\d+)\/(\d+)\/(\d+)/);
+  if (msgUrlMatch) {
+    const channelId = msgUrlMatch[2];
+    const messageId = msgUrlMatch[3];
+
+    const channel = await guild.client.channels.fetch(channelId).catch(() => null);
+    if (!channel) {
+      throw new Error(`Could not access channel with ID \`${channelId}\` (Ensure bot has access to that channel).`);
+    }
+
+    const message = await channel.messages.fetch(messageId).catch(() => null);
+    if (!message) {
+      throw new Error(`Could not find message with ID \`${messageId}\` in channel <#${channelId}>.`);
+    }
+
+    const emojiMatch = message.content.match(/<(a)?:(\w+):(\d+)>/);
+    if (!emojiMatch) {
+      throw new Error('No custom emojis found in the specified message contents.');
+    }
+
+    const animated = !!emojiMatch[1];
+    const name = emojiMatch[2];
+    const id = emojiMatch[3];
+    const url = `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
+
+    return { url, name, animated };
+  }
+
+  const emojiMatch = emojiOrMsgUrl.match(/<(a)?:(\w+):(\d+)>/);
+  if (!emojiMatch) {
+    throw new Error('Invalid format. Please supply a custom emoji (e.g., `<:name:id>`) or a Discord message link.');
+  }
+
+  const animated = !!emojiMatch[1];
+  const name = emojiMatch[2];
+  const id = emojiMatch[3];
+  const url = `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
+
+  return { url, name, animated };
+}
+
 // Helper: Download image and return buffer
 async function downloadImage(url) {
   let targetUrl = url;
@@ -83,46 +130,7 @@ async function downloadImage(url) {
 
 // 6. STEAL EMOJI
 async function handleSteal(guild, emojiOrMsgUrl) {
-  let targetUrl = '';
-  let targetName = '';
-  let animated = false;
-
-  const msgUrlMatch = emojiOrMsgUrl.match(/channels\/(\d+)\/(\d+)\/(\d+)/);
-  if (msgUrlMatch) {
-    const channelId = msgUrlMatch[2];
-    const messageId = msgUrlMatch[3];
-
-    const channel = await guild.client.channels.fetch(channelId).catch(() => null);
-    if (!channel) {
-      throw new Error(`Could not access channel with ID \`${channelId}\` (Ensure bot has access to that channel).`);
-    }
-
-    const message = await channel.messages.fetch(messageId).catch(() => null);
-    if (!message) {
-      throw new Error(`Could not find message with ID \`${messageId}\` in channel <#${channelId}>.`);
-    }
-
-    const emojiMatch = message.content.match(/<(a)?:(\w+):(\d+)>/);
-    if (!emojiMatch) {
-      throw new Error('No custom emojis found in the specified message contents.');
-    }
-
-    animated = !!emojiMatch[1];
-    targetName = emojiMatch[2];
-    const emojiId = emojiMatch[3];
-    targetUrl = `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? 'gif' : 'png'}`;
-  } else {
-    const emojiMatch = emojiOrMsgUrl.match(/<(a)?:(\w+):(\d+)>/);
-    if (!emojiMatch) {
-      throw new Error('Invalid format. Please supply a custom emoji (e.g., `<:name:id>`) or a Discord message link.');
-    }
-
-    animated = !!emojiMatch[1];
-    targetName = emojiMatch[2];
-    const emojiId = emojiMatch[3];
-    targetUrl = `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? 'gif' : 'png'}`;
-  }
-
+  const { url: targetUrl, name: targetName } = await resolveStealTarget(guild, emojiOrMsgUrl);
   const { buffer } = await downloadImage(targetUrl);
   const newEmoji = await guild.emojis.create({ attachment: buffer, name: targetName });
 
@@ -138,6 +146,41 @@ async function handleSteal(guild, emojiOrMsgUrl) {
     .setThumbnail(newEmoji.url);
 }
 
+async function handleStealSuggestion(guild, emojiOrMsgUrl, author) {
+  const { url: targetUrl, name: targetName } = await resolveStealTarget(guild, emojiOrMsgUrl);
+  const channel = await getSuggestChannel(guild);
+  if (!channel) {
+    throw new Error('Emoji suggestion channel is not configured, and no channel named `đề-xuất-emoji` was found in this server.');
+  }
+
+  const db = require('../../database');
+  const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+  const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+
+  const embed = new EmbedBuilder()
+    .setColor(COLOR_INFO)
+    .setTitle('💡 Đề Xuất Emoji Từ Người Dùng')
+    .setDescription(`Người dùng ${author} đã đề xuất một emoji để thêm vào server.`)
+    .addFields(
+      { name: 'Tên Emoji', value: `\`:${targetName}:\``, inline: true },
+      { name: 'Nguồn', value: emojiOrMsgUrl, inline: true }
+    )
+    .setImage(targetUrl)
+    .setFooter({ text: `Suggested by ${author.tag || author.username}` });
+
+  const suggestMsg = await channel.send({ embeds: [embed] });
+  await suggestMsg.react(approveEmoji).catch(() => {});
+  await suggestMsg.react(rejectEmoji).catch(() => {});
+
+  return new EmbedBuilder()
+    .setColor(COLOR_SUCCESS)
+    .setTitle('✅ Đã Gửi Đề Xuất Emoji')
+    .setDescription(`Bạn chưa có quyền quản lý emoji, nên đề xuất đã được gửi đến kênh ${channel}.`)
+    .addFields(
+      { name: 'Tên Emoji', value: `\`:${targetName}:\``, inline: true },
+      { name: 'Kênh Đề Xuất', value: `${channel}`, inline: true }
+    );
+}
 
 
 // Helper: Resolve emoji suggestion channel
@@ -552,7 +595,7 @@ module.exports = {
     const guild = message.guild;
 
     // Subcommands that require ManageExpressions permission
-    const adminSubcommands = ['steal', 'config', 'prune', 'autosuggest'];
+    const adminSubcommands = ['config', 'prune', 'autosuggest'];
     if (adminSubcommands.includes(subcommand)) {
       if (!message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
         const errEmbed = new EmbedBuilder()
@@ -581,7 +624,12 @@ module.exports = {
         if (!query) {
           throw new Error(`Usage: \`${prefix}emoji steal <emoji_or_message_url>\``);
         }
-        embed = await handleSteal(guild, query);
+
+        if (message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
+          embed = await handleSteal(guild, query);
+        } else {
+          embed = await handleStealSuggestion(guild, query, message.author);
+        }
       }
       else if (subcommand === 'suggest') {
         const name = args[1];
@@ -625,13 +673,6 @@ module.exports = {
           throw new Error(`Usage: \`${prefix}emoji info <emoji>\``);
         }
         embed = await handleInfo(guild, emojiQuery);
-      }
-      else if (subcommand === 'steal') {
-        const query = args[1];
-        if (!query) {
-          throw new Error(`Usage: \`${prefix}emoji steal <emoji_or_message_url>\``);
-        }
-        embed = await handleSteal(guild, query);
       }
       else if (subcommand === 'restrict') {
         const emojiQuery = args[1];
