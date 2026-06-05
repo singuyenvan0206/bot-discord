@@ -205,7 +205,7 @@ async function handleStealSuggestion(guild, emojiOrMsgUrl, author, customName = 
     .setTitle('✅ Đã Gửi Đề Xuất Emoji')
     .setDescription(`Bạn chưa có quyền quản lý emoji, nên đề xuất đã được gửi đến kênh ${channel}.`)
     .addFields(
-      { name: 'Tên Emoji', value: `\`:${targetName}:\``, inline: true },
+      { name: 'Tên Emoji', value: `\`:${name}:\``, inline: true },
       { name: 'Kênh Đề Xuất', value: `${channel}`, inline: true }
     );
 }
