@@ -6,8 +6,10 @@ const COLOR_SUCCESS = 0x57F287; // Discord Green
 const COLOR_ERROR = 0xED4245; // Discord Red
 const COLOR_INFO = 0x5865F2; // Discord Blurple
 
-// Helper: Resolve Emoji from Guild cache or parse custom emoji structure
-function resolveEmoji(guild, query) {
+
+
+// Helper: Convert Unicode emoji, custom emoji, or URL to a valid image URL
+function parseEmojiInputToUrl(query) {
   if (!query) return null;
   
   // Try matching <a:name:id> or <:name:id>
@@ -77,166 +79,7 @@ async function downloadImage(url) {
 // Subcommand Handlers
 // -------------------------------------------------------------
 
-// 1. ADD EMOJI
-async function handleAdd(guild, name, urlOrEmoji) {
-  if (!name || !/^\w{2,32}$/.test(name)) {
-    throw new Error('Emoji name must be alphanumeric (underscores allowed) and between 2 and 32 characters.');
-  }
 
-  const parsedEmoji = parseEmojiSource(urlOrEmoji);
-  const targetUrl = parsedEmoji ? parsedEmoji.url : urlOrEmoji;
-  const { buffer } = await downloadImage(targetUrl);
-  const emoji = await guild.emojis.create({ attachment: buffer, name });
-  
-  return new EmbedBuilder()
-    .setColor(COLOR_SUCCESS)
-    .setTitle('✅ Emoji Added')
-    .setDescription(`Successfully created custom emoji: ${emoji}`)
-    .addFields(
-      { name: 'Name', value: `\`:${emoji.name}:\``, inline: true },
-      { name: 'ID', value: `\`${emoji.id}\``, inline: true },
-      { name: 'Type', value: emoji.animated ? 'Animated (GIF)' : 'Static', inline: true }
-    )
-    .setThumbnail(emoji.url);
-}
-
-// 2. DELETE EMOJI
-async function handleDelete(guild, emojiQuery) {
-  const emoji = resolveEmoji(guild, emojiQuery);
-  if (!emoji) {
-    throw new Error(`Could not find custom emoji matching \`${emojiQuery}\` in this server.`);
-  }
-  if (emoji.isExternal) {
-    throw new Error(`The emoji matching \`${emojiQuery}\` belongs to another server.`);
-  }
-
-  const name = emoji.name;
-  const id = emoji.id;
-  const wasAnimated = emoji.animated;
-  
-  await emoji.delete();
-
-  return new EmbedBuilder()
-    .setColor(COLOR_SUCCESS)
-    .setTitle('🗑️ Emoji Deleted')
-    .setDescription(`Successfully deleted custom emoji: \`:${name}:\``)
-    .addFields(
-      { name: 'Name', value: `\`:${name}:\``, inline: true },
-      { name: 'ID', value: `\`${id}\``, inline: true },
-      { name: 'Type', value: wasAnimated ? 'Animated' : 'Static', inline: true }
-    );
-}
-
-// 3. RENAME EMOJI
-async function handleRename(guild, emojiQuery, newName) {
-  if (!newName || !/^\w{2,32}$/.test(newName)) {
-    throw new Error('New name must be alphanumeric and between 2 and 32 characters.');
-  }
-
-  const emoji = resolveEmoji(guild, emojiQuery);
-  if (!emoji) {
-    throw new Error(`Could not find custom emoji matching \`${emojiQuery}\` in this server.`);
-  }
-  if (emoji.isExternal) {
-    throw new Error('Cannot rename emojis that belong to other servers.');
-  }
-
-  const oldName = emoji.name;
-  await emoji.setName(newName);
-
-  return new EmbedBuilder()
-    .setColor(COLOR_SUCCESS)
-    .setTitle('✏️ Emoji Renamed')
-    .setDescription(`Successfully renamed custom emoji: ${emoji}`)
-    .addFields(
-      { name: 'Old Name', value: `\`:${oldName}:\``, inline: true },
-      { name: 'New Name', value: `\`:${emoji.name}:\``, inline: true },
-      { name: 'ID', value: `\`${emoji.id}\``, inline: true }
-    )
-    .setThumbnail(emoji.url);
-}
-
-// 4. LIST EMOJIS
-async function handleList(guild) {
-  const emojis = await guild.emojis.fetch();
-  const staticEmojis = emojis.filter(e => !e.animated);
-  const animatedEmojis = emojis.filter(e => e.animated);
-
-  let maxSlots = 50;
-  if (guild.premiumTier === 1) maxSlots = 100;
-  if (guild.premiumTier === 2) maxSlots = 150;
-  if (guild.premiumTier === 3) maxSlots = 250;
-
-  const staticCount = staticEmojis.size;
-  const animatedCount = animatedEmojis.size;
-
-  const staticString = staticEmojis.map(e => e.toString()).join(' ') || '_No static emojis_';
-  const animatedString = animatedEmojis.map(e => e.toString()).join(' ') || '_No animated emojis_';
-
-  const truncate = (str, limit = 1000) => {
-    if (str.length > limit) {
-      return str.slice(0, limit) + ' ... and more';
-    }
-    return str;
-  };
-
-  return new EmbedBuilder()
-    .setColor(COLOR_INFO)
-    .setTitle(`Guild Emojis for ${guild.name}`)
-    .addFields(
-      {
-        name: `Static Emojis (${staticCount} / ${maxSlots} slots)`,
-        value: truncate(staticString)
-      },
-      {
-        name: `Animated Emojis (${animatedCount} / ${maxSlots} slots)`,
-        value: truncate(animatedString)
-      }
-    )
-    .setFooter({ text: `Total Custom Emojis: ${emojis.size} | Premium Tier: Level ${guild.premiumTier}` });
-}
-
-// 5. EMOJI INFO
-async function handleInfo(guild, emojiQuery) {
-  const emoji = resolveEmoji(guild, emojiQuery);
-  if (!emoji) {
-    throw new Error(`Could not find custom emoji matching \`${emojiQuery}\`.`);
-  }
-
-  const embed = new EmbedBuilder().setColor(COLOR_INFO);
-
-  if (emoji.isExternal) {
-    const extUrl = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? 'gif' : 'png'}`;
-    embed
-      .setTitle(`ℹ️ Emoji Info (External Server)`)
-      .setDescription(`This emoji is from another server. You can steal it using \`/emoji steal <emoji>\`!`)
-      .addFields(
-        { name: 'Name', value: `\`:${emoji.name}:\``, inline: true },
-        { name: 'ID', value: `\`${emoji.id}\``, inline: true },
-        { name: 'Animated', value: emoji.animated ? 'Yes' : 'No', inline: true },
-        { name: 'Image Link', value: `[Click Here](${extUrl})` }
-      )
-      .setThumbnail(extUrl);
-  } else {
-    const creator = await emoji.fetchAuthor().catch(() => null);
-    const rolesList = emoji.roles.cache.map(r => r.toString()).join(', ') || 'No restrictions (everyone can use)';
-    
-    embed
-      .setTitle(`ℹ️ Emoji Info: :${emoji.name}:`)
-      .addFields(
-        { name: 'Name', value: `\`:${emoji.name}:\``, inline: true },
-        { name: 'ID', value: `\`${emoji.id}\``, inline: true },
-        { name: 'Type', value: emoji.animated ? 'Animated (GIF)' : 'Static', inline: true },
-        { name: 'Created At', value: `<t:${Math.floor(emoji.createdTimestamp / 1000)}:f>`, inline: true },
-        { name: 'Created By', value: creator ? creator.toString() : 'Unknown (Missing Permissions)', inline: true },
-        { name: 'Role Lock Restrictions', value: rolesList }
-      )
-      .setThumbnail(emoji.url)
-      .setImage(emoji.url);
-  }
-
-  return embed;
-}
 
 // 6. STEAL EMOJI
 async function handleSteal(guild, emojiOrMsgUrl) {
@@ -295,18 +138,270 @@ async function handleSteal(guild, emojiOrMsgUrl) {
     .setThumbnail(newEmoji.url);
 }
 
-// 7. RESTRICT EMOJI ROLES
-async function handleRestrict(guild, emojiQuery, role) {
-  const emoji = resolveEmoji(guild, emojiQuery);
-  if (!emoji) {
-    throw new Error(`Could not find custom emoji matching \`${emojiQuery}\` in this server.`);
-  }
-  if (emoji.isExternal) {
-    throw new Error('Cannot edit role restrictions on emojis belonging to other servers.');
+
+
+// Helper: Resolve emoji suggestion channel
+async function getSuggestChannel(guild) {
+  const db = require('../../database');
+  const channelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
+  if (channelId) {
+    const channel = guild.channels.cache.get(channelId);
+    if (channel) return channel;
   }
 
-  if (!role) {
-    await emoji.roles.set([]);
+  // Fallback to name match
+  const fallback = guild.channels.cache.find(
+    c => c.name.toLowerCase().includes('đề-xuất-emoji') || c.name.toLowerCase().includes('de-xuat-emoji')
+  );
+  return fallback || null;
+}
+
+// 9. SUGGEST EMOJI
+async function handleSuggest(guild, name, url, author) {
+  if (!name || !/^\w{2,32}$/.test(name)) {
+    throw new Error('Emoji name must be alphanumeric (underscores allowed) and between 2 and 32 characters.');
+  }
+
+  const parsedUrl = parseEmojiInputToUrl(url);
+  if (!parsedUrl) {
+    throw new Error('Invalid emoji or image source provided.');
+  }
+
+  const channel = await getSuggestChannel(guild);
+  if (!channel) {
+    throw new Error('Emoji suggestion channel is not configured, and no channel named `đề-xuất-emoji` was found in this server.');
+  }
+
+  const db = require('../../database');
+  const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+  const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+
+  const embed = new EmbedBuilder()
+    .setColor(COLOR_INFO)
+    .setTitle('💡 Đề Xuất Emoji Mới')
+    .setDescription(`Một emoji mới đã được đề xuất và đang chờ duyệt.\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
+    .addFields(
+      { name: 'Tên Đề Xuất', value: `\`:${name}:\``, inline: true },
+      { name: 'Người Đề Xuất', value: `${author}`, inline: true }
+    )
+    .setImage(parsedUrl)
+    .setFooter({ text: `Source: ${parsedUrl} | Name: ${name}` });
+
+  const suggestMsg = await channel.send({ embeds: [embed] });
+  await suggestMsg.react(approveEmoji).catch(() => {});
+  await suggestMsg.react(rejectEmoji).catch(() => {});
+
+  return new EmbedBuilder()
+    .setColor(COLOR_SUCCESS)
+    .setTitle('✅ Đã Gửi Đề Xuất')
+    .setDescription(`Đề xuất emoji của bạn đã được gửi thành công đến kênh ${channel}!`);
+}
+
+// 10. CONFIG SUGGESTIONS
+async function handleConfig(guild, channelQuery, approveQuery, rejectQuery, autoSuggestQuery, autoPruneQuery, pruneMinUsesQuery, pruneInactiveDaysQuery) {
+  const db = require('../../database');
+  let description = '';
+
+  if (channelQuery) {
+    if (channelQuery.toLowerCase() === 'clear') {
+      await db.setGuildSetting(guild.id, 'emoji_suggest_channel', null);
+      description += `• Kênh đề xuất: *Đã xóa cấu hình* (Sẽ tự động tìm kênh có tên chứa \`đề-xuất-emoji\`)\n`;
+    } else {
+      let channelId = '';
+      const channelMatch = channelQuery.match(/^<#(\d+)>$/);
+      if (channelMatch) {
+        channelId = channelMatch[1];
+      } else if (/^\d+$/.test(channelQuery)) {
+        channelId = channelQuery;
+      } else {
+        const channel = guild.channels.cache.find(c => c.name.toLowerCase() === channelQuery.toLowerCase());
+        if (channel) channelId = channel.id;
+      }
+
+      if (!channelId || !guild.channels.cache.has(channelId)) {
+        throw new Error(`Could not find channel matching \`${channelQuery}\` in this server.`);
+      }
+
+      await db.setGuildSetting(guild.id, 'emoji_suggest_channel', channelId);
+      description += `• Kênh đề xuất: <#${channelId}>\n`;
+    }
+  }
+
+  if (approveQuery) {
+    await db.setGuildSetting(guild.id, 'emoji_approve_reaction', approveQuery);
+    description += `• Biểu cảm duyệt: ${approveQuery}\n`;
+  }
+
+  if (rejectQuery) {
+    await db.setGuildSetting(guild.id, 'emoji_reject_reaction', rejectQuery);
+    description += `• Biểu cảm từ chối: ${rejectQuery}\n`;
+  }
+
+  if (autoSuggestQuery) {
+    const val = autoSuggestQuery.toLowerCase() === 'true' ? 'true' : 'false';
+    await db.setGuildSetting(guild.id, 'emoji_auto_suggest', val);
+    description += `• Gợi ý tự động: ${val === 'true' ? '✅ Bật' : '❌ Tắt'}\n`;
+  }
+
+  if (autoPruneQuery) {
+    const val = autoPruneQuery.toLowerCase() === 'true' ? 'true' : 'false';
+    await db.setGuildSetting(guild.id, 'emoji_auto_prune', val);
+    description += `• Dọn dẹp tự động: ${val === 'true' ? '✅ Bật' : '❌ Tắt'}\n`;
+  }
+
+  if (pruneMinUsesQuery) {
+    const minUsesInt = parseInt(pruneMinUsesQuery);
+    if (isNaN(minUsesInt) || minUsesInt < 0) {
+        throw new Error('Số lượt dùng tối thiểu (prune_min_uses) phải là một số nguyên dương.');
+    }
+    await db.setGuildSetting(guild.id, 'emoji_prune_min_uses', String(minUsesInt));
+    description += `• Lượt dùng tối thiểu để dọn dẹp: \`${minUsesInt}\` lượt\n`;
+  }
+
+  if (pruneInactiveDaysQuery) {
+    const inactiveDaysInt = parseInt(pruneInactiveDaysQuery);
+    if (isNaN(inactiveDaysInt) || inactiveDaysInt < 0) {
+        throw new Error('Số ngày không hoạt động (prune_inactive_days) phải là một số nguyên dương.');
+    }
+    await db.setGuildSetting(guild.id, 'emoji_prune_inactive_days', String(inactiveDaysInt));
+    description += `• Số ngày không hoạt động để dọn dẹp: \`${inactiveDaysInt}\` ngày\n`;
+  }
+
+  if (!description) {
+    const channelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
+    const approve = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+    const reject = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+    const autoSuggest = await db.getGuildSetting(guild.id, 'emoji_auto_suggest', 'false');
+    const autoPrune = await db.getGuildSetting(guild.id, 'emoji_auto_prune', 'false');
+    const minUses = await db.getGuildSetting(guild.id, 'emoji_prune_min_uses', '5');
+    const inactiveDays = await db.getGuildSetting(guild.id, 'emoji_prune_inactive_days', '30');
+    
+    description = `• Kênh đề xuất: ${channelId ? `<#${channelId}>` : '*Chưa cấu hình (mặc định tìm theo tên)*'}\n` +
+                  `• Biểu cảm duyệt: ${approve}\n` +
+                  `• Biểu cảm từ chối: ${reject}\n` +
+                  `• Gợi ý tự động (auto_suggest): ${autoSuggest === 'true' ? '✅ Bật' : '❌ Tắt'}\n` +
+                  `• Dọn dẹp tự động (auto_prune): ${autoPrune === 'true' ? '✅ Bật' : '❌ Tắt'}\n` +
+                  `• Lượt dùng tối thiểu để dọn dẹp (prune_min_uses): \`${minUses}\` lượt\n` +
+                  `• Số ngày không hoạt động để dọn dẹp (prune_inactive_days): \`${inactiveDays}\` ngày\n`;
+  }
+
+  return new EmbedBuilder()
+    .setColor(COLOR_SUCCESS)
+    .setTitle('⚙️ Cấu Hình Đề Xuất Emoji')
+    .setDescription(description);
+}
+
+// 11. SEARCH EMOJIS
+async function handleSearch(guild, query, prefix) {
+  if (!query) {
+    throw new Error('Please provide a search query.');
+  }
+
+  const slackmojis = require('../../data/slackmojis.json');
+  const matches = slackmojis.filter(e => e.name.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
+
+  if (matches.length === 0) {
+    return new EmbedBuilder()
+      .setColor(COLOR_ERROR)
+      .setTitle('🔍 Kết quả tìm kiếm Emoji')
+      .setDescription(`Không tìm thấy emoji nào phù hợp với từ khóa \`${query}\`.`);
+  }
+
+  const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+  const selectMenu = new StringSelectMenuBuilder()
+    .setCustomId('emoji_search_select')
+    .setPlaceholder('Chọn một emoji để thêm hoặc đề xuất...')
+    .addOptions(
+      matches.map(e => {
+        const relativePath = e.image_url.replace('https://emojis.slackmojis.com/emojis/images/', '').split('?')[0];
+        return {
+          label: `:${e.name.slice(0, 20)}:`,
+          value: `${e.name.slice(0, 32)}|${relativePath}`,
+          description: `Category: ${e.category?.name || 'General'}`,
+        };
+      })
+    );
+
+  const row = new ActionRowBuilder().addComponents(selectMenu);
+
+  const listText = matches.map((e, idx) => `${idx + 1}. **${e.name}** (${e.category?.name || 'General'})`).join('\n');
+
+  return {
+    embeds: [
+      new EmbedBuilder()
+        .setColor(COLOR_INFO)
+        .setTitle(`🔍 Kết quả tìm kiếm cho: ${query}`)
+        .setDescription(`Tìm thấy **${matches.length}** kết quả phù hợp:\n\n${listText}\n\n*Hãy chọn emoji từ menu bên dưới để tải về.*`)
+    ],
+    components: [row]
+  };
+}
+
+async function createEmojiFromUrl(guild, name, url) {
+  const { buffer } = await downloadImage(url);
+  return await guild.emojis.create({ attachment: buffer, name });
+}
+
+// 12. INACTIVE EMOJIS
+async function handleInactive(guild, minUses = null, inactiveDays = null) {
+  const db = require('../../database');
+  if (minUses === null || minUses === undefined) {
+    const dbMin = await db.getGuildSetting(guild.id, 'emoji_prune_min_uses', '5');
+    minUses = parseInt(dbMin) || 5;
+  }
+  if (inactiveDays === null || inactiveDays === undefined) {
+    const dbInactive = await db.getGuildSetting(guild.id, 'emoji_prune_inactive_days', '30');
+    inactiveDays = parseInt(dbInactive) || 30;
+  }
+  const emojis = await guild.emojis.fetch();
+  const stats = await db.getEmojiStats(guild.id);
+  const statsMap = new Map(stats.map(s => [s.emoji_id, s]));
+
+  const inactiveList = [];
+  const now = Date.now();
+  const thresholdMs = inactiveDays * 24 * 60 * 60 * 1000;
+
+  for (const [id, emoji] of emojis) {
+    const stat = statsMap.get(id);
+    const useCount = stat ? stat.use_count : 0;
+    const lastUsed = stat ? Number(stat.last_used_at) : now;
+
+    if (!stat) {
+      // Seed the database with initial tracking stats to prevent instant listing as inactive
+      db.execute(`
+        INSERT INTO emoji_stats (guild_id, emoji_id, use_count, last_used_at)
+        VALUES (?, ?, 0, ?)
+        ON CONFLICT(guild_id, emoji_id) DO NOTHING
+      `, [guild.id, id, now]).catch(() => {});
+    }
+
+    const emojiAgeMs = now - emoji.createdTimestamp;
+    const trackerAgeMs = now - lastUsed;
+
+    let isInactive = false;
+    // Only flag as inactive if both the emoji age and tracking duration are older than threshold
+    if (emojiAgeMs >= thresholdMs && trackerAgeMs >= thresholdMs) {
+      if (useCount <= minUses) {
+        isInactive = true;
+      }
+    }
+
+    if (isInactive) {
+      inactiveList.push({
+        emoji,
+        useCount,
+        lastUsed
+      });
+    }
+  }
+
+  // Sort by usage count (lowest first), then last used (oldest first)
+  inactiveList.sort((a, b) => {
+    if (a.useCount !== b.useCount) return a.useCount - b.useCount;
+    return a.lastUsed - b.lastUsed;
+  });
+
+  if (inactiveList.length === 0) {
     return new EmbedBuilder()
       .setColor(COLOR_SUCCESS)
       .setTitle('🔒 Emoji Restriction Cleared')
@@ -360,13 +455,43 @@ function handleHelp(prefix) {
         inline: false
       },
       {
-        name: '🥷 Steal Emoji',
-        value: `* **Slash:** \`/emoji steal emoji_or_message: <emoji_or_message_url>\`\n* **Prefix:** \`${prefix}emoji steal <emoji_or_message_url>\`\n* **Shortcut:** \`${prefix}stealemoji <emoji_or_message_url>\``,
+        name: '➕ Add Emoji',
+        value: `* **Slash:** \`/emoji add name: <name> [url] [file]\`\n* **Prefix:** \`${prefix}emoji add <name> [url]\` (or upload image and type \`${prefix}emoji add <name>\`)\n* **Shortcut:** \`${prefix}addemoji <name>\``,
+        inline: false
+      },
+      {
+        name: '🗑️ Delete Emoji',
+        value: `* **Slash:** \`/emoji delete emoji: <emoji>\`\n* **Prefix:** \`${prefix}emoji delete <emoji>\`\n* **Shortcut:** \`${prefix}delemoji <emoji>\``,
         inline: false
       },
       {
         name: '🔒 Restrict Emoji (Role Lock)',
         value: `* **Slash:** \`/emoji restrict emoji: <emoji> [role]\`\n* **Prefix:** \`${prefix}emoji restrict <emoji> [@role]\` (leave role blank to clear)\n* **Shortcut:** \`${prefix}restrictemoji <emoji> [@role]\``,
+        inline: false
+      },
+      {
+        name: '✏️ Rename Emoji',
+        value: `* **Slash:** \`/emoji rename emoji: <emoji> new_name: <name>\`\n* **Prefix:** \`${prefix}emoji rename <emoji> <new_name>\`\n* **Shortcut:** \`${prefix}renameemoji <emoji> <new_name>\``,
+        inline: false
+      },
+      {
+        name: '📋 List Emojis',
+        value: `* **Slash:** \`/emoji list\`\n* **Prefix:** \`${prefix}emoji list\`\n* **Shortcut:** \`${prefix}listemoji\` or \`${prefix}emojis\``,
+        inline: false
+      },
+      {
+        name: 'ℹ️ Emoji Info',
+        value: `* **Slash:** \`/emoji info emoji: <emoji>\`\n* **Prefix:** \`${prefix}emoji info <emoji>\`\n* **Shortcut:** \`${prefix}infoemoji <emoji>\``,
+        inline: false
+      },
+      {
+        name: '🥷 Steal Emoji',
+        value: `* **Slash:** \`/emoji steal emoji_or_message: <emoji_or_message_url>\`\n* **Prefix:** \`${prefix}emoji steal <emoji_or_message_url>\`\n* **Shortcut:** \`${prefix}stealemoji <emoji_or_message_url>\``,
+        inline: false
+      },
+      {
+        name: '⚙️ Config Suggestions (Admin)',
+        value: `* **Slash:** \`/emoji config [channel] [approve] [reject] [auto_suggest] [auto_prune] [prune_min_uses] [prune_inactive_days]\`\n* **Prefix:** \`${prefix}emoji config channel <#channel/clear>\` or \`auto_suggest <true/false>\` or \`prune_min_uses <count>\``,
         inline: false
       }
     )
@@ -375,7 +500,7 @@ function handleHelp(prefix) {
 
 module.exports = {
   name: 'emoji',
-  aliases: ['addemoji', 'delemoji', 'deleteemoji', 'renameemoji', 'listemoji', 'emojis', 'infoemoji', 'stealemoji', 'restrictemoji'],
+  aliases: ['stealemoji', 'suggestemoji', 'configemoji', 'searchemoji', 'inactiveemoji', 'pruneemoji', 'websearchemoji', 'autosuggestemoji'],
   description: 'Quản lý emoji của server (Manage guild emojis)',
   async execute(message, args) {
     const db = require('../../database');
@@ -407,20 +532,35 @@ module.exports = {
       args = ['info', ...args];
     } else if (invokedCommand === 'stealemoji') {
       args = ['steal', ...args];
-    } else if (invokedCommand === 'restrictemoji') {
-      args = ['restrict', ...args];
+    } else if (invokedCommand === 'suggestemoji') {
+      args = ['suggest', ...args];
+    } else if (invokedCommand === 'configemoji') {
+      args = ['config', ...args];
+    } else if (invokedCommand === 'searchemoji') {
+      args = ['search', ...args];
+    } else if (invokedCommand === 'inactiveemoji') {
+      args = ['inactive', ...args];
+    } else if (invokedCommand === 'pruneemoji') {
+      args = ['prune', ...args];
+    } else if (invokedCommand === 'websearchemoji') {
+      args = ['websearch', ...args];
+    } else if (invokedCommand === 'autosuggestemoji') {
+      args = ['autosuggest', ...args];
     }
 
     const subcommand = args[0]?.toLowerCase();
     const guild = message.guild;
 
-    // Permission Check: Requires MANAGE_EMOJIS_AND_STICKERS / MANAGE_EXPRESSIONS
-    if (!message.member.permissions.has(PermissionFlagsBits.ManageExpressions)) {
-      const errEmbed = new EmbedBuilder()
-        .setColor(COLOR_ERROR)
-        .setTitle('❌ Permission Denied')
-        .setDescription('You need the `Manage Expressions` (or `Manage Emojis and Stickers`) permission to use this command.');
-      return message.reply({ embeds: [errEmbed] });
+    // Subcommands that require ManageExpressions permission
+    const adminSubcommands = ['steal', 'config', 'prune', 'autosuggest'];
+    if (adminSubcommands.includes(subcommand)) {
+      if (!message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
+        const errEmbed = new EmbedBuilder()
+          .setColor(COLOR_ERROR)
+          .setTitle('❌ Permission Denied')
+          .setDescription('You need the `Manage Expressions` (or `Manage Emojis and Stickers`) permission to use this command.');
+        return message.reply({ embeds: [errEmbed] });
+      }
     }
 
     if (!subcommand || subcommand === 'help') {
@@ -436,7 +576,14 @@ module.exports = {
     try {
       let embed;
 
-      if (subcommand === 'add') {
+      if (subcommand === 'steal') {
+        const query = args[1];
+        if (!query) {
+          throw new Error(`Usage: \`${prefix}emoji steal <emoji_or_message_url>\``);
+        }
+        embed = await handleSteal(guild, query);
+      }
+      else if (subcommand === 'suggest') {
         const name = args[1];
         let source = args[2];
         const attachment = message.attachments ? message.attachments.first() : null;

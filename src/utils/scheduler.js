@@ -340,8 +340,8 @@ async function runAutoSuggestForGuild(guild, slackmojis) {
         .setFooter({ text: `Source: ${target.image_url} | Name: ${target.name}` });
 
     const suggestMsg = await channel.send({ embeds: [embed] });
-    await suggestMsg.react(approveEmoji).catch(() => {});
-    await suggestMsg.react(rejectEmoji).catch(() => {});
+    await suggestMsg.react('👍').catch(() => {});
+    await suggestMsg.react('👎').catch(() => {});
 
     return target;
 }
