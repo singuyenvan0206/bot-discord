@@ -74,43 +74,6 @@ module.exports = {
                 }
             }
 
-            if (interaction.customId.startsWith('emoji_preview_add|')) {
-                await interaction.deferUpdate().catch(() => {});
-                
-                const parts = interaction.customId.split('|');
-                const emojiName = parts[1];
-                const relativePath = parts[2];
-                const imageUrl = `https://emojis.slackmojis.com/emojis/images/${relativePath}`;
-
-                const guild = interaction.guild;
-                const member = interaction.member;
-
-                const { PermissionFlagsBits, EmbedBuilder } = require('discord.js');
-                const isAdmin = member.permissions.has(PermissionFlagsBits.ManageGuildExpressions);
-                
-                if (!isAdmin) {
-                    return interaction.followUp({ content: '❌ Bạn không có quyền `Manage Expressions` để thêm emoji trực tiếp.', ephemeral: true }).catch(() => {});
-                }
-
-                try {
-                    const emojiCommand = require('../commands/utility/emoji');
-                    const newEmoji = await emojiCommand.createEmojiFromUrl(guild, emojiName, imageUrl);
-                    const successEmbed = new EmbedBuilder()
-                        .setColor(0x57F287) // COLOR_SUCCESS
-                        .setTitle('✅ Đã Thêm Emoji Thành Công')
-                        .setDescription(`Đã thêm emoji tùy chỉnh mới: ${newEmoji}`)
-                        .addFields(
-                            { name: 'Tên Emoji', value: `\`:${emojiName}:\``, inline: true },
-                            { name: 'Nguồn', value: 'Slackmojis', inline: true }
-                        )
-                        .setThumbnail(imageUrl);
-                    
-                    await interaction.editReply({ embeds: [successEmbed], components: [] }).catch(() => {});
-                } catch (err) {
-                    await interaction.followUp({ content: `❌ Thất bại khi thêm emoji trực tiếp: ${err.message}`, ephemeral: true }).catch(() => {});
-                }
-                return;
-            }
 
             if (interaction.customId.startsWith('emoji_preview_suggest|')) {
                 await interaction.deferUpdate().catch(() => {});
@@ -294,29 +257,11 @@ module.exports = {
                     )
                     .setImage(imageUrl);
 
-                const row = new ActionRowBuilder();
-
-                if (isAdmin) {
-                    row.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId(`emoji_preview_add|${emojiName}|${relativePath}`)
-                            .setLabel('Thêm Trực Tiếp (Admin)')
-                            .setStyle(ButtonStyle.Success),
-                        new ButtonBuilder()
-                            .setCustomId(`emoji_preview_suggest|${emojiName}|${relativePath}`)
-                            .setLabel('Đề Xuất Bình Chọn')
-                            .setStyle(ButtonStyle.Primary)
-                    );
-                } else {
-                    row.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId(`emoji_preview_suggest|${emojiName}|${relativePath}`)
-                            .setLabel('Đề Xuất Bình Chọn')
-                            .setStyle(ButtonStyle.Primary)
-                    );
-                }
-
-                row.addComponents(
+                const row = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setCustomId(`emoji_preview_suggest|${emojiName}|${relativePath}`)
+                        .setLabel('Đề Xuất Bình Chọn')
+                        .setStyle(ButtonStyle.Primary),
                     new ButtonBuilder()
                         .setCustomId('emoji_preview_cancel')
                         .setLabel('Hủy')
@@ -366,26 +311,8 @@ module.exports = {
             } else if (commandName === 'emoji') {
                 const sub = interaction.options.getSubcommand();
                 args.push(sub);
-                if (sub === 'add') {
-                    args.push(interaction.options.getString('name'));
-                    const url = interaction.options.getString('url');
-                    const file = interaction.options.getAttachment('file');
-                    args.push(url || (file ? file.url : ''));
-                } else if (sub === 'delete') {
-                    args.push(interaction.options.getString('emoji'));
-                } else if (sub === 'rename') {
-                    args.push(interaction.options.getString('emoji'));
-                    args.push(interaction.options.getString('new_name'));
-                } else if (sub === 'info') {
-                    args.push(interaction.options.getString('emoji'));
-                } else if (sub === 'steal') {
+                if (sub === 'steal') {
                     args.push(interaction.options.getString('emoji_or_message'));
-                } else if (sub === 'restrict') {
-                    args.push(interaction.options.getString('emoji'));
-                    const role = interaction.options.getRole('role');
-                    if (role) {
-                        args.push(`<@&${role.id}>`);
-                    }
                 } else if (sub === 'suggest') {
                     args.push(interaction.options.getString('name'));
                     const url = interaction.options.getString('url');
