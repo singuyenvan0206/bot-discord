@@ -197,22 +197,25 @@ async function handleStealSuggestion(guild, emojiOrMsgUrl, author, currentChanne
     .setImage(targetUrl)
     .setFooter({ text: `Suggested by ${author.tag || author.username}` });
 
-  if (!isSameChannel) {
-    const suggestMsg = await channel.send({ embeds: [embed] });
-    await suggestMsg.react(approveEmoji).catch(() => {});
-    await suggestMsg.react(rejectEmoji).catch(() => {});
-  }
+  const suggestMsg = await channel.send({ embeds: [embed] });
+  await suggestMsg.react(approveEmoji).catch(() => {});
+  await suggestMsg.react(rejectEmoji).catch(() => {});
 
-  return new EmbedBuilder()
+  const responseEmbed = new EmbedBuilder()
     .setColor(COLOR_SUCCESS)
     .setTitle('✅ Đã Gửi Đề Xuất Emoji')
     .setDescription(isSameChannel
-      ? 'Bạn chưa có quyền quản lý emoji. Đề xuất đã được ghi nhận trong kênh hiện tại.'
+      ? 'Đề xuất đã được ghi nhận trong kênh hiện tại.'
       : `Bạn chưa có quyền quản lý emoji, nên đề xuất đã được gửi đến kênh ${channel}.`)
     .addFields(
-      { name: 'Tên Emoji', value: `\`:${name}:\``, inline: true },
-      { name: 'Kênh Đề Xuất', value: `${channel}`, inline: true }
+      { name: 'Tên Emoji', value: `\`:${name}:\``, inline: true }
     );
+
+  if (!isSameChannel) {
+    responseEmbed.addFields({ name: 'Kênh Đề Xuất', value: `${channel}`, inline: true });
+  }
+
+  return responseEmbed;
 }
 
 
