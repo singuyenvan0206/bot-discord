@@ -201,19 +201,18 @@ async function handleStealSuggestion(guild, emojiOrMsgUrl, author, currentChanne
   await suggestMsg.react(approveEmoji).catch(() => {});
   await suggestMsg.react(rejectEmoji).catch(() => {});
 
+  if (isSameChannel) {
+    return null;
+  }
+
   const responseEmbed = new EmbedBuilder()
     .setColor(COLOR_SUCCESS)
     .setTitle('✅ Đã Gửi Đề Xuất Emoji')
-    .setDescription(isSameChannel
-      ? 'Đề xuất đã được ghi nhận trong kênh hiện tại.'
-      : `Bạn chưa có quyền quản lý emoji, nên đề xuất đã được gửi đến kênh ${channel}.`)
+    .setDescription(`Bạn chưa có quyền quản lý emoji, nên đề xuất đã được gửi đến kênh ${channel}.`)
     .addFields(
-      { name: 'Tên Emoji', value: `\`:${name}:\``, inline: true }
+      { name: 'Tên Emoji', value: `\`:${name}:\``, inline: true },
+      { name: 'Kênh Đề Xuất', value: `${channel}`, inline: true }
     );
-
-  if (!isSameChannel) {
-    responseEmbed.addFields({ name: 'Kênh Đề Xuất', value: `${channel}`, inline: true });
-  }
 
   return responseEmbed;
 }
@@ -755,7 +754,9 @@ module.exports = {
         throw new Error(`Unknown subcommand \`${subcommand}\`. Type \`${prefix}emoji\` for help.`);
       }
 
-      await message.reply({ embeds: [embed] });
+      if (embed) {
+        await message.reply({ embeds: [embed] });
+      }
     } catch (error) {
       const errorEmbed = new EmbedBuilder()
         .setColor(COLOR_ERROR)
