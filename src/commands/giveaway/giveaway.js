@@ -150,8 +150,7 @@ module.exports = {
         /* ================= LIST ================= */
 
         if (['list', 'l', 'li'].includes(subcommand)) {
-            const giveaways = await db.getActiveGiveaways()
-                .filter(g => g.guild_id === message.guild.id);
+            const giveaways = await db.getActiveGiveaways(message.guild.id);
 
             if (!giveaways.length) {
                 return message.reply(`❌ ${t('giveaway.no_active', lang)}`);
