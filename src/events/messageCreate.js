@@ -39,11 +39,7 @@ module.exports = {
                 const hasUrl = /https?:\/\/\S+/i.test(message.content);
                 const hasCustomEmoji = /<a?:\w+:\d+>/.test(message.content);
                 
-                const codePoints = [...message.content].map(char => char.codePointAt(0).toString(16));
-                const hasUnicodeEmoji = codePoints.some(cp => {
-                    const val = parseInt(cp, 16);
-                    return val >= 128 || cp === '20e3';
-                });
+                const hasUnicodeEmoji = /\p{Extended_Pictographic}/u.test(message.content);
 
                 if (attachment || hasUrl || hasCustomEmoji || hasUnicodeEmoji) {
                     let sourceUrl = '';
@@ -63,8 +59,8 @@ module.exports = {
                     } else if (hasUnicodeEmoji) {
                         const chars = [...message.content];
                         for (const char of chars) {
-                            const cp = char.codePointAt(0);
-                            if (cp >= 128) {
+                            if (/\p{Extended_Pictographic}/u.test(char)) {
+                                const cp = char.codePointAt(0);
                                 const hex = cp.toString(16);
                                 sourceUrl = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${hex}.png`;
                                 targetName = `emoji_${hex}`;

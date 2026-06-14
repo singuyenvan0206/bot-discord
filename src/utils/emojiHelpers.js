@@ -22,7 +22,8 @@ function isUnicodeEmoji(value) {
 
 function emojiToTwemojiUrl(emoji) {
   const codePoints = [...emoji].map(char => char.codePointAt(0).toString(16));
-  return 'https://twemoji.maxcdn.com/v/latest/72x72/' + codePoints.join('-') + '.png';
+  const filtered = codePoints.filter(cp => cp !== 'fe0f');
+  return 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/' + filtered.join('-') + '.png';
 }
 
 function parseEmojiInputToUrl(query) {
