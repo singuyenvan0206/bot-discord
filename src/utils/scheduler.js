@@ -201,7 +201,8 @@ async function processAutoPrune(client) {
     console.log('[Scheduler] Running Auto Prune check for all guilds...');
     const guilds = await db.queryAll('SELECT id FROM guilds');
     for (const g of guilds) {
-        const autoPrune = await db.getGuildSetting(g.id, 'emoji_auto_prune') === 'true';
+        const autoPruneSetting = await db.getGuildSetting(g.id, 'emoji_auto_prune');
+        const autoPrune = autoPruneSetting === true || autoPruneSetting === 'true';
         if (!autoPrune) continue;
 
         const guild = client.guilds.cache.get(g.id) || await client.guilds.fetch(g.id).catch(() => null);
@@ -353,7 +354,8 @@ async function processAutoSuggest(client) {
 
     const guilds = await db.queryAll('SELECT id FROM guilds');
     for (const g of guilds) {
-        const autoSuggest = await db.getGuildSetting(g.id, 'emoji_auto_suggest') === 'true';
+        const autoSuggestSetting = await db.getGuildSetting(g.id, 'emoji_auto_suggest');
+        const autoSuggest = autoSuggestSetting === true || autoSuggestSetting === 'true';
         if (!autoSuggest) continue;
 
         const guild = client.guilds.cache.get(g.id) || await client.guilds.fetch(g.id).catch(() => null);

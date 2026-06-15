@@ -41,8 +41,8 @@ module.exports = {
           { name: 'Channel (`channel`)', value: channelDisplay, inline: true },
           { name: 'Approve Reaction (`approve`)', value: approveEmoji, inline: true },
           { name: 'Reject Reaction (`reject`)', value: rejectEmoji, inline: true },
-          { name: 'Auto Suggest (`auto_suggest`)', value: autoSuggest === 'true' ? 'Enabled (True)' : 'Disabled (False)', inline: true },
-          { name: 'Auto Prune (`auto_prune`)', value: autoPrune === 'true' ? 'Enabled (True)' : 'Disabled (False)', inline: true },
+          { name: 'Auto Suggest (`auto_suggest`)', value: (autoSuggest === true || autoSuggest === 'true') ? 'Enabled (True)' : 'Disabled (False)', inline: true },
+          { name: 'Auto Prune (`auto_prune`)', value: (autoPrune === true || autoPrune === 'true') ? 'Enabled (True)' : 'Disabled (False)', inline: true },
           { name: 'Prune Min Uses (`prune_min_uses`)', value: minUses.toString(), inline: true },
           { name: 'Prune Inactive Days (`prune_inactive_days`)', value: inactiveDays.toString(), inline: true }
         );

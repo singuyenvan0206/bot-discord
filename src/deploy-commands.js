@@ -524,6 +524,16 @@ const commands = [
                 .setDescription('Trigger a random daily emoji suggestion post immediately (Admin only)')
         )
         .addSubcommand(sub =>
+            sub.setName('usage')
+                .setDescription('Thống kê số lần sử dụng emoji trên server (Show emoji usage statistics)')
+                .addIntegerOption(opt =>
+                    opt.setName('page')
+                        .setDescription('Số trang (Page number)')
+                        .setRequired(false)
+                        .setMinValue(1)
+                )
+        )
+        .addSubcommand(sub =>
             sub.setName('help')
                 .setDescription('Display the list of available commands and instructions')
         ),

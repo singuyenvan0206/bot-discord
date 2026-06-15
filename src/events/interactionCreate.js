@@ -344,6 +344,9 @@ module.exports = {
                     args.push(interaction.options.getString('query'));
                 } else if (sub === 'autosuggest') {
                     // No additional arguments
+                } else if (sub === 'usage') {
+                    const page = interaction.options.getInteger('page');
+                    args.push(page !== null ? String(page) : '1');
                 }
             } else if (commandName === 'job') {
                 const sub = interaction.options.getSubcommand();
