@@ -1,5 +1,6 @@
 const { URL } = require('url');
 const axios = require('axios');
+const Jimp = require('jimp');
 
 // Embed Colors
 const COLOR_SUCCESS = 0x57F287; // Discord Green
@@ -144,6 +145,67 @@ async function createEmojiFromUrl(guild, name, url) {
   return await guild.emojis.create({ attachment: buffer, name });
 }
 
+async function computePerceptualHash(buffer) {
+  const image = await Jimp.read(buffer);
+  return image.hash(2);
+}
+
+function getHammingDistance(bin1, bin2) {
+  if (!bin1 || !bin2 || bin1.length !== bin2.length) return 999;
+  let distance = 0;
+  for (let i = 0; i < bin1.length; i++) {
+    if (bin1[i] !== bin2[i]) distance++;
+  }
+  return distance;
+}
+
+async function checkDuplicateEmoji(guild, targetUrl, threshold = 5) {
+  const db = require('../database');
+  let targetBuffer;
+  try {
+    const { buffer } = await downloadImage(targetUrl);
+    targetBuffer = buffer;
+  } catch (err) {
+    console.error('Error downloading proposed emoji for hash check:', err);
+    return null;
+  }
+
+  let targetHash;
+  try {
+    targetHash = await computePerceptualHash(targetBuffer);
+  } catch (err) {
+    console.error('Error computing hash for proposed emoji:', err);
+    return null;
+  }
+
+  const dbHashes = await db.getEmojiHashes(guild.id);
+  const dbHashMap = new Map(dbHashes.map(h => [h.emoji_id, h.image_hash]));
+
+  const currentEmojis = await guild.emojis.fetch();
+
+  for (const [id, emoji] of currentEmojis) {
+    let hash = dbHashMap.get(id);
+
+    if (!hash) {
+      try {
+        const { buffer } = await downloadImage(emoji.url);
+        hash = await computePerceptualHash(buffer);
+        await db.updateEmojiHash(guild.id, id, hash);
+      } catch (err) {
+        console.warn(`Could not compute hash for existing emoji ${emoji.name} (${id}):`, err.message);
+        continue;
+      }
+    }
+
+    const distance = getHammingDistance(targetHash, hash);
+    if (distance <= threshold) {
+      return emoji;
+    }
+  }
+
+  return null;
+}
+
 module.exports = {
   COLOR_SUCCESS,
   COLOR_ERROR,
@@ -156,4 +218,7 @@ module.exports = {
   downloadImage,
   resolveStealTarget,
   createEmojiFromUrl,
+  computePerceptualHash,
+  getHammingDistance,
+  checkDuplicateEmoji,
 };

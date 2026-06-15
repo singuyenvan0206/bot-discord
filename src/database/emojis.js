@@ -32,8 +32,34 @@ async function clearEmojiStats(guildId, emojiId) {
     }
 }
 
+async function updateEmojiHash(guildId, emojiId, hash) {
+    try {
+        const now = Date.now();
+        await execute(`
+            INSERT INTO emoji_stats (guild_id, emoji_id, image_hash, last_used_at)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(guild_id, emoji_id) DO UPDATE SET
+                image_hash = EXCLUDED.image_hash
+        `, [guildId, emojiId, hash, now]);
+    } catch (error) {
+        console.error(`Error in updateEmojiHash for guild ${guildId}, emoji ${emojiId}:`, error);
+    }
+}
+
+async function getEmojiHashes(guildId) {
+    try {
+        const rows = await queryAll('SELECT emoji_id, image_hash FROM emoji_stats WHERE guild_id = ? AND image_hash IS NOT NULL', [guildId]);
+        return rows;
+    } catch (error) {
+        console.error(`Error in getEmojiHashes for guild ${guildId}:`, error);
+        return [];
+    }
+}
+
 module.exports = {
     incrementEmojiUsage,
     getEmojiStats,
     clearEmojiStats,
+    updateEmojiHash,
+    getEmojiHashes,
 };

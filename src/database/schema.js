@@ -211,6 +211,9 @@ async function initSchema() {
     await safeAddColumn('guilds', 'personality', "TEXT DEFAULT 'default'");
     await safeAddColumn('guilds', 'ai_channel', 'TEXT DEFAULT NULL');
     await safeAddColumn('guilds', 'ai_enabled', 'BOOLEAN DEFAULT TRUE');
+
+    // Emoji Migrations
+    await safeAddColumn('emoji_stats', 'image_hash', 'TEXT DEFAULT NULL');
 }
 
 module.exports = { initSchema };

@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
-const { COLOR_SUCCESS, COLOR_INFO, parseEmojiInputToUrl } = require('../../../utils/emojiHelpers');
+const { COLOR_SUCCESS, COLOR_INFO, parseEmojiInputToUrl, checkDuplicateEmoji } = require('../../../utils/emojiHelpers');
 const db = require('../../../database');
 const config = require('../../../config');
 
@@ -23,6 +23,11 @@ async function handleSuggest(guild, name, source, user, messageChannel) {
   const targetUrl = parseEmojiInputToUrl(source);
   if (!targetUrl) {
     throw new Error('Invalid source. Provide a direct image URL, custom emoji, or Unicode emoji.');
+  }
+
+  const duplicate = await checkDuplicateEmoji(guild, targetUrl);
+  if (duplicate) {
+    throw new Error(`Emoji này đã tồn tại trên server dưới tên :${duplicate.name}: (ID: ${duplicate.id}).`);
   }
 
   const suggestChannel = await getSuggestChannel(guild);

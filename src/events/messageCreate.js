@@ -85,6 +85,15 @@ module.exports = {
                     }
 
                     if (sourceUrl) {
+                        const { checkDuplicateEmoji } = require('../utils/emojiHelpers');
+                        const duplicate = await checkDuplicateEmoji(message.guild, sourceUrl).catch(() => null);
+                        if (duplicate) {
+                            await message.delete().catch(() => {});
+                            const alertMsg = await message.channel.send(`❌ ${message.author}, emoji này đã tồn tại trên server dưới tên :${duplicate.name}: (ID: ${duplicate.id}).`);
+                            setTimeout(() => alertMsg.delete().catch(() => {}), 10000);
+                            return;
+                        }
+
                         const { EmbedBuilder } = require('discord.js');
                         const approveEmoji = await db.getGuildSetting(message.guild.id, 'emoji_approve_reaction', '✅');
                         const rejectEmoji = await db.getGuildSetting(message.guild.id, 'emoji_reject_reaction', '❌');

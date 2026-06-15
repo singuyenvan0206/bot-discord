@@ -37,7 +37,17 @@ async function createEmojiFromUrl(guild, name, url) {
   if (buffer.length > 256 * 1024) {
     throw new Error('Kích thước ảnh vượt quá giới hạn 256 KB của Discord.');
   }
-  return await guild.emojis.create({ attachment: buffer, name });
+  const emoji = await guild.emojis.create({ attachment: buffer, name });
+
+  try {
+    const { computePerceptualHash } = require('../utils/emojiHelpers');
+    const hash = await computePerceptualHash(buffer);
+    await db.updateEmojiHash(guild.id, emoji.id, hash);
+  } catch (err) {
+    console.error('Failed to save hash for approved emoji:', err);
+  }
+
+  return emoji;
 }
 
 module.exports = {
