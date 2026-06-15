@@ -2027,6 +2027,10 @@
     },
     "admin": {
         "blacklist_added": "✅ Successfully added user **{{user}}** to the blacklist!",
-        "blacklist_removed": "✅ Successfully removed user **{{user}}** from the blacklist!"
+        "blacklist_removed": "✅ Successfully removed user **{{user}}** from the blacklist!",
+        "setprefix_usage": "Usage: `{{prefix}}setprefix <new_prefix|reset>`",
+        "setprefix_success": "✅ Successfully changed server prefix to: `{{newPrefix}}`",
+        "setprefix_reset": "✅ Successfully reset server prefix to default: `{{defaultPrefix}}`",
+        "setprefix_too_long": "❌ Prefix is too long! Maximum length is 5 characters."
     }
 }

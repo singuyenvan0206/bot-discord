@@ -12,7 +12,8 @@ module.exports = {
     description: 'Mở menu trợ giúp hệ thống và hướng dẫn lệnh (Open the system help menu and command guides)',
     skipXp: true,
     async execute(message, args) {
-        const prefix = config.PREFIX;
+        const guildRow = message.guild ? await db.getGuild(message.guild.id) : null;
+        const prefix = guildRow?.prefix || config.PREFIX;
         const lang = await getLanguage(message.author.id, message.guild?.id);
         const isOwner = await db.isOwner(message.author.id);
         const isAdmin = isOwner || (message.member && message.member.permissions.has('Administrator')) || (message.guild && message.guild.ownerId === message.author.id);

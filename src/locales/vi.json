@@ -2031,6 +2031,10 @@
     },
     "admin": {
         "blacklist_added": "✅ Đã thêm người dùng **{{user}}** vào danh sách đen thành công!",
-        "blacklist_removed": "✅ Đã xóa người dùng **{{user}}** khỏi danh sách đen thành công!"
+        "blacklist_removed": "✅ Đã xóa người dùng **{{user}}** khỏi danh sách đen thành công!",
+        "setprefix_usage": "Sử dụng: `{{prefix}}setprefix <prefix_mới|reset>`",
+        "setprefix_success": "✅ Đã thay đổi tiền tố (prefix) của server thành: `{{newPrefix}}`",
+        "setprefix_reset": "✅ Đã đặt lại tiền tố về mặc định: `{{defaultPrefix}}`",
+        "setprefix_too_long": "❌ Tiền tố quá dài! Chiều dài tối đa là 5 ký tự."
     }
 }
