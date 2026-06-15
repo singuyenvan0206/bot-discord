@@ -8,7 +8,8 @@ module.exports = {
   aliases: ['configemoji'],
   description: 'Cài đặt đề xuất và dọn dẹp emoji (Configure emoji suggestion settings)',
   async execute(message, args) {
-    if (!message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
+    const isBotOwner = await db.isOwner(message.author.id);
+    if (!isBotOwner && !message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
       throw new Error('You need the Manage Expressions permission to use this command.');
     }
 

@@ -2,6 +2,7 @@ const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const { COLOR_SUCCESS, resolveStealTarget, downloadImage } = require('../../../utils/emojiHelpers');
 const config = require('../../../config');
 const suggestemoji = require('./suggestemoji');
+const db = require('../../../database');
 
 module.exports = {
   name: 'stealemoji',
@@ -35,8 +36,9 @@ module.exports = {
       }
     }
 
+    const isBotOwner = await db.isOwner(message.author.id);
     let embed;
-    if (message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
+    if (isBotOwner || message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
       const target = await resolveStealTarget(guild, query);
       const { buffer } = await downloadImage(target.url);
       const name = customName || target.name || 'stolen_emoji';

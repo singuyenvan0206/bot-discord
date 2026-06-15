@@ -7,7 +7,8 @@ module.exports = {
   aliases: ['pruneemoji'],
   description: 'Dọn dẹp emoji ít sử dụng trên server (Delete inactive emojis)',
   async execute(message, args) {
-    if (!message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
+    const isBotOwner = await db.isOwner(message.author.id);
+    if (!isBotOwner && !message.member.permissions.has(PermissionFlagsBits.ManageGuildExpressions)) {
       throw new Error('You need the Manage Expressions permission to use this command.');
     }
 
