@@ -537,6 +537,10 @@ const commands = [
             sub.setName('help')
                 .setDescription('Display the list of available commands and instructions')
         ),
+    new SlashCommandBuilder()
+        .setName('scanperms')
+        .setDescription('Quét và tạo báo cáo chi tiết về quyền hạn của các Role và Channel (Scan permissions)')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 ].map(cmd => cmd.toJSON());
 
 // ─── Register Commands ───────────────────────────────────────────
