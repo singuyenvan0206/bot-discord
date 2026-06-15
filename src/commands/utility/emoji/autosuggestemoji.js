@@ -22,15 +22,16 @@ module.exports = {
       throw new Error('No new emoji suggestion could be generated at this time.');
     }
 
-    const embed = new EmbedBuilder()
-      .setColor(COLOR_SUCCESS)
-      .setTitle('💡 Auto Suggestion Triggered')
-      .setDescription(`Successfully suggested emoji **:${suggested.name}:** into voting channel!`)
-      .setThumbnail(suggested.image_url);
-
+    const isPlainObject = message.constructor && message.constructor.name === 'Object';
     if (message.reply) {
-      await message.reply({ embeds: [embed] });
+      if (!isPlainObject) {
+        await message.react('✅').catch(() => {});
+      } else {
+        await message.reply({
+          content: `✅ Đã gửi gợi ý emoji **:${suggested.name}:** vào kênh bình chọn thành công!`,
+          flags: [64] // Ephemeral
+        });
+      }
     }
-    return embed;
   }
 };
