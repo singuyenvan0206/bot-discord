@@ -50,12 +50,30 @@ async function initScheduler(client) {
         await processAquariumIncome(client);
     }, 3600_000);
 
-    // Auto Emoji Maintenance (Every 24 hours)
-    setInterval(async () => {
-        console.log('💡 Running automated emoji maintenance...');
-        await processAutoPrune(client).catch(console.error);
-        await processAutoSuggest(client).catch(console.error);
-    }, 86400_000);
+    // Helper to calculate milliseconds until 7:00 AM GMT+7 (0:00 UTC)
+    const getDelayUntil7AM = () => {
+        const now = new Date();
+        const target = new Date();
+        target.setUTCHours(0, 0, 0, 0); // 0:00 UTC is exactly 7:00 AM GMT+7
+        if (now.getTime() >= target.getTime()) {
+            target.setUTCDate(target.getUTCDate() + 1);
+        }
+        return target.getTime() - now.getTime();
+    };
+
+    // Schedule automated emoji maintenance daily at 7:00 AM GMT+7
+    const scheduleDailyMaintenance = () => {
+        const delay = getDelayUntil7AM();
+        console.log(`[Scheduler] Next automated emoji maintenance scheduled in ${Math.round(delay / 1000 / 60)} minutes (at 7:00 AM GMT+7).`);
+        setTimeout(async () => {
+            console.log('💡 Running automated emoji maintenance (7:00 AM GMT+7)...');
+            await processAutoPrune(client).catch(console.error);
+            await processAutoSuggest(client).catch(console.error);
+            scheduleDailyMaintenance(); // Set up for the next day
+        }, delay);
+    };
+
+    scheduleDailyMaintenance();
 }
 
 async function processAquariumIncome(client) {
