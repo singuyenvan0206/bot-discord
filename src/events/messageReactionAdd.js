@@ -50,6 +50,20 @@ async function createEmojiFromUrl(guild, name, url) {
   return emoji;
 }
 
+async function downloadStickerImage(url) {
+  let targetUrl = url;
+  if (targetUrl.includes('//localhost')) {
+    targetUrl = targetUrl.replace('//localhost', '//127.0.0.1');
+  }
+  const response = await axios.get(targetUrl, { responseType: 'arraybuffer' });
+  const buffer = Buffer.from(response.data, 'binary');
+  if (buffer.length > 512 * 1024) {
+    throw new Error('Kích thước ảnh vượt quá giới hạn 512 KB của sticker Discord.');
+  }
+  return buffer;
+}
+
+
 module.exports = {
     name: Events.MessageReactionAdd,
     async execute(reaction, user) {
@@ -68,56 +82,113 @@ module.exports = {
             }
         }
 
-        // --- EMOJI SUGGESTION REACTION HANDLER ---
-        const suggestChannelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
-        const isSuggestChannel = reaction.message.channelId === suggestChannelId || 
-            (!suggestChannelId && (reaction.message.channel.name.toLowerCase().includes('đề-xuất-emoji') || reaction.message.channel.name.toLowerCase().includes('de-xuat-emoji')));
+        // --- EMOJI & STICKER SUGGESTION REACTION HANDLER ---
+        const emojiSuggestChannelId = await db.getGuildSetting(guild.id, 'emoji_suggest_channel');
+        const stickerSuggestChannelId = await db.getGuildSetting(guild.id, 'sticker_suggest_channel');
+        const isSuggestChannel = reaction.message.channelId === emojiSuggestChannelId || 
+            reaction.message.channelId === stickerSuggestChannelId ||
+            (!emojiSuggestChannelId && !stickerSuggestChannelId && (
+                reaction.message.channel.name.toLowerCase().includes('đề-xuất-emoji') || 
+                reaction.message.channel.name.toLowerCase().includes('de-xuat-emoji') ||
+                reaction.message.channel.name.toLowerCase().includes('đề-xuất-sticker') || 
+                reaction.message.channel.name.toLowerCase().includes('de-xuat-sticker')
+            ));
 
         if (isSuggestChannel) {
             const member = await guild.members.fetch(user.id).catch(() => null);
             const isBotOwner = await db.isOwner(user.id);
-            if (member && (member.permissions.has(PermissionFlagsBits.ManageGuildExpressions) || isBotOwner)) {
-                const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
-                const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+            const hasManagePerms = member && (
+                member.permissions.has(PermissionFlagsBits.ManageGuildExpressions) || 
+                member.permissions.has(PermissionFlagsBits.ManageEmojisAndStickers) || 
+                isBotOwner
+            );
+
+            if (hasManagePerms) {
+                // Read custom reaction configuration based on whether it is a sticker or emoji
+                const embed = reaction.message.embeds[0];
+                const footerText = embed?.footer?.text || '';
+                const isSticker = footerText.includes('Type: sticker');
+
+                const approveEmoji = isSticker 
+                    ? await db.getGuildSetting(guild.id, 'sticker_approve_reaction', '✅')
+                    : await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+                const rejectEmoji = isSticker 
+                    ? await db.getGuildSetting(guild.id, 'sticker_reject_reaction', '❌')
+                    : await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
 
                 const isApprove = reaction.emoji.name === approveEmoji;
                 const isReject = reaction.emoji.name === rejectEmoji;
 
                 if (isApprove || isReject) {
-                    const embed = reaction.message.embeds[0];
-                    if (embed && embed.footer && embed.footer.text) {
-                        const footerText = embed.footer.text;
-                        const sourceMatch = footerText.match(/Source:\s*(https?:\/\/\S+)\s*\|\s*Name:\s*(\w+)/);
+                    if (embed && footerText) {
+                        const sourceMatch = footerText.match(/Source:\s*(https?:\/\/\S+)\s*\|\s*Name:\s*([\w-]+)/);
                         if (sourceMatch) {
                             const sourceUrl = sourceMatch[1];
-                            const emojiName = sourceMatch[2];
+                            const targetName = sourceMatch[2];
 
                             // Remove reactions to lock the suggestion card
                             await reaction.message.reactions.removeAll().catch(() => {});
 
-                            if (isApprove) {
-                                try {
-                                    const newEmoji = await createEmojiFromUrl(guild, emojiName, sourceUrl);
+                            if (isSticker) {
+                                const tagsMatch = footerText.match(/Tags:\s*([^\s|]+)/);
+                                const stickerTags = tagsMatch ? tagsMatch[1] : '✨';
+
+                                if (isApprove) {
+                                    try {
+                                        const buffer = await downloadStickerImage(sourceUrl);
+                                        const newSticker = await guild.stickers.create({
+                                            file: buffer,
+                                            name: targetName,
+                                            tags: stickerTags,
+                                            description: 'Approved via suggestion'
+                                        });
+
+                                        const updatedEmbed = EmbedBuilder.from(embed)
+                                            .setColor(0x57F287) // Success green
+                                            .setTitle('✅ Đề Xuất Sticker Được Duyệt')
+                                            .setDescription(`Sticker **${targetName}** đã được thêm vào server thành công bởi ${user}!\nTags: ${stickerTags}`);
+                                        
+                                        await reaction.message.edit({ embeds: [updatedEmbed] }).catch(() => {});
+                                    } catch (err) {
+                                        const errorEmbed = EmbedBuilder.from(embed)
+                                            .setColor(0xED4245) // Error red
+                                            .setTitle('❌ Lỗi Duyệt Sticker')
+                                            .setDescription(`Thất bại khi tự động thêm sticker **${targetName}**.\nChi tiết: ${err.message}`);
+                                        await reaction.message.edit({ embeds: [errorEmbed] }).catch(() => {});
+                                    }
+                                } else if (isReject) {
                                     const updatedEmbed = EmbedBuilder.from(embed)
-                                        .setColor(0x57F287) // Success green
-                                        .setTitle('✅ Đề Xuất Emoji Được Duyệt')
-                                        .setDescription(`Emoji **${emojiName}** đã được thêm vào server thành công bởi ${user}!\nBiểu tượng: ${newEmoji}`);
+                                        .setColor(0xED4245) // Error red
+                                        .setTitle('❌ Đề Xuất Sticker Bị Từ Chối')
+                                        .setDescription(`Đề xuất cho sticker **${targetName}** đã bị từ chối bởi quản trị viên ${user}.`);
                                     
                                     await reaction.message.edit({ embeds: [updatedEmbed] }).catch(() => {});
-                                } catch (err) {
-                                    const errorEmbed = EmbedBuilder.from(embed)
-                                        .setColor(0xED4245) // Error red
-                                        .setTitle('❌ Lỗi Duyệt Emoji')
-                                        .setDescription(`Thất bại khi tự động thêm emoji **${emojiName}**.\nChi tiết: ${err.message}`);
-                                    await reaction.message.edit({ embeds: [errorEmbed] }).catch(() => {});
                                 }
-                            } else if (isReject) {
-                                const updatedEmbed = EmbedBuilder.from(embed)
-                                    .setColor(0xED4245) // Error red
-                                    .setTitle('❌ Đề Xuất Emoji Bị Từ Chối')
-                                    .setDescription(`Đề xuất cho emoji **${emojiName}** đã bị từ chối bởi quản trị viên ${user}.`);
-                                
-                                await reaction.message.edit({ embeds: [updatedEmbed] }).catch(() => {});
+                            } else {
+                                if (isApprove) {
+                                    try {
+                                        const newEmoji = await createEmojiFromUrl(guild, targetName, sourceUrl);
+                                        const updatedEmbed = EmbedBuilder.from(embed)
+                                            .setColor(0x57F287) // Success green
+                                            .setTitle('✅ Đề Xuất Emoji Được Duyệt')
+                                            .setDescription(`Emoji **${targetName}** đã được thêm vào server thành công bởi ${user}!\nBiểu tượng: ${newEmoji}`);
+                                        
+                                        await reaction.message.edit({ embeds: [updatedEmbed] }).catch(() => {});
+                                    } catch (err) {
+                                        const errorEmbed = EmbedBuilder.from(embed)
+                                            .setColor(0xED4245) // Error red
+                                            .setTitle('❌ Lỗi Duyệt Emoji')
+                                            .setDescription(`Thất bại khi tự động thêm emoji **${targetName}**.\nChi tiết: ${err.message}`);
+                                        await reaction.message.edit({ embeds: [errorEmbed] }).catch(() => {});
+                                    }
+                                } else if (isReject) {
+                                    const updatedEmbed = EmbedBuilder.from(embed)
+                                        .setColor(0xED4245) // Error red
+                                        .setTitle('❌ Đề Xuất Emoji Bị Từ Chối')
+                                        .setDescription(`Đề xuất cho emoji **${targetName}** đã bị từ chối bởi quản trị viên ${user}.`);
+                                    
+                                    await reaction.message.edit({ embeds: [updatedEmbed] }).catch(() => {});
+                                }
                             }
                             return; // Handled
                         }

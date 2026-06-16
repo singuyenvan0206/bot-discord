@@ -75,6 +75,83 @@ module.exports = {
             }
 
 
+            if (interaction.customId.startsWith('suggest_type_')) {
+                const parts = interaction.customId.split('|');
+                const type = parts[0].replace('suggest_type_', ''); // 'emoji', 'sticker', 'cancel'
+                const userId = parts[1];
+                const targetName = parts[2];
+
+                if (interaction.user.id !== userId) {
+                    return interaction.reply({ content: '❌ Chỉ người đề xuất mới có thể chọn thao tác này!', flags: [64] }).catch(() => {});
+                }
+
+                await interaction.deferUpdate().catch(() => {});
+
+                if (type === 'cancel') {
+                    await interaction.message.delete().catch(() => {});
+                    return;
+                }
+
+                const embed = interaction.message.embeds[0];
+                const sourceUrl = embed?.image?.url;
+
+                if (!sourceUrl) {
+                    return interaction.followUp({ content: '❌ Không thể lấy đường dẫn ảnh từ đề xuất.', ephemeral: true }).catch(() => {});
+                }
+
+                const guild = interaction.guild;
+
+                if (type === 'emoji') {
+                    try {
+                        const { checkDuplicateEmoji } = require('../utils/emojiHelpers');
+                        const duplicate = await checkDuplicateEmoji(guild, sourceUrl).catch(() => null);
+                        if (duplicate) {
+                            await interaction.message.delete().catch(() => {});
+                            return interaction.followUp({ content: `❌ Emoji này đã tồn tại trên server dưới tên :${duplicate.name}: (ID: ${duplicate.id}).`, ephemeral: true }).catch(() => {});
+                        }
+
+                        const approveEmoji = await db.getGuildSetting(guild.id, 'emoji_approve_reaction', '✅');
+                        const rejectEmoji = await db.getGuildSetting(guild.id, 'emoji_reject_reaction', '❌');
+
+                        const { EmbedBuilder } = require('discord.js');
+                        const suggestEmbed = new EmbedBuilder()
+                            .setColor(0x5865F2)
+                            .setTitle('💡 Đề Xuất Emoji Mới')
+                            .setDescription(`Một emoji mới đã được đề xuất và đang chờ duyệt.\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
+                            .addFields(
+                                { name: 'Tên Đề Xuất', value: `\`:${targetName}:\``, inline: true },
+                                { name: 'Người Đề Xuất', value: `<@${userId}>`, inline: true }
+                            )
+                            .setImage(sourceUrl)
+                            .setFooter({ text: `Source: ${sourceUrl} | Name: ${targetName}` });
+
+                        const suggestMsg = await interaction.message.channel.send({ embeds: [suggestEmbed] });
+                        await suggestMsg.react('👍').catch(() => {});
+                        await suggestMsg.react('👎').catch(() => {});
+
+                        await interaction.message.delete().catch(() => {});
+                    } catch (err) {
+                        await interaction.followUp({ content: `❌ Lỗi khi đề xuất Emoji: ${err.message}`, ephemeral: true }).catch(() => {});
+                    }
+                } else if (type === 'sticker') {
+                    try {
+                        const suggestSticker = require('../commands/utility/sticker/suggeststicker');
+                        await suggestSticker.handleStickerSuggest(
+                            guild, 
+                            targetName, 
+                            '✨', // Default tag
+                            sourceUrl, 
+                            `<@${userId}>`, 
+                            interaction.message.channel
+                        );
+                        await interaction.message.delete().catch(() => {});
+                    } catch (err) {
+                        await interaction.followUp({ content: `❌ Lỗi khi đề xuất Sticker: ${err.message}`, ephemeral: true }).catch(() => {});
+                    }
+                }
+                return;
+            }
+
             if (interaction.customId.startsWith('emoji_preview_suggest|')) {
                 await interaction.deferUpdate().catch(() => {});
                 
@@ -347,6 +424,41 @@ module.exports = {
                 } else if (sub === 'usage') {
                     const page = interaction.options.getInteger('page');
                     args.push(page !== null ? String(page) : '1');
+                } else if (sub === 'delete') {
+                    args.push(interaction.options.getString('queries'));
+                }
+            } else if (commandName === 'sticker') {
+                const sub = interaction.options.getSubcommand();
+                args.push(sub);
+                if (sub === 'suggest') {
+                    args.push(interaction.options.getString('name'));
+                    args.push(interaction.options.getString('tags') || '✨');
+                    const url = interaction.options.getString('url');
+                    const file = interaction.options.getAttachment('file');
+                    args.push(url || (file ? file.url : ''));
+                } else if (sub === 'steal') {
+                    const url = interaction.options.getString('message_url');
+                    const name = interaction.options.getString('name');
+                    const tags = interaction.options.getString('tags');
+                    args.push(url || '');
+                    args.push(name || '');
+                    args.push(tags || '');
+                } else if (sub === 'config') {
+                    const channel = interaction.options.getChannel('channel');
+                    const approve = interaction.options.getString('approve');
+                    const reject = interaction.options.getString('reject');
+                    const autoSuggest = interaction.options.getString('auto_suggest');
+                    args.push(channel ? `<#${channel.id}>` : '');
+                    args.push(approve || '');
+                    args.push(reject || '');
+                    args.push(autoSuggest || '');
+                } else if (sub === 'usage') {
+                    const page = interaction.options.getInteger('page');
+                    args.push(page !== null ? String(page) : '1');
+                } else if (sub === 'delete') {
+                    args.push(interaction.options.getString('queries'));
+                } else if (sub === 'autosuggest') {
+                    // No additional arguments
                 }
             } else if (commandName === 'job') {
                 const sub = interaction.options.getSubcommand();

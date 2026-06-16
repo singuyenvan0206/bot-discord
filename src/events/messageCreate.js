@@ -25,6 +25,14 @@ module.exports = {
                 }
             }
 
+            // --- STICKER USAGE TRACKING ---
+            if (message.stickers && message.stickers.size > 0) {
+                const sticker = message.stickers.first();
+                if (message.guild.stickers.cache.has(sticker.id)) {
+                    db.incrementEmojiUsage(message.guild.id, sticker.id).catch(() => {});
+                }
+            }
+
             const guildRow = await db.getGuild(message.guild.id);
             const { client } = message;
             const prefix = guildRow?.prefix || config.PREFIX;
@@ -85,35 +93,37 @@ module.exports = {
                     }
 
                     if (sourceUrl) {
-                        const { checkDuplicateEmoji } = require('../utils/emojiHelpers');
-                        const duplicate = await checkDuplicateEmoji(message.guild, sourceUrl).catch(() => null);
-                        if (duplicate) {
-                            await message.delete().catch(() => {});
-                            const alertMsg = await message.channel.send(`❌ ${message.author}, emoji này đã tồn tại trên server dưới tên :${duplicate.name}: (ID: ${duplicate.id}).`);
-                            setTimeout(() => alertMsg.delete().catch(() => {}), 10000);
-                            return;
-                        }
-
-                        const { EmbedBuilder } = require('discord.js');
-                        const approveEmoji = await db.getGuildSetting(message.guild.id, 'emoji_approve_reaction', '✅');
-                        const rejectEmoji = await db.getGuildSetting(message.guild.id, 'emoji_reject_reaction', '❌');
-
+                        const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+                        
                         const embed = new EmbedBuilder()
                             .setColor(0x5865F2)
-                            .setTitle('💡 Đề Xuất Emoji Mới')
-                            .setDescription(`Một emoji mới đã được đề xuất và đang chờ duyệt.\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
-                            .addFields(
-                                { name: 'Tên Đề Xuất', value: `\`:${targetName}:\``, inline: true },
-                                { name: 'Người Đề Xuất', value: `${message.author}`, inline: true }
-                            )
-                            .setImage(sourceUrl)
-                            .setFooter({ text: `Source: ${sourceUrl} | Name: ${targetName}` });
+                            .setTitle('💡 Chọn Loại Đề Xuất')
+                            .setDescription(`Chào ${message.author}, bạn muốn đề xuất hình ảnh này dưới dạng **Emoji** hay **Sticker**?\n\n*Lưu ý: Sticker yêu cầu kích thước 512x512 và dung lượng dưới 512KB.*`)
+                            .setImage(sourceUrl);
+
+                        const row = new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId(`suggest_type_emoji|${message.author.id}|${targetName}`)
+                                .setLabel('Đề xuất Emoji 💡')
+                                .setStyle(ButtonStyle.Primary),
+                            new ButtonBuilder()
+                                .setCustomId(`suggest_type_sticker|${message.author.id}|${targetName}`)
+                                .setLabel('Đề xuất Sticker 🏷️')
+                                .setStyle(ButtonStyle.Success),
+                            new ButtonBuilder()
+                                .setCustomId(`suggest_type_cancel|${message.author.id}`)
+                                .setLabel('Hủy ❌')
+                                .setStyle(ButtonStyle.Danger)
+                        );
 
                         await message.delete().catch(() => {});
 
-                        const suggestMsg = await message.channel.send({ embeds: [embed] });
-                        await suggestMsg.react('👍').catch(() => {});
-                        await suggestMsg.react('👎').catch(() => {});
+                        const promptMsg = await message.channel.send({ embeds: [embed], components: [row] });
+                        
+                        // Automatically delete prompt after 60 seconds if no action is taken
+                        setTimeout(() => {
+                            promptMsg.delete().catch(() => {});
+                        }, 60000);
                         return;
                     }
                 }

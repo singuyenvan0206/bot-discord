@@ -534,8 +534,116 @@ const commands = [
                 )
         )
         .addSubcommand(sub =>
+            sub.setName('delete')
+                .setDescription('Delete custom emojis (bulk deletion supported) (Admin only)')
+                .addStringOption(opt =>
+                    opt.setName('queries')
+                        .setDescription('List of emoji names or IDs separated by space or comma')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
             sub.setName('help')
                 .setDescription('Display the list of available commands and instructions')
+        ),
+    new SlashCommandBuilder()
+        .setName('sticker')
+        .setDescription('Manage custom stickers in this server')
+        .setDMPermission(false)
+        .addSubcommand(sub =>
+            sub.setName('suggest')
+                .setDescription('Suggest a new custom sticker to the server')
+                .addStringOption(opt =>
+                    opt.setName('name')
+                        .setDescription('Name for the suggested sticker')
+                        .setRequired(true)
+                )
+                .addStringOption(opt =>
+                    opt.setName('tags')
+                        .setDescription('Unicode emoji tag(s) for the sticker')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('url')
+                        .setDescription('Direct image URL for the sticker')
+                        .setRequired(false)
+                )
+                .addAttachmentOption(opt =>
+                    opt.setName('file')
+                        .setDescription('Upload an image file directly')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('steal')
+                .setDescription('Steal a sticker from a message or URL')
+                .addStringOption(opt =>
+                    opt.setName('message_url')
+                        .setDescription('Message link containing the sticker, or image URL')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('name')
+                        .setDescription('Custom name override')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('tags')
+                        .setDescription('Custom tags override')
+                        .setRequired(false)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('config')
+                .setDescription('Configure sticker suggestion settings (Admin only)')
+                .addChannelOption(opt =>
+                    opt.setName('channel')
+                        .setDescription('Channel to post suggestions in')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('approve')
+                        .setDescription('Reaction emoji for approval (e.g. ✅)')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('reject')
+                        .setDescription('Reaction emoji for rejection (e.g. ❌)')
+                        .setRequired(false)
+                )
+                .addStringOption(opt =>
+                    opt.setName('auto_suggest')
+                        .setDescription('Enable or disable daily trending suggestions')
+                        .setRequired(false)
+                        .addChoices({ name: 'Enable (True)', value: 'true' }, { name: 'Disable (False)', value: 'false' })
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('usage')
+                .setDescription('Show sticker usage statistics')
+                .addIntegerOption(opt =>
+                    opt.setName('page')
+                        .setDescription('Page number')
+                        .setRequired(false)
+                        .setMinValue(1)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('delete')
+                .setDescription('Delete custom stickers (bulk deletion supported) (Admin only)')
+                .addStringOption(opt =>
+                    opt.setName('queries')
+                        .setDescription('List of sticker names or IDs separated by space or comma')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(sub =>
+            sub.setName('autosuggest')
+                .setDescription('Trigger a random sticker suggestion immediately (Admin only)')
+        )
+        .addSubcommand(sub =>
+            sub.setName('help')
+                .setDescription('Display sticker commands instructions')
         ),
     new SlashCommandBuilder()
         .setName('scanperms')

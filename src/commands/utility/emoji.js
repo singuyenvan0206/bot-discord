@@ -36,7 +36,8 @@ module.exports = {
     'prune [minUses] [inactiveDays]': 'Dọn dẹp (xóa) emoji ít sử dụng.',
     'websearch <query>': 'Tìm kiếm emoji trực tuyến từ Slackmojis.',
     'autosuggest': 'Gửi đề xuất emoji thịnh hành ngay lập tức.',
-    'usage [page]': 'Xem thống kê số lần sử dụng của từng emoji trên server.'
+    'usage [page]': 'Xem thống kê số lần sử dụng của từng emoji trên server.',
+    'delete <name_or_id_list>': 'Xóa hoặc xóa hàng loạt emoji bằng tên hoặc ID.'
   },
 
   handleSuggest,
@@ -88,6 +89,8 @@ module.exports = {
         case 'usage':
         case 'stats':
           return await require('./emoji/usageemoji').execute(message, args);
+        case 'delete':
+          return await require('./emoji/deleteemoji').execute(message, args);
         default:
           throw new Error('Unknown subcommand ' + subcommand + '. Type ' + prefix + 'emoji for help.');
       }

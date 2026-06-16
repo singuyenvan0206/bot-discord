@@ -64,11 +64,12 @@ async function initScheduler(client) {
     // Schedule automated emoji maintenance daily at 7:00 AM GMT+7
     const scheduleDailyMaintenance = () => {
         const delay = getDelayUntil7AM();
-        console.log(`[Scheduler] Next automated emoji maintenance scheduled in ${Math.round(delay / 1000 / 60)} minutes (at 7:00 AM GMT+7).`);
+        console.log(`[Scheduler] Next automated emoji/sticker maintenance scheduled in ${Math.round(delay / 1000 / 60)} minutes (at 7:00 AM GMT+7).`);
         setTimeout(async () => {
-            console.log('💡 Running automated emoji maintenance (7:00 AM GMT+7)...');
+            console.log('💡 Running automated emoji/sticker maintenance (7:00 AM GMT+7)...');
             await processAutoPrune(client).catch(console.error);
             await processAutoSuggest(client).catch(console.error);
+            await processStickerAutoSuggest(client).catch(console.error);
             scheduleDailyMaintenance(); // Set up for the next day
         }, delay);
     };
@@ -387,4 +388,81 @@ async function processAutoSuggest(client) {
     }
 }
 
-module.exports = { initScheduler, processWantedDecay, processAutoPrune, processAutoSuggest, runAutoSuggestForGuild };
+async function runStickerAutoSuggestForGuild(guild, stickers) {
+    if (!stickers || stickers.length === 0) {
+        try {
+            stickers = require('../data/stickers.json');
+        } catch (e) {
+            console.error('[Scheduler] Failed to load stickers.json:', e);
+            return null;
+        }
+    }
+    if (stickers.length === 0) return null;
+
+    const suggestSticker = require('../commands/utility/sticker/suggeststicker');
+    const channel = await suggestSticker.getStickerSuggestChannel(guild);
+    if (!channel) {
+        throw new Error('Không tìm thấy kênh đề xuất sticker trong server này.');
+    }
+
+    const currentStickers = await guild.stickers.fetch();
+    const currentNames = new Set(currentStickers.map(s => s.name.toLowerCase()));
+
+    // Filter out stickers that already exist on the server
+    const candidates = stickers.filter(s => !currentNames.has(s.name.toLowerCase()));
+    if (candidates.length === 0) {
+        throw new Error('Tất cả sticker thịnh hành hiện tại đều đã tồn tại trên server.');
+    }
+
+    const target = candidates[Math.floor(Math.random() * candidates.length)];
+    
+    await suggestSticker.handleStickerSuggest(
+        guild, 
+        target.name, 
+        target.tags, 
+        target.image_url, 
+        guild.client.user, 
+        channel
+    );
+
+    return target;
+}
+
+async function processStickerAutoSuggest(client) {
+    console.log('[Scheduler] Running Sticker Auto Suggest check for all guilds...');
+    let stickers = [];
+    try {
+        stickers = require('../data/stickers.json');
+    } catch (e) {
+        console.error('[Scheduler] Failed to load stickers.json:', e);
+        return;
+    }
+    if (stickers.length === 0) return;
+
+    const guilds = await db.queryAll('SELECT id FROM guilds');
+    for (const g of guilds) {
+        const autoSuggestSetting = await db.getGuildSetting(g.id, 'sticker_auto_suggest');
+        const autoSuggest = autoSuggestSetting === true || autoSuggestSetting === 'true';
+        if (!autoSuggest) continue;
+
+        const guild = client.guilds.cache.get(g.id) || await client.guilds.fetch(g.id).catch(() => null);
+        if (!guild) continue;
+
+        try {
+            await runStickerAutoSuggestForGuild(guild, stickers);
+        } catch (err) {
+            console.error(`[Scheduler] Sticker Auto Suggest failed for guild ${g.id}:`, err.message);
+        }
+    }
+}
+
+module.exports = { 
+    initScheduler, 
+    processWantedDecay, 
+    processAutoPrune, 
+    processAutoSuggest, 
+    runAutoSuggestForGuild,
+    processStickerAutoSuggest,
+    runStickerAutoSuggestForGuild
+};
+

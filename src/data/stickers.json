@@ -1,0 +1,52 @@
+[
+  {
+    "name": "pepe_wave",
+    "tags": "👋",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2Fqd3pxM2pmaTFyNXJrdWhid2hsc3d6azVmdXNqYmdzcmFxbzJkdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/H54b0x71wja1T4841v/giphy.gif"
+  },
+  {
+    "name": "blob_dance",
+    "tags": "💃",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTh5MG11b3Z2NWRkODc0cW9yZzVka2lpeWh6cm56aWZ4bzdwNHludCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/B0tZ2f2sPspC6v9s0S/giphy.gif"
+  },
+  {
+    "name": "cat_wiggle",
+    "tags": "🐱",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnZkcHk0Z3RsczU2NHdzbXB6bjVjMW9sdTR2eXBjOGUycThrd3F4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/vQ2tN2G1NSm7C/giphy.gif"
+  },
+  {
+    "name": "pop_cat",
+    "tags": "😮",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzB2M2NlNXpwZzd5OWkwdXBwZnI1cjFkMXE4OXU1cDZ2ZHc4YmZzYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/S6GjTmhG9sA2P5s71m/giphy.gif"
+  },
+  {
+    "name": "pepe_cool",
+    "tags": "😎",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaG45cXZpcTFpaDM5Mm00ZHQ1aTVpejFmMGQ2MnoxOHc1MTAxdnB1MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/dOl2LFw0NYT5W816qS/giphy.gif"
+  },
+  {
+    "name": "heart_hand",
+    "tags": "❤️",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYzdWRtZTZjbjc5dDhzMzhyajJhcThnOG9wazQxbWdqcWVrNms4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/gL2uQoOQ3nZ8Hq6t1T/giphy.gif"
+  },
+  {
+    "name": "doge_shrug",
+    "tags": "🤷",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIyb2ZtODFkMnJ1cGQ1eTF3OXB5NW84dzI0bDJhYzAwaWhrdDNkNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Y4qA6TjI579x0R5S6C/giphy.gif"
+  },
+  {
+    "name": "cat_jam",
+    "tags": "🎵",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhxMHQ3czc2MHFuZHZ1OTQ0YmY5eWJ5dzFhMnVtbXZtMnZ6cTVkNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/jpbnoe3UIa8TU8wK3o/giphy.gif"
+  },
+  {
+    "name": "wumpus_love",
+    "tags": "🥰",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWR1Zm1kNDFzOWJ0bmtsa2Y1amtxNnkxY2c0bWdjaWR3NXdzdmZ1OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/R6gVNv59cNdStq75GX/giphy.gif"
+  },
+  {
+    "name": "crying_pepe",
+    "tags": "😭",
+    "image_url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczU3OHI4cm1xMXFqcnJ1MmNkc3B5ODAwOHc0cG5pMDU5NmdwMThmMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/KDRv3QggAj6OGa2KEM/giphy.gif"
+  }
+]
