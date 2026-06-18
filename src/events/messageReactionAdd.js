@@ -2,6 +2,7 @@ const { Events, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 const db = require('../database');
 const { EMOJI, createGiveawayEmbed, createEntryButton } = require('../utils/embeds');
 const { getLanguage } = require('../utils/i18n');
+const { downloadAndResizeStickerImage } = require('../utils/emojiHelpers');
 const axios = require('axios');
 
 // Helper: Convert Unicode emoji, custom emoji, or URL to a valid image URL
@@ -48,19 +49,6 @@ async function createEmojiFromUrl(guild, name, url) {
   }
 
   return emoji;
-}
-
-async function downloadStickerImage(url) {
-  let targetUrl = url;
-  if (targetUrl.includes('//localhost')) {
-    targetUrl = targetUrl.replace('//localhost', '//127.0.0.1');
-  }
-  const response = await axios.get(targetUrl, { responseType: 'arraybuffer' });
-  const buffer = Buffer.from(response.data, 'binary');
-  if (buffer.length > 512 * 1024) {
-    throw new Error('Kích thước ảnh vượt quá giới hạn 512 KB của sticker Discord.');
-  }
-  return buffer;
 }
 
 
@@ -135,7 +123,7 @@ module.exports = {
 
                                 if (isApprove) {
                                     try {
-                                        const buffer = await downloadStickerImage(sourceUrl);
+                                        const buffer = await downloadAndResizeStickerImage(sourceUrl);
                                         const newSticker = await guild.stickers.create({
                                             file: buffer,
                                             name: targetName,

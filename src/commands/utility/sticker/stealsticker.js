@@ -1,22 +1,9 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
-const { COLOR_SUCCESS } = require('../../../utils/emojiHelpers');
+const { COLOR_SUCCESS, downloadAndResizeStickerImage } = require('../../../utils/emojiHelpers');
 const db = require('../../../database');
 const config = require('../../../config');
 const suggestSticker = require('./suggeststicker');
 const axios = require('axios');
-
-async function downloadStickerImage(url) {
-  let targetUrl = url;
-  if (targetUrl.includes('//localhost')) {
-    targetUrl = targetUrl.replace('//localhost', '//127.0.0.1');
-  }
-  const response = await axios.get(targetUrl, { responseType: 'arraybuffer' });
-  const buffer = Buffer.from(response.data, 'binary');
-  if (buffer.length > 512 * 1024) {
-    throw new Error('Kích thước ảnh vượt quá giới hạn 512 KB của sticker Discord.');
-  }
-  return buffer;
-}
 
 module.exports = {
   name: 'stealsticker',
@@ -111,7 +98,7 @@ module.exports = {
     const isBotOwner = await db.isOwner(message.author.id);
     let embed;
     if (isBotOwner || message.member.permissions.has(PermissionFlagsBits.ManageEmojisAndStickers)) {
-      const buffer = await downloadStickerImage(targetStickerUrl);
+      const buffer = await downloadAndResizeStickerImage(targetStickerUrl);
       
       const newSticker = await guild.stickers.create({ 
         file: buffer, 

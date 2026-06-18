@@ -206,6 +206,44 @@ async function checkDuplicateEmoji(guild, targetUrl, threshold = 5) {
   return null;
 }
 
+async function downloadAndResizeStickerImage(url) {
+  let targetUrl = url;
+  if (!targetUrl || typeof targetUrl !== 'string') {
+    throw new Error('Invalid URL or sticker source.');
+  }
+
+  if (targetUrl.includes('//localhost')) {
+    targetUrl = targetUrl.replace('//localhost', '//127.0.0.1');
+  }
+
+  const response = await axios.get(targetUrl, { responseType: 'arraybuffer' });
+  let buffer = Buffer.from(response.data, 'binary');
+
+  try {
+    const image = await Jimp.read(buffer);
+    const width = image.bitmap.width;
+    const height = image.bitmap.height;
+
+    // Auto-resize if it's not exactly 320x320 pixels, or if the file exceeds 512 KB
+    if (width !== 320 || height !== 320 || buffer.length > 512 * 1024) {
+      image.resize(320, 320);
+      buffer = await image.getBufferAsync(Jimp.MIME_PNG);
+    }
+  } catch (err) {
+    // Fallback: If Jimp fails to read (could be Lottie JSON or APNG unsupported by Jimp),
+    // and size is already within 512 KB limit, return as-is.
+    if (buffer.length > 512 * 1024) {
+      throw new Error('Kích thước ảnh vượt quá giới hạn 512 KB của sticker Discord và không thể tự động thay đổi kích thước.');
+    }
+  }
+
+  if (buffer.length > 512 * 1024) {
+    throw new Error('Kích thước sticker vượt quá giới hạn 512 KB của Discord.');
+  }
+
+  return buffer;
+}
+
 module.exports = {
   COLOR_SUCCESS,
   COLOR_ERROR,
@@ -221,4 +259,5 @@ module.exports = {
   computePerceptualHash,
   getHammingDistance,
   checkDuplicateEmoji,
+  downloadAndResizeStickerImage,
 };
