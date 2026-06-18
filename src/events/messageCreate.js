@@ -2,7 +2,6 @@ const { Events, Collection } = require('discord.js');
 const fs = require('fs');
 const config = require('../config');
 const db = require('../database');
-const { generateAIResponse } = require('../utils/ai');
 const { getLanguage, t } = require('../utils/i18n');
 const { addXp, XP_AMOUNTS } = require('../utils/leveling');
 const { formatDuration } = require('../utils/time');
@@ -145,37 +144,6 @@ module.exports = {
                 await db.updateUser(message.author.id, { helpful_score: (userStats.helpful_score || 0) + 1 });
             }
 
-            // --- SMART AI DETECTION (Tag bot hoặc Chat tự nhiên hoặc Kênh AI) ---
-            const isMentioned = message.mentions.has(client.user) && !message.mentions.everyone;
-            const isAiChannel = guildRow?.ai_channel === message.channel.id;
-            
-            // Check if it's a valid command first to prioritize commands over AI
-            const args_temp = message.content.slice(prefix.length).trim().split(/ +/);
-            const commandName_temp = (args_temp.shift() || '').toLowerCase();
-            const commandExists = isCommand && (client.commands.has(commandName_temp) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName_temp)));
-
-            // AI handles if: 
-            // 1. AI is enabled for the guild
-            // 2. Bot is Mentioned (Works everywhere) OR Message is in dedicated AI Channel (And not a valid command)
-            const aiEnabled = guildRow?.ai_enabled !== false; // Default to true if null/undefined
-            const isAiInteraction = aiEnabled && (isMentioned || (isAiChannel && !commandExists));
-
-            if (isAiInteraction) {
-                // Strip bot mention if it exists
-                let prompt = message.content.replace(`<@${client.user.id}>`, '').replace(`<@!${client.user.id}>`, '').trim();
-                
-                // If in AI channel and still has prefix (but not a command), strip the prefix for a cleaner AI prompt
-                if (isAiChannel && prompt.startsWith(prefix)) {
-                    prompt = prompt.slice(prefix.length).trim();
-                }
-
-                if (prompt.length > 0) {
-                    await message.channel.sendTyping();
-                    const personality = guildRow?.personality || 'default';
-                    const aiReply = await generateAIResponse(prompt, personality, userStats);
-                    return message.reply(aiReply);
-                }
-            }
 
             let tempCommand = null;
             if (isCommand) {
