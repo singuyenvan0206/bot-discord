@@ -61,20 +61,50 @@ async function initScheduler(client) {
         return target.getTime() - now.getTime();
     };
 
-    // Schedule automated emoji maintenance daily at 7:00 AM GMT+7
-    const scheduleDailyMaintenance = () => {
+    // Helper to calculate milliseconds until the next 12-hour suggestion slot (7:00 AM or 7:00 PM GMT+7)
+    const getDelayUntilNext12Hours = () => {
+        const now = new Date();
+        const targetAM = new Date();
+        targetAM.setUTCHours(0, 0, 0, 0); // 7:00 AM GMT+7 (0:00 UTC)
+
+        const targetPM = new Date();
+        targetPM.setUTCHours(12, 0, 0, 0); // 7:00 PM GMT+7 (12:00 UTC)
+
+        const diffs = [
+            targetAM.getTime() - now.getTime(),
+            targetPM.getTime() - now.getTime(),
+            targetAM.getTime() + 24 * 3600_000 - now.getTime(),
+            targetPM.getTime() + 24 * 3600_000 - now.getTime()
+        ].filter(diff => diff > 0);
+
+        return Math.min(...diffs);
+    };
+
+    // Schedule automated emoji prune maintenance daily at 7:00 AM GMT+7
+    const scheduleDailyPrune = () => {
         const delay = getDelayUntil7AM();
-        console.log(`[Scheduler] Next automated emoji/sticker maintenance scheduled in ${Math.round(delay / 1000 / 60)} minutes (at 7:00 AM GMT+7).`);
+        console.log(`[Scheduler] Next automated emoji prune maintenance scheduled in ${Math.round(delay / 1000 / 60)} minutes (at 7:00 AM GMT+7).`);
         setTimeout(async () => {
-            console.log('💡 Running automated emoji/sticker maintenance (7:00 AM GMT+7)...');
+            console.log('💡 Running automated emoji prune maintenance (7:00 AM GMT+7)...');
             await processAutoPrune(client).catch(console.error);
-            await processAutoSuggest(client).catch(console.error);
-            await processStickerAutoSuggest(client).catch(console.error);
-            scheduleDailyMaintenance(); // Set up for the next day
+            scheduleDailyPrune(); // Set up for the next day
         }, delay);
     };
 
-    scheduleDailyMaintenance();
+    // Schedule automated emoji/sticker suggestions every 12 hours (at 7:00 AM and 7:00 PM GMT+7)
+    const schedule12HourSuggestions = () => {
+        const delay = getDelayUntilNext12Hours();
+        console.log(`[Scheduler] Next automated emoji/sticker suggestions scheduled in ${Math.round(delay / 1000 / 60)} minutes.`);
+        setTimeout(async () => {
+            console.log('💡 Running automated 12-hour emoji/sticker suggestions...');
+            await processAutoSuggest(client).catch(console.error);
+            await processStickerAutoSuggest(client).catch(console.error);
+            schedule12HourSuggestions(); // Set up for the next 12 hours
+        }, delay);
+    };
+
+    scheduleDailyPrune();
+    schedule12HourSuggestions();
 }
 
 async function processAquariumIncome(client) {
@@ -298,32 +328,18 @@ async function processAutoPrune(client) {
     }
 }
 
-async function fetchSlackmojisList() {
-    const axios = require('axios');
+function fetchSlackmojisList() {
     try {
-        const response = await axios.get('https://slackmojis.com/emojis.json', {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            },
-            timeout: 5000
-        });
-        if (response.data && Array.isArray(response.data)) {
-            return response.data;
-        }
-    } catch (err) {
-        console.warn('[Scheduler] Live auto-suggest fetch failed, using offline fallback:', err.message);
-    }
-    try {
-        return require('../data/slackmojis.json');
+        return require('../data/emojigg_meme.json');
     } catch (e) {
-        console.error('[Scheduler] Offline fallback load failed:', e);
+        console.error('[Scheduler] Failed to load emoji.gg Meme database:', e);
         return [];
     }
 }
 
 async function runAutoSuggestForGuild(guild, slackmojis) {
     if (!slackmojis || slackmojis.length === 0) {
-        slackmojis = await fetchSlackmojisList();
+        slackmojis = fetchSlackmojisList();
     }
     if (slackmojis.length === 0) return null;
 
@@ -354,7 +370,7 @@ async function runAutoSuggestForGuild(guild, slackmojis) {
         .setDescription(`Mình tìm thấy emoji này rất đẹp trên mạng! Các bạn có muốn thêm nó vào server không?\nBiểu cảm duyệt: ${approveEmoji} | Từ chối: ${rejectEmoji}`)
         .addFields(
             { name: 'Tên Đề Xuất', value: `\`:${target.name}:\``, inline: true },
-            { name: 'Nguồn', value: 'Slackmojis Trending', inline: true }
+            { name: 'Nguồn', value: 'Emoji.gg Memes', inline: true }
         )
         .setImage(target.image_url)
         .setFooter({ text: `Source: ${target.image_url} | Name: ${target.name}` });

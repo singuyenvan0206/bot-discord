@@ -158,7 +158,7 @@ module.exports = {
                 const parts = interaction.customId.split('|');
                 const emojiName = parts[1];
                 const relativePath = parts[2];
-                const imageUrl = `https://emojis.slackmojis.com/emojis/images/${relativePath}`;
+                const imageUrl = `https://cdn3.emoji.gg/emojis/${relativePath}`;
 
                 const guild = interaction.guild;
 
@@ -316,7 +316,7 @@ module.exports = {
                 
                 const emojiName = parts[0];
                 const relativePath = parts[1];
-                const imageUrl = `https://emojis.slackmojis.com/emojis/images/${relativePath}`;
+                const imageUrl = `https://cdn3.emoji.gg/emojis/${relativePath}`;
 
                 const guild = interaction.guild;
                 const member = interaction.member;
@@ -330,7 +330,7 @@ module.exports = {
                     .setDescription('Bạn có muốn thêm emoji này vào server không? Chọn một thao tác dưới đây.')
                     .addFields(
                         { name: 'Tên Đề Xuất', value: `\`:${emojiName}:\``, inline: true },
-                        { name: 'Nguồn', value: 'Slackmojis', inline: true }
+                        { name: 'Nguồn', value: 'Emoji.gg', inline: true }
                     )
                     .setImage(imageUrl);
 
