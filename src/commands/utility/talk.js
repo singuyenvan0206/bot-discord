@@ -162,7 +162,13 @@ module.exports = {
             return message.reply(t('talk.no_text', lang));
         }
 
-        const text = originalText;
+        const displayName = message.member?.displayName || message.author.username;
+        let cleanedName = displayName.replace(/[^\p{L}\p{N}\s]/gu, '').replace(/\s+/g, ' ').trim();
+        if (!cleanedName) {
+            cleanedName = lang === 'vi' ? 'Người dùng' : 'User';
+        }
+
+        const text = t('talk.say_with_name', lang, { name: cleanedName, text: originalText });
 
         if (text.length > 1000) {
             return message.reply('❌ Câu nói quá dài (tối đa 1000 ký tự)!');
