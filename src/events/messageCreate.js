@@ -231,7 +231,7 @@ module.exports = {
             // ─── Role Requirement Check ───
             const startRole = await db.getGuildSetting(message.guild.id, 'start_role', null);
             if (startRole && !message.member.roles.cache.has(startRole)) {
-                const isExempt = command && ['start', 'setstartrole', 'help'].includes(command.name);
+                const isExempt = command && ['start', 'setstartrole', 'help', 'talk', 'tts', 'noi', 'v', 'voice', 'setvoice', 'giongnoi', 'leave'].includes(command.name);
                 if (!isExempt && !await db.isOwner(message.author.id)) {
                     return message.reply(t('role.missing_role_error', lang, { prefix })).catch(() => { });
                 }
