@@ -1,4 +1,4 @@
-const { Events, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { Events, EmbedBuilder } = require('discord.js');
 const db = require('../database');
 const { EMOJI, createGiveawayEmbed, createEntryButton } = require('../utils/embeds');
 const { getLanguage } = require('../utils/i18n');
@@ -85,11 +85,9 @@ module.exports = {
         if (isSuggestChannel) {
             const member = await guild.members.fetch(user.id).catch(() => null);
             const isBotOwner = await db.isOwner(user.id);
-            const hasManagePerms = member && (
-                member.permissions.has(PermissionFlagsBits.ManageGuildExpressions) || 
-                member.permissions.has(PermissionFlagsBits.ManageEmojisAndStickers) || 
-                isBotOwner
-            );
+            const approveRoleId = await db.getGuildSetting(guild.id, 'emoji_approve_role', null);
+            const hasApproveRole = approveRoleId && member?.roles.cache.has(approveRoleId);
+            const hasManagePerms = member && (isBotOwner || hasApproveRole);
 
             if (hasManagePerms) {
                 // Read custom reaction configuration based on whether it is a sticker or emoji

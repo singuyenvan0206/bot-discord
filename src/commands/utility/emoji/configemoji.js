@@ -33,6 +33,9 @@ module.exports = {
 
       const channelDisplay = suggestChannelId ? `<#${suggestChannelId}>` : '_Not configured_';
 
+      const approveRoleId = await db.getGuildSetting(guild.id, 'emoji_approve_role', null);
+      const approveRoleDisplay = approveRoleId ? `<@&${approveRoleId}>` : '_Not configured (uses Discord permissions)_';
+
       return new EmbedBuilder()
         .setColor(COLOR_INFO)
         .setTitle('⚙️ Emoji Configuration')
@@ -41,6 +44,7 @@ module.exports = {
           { name: 'Channel (`channel`)', value: channelDisplay, inline: true },
           { name: 'Approve Reaction (`approve`)', value: approveEmoji, inline: true },
           { name: 'Reject Reaction (`reject`)', value: rejectEmoji, inline: true },
+          { name: 'Approve Role (`approve_role`)', value: approveRoleDisplay, inline: false },
           { name: 'Auto Suggest (`auto_suggest`)', value: (autoSuggest === true || autoSuggest === 'true') ? 'Enabled (True)' : 'Disabled (False)', inline: true },
           { name: 'Auto Prune (`auto_prune`)', value: (autoPrune === true || autoPrune === 'true') ? 'Enabled (True)' : 'Disabled (False)', inline: true },
           { name: 'Prune Min Uses (`prune_min_uses`)', value: minUses.toString(), inline: true },
@@ -58,7 +62,7 @@ module.exports = {
     }
 
     // 2. Single Key/Value Configuration (Prefix mode)
-    const validKeys = ['channel', 'approve', 'reject', 'auto_suggest', 'auto_prune', 'prune_min_uses', 'prune_inactive_days'];
+    const validKeys = ['channel', 'approve', 'reject', 'approve_role', 'auto_suggest', 'auto_prune', 'prune_min_uses', 'prune_inactive_days'];
     const key = commandArgs[0]?.toLowerCase();
 
     if (commandArgs.length === 2 && validKeys.includes(key)) {
@@ -85,6 +89,20 @@ module.exports = {
         dbKey = 'emoji_approve_reaction';
       } else if (key === 'reject') {
         dbKey = 'emoji_reject_reaction';
+      } else if (key === 'approve_role') {
+        dbKey = 'emoji_approve_role';
+        if (value.toLowerCase() === 'none' || value.toLowerCase() === 'null' || value === '0') {
+          value = '';
+          displayValue = 'Cleared (no fixed role)';
+        } else {
+          const match = value.match(/^<@&(\d+)>$/) || value.match(/^(\d+)$/);
+          if (!match) throw new Error('Please provide a valid role ID or mention (e.g. @RoleName or 123456789).');
+          const roleId = match[1];
+          const role = guild.roles.cache.get(roleId);
+          if (!role) throw new Error('Could not find that role in this server.');
+          value = roleId;
+          displayValue = `<@&${roleId}> (${role.name})`;
+        }
       } else if (key === 'auto_suggest') {
         dbKey = 'emoji_auto_suggest';
         value = ['true', 'yes', 'enable', '1'].includes(value.toLowerCase()) ? 'true' : 'false';
