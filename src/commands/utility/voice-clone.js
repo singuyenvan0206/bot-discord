@@ -12,7 +12,7 @@ const FFMPEG_BIN = process.env.FFMPEG_PATH || 'ffmpeg';
 /**
  * Helper to upload audio file to Fish Audio API for Instant Voice Cloning
  */
-async function addVoice(apiKey, name, filePath) {
+async function addVoice(apiKey, name, filePath, transcript) {
     const url = 'https://api.fish.audio/model';
     const fileBuffer = fs.readFileSync(filePath);
     
@@ -22,6 +22,7 @@ async function addVoice(apiKey, name, filePath) {
     formData.append('description', 'Voice cloned from Discord Bot');
     formData.append('visibility', 'private');
     formData.append('train_mode', 'fast');
+    formData.append('texts', transcript); // Send transcript to teach AI Vietnamese phonemes correctly
     
     const blob = new Blob([fileBuffer], { type: 'audio/wav' });
     formData.append('voices', blob, 'recording.wav');
@@ -59,7 +60,7 @@ async function deleteVoice(apiKey, voiceId) {
         const errText = await response.text();
         throw new Error(`Fish Audio delete error: ${errText}`);
     }
-    return await response.json();
+    return true;
 }
 
 module.exports = {
@@ -134,7 +135,7 @@ module.exports = {
                 return message.reply('❌ Không thể kết nối tới kênh voice (Connection timeout)');
             }
 
-            const msg = await message.reply('🎤 **Bắt đầu ghi âm!** Hãy đọc to đoạn văn bản sau trong vòng 15 giây:\n\n*"Cơn mưa chiều nay thật lớn. Tôi ngồi bên cửa sổ, nhìn những giọt nước đọng trên kính và nghĩ về những chuyến đi sắp tới. Hy vọng ngày mai trời sẽ nắng ấm."*\n\n*(Bot sẽ tự động dừng ghi âm sau 15 giây)*');
+            const msg = await message.reply('🎤 **Bắt đầu ghi âm!** Hãy đọc to đoạn văn bản sau trong vòng 15 giây:\n\n*"Chào mọi người nha! Mình đang thu âm thử giọng để cài đặt cho con bot Discord này. Hy vọng sau khi clone xong, nghe giọng mình nói sẽ tự nhiên, rõ ràng và mượt mà một chút."*\n\n*(Bot sẽ tự động dừng ghi âm sau 15 giây)*');
 
             const tempFilePath = path.join(__dirname, `../../temp_voice_${message.author.id}.wav`);
 
@@ -213,9 +214,10 @@ module.exports = {
                         }
                     }
 
-                    // Upload to Fish Audio
+                    // Upload to Fish Audio with exact transcription text
                     const voiceName = `Discord_Clone_${message.author.id}`;
-                    const voiceId = await addVoice(apiKey, voiceName, tempFilePath);
+                    const transcriptText = 'Chào mọi người nha! Mình đang thu âm thử giọng để cài đặt cho con bot Discord này. Hy vọng sau khi clone xong, nghe giọng mình nói sẽ tự nhiên, rõ ràng và mượt mà một chút.';
+                    const voiceId = await addVoice(apiKey, voiceName, tempFilePath, transcriptText);
 
                     // Save model ID to db
                     await db.updateUser(message.author.id, { elevenlabs_voice_id: voiceId });
