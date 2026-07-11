@@ -39,22 +39,54 @@ async function processQueue(guildId) {
             ttsLang = 'en';
         }
 
-        // Use Edge TTS for natural voices
-        let edgeVoice = 'vi-VN-HoaiMyNeural';
-        if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
-        if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
+        let ttsStream;
+        const apiKey = process.env.ELEVENLABS_API_KEY;
+        const userDb = await db.getUser(message.author.id);
 
-        if (ttsLang === 'vi' && baseVoice === 'male') {
-            edgeVoice = 'vi-VN-NamMinhNeural';
-        } else if (ttsLang === 'en' && baseVoice === 'male') {
-            edgeVoice = 'en-US-GuyNeural';
-        } else if (ttsLang === 'ja' && baseVoice === 'male') {
-            edgeVoice = 'ja-JP-KeitaNeural';
+        if (apiKey && userDb?.elevenlabs_voice_id) {
+            console.log(`[Talk Command] Guild ${guildId}: Speaking using ElevenLabs Voice ID ${userDb.elevenlabs_voice_id}`);
+            const elResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${userDb.elevenlabs_voice_id}/stream`, {
+                method: 'POST',
+                headers: {
+                    'xi-api-key': apiKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: text,
+                    model_id: 'eleven_multilingual_v2',
+                    voice_settings: {
+                        stability: 0.5,
+                        similarity_boost: 0.75
+                    }
+                })
+            });
+
+            if (!elResponse.ok) {
+                const elErrText = await elResponse.text();
+                throw new Error(`ElevenLabs stream error: ${elErrText}`);
+            }
+
+            const { Readable } = require('stream');
+            ttsStream = Readable.fromWeb(elResponse.body);
+        } else {
+            // Use Edge TTS for natural voices
+            let edgeVoice = 'vi-VN-HoaiMyNeural';
+            if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
+            if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
+
+            if (ttsLang === 'vi' && baseVoice === 'male') {
+                edgeVoice = 'vi-VN-NamMinhNeural';
+            } else if (ttsLang === 'en' && baseVoice === 'male') {
+                edgeVoice = 'en-US-GuyNeural';
+            } else if (ttsLang === 'ja' && baseVoice === 'male') {
+                edgeVoice = 'ja-JP-KeitaNeural';
+            }
+
+            const tts = new MsEdgeTTS();
+            await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+            const { audioStream: edgeStream } = tts.toStream(text);
+            ttsStream = edgeStream;
         }
-
-        const tts = new MsEdgeTTS();
-        await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-        const { audioStream: ttsStream } = tts.toStream(text);
 
         // FFmpeg filter setup
         let audioFilter = 'atempo=1.0'; // Default normal speed
@@ -91,8 +123,8 @@ async function processQueue(guildId) {
         ttsStream.pipe(ffmpegProcess.stdin);
 
         ttsStream.on('error', (err) => {
-            console.error(`[Talk Command] Guild ${guildId} Edge TTS Stream Error:`, err);
-            message.reply('❌ Lỗi khi tải âm thanh từ máy chủ Microsoft!');
+            console.error(`[Talk Command] Guild ${guildId} TTS Stream Error:`, err);
+            message.reply('❌ Lỗi khi tải âm thanh từ máy chủ TTS!');
             queue.isPlaying = false;
             processQueue(guildId);
         });
