@@ -10,51 +10,54 @@ process.env.FFMPEG_PATH = ffmpeg;
 const FFMPEG_BIN = process.env.FFMPEG_PATH || 'ffmpeg';
 
 /**
- * Helper to upload audio file to ElevenLabs API for Instant Voice Cloning
+ * Helper to upload audio file to Fish Audio API for Instant Voice Cloning
  */
 async function addVoice(apiKey, name, filePath) {
-    const url = 'https://api.elevenlabs.io/v1/voices/add';
+    const url = 'https://api.fish.audio/model';
     const fileBuffer = fs.readFileSync(filePath);
     
     const formData = new FormData();
-    formData.append('name', name);
+    formData.append('type', 'tts');
+    formData.append('title', name);
     formData.append('description', 'Voice cloned from Discord Bot');
+    formData.append('visibility', 'private');
+    formData.append('train_mode', 'fast');
     
     const blob = new Blob([fileBuffer], { type: 'audio/wav' });
-    formData.append('files', blob, 'recording.wav');
+    formData.append('voices', blob, 'recording.wav');
     
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'xi-api-key': apiKey
+            'Authorization': `Bearer ${apiKey}`
         },
         body: formData
     });
     
     if (!response.ok) {
         const errText = await response.text();
-        throw new Error(`ElevenLabs error: ${errText}`);
+        throw new Error(`Fish Audio error: ${errText}`);
     }
     
     const data = await response.json();
-    return data.voice_id;
+    return data._id; // Fish Audio returns model ID as _id
 }
 
 /**
- * Helper to delete a voice from ElevenLabs API
+ * Helper to delete a voice model from Fish Audio API
  */
 async function deleteVoice(apiKey, voiceId) {
-    const url = `https://api.elevenlabs.io/v1/voices/${voiceId}`;
+    const url = `https://api.fish.audio/model/${voiceId}`;
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'xi-api-key': apiKey
+            'Authorization': `Bearer ${apiKey}`
         }
     });
     
     if (!response.ok) {
         const errText = await response.text();
-        throw new Error(`ElevenLabs delete error: ${errText}`);
+        throw new Error(`Fish Audio delete error: ${errText}`);
     }
     return await response.json();
 }
@@ -62,15 +65,15 @@ async function deleteVoice(apiKey, voiceId) {
 module.exports = {
     name: 'voice-clone',
     aliases: ['vc', 'clone'],
-    description: 'Ghi âm và clone giọng nói của bạn (Record and clone your voice using ElevenLabs)',
+    description: 'Ghi âm và clone giọng nói của bạn (Record and clone your voice using Fish Audio)',
     usage: 'record | delete | status',
     category: 'utility',
     skipXp: true,
     bypassBlacklist: true,
     async execute(message, args) {
-        const apiKey = process.env.ELEVENLABS_API_KEY;
+        const apiKey = process.env.FISH_API_KEY || process.env.ELEVENLABS_API_KEY;
         if (!apiKey) {
-            return message.reply('❌ Chưa cấu hình `ELEVENLABS_API_KEY` trong file `.env`!');
+            return message.reply('❌ Chưa cấu hình `FISH_API_KEY` trong file `.env`!');
         }
 
         const subCommand = (args[0] || '').toLowerCase();
@@ -91,7 +94,7 @@ module.exports = {
             if (!userDb?.elevenlabs_voice_id) {
                 return message.reply('❌ Bạn chưa có giọng nói clone nào trên hệ thống!');
             }
-            const statusMsg = await message.reply('⏳ Đang xóa giọng nói clone của bạn khỏi ElevenLabs...');
+            const statusMsg = await message.reply('⏳ Đang xóa giọng nói clone của bạn khỏi Fish Audio...');
             try {
                 await deleteVoice(apiKey, userDb.elevenlabs_voice_id);
                 await db.updateUser(message.author.id, { elevenlabs_voice_id: null });
@@ -121,7 +124,7 @@ module.exports = {
                     channelId: voiceChannel.id,
                     guildId: message.guild.id,
                     adapterCreator: message.guild.voiceAdapterCreator,
-                    selfDeaf: false, // MUST be false to receive voice packets
+                    selfDeaf: false,
                 });
 
                 await entersState(connection, VoiceConnectionStatus.Ready, 20_000);
@@ -135,18 +138,15 @@ module.exports = {
 
             const tempFilePath = path.join(__dirname, `../../temp_voice_${message.author.id}.wav`);
 
-            // Subscribe to the author's voice stream
             const audioStream = connection.receiver.subscribe(message.author.id, {
                 end: {
                     behavior: EndBehaviorType.Manual
                 }
             });
 
-            // Decode Opus stream to PCM
             const opusDecoder = new prism.opus.Decoder({ frameSize: 960, channels: 2, rate: 48000 });
             const pcmStream = audioStream.pipe(opusDecoder);
 
-            // Write PCM data into FFmpeg to convert to standard WAV
             const ffmpegProcess = spawn(FFMPEG_BIN, [
                 '-f', 's16le',
                 '-ar', '48000',
@@ -177,16 +177,13 @@ module.exports = {
                 console.error('[Voice Recording] FFmpeg process error:', err);
             });
 
-            // Wait 15 seconds to record
             setTimeout(async () => {
                 try {
-                    // Destroy stream and close FFmpeg
                     audioStream.destroy();
                     ffmpegProcess.stdin.end();
 
                     await msg.edit('⏳ **Đang xử lý âm thanh và clone giọng...** Xin vui lòng chờ trong giây lát.');
 
-                    // Wait for FFmpeg process to fully close
                     if (!ffmpegClosed && !ffmpegError) {
                         await new Promise((resolve) => {
                             ffmpegProcess.once('close', resolve);
@@ -202,7 +199,6 @@ module.exports = {
                         throw new Error(`FFmpeg exited with non-zero code ${ffmpegExitCode}`);
                     }
 
-                    // Validate file
                     if (!fs.existsSync(tempFilePath) || fs.statSync(tempFilePath).size === 0) {
                         throw new Error('Không nhận được âm thanh từ bạn. Hãy đảm bảo bạn đã nói gì đó khi ghi âm.');
                     }
@@ -213,28 +209,26 @@ module.exports = {
                         try {
                             await deleteVoice(apiKey, userDb.elevenlabs_voice_id);
                         } catch (e) {
-                            console.warn('Failed to delete old voice from ElevenLabs:', e.message);
+                            console.warn('Failed to delete old voice from Fish Audio:', e.message);
                         }
                     }
 
-                    // Upload to ElevenLabs
+                    // Upload to Fish Audio
                     const voiceName = `Discord_Clone_${message.author.id}`;
                     const voiceId = await addVoice(apiKey, voiceName, tempFilePath);
 
-                    // Save voice ID to user table
+                    // Save model ID to db
                     await db.updateUser(message.author.id, { elevenlabs_voice_id: voiceId });
 
-                    await msg.edit('✅ **Clone giọng thành công!** Giọng của bạn đã được tạo lập.\nBây giờ hãy dùng lệnh \`!talk <nội dung>\` để bot nói bằng giọng của chính bạn!');
+                    await msg.edit('✅ **Clone giọng thành công!** Giọng của bạn đã được tạo lập trên Fish Audio.\nBây giờ hãy dùng lệnh \`!talk <nội dung>\` để bot nói bằng giọng của chính bạn!');
 
                 } catch (error) {
                     console.error('[Voice Recording] Processing Error:', error);
                     await msg.edit(`❌ **Lỗi khi xử lý giọng nói:** ${error.message}`);
                 } finally {
-                    // Clean up temp file
                     if (fs.existsSync(tempFilePath)) {
                         fs.unlinkSync(tempFilePath);
                     }
-                    // Leave channel
                     if (connection && connection.state.status !== VoiceConnectionStatus.Destroyed) {
                         connection.destroy();
                     }

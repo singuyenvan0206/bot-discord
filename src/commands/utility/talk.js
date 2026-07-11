@@ -40,34 +40,32 @@ async function processQueue(guildId) {
         }
 
         let ttsStream;
-        const apiKey = process.env.ELEVENLABS_API_KEY;
+        const apiKey = process.env.FISH_API_KEY || process.env.ELEVENLABS_API_KEY;
         const userDb = await db.getUser(message.author.id);
 
         if (apiKey && userDb?.elevenlabs_voice_id) {
-            console.log(`[Talk Command] Guild ${guildId}: Speaking using ElevenLabs Voice ID ${userDb.elevenlabs_voice_id}`);
-            const elResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${userDb.elevenlabs_voice_id}/stream`, {
+            console.log(`[Talk Command] Guild ${guildId}: Speaking using Fish Audio Voice ID ${userDb.elevenlabs_voice_id}`);
+            const fishResponse = await fetch('https://api.fish.audio/v1/tts', {
                 method: 'POST',
                 headers: {
-                    'xi-api-key': apiKey,
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                    'model': 's2.1-pro-free'
                 },
                 body: JSON.stringify({
                     text: text,
-                    model_id: 'eleven_multilingual_v2',
-                    voice_settings: {
-                        stability: 0.5,
-                        similarity_boost: 0.75
-                    }
+                    reference_id: userDb.elevenlabs_voice_id,
+                    format: 'mp3'
                 })
             });
 
-            if (!elResponse.ok) {
-                const elErrText = await elResponse.text();
-                throw new Error(`ElevenLabs stream error: ${elErrText}`);
+            if (!fishResponse.ok) {
+                const fishErrText = await fishResponse.text();
+                throw new Error(`Fish Audio stream error: ${fishErrText}`);
             }
 
             const { Readable } = require('stream');
-            ttsStream = Readable.fromWeb(elResponse.body);
+            ttsStream = Readable.fromWeb(fishResponse.body);
         } else {
             // Use Edge TTS for natural voices
             let edgeVoice = 'vi-VN-HoaiMyNeural';
