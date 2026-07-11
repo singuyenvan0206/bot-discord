@@ -50,7 +50,13 @@ async function processQueue(guildId) {
             
             const { encode } = require('@msgpack/msgpack');
             const audioBytes = fs.readFileSync(voicePath);
-            const transcriptText = 'Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần.';
+            
+            // Read transcript text dynamically from the saved file to ensure 100% alignment
+            const transcriptPath = path.join(__dirname, `../../data/voices/${message.author.id}.txt`);
+            let transcriptText = 'Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần.';
+            if (fs.existsSync(transcriptPath)) {
+                transcriptText = fs.readFileSync(transcriptPath, 'utf8');
+            }
 
             const payload = {
                 text: text,
@@ -60,7 +66,8 @@ async function processQueue(guildId) {
                         text: transcriptText
                     }
                 ],
-                format: 'mp3'
+                format: 'mp3',
+                temperature: 0.3 // Lower temperature for much more stable and accurate Vietnamese tone alignment
             };
 
             const bodyData = encode(payload);

@@ -48,6 +48,10 @@ module.exports = {
             }
             try {
                 fs.unlinkSync(voicePath);
+                const transcriptPath = path.join(voicesDir, `${message.author.id}.txt`);
+                if (fs.existsSync(transcriptPath)) {
+                    fs.unlinkSync(transcriptPath);
+                }
                 await db.updateUser(message.author.id, { elevenlabs_voice_id: null });
                 return message.reply('✅ Đã xóa giọng nói clone thành công!');
             } catch (error) {
@@ -84,7 +88,7 @@ module.exports = {
                 return message.reply('❌ Không thể kết nối tới kênh voice (Connection timeout). Có thể do VPS bị chặn cổng UDP.');
             }
 
-            const msg = await message.reply('🎤 **Bắt đầu ghi âm!** Hãy đọc to đoạn văn bản sau trong vòng 15 giây:\n\n*"Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần."*\n\n*(Bot sẽ tự động dừng ghi âm sau 15 giây)*');
+            const msg = await message.reply('🎤 **Bắt đầu ghi âm!** Hãy đọc to đoạn văn bản sau trong vòng 25 giây:\n\n*"Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần. Mỗi ngày, chúng ta nên dành một chút thời gian tĩnh lặng để thư giãn đầu óc, giúp giảm bớt căng thẳng và tìm lại sự bình yên trong cuộc sống bận rộn."*\n\n*(Bot sẽ tự động dừng ghi âm sau 25 giây)*');
 
             // Subscribe to the author's voice stream
             const audioStream = connection.receiver.subscribe(message.author.id, {
@@ -158,6 +162,11 @@ module.exports = {
                     // Save local flag to database
                     await db.updateUser(message.author.id, { elevenlabs_voice_id: 'local' });
 
+                    // Save the transcript text file
+                    const transcriptPath = path.join(voicesDir, `${message.author.id}.txt`);
+                    const transcriptText = 'Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần. Mỗi ngày, chúng ta nên dành một chút thời gian tĩnh lặng để thư giãn đầu óc, giúp giảm bớt căng thẳng và tìm lại sự bình yên trong cuộc sống bận rộn.';
+                    fs.writeFileSync(transcriptPath, transcriptText, 'utf8');
+
                     await msg.edit('✅ **Clone giọng thành công!** Giọng của bạn đã được ghi âm và lưu cục bộ.\nBây giờ hãy dùng lệnh \`!talk <nội dung>\` để bot nói bằng giọng của chính bạn!');
 
                 } catch (error) {
@@ -172,7 +181,7 @@ module.exports = {
                         connection.destroy();
                     }
                 }
-            }, 15000);
+            }, 25000);
         }
     }
 };
