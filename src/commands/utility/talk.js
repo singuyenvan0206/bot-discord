@@ -39,22 +39,68 @@ async function processQueue(guildId) {
             ttsLang = 'en';
         }
 
-        // Use Edge TTS for natural voices
-        let edgeVoice = 'vi-VN-HoaiMyNeural';
-        if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
-        if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
+        let ttsStream;
+        const apiKey = process.env.FISH_API_KEY || process.env.ELEVENLABS_API_KEY;
+        const fs = require('fs');
+        const voicePath = path.join(__dirname, `../../data/voices/${message.author.id}.wav`);
+        const hasLocalVoice = fs.existsSync(voicePath);
 
-        if (ttsLang === 'vi' && baseVoice === 'male') {
-            edgeVoice = 'vi-VN-NamMinhNeural';
-        } else if (ttsLang === 'en' && baseVoice === 'male') {
-            edgeVoice = 'en-US-GuyNeural';
-        } else if (ttsLang === 'ja' && baseVoice === 'male') {
-            edgeVoice = 'ja-JP-KeitaNeural';
+        if (apiKey && hasLocalVoice) {
+            console.log(`[Talk Command] Guild ${guildId}: Speaking using local zero-shot cloned voice for user ${message.author.id}`);
+            
+            const { encode } = require('@msgpack/msgpack');
+            const audioBytes = fs.readFileSync(voicePath);
+            const transcriptText = 'Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần.';
+
+            const payload = {
+                text: text,
+                references: [
+                    {
+                        audio: audioBytes,
+                        text: transcriptText
+                    }
+                ],
+                format: 'mp3'
+            };
+
+            const bodyData = encode(payload);
+
+            const fishResponse = await fetch('https://api.fish.audio/v1/tts', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/msgpack',
+                    'model': 's2.1-pro-free'
+                },
+                body: bodyData
+            });
+
+            if (!fishResponse.ok) {
+                const fishErrText = await fishResponse.text();
+                throw new Error(`Fish Audio stream error: ${fishErrText}`);
+            }
+
+            const { Readable } = require('stream');
+            ttsStream = Readable.fromWeb(fishResponse.body);
+        } else {
+            // Use Edge TTS for natural voices
+            let edgeVoice = 'vi-VN-HoaiMyNeural';
+            if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
+            if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
+
+            if (ttsLang === 'vi' && baseVoice === 'male') {
+                edgeVoice = 'vi-VN-NamMinhNeural';
+            } else if (ttsLang === 'en' && baseVoice === 'male') {
+                edgeVoice = 'en-US-GuyNeural';
+            } else if (ttsLang === 'ja' && baseVoice === 'male') {
+                edgeVoice = 'ja-JP-KeitaNeural';
+            }
+
+            const tts = new MsEdgeTTS();
+            await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+            const { audioStream: edgeStream } = tts.toStream(text);
+            ttsStream = edgeStream;
         }
-
-        const tts = new MsEdgeTTS();
-        await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-        const { audioStream: ttsStream } = tts.toStream(text);
 
         // FFmpeg filter setup
         let audioFilter = 'atempo=1.0'; // Default normal speed

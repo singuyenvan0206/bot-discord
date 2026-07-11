@@ -199,6 +199,7 @@ async function initSchema() {
     await safeAddColumn('users', 'helpful_score', 'INTEGER DEFAULT 0');
     await safeAddColumn('users', 'voice_type', "TEXT DEFAULT 'default'");
     await safeAddColumn('users', 'voice_effect', "TEXT DEFAULT 'none'");
+    await safeAddColumn('users', 'elevenlabs_voice_id', "TEXT DEFAULT NULL");
     // User Guilds Migrations (Per-server data)
     await safeAddColumn('user_guilds', 'balance', 'BIGINT NOT NULL DEFAULT 0');
     await safeAddColumn('user_guilds', 'xp', 'BIGINT NOT NULL DEFAULT 0');
