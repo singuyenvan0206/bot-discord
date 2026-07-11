@@ -135,7 +135,7 @@ module.exports = {
                 return message.reply('❌ Không thể kết nối tới kênh voice (Connection timeout)');
             }
 
-            const msg = await message.reply('🎤 **Bắt đầu ghi âm!** Hãy đọc to đoạn văn bản sau trong vòng 15 giây:\n\n*"Chào mọi người nha! Mình đang thu âm thử giọng để cài đặt cho con bot Discord này. Hy vọng sau khi clone xong, nghe giọng mình nói sẽ tự nhiên, rõ ràng và mượt mà một chút."*\n\n*(Bot sẽ tự động dừng ghi âm sau 15 giây)*');
+            const msg = await message.reply('🎤 **Bắt đầu ghi âm!** Hãy đọc to đoạn văn bản sau trong vòng 15 giây:\n\n*"Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần."*\n\n*(Bot sẽ tự động dừng ghi âm sau 15 giây)*');
 
             const tempFilePath = path.join(__dirname, `../../temp_voice_${message.author.id}.wav`);
 
@@ -216,7 +216,7 @@ module.exports = {
 
                     // Upload to Fish Audio with exact transcription text
                     const voiceName = `Discord_Clone_${message.author.id}`;
-                    const transcriptText = 'Chào mọi người nha! Mình đang thu âm thử giọng để cài đặt cho con bot Discord này. Hy vọng sau khi clone xong, nghe giọng mình nói sẽ tự nhiên, rõ ràng và mượt mà một chút.';
+                    const transcriptText = 'Khoa học đã chứng minh rằng việc duy trì một lối sống lành mạnh, bao gồm ăn uống cân bằng và rèn luyện thể thao thường xuyên, sẽ giúp cải thiện đáng kể sức khỏe tinh thần.';
                     const voiceId = await addVoice(apiKey, voiceName, tempFilePath, transcriptText);
 
                     // Save model ID to db
