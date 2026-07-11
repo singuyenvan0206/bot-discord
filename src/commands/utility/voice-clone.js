@@ -158,11 +158,22 @@ module.exports = {
 
             pcmStream.pipe(ffmpegProcess.stdin);
 
+            let ffmpegClosed = false;
+            let ffmpegExitCode = null;
+            let ffmpegError = null;
+
             audioStream.on('error', (err) => {
                 console.error('[Voice Recording] Audio stream error:', err);
             });
 
+            ffmpegProcess.on('close', (code) => {
+                ffmpegClosed = true;
+                ffmpegExitCode = code;
+                console.log(`[Voice Recording] FFmpeg process closed with code ${code}`);
+            });
+
             ffmpegProcess.on('error', (err) => {
+                ffmpegError = err;
                 console.error('[Voice Recording] FFmpeg process error:', err);
             });
 
@@ -176,9 +187,20 @@ module.exports = {
                     await msg.edit('⏳ **Đang xử lý âm thanh và clone giọng...** Xin vui lòng chờ trong giây lát.');
 
                     // Wait for FFmpeg process to fully close
-                    await new Promise((resolve) => {
-                        ffmpegProcess.on('close', resolve);
-                    });
+                    if (!ffmpegClosed && !ffmpegError) {
+                        await new Promise((resolve) => {
+                            ffmpegProcess.once('close', resolve);
+                            ffmpegProcess.once('error', resolve);
+                        });
+                    }
+
+                    if (ffmpegError) {
+                        throw new Error(`FFmpeg error: ${ffmpegError.message}`);
+                    }
+
+                    if (ffmpegExitCode !== null && ffmpegExitCode !== 0) {
+                        throw new Error(`FFmpeg exited with non-zero code ${ffmpegExitCode}`);
+                    }
 
                     // Validate file
                     if (!fs.existsSync(tempFilePath) || fs.statSync(tempFilePath).size === 0) {
