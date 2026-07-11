@@ -34,8 +34,7 @@ async function getUser(userId, guildId = null) {
                 skill_data: '{}',
                 aquarium_data: '{}',
                 voice_type: 'default',
-                voice_effect: 'none',
-                elevenlabs_voice_id: null
+                voice_effect: 'none'
             };
         }
 
@@ -52,8 +51,7 @@ async function getUser(userId, guildId = null) {
                     fish_ledger: '{}', bounty: 0, wanted_level: 0, skill_data: '{}', aquarium_data: '{}',
                     daily_streak: 0,
                     voice_type: 'default',
-                    voice_effect: 'none',
-                    elevenlabs_voice_id: null
+                    voice_effect: 'none'
                 };
 
             }

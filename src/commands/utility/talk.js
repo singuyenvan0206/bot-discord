@@ -39,52 +39,22 @@ async function processQueue(guildId) {
             ttsLang = 'en';
         }
 
-        let ttsStream;
-        const apiKey = process.env.FISH_API_KEY || process.env.ELEVENLABS_API_KEY;
-        const userDb = await db.getUser(message.author.id);
+        // Use Edge TTS for natural voices
+        let edgeVoice = 'vi-VN-HoaiMyNeural';
+        if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
+        if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
 
-        if (apiKey && userDb?.elevenlabs_voice_id) {
-            console.log(`[Talk Command] Guild ${guildId}: Speaking using Fish Audio Voice ID ${userDb.elevenlabs_voice_id}`);
-            const fishResponse = await fetch('https://api.fish.audio/v1/tts', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json',
-                    'model': 's2.1-pro-free'
-                },
-                body: JSON.stringify({
-                    text: text,
-                    reference_id: userDb.elevenlabs_voice_id,
-                    format: 'mp3'
-                })
-            });
-
-            if (!fishResponse.ok) {
-                const fishErrText = await fishResponse.text();
-                throw new Error(`Fish Audio stream error: ${fishErrText}`);
-            }
-
-            const { Readable } = require('stream');
-            ttsStream = Readable.fromWeb(fishResponse.body);
-        } else {
-            // Use Edge TTS for natural voices
-            let edgeVoice = 'vi-VN-HoaiMyNeural';
-            if (ttsLang === 'ja') edgeVoice = 'ja-JP-NanamiNeural';
-            if (ttsLang === 'en') edgeVoice = 'en-US-AriaNeural';
-
-            if (ttsLang === 'vi' && baseVoice === 'male') {
-                edgeVoice = 'vi-VN-NamMinhNeural';
-            } else if (ttsLang === 'en' && baseVoice === 'male') {
-                edgeVoice = 'en-US-GuyNeural';
-            } else if (ttsLang === 'ja' && baseVoice === 'male') {
-                edgeVoice = 'ja-JP-KeitaNeural';
-            }
-
-            const tts = new MsEdgeTTS();
-            await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-            const { audioStream: edgeStream } = tts.toStream(text);
-            ttsStream = edgeStream;
+        if (ttsLang === 'vi' && baseVoice === 'male') {
+            edgeVoice = 'vi-VN-NamMinhNeural';
+        } else if (ttsLang === 'en' && baseVoice === 'male') {
+            edgeVoice = 'en-US-GuyNeural';
+        } else if (ttsLang === 'ja' && baseVoice === 'male') {
+            edgeVoice = 'ja-JP-KeitaNeural';
         }
+
+        const tts = new MsEdgeTTS();
+        await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+        const { audioStream: ttsStream } = tts.toStream(text);
 
         // FFmpeg filter setup
         let audioFilter = 'atempo=1.0'; // Default normal speed
